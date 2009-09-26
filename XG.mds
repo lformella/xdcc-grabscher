@@ -1,0 +1,64 @@
+<Combine fileversion="2.0" name="XG">
+  <Policies>
+    <VersionControlPolicy inheritsSet="Mono" />
+    <ChangeLogPolicy UpdateMode="None" inheritsSet="Mono">
+      <MessageStyle LineAlign="0" />
+    </ChangeLogPolicy>
+    <DotNetNamingPolicy DirectoryNamespaceAssociation="None" ResourceNamePolicy="FileFormatDefault" />
+  </Policies>
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="XG.Core" configuration="Debug" />
+      <Entry build="True" name="XG.Server" configuration="Debug" />
+      <Entry build="True" name="XG.Client.TCP" configuration="Debug" />
+      <Entry build="True" name="XG.Client.TCP.GTK" configuration="Debug" />
+      <Entry build="True" name="XG.Server.TCP" configuration="Debug" />
+      <Entry build="True" name="XG.Client" configuration="Debug" />
+      <Entry build="True" name="XG.Client.GTK" configuration="Debug" />
+      <Entry build="True" name="XG.Client.Widgets.GTK" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Web" configuration="Debug" />
+      <Entry build="True" name="XG.Client.Web" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Cmd" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="XG.Core" configuration="Release" />
+      <Entry build="True" name="XG.Server" configuration="Release" />
+      <Entry build="True" name="XG.Client.TCP" configuration="Release" />
+      <Entry build="True" name="XG.Client.TCP.GTK" configuration="Release" />
+      <Entry build="True" name="XG.Server.TCP" configuration="Release" />
+      <Entry build="True" name="XG.Client" configuration="Release" />
+      <Entry build="True" name="XG.Client.GTK" configuration="Release" />
+      <Entry build="True" name="XG.Client.Widgets.GTK" configuration="Release" />
+      <Entry build="True" name="XG.Server.Web" configuration="Release" />
+      <Entry build="True" name="XG.Client.Web" configuration="Release" />
+      <Entry build="True" name="XG.Server.Cmd" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="XG.Server.Cmd" single="True">
+    <Execute type="None" entry="XG.Core" />
+    <Execute type="None" entry="XG.Server" />
+    <Execute type="None" entry="XG.Client.TCP" />
+    <Execute type="None" entry="XG.Client.TCP.GTK" />
+    <Execute type="None" entry="XG.Server.TCP" />
+    <Execute type="None" entry="XG.Client" />
+    <Execute type="None" entry="XG.Client.GTK" />
+    <Execute type="None" entry="XG.Client.Widgets.GTK" />
+    <Execute type="None" entry="XG.Server.Web" />
+    <Execute type="None" entry="XG.Client.Web" />
+    <Execute type="None" entry="XG.Server.Cmd" />
+  </StartMode>
+  <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="OneChangeLogInProjectRootDirectory" />
+  <Entries>
+    <Entry filename="XG.Core/XG.Core.mdp" />
+    <Entry filename="XG.Server/XG.Server.mdp" />
+    <Entry filename="XG.Client.TCP/XG.Client.TCP.mdp" />
+    <Entry filename="XG.Client.TCP.GTK/XG.Client.TCP.GTK.mdp" />
+    <Entry filename="XG.Server.TCP/XG.Server.TCP.mdp" />
+    <Entry filename="XG.Client/XG.Client.mdp" />
+    <Entry filename="XG.Client.GTK/XG.Client.GTK.mdp" />
+    <Entry filename="XG.Client.Widgets.GTK/XG.Client.Widgets.GTK.mdp" />
+    <Entry filename="XG.Server.Web/XG.Server.Web.mdp" />
+    <Entry filename="XG.Client.Web/XG.Client.Web.mdp" />
+    <Entry filename="XG.Server.Cmd/XG.Server.Cmd.mdp" />
+  </Entries>
+</Combine>

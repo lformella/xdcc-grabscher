@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>XG Webclient (beta)</title>
+		<link type="text/css" href="css/cupertino/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+
+		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
+
+		<script type="text/javascript" src="js/i18n/grid.locale-de.js"></script>
+		<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+		
+		<script type="text/javascript">
+			$(function()
+			{
+				var AddServer				= 1;
+				var RemoveServer			= 2
+				var AddChannel				= 3;
+				var RemoveChannel			= 4;
+
+				var ActivateObject			= 5;
+				var DeactivateObject		= 6;
+
+				var SearchPacket			= 7;
+				var SearchPacketTime		= 8;
+				var SearchBot				= 9;
+				var SearchBotTime			= 10;
+
+				var GetServersChannels		= 11;
+				var GetActivePackets		= 12;
+				var GetFiles				= 13;
+				var GetObject				= 14;
+				var GetChildrenFromObject	= 15;
+
+				var CloseClient				= 16;
+				var RestartServer			= 17;
+				var CloseServer				= 18;
+
+				var jsonurl = "/?password=xgisgreat&request=";
+
+				var id_server;
+				var id_bot;
+				var id_search;
+				
+				var search_active = false;
+
+				function GuidUrl(id, guid) { return jsonurl + id + "&guid=" + guid; }
+				function NameUrl(id, name) { return jsonurl + id + "&name=" + name; }
+
+				/* ********************************************************** */
+
+				jQuery("#servers").jqGrid(
+				{
+					url: GuidUrl(GetServersChannels, ''),
+					datatype: "json",
+					colNames:['', '', '', '', 'Name'],
+					colModel:[
+						{name:'parent',			index:'parent',			hidden:true},
+						{name:'connected',		index:'connected',		hidden:true},
+						{name:'enabled',		index:'enabled',		width:26,	formatter:FormatServerIcon},
+						{name:'lastmodified',	index:'lastmodified',	hidden:true},
+						{name:'name',			index:'name',			width:200}
+					],
+					onSelectRow: function(id)
+					{
+						if(id && id !== id_server)
+						{
+							search_active = false;
+							var serv = jQuery('#servers').getRowData(id);
+							if(serv && serv.level == 1)
+							{
+								jQuery("#bots").setGridParam({url:GuidUrl(GetChildrenFromObject, id)}).trigger("reloadGrid");
+								id_server = id;
+							}
+						}
+					},
+					treeGrid: true,
+					rowNum:100,
+					rowList:[100, 200, 400, 800],
+					//imgpath: gridimgpath,
+					sortname: 'name',
+					ExpandColumn: 'name',
+					viewrecords: true,
+					//autowidth: true,
+					height: 400,
+					sortorder: "asc",
+					caption:"Servers"
+				});
+
+				/* ********************************************************** */
+
+				jQuery("#bots").jqGrid(
+				{
+					datatype: "json",
+					colNames:['', '', '', '', 'Name', '', '', '', 'Queue Pos', 'Queue Time', 'Speed', '', 'Slots', '', 'Queue', ''],
+					colModel:[
+						{name:'parent',			index:'parent',			hidden:true},
+						{name:'connected',		index:'connected',		hidden:true},
+						{name:'enabled',		index:'enabled',		width:26,	formatter:FormatBotIcon},
+						{name:'lastmodified',	index:'lastmodified',	hidden:true},
+						{name:'name',			index:'name',			width:270},
+						{name:'botstate',		index:'botstate',		hidden:true},
+						{name:'lastmessage',	index:'lastmessage',	hidden:true},
+						{name:'lastcontact',	index:'lastcontact',	hidden:true},
+						{name:'queueposition',	index:'queueposition',	width:40},
+						{name:'queuetime',		index:'queuetime',		width:90},
+						{name:'speedmax',		index:'speedmax',		width:130},
+						{name:'speecurrent',	index:'speecurrent',	hidden:true},
+						{name:'slottotal',		index:'slottotal',		width:130},
+						{name:'slotcurrent',	index:'slotcurrent',	hidden:true},
+						{name:'queuetotal',		index:'queuetotal',		width:130},
+						{name:'queuecurrent',	index:'queuecurrent',	hidden:true}
+					],
+					onSelectRow: function(id)
+					{
+						if(id && id !== id_bot)
+						{
+							search_active = false;
+							var bot = jQuery('#bots').getRowData(id);
+							jQuery("#packets").setGridParam({url:GuidUrl(GetChildrenFromObject, id)}).trigger("reloadGrid");
+							id_bot = id;
+							jQuery('#servers').setSelection(bot.parent, false);
+						}
+					},
+					rowNum:100,
+					rowList:[100, 200, 400, 800],
+					//imgpath: gridimgpath,
+					pager: jQuery('#bot-pager'),
+					sortname: 'name',
+					viewrecords: true,
+					rownumbers: true,
+					//autowidth: true,
+					scrollrows: true,
+					//forceFit: true,
+					//height: '100%',
+					height: 300,
+					sortorder: "asc",
+					caption:"Bots"
+				}).navGrid('#bot-pager',{edit:false,add:false,del:false,search:false});
+
+				/* ********************************************************** */
+
+				jQuery("#packets").jqGrid(
+				{
+					datatype: "json",
+					colNames:['', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Order', 'Lastupdated'],
+					colModel:[
+						{name:'parent',		index:'parent',				hidden:true},
+						{name:'connected',		index:'connected',		hidden:true},
+						{name:'enabled',		index:'enabled',		width:26,	formatter:FormatPacketIcon},
+						{name:'lastmodified',	index:'lastmodified',	hidden:true},
+						{name:'channelguid',	index:'channelguid',	hidden:true},
+						{name:'id',				index:'id',				width:40,	formatter:FormatPacketId, align:"right"},
+						{name:'name',			index:'name',			width:350,	formatter:FormatPacketName},
+						{name:'size',			index:'size',			width:90,	formatter:FormatPacketSize, align:"right"},
+						{name:'speed',			index:'speed',			width:90,	formatter:FormatPacketSpeed},
+						{name:'time',			index:'time',			width:90,	formatter:FormatPacketTime},
+						{name:'order',			index:'order',			hidden:true},
+						{name:'lastupdated',	index:'lastupdated',	width:130}
+					],
+					onSelectRow: function(id)
+					{
+						if(id)
+						{
+							var pack = jQuery('#packets').getRowData(id);
+							if(pack)
+							{
+								var bot = jQuery('#bots').getRowData(pack.parent);
+								if(bot)
+								{
+									jQuery('#bots').setSelection(pack.parent, false);
+									jQuery('#servers').setSelection(bot.parent, false);
+								}
+							}
+						}
+					},
+					ondblClickRow: function(id)
+					{
+						if(id)
+						{
+							var pack = jQuery('#packets').getRowData(id);
+							if(pack)
+							{
+								if(pack.enabled)
+									$.get(GuidUrl(ActivateObject, id));
+								else
+									$.get(GuidUrl(DeactivateObject, id));
+							}
+						}
+					},
+					afterInsertRow: function(rowid, rowdata, rowelem)
+					{
+						if(search_active)
+						{
+							// TODO create color sets for each channel
+						}
+					},
+					rowNum:100,
+					rowList:[100, 200, 400, 800],
+					//imgpath: gridimgpath,
+					pager: jQuery('#packet-pager'),
+					sortname: 'id',
+					viewrecords: true,
+					rownumbers: true,
+					//autowidth: true,
+					height: 300,
+					sortorder: "asc",
+					caption:"Packets"
+				}).navGrid('#packet-pager',{edit:false,add:false,del:false,search:false});
+
+				/* ********************************************************** */
+
+				jQuery("#searches").jqGrid(
+				{
+					datatype: "local",
+					colNames:['', 'Search'],
+					colModel:[
+						{name:'id',		index:'id',		width:26, formatter:FormatSearchIcon},
+						{name:'name',	index:'name',	width:200}
+					],
+					onSelectRow: function(id)
+					{
+						search_active = true;
+						if(id && id !== id_search)
+						{
+							var data = jQuery('#searches').getRowData(id);
+							var url1 = "";
+							var url2 = "";
+							switch(id)
+							{
+								case "1":
+									url1 = NameUrl(SearchBotTime, "0-86400000");
+									url2 = NameUrl(SearchPacketTime, "0-86400000");
+									break;
+								case "2":
+									url1 = NameUrl(SearchBotTime, "0-604800000");
+									url2 = NameUrl(SearchPacketTime, "0-604800000");
+									break;
+								case "3":
+									url1 = "";
+									url2 = "";
+									break;
+								case "4":
+									url1 = "";
+									url2 = "";
+									break;
+								default:
+									url1 = NameUrl(SearchBot, data.name);
+									url2 = NameUrl(SearchPacket, data.name);
+									break;
+							}
+
+							if(url1 != "")
+								jQuery("#bots").setGridParam({url:url1}).trigger("reloadGrid");
+							if(url2 != "")
+								jQuery("#packets").setGridParam({url:url2}).trigger("reloadGrid");
+							id_search = id;
+						}
+					},
+					ondblClickRow: function(id)
+					{
+						if(id)
+						{
+							jQuery('#packets').delRowData(id);
+						}
+					},
+					//imgpath: gridimgpath,
+					sortname: 'name',
+					ExpandColumn : 'name',
+					viewrecords: true,
+					//autowidth: true,
+					height: 'auto',
+					sortorder: "desc",
+					caption:"Search"
+				});
+
+				var id_search_count = 1;
+				var mydata = [
+					{id:"1",name:"ODay Packets"},
+					{id:"2",name:"OWeek Packets"},
+					{id:"3",name:"Downloads"},
+					{id:"4",name:"Enabled Packets"}
+				];
+				for(var i=0;i<=mydata.length;i++)
+				{
+					jQuery("#searches").addRowData(i+1, mydata[i]);
+					id_search_count++;
+				}
+
+				/* ********************************************************** */
+
+				jQuery("#search-button").click( function()
+				{
+					var tbox = jQuery('#search-text');
+					var datarow = {id:id_search_count,name:jQuery('#search-text').val()};
+					var su = jQuery("#searches").addRowData(id_search_count,datarow);
+					tbox.val('');
+				});
+			});
+
+			/* ************************************************************** */
+
+			function FormatIcon(img)
+			{
+				return "<img src='image&" + img + "'>";
+			}
+
+			function FormatServerIcon(cellvalue, options, rowObject)
+			{
+				return FormatIcon((rowObject[6] == 0 ? "Server" : "Channel") + (cellvalue == "False" ? "Disconnected" : (rowObject[2] == "False" ? "" : "Connected")));
+			}
+
+			function FormatBotIcon(cellvalue, options, rowObject)
+			{
+				return FormatIcon("Bot" + (cellvalue == "False" ? "Off" : ""));
+			}
+
+			function FormatPacketIcon(cellvalue, options, rowObject)
+			{
+				var img = "Disabled";
+				if(rowObject.connected)
+				{
+					if (rowObject.speed < 1024 * 50) { img = "DL0"; }
+					else if (rowObject.speed < 1024 * 100) { img = "DL1"; }
+					else if (rowObject.speed < 1024 * 150) { img = "DL2"; }
+					else if (rowObject.speed < 1024 * 200) { img = "DL3"; }
+					else if (rowObject.speed < 1024 * 250) { img = "DL4"; }
+					else { img = "DL5"; }
+				}
+				else if (rowObject.enabled)
+				{
+					if (rowObject.order == 1) { img = "Queued"; }
+					else { img = "New"; }
+				}
+
+				return FormatIcon("Packet" + img);
+			}
+
+			function FormatSearchIcon(cellvalue, options, rowObject)
+			{
+				var str = "";
+				switch(cellvalue)
+				{
+					case "1":
+						str = "ODay";
+						break;
+					case "2":
+						str = "OWeek";
+						break;
+					case "3":
+						str = "BotDL0";
+						break;
+					case "4":
+						str = "Ok";
+						break;
+					default:
+						str = "Search";
+						break;
+				}
+				return FormatIcon(str);
+			}
+
+			/* ************************************************************** */
+
+			function FormatPacketId(cellvalue, options, rowObject)
+			{
+				return "#" + cellvalue;
+			}
+
+			function FormatPacketName(cellvalue, options, rowObject)
+			{
+				// TODO expand some file check and download stuff here
+				return cellvalue;
+			}
+
+			function FormatPacketSize(cellvalue, options, rowObject)
+			{
+				return Size2Human(cellvalue);
+			}
+
+			function FormatPacketTime(cellvalue, options, rowObject)
+			{
+				return Time2Human(cellvalue);
+			}
+
+			function FormatPacketSpeed(cellvalue, options, rowObject)
+			{
+				return Speed2Human(cellvalue);
+			}
+
+			/* ************************************************************** */
+
+			function Size2Human(size)
+			{
+				if (size == 0) { return ""; }
+				if (size < 1024) { return size + " B"; }
+				else if (size < 1024 * 1024) { return (size / 1024).toFixed(2) + " KB"; }
+				else if (size < 1024 * 1024 * 1024) { return (size / (1024 * 1024)).toFixed(2) + " MB"; }
+				else { return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB"; }
+			}
+
+			function Speed2Human(speed)
+			{
+				if (speed == 0) { return ""; }
+				if (speed < 1024) { return speed.toFixed(2) + " B"; }
+				else if (speed < 1024 * 1024) { return (speed / 1024).toFixed(2) + " KB"; }
+				else { return (speed / (1024 * 1024)).toFixed(2) + " MB"; }
+			}
+		
+			function Time2Human(time)
+			{
+				var str = "";
+				if(time < 0) { return str; }
+		
+				var buff = 0;
+		
+				if (time > 86400)
+				{
+					buff = (time / 86400);
+					str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
+					time -= buff * 86400;
+				}
+				//else { str += "00:"; }
+		
+				if (time > 3600)
+				{
+					buff = (time / 3600);
+					str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
+					time -= buff * 3600;
+				}
+				//else { str += "00:"; }
+		
+				if (time > 60)
+				{
+					buff = (time / 60);
+					str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
+					time -= buff * 60;
+				}
+				//else { str += "00:"; }
+		
+				if (time > 0)
+				{
+					buff = time;
+					str += buff >= 10 ? "" + buff : "0" + buff;
+					time -= buff;
+				}
+				//else { str += "00"; }
+		
+				return str;
+			}
+
+		</script>
+		<style type="text/css">
+			/*demo page css*/
+			body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 5px;}
+			.demoHeaders { margin-top: 2em; }
+			#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+			#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+			ul#icons {margin: 0; padding: 0;}
+			ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+			ul#icons span.ui-icon {float: left; margin: 0 4px;}
+		</style>
+	</head>
+	<body>
+
+		<table width="100%">
+			<tr>
+				<td width="250" valign="top">
+				
+					<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="server-pager" class="scroll" style="text-align:center;"></div>
+
+					<br />
+
+					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<input type="text" id="search-text" /><span id='search-button' class="ui-icon ui-icon-search"></span>
+
+				</td>
+				<td valign="top">
+				
+					<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+
+					<br />
+
+					<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="packet-pager" class="scroll" style="text-align:center;"></div>
+					
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>
+
+
