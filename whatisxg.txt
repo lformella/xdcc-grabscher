@@ -29,6 +29,6 @@ Look here.
 
 
 How do i start it?
-Just start the 'XG.Server.Cmd.exe' on one PC and the 'XG.Client.Tcp.Gui.Gtk.exe' on another. The default port and password is '5555' and 'xgisgreat'. You can change it by changing the settings of a connected server of course.
-In the client you have to connect to the server and add irc networks and channels. The bots and packets are generated and updated automatically.
+Just copy the file setings.xml into the folder where the programm 'XG.Server.Cmd.exe' lives. Change the xml file if you want and run the programm on one PC and the 'XG.Client.Tcp.Gui.Gtk.exe' on another. The default port and password is '5555' and 'xgisgreat'.
+On the client side you have to connect to the server and add irc networks and channels. The bots and packets are generated and updated automatically.
 If you double click on a packet, the server will try to download it and keeps you up to date with updated packet informations.
