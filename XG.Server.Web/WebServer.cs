@@ -74,30 +74,38 @@ namespace XG.Server.Web
 		private void OpenServer()
 		{
 			this.myListener = new HttpListener();
+#if !UNSAFE
 			try
 			{
+#endif
 				this.myListener.Prefixes.Add("http://*:" + (Settings.Instance.Port + 1) + "/");
 				this.myListener.Start();
 
 				while (true)
 				{
+#if !UNSAFE
 					try
 					{
+#endif
 						HttpListenerContext client = this.myListener.GetContext();
 						Thread t = new Thread(new ParameterizedThreadStart(OpenClient));
 						t.IsBackground = true;
 						t.Start(client);
+#if !UNSAFE
 					}
 					catch (Exception ex)
 					{
 						this.Log("OpenServer() client: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 					}
+#endif
 				}
+#if !UNSAFE
 			}
 			catch (Exception ex)
 			{
 				this.Log("OpenServer() server: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 			}
+#endif
 		}
 		
 		private void CloseServer()
@@ -387,11 +395,11 @@ namespace XG.Server.Web
 				sb.Append("\t\t\t" + tPack.Id + ",\n");
 				sb.Append("\t\t\t\"" + (tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");
 				sb.Append("\t\t\t" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",\n");
-				sb.Append("\t\t\t" + tPart != null ? tPart.Speed.ToString("0.00") : "0" + ",\n");
-				sb.Append("\t\t\t" + tPart != null ? tPart.TimeMissing.ToString() : "0" + ",\n");
-				sb.Append("\t\t\t" + tPart != null ? tPart.StartSize.ToString() : "0" + ",\n");
-				sb.Append("\t\t\t" + tPart != null ? tPart.StopSize.ToString() : "0" + ",\n");
-				sb.Append("\t\t\t" + tPart != null ? tPart.CurrentSize.ToString() : "0" + ",\n");
+				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.Speed.ToString("0.00"))  + ",\n");
+				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.TimeMissing.ToString()) + ",\n");
+				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.StartSize.ToString()) + ",\n");
+				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",\n");
+				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",\n");
 				sb.Append("\t\t\t" + "0,\n"); // order
 				sb.Append("\t\t\t\"" + tPack.LastUpdated + "\"\n");
 			}

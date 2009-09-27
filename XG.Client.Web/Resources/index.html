@@ -222,7 +222,7 @@
 					colNames:['', 'Search', ''],
 					colModel:[
 						{name:'id',		index:'id',		width:26, formatter:FormatSearchIcon},
-						{name:'name',	index:'name',	width:200},
+						{name:'name',	index:'name',	width:174},
 						{name:'edit',	index:'edit',	width:26, formatter:FormatSearchEditIcon}
 					],
 					onSelectRow: function(id)
@@ -319,12 +319,12 @@
 
 			function FormatServerIcon(cellvalue, options, rowObject)
 			{
-				return FormatIcon((rowObject[6] == 0 ? "Server" : "Channel") + (cellvalue == "False" ? "Disconnected" : (rowObject[2] == "False" ? "" : "Connected")));
+				return FormatIcon((rowObject[6] == 0 ? "Server" : "Channel") + (cellvalue == false ? "Disconnected" : (rowObject[2] == false ? "" : "Connected")));
 			}
 
 			function FormatBotIcon(cellvalue, options, rowObject)
 			{
-				return FormatIcon("Bot" + (cellvalue == "False" ? "Off" : ""));
+				return FormatIcon("Bot" + (cellvalue == false ? "Off" : ""));
 			}
 
 			function FormatPacketIcon(cellvalue, options, rowObject)

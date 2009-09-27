@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using XG.Core;
 
 namespace XG.Server
 {
@@ -39,7 +40,11 @@ namespace XG.Server
 						instance = (Settings)ser.Deserialize(sr);
 						sr.Close();
 					}
-					catch (Exception) { instance = new Settings(); }
+					catch (Exception ex)
+					{
+						XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						instance = new Settings();
+					}
 				}
 				return instance;
 			}
