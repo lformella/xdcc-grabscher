@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
 
 		<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
-		
+
 		<script type="text/javascript">
 			$(function()
 			{
@@ -44,7 +44,7 @@
 				var id_server;
 				var id_bot;
 				var id_search;
-				
+
 				var search_active = false;
 
 				function GuidUrl(id, guid) { return jsonurl + id + "&guid=" + guid; }
@@ -146,7 +146,7 @@
 				jQuery("#packets").jqGrid(
 				{
 					datatype: "json",
-					colNames:['', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Order', 'Lastupdated'],
+					colNames:['', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', 'Order', 'Lastupdated'],
 					colModel:[
 						{name:'parent',		index:'parent',				hidden:true},
 						{name:'connected',		index:'connected',		hidden:true},
@@ -158,6 +158,9 @@
 						{name:'size',			index:'size',			width:90,	formatter:FormatPacketSize, align:"right"},
 						{name:'speed',			index:'speed',			width:90,	formatter:FormatPacketSpeed},
 						{name:'time',			index:'time',			width:90,	formatter:FormatPacketTime},
+						{name:'sizestart',		index:'sizestart',		hidden:true},
+						{name:'sizestop',		index:'sizestop',		hidden:true},
+						{name:'sizecur',		index:'sizecur',		hidden:true},
 						{name:'order',			index:'order',			hidden:true},
 						{name:'lastupdated',	index:'lastupdated',	width:130}
 					],
@@ -216,10 +219,11 @@
 				jQuery("#searches").jqGrid(
 				{
 					datatype: "local",
-					colNames:['', 'Search'],
+					colNames:['', 'Search', ''],
 					colModel:[
 						{name:'id',		index:'id',		width:26, formatter:FormatSearchIcon},
-						{name:'name',	index:'name',	width:200}
+						{name:'name',	index:'name',	width:200},
+						{name:'edit',	index:'edit',	width:26, formatter:FormatSearchEditIcon}
 					],
 					onSelectRow: function(id)
 					{
@@ -265,6 +269,7 @@
 						if(id)
 						{
 							jQuery('#packets').delRowData(id);
+							//id_search_count--;
 						}
 					},
 					//imgpath: gridimgpath,
@@ -279,10 +284,10 @@
 
 				var id_search_count = 1;
 				var mydata = [
-					{id:"1",name:"ODay Packets"},
-					{id:"2",name:"OWeek Packets"},
-					{id:"3",name:"Downloads"},
-					{id:"4",name:"Enabled Packets"}
+					{id:"1",name:"ODay Packets",edit:"0"},
+					{id:"2",name:"OWeek Packets",edit:"0"},
+					{id:"3",name:"Downloads",edit:"0"},
+					{id:"4",name:"Enabled Packets",edit:"0"}
 				];
 				for(var i=0;i<=mydata.length;i++)
 				{
@@ -295,9 +300,13 @@
 				jQuery("#search-button").click( function()
 				{
 					var tbox = jQuery('#search-text');
-					var datarow = {id:id_search_count,name:jQuery('#search-text').val()};
-					var su = jQuery("#searches").addRowData(id_search_count,datarow);
-					tbox.val('');
+					if(tbox.val() != "")
+					{
+						var datarow = {id:id_search_count,name:tbox.val(),edit:"1"};
+						var su = jQuery("#searches").addRowData(id_search_count, datarow);
+						id_search_count++;
+						tbox.val('');
+					}
 				});
 			});
 
@@ -363,6 +372,15 @@
 				return FormatIcon(str);
 			}
 
+			function FormatSearchEditIcon(cellvalue, options, rowObject)
+			{
+				if(cellvalue == 1)
+				{
+					return FormatIcon("No");
+				}
+				return "";
+			}
+
 			/* ************************************************************** */
 
 			function FormatPacketId(cellvalue, options, rowObject)
@@ -409,14 +427,14 @@
 				else if (speed < 1024 * 1024) { return (speed / 1024).toFixed(2) + " KB"; }
 				else { return (speed / (1024 * 1024)).toFixed(2) + " MB"; }
 			}
-		
+
 			function Time2Human(time)
 			{
 				var str = "";
 				if(time < 0) { return str; }
-		
+
 				var buff = 0;
-		
+
 				if (time > 86400)
 				{
 					buff = (time / 86400);
@@ -424,7 +442,7 @@
 					time -= buff * 86400;
 				}
 				//else { str += "00:"; }
-		
+
 				if (time > 3600)
 				{
 					buff = (time / 3600);
@@ -432,7 +450,7 @@
 					time -= buff * 3600;
 				}
 				//else { str += "00:"; }
-		
+
 				if (time > 60)
 				{
 					buff = (time / 60);
@@ -440,7 +458,7 @@
 					time -= buff * 60;
 				}
 				//else { str += "00:"; }
-		
+
 				if (time > 0)
 				{
 					buff = time;
@@ -448,10 +466,11 @@
 					time -= buff;
 				}
 				//else { str += "00"; }
-		
+
 				return str;
 			}
-
+
+
 		</script>
 		<style type="text/css">
 			/*demo page css*/
@@ -469,7 +488,7 @@
 		<table width="100%">
 			<tr>
 				<td width="250" valign="top">
-				
+
 					<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
 					<div id="server-pager" class="scroll" style="text-align:center;"></div>
 
@@ -480,7 +499,7 @@
 
 				</td>
 				<td valign="top">
-				
+
 					<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
 					<div id="bot-pager" class="scroll" style="text-align:center;"></div>
 
@@ -488,7 +507,7 @@
 
 					<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
 					<div id="packet-pager" class="scroll" style="text-align:center;"></div>
-					
+
 				</td>
 			</tr>
 		</table>

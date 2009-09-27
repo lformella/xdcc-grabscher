@@ -381,12 +381,17 @@ namespace XG.Server.Web
 			if(aObject.GetType() == typeof(XGPacket))
 			{
 				XGPacket tPack = (XGPacket)aObject;
+				XGFilePart tPart = this.myRunner.GetFilePart4Packet(tPack);
+
 				sb.Append("\t\t\t\"" + tPack.Parent.Parent.Guid + "\",\n");
 				sb.Append("\t\t\t" + tPack.Id + ",\n");
 				sb.Append("\t\t\t\"" + (tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");
 				sb.Append("\t\t\t" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",\n");
-				sb.Append("\t\t\t" + "0,\n"); // speed
-				sb.Append("\t\t\t" + "0,\n"); // time
+				sb.Append("\t\t\t" + tPart != null ? tPart.Speed.ToString("0.00") : "0" + ",\n");
+				sb.Append("\t\t\t" + tPart != null ? tPart.TimeMissing.ToString() : "0" + ",\n");
+				sb.Append("\t\t\t" + tPart != null ? tPart.StartSize.ToString() : "0" + ",\n");
+				sb.Append("\t\t\t" + tPart != null ? tPart.StopSize.ToString() : "0" + ",\n");
+				sb.Append("\t\t\t" + tPart != null ? tPart.CurrentSize.ToString() : "0" + ",\n");
 				sb.Append("\t\t\t" + "0,\n"); // order
 				sb.Append("\t\t\t\"" + tPack.LastUpdated + "\"\n");
 			}
@@ -405,6 +410,7 @@ namespace XG.Server.Web
 				if(aObject.GetType() == typeof(XGBot))
 				{
 					XGBot tBot = (XGBot)aObject;
+
 					sb.Append("\t\t\t\"" + aObject.Name + "\",\n");
 					sb.Append("\t\t\t\"" + tBot.BotState + "\",\n");
 					sb.Append("\t\t\t" + tBot.QueuePosition + ",\n");
@@ -422,6 +428,7 @@ namespace XG.Server.Web
 				if(aObject.GetType() == typeof(XGServer))
 				{
 					XGServer tServ = (XGServer)aObject;
+
 					sb.Append("\t\t\t\"" + aObject.Name + ":" + tServ.Port + "\",\n");
 					
 					sb.Append("\t\t\t0,\n");					

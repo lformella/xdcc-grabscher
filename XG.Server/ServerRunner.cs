@@ -433,7 +433,7 @@ namespace XG.Server
 			while (true) 
 			{
 				Thread.Sleep ((int)Settings.Instance.BackupDataTime);
-				this.Save (XGHelper.CloneObject (this.myRootObject, false), "./xg.xml");
+				this.Save (XGHelper.CloneObject(this.myRootObject, false), Settings.Instance.DataBinary);
 			}
 		}
 
@@ -770,6 +770,21 @@ namespace XG.Server
 			return this.GetFiles(null);
 		}
 
+		public XGFilePart GetFilePart4Packet(XGPacket aPacket)
+		{
+			foreach (XGFile tFile in this.myFiles)
+			{
+				foreach (XGFilePart tPart in tFile.Children)
+				{
+					if (tPart.Packet == aPacket)
+					{
+						return tPart;
+					}
+				}
+			}
+			return null;
+		}
+
 		public XGObject[] GetFiles(Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
@@ -810,7 +825,7 @@ namespace XG.Server
 
 		public XGObject[] GetChildrenFromObject(Guid aGuid)
 		{
-			return this.GetChildrenFromObject(aGuid);
+			return this.GetChildrenFromObject(aGuid, null);
 		}
 
 		public XGObject[] GetChildrenFromObject(Guid aGuid, Comparison<XGObject> aComp)
