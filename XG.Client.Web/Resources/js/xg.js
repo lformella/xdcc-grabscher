@@ -107,6 +107,7 @@ $(function()
 			}
 		},
 		treeGrid: true,
+		treeGridModel: 'adjacency',
 		rowNum:100,
 		rowList:[100, 200, 400, 800],
 		//imgpath: gridimgpath,

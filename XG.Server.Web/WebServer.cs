@@ -426,9 +426,10 @@ namespace XG.Server.Web
 				{
 					sb.Append("\t\t\t\"" + aObject.Name + "\",\n");													//5
 					
-					sb.Append("\t\t\t1,\n");																		//6		
-					sb.Append("\t\t\ttrue,\n");																		//7	
-					sb.Append("\t\t\ttrue\n");																		//8	
+					sb.Append("\t\t\t1,\n");																		//6
+					sb.Append("\t\t\t\"" + aObject.ParentGuid + "\",\n");											//7
+					sb.Append("\t\t\ttrue,\n");																		//8
+					sb.Append("\t\t\tfalse\n");																		//9
 				}
 				
 				if(aObject.GetType() == typeof(XGBot))
@@ -457,9 +458,10 @@ namespace XG.Server.Web
 
 					sb.Append("\t\t\t\"" + aObject.Name + ":" + tServ.Port + "\",\n");								//5
 					
-					sb.Append("\t\t\t0,\n");																		//6			
-					sb.Append("\t\t\tfalse,\n");																	//7	
-					sb.Append("\t\t\ttrue\n");																		//8	
+					sb.Append("\t\t\t0,\n");																		//6	
+					sb.Append("\t\t\t0,\n");																		//7			
+					sb.Append("\t\t\tfalse,\n");																	//8	
+					sb.Append("\t\t\tfalse\n");																		//9	
 				}
 			}
 			
