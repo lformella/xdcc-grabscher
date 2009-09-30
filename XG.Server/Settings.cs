@@ -86,6 +86,7 @@ namespace XG.Server
 			this.fileHandler = new string[] {""};
 			this.startTCPServer = true;
 			this.startWebServer = false;
+			this.styleWebServer = "blitzer";
 		}
 		
 		#region PRIVATE
@@ -303,6 +304,13 @@ namespace XG.Server
 		{
 			get { return startWebServer; }
 			set { startWebServer = value; }
+		}
+
+		string styleWebServer;
+		public string StyleWebServer 
+		{
+			get { return styleWebServer; }
+			set { styleWebServer = value; }
 		}
 		
 		#endregion

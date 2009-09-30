@@ -68,6 +68,7 @@ namespace XG.Core
 	public enum TCPClientRequest : byte
 	{
 		None,
+		Version,
 
 		AddServer,
 		RemoveServer,

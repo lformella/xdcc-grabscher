@@ -785,6 +785,20 @@ namespace XG.Server
 			return null;
 		}
 
+		public XGFilePart GetFilePart4Bot(XGBot aBot)
+		{
+			XGFilePart tPart = null;
+			foreach (XGPacket tPack in aBot.Children)
+			{
+				tPart = this.GetFilePart4Packet(tPack);
+				if(tPart != null)
+				{
+					break;
+				}
+			}
+			return tPart;
+		}
+
 		public XGObject[] GetFiles(Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();

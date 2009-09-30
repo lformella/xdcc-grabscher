@@ -28,6 +28,22 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
+		public new bool Enabled
+		{
+			get { return base.Enabled; }
+			set
+			{
+				if (value)
+				{
+					if(this.Parent != null && !this.Parent.Enabled)
+					{
+						this.Parent.Enabled = value;
+					}
+				}
+				base.Enabled = value;
+			}
+		}
+
 		private int id = -1;
 		public int Id
 		{
@@ -102,7 +118,7 @@ namespace XG.Core
 			: base()
 		{
 			this.realName = "";
-			this.LastUpdated = DateTime.Now;
+			//this.LastUpdated = DateTime.Now;
 		}
 		public XGPacket(XGBot parent)
 			: this()

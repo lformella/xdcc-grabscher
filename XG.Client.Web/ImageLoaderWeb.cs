@@ -38,11 +38,11 @@ namespace XG.Client.Web
 
 			this.pbServer = this.LoadImage(base.Server);
 			this.pbServerConnected = this.LoadImage(base.ServerConnected);
-			this.pbServerDisconnected = this.LoadImage(base.ServerDisconnected);
+			this.pbServerDisabled = this.LoadImage(base.ServerDisabled);
 
 			this.pbChannel = this.LoadImage(base.Channel);
 			this.pbChannelConnected = this.LoadImage(base.ChannelConnected);
-			this.pbChannelDisconnected = this.LoadImage(base.ChannelDisconnected);
+			this.pbChannelDisabled = this.LoadImage(base.ChannelDisabled);
 
 			this.pbBot = this.LoadImage(base.Bot);
 			this.pbBotOff = this.LoadImage(base.BotOff);
@@ -82,6 +82,13 @@ namespace XG.Client.Web
 			this.pbDisconnect = this.LoadImage(base.Disconnect);
 			this.pbOk = this.LoadImage(base.Ok);
 			this.pbNo = this.LoadImage(base.No);
+			
+			this.pbLanguageDe = this.LoadImage(base.LanguageDe);
+			
+			this.pbExtAudio = this.LoadImage(base.ExtAudio);
+			this.pbExtCompressed = this.LoadImage(base.ExtCompressed);
+			this.pbExtDefault = this.LoadImage(base.ExtDefault);
+			this.pbExtVideo = this.LoadImage(base.ExtVideo);
 		}
 
 		private byte[] LoadImage(Stream aStream)
@@ -113,8 +120,8 @@ namespace XG.Client.Web
 				case "ServerConnected":
 					return this.pbServerConnected;
 
-				case "ServerDisconnected":
-					return this.pbServerDisconnected;					
+				case "ServerDisabled":
+					return this.pbServerDisabled;					
 
 				case "Channel":
 					return this.pbChannel;
@@ -122,8 +129,8 @@ namespace XG.Client.Web
 				case "ChannelConnected":
 					return this.pbChannelConnected;
 
-				case "ChannelDisconnected":
-					return this.pbChannelDisconnected;					
+				case "ChannelDisabled":
+					return this.pbChannelDisabled;					
 
 				case "Bot":
 					return this.pbBot;
@@ -179,7 +186,7 @@ namespace XG.Client.Web
 				case "PacketNew":
 					return this.pbPacketNew;
 
-				case "":
+				case "PacketDL0":
 					return this.pbPacketDL0;
 
 				case "PacketDL1":
@@ -229,6 +236,18 @@ namespace XG.Client.Web
 
 				case "No":
 					return this.pbNo;
+
+				case "LanguageDe":
+					return this.pbLanguageDe;
+
+				case "ExtAudio":
+					return this.pbExtAudio;
+				case "ExtCompressed":
+					return this.pbExtCompressed;
+				case "ExtDefault":
+					return this.pbExtDefault;
+				case "ExtVideo":
+					return this.pbExtVideo;
 			}
 			return null;
 		}
@@ -237,11 +256,11 @@ namespace XG.Client.Web
 
 		private byte[] pbServer;
 		private byte[] pbServerConnected;
-		private byte[] pbServerDisconnected;
+		private byte[] pbServerDisabled;
 
 		private byte[] pbChannel;
 		private byte[] pbChannelConnected;
-		private byte[] pbChannelDisconnected;
+		private byte[] pbChannelDisabled;
 
 		private byte[] pbBot;
 		private byte[] pbBotOff;
@@ -281,5 +300,12 @@ namespace XG.Client.Web
 		private byte[] pbDisconnect;
 		private byte[] pbOk;
 		private byte[] pbNo;
+		
+		private byte[] pbLanguageDe;
+		
+		private byte[] pbExtAudio;
+		private byte[] pbExtCompressed;
+		private byte[] pbExtDefault;
+		private byte[] pbExtVideo;
 	}
 }

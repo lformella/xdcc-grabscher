@@ -372,7 +372,8 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// 
+		/// removes a XGFile
+		/// stops all running part connections and removes the file
 		/// </summary>
 		/// <param name="aFile"></param>
 		public void RemoveFile(XGFile aFile)
@@ -564,6 +565,10 @@ namespace XG.Server
 			return nextSize;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="aObj"></param>
 		public void CheckNextReferenceBytes(object aObj)
 		{
 			PartBytesObject pbo = aObj as PartBytesObject;
@@ -812,7 +817,7 @@ namespace XG.Server
 					tFile.Enabled = true;
 					error = false;
 
-					// TODO check if we should run this here
+					// maybee clear it
 					if(Settings.Instance.ClearReadyDownloads)
 					{
 						this.RemoveFile(tFile);
@@ -839,6 +844,10 @@ namespace XG.Server
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="aFile"></param>
 		public void HandleFile(string aFile)
 		{
 			if(aFile != null && aFile != "")

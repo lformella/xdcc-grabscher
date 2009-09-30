@@ -31,11 +31,11 @@ namespace XG.Client
 
 			this.Server = assembly.GetManifestResourceStream(name + ".Resources.Server.png");
 			this.ServerConnected = assembly.GetManifestResourceStream(name + ".Resources.Server_connected.png");
-			this.ServerDisconnected = assembly.GetManifestResourceStream(name + ".Resources.Server_disabled.png");
+			this.ServerDisabled = assembly.GetManifestResourceStream(name + ".Resources.Server_disabled.png");
 
 			this.Channel = assembly.GetManifestResourceStream(name + ".Resources.Channel.png");
 			this.ChannelConnected = assembly.GetManifestResourceStream(name + ".Resources.Channel_connected.png");
-			this.ChannelDisconnected = assembly.GetManifestResourceStream(name + ".Resources.Channel_disabled.png");
+			this.ChannelDisabled = assembly.GetManifestResourceStream(name + ".Resources.Channel_disabled.png");
 
 			this.Bot = assembly.GetManifestResourceStream(name + ".Resources.Bot.png");
 			this.BotOff = assembly.GetManifestResourceStream(name + ".Resources.Bot_offline.png");
@@ -75,17 +75,24 @@ namespace XG.Client
 			this.Disconnect = assembly.GetManifestResourceStream(name + ".Resources.Disconnect.png");
 			this.Ok = assembly.GetManifestResourceStream(name + ".Resources.Ok.png");
 			this.No = assembly.GetManifestResourceStream(name + ".Resources.No.png");
+			
+			this.LanguageDe = assembly.GetManifestResourceStream(name + ".Resources.language.de.png");
+			
+			this.ExtAudio = assembly.GetManifestResourceStream(name + ".Resources.extension.audio.png");
+			this.ExtCompressed = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed.png");
+			this.ExtDefault = assembly.GetManifestResourceStream(name + ".Resources.extension.default.png");
+			this.ExtVideo = assembly.GetManifestResourceStream(name + ".Resources.extension.video.png");
 		}
 
 		protected Stream Client;
 
 		protected Stream Server;
 		protected Stream ServerConnected;
-		protected Stream ServerDisconnected;
+		protected Stream ServerDisabled;
 
 		protected Stream Channel;
 		protected Stream ChannelConnected;
-		protected Stream ChannelDisconnected;
+		protected Stream ChannelDisabled;
 
 		protected Stream Bot;
 		protected Stream BotOff;
@@ -125,5 +132,12 @@ namespace XG.Client
 		protected Stream Disconnect;
 		protected Stream Ok;
 		protected Stream No;
+		
+		protected Stream LanguageDe;
+		
+		protected Stream ExtAudio;
+		protected Stream ExtCompressed;
+		protected Stream ExtDefault;
+		protected Stream ExtVideo;
 	}
 }

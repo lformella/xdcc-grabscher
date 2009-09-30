@@ -35,11 +35,11 @@ namespace XG.Client.GTK
 
 			this.pbServer = new Gdk.Pixbuf(base.Server);
 			this.pbServerConnected = new Gdk.Pixbuf(base.ServerConnected);
-			this.pbServerDisconnected = new Gdk.Pixbuf(base.ServerDisconnected);
+			this.pbServerDisabled = new Gdk.Pixbuf(base.ServerDisabled);
 
 			this.pbChannel = new Gdk.Pixbuf(base.Channel);
 			this.pbChannelConnected = new Gdk.Pixbuf(base.ChannelConnected);
-			this.pbChannelDisconnected = new Gdk.Pixbuf(base.ChannelDisconnected);
+			this.pbChannelDisabled = new Gdk.Pixbuf(base.ChannelDisabled);
 
 			this.pbBot = new Gdk.Pixbuf(base.Bot);
 			this.pbBotOff = new Gdk.Pixbuf(base.BotOff);
@@ -85,11 +85,11 @@ namespace XG.Client.GTK
 
 		public readonly Gdk.Pixbuf pbServer;
 		public readonly Gdk.Pixbuf pbServerConnected;
-		public readonly Gdk.Pixbuf pbServerDisconnected;
+		public readonly Gdk.Pixbuf pbServerDisabled;
 
 		public readonly Gdk.Pixbuf pbChannel;
 		public readonly Gdk.Pixbuf pbChannelConnected;
-		public readonly Gdk.Pixbuf pbChannelDisconnected;
+		public readonly Gdk.Pixbuf pbChannelDisabled;
 
 		public readonly Gdk.Pixbuf pbBot;
 		public readonly Gdk.Pixbuf pbBotOff;

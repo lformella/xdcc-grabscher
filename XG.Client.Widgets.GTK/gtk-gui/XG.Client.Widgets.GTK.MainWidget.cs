@@ -274,16 +274,12 @@ namespace XG.Client.Widgets.GTK {
             this.vpaned4.Name = "vpaned4";
             this.vpaned4.Position = 220;
             // Container child vpaned4.Gtk.Paned+PanedChild
-            this.botWidget = new XG.Client.Widgets.GTK.BotWidget();
-            this.botWidget.Events = ((Gdk.EventMask)(256));
-            this.botWidget.Name = "botWidget";
+            this.botWidget = null;
             this.vpaned4.Add(this.botWidget);
             Gtk.Paned.PanedChild w47 = ((Gtk.Paned.PanedChild)(this.vpaned4[this.botWidget]));
             w47.Resize = false;
             // Container child vpaned4.Gtk.Paned+PanedChild
-            this.packetWidget = new XG.Client.Widgets.GTK.PacketWidget();
-            this.packetWidget.Events = ((Gdk.EventMask)(256));
-            this.packetWidget.Name = "packetWidget";
+            this.packetWidget = null;
             this.vpaned4.Add(this.packetWidget);
             this.vbox2.Add(this.vpaned4);
             Gtk.Box.BoxChild w49 = ((Gtk.Box.BoxChild)(this.vbox2[this.vpaned4]));

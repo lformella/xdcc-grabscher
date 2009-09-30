@@ -47,7 +47,7 @@ namespace XG.Client.Widgets.GTK
 						if (tObj.Connected) { renderer.Pixbuf = ImageLoaderGTK.Instance.pbServerConnected; }
 						else { renderer.Pixbuf = ImageLoaderGTK.Instance.pbServer; }
 					}
-					else { renderer.Pixbuf = ImageLoaderGTK.Instance.pbServerDisconnected; }
+					else { renderer.Pixbuf = ImageLoaderGTK.Instance.pbServerDisabled; }
 				}
 				else if (tObj.GetType() == typeof(XGChannel))
 				{
@@ -56,7 +56,7 @@ namespace XG.Client.Widgets.GTK
 						if (tObj.Connected) { renderer.Pixbuf = ImageLoaderGTK.Instance.pbChannelConnected; }
 						else { renderer.Pixbuf = ImageLoaderGTK.Instance.pbChannel; }
 					}
-					else { renderer.Pixbuf = ImageLoaderGTK.Instance.pbChannelDisconnected; }
+					else { renderer.Pixbuf = ImageLoaderGTK.Instance.pbChannelDisabled; }
 				}
 			}
 		}

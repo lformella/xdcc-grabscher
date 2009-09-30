@@ -32,12 +32,6 @@
       </itemgroup>
     </signals>
   </object>
-  <object type="XG.Client.Widgets.GTK.PacketWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
-    <itemgroups>
-    </itemgroups>
-    <signals>
-    </signals>
-  </object>
   <object type="XG.Client.Widgets.GTK.SearchWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
     <itemgroups>
       <itemgroup label="ViewWidget Properties">
@@ -65,6 +59,10 @@
       </itemgroup>
     </signals>
   </object>
+  <object type="XG.Client.Widgets.GTK.BotWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
+    <itemgroups />
+    <signals />
+  </object>
   <object type="XG.Client.Widgets.GTK.ServerChannelWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
     <itemgroups>
       <itemgroup label="ViewWidget Properties">
@@ -78,10 +76,8 @@
       </itemgroup>
     </signals>
   </object>
-  <object type="XG.Client.Widgets.GTK.BotWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
-    <itemgroups>
-    </itemgroups>
-    <signals>
-    </signals>
+  <object type="XG.Client.Widgets.GTK.PacketWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
+    <itemgroups />
+    <signals />
   </object>
 </objects>
