@@ -138,7 +138,10 @@ namespace XG.Server.TCP
 			{
 				string pass = tReader.ReadString();
 				// nice try
-				if (pass != Settings.Instance.Password) { throw new Exception("Password wrong!"); }
+				if (pass != Settings.Instance.Password)
+				{
+					throw new Exception("Password wrong!");
+				}
 			}
 			catch (Exception ex)
 			{

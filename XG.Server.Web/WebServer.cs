@@ -130,7 +130,7 @@ namespace XG.Server.Web
 			Dictionary<string, string> tDic = new Dictionary<string, string>();
 
 			string str = client.Request.RawUrl;
-			this.Log("OpenClient() " + str, LogLevel.Notice);
+			this.Log("OpenClient() " + str, LogLevel.Traffic);
 
 #if !UNSAFE
 			try
@@ -149,7 +149,10 @@ namespace XG.Server.Web
 					try
 					{
 						// nice try
-						if (tDic["password"] != Settings.Instance.Password) { throw new Exception("Password wrong!"); }
+						if (!tDic.ContainsKey("password") || tDic["password"] != Settings.Instance.Password)
+						{
+							throw new Exception("Password wrong!");
+						}
 					}
 					catch (Exception ex)
 					{

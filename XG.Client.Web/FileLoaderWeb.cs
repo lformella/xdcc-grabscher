@@ -56,7 +56,7 @@ namespace XG.Client.Web
 				{
 #if DEBUG
 					return File.OpenText("../../../XG.Client.Web/Resources" +  aFile).ReadToEnd();
-#elif		
+#else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
 					string name = assembly.GetName().Name + ".Resources" +  aFile.Replace('/', '.');
 					this.myDicStr.Add(aFile, new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd());
@@ -66,9 +66,9 @@ namespace XG.Client.Web
 				catch(Exception ex)
 				{
 					XGHelper.Log("FileLoaderWeb.LoadFile(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					return "";
 				}
 			}
+			return "";
 		}
 
 		public byte[] LoadImage(string aFile)
