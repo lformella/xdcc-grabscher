@@ -451,7 +451,7 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t" + tBot.InfoSpeedMax + ",\n");												//13
 					sb.Append("\t\t\t" + tBot.InfoQueueCurrent + ",\n");											//14
 					sb.Append("\t\t\t" + tBot.InfoQueueTotal + ",\n");												//15
-					sb.Append("\t\t\t\"" + tBot.LastMessage + "\",\n");												//16
+					sb.Append("\t\t\t\"" + tBot.LastMessage.Replace('"', '\'') + "\",\n");							//16
 					sb.Append("\t\t\t\"" + tBot.LastContact + "\"\n");												//17
 				}
 				

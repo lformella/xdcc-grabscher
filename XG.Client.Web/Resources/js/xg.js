@@ -462,7 +462,7 @@ function FormatServerIcon(cellvalue, options, rowObject)
 	else { str += "Channel"; }
 
 	if(!rowObject[2]) { str += "Disabled"; }
-	else if(!rowObject[1]) { str += "Connected"; }
+	else if(rowObject[1]) { str += "Connected"; }
 
 	return FormatIcon(str) + " " + rowObject[5];
 }
@@ -476,7 +476,13 @@ function FormatBotIcon(cellvalue, options, rowObject)
 	{
 		switch(rowObject[6])
 		{
-			case "Idle": str += ""; break;
+			case "Idle": 
+				if(rowObject[11] > 0)
+				{
+					if(rowObject[10] > 0) str += "Free";
+					else if(rowObject[10] == 0) str += "Full";
+				}
+				break;
 			case "Active": str += Speed2Image(rowObject[7]); break;
 			case "Waiting": str += "Queued"; break;
 		}

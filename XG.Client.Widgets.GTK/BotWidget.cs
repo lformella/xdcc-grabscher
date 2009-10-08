@@ -186,8 +186,11 @@ namespace XG.Client.Widgets.GTK
 					else { pb = ImageLoaderGTK.Instance.pbBotDL0; }
 				}
 				else if (tBot.BotState == BotState.Waiting) { pb = ImageLoaderGTK.Instance.pbBotQueued; }
-				else if (tBot.InfoSlotTotal > 0 && tBot.InfoSlotCurrent > 0) { pb = ImageLoaderGTK.Instance.pbBotFree; }
-				else if (tBot.InfoSlotTotal > 0 && tBot.InfoSlotCurrent == 0) { pb = ImageLoaderGTK.Instance.pbBotFull; }
+				else if (tBot.InfoSlotTotal > 0)
+				{
+					if(tBot.InfoSlotCurrent > 0) { pb = ImageLoaderGTK.Instance.pbBotFree; }
+					else if (tBot.InfoSlotCurrent == 0) { pb = ImageLoaderGTK.Instance.pbBotFull; }
+				}
 				renderer.Pixbuf = pb;
 			}
 		}

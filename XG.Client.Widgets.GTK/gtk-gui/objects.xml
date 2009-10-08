@@ -60,8 +60,10 @@
     </signals>
   </object>
   <object type="XG.Client.Widgets.GTK.BotWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
-    <itemgroups />
-    <signals />
+    <itemgroups>
+    </itemgroups>
+    <signals>
+    </signals>
   </object>
   <object type="XG.Client.Widgets.GTK.ServerChannelWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
     <itemgroups>
@@ -77,7 +79,9 @@
     </signals>
   </object>
   <object type="XG.Client.Widgets.GTK.PacketWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
-    <itemgroups />
-    <signals />
+    <itemgroups>
+    </itemgroups>
+    <signals>
+    </signals>
   </object>
 </objects>
