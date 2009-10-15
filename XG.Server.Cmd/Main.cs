@@ -1,10 +1,10 @@
 //  
-//  Copyright (C) 2009 Lars Formella <ich@larsformella.de>
+//  Copyright(C) 2009 Lars Formella <ich@larsformella.de>
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+// (at your option) any later version.
 // 
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,26 +25,17 @@ namespace XG.Server.Cmd
 {
 	class MainClass
 	{
-		public static void Main (string[] args)
+		public static void Main(string[] args)
 		{
 			try
 			{
-				ServerRunner runner = new ServerRunner ();
-				runner.Start ();
-				
-				if (Settings.Instance.StartTCPServer)
-				{
-					TCPServer tcp = new TCPServer ();
-					tcp.Start (runner);
-				}
-				
-				if (Settings.Instance.StartWebServer)
-				{
-					WebServer web = new WebServer ();
-					web.Start (runner);
-				}
+				ServerRunner runner = new ServerRunner();
+				runner.Start();
+
+				if(Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
+				if(Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 				// die bitch, but stay there
 				Console.WriteLine(ex.ToString());

@@ -1,20 +1,20 @@
-<Project releaseVersion="" name="XG.Client.TCP" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="XG.Client.TCP" fileversion="2.0" language="C#" releaseVersion="" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.TCP" />
       <Build debugmode="True" target="Library" />
-      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assemblyKeyFile="." assembly="XG.Client.TCP" />
       <Build debugmode="False" target="Library" />
-      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File subtype="Code" buildaction="Compile" name="TCPClient.cs" />
+    <File name="TCPClient.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />

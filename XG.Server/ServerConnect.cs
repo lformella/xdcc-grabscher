@@ -24,16 +24,24 @@ using XG.Core;
 
 namespace XG.Server
 {
+	/// <summary>
+	/// This class describes the connection to a single irc server
+	/// it does the following things
+	/// - parsing all messages comming from the server, channel and bot
+	/// - creating and removing bots on the fly
+	/// - creating and removing packets on the fly (if the bot posts them into the channel)
+	/// - communicate with the bot to handle downloads
+	/// </summary>	
 	public class ServerConnect
 	{
 		private ServerHandler myParent;
 
 		private XGServer myServer;
 		private Connection myCon;
-		private Thread myWatchDogThread;
 
 		private bool myIsRunning = false;
-		private Thread myTimerThread;
+		public bool IsRunning { get { return this.myIsRunning; } }
+
 		private Dictionary<XGObject, DateTime> myTimedObjects;
 		private Dictionary<string, DateTime> myLatestPacketRequests;
 
@@ -91,15 +99,9 @@ namespace XG.Server
 				}
 			}
 
-			this.myWatchDogThread = new Thread(new ThreadStart(RunBotWatchdog));
-			this.myWatchDogThread.Start();
-
 			this.myTimedObjects = new Dictionary<XGObject, DateTime>();
 			this.myLatestPacketRequests = new Dictionary<string, DateTime>();
 			this.myIsRunning = true;
-
-			this.myTimerThread = new Thread(new ThreadStart(RunTimerThread));
-			this.myTimerThread.Start();
 
 			this.ConnectedEvent(this.myServer);
 		}
@@ -116,8 +118,8 @@ namespace XG.Server
 			this.myServer.Connected = false;
 			this.ObjectChange(this.myServer);
 
-			if (this.myWatchDogThread != null) { this.myWatchDogThread.Abort(); }
-			if (this.myTimerThread != null) { this.myTimerThread.Abort(); }
+			//if (this.myWatchDogThread != null) { this.myWatchDogThread.Abort(); }
+			//if (this.myTimerThread != null) { this.myTimerThread.Abort(); }
 
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);
 			this.myCon.DisconnectedEvent -= new EmptyDelegate(con_DisconnectedEventHandler);
@@ -147,7 +149,7 @@ namespace XG.Server
 
 		#endregion
 
-		#region DATA
+		#region DATA HANDLING
 
 		private void con_DataReceivedEventHandler(string aData)
 		{
@@ -163,7 +165,7 @@ namespace XG.Server
 
 					string tUserName = tCommandList[0].Split('!')[0];
 					string tComCodeStr = tCommandList[1];
-					string tChannelName = tCommandList[2].ToLower();
+					string tChannelName = tCommandList[2];
 
 					XGChannel tChan = this.myServer[tChannelName];
 					XGBot tBot = this.myServer.getBot(tUserName);
@@ -236,7 +238,7 @@ namespace XG.Server
 										this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
 										tPacket.Enabled = false;
 										this.ObjectChange(tPacket);
-										this.CreatTimer(tBot, Settings.Instance.CommandWaitTime);
+										this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
 									}
 									else if (tChunk > 0)
 									{
@@ -304,7 +306,7 @@ namespace XG.Server
 									if (tBot.InfoSlotCurrent > 0 && tBot.BotState == BotState.Waiting)
 									{
 										tBot.BotState = BotState.Idle;
-										this.CreatTimer(tBot, 0);
+										this.CreateTimer(tBot, 0);
 									}
 								}
 							}
@@ -512,7 +514,7 @@ namespace XG.Server
 									{
 										tBot.BotState = BotState.Idle;
 									}
-									this.CreatTimer(tBot, Settings.Instance.CommandWaitTime);
+									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
 								}
 							}
 
@@ -596,7 +598,7 @@ namespace XG.Server
 										{
 											tBot.BotState = BotState.Idle;
 										}
-										this.CreatTimer(tBot, (valueInt + 2) * 1000);
+										this.CreateTimer(tBot, (valueInt + 2) * 1000);
 									}
 								}
 							}
@@ -619,7 +621,7 @@ namespace XG.Server
 									tBot.InfoQueueCurrent = 0;
 									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
 
-									this.CreatTimer(tBot, Settings.Instance.BotWaitTime);
+									this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
 								}
 							}
 
@@ -657,7 +659,7 @@ namespace XG.Server
 
 									if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
 									{
-										this.CreatTimer(tBot, (valueInt * 60 + 1) * 1000);
+										this.CreateTimer(tBot, (valueInt * 60 + 1) * 1000);
 									}
 								}
 							}
@@ -676,7 +678,7 @@ namespace XG.Server
 									{
 										tBot.BotState = BotState.Idle;
 									}
-									this.CreatTimer(tBot, Settings.Instance.BotWaitTime);
+									this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
 								}
 							}
 
@@ -712,7 +714,7 @@ namespace XG.Server
 										{
 											tBot.BotState = BotState.Idle;
 										}
-										this.CreatTimer(tBot, Settings.Instance.CommandWaitTime);
+										this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
 										this.Log("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info, LogLevel.Error);
 									}
 								}
@@ -777,7 +779,7 @@ namespace XG.Server
 									{
 										tBot.BotState = BotState.Idle;
 									}
-									this.CreatTimer(tBot, Settings.Instance.CommandWaitTime);
+									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
 								}
 							}
 
@@ -796,7 +798,7 @@ namespace XG.Server
 										tBot.BotState = BotState.Idle;
 									}
 									tBot.QueuePosition = 0;
-									this.CreatTimer(tBot, Settings.Instance.CommandWaitTime);
+									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
 								}
 							}
 
@@ -826,7 +828,7 @@ namespace XG.Server
 										{
 											time += valueInt;
 										}
-										this.CreatTimer(tBot, time * 1000, true);
+										this.CreateTimer(tBot, time * 1000, true);
 									}
 								}
 							}
@@ -893,7 +895,7 @@ namespace XG.Server
 
 					else if (tComCodeStr == "JOIN")
 					{
-						tChannelName = tData.ToLower();
+						tChannelName = tData;
 						tChan = myServer[tChannelName];
 						if (tChan != null)
 						{
@@ -1007,7 +1009,7 @@ namespace XG.Server
 
 
 								case 353: // RPL_NAMREPLY
-									tChannelName = tCommandList[4].ToLower();
+									tChannelName = tCommandList[4];
 									tChan = myServer[tChannelName];
 									if (tChan != null)
 									{
@@ -1033,7 +1035,7 @@ namespace XG.Server
 
 
 								case 366: // RPL_ENDOFNAMES
-									tChannelName = tCommandList[3].ToLower();
+									tChannelName = tCommandList[3];
 									tChan = myServer[tChannelName];
 									if (tChan != null)
 									{
@@ -1058,7 +1060,7 @@ namespace XG.Server
 								case 477: // ERR_NOCHANMODES
 									this.Log("con_DataReceived() registering myself", LogLevel.Notice);
 									this.myCon.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-									this.CreatTimer(tChan, Settings.Instance.ChannelWaitTime);
+									this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime);
 									break;
 
 
@@ -1067,13 +1069,13 @@ namespace XG.Server
 								case 474: // ERR_BANNEDFROMCHAN
 								case 475: // ERR_BADCHANNELKEY
 								case 485: // ERR_UNIQOPPRIVSNEEDED
-									tChannelName = tCommandList[3].ToLower();
+									tChannelName = tCommandList[3];
 									tChan = myServer[tChannelName];
 									if (tChan != null)
 									{
 										tChan.Connected = false;
 										this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
-										this.CreatTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
+										this.CreateTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
 									}
 									break;
 							}
@@ -1156,7 +1158,7 @@ namespace XG.Server
 								if(time > 0)
 								{
 									this.Log("RequestFromBot(" + tBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms", LogLevel.Warning);
-									this.CreatTimer(tBot, (long)time + 1000);
+									this.CreateTimer(tBot, (long)time + 1000);
 									return;
 								}
 							}
@@ -1171,7 +1173,7 @@ namespace XG.Server
 							}
 
 							// create a timer to re request if the bot didnt recognized the privmsg
-							this.CreatTimer(tBot, Settings.Instance.BotWaitTime);
+							this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
 							break;
 						}
 					}
@@ -1185,7 +1187,7 @@ namespace XG.Server
 			{
 				this.Log("UnregisterFromBot(" + aBot.Name + ")", LogLevel.Notice);
 				this.myCon.SendData("PRIVMSG " + aBot.Name + " :XDCC REMOVE");
-				this.CreatTimer(aBot, Settings.Instance.CommandWaitTime);
+				this.CreateTimer(aBot, Settings.Instance.CommandWaitTime);
 			}
 		}
 
@@ -1287,65 +1289,30 @@ namespace XG.Server
 
 		#endregion
 
-		#region BOT WATCHDOG
-
-		private void RunBotWatchdog()
-		{
-			if (this.myCon != null && this.myCon.IsConnected)
-			{
-				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
-				int a = 0;
-
-				foreach (XGChannel tChan in this.myServer.Children)
-				{
-					if (tChan.Connected)
-					{
-						foreach (XGBot tBot in tChan.Children)
-						{
-							if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.getOldestActivePacket() != null)
-							{
-								a++;
-								tChan.removeBot(tBot);
-								this.ObjectRemovedEvent(tChan, tBot);
-							}
-						}
-					}
-				}
-				if(a > 0) { this.Log("RunBotWatchdog() removed " + a + " offline bot(s)", LogLevel.Notice); }
-			}
-		}
-
-		#endregion
-
 		#region TIMER
 
-		private void RunTimerThread()
+		public void TriggerTimerRun()
 		{
-			while (this.myIsRunning)
+			List<XGObject> remove = new List<XGObject>();
+			foreach (KeyValuePair<XGObject, DateTime> kvp in this.myTimedObjects)
 			{
-				List<XGObject> remove = new List<XGObject>();
-				foreach (KeyValuePair<XGObject, DateTime> kvp in this.myTimedObjects)
-				{
-					DateTime time = kvp.Value;
-					if ((time - DateTime.Now).TotalMilliseconds < 0) { remove.Add(kvp.Key); }
-				}
-				foreach (XGObject obj in remove)
-				{
-					this.myTimedObjects.Remove(obj);
+				DateTime time = kvp.Value;
+				if ((time - DateTime.Now).TotalMilliseconds < 0) { remove.Add(kvp.Key); }
+			}
+			foreach (XGObject obj in remove)
+			{
+				this.myTimedObjects.Remove(obj);
 
-					if (obj.GetType() == typeof(XGChannel)) { this.JoinChannel(obj as XGChannel); }
-					else if (obj.GetType() == typeof(XGBot)) { this.RequestFromBot(obj as XGBot); }
-				}
-
-				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
+				if (obj.GetType() == typeof(XGChannel)) { this.JoinChannel(obj as XGChannel); }
+				else if (obj.GetType() == typeof(XGBot)) { this.RequestFromBot(obj as XGBot); }
 			}
 		}
 
-		public void CreatTimer(XGObject aObject, Int64 aTime)
+		public void CreateTimer(XGObject aObject, Int64 aTime)
 		{
-			this.CreatTimer(aObject, aTime, false);
+			this.CreateTimer(aObject, aTime, false);
 		}
-		public void CreatTimer(XGObject aObject, Int64 aTime, bool aOverride)
+		private void CreateTimer(XGObject aObject, Int64 aTime, bool aOverride)
 		{
 			if(aOverride && this.myTimedObjects.ContainsKey(aObject))
 			{

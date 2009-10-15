@@ -28,6 +28,14 @@ namespace XG.Server
 	public delegate void DownloadDelegate(XGPacket aPack, Int64 aChunk, IPAddress aIp, int aPort);
 	public delegate void PacketBotConnectDelegate(XGPacket aPack, BotConnect aCon);
 
+	/// <summary>
+	/// This class describes a irc server connection handler
+	/// it does the following things
+	/// - connect to or disconnect from an irc server
+	/// - handling of global bot downloads
+	/// - splitting and merging the files to download
+	/// - timering some clean up tasks
+	/// </summary>
 	public class ServerHandler
 	{
 		private Dictionary<XGServer, ServerConnect> myServers;
@@ -55,6 +63,10 @@ namespace XG.Server
 			// create my stuff if its not there
 			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
 			new DirectoryInfo(Settings.Instance.TempPath).Create();
+			
+			// start the timed tasks
+			new Thread(new ThreadStart(RunBotWatchdog)).Start();
+			new Thread(new ThreadStart(RunTimer)).Start();
 		}
 
 		#endregion
@@ -68,27 +80,26 @@ namespace XG.Server
 		public void ConnectServer(object aServer)
 		{
 			XGServer tServer = aServer as XGServer;
-			new Thread(delegate()
+			
+			if (!this.myServers.ContainsKey(tServer))
 			{
-				if (!this.myServers.ContainsKey(tServer))
-				{
-					ServerConnect con = new ServerConnect(this);
+				ServerConnect con = new ServerConnect(this);
+				this.myServers.Add(tServer, con);
 
-					con.NewDownloadEvent += new DownloadDelegate(server_NewDownloadEventHandler);
-					con.DisconnectedEvent += new ServerDelegate(server_DisconnectedEventHandler);
-					con.ConnectedEvent += new ServerDelegate(server_ConnectedEventHandler);
-					con.ParsingErrorEvent += new DataTextDelegate(server_ParsingErrorEventHandler);
+				con.NewDownloadEvent += new DownloadDelegate(server_NewDownloadEventHandler);
+				con.DisconnectedEvent += new ServerDelegate(server_DisconnectedEventHandler);
+				con.ConnectedEvent += new ServerDelegate(server_ConnectedEventHandler);
+				con.ParsingErrorEvent += new DataTextDelegate(server_ParsingErrorEventHandler);
 
-					con.ObjectAddedEvent += new ObjectObjectDelegate(_ObjectAddedEventHandler);
-					con.ObjectChangedEvent += new ObjectDelegate(_ObjectChangedEventHandler);
-					con.ObjectRemovedEvent += new ObjectObjectDelegate(_ObjectRemovedEventHandler);
-
-					this.myServers.Add(tServer, con);
-					con.Connect(tServer);
-				}
-			}).Start();
+				con.ObjectAddedEvent += new ObjectObjectDelegate(_ObjectAddedEventHandler);
+				con.ObjectChangedEvent += new ObjectDelegate(_ObjectChangedEventHandler);
+				con.ObjectRemovedEvent += new ObjectObjectDelegate(_ObjectRemovedEventHandler);
+				
+				// start a new thread wich connects to the given server
+				new Thread(delegate() { con.Connect(tServer); }).Start();
+			}
 		}
-		void server_ConnectedEventHandler(XGServer aServer)
+		private void server_ConnectedEventHandler(XGServer aServer)
 		{
 		}
 
@@ -110,21 +121,38 @@ namespace XG.Server
 			{
 				ServerConnect con = this.myServers[aServer];
 
-				con.NewDownloadEvent -= new DownloadDelegate(server_NewDownloadEventHandler);
-				con.DisconnectedEvent -= new ServerDelegate(server_DisconnectedEventHandler);
-				con.ConnectedEvent -= new ServerDelegate(server_ConnectedEventHandler);
-				con.ParsingErrorEvent -= new DataTextDelegate(server_ParsingErrorEventHandler);
-
-				con.ObjectAddedEvent -= new ObjectObjectDelegate(_ObjectAddedEventHandler);
-				con.ObjectChangedEvent -= new ObjectDelegate(_ObjectChangedEventHandler);
-				con.ObjectRemovedEvent -= new ObjectObjectDelegate(_ObjectRemovedEventHandler);
-
-				this.myServers.Remove(aServer);
+				if (!aServer.Enabled)
+				{
+					con.NewDownloadEvent -= new DownloadDelegate(server_NewDownloadEventHandler);
+					con.DisconnectedEvent -= new ServerDelegate(server_DisconnectedEventHandler);
+					con.ConnectedEvent -= new ServerDelegate(server_ConnectedEventHandler);
+					con.ParsingErrorEvent -= new DataTextDelegate(server_ParsingErrorEventHandler);
+	
+					con.ObjectAddedEvent -= new ObjectObjectDelegate(_ObjectAddedEventHandler);
+					con.ObjectChangedEvent -= new ObjectDelegate(_ObjectChangedEventHandler);
+					con.ObjectRemovedEvent -= new ObjectObjectDelegate(_ObjectRemovedEventHandler);
+	
+					this.myServers.Remove(aServer);
+				}
+				else
+				{
+					new Timer(new TimerCallback(this.ReconnectServer), aServer, Settings.Instance.ReconnectWaitTime, System.Threading.Timeout.Infinite);
+				}
 			}
+		}
+		
+		private void ReconnectServer(object aServer)
+		{
+			XGServer tServer = aServer as XGServer;
 
-			if (aServer.Enabled)
+			if (this.myServers.ContainsKey(tServer))
 			{
-				new Timer(new TimerCallback(this.ConnectServer), aServer, Settings.Instance.ReconnectWaitTime, System.Threading.Timeout.Infinite);
+				ServerConnect con = this.myServers[tServer];
+
+				if (tServer.Enabled)
+				{
+					con.Connect(tServer);
+				}
 			}
 		}
 
@@ -188,7 +216,7 @@ namespace XG.Server
 				try
 				{
 					ServerConnect sc = this.myServers[aPacket.Parent.Parent.Parent];
-					sc.CreatTimer(aPacket.Parent, Settings.Instance.CommandWaitTime);
+					sc.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime);
 				}
 				catch (Exception ex)
 				{
@@ -899,6 +927,67 @@ namespace XG.Server
 
 		#endregion
 
+		#region TIMER TASKS
+
+		#region BOT WATCHDOG
+
+		private void RunBotWatchdog()
+		{
+			while(true)
+			{
+				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
+				
+				int a = 0;
+				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
+				{
+					if (kvp.Value.IsRunning)
+					{
+						foreach (XGChannel tChan in kvp.Key.Children)
+						{
+							if (tChan.Connected)
+							{
+								foreach (XGBot tBot in tChan.Children)
+								{
+									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.getOldestActivePacket() == null)
+									{
+										a++;
+										tChan.removeBot(tBot);
+										this.ObjectRemovedEvent(tChan, tBot);
+									}
+								}
+							}
+						}
+					}
+				}
+				if(a > 0) { this.Log("RunBotWatchdog() removed " + a + " offline bot(s)", LogLevel.Notice); }
+			}
+		}
+		
+		#endregion
+
+		#region TIMER
+		
+		private void RunTimer()
+		{
+			while (true)
+			{
+				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
+				{
+					ServerConnect sc = kvp.Value;
+					if (sc.IsRunning)
+					{
+						sc.TriggerTimerRun();
+					}
+				}
+
+				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
+			}
+		}
+
+		#endregion
+		
+		#endregion
+		
 		#region LOG
 
 		private void Log(string aData, LogLevel aLevel)

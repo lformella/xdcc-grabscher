@@ -48,11 +48,9 @@ namespace XG.Core
 		{
 			get
 			{
-				name = name.ToLower();
 				foreach (XGBot bot in base.Children)
 				{
-					//if (bot.Name.ToLower() == name) { return bot; }
-					if (bot.Name.ToLower().CompareTo(name) == 0) { return bot; }
+					if (bot.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) { return bot; }
 				}
 				return null;
 			}

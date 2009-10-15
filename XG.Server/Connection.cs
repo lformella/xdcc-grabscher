@@ -170,9 +170,10 @@ namespace XG.Server
 				{
 					this.Log("Connect(" + aName + ", " + aPort + (aMaxData > 0 ? ", " + aMaxData : "") + ") Exception: " + XGHelper.GetExceptionMessage(ex), LogLevel.Error);
 				}*/
+
+				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") end", LogLevel.Notice);
 			}
 
-			this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") end", LogLevel.Notice);
 			this.DisconnectedEvent();
 		}
 

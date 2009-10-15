@@ -24,6 +24,13 @@ using XG.Core;
 
 namespace XG.Server
 {
+	/// <summary>
+	/// This class holds all information about the files and the irc objects
+	/// it does the following things
+	/// - loading and saving the object to a file
+	/// - calling the ServerHandler to connect to or disconnect from an irc server
+	/// - communicate with XG.Server.* plugins, meaning the client
+	/// </summary>
 	public class ServerRunner
 	{
 		private ServerHandler myServerHandler;
@@ -272,6 +279,15 @@ namespace XG.Server
 
 		#endregion
 
+		#region SERVER PLUGIN
+		
+		public void AddServerPlugin(IServerPlugin aPlugin)
+		{
+			aPlugin.Start(this);
+		}
+		
+		#endregion
+
 		#region EVENTS
 
 		/// <summary>
@@ -325,6 +341,7 @@ namespace XG.Server
 			// we are just interested in files or fileparts
 			if(aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
 			{
+				// to save em now
 				this.SaveFileDataNow();
 			}
 			
@@ -341,7 +358,7 @@ namespace XG.Server
 			{
 				this.SaveFileDataNow();
 			}
-			if(aObj.GetType() == typeof(XGFilePart))
+			else if(aObj.GetType() == typeof(XGFilePart))
 			{
 				XGFilePart part = aObj as XGFilePart;
 				// if this change is lost, the data might be corrupt, so save it NOW
@@ -369,6 +386,7 @@ namespace XG.Server
 			// we are just interested in files or fileparts
 			if(aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
 			{
+				// to save em now
 				this.SaveFileDataNow();
 			}
 			

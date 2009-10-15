@@ -67,10 +67,9 @@ namespace XG.Core
 		{
 			get
 			{
-				name = name.ToLower();
 				foreach (XGChannel chan in base.Children)
 				{
-					if (chan.Name.ToLower() == name) { return chan; }
+					if (chan.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) { return chan; }
 				}
 				return null;
 			}
@@ -99,14 +98,13 @@ namespace XG.Core
 		}
 		public void addChannel(string aChannel)
 		{
-			if (!aChannel.StartsWith("#"))
-			{
-				aChannel = "#" + aChannel;
-			}
+			aChannel = aChannel.Trim().ToLower();
+
+			if (!aChannel.StartsWith("#")) { aChannel = "#" + aChannel; }
 			if (this[aChannel] == null)
 			{
 				XGChannel tChannel = new XGChannel();
-				tChannel.Name = aChannel.Trim().ToLower();
+				tChannel.Name = aChannel;
 				tChannel.Enabled = true;
 				this.addChannel(tChannel);
 			}
