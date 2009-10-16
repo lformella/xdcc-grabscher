@@ -1,0 +1,87 @@
+<objects attr-sync="on">
+  <object type="XG.Client.Widgets.GTK.MainWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
+    <itemgroups />
+    <signals>
+      <itemgroup label="MainWidget Signals">
+        <signal name="GetEnabledPacketsEvent" />
+        <signal name="SearchPacketEvent" />
+        <signal name="SearchPacketTimeEvent" />
+        <signal name="ObjectFlippedEvent" />
+        <signal name="GetChildrenEvent" />
+        <signal name="ServerAddedEvent" />
+        <signal name="ChannelAddedEvent" />
+        <signal name="ServerRemovedEvent" />
+        <signal name="ChannelRemovedEvent" />
+      </itemgroup>
+    </signals>
+  </object>
+  <object type="XG.Client.Widgets.GTK.StatusWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
+    <itemgroups />
+    <signals />
+  </object>
+  <object type="XG.Client.Widgets.GTK.FileWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
+    <itemgroups>
+      <itemgroup label="ViewWidget Properties">
+        <property name="ShowOfflineObjects" />
+      </itemgroup>
+    </itemgroups>
+    <signals>
+      <itemgroup label="ViewWidget Signals">
+        <signal name="ObjectClickedEvent" />
+        <signal name="ObjectDoubleClickedEvent" />
+      </itemgroup>
+    </signals>
+  </object>
+  <object type="XG.Client.Widgets.GTK.SearchWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
+    <itemgroups>
+      <itemgroup label="ViewWidget Properties">
+        <property name="ShowOfflineObjects" />
+      </itemgroup>
+    </itemgroups>
+    <signals>
+      <itemgroup label="SearchWidget Signals">
+        <signal name="FilterActivated" />
+        <signal name="ObjectClickedEvent" />
+        <signal name="ObjectDoubleClickedEvent" />
+      </itemgroup>
+    </signals>
+  </object>
+  <object type="XG.Client.Widgets.GTK.PartableWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
+    <itemgroups>
+      <itemgroup label="ViewWidget Properties">
+        <property name="ShowOfflineObjects" />
+      </itemgroup>
+    </itemgroups>
+    <signals>
+      <itemgroup label="ViewWidget Signals">
+        <signal name="ObjectClickedEvent" />
+        <signal name="ObjectDoubleClickedEvent" />
+      </itemgroup>
+    </signals>
+  </object>
+  <object type="XG.Client.Widgets.GTK.BotWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
+    <itemgroups>
+    </itemgroups>
+    <signals>
+    </signals>
+  </object>
+  <object type="XG.Client.Widgets.GTK.ServerChannelWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
+    <itemgroups>
+      <itemgroup label="ViewWidget Properties">
+        <property name="ShowOfflineObjects" />
+      </itemgroup>
+    </itemgroups>
+    <signals>
+      <itemgroup label="ViewWidget Signals">
+        <signal name="ObjectClickedEvent" />
+        <signal name="ObjectDoubleClickedEvent" />
+      </itemgroup>
+    </signals>
+  </object>
+  <object type="XG.Client.Widgets.GTK.PacketWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
+    <itemgroups>
+    </itemgroups>
+    <signals>
+    </signals>
+  </object>
+</objects>

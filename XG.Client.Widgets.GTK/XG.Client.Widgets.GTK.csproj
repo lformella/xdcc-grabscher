@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DA143C1A-EA79-4CD1-882C-C2855C302EF7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XG.Client.Widgets.GTK</RootNamespace>
+    <AssemblyName>XG.Client.Widgets.GTK</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="Mono.Cairo, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL" />
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BotWidget.cs" />
+    <Compile Include="CellRendererPacketProgress.cs" />
+    <Compile Include="FileWidget.cs" />
+    <Compile Include="gtk-gui\generated.cs" />
+    <Compile Include="gtk-gui\XG.Client.Widgets.GTK.MainWidget.cs" />
+    <Compile Include="gtk-gui\XG.Client.Widgets.GTK.StatusWidget.cs" />
+    <Compile Include="gtk-gui\XG.Client.Widgets.GTK.TextDialog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="gtk-gui\XG.Client.Widgets.GTK.ViewWidget.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="MainWidget.cs" />
+    <Compile Include="Mono.cs" />
+    <Compile Include="PacketWidget.cs" />
+    <Compile Include="PartableWidget.cs" />
+    <Compile Include="SearchWidget.cs" />
+    <Compile Include="SegmentedBar.cs" />
+    <Compile Include="ServerChannelWidget.cs" />
+    <Compile Include="StatusWidget.cs" />
+    <Compile Include="TextDialog.cs" />
+    <Compile Include="ViewWidget.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Client.GTK\XG.Client.GTK.csproj">
+      <Project>{5096DADD-3507-4E57-BBFA-814545DE012F}</Project>
+      <Name>XG.Client.GTK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Client\XG.Client.csproj">
+      <Project>{68987989-8A96-455F-92C0-5F117CEF2E27}</Project>
+      <Name>XG.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Core\XG.Core.csproj">
+      <Project>{3080DF73-101A-4ACB-9FC2-6FEAEB90DE08}</Project>
+      <Name>XG.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,117 @@
+<!--
+//
+//  Copyright (C) 2009 Lars Formella <ich@larsformella.de>
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+		<title>XG Webclient (beta)</title>
+
+		<link type="text/css" href="css/style/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+
+		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
+
+		<script type="text/javascript" src="js/i18n/grid.locale-de.js"></script>
+		<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
+
+		<script type="text/javascript" src="js/xg.js"></script>
+
+		<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+
+		<style type="text/css">
+			/*body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 5px;}
+			.demoHeaders { margin-top: 2em; }
+			#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+			#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+			ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+			ul#icons span.ui-icon {float: left; margin: 0 4px;}*/
+			/*.ui-button { outline: 0; margin:0; padding: 5px; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }*/
+			/*img{float: left;}*/
+			body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 5px;}
+			ul#icons {margin: 0; padding: 0;}
+		</style>
+	</head>
+
+	<body>
+		<div id="dialog_password" title="Password required">
+			<p id="password_tip">Please enter the password for this webfrontend.</p>
+			<form>
+				<fieldset>
+					<label for="password">Password</label>
+					<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
+				</fieldset>
+			</form>
+		</div>
+
+		<div id="dialog_server" title="Insert new server">
+			<p id="server_tip">Please insert the new server name.</p>
+			<form>
+				<fieldset>
+					<label for="server">Server</label>
+					<input type="text" name="server" id="server" value="" class="text ui-widget-content ui-corner-all" />
+				</fieldset>
+			</form>
+		</div>
+
+		<div id="dialog_channel" title="Insert new channel">
+			<p id="channel_tip">Please insert the new channel name.</p>
+			<form>
+				<fieldset>
+					<label for="server">Server</label>
+					<input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all" />
+				</fieldset>
+			</form>
+		</div>
+
+		<table width="100%">
+			<tr>
+				<td width="210" valign="top">
+
+					<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="server-pager" class="scroll" style="text-align:center;"></div>
+
+					<button id="add-server" class="ui-button ui-state-default ui-corner-all">Add Server</button>
+					<button id="add-channel" class="ui-button ui-state-default ui-corner-all">Add Channel</button>
+
+					<br />
+
+					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<input type="text" id="search-text" /><span id='search-button' class="ui-icon ui-icon-search"></span>
+
+				</td>
+				<td valign="top">
+
+					<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+
+					<br />
+
+					<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="packet-pager" class="scroll" style="text-align:center;"></div>
+
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>
+
+

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{68987989-8A96-455F-92C0-5F117CEF2E27}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>XG.Client</RootNamespace>
+    <AssemblyName>XG.Client</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'UnSafe|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\UnSafe\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNSAFE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ODay.png" />
+    <EmbeddedResource Include="Resources\OWeek.png" />
+    <EmbeddedResource Include="Resources\Add.png" />
+    <EmbeddedResource Include="Resources\Blind.png" />
+    <EmbeddedResource Include="Resources\Bot.png" />
+    <EmbeddedResource Include="Resources\Bot_dl0.png" />
+    <EmbeddedResource Include="Resources\Bot_dl1.png" />
+    <EmbeddedResource Include="Resources\Bot_dl2.png" />
+    <EmbeddedResource Include="Resources\Bot_dl3.png" />
+    <EmbeddedResource Include="Resources\Bot_dl4.png" />
+    <EmbeddedResource Include="Resources\Bot_dl5.png" />
+    <EmbeddedResource Include="Resources\Bot_offline.png" />
+    <EmbeddedResource Include="Resources\Bot_queued.png" />
+    <EmbeddedResource Include="Resources\Bot_slotsfree.png" />
+    <EmbeddedResource Include="Resources\Bot_slotsfull.png" />
+    <EmbeddedResource Include="Resources\Channel.png" />
+    <EmbeddedResource Include="Resources\Channel_connected.png" />
+    <EmbeddedResource Include="Resources\Channel_disabled.png" />
+    <EmbeddedResource Include="Resources\Connect.png" />
+    <EmbeddedResource Include="Resources\Delete.png" />
+    <EmbeddedResource Include="Resources\Disconnect.png" />
+    <EmbeddedResource Include="Resources\No.png" />
+    <EmbeddedResource Include="Resources\Ok.png" />
+    <EmbeddedResource Include="Resources\Packet.png" />
+    <EmbeddedResource Include="Resources\Packet_broken.png" />
+    <EmbeddedResource Include="Resources\Packet_disabled.png" />
+    <EmbeddedResource Include="Resources\Packet_dl0.png" />
+    <EmbeddedResource Include="Resources\Packet_dl1.png" />
+    <EmbeddedResource Include="Resources\Packet_dl2.png" />
+    <EmbeddedResource Include="Resources\Packet_dl3.png" />
+    <EmbeddedResource Include="Resources\Packet_dl4.png" />
+    <EmbeddedResource Include="Resources\Packet_dl5.png" />
+    <EmbeddedResource Include="Resources\Packet_new.png" />
+    <EmbeddedResource Include="Resources\Packet_queued.png" />
+    <EmbeddedResource Include="Resources\Packet_ready_0.png" />
+    <EmbeddedResource Include="Resources\Packet_ready_1.png" />
+    <EmbeddedResource Include="Resources\Remove.png" />
+    <EmbeddedResource Include="Resources\Search.png" />
+    <EmbeddedResource Include="Resources\Search_freeslots.png" />
+    <EmbeddedResource Include="Resources\Server.png" />
+    <EmbeddedResource Include="Resources\Server_connected.png" />
+    <EmbeddedResource Include="Resources\Server_disabled.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ImageLoader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\client.png" />
+  </ItemGroup>
+</Project>

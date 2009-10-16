@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F73E6212-0D0D-4C25-9835-0975DB772740}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XG.Client.Web</RootNamespace>
+    <AssemblyName>XG.Client.Web</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'UnSafe|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\UnSafe\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNSAFE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="FileLoaderWeb.cs" />
+    <Compile Include="ImageLoaderWeb.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Client\XG.Client.csproj">
+      <Project>{68987989-8A96-455F-92C0-5F117CEF2E27}</Project>
+      <Name>XG.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Core\XG.Core.csproj">
+      <Project>{3080DF73-101A-4ACB-9FC2-6FEAEB90DE08}</Project>
+      <Name>XG.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_flat_15_cd0a0a_40x100.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_glass_100_e4f1fb_1x400.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_glass_50_3baae3_1x400.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_glass_80_d7ebf9_1x400.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-hard_100_f2f5f7_1x100.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-hard_70_000000_1x100.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-soft_100_deedf7_1x100.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-soft_25_ffef8f_1x100.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_2694e8_256x240.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_2e83ff_256x240.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_3d80b3_256x240.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_72a7cf_256x240.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_ffffff_256x240.png" />
+    <EmbeddedResource Include="Resources\css\cupertino\jquery-ui-1.7.2.custom.css" />
+    <EmbeddedResource Include="Resources\css\ui.jqgrid.css" />
+    <EmbeddedResource Include="Resources\index.html" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-de.js" />
+    <EmbeddedResource Include="Resources\js\jquery-1.3.2.js" />
+    <EmbeddedResource Include="Resources\js\jquery-ui-1.7.2.custom.min.js" />
+    <EmbeddedResource Include="Resources\js\jquery.jqGrid.min.js" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,49 @@
+<Project name="XG.Client.Widgets.GTK" fileversion="2.0" language="C#" releaseVersion="" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="XG.Client.Widgets.GTK" />
+      <Build debugmode="True" target="Library" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="3" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="XG.Client.Widgets.GTK" />
+      <Build debugmode="False" target="Library" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="3" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="gtk-gui/gui.stetic" subtype="Code" buildaction="EmbedAsResource" />
+    <File name="gtk-gui/generated.cs" subtype="Code" buildaction="Compile" />
+    <File name="gtk-gui/XG.Client.Widgets.GTK.ViewWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="gtk-gui/XG.Client.Widgets.GTK.TextDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="ServerChannelWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="BotWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="CellRendererPacketProgress.cs" subtype="Code" buildaction="Compile" />
+    <File name="FileWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="Helper.cs" subtype="Code" buildaction="Compile" />
+    <File name="PacketWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="SearchWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="SegmentedBar.cs" subtype="Code" buildaction="Compile" />
+    <File name="ViewWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="TextDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="MainWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="gtk-gui/XG.Client.Widgets.GTK.MainWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="StatusWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="gtk-gui/XG.Client.Widgets.GTK.StatusWidget.cs" subtype="Code" buildaction="Compile" />
+    <File name="PartableWidget.cs" subtype="Code" buildaction="Compile" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Client" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Client.GTK" />
+    <ProjectReference type="Gac" localcopy="True" refto="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Cairo, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Gac" localcopy="True" refto="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Gac" localcopy="True" refto="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+  </References>
+</Project>
