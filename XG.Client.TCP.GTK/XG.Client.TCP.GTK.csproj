@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3BE70D4A-0292-4398-8305-5249019CC93F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -21,7 +21,7 @@
     <GenerateManifests>false</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
     <SignManifests>false</SignManifests>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -35,9 +35,8 @@
     <ProductName>XG.Client.TCP.GTK</ProductName>
     <PublisherName>XG</PublisherName>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -84,7 +83,6 @@
     <Compile Include="gtk-gui\XG.Client.TCP.GTK.MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MainWindow.cs" />
-    <Compile Include="Mono.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Client.GTK\XG.Client.GTK.csproj">
@@ -109,22 +107,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\XG.Lib\atk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\XG.Lib\gdk-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\XG.Lib\glib-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\XG.Lib\gtk-sharp.dll</HintPath>
-    </Reference>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -133,14 +120,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>ClientSettings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>

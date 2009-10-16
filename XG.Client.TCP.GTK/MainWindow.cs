@@ -136,7 +136,7 @@ namespace XG.Client.TCP.GTK
 			XGBot b = new XGBot(c);
 			b.Name = "bot";
 			b.Connected = true;
-			b.ActionState = ActionState.Active;
+			b.BotState = BotState.Active;
 			this.myClient_ObjectAddedOrChanged(XGHelper.CloneObject(b, true));
 
 			XGPacket pa = new XGPacket(b);
@@ -159,20 +159,20 @@ namespace XG.Client.TCP.GTK
 			p1.StartSize = 9000000;
 			p1.CurrentSize = 10000000;
 			p1.StopSize = 10000000;
-			p1.State = PartState.Ready;
+			p1.PartState = FilePartState.Ready;
 			p1.IsChecked = true;
 			this.myClient_ObjectAddedOrChanged(p1);
 			p1 = new XGFilePart(f1);
 			p1.StartSize = 4000000;
 			p1.CurrentSize = 6000000;
 			p1.StopSize = 6000000;
-			p1.State = PartState.Ready;
+			p1.PartState = FilePartState.Ready;
 			this.myClient_ObjectAddedOrChanged(p1);
 			p1 = new XGFilePart(f1);
 			p1.StartSize = 0000000;
 			p1.CurrentSize = 1500000;
 			p1.StopSize = 2000000;
-			p1.State = PartState.Open;
+			p1.PartState = FilePartState.Open;
 			p1.Speed = 164687;
 			p1.Packet = pa;
 			p1.IsChecked = true;
@@ -181,20 +181,20 @@ namespace XG.Client.TCP.GTK
 			p1.StartSize = 6000000;
 			p1.CurrentSize = 7500000;
 			p1.StopSize = 8000000;
-			p1.State = PartState.Open;
+			p1.PartState = FilePartState.Open;
 			p1.Speed = 244666;
 			this.myClient_ObjectAddedOrChanged(p1);
 			p1 = new XGFilePart(f1);
 			p1.StartSize = 8000000;
 			p1.CurrentSize = 8500000;
 			p1.StopSize = 9000000;
-			p1.State = PartState.Broken;
+			p1.PartState = FilePartState.Broken;
 			this.myClient_ObjectAddedOrChanged(p1);
 			p1 = new XGFilePart(f1);
 			p1.StartSize = 2000000;
 			p1.CurrentSize = 2500000;
 			p1.StopSize = 4000000;
-			p1.State = PartState.Closed;
+			p1.PartState = FilePartState.Closed;
 			this.myClient_ObjectAddedOrChanged(p1);
 
 			/**/
