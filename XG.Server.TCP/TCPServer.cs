@@ -39,7 +39,7 @@ namespace XG.Server.TCP
 		#region RUN STOP RESTART
 
 		/// <summary>
-		/// Run method - should be called via thread
+		/// Run method - opens itself in a new thread
 		/// </summary>
 		public void Start(ServerRunner aParent)
 		{

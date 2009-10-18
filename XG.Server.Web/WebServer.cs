@@ -37,7 +37,7 @@ namespace XG.Server.Web
 		#region RUN STOP RESTART
 
 		/// <summary>
-		/// Run method - should be called via thread
+		/// Run method - opens itself in a new thread
 		/// </summary>
 		public void Start(ServerRunner aParent)
 		{
@@ -137,7 +137,7 @@ namespace XG.Server.Web
 			{
 #endif	
 				if(str.StartsWith("/?"))
-				{	   
+				{
 					string[] tCommand = str.Split('?')[1].Split('&');
 					foreach(string tStr in tCommand)
 					{
@@ -454,25 +454,25 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t\"" + tBot.LastMessage.Replace('"', '\'') + "\",\n");							//16
 					sb.Append("\t\t\t\"" + tBot.LastContact + "\"\n");												//17
 				}
-				
+
 				if(aObject.GetType() == typeof(XGServer))
 				{
 					XGServer tServ = (XGServer)aObject;
 
 					sb.Append("\t\t\t\"" + aObject.Name + ":" + tServ.Port + "\",\n");								//5
-					
+
 					sb.Append("\t\t\t0,\n");																		//6	
 					sb.Append("\t\t\t0,\n");																		//7			
 					sb.Append("\t\t\tfalse,\n");																	//8	
 					sb.Append("\t\t\tfalse\n");																		//9	
 				}
 			}
-			
+
 			sb.Append("\t\t]\n\t}");
 
 			return sb.ToString();
 		}
-		
+
 		#endregion
 
 		#region LOG

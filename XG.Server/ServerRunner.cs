@@ -261,6 +261,7 @@ namespace XG.Server
 		/// </summary>
 		public void Stop()
 		{
+			// TODO stop server plugins
 			foreach (XGServer serv in myRootObject.Children)
 			{
 				this.myServerHandler.DisconnectServer(serv);

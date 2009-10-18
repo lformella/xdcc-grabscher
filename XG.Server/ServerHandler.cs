@@ -780,12 +780,10 @@ namespace XG.Server
 						{
 							foreach (XGPacket tPack in tBot.Children)
 							{
-								if (tPack.Enabled &&
-								    (
-								     XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || 
-								     XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
-								    )
-								   )
+								if (tPack.Enabled && (
+									XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || 
+									XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
+									))
 								{
 									this.Log("CreateCompleteFile(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
 									tPack.Enabled = false;
@@ -889,6 +887,7 @@ namespace XG.Server
 					{
 						if(line == null || line == "") { continue; }
 
+						// TODO replace this with regex functions
 						string[] values = line.Split('#');
 						if(values[0] == extension)
 						{
