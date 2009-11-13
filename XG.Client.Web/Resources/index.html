@@ -75,10 +75,14 @@
 			<p id="channel_tip">Please insert the new channel name.</p>
 			<form>
 				<fieldset>
-					<label for="server">Server</label>
+					<label for="server">Channel</label>
 					<input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
+		</div>
+
+		<div id="dialog_delete" title="Really delete">
+			<p id="channel_tip">Do you really want to delete the item you selected?</p>
 		</div>
 
 		<table width="100%">
@@ -88,13 +92,16 @@
 					<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
 					<div id="server-pager" class="scroll" style="text-align:center;"></div>
 
-					<button id="add-server" class="ui-button ui-state-default ui-corner-all">Add Server</button>
-					<button id="add-channel" class="ui-button ui-state-default ui-corner-all">Add Channel</button>
-
+					<button id="add-server" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span style="margin-left:20px">Server</span></button>
+					<button id="add-channel" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span style="margin-left:20px">Channel</span></button>
 					<br />
+					<button id="delete" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-minus" style="position:absolute;"></span><span style="margin-left:20px">Current Item</span></button>
+
+					<br /><br />
 
 					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<input type="text" id="search-text" /><span id='search-button' class="ui-icon ui-icon-search"></span>
+					<input type="text" id="search-text" />
+					<button id="search-button" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-search"></span></button>
 
 				</td>
 				<td valign="top">

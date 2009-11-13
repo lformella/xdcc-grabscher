@@ -67,31 +67,35 @@ namespace XG.Core
 	[Flags]
 	public enum TCPClientRequest : byte
 	{
-		None,
-		Version,
+		None = 0,
+		Version = 1,
 
-		AddServer,
-		RemoveServer,
-		AddChannel,
-		RemoveChannel,
+		AddServer = 2,
+		RemoveServer = 3,
+		AddChannel = 4,
+		RemoveChannel = 5,
 
-		ActivateObject,
-		DeactivateObject,
+		ActivateObject = 6,
+		DeactivateObject = 7,
 
-		SearchPacket,
-		SearchPacketTime,
-		SearchBot,
-		SearchBotTime,
+		SearchPacket = 8,
+		SearchPacketTime = 9,
+		SearchPacketActiveDownloads = 10,
+		SearchPacketsEnabled = 11,
+		SearchBot = 12,
+		SearchBotTime = 13,
+		SearchBotActiveDownloads = 14,
+		SearchBotsEnabled = 15,
 
-		GetServersChannels,
-		GetActivePackets,
-		GetFiles,
-		GetObject,
-		GetChildrenFromObject,
+		GetServersChannels = 16,
+		GetActivePackets = 17,
+		GetFiles = 18,
+		GetObject = 19,
+		GetChildrenFromObject = 20,
 
-		CloseClient,
-		RestartServer,
-		CloseServer
+		CloseClient = 21,
+		RestartServer = 22,
+		CloseServer = 23
 	}
 
 	#endregion
@@ -374,12 +378,11 @@ namespace XG.Core
 		private static object LogLock = new object();
 		public static void Log(string aData, LogLevel aLevel)
 		{
-			// TODO uncomment this
-//#if DEBUG
+#if DEBUG
 			if ((Int16)aLevel >= (Int16)LogLevel.Notice)
-/*#else
+#else
 			if ((Int16)aLevel >= (Int16)LogLevel.Error)
-#endif*/
+#endif
 			{
 				lock(LogLock)
 				{ 

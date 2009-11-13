@@ -84,7 +84,7 @@ namespace XG.Server.TCP
 		/// </summary>
 		private void OpenServer()
 		{
-			this.myListener = new TcpListener(IPAddress.Any, Settings.Instance.Port);
+			this.myListener = new TcpListener(IPAddress.Any, Settings.Instance.TcpServerPort);
 			try
 			{
 				this.myListener.Start();

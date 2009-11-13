@@ -27,6 +27,9 @@ namespace XG.Server
 	{
 		private static Settings instance = null;
 
+		/// <value>
+		/// Returns an instance of the settings - just loaded once
+		/// </value>
 		public static Settings Instance
 		{
 			get
@@ -45,6 +48,29 @@ namespace XG.Server
 						XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 						instance = new Settings();
 					}
+				}
+				return instance;
+			}
+		}
+
+		/// <value>
+		/// Returns an instance of the settings - loaded new every time you crquest it
+		/// </value>
+		public static Settings InstanceReload
+		{
+			get
+			{
+				try
+				{
+					XmlSerializer ser = new XmlSerializer(typeof(Settings));
+					StreamReader sr = new StreamReader("./setings.xml");
+					instance = (Settings)ser.Deserialize(sr);
+					sr.Close();
+				}
+				catch (Exception ex)
+				{
+					XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					instance = new Settings();
 				}
 				return instance;
 			}
@@ -77,16 +103,20 @@ namespace XG.Server
 			this.botOfflineTime = 7200000;
 			this.samePacketRequestTime = 10000;
 
-			this.port = 5555;
 			this.parsingErrorFile = "./parsing_errors.txt";
 			this.dataBinary = "./xg.bin";
 			this.filesBinary = "./xgfiles.bin";
 			this.password = "xgisgreat";
 			this.backupDataTime = 900000;
 			this.fileHandler = new string[] {""};
+
 			this.startTCPServer = true;
-			this.startWebServer = false;
+			this.tcpServerPort = 5555;
+
+			this.startWebServer = true;
+			this.webServerPort = 5556;
 			this.styleWebServer = "blitzer";
+			this.autoJoinOnInvite = true;
 		}
 		
 		#region PRIVATE
@@ -264,11 +294,18 @@ namespace XG.Server
 			set { clearReadyDownloads = value; }
 		}
 
-		int port;
-		public int Port
+		int tcpServerPort;
+		public int TcpServerPort
 		{
-			get { return port; }
-			set { port = value; }
+			get { return tcpServerPort; }
+			set { tcpServerPort = value; }
+		}
+
+		int webServerPort;
+		public int WebServerPort
+		{
+			get { return webServerPort; }
+			set { webServerPort = value; }
 		}
 
 		string password;
@@ -311,6 +348,13 @@ namespace XG.Server
 		{
 			get { return styleWebServer; }
 			set { styleWebServer = value; }
+		}
+
+		bool autoJoinOnInvite;
+		public bool AutoJoinOnInvite 
+		{
+			get { return autoJoinOnInvite; }
+			set { autoJoinOnInvite = value; }
 		}
 		
 		#endregion

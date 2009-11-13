@@ -606,6 +606,8 @@ namespace XG.Server
 
 		#region SEARCH
 
+		#region PACKET
+
 		public XGObject[] SearchPacket(string aString)
 		{
 			return this.SearchPacket(aString, null);
@@ -645,10 +647,7 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null)
-			{
-				tList.Sort(aComp);
-			}
+			if(aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -685,12 +684,69 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null)
-			{
-				tList.Sort(aComp);
-			}
+			if(aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
+
+		public XGObject[] SearchPacketActiveDownloads()
+		{
+			return this.SearchPacketActiveDownloads(null);
+		}
+
+		public XGObject[] SearchPacketActiveDownloads(Comparison<XGObject> aComp)
+		{
+			List<XGObject> tList = new List<XGObject>();
+			foreach (XGServer tServ in this.myRootObject.Children)
+			{
+				foreach (XGChannel tChan in tServ.Children)
+				{
+					foreach (XGBot tBot in tChan.Children)
+					{
+						foreach (XGPacket tPack in tBot.Children)
+						{
+							if (tPack.Connected)
+							{
+								tList.Add(tPack);
+							}
+						}
+					}
+				}
+			}
+			if(aComp != null) { tList.Sort(aComp); }
+			return tList.ToArray();
+		}
+
+		public XGObject[] SearchPacketsEnabled()
+		{
+			return this.SearchPacketsEnabled(null);
+		}
+
+		public XGObject[] SearchPacketsEnabled(Comparison<XGObject> aComp)
+		{
+			List<XGObject> tList = new List<XGObject>();
+			foreach (XGServer tServ in this.myRootObject.Children)
+			{
+				foreach (XGChannel tChan in tServ.Children)
+				{
+					foreach (XGBot tBot in tChan.Children)
+					{
+						foreach (XGPacket tPack in tBot.Children)
+						{
+							if (tPack.Enabled)
+							{
+								tList.Add(tPack);
+							}
+						}
+					}
+				}
+			}
+			if(aComp != null) { tList.Sort(aComp); }
+			return tList.ToArray();
+		}
+
+		#endregion
+
+		#region BOT
 
 		public XGObject[] SearchBot(string aString)
 		{
@@ -699,23 +755,7 @@ namespace XG.Server
 
 		public XGObject[] SearchBot(string aString, Comparison<XGObject> aComp)
 		{
-			List<XGObject> tList = new List<XGObject>();
-			
-			XGObject[] tPackets = this.SearchPacket(aString);
-			foreach(XGPacket tPack in tPackets)
-			{
-				if(tList.Contains(tPack.Parent))
-				{
-					continue;
-				}
-				tList.Add(tPack.Parent);
-			}			
-			
-			if(aComp != null)
-			{
-				tList.Sort(aComp);
-			}
-			return tList.ToArray();
+			return this.GetBots2Packets(this.SearchPacket(aString, aComp), aComp);
 		}
 
 		public XGObject[] SearchBotTime(string aString)
@@ -725,24 +765,42 @@ namespace XG.Server
 
 		public XGObject[] SearchBotTime(string aString, Comparison<XGObject> aComp)
 		{
-			List<XGObject> tList = new List<XGObject>();
+			return this.GetBots2Packets(this.SearchPacketTime(aString, aComp), aComp);
+		}
 
-			XGObject[] tPackets = this.SearchPacketTime(aString);
-			foreach(XGPacket tPack in tPackets)
+		public XGObject[] SearchBotActiveDownloads()
+		{
+			return this.SearchBotActiveDownloads(null);
+		}
+
+		public XGObject[] SearchBotActiveDownloads(Comparison<XGObject> aComp)
+		{
+			return this.GetBots2Packets(this.SearchPacketActiveDownloads(aComp), aComp);
+		}
+
+		public XGObject[] SearchBotsEnabled()
+		{
+			return this.SearchBotsEnabled(null);
+		}
+
+		public XGObject[] SearchBotsEnabled(Comparison<XGObject> aComp)
+		{
+			return this.GetBots2Packets(this.SearchPacketsEnabled(aComp), aComp);
+		}
+
+		private XGObject[] GetBots2Packets(XGObject[] aList, Comparison<XGObject> aComp)
+		{
+			List<XGObject> tList = new List<XGObject>();
+			foreach(XGPacket tPack in aList)
 			{
-				if(tList.Contains(tPack.Parent))
-				{
-					continue;
-				}
+				if(tList.Contains(tPack.Parent)) { continue; }
 				tList.Add(tPack.Parent);
 			}
-
-			if(aComp != null)
-			{
-				tList.Sort(aComp);
-			}
+			if(aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
+
+		#endregion
 
 		#endregion
 
@@ -829,10 +887,7 @@ namespace XG.Server
 					tList.Add(tPart);
 				}
 			}
-			if(aComp != null)
-			{
-				tList.Sort(aComp);
-			}
+			if(aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -886,10 +941,7 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null)
-			{
-				tList.Sort(aComp);
-			}
+			if(aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 

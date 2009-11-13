@@ -962,7 +962,13 @@ namespace XG.Server
 					else if (tComCodeStr == "INVITE")
 					{
 						this.Log("con_DataReceived() received an invite for channel " + tData, LogLevel.Notice);
-						// TODO well, do an auto join?!
+
+						// ok, lets do a silent auto join
+						if (Settings.Instance.AutoJoinOnInvite)
+						{
+							this.Log("con_DataReceived() auto joining", LogLevel.Notice);
+							this.myCon.SendData("JOIN " + tData);
+						}
 					}
 
 					#endregion

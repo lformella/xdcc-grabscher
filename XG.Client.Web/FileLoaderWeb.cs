@@ -54,14 +54,14 @@ namespace XG.Client.Web
 			{		
 				try
 				{
-/*#if DEBUG
-					return File.OpenText("../../../XG.Client.Web/Resources" +  aFile).ReadToEnd();
-#else*/
+#if DEBUG
+					return File.OpenText("./Resources" +  aFile).ReadToEnd();
+#else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
 					string name = assembly.GetName().Name + ".Resources" +  aFile.Replace('/', '.');
 					this.myDicStr.Add(aFile, new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd());
 					return this.myDicStr[aFile];
-//#endif
+#endif
 				}
 				catch(Exception ex)
 				{

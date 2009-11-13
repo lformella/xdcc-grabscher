@@ -22,6 +22,13 @@ using System.Net;
 
 namespace XG.Server
 {
+	/// <summary>
+	/// This class describes the connection to a single irc bot
+	/// it does the following things
+	/// - receiving all data comming from the bot
+	/// - writing the data into the file
+	/// - checking if the data matches the given file (rollback check)
+	/// </summary>	
 	public class BotConnect
 	{
 		private ServerHandler myParent;

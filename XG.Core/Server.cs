@@ -105,7 +105,7 @@ namespace XG.Core
 			{
 				XGChannel tChannel = new XGChannel();
 				tChannel.Name = aChannel;
-				tChannel.Enabled = true;
+				tChannel.Enabled = this.Enabled;
 				this.addChannel(tChannel);
 			}
 		}

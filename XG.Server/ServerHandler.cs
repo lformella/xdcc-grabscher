@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using XG.Core;
 
@@ -755,7 +756,9 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// 
+		/// Joins all parts of a XGFile together by doing this
+		/// - disabling all matching packets to avoid the same download again
+		/// - merging the file and checking the file size
 		/// </summary>
 		/// <param name="aObject"></param>
 		public void JoinCompleteParts(object aObject)
@@ -850,8 +853,7 @@ namespace XG.Server
 					}
 
 					// great, all went right, so lets check what we can do with the file
-					//TODO fix this
-					//new Thread(delegate() { this.HandleFile(fileReady); }).Start();
+					new Thread(delegate() { this.HandleFile(fileReady); }).Start();
 				}
 				else
 				{
@@ -871,51 +873,51 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// 
+		/// Handles a downloaded file by calling the FileHandler string in the settings file
 		/// </summary>
 		/// <param name="aFile"></param>
 		public void HandleFile(string aFile)
 		{
 			if(aFile != null && aFile != "")
 			{
-				int pos = aFile.LastIndexOf('.');
-				if(pos > 0)
+				int pos = aFile.LastIndexOf('/');
+				string folder = aFile.Substring(0, pos);
+				string file = aFile.Substring(pos + 1);
+
+				pos = file.LastIndexOf('.');
+				string filename =  pos != -1 ? file.Substring(0, pos) : file;
+				string fileext = pos != -1 ? file.Substring(pos + 1) : "";
+
+				foreach(string line in Settings.InstanceReload.FileHandler)
 				{
-					string extension = aFile.Substring(pos + 1);
+					if(line == null || line == "") { continue; }
+					string[] values = line.Split('#');
 
-					foreach(string line in Settings.Instance.FileHandler)
+					Match tMatch = Regex.Match(file, values[0], RegexOptions.IgnoreCase);
+					if(tMatch.Success)
 					{
-						if(line == null || line == "") { continue; }
-
-						// TODO replace this with regex functions
-						string[] values = line.Split('#');
-						if(values[0] == extension)
+						for(int a = 1; a < values.Length; a++)
 						{
-							int pos2 = aFile.LastIndexOf('/');
-							string folder = aFile.Substring(0, pos2);
-							string name = aFile.Substring(pos2 + 1, pos - pos2 - 1);
+							pos = values[a].IndexOf(' ');
+							string process = values[a].Substring(0, pos);
+							string arguments = values[a].Substring(pos + 1);
 
-							values[2] = values[2].Replace("%FILE%", aFile);
-							values[2] = values[2].Replace("%FOLDER%", folder);
-							values[2] = values[2].Replace("%EXTENSION%", extension);
-							values[2] = values[2].Replace("%FILENAME%", name);
+							arguments = arguments.Replace("%PATH%", aFile);
+							arguments = arguments.Replace("%FOLDER%", folder);
+							arguments = arguments.Replace("%FILE%", file);
+							arguments = arguments.Replace("%FILENAME%", filename);
+							arguments = arguments.Replace("%EXTENSION%", fileext);
 
 							try
 							{
-								Process p = Process.Start(values[1], values[2]);
+								Process p = Process.Start(process, arguments);
+								// TODO should we block all other procs?!
 								p.WaitForExit();
-
-								if(Directory.Exists(aFile))
-								{
-									foreach(string file in Directory.GetFiles(aFile))
-									{
-										this.HandleFile(file);
-									}
-								}
 							}
-							catch {}
-
-							break;
+							catch(Exception ex)
+							{
+								this.Log("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							}
 						}
 					}
 				}
