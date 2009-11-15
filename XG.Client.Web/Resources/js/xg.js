@@ -182,8 +182,8 @@ $(function()
 			{name:'name',			index:'name',			width:370,	formatter:FormatBotName},
 			{name:'botstate',		index:'botstate',		hidden:true},
 			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right"},
-			{name:'queueposition',	index:'queueposition',	width:70, align:"right"},
-			{name:'queuetime',		index:'queuetime',		width:70, align:"right"},
+			{name:'queueposition',	index:'queueposition',	width:70,	formatter:FormatInteger, align:"right"},
+			{name:'queuetime',		index:'queuetime',		width:70,	formatter:FormatTime, align:"right"},
 			{name:'speedmax',		index:'speedmax',		width:100,	formatter:FormatBotSpeed, align:"right"},
 			{name:'speedcurrent',	index:'speedcurrent',	hidden:true},
 			{name:'slottotal',		index:'slottotal',		width:60,	formatter:FormatBotSlots, align:"right"},
@@ -1028,6 +1028,11 @@ function FormatTime(cellvalue, options, rowObject)
 function FormatSpeed(cellvalue, options, rowObject)
 {
 	return Speed2Human(cellvalue);
+}
+
+function FormatInteger(cellvalue, options, rowObject)
+{
+	return cellvalue > 0 ? cellvalue : "";
 }
 
 /* ************************************************************************** */

@@ -21,7 +21,6 @@
     <File name="Resources/js" subtype="Directory" buildaction="Compile" />
     <File name="Resources/css/ui.jqgrid.css" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.ui.jqgrid.css" />
     <File name="Resources/js/jquery.jqGrid.min.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.jquery.jqGrid.min.js" />
-    <File name="Resources/js/jquery-1.3.2.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.jquery-1.3.2.js" />
     <File name="Resources/js/jquery-ui-1.7.2.custom.min.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.jquery-ui-1.7.2.custom.min.js" />
     <File name="Resources/js/i18n" subtype="Directory" buildaction="Compile" />
     <File name="Resources/js/i18n/grid.locale-de.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-de.js" />
@@ -57,6 +56,32 @@
     <File name="Resources/css/blitzer/images/ui-icons_004276_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_004276_256x240.png" />
     <File name="Resources/css/blitzer/images/ui-icons_cc0000_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_cc0000_256x240.png" />
     <File name="Resources/css/blitzer/images/ui-icons_ffffff_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_ffffff_256x240.png" />
+    <File name="Resources/js/jquery-1.3.2.min.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-bg.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-bg1251.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-cat.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-cs.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-dk.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-el.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-en.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-fa.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-fi.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-fr.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-he.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-is.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-it.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-jp.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-nl.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-no.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-pl.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-pt.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-pt-br.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-ro.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-ru.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-sp.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-sv.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-tr.js" subtype="Code" buildaction="Nothing" />
+    <File name="Resources/js/i18n/grid.locale-ua.js" subtype="Code" buildaction="Nothing" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />
