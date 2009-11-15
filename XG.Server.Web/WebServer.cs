@@ -27,7 +27,7 @@ namespace XG.Server.Web
 {	
 	public class WebServer : IServerPlugin
 	{
-		private const string VERSION = "0.1";
+		private const string VERSION = "0.2";
 		
 		private ServerRunner myRunner;
 
