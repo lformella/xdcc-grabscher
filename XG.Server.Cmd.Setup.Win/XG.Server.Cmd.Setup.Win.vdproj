@@ -15,50 +15,68 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_295342BEA4878053019DABB3E9800287"
+        "MsmKey" = "8:_263CB449784EA869D46BC8B66CC4EA85"
         "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
+        "MsmKey" = "8:_263CB449784EA869D46BC8B66CC4EA85"
+        "OwnerKey" = "8:_A46F9180D5182E182BCC81C00F046D5A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_263CB449784EA869D46BC8B66CC4EA85"
+        "OwnerKey" = "8:_35A7A7157468CB7A8AD8E4ABEC8C060C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_263CB449784EA869D46BC8B66CC4EA85"
+        "OwnerKey" = "8:_3C6EF813CA3D9FC79BB84576F4F4C158"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_263CB449784EA869D46BC8B66CC4EA85"
+        "OwnerKey" = "8:_57B47C886209F2BAFC5110080BE94E6E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35A7A7157468CB7A8AD8E4ABEC8C060C"
         "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
-        "OwnerKey" = "8:_8C1F278E90A6D81A9693B94522C18DD8"
+        "MsmKey" = "8:_35A7A7157468CB7A8AD8E4ABEC8C060C"
+        "OwnerKey" = "8:_A46F9180D5182E182BCC81C00F046D5A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6FB933B4C0E9478CEBC90B002104264C"
+        "MsmKey" = "8:_3C6EF813CA3D9FC79BB84576F4F4C158"
+        "OwnerKey" = "8:_57B47C886209F2BAFC5110080BE94E6E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3C6EF813CA3D9FC79BB84576F4F4C158"
         "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6FB933B4C0E9478CEBC90B002104264C"
-        "OwnerKey" = "8:_8C1F278E90A6D81A9693B94522C18DD8"
+        "MsmKey" = "8:_3C6EF813CA3D9FC79BB84576F4F4C158"
+        "OwnerKey" = "8:_A46F9180D5182E182BCC81C00F046D5A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_6FB933B4C0E9478CEBC90B002104264C"
-        "OwnerKey" = "8:_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6FB933B4C0E9478CEBC90B002104264C"
-        "OwnerKey" = "8:_A02DFB4256BA4E4DB641F417AD3048EB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6FB933B4C0E9478CEBC90B002104264C"
-        "OwnerKey" = "8:_295342BEA4878053019DABB3E9800287"
+        "MsmKey" = "8:_57B47C886209F2BAFC5110080BE94E6E"
+        "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -69,44 +87,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_8C1F278E90A6D81A9693B94522C18DD8"
+        "MsmKey" = "8:_A46F9180D5182E182BCC81C00F046D5A"
         "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A02DFB4256BA4E4DB641F417AD3048EB"
-        "OwnerKey" = "8:_295342BEA4878053019DABB3E9800287"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A02DFB4256BA4E4DB641F417AD3048EB"
+        "MsmKey" = "8:_FF13E097787A8A9E0519CE41201697F7"
         "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A02DFB4256BA4E4DB641F417AD3048EB"
-        "OwnerKey" = "8:_8C1F278E90A6D81A9693B94522C18DD8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F9D1377F7BBAC464D86128DC6D319A75"
-        "OwnerKey" = "8:_73537C8B474741DFBA6CCD9FE455C46F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F9D1377F7BBAC464D86128DC6D319A75"
-        "OwnerKey" = "8:_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6FB933B4C0E9478CEBC90B002104264C"
+        "MsmKey" = "8:_FF13E097787A8A9E0519CE41201697F7"
+        "OwnerKey" = "8:_35A7A7157468CB7A8AD8E4ABEC8C060C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -118,31 +112,37 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8C1F278E90A6D81A9693B94522C18DD8"
+        "OwnerKey" = "8:_A46F9180D5182E182BCC81C00F046D5A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
+        "OwnerKey" = "8:_35A7A7157468CB7A8AD8E4ABEC8C060C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F9D1377F7BBAC464D86128DC6D319A75"
+        "OwnerKey" = "8:_FF13E097787A8A9E0519CE41201697F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_295342BEA4878053019DABB3E9800287"
+        "OwnerKey" = "8:_57B47C886209F2BAFC5110080BE94E6E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A02DFB4256BA4E4DB641F417AD3048EB"
+        "OwnerKey" = "8:_3C6EF813CA3D9FC79BB84576F4F4C158"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_263CB449784EA869D46BC8B66CC4EA85"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -163,13 +163,21 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\XG.Server.Cmd.Setup.Win.msi"
+        "OutputFilename" = "8:Release\\XG_Server_0.X.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -179,6 +187,27 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
+                    {
+                    "Name" = "8:.NET Framework 3.5"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -208,76 +237,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_295342BEA4878053019DABB3E9800287"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:XG.Server.TCP, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_295342BEA4878053019DABB3E9800287"
-                    {
-                    "Name" = "8:XG.Server.TCP.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:XG.Server.TCP.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:XG.Client.Web, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_2F72296E9E3E1D28FFE6CF0ED2A83D8A"
-                    {
-                    "Name" = "8:XG.Client.Web.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:XG.Client.Web.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6FB933B4C0E9478CEBC90B002104264C"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_263CB449784EA869D46BC8B66CC4EA85"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:XG.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6FB933B4C0E9478CEBC90B002104264C"
+                    "_263CB449784EA869D46BC8B66CC4EA85"
                     {
                     "Name" = "8:XG.Core.dll"
                     "Attributes" = "3:512"
@@ -301,20 +268,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8C1F278E90A6D81A9693B94522C18DD8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_35A7A7157468CB7A8AD8E4ABEC8C060C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:XG.Server.Web, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:XG.Client.Web, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8C1F278E90A6D81A9693B94522C18DD8"
+                    "_35A7A7157468CB7A8AD8E4ABEC8C060C"
                     {
-                    "Name" = "8:XG.Server.Web.dll"
+                    "Name" = "8:XG.Client.Web.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:XG.Server.Web.dll"
+            "SourcePath" = "8:XG.Client.Web.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
@@ -332,14 +299,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A02DFB4256BA4E4DB641F417AD3048EB"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C6EF813CA3D9FC79BB84576F4F4C158"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:XG.Server, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A02DFB4256BA4E4DB641F417AD3048EB"
+                    "_3C6EF813CA3D9FC79BB84576F4F4C158"
                     {
                     "Name" = "8:XG.Server.dll"
                     "Attributes" = "3:512"
@@ -363,14 +330,76 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F9D1377F7BBAC464D86128DC6D319A75"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_57B47C886209F2BAFC5110080BE94E6E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:XG.Server.TCP, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_57B47C886209F2BAFC5110080BE94E6E"
+                    {
+                    "Name" = "8:XG.Server.TCP.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:XG.Server.TCP.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A46F9180D5182E182BCC81C00F046D5A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:XG.Server.Web, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_A46F9180D5182E182BCC81C00F046D5A"
+                    {
+                    "Name" = "8:XG.Server.Web.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:XG.Server.Web.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FF13E097787A8A9E0519CE41201697F7"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:XG.Client, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_F9D1377F7BBAC464D86128DC6D319A75"
+                    "_FF13E097787A8A9E0519CE41201697F7"
                     {
                     "Name" = "8:XG.Client.dll"
                     "Attributes" = "3:512"
@@ -462,7 +491,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:XG Server"
         "ProductCode" = "8:{120964BB-7BD6-401B-BA51-B15642CEA074}"
-        "PackageCode" = "8:{43133446-D77E-498E-A526-D161A5934400}"
+        "PackageCode" = "8:{FBCE1861-0201-41E0-94F2-9A95E5DFC160}"
         "UpgradeCode" = "8:{29D4451A-D70D-43F2-B547-251E4E4B1717}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

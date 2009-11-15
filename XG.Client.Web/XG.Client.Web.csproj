@@ -81,8 +81,52 @@
     <EmbeddedResource Include="Resources\css\ui.jqgrid.css" />
     <EmbeddedResource Include="Resources\index.html" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-de.js" />
-    <EmbeddedResource Include="Resources\js\jquery-1.3.2.js" />
     <EmbeddedResource Include="Resources\js\jquery-ui-1.7.2.custom.min.js" />
     <EmbeddedResource Include="Resources\js\jquery.jqGrid.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\jquery-1.3.2.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_dots-small_65_a6a6a6_2x2.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_flat_0_333333_40x100.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_flat_65_ffffff_40x100.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_glass_55_fbf8ee_1x400.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_highlight-hard_100_eeeeee_1x100.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_highlight-soft_15_cc0000_1x100.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-icons_004276_256x240.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-icons_cc0000_256x240.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\images\ui-icons_ffffff_256x240.png" />
+    <EmbeddedResource Include="Resources\css\blitzer\jquery-ui-1.7.2.custom.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-bg.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-bg1251.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-cat.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-cs.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-dk.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-el.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-en.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-fa.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-fi.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-fr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-he.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-is.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-it.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-jp.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-nl.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-no.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-pl.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-pt-br.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-pt.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ro.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ru.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sp.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sv.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-tr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ua.js" />
   </ItemGroup>
 </Project>
