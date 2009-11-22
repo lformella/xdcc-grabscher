@@ -345,8 +345,11 @@ namespace XG.Server
 				// to save em now
 				this.SaveFileDataNow();
 			}
-			
-			this.ObjectAddedEvent(aParentObj, aObj);
+
+			if (this.ObjectAddedEvent != null)
+			{
+				this.ObjectAddedEvent(aParentObj, aObj);
+			}
 		}
 
 		/// <summary>
@@ -373,8 +376,11 @@ namespace XG.Server
 					this.isSaveFile = true;
 				}
 			}
-			
-			this.ObjectChangedEvent(aObj);
+
+			if (this.ObjectChangedEvent != null)
+			{
+				this.ObjectChangedEvent(aObj);
+			}
 		}
 
 		/// <summary>
@@ -390,8 +396,11 @@ namespace XG.Server
 				// to save em now
 				this.SaveFileDataNow();
 			}
-			
-			this.ObjectRemovedEvent(aParentObj, aObj);
+
+			if (this.ObjectRemovedEvent != null)
+			{
+				this.ObjectRemovedEvent(aParentObj, aObj);
+			}
 		}
 
 		/// <summary>

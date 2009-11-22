@@ -157,13 +157,37 @@ namespace XG.Server
 			}
 		}
 
-		void server_ParsingErrorEventHandler(string aData) { this.ParsingErrorEvent(aData); }
+		void server_ParsingErrorEventHandler(string aData)
+		{
+			if (this.ParsingErrorEvent != null)
+			{
+				this.ParsingErrorEvent(aData);
+			}
+		}
 
-		void _ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj) { this.ObjectRemovedEvent(aParentObj, aObj); }
+		void _ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
+		{
+			if (this.ObjectRemovedEvent != null)
+			{
+				this.ObjectRemovedEvent(aParentObj, aObj);
+			}
+		}
 
-		void _ObjectChangedEventHandler(XGObject aObj) { this.ObjectChangedEvent(aObj); }
+		void _ObjectChangedEventHandler(XGObject aObj)
+		{
+			if (this.ObjectChangedEvent != null)
+			{
+				this.ObjectChangedEvent(aObj);
+			}
+		}
 
-		void _ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj) { this.ObjectAddedEvent(aParentObj, aObj); }
+		void _ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
+		{
+			if (this.ObjectAddedEvent != null)
+			{
+				this.ObjectAddedEvent(aParentObj, aObj);
+			}
+		}
 
 		#endregion
 

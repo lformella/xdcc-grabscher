@@ -96,7 +96,10 @@ namespace XG.Server
 				this.myWriter = new StreamWriter(stream);
 				this.myWriter.AutoFlush = true;
 
-				this.ConnectedEvent();
+				if (this.ConnectedEvent != null)
+				{
+					this.ConnectedEvent();
+				}
 
 				try
 				{
@@ -118,7 +121,10 @@ namespace XG.Server
 							}
 							if (data.Length != 0)
 							{
-								this.DataBinaryReceivedEvent(data);
+								if (this.DataBinaryReceivedEvent != null)
+								{
+									this.DataBinaryReceivedEvent(data);
+								}
 								missing -= data.Length;
 							}
 							else
@@ -148,7 +154,10 @@ namespace XG.Server
 							}
 							if (data != "" && data != null)
 							{
-								this.DataTextReceivedEvent(data);
+								if (this.DataTextReceivedEvent != null)
+								{
+									this.DataTextReceivedEvent(data);
+								}
 							}
 							else
 							{
@@ -174,7 +183,10 @@ namespace XG.Server
 				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") end", LogLevel.Notice);
 			}
 
-			this.DisconnectedEvent();
+			if (this.DisconnectedEvent != null)
+			{
+				this.DisconnectedEvent();
+			}
 		}
 
 		#endregion

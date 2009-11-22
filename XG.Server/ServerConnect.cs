@@ -473,7 +473,7 @@ namespace XG.Server
 							{
 								tMatch1 = Regex.Match(tData, "((\\*){2,3} All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*", RegexOptions.IgnoreCase);
 								tMatch2 = Regex.Match(tData, "Queueing you for pack [0-9]+ \\(.*\\) in slot (?<queue_cur>[0-9]+)/(?<queue_total>[0-9]+)\\. To remove you(r|)self from the queue, type: .*\\. To check your position in the queue, type: .*\\. Estimated time remaining in queue: (?<queue_d>[0-9]+) days, (?<queue_h>[0-9]+) hours, (?<queue_m>[0-9]+) minutes", RegexOptions.IgnoreCase);
-								tMatch3 = Regex.Match(tData, "Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
+								tMatch3 = Regex.Match(tData, "[(\\*){2,3} |]Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
 								if (tMatch1.Success || tMatch2.Success)
 								{
 									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
@@ -587,7 +587,7 @@ namespace XG.Server
 							if (!isParsed)
 							{
 								tMatch1 = Regex.Match(tData, "(\\*){2,3} You have a DCC pending, Set your client to receive the transfer\\. ((Type .*|Send XDCC CANCEL) to abort the transfer\\. |)\\((?<time>[0-9]+) seconds remaining until timeout\\)", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL) an den Bot um die .bertragung abzubrechen\\.|)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)", RegexOptions.IgnoreCase);
+								tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL)            an den Bot um die .bertragung abzubrechen\\. |)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)", RegexOptions.IgnoreCase);
 								if (tMatch1.Success || tMatch2.Success)
 								{
 									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
@@ -609,9 +609,11 @@ namespace XG.Server
 
 							if (!isParsed)
 							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
+								tMatch1 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later", RegexOptions.IgnoreCase);
+								tMatch2 = Regex.Match(tData, "(\\*){2,3} Es laufen bereits genug .bertragungen, abgewiesen, die Warteschlange ist voll, max\\. (?<queue_total>[0-9]+) Dateien, Versuche es sp.ter nochmal", RegexOptions.IgnoreCase);
+								if (tMatch1.Success || tMatch2.Success)
 								{
+									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 									isParsed = true;
 									if (tBot.BotState == BotState.Waiting)
 									{
