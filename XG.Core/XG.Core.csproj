@@ -52,6 +52,7 @@
     <Compile Include="Bot.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="FilePart.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Packet.cs" />
