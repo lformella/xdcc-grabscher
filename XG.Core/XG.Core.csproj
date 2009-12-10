@@ -61,4 +61,7 @@
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreClasses.cd" />
+  </ItemGroup>
 </Project>

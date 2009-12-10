@@ -102,9 +102,11 @@ Global
 		{B6ACFEB4-C001-44AB-8F59-8ABBF134C7C2}.UnSafe|Any CPU.Build.0 = Release|Any CPU
 		{CB8A8E5B-E36E-4011-A3C9-91B27D133CD8}.Debug|Any CPU.ActiveCfg = Debug
 		{CB8A8E5B-E36E-4011-A3C9-91B27D133CD8}.Release|Any CPU.ActiveCfg = Release
+		{CB8A8E5B-E36E-4011-A3C9-91B27D133CD8}.Release|Any CPU.Build.0 = Release
 		{CB8A8E5B-E36E-4011-A3C9-91B27D133CD8}.UnSafe|Any CPU.ActiveCfg = Release
 		{30A25E6A-8121-4C9B-B6E5-7C690790E745}.Debug|Any CPU.ActiveCfg = Debug
 		{30A25E6A-8121-4C9B-B6E5-7C690790E745}.Release|Any CPU.ActiveCfg = Release
+		{30A25E6A-8121-4C9B-B6E5-7C690790E745}.Release|Any CPU.Build.0 = Release
 		{30A25E6A-8121-4C9B-B6E5-7C690790E745}.UnSafe|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
