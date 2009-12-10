@@ -301,73 +301,65 @@ namespace XG.Server.TCP
 		/// <param name="aMessage"></param>
 		private void WriteToStream(BinaryWriter aWriter, XGObject[] aList, TCPServerResponse aMessage)
 		{
-			this.WriteToStream(aWriter, null, TCPServerResponse.ObjectBlockStart, null);
+			this.WriteToStream(aWriter, new XGObject(), TCPServerResponse.ObjectBlockStart);
 			foreach (XGObject tObj in aList)
 			{
 				if (!this.WriteToStream(aWriter, tObj, aMessage)) { break; }
 			}
-			this.WriteToStream(aWriter, null, TCPServerResponse.ObjectBlockStop, null);
+			this.WriteToStream(aWriter, new XGObject(), TCPServerResponse.ObjectBlockStop);
+		}
+
+		/// <summary>
+		/// Writes an object with a response message to all stream
+		/// </summary>
+		/// <param name="aObject"></param>
+		/// <param name="aMessage"></param>
+		/// <returns></returns>
+		private bool WriteToStreams(XGObject aObject, TCPServerResponse aMessage)
+		{
+			bool ok = true;
+			foreach (BinaryWriter tWriter in this.myWriter.ToArray())
+			{
+				if (!this.WriteToStream(tWriter, aObject, aMessage)) { ok = false; }
+			}
+			return ok;
 		}
 
 		/// <summary>
 		/// Writes an object with a response message to a stream
 		/// </summary>
-		/// <param name="aWriter"></param>
+		/// <param name="aWriter">the stream, or null if sending to all streams</param>
 		/// <param name="aObject"></param>
 		/// <param name="aMessage"></param>
 		/// <returns></returns>
 		private bool WriteToStream(BinaryWriter aWriter, XGObject aObject, TCPServerResponse aMessage)
 		{
-			return this.WriteToStream(aWriter, aObject, aMessage, null);
-		}
-
-		/// <summary>
-		/// Writes an object with data and a response message to a stream
-		/// </summary>
-		/// <param name="aWriter">the stream, or null if sending to all streams</param>
-		/// <param name="aObject"></param>
-		/// <param name="aMessage"></param>
-		/// <param name="aData"></param>
-		/// <returns></returns>
-		private bool WriteToStream(BinaryWriter aWriter, XGObject aObject, TCPServerResponse aMessage, string aData)
-		{
-			bool ok = true;
-			if (aWriter == null)
+			bool ok = false;
+			lock (aWriter)
 			{
-				foreach (BinaryWriter tWriter in this.myWriter.ToArray())
+				try
 				{
-					if (!this.WriteToStream(tWriter, aObject, aMessage, aData)) { ok = false; }
+					aWriter.Write((byte)aMessage);
+					switch (aMessage)
+					{
+						case TCPServerResponse.ObjectAdded:
+						case TCPServerResponse.ObjectChanged:
+							this.myFormatter.Serialize(aWriter.BaseStream, XGHelper.CloneObject(aObject, true));
+							break;
+
+						case TCPServerResponse.ObjectRemoved:
+							aWriter.Write(aObject.Guid.ToByteArray());
+							break;
+					}
+					aWriter.Flush();
+					ok = true;
 				}
-			}
-			else
-			{
-				lock (aWriter)
+				// this is ok
+				catch (ObjectDisposedException) {}
+				catch (SocketException) {}
+				catch (Exception ex)
 				{
-					try
-					{
-						aWriter.Write((byte)aMessage);
-						switch (aMessage)
-						{
-							case TCPServerResponse.ObjectAdded:
-							case TCPServerResponse.ObjectChanged:
-								this.myFormatter.Serialize(aWriter.BaseStream, XGHelper.CloneObject(aObject, true));
-								break;
-
-							case TCPServerResponse.ObjectRemoved:
-								aWriter.Write(aObject.Guid.ToByteArray());
-								break;
-						}
-						aWriter.Flush();
-						//this.Log("Sending " + aObject.Guid + " | " + aObject.Parent.Guid + " | " + aObject.Name, LogLevel.Warning);
-					}
-					// this is ok
-					catch (ObjectDisposedException) { }
-					catch (SocketException) { }
-					catch (Exception ex)
-					{
-						ok = false;
-						this.Log("WriteToStream() write: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					}
+					this.Log("WriteToStream() write: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
 			}
 			return ok;
@@ -384,7 +376,7 @@ namespace XG.Server.TCP
 		/// <param name="aObj"></param>
 		protected void myRunner_ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
-			this.WriteToStream(null, aObj, TCPServerResponse.ObjectAdded);
+			this.WriteToStreams(aObj, TCPServerResponse.ObjectAdded);
 		}
 
 		/// <summary>
@@ -393,7 +385,7 @@ namespace XG.Server.TCP
 		/// <param name="aObj"></param>
 		protected void myRunner_ObjectChangedEventHandler(XGObject aObj)
 		{
-			this.WriteToStream(null, aObj, TCPServerResponse.ObjectChanged);
+			this.WriteToStreams(aObj, TCPServerResponse.ObjectChanged);
 		}
 
 		/// <summary>
@@ -403,7 +395,7 @@ namespace XG.Server.TCP
 		/// <param name="aObj"></param>
 		protected void myRunner_ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
-			this.WriteToStream(null, aObj, TCPServerResponse.ObjectRemoved);
+			this.WriteToStreams(aObj, TCPServerResponse.ObjectRemoved);
 		}
 
 		#endregion

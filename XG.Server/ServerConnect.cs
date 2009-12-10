@@ -278,7 +278,7 @@ namespace XG.Server
 								tBot = new XGBot(tChan);
 								tBot.Name = tUserName;
 								tBot.Connected = true;
-								tBot.LastContact = DateTime.Now;
+								tBot.LastMessage = "initial creation";
 							}
 
 							bool isParsed = false;
@@ -362,7 +362,7 @@ namespace XG.Server
 											//this.Log(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content", LogLevel.Warning);
 											//this.Log(this, "DATA: " + tData, LogLevel.Warning);
 											tPack.Enabled = false;
-											tPack.LastUpdated = DateTime.Now;
+											//tPack.LastUpdated = DateTime.Now;
 											if (!tPack.Connected)
 											{
 												tPack.RealName = "";
@@ -773,8 +773,9 @@ namespace XG.Server
 
 							if (!isParsed)
 							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
+								tMatch1 = Regex.Match(tData, "(\\*){2,3} (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
+								tMatch2 = Regex.Match(tData, "(\\*){2,3} (Schliese Verbindung:).*", RegexOptions.IgnoreCase);
+								if (tMatch1.Success || tMatch2.Success)
 								{
 									isParsed = true;
 									if (tBot.BotState != BotState.Active)
@@ -884,7 +885,7 @@ namespace XG.Server
 								if (tBot != null)
 								{
 									tBot.Connected = false;
-									tBot.LastContact = DateTime.Now;
+									tBot.LastMessage = "kicked from channel " + tChan.Name;
 									this.Log("con_DataReceived() bot " + tBot.Name + " is offline", LogLevel.Info);
 								}
 							}
@@ -904,7 +905,7 @@ namespace XG.Server
 							if (tBot != null)
 							{
 								tBot.Connected = true;
-								tBot.LastContact = DateTime.Now;
+								tBot.LastMessage = "joined channel " + tChan.Name;
 								if (tBot.BotState != BotState.Active)
 								{
 									tBot.BotState = BotState.Idle;
@@ -926,7 +927,7 @@ namespace XG.Server
 							if (tBot != null)
 							{
 								tBot.Connected = true;
-								tBot.LastContact = DateTime.Now;
+								tBot.LastMessage = "parted channel " + tChan.Name;
 								this.Log("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name, LogLevel.Info);
 							}
 						}
@@ -941,7 +942,7 @@ namespace XG.Server
 						if (tBot != null)
 						{
 							tBot.Connected = false;
-							tBot.LastContact = DateTime.Now;
+							tBot.LastMessage = "quited";
 							this.Log("con_DataReceived() bot " + tBot.Name + " quited", LogLevel.Info);
 						}
 					}

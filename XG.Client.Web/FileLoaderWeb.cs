@@ -65,7 +65,7 @@ namespace XG.Client.Web
 				}
 				catch(Exception ex)
 				{
-					XGHelper.Log("FileLoaderWeb.LoadFile(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					this.Log("LoadFile(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
 			}
 			return "";
@@ -90,10 +90,7 @@ namespace XG.Client.Web
 					while (remaining > 0)
 					{
 						int read = stream.Read(data, offset, remaining);
-						if (read <= 0)
-						{
-							throw new EndOfStreamException (String.Format("End of stream reached with {0} bytes left to read", remaining));
-						}
+						if (read <= 0) { throw new EndOfStreamException (String.Format("End of stream reached with {0} bytes left to read", remaining)); }
 						remaining -= read;
 						offset += read;
 					}
@@ -102,10 +99,19 @@ namespace XG.Client.Web
 				}
 				catch(Exception ex)
 				{
-					XGHelper.Log("FileLoaderWeb.LoadImage(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					this.Log("LoadImage(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
 			}
 			return null;
 		}
+
+		#region LOG
+
+		private void Log(string aData, LogLevel aLevel)
+		{
+			XGHelper.Log("FileLoaderWeb." + aData, aLevel);
+		}
+
+		#endregion
 	}
 }

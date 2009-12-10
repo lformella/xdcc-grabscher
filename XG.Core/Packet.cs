@@ -28,6 +28,8 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
+		// why did i do this?
+		/*
 		public new bool Enabled
 		{
 			get { return base.Enabled; }
@@ -41,6 +43,21 @@ namespace XG.Core
 					}
 				}
 				base.Enabled = value;
+			}
+		}
+		*/
+
+		public new string Name
+		{
+			get { return base.Name; }
+			set
+			{
+				// iam updated if my name changes
+				if (base.Name != value)
+				{
+					this.lastUpdated = DateTime.Now;
+				}
+				base.Name = value;
 			}
 		}
 
@@ -104,21 +121,13 @@ namespace XG.Core
 		public DateTime LastUpdated
 		{
 			get { return this.lastUpdated; }
-			set
-			{
-				if (this.lastUpdated != value)
-				{
-					this.lastUpdated = value;
-					this.Modified = true;
-				}
-			}
 		}
 
 		public XGPacket()
 			: base()
 		{
 			this.realName = "";
-			//this.LastUpdated = DateTime.Now;
+			this.lastUpdated = DateTime.Now;
 		}
 		public XGPacket(XGBot parent)
 			: this()

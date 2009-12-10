@@ -17,8 +17,8 @@
 
 using System;
 using System.IO;
-using XG.Core;
 using System.Net;
+using XG.Core;
 
 namespace XG.Server
 {
@@ -235,7 +235,7 @@ namespace XG.Server
 				catch (Exception ex)
 				{
 					this.Log("con_Connected() Exception: " + XGHelper.GetExceptionMessage(ex), LogLevel.Error);
-					this.myCon.Disconnect();
+					this.Disconnect();
 					return;
 				}
 #endif

@@ -851,11 +851,6 @@ namespace XG.Server
 			return tList.ToArray();
 		}
 
-		public XGObject[] GetFiles()
-		{
-			return this.GetFiles(null);
-		}
-
 		public XGFilePart GetFilePart4Packet(XGPacket aPacket)
 		{
 			foreach (XGFile tFile in this.myFiles)
@@ -883,6 +878,11 @@ namespace XG.Server
 				}
 			}
 			return tPart;
+		}
+
+		public XGObject[] GetFiles()
+		{
+			return this.GetFiles(null);
 		}
 
 		public XGObject[] GetFiles(Comparison<XGObject> aComp)

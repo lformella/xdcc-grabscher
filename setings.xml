@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<IRCName>XG-anon1234</IRCName>
-	<TempPath>./tmp/</TempPath>
-	<ReadyPath>./dl/</ReadyPath>
-	<IrcRegisterPasswort>password123</IrcRegisterPasswort>
-	<IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail>
-	<EnableMultiDownloads>true</EnableMultiDownloads>
-	<ClearReadyDownloads>false</ClearReadyDownloads>
-	<Port>5555</Port>
-	<Password>xgisgreat</Password>
-	<BackupDataTime>900000</BackupDataTime>
-	<FileHandler>
-	<string />
-	</FileHandler>
-	<StartTCPServer>true</StartTCPServer>
-	<StartWebServer>true</StartWebServer>
-	<StyleWebServer>blitzer</StyleWebServer>
+  <IRCName>enter_your_nickname_here</IRCName>
+  <TempPath>./tmp/</TempPath>
+  <ReadyPath>./dl/</ReadyPath>
+  <IrcRegisterPasswort>password123</IrcRegisterPasswort>
+  <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail>
+  <EnableMultiDownloads>true</EnableMultiDownloads>
+  <ClearReadyDownloads>true</ClearReadyDownloads>
+  <Password>xgisgreat</Password>
+  <BackupDataTime>900000</BackupDataTime>
+  <FileHandler>
+    <string>.*#mv %PATH% %FOLDER%/_%FILE%</string>
+  </FileHandler>
+  <StartTCPServer>true</StartTCPServer>
+  <TcpServerPort>5555</TcpServerPort>
+  <StartWebServer>true</StartWebServer>
+  <WebServerPort>5556</WebServerPort>
+  <StyleWebServer>blitzer</StyleWebServer>
+  <AutoJoinOnInvite>true</AutoJoinOnInvite>
 </Settings>

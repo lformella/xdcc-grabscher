@@ -357,7 +357,7 @@ namespace XG.Core
 		#region HELPER
 
 		/// <summary>
-		/// Returns the file name shrinked to its information
+		/// Returns the file name ripped of the following chars ()[]{}-_.
 		/// </summary>
 		/// <param name="aName"></param>
 		/// <param name="aSize"></param>

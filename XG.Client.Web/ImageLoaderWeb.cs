@@ -99,8 +99,7 @@ namespace XG.Client.Web
 			while (remaining > 0)
 			{
 				int read = aStream.Read(data, offset, remaining);
-				if (read <= 0)
-					throw new EndOfStreamException (String.Format("End of stream reached with {0} bytes left to read", remaining));
+				if (read <= 0) { throw new EndOfStreamException (String.Format("End of stream reached with {0} bytes left to read", remaining)); }
 				remaining -= read;
 				offset += read;
 			}
@@ -242,10 +241,13 @@ namespace XG.Client.Web
 
 				case "ExtAudio":
 					return this.pbExtAudio;
+
 				case "ExtCompressed":
 					return this.pbExtCompressed;
+
 				case "ExtDefault":
 					return this.pbExtDefault;
+
 				case "ExtVideo":
 					return this.pbExtVideo;
 			}

@@ -36,46 +36,51 @@ namespace XG.Server
 			{
 				if (instance == null)
 				{
-					try
-					{
-						XmlSerializer ser = new XmlSerializer(typeof(Settings));
-						StreamReader sr = new StreamReader("./setings.xml");
-						instance = (Settings)ser.Deserialize(sr);
-						sr.Close();
-					}
-					catch (Exception ex)
-					{
-						XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-						instance = new Settings();
-					}
+					instance = Deserialize();
 				}
 				return instance;
 			}
 		}
 
 		/// <value>
-		/// Returns an instance of the settings - loaded new every time you crquest it
+		/// Returns an instance of the settings - loaded new every time you request it
 		/// </value>
 		public static Settings InstanceReload
 		{
 			get
 			{
-				try
-				{
-					XmlSerializer ser = new XmlSerializer(typeof(Settings));
-					StreamReader sr = new StreamReader("./setings.xml");
-					instance = (Settings)ser.Deserialize(sr);
-					sr.Close();
-				}
-				catch (Exception ex)
-				{
-					XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					instance = new Settings();
-				}
+				instance = Deserialize();
 				return instance;
 			}
 		}
 
+		/// <summary>
+		/// Deserializes a previously saved settings object from the file named setings.xml
+		/// </summary>
+		/// <returns>
+		/// A <see cref="Settings"/>
+		/// </returns>
+		private static Settings Deserialize()
+		{
+			try
+			{
+				XmlSerializer ser = new XmlSerializer(typeof(Settings));
+				StreamReader sr = new StreamReader("./setings.xml");
+				Settings settings = (Settings)ser.Deserialize(sr);
+				sr.Close();
+				return settings;
+			}
+			catch (Exception ex)
+			{
+				XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				return new Settings();
+			}
+		}
+
+		/// <summary>
+		/// All xg server settings are saved here
+		/// some are writeable - others just readable
+		/// </summary>
 		private Settings()
 		{
 			this.commandWaitTime = 15000;

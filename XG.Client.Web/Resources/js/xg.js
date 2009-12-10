@@ -898,7 +898,7 @@ function FormatBotName(cellvalue, options, rowObject)
 
 	var ret = "";
 	ret += cellvalue;
-	if(rowObject.botstate != "Idle" && rowObject.lastmessage != "")
+	if(/*rowObject.botstate != "Idle" &&*/ rowObject.lastmessage != "")
 	{
 		ret += "<br /><small>" + rowObject.lastmessage + "</small>";
 	}

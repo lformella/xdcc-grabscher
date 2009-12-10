@@ -123,22 +123,7 @@ namespace XG.Client.TCP
 			{
 				if (aMessage != TCPClientRequest.None) { this.myWriter.Write((byte)aMessage); }
 				if (aGuid != Guid.Empty) { this.myWriter.Write(aGuid.ToByteArray()); }
-				if (aData != null) { this.myWriter.Write(aData); }
-				this.myWriter.Flush();
-			}
-			catch (Exception ex)
-			{
-				if (this.ConnectionErrorEvent != null) { this.ConnectionErrorEvent(XGHelper.GetExceptionMessage(ex)); }
-				this.Disconnect();
-			}
-		}
-
-		public void WriteSerializeData(TCPClientRequest aMessage, object aObject)
-		{
-			try
-			{
-				if (aMessage != TCPClientRequest.None) { this.myWriter.Write((byte)aMessage); }
-				if (aObject != null) { new BinaryFormatter().Serialize(this.myWriter.BaseStream, aObject); }
+				if (aData != null && aData != "") { this.myWriter.Write(aData); }
 				this.myWriter.Flush();
 			}
 			catch (Exception ex)

@@ -35,6 +35,7 @@ namespace XG.Server
 	/// - connect to or disconnect from an irc server
 	/// - handling of global bot downloads
 	/// - splitting and merging the files to download
+	/// - writing files to disk
 	/// - timering some clean up tasks
 	/// </summary>
 	public class ServerHandler
@@ -157,6 +158,10 @@ namespace XG.Server
 			}
 		}
 
+		/// <summary>
+		/// Just throws the event on step ahead
+		/// </summary>
+		/// <param name="aData"></param>
 		void server_ParsingErrorEventHandler(string aData)
 		{
 			if (this.ParsingErrorEvent != null)
@@ -165,6 +170,11 @@ namespace XG.Server
 			}
 		}
 
+		/// <summary>
+		/// Just throws the event on step ahead
+		/// </summary>
+		/// <param name="aParentObj"></param>
+		/// <param name="aObj"></param>
 		void _ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
 			if (this.ObjectRemovedEvent != null)
@@ -173,6 +183,10 @@ namespace XG.Server
 			}
 		}
 
+		/// <summary>
+		/// Just throws the event on step ahead
+		/// </summary>
+		/// <param name="aObj"></param>
 		void _ObjectChangedEventHandler(XGObject aObj)
 		{
 			if (this.ObjectChangedEvent != null)
@@ -181,6 +195,11 @@ namespace XG.Server
 			}
 		}
 
+		/// <summary>
+		/// Just throws the event on step ahead
+		/// </summary>
+		/// <param name="aParentObj"></param>
+		/// <param name="aObj"></param>
 		void _ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
 			if (this.ObjectAddedEvent != null)

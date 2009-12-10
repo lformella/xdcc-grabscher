@@ -168,7 +168,6 @@ namespace XG.Server.Web
 		
 					// read the request id
 					try { tMessage = (TCPClientRequest)int.Parse(tDic["request"]); }
-					// this is ok
 					catch (Exception ex)
 					{
 						this.Log("OpenClient() read client request: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);

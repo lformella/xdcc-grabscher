@@ -5,9 +5,9 @@
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
-    <widget-library name="../../XG.Client.GTK/bin/Release/XG.Client.GTK.dll" />
-    <widget-library name="../../XG.Client.Widgets.GTK/bin/Release/XG.Client.Widgets.GTK.dll" />
-    <widget-library name="../bin/Release/XG.Client.TCP.GTK.exe" internal="true" />
+    <widget-library name="../../XG.Client.GTK/bin/Debug/XG.Client.GTK.dll" />
+    <widget-library name="../../XG.Client.Widgets.GTK/bin/Debug/XG.Client.Widgets.GTK.dll" />
+    <widget-library name="../bin/Debug/XG.Client.TCP.GTK.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="XG.Client.TCP.GTK.MainWindow" design-size="1130 660">
     <property name="MemberName" />

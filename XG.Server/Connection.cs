@@ -129,7 +129,7 @@ namespace XG.Server
 							}
 							else
 							{
-								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received - possible deadlock?!", LogLevel.Warning);
+								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received", LogLevel.Warning);
 								break;
 							}
 						}
@@ -161,7 +161,8 @@ namespace XG.Server
 							}
 							else
 							{
-								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received - possible deadlock?!", LogLevel.Warning);
+								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received", LogLevel.Warning);
+								break;
 							}
 						}
 						while (data != null);

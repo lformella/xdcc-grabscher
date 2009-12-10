@@ -77,14 +77,6 @@ namespace XG.Core
 		public DateTime LastContact
 		{
 			get { return lastContact; }
-			set
-			{
-				if (lastContact != value)
-				{
-					lastContact = value;
-					this.Modified = true;
-				}
-			}
 		}
 
 		private int queuePosition = 0;

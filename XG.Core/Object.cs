@@ -73,17 +73,20 @@ namespace XG.Core
 			get { return this.enabled; }
 			set
 			{
-				// disable all children
-				if (!value)
-				{
-					foreach (XGObject tObj in this.Children)
-					{
-						tObj.Enabled = value;
-					}
-				}
 				if (this.enabled != value)
 				{
+					// disable all children
+					if (!value)
+					{
+						foreach (XGObject tObj in this.Children)
+						{
+							tObj.Enabled = value;
+						}
+					}
+
 					this.enabled = value;
+
+					// just set the time if this object is enabled
 					if (this.enabled)
 					{
 						this.lastModified = DateTime.Now;
@@ -114,14 +117,6 @@ namespace XG.Core
 		public DateTime LastModified
 		{
 			get { return this.lastModified; }
-			set
-			{
-				if (this.lastModified != value)
-				{
-					this.lastModified = value;
-					this.Modified = true;
-				}
-			}
 		}
 
 		private bool modified;
@@ -145,15 +140,6 @@ namespace XG.Core
 		
 		#region ALTER CHILDREN
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="aObject">
-		/// A <see cref="XGObject"/>
-		/// </param>
-		/// <returns>
-		/// A <see cref="System.Boolean"/>
-		/// </returns>
 		public bool addChild(XGObject aObject)
 		{
 			if(aObject != null)
@@ -178,15 +164,6 @@ namespace XG.Core
 			return false;
 		}
 		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="aObject">
-		/// A <see cref="XGObject"/>
-		/// </param>
-		/// <returns>
-		/// A <see cref="System.Boolean"/>
-		/// </returns>
 		public bool removeChild(XGObject aObject)
 		{
 			if(aObject != null)
@@ -201,6 +178,8 @@ namespace XG.Core
 		}
 		
 		#endregion
+
+		#region GET CHILDREN
 
 		public XGObject getChildByGuid(Guid aGuid)
 		{
@@ -237,6 +216,8 @@ namespace XG.Core
 			}
 			return null;
 		}
+
+		#endregion
 
 		protected void SetGuid(Guid aGuid)
 		{
