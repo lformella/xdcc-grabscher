@@ -18,4 +18,5 @@
   <WebServerPort>5556</WebServerPort>
   <StyleWebServer>blitzer</StyleWebServer>
   <AutoJoinOnInvite>true</AutoJoinOnInvite>
+  <LogLevel>Notice</LogLevel>
 </Settings>
