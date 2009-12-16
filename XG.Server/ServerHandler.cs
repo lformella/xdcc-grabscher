@@ -253,9 +253,18 @@ namespace XG.Server
 				aCon.ObjectChangedEvent -= new ObjectDelegate(_ObjectChangedEventHandler);
 				this.myDownloads.Remove(aPacket);
 
-				// if a download is only one part it wil never call the next refbytes function, so the check must be done somewhere else...
-				try { this.CheckFile(aCon.Part.Parent); }
-				catch (Exception) { }
+				try
+				{
+					// if a download is only one part it wil never call the next refbytes function, so we hab to trigger the checkfile here
+					if(aCon.Part.Parent.Children.Length == 1 && aCon.Part.IsChecked)
+					{
+						this.CheckFile(aCon.Part.Parent);
+					}
+				}
+				catch (Exception ex)
+				{
+					this.Log("bot_Disconnected() " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				}
 
 				try
 				{
@@ -644,7 +653,7 @@ namespace XG.Server
 		public void CheckNextReferenceBytes(object aObj)
 		{
 			PartBytesObject pbo = aObj as PartBytesObject;
-			this.CheckNextReferenceBytes(pbo.Part, pbo.Bytes);
+			this.CheckNextReferenceBytes(pbo.Part, pbo.Bytes, true);
 		}
 
 		/// <summary>
@@ -654,6 +663,18 @@ namespace XG.Server
 		/// <param name="aBytes"></param>
 		/// <returns></returns>
 		public Int64 CheckNextReferenceBytes(XGFilePart aPart, byte[] aBytes)
+		{
+			return this.CheckNextReferenceBytes(aPart, aBytes, false);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="aPart"></param>
+		/// <param name="aBytes"></param>
+		/// <param name="aThreaded"></param>
+		/// <returns></returns>
+		private Int64 CheckNextReferenceBytes(XGFilePart aPart, byte[] aBytes, bool aThreaded)
 		{
 			XGFile tFile = aPart.Parent;
 			XGObject[] parts = tFile.Children;
@@ -725,6 +746,7 @@ namespace XG.Server
 								part.IsChecked = true;
 								this.ObjectChangedEvent(part);
 
+								// TODO cut
 								if (part.PartState == FilePartState.Ready)
 								{
 									// file is not the last, so check the next one
@@ -739,16 +761,22 @@ namespace XG.Server
 										fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheck);
 										fileReader.Close();
 
-										//this.CheckNextReferenceBytes(part, bytes);
-										new Thread(new ParameterizedThreadStart(CheckNextReferenceBytes)).Start(new PartBytesObject(part, bytes));
+										// dont open a new thread if we are already threaded
+										if(aThreaded)
+										{
+											this.CheckNextReferenceBytes(part, bytes, false);
+										}
+										else
+										{
+											new Thread(new ParameterizedThreadStart(CheckNextReferenceBytes)).Start(new PartBytesObject(part, bytes));
+										}
 									}
 									// last file, so check all downloaded files
-									// this is done separately
-									/*else
+									else
 									{
 										this.Log("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") ready, starting file check", LogLevel.Notice);
 										this.CheckFile(tFile);
-									}*/
+									}
 								}
 							}
 						}
@@ -830,8 +858,9 @@ namespace XG.Server
 									XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || 
 									XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
 									))
-								{
-									this.Log("CreateCompleteFile(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
+								{									
+									this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
+									this.Log("REMOVE ME - " + fileName + " vs " + XGHelper.ShrinkFileName(tPack.RealName, 0) + " / " + XGHelper.ShrinkFileName(tPack.Name, 0), LogLevel.Notice);
 									tPack.Enabled = false;
 									this.ObjectChangedEvent(tPack);
 								}
@@ -872,7 +901,7 @@ namespace XG.Server
 					}
 					catch (Exception ex)
 					{
-						this.Log("CreateCompleteFile(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 						break;
 					}
 				}
@@ -883,7 +912,7 @@ namespace XG.Server
 				if (size == tFile.Size)
 				{
 					this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
-					this.Log("CreateCompleteFile(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
+					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
 
 					// the file is complete and enabled
 					tFile.Enabled = true;
@@ -900,12 +929,12 @@ namespace XG.Server
 				}
 				else
 				{
-					this.Log("CreateCompleteFile(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size, LogLevel.Error);
+					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size, LogLevel.Error);
 				}
 			}
 			catch (Exception ex)
 			{
-				this.Log("CreateCompleteFile(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 			}
 			if(error)
 			{

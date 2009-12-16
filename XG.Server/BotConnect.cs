@@ -426,7 +426,9 @@ namespace XG.Server
 						this.Disconnect();
 					}
 					this.myStopBuffer = new byte[aData.Length - length];
+					// copy the overlapping data into the buffer
 					Array.Copy(aData, length, this.myStopBuffer, 0, aData.Length - length);
+					// and shrink the actual data
 					Array.Resize(ref aData, (int)length);
 				}
 				// resize buffer and copy data
@@ -465,11 +467,12 @@ namespace XG.Server
 					// we are unchecked, so just close
 					else
 					{
-						// shrink the buffer if it is to big and write it to file to be able to check the next file
+						// shrink the buffer if it is to big
 						if (this.myStopBuffer.Length > Settings.Instance.FileRollbackCheck)
 						{
 							Array.Resize(ref this.myStopBuffer, (int)Settings.Instance.FileRollbackCheck);
 						}
+						// and write it to file to be able to check the next file
 						this.myWriter.Write(this.myStopBuffer);
 						this.myWriter.Flush();
 						this.myReceivedBytes += this.myStopBuffer.Length;

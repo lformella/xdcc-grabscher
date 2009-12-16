@@ -65,6 +65,9 @@ namespace XG.Server
 		/// </summary>
 		public void Start()
 		{
+			// set the loglevel
+			XGHelper.LogLevel = Settings.Instance.LogLevel;
+			
 			// the one and only root object
 			this.myRootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
 			if (this.myRootObject == null) { this.myRootObject = new RootObject(); }

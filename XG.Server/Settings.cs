@@ -37,6 +37,7 @@ namespace XG.Server
 				if (instance == null)
 				{
 					instance = Deserialize();
+					Serialize();
 				}
 				return instance;
 			}
@@ -74,6 +75,21 @@ namespace XG.Server
 			{
 				XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				return new Settings();
+			}
+		}
+
+		private static void Serialize()
+		{
+			try
+			{
+				XmlSerializer ser = new XmlSerializer(typeof(Settings));
+				StreamWriter sw = new StreamWriter("./setings.xml");
+				ser.Serialize(sw, instance);
+				sw.Close();
+			}
+			catch (Exception ex)
+			{
+				XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 			}
 		}
 
@@ -122,6 +138,12 @@ namespace XG.Server
 			this.webServerPort = 5556;
 			this.styleWebServer = "blitzer";
 			this.autoJoinOnInvite = true;
+
+#if DEBUG
+			this.logLevel = LogLevel.Notice;
+#else
+			this.logLevel = LogLevel.Warning;
+#endif
 		}
 		
 		#region PRIVATE
@@ -360,6 +382,13 @@ namespace XG.Server
 		{
 			get { return autoJoinOnInvite; }
 			set { autoJoinOnInvite = value; }
+		}
+
+		LogLevel logLevel;
+		public LogLevel LogLevel 
+		{
+			get { return logLevel; }
+			set { logLevel = value; }
 		}
 		
 		#endregion

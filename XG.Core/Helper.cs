@@ -376,13 +376,10 @@ namespace XG.Core
 		#region LOGGING
 
 		private static object LogLock = new object();
+		public static LogLevel LogLevel = LogLevel.Warning;
 		public static void Log(string aData, LogLevel aLevel)
 		{
-#if DEBUG
-			if ((Int16)aLevel >= (Int16)LogLevel.Notice)
-#else
-			if ((Int16)aLevel >= (Int16)LogLevel.Error)
-#endif
+			if ((Int16)aLevel >= (Int16)LogLevel)
 			{
 				lock(LogLock)
 				{ 
