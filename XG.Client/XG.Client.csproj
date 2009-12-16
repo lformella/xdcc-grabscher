@@ -94,14 +94,14 @@
     <EmbeddedResource Include="Resources\Server.png" />
     <EmbeddedResource Include="Resources\Server_connected.png" />
     <EmbeddedResource Include="Resources\Server_disabled.png" />
+    <EmbeddedResource Include="Resources\language\de.png" />
+    <EmbeddedResource Include="Resources\extension\audio.png" />
+    <EmbeddedResource Include="Resources\extension\compressed.png" />
+    <EmbeddedResource Include="Resources\extension\default.png" />
+    <EmbeddedResource Include="Resources\extension\video.png" />
+    <EmbeddedResource Include="Resources\client.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageLoader.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\client.png" />
   </ItemGroup>
 </Project>

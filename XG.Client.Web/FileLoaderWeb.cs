@@ -51,9 +51,11 @@ namespace XG.Client.Web
 				return this.myDicStr[aFile];
 			}
 			else
-			{		
+			{
+#if !UNSAFE
 				try
 				{
+#endif
 #if DEBUG
 					return File.OpenText("./Resources" +  aFile).ReadToEnd();
 #else
@@ -62,11 +64,13 @@ namespace XG.Client.Web
 					this.myDicStr.Add(aFile, new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd());
 					return this.myDicStr[aFile];
 #endif
+#if !UNSAFE
 				}
 				catch(Exception ex)
 				{
 					this.Log("LoadFile(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
+#endif
 			}
 			return "";
 		}
@@ -79,8 +83,10 @@ namespace XG.Client.Web
 			}
 			else
 			{
+#if !UNSAFE
 				try
 				{
+#endif
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
 					string name = assembly.GetName().Name + ".Resources" +  aFile.Replace('/', '.');
 					Stream stream = assembly.GetManifestResourceStream(name);
@@ -96,11 +102,13 @@ namespace XG.Client.Web
 					}
 					this.myDicByt.Add(aFile, data);
 					return this.myDicByt[aFile];
+#if !UNSAFE
 				}
 				catch(Exception ex)
 				{
 					this.Log("LoadImage(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
+#endif
 			}
 			return null;
 		}
