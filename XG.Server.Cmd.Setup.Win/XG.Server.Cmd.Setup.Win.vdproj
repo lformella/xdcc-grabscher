@@ -75,7 +75,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_47D5022BE8B449D286FDD78752642294"
+        "MsmKey" = "8:_525D50C5F4C44A3BAE0129BC97F0CFB7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -349,10 +349,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_47D5022BE8B449D286FDD78752642294"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_525D50C5F4C44A3BAE0129BC97F0CFB7"
             {
-            "SourcePath" = "8:..\\setings.xml"
-            "TargetName" = "8:setings.xml"
+            "SourcePath" = "8:..\\setings.example.xml"
+            "TargetName" = "8:setings.example.xml"
             "Tag" = "8:"
             "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
             "Condition" = "8:"
