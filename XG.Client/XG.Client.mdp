@@ -59,7 +59,7 @@
     <File name="Resources/ODay.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Resources.ODay.png" />
     <File name="Resources/OWeek.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Resources.OWeek.png" />
     <File name="Resources/language" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/language/de.gif" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Resources.language.de.png" />
+    <File name="Resources/language/de.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Resources.language.de.png" />
     <File name="Resources/extension" subtype="Directory" buildaction="Compile" />
     <File name="Resources/extension/video.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Resources.extension.video.png" />
     <File name="Resources/extension/default.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Resources.extension.default.png" />

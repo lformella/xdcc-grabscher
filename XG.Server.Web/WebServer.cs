@@ -339,10 +339,17 @@ namespace XG.Server.Web
 				}
 				else
 				{
+					// load an image
 					if(str.StartsWith("/image&"))
 					{
 						this.WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage(str.Split('&')[1]));
 					}
+					// serve the favicon
+					else if(str == "/favicon.ico")
+					{
+						this.WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage("Client"));
+					}
+					// load a file
 					else
 					{
 						if(str.Contains("?")) { str = str.Split('?')[0]; }	

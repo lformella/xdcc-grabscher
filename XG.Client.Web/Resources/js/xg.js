@@ -155,12 +155,10 @@ $(function()
 		treeGridModel: 'adjacency',
 		rowNum:100,
 		rowList:[100, 200, 400, 800],
-		//imgpath: gridimgpath,
 		sortname: 'name',
 		ExpandColumn: 'name',
 		viewrecords: true,
-		//autowidth: true,
-		height: 400,
+		height: 300,
 		sortorder: "asc",
 		caption:"Servers"
 	});
@@ -178,17 +176,17 @@ $(function()
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
 			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			width:26,	formatter:FormatBotIcon},
+			{name:'icon',			index:'icon',			width:26,	formatter:FormatBotIcon, fixed:true},
 			{name:'name',			index:'name',			width:370,	formatter:FormatBotName},
 			{name:'botstate',		index:'botstate',		hidden:true},
-			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right"},
-			{name:'queueposition',	index:'queueposition',	width:70,	formatter:FormatInteger, align:"right"},
-			{name:'queuetime',		index:'queuetime',		width:70,	formatter:FormatTime, align:"right"},
-			{name:'speedmax',		index:'speedmax',		width:100,	formatter:FormatBotSpeed, align:"right"},
+			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right", fixed:true},
+			{name:'queueposition',	index:'queueposition',	width:70,	formatter:FormatInteger, align:"right", fixed:true},
+			{name:'queuetime',		index:'queuetime',		width:70,	formatter:FormatTime, align:"right", fixed:true},
+			{name:'speedmax',		index:'speedmax',		width:100,	formatter:FormatBotSpeed, align:"right", fixed:true},
 			{name:'speedcurrent',	index:'speedcurrent',	hidden:true},
-			{name:'slottotal',		index:'slottotal',		width:60,	formatter:FormatBotSlots, align:"right"},
+			{name:'slottotal',		index:'slottotal',		width:60,	formatter:FormatBotSlots, align:"right", fixed:true},
 			{name:'slotcurrent',	index:'slotcurrent',	hidden:true},
-			{name:'queuetotal',		index:'queuetotal',		width:60,	formatter:FormatBotQueue, align:"right"},
+			{name:'queuetotal',		index:'queuetotal',		width:60,	formatter:FormatBotQueue, align:"right", fixed:true},
 			{name:'queuecurrent',	index:'queuecurrent',	hidden:true},
 			{name:'lastmessage',	index:'lastmessage',	hidden:true},
 			{name:'lastcontact',	index:'lastcontact',	hidden:true}
@@ -206,15 +204,11 @@ $(function()
 		},
 		rowNum:100,
 		rowList:[100, 200, 400, 800],
-		//imgpath: gridimgpath,
 		pager: jQuery('#bot-pager'),
 		sortname: 'name',
 		viewrecords: true,
-		//rownumbers: true,
-		//autowidth: true,
+		autowidth: true,
 		scrollrows: true,
-		//forceFit: true,
-		//height: '100%',
 		height: 300,
 		sortorder: "asc",
 		caption:"Bots"
@@ -233,18 +227,18 @@ $(function()
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
 			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			width:26,	formatter:FormatPacketIcon},
+			{name:'icon',			index:'icon',			width:26,	formatter:FormatPacketIcon, fixed:true},
 			{name:'channelguid',	index:'channelguid',	hidden:true},
-			{name:'id',				index:'id',				width:40,	formatter:FormatPacketId, align:"right"},
+			{name:'id',				index:'id',				width:40,	formatter:FormatPacketId, align:"right", fixed:true},
 			{name:'name',			index:'name',			width:400,	formatter:FormatPacketName},
-			{name:'size',			index:'size',			width:70,	formatter:FormatSize, align:"right"},
-			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right"},
-			{name:'time',			index:'time',			width:90,	formatter:FormatTime, align:"right"},
+			{name:'size',			index:'size',			width:70,	formatter:FormatSize, align:"right", fixed:true},
+			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right", fixed:true},
+			{name:'time',			index:'time',			width:90,	formatter:FormatTime, align:"right", fixed:true},
 			{name:'sizestart',		index:'sizestart',		hidden:true},
 			{name:'sizestop',		index:'sizestop',		hidden:true},
 			{name:'sizecur',		index:'sizecur',		hidden:true},
 			{name:'order',			index:'order',			hidden:true},
-			{name:'lastupdated',	index:'lastupdated',	width:130, align:"right"}
+			{name:'lastupdated',	index:'lastupdated',	width:130, align:"right", fixed:true}
 		],
 		onSelectRow: function(id)
 		{
@@ -292,12 +286,10 @@ $(function()
 		},
 		rowNum:100,
 		rowList:[100, 200, 400, 800],
-		//imgpath: gridimgpath,
 		pager: jQuery('#packet-pager'),
 		sortname: 'id',
 		viewrecords: true,
-		//rownumbers: true,
-		//autowidth: true,
+		autowidth: true,
 		height: 300,
 		sortorder: "asc",
 		caption:"Packets"
@@ -366,12 +358,10 @@ $(function()
 				//id_search_count--;
 			}
 		},
-		//imgpath: gridimgpath,
 		sortname: 'name',
 		ExpandColumn : 'name',
 		viewrecords: true,
-		//autowidth: true,
-		height: 'auto',
+		height: 300,
 		sortorder: "desc",
 		caption:"Search"
 	});
@@ -504,6 +494,7 @@ $(function()
 	{
 		$("#dialog_channel").dialog("open");
 	});
+	jQuery("#add-channel").hide();
 	
 	$("#dialog_channel").dialog({
 		bgiframe: true,
@@ -582,7 +573,17 @@ $(function()
 	
 	// start the refresh
 	RefreshGrid();
+
+	/* ********************************************************************** */
+	/* RESIZE HELPER                                                          */
+	/* ********************************************************************** */
+	
+	$(window).resize(function(){
+	  Resize();
+	});
+	 Resize();
 });
+
 
 /* ************************************************************************** */
 /* COLOR STUFF                                                                */
@@ -900,7 +901,7 @@ function FormatBotName(cellvalue, options, rowObject)
 	ret += cellvalue;
 	if(/*rowObject.botstate != "Idle" &&*/ rowObject.lastmessage != "")
 	{
-		ret += "<br /><small>" + rowObject.lastmessage + "</small>";
+		ret += "<br /><small><b>" + rowObject.lastcontact + ":</b> " + rowObject.lastmessage + "</small>";
 	}
 	return ret;
 }
@@ -999,9 +1000,8 @@ function FormatPacketName(cellvalue, options, rowObject)
 		ret += "<br />";
 
 		var val = ((rowObject.sizecur - rowObject.sizestart) / (rowObject.sizestop - rowObject.sizestart)).toFixed(2) * 100;
-		ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-widget-content ui-corner-all' style='height:5px'><div style='width: " + val + "%' class='ui-progressbar-value ui-widget-header ui-corner-left'></div></div>";
+		ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-widget-content ui-corner-all' style='height:3px'><div style='width: " + val + "%' class='ui-progressbar-value ui-widget-header ui-corner-left'></div></div>";
 	}
-
 
 	return ret;
 }
@@ -1107,3 +1107,19 @@ function Time2Human(time)
 
 	return str;
 }
+
+function Resize()
+{
+	//alert($(window).height() / 2);
+	var width = $(window).width() - 6 * 5 - 200;
+	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25) / 2;
+
+	jQuery("#servers").setGridHeight(height - 15);
+	jQuery("#searches").setGridHeight(height);
+
+	jQuery("#bots").setGridHeight(height);
+	jQuery("#bots").setGridWidth(width);
+	jQuery("#packets").setGridHeight(height);
+	jQuery("#packets").setGridWidth(width);
+}
+
