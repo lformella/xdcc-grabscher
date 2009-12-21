@@ -153,42 +153,48 @@ namespace XG.Core
 		public static XGObject CloneObject(XGObject aFromObj, bool aFull)
 		{
 			XGObject tObj = null;
-			if (aFromObj.GetType() == typeof(XGServer)) { tObj = new XGServer(); }
-			else if (aFromObj.GetType() == typeof(XGChannel)) { tObj = new XGChannel(); }
-			else if (aFromObj.GetType() == typeof(XGBot)) { tObj = new XGBot(); }
-			else if (aFromObj.GetType() == typeof(XGPacket)) { tObj = new XGPacket(); }
-			else if (aFromObj.GetType() == typeof(XGFile)) { tObj = new XGFile(); }
-			else if (aFromObj.GetType() == typeof(XGFilePart)) { tObj = new XGFilePart(); }
-			CloneObject(aFromObj, tObj, aFull);
+			if (aFromObj != null)
+			{
+				if (aFromObj.GetType() == typeof(XGServer)) { tObj = new XGServer(); }
+				else if (aFromObj.GetType() == typeof(XGChannel)) { tObj = new XGChannel(); }
+				else if (aFromObj.GetType() == typeof(XGBot)) { tObj = new XGBot(); }
+				else if (aFromObj.GetType() == typeof(XGPacket)) { tObj = new XGPacket(); }
+				else if (aFromObj.GetType() == typeof(XGFile)) { tObj = new XGFile(); }
+				else if (aFromObj.GetType() == typeof(XGFilePart)) { tObj = new XGFilePart(); }
+				CloneObject(aFromObj, tObj, aFull);
+			}
 			return tObj;
 		}
 
 		public static void CloneObject(XGObject aFromObj, XGObject aToObj, bool aFull)
 		{
-			//Console.WriteLine(aFromObj.Guid + " " + aFromObj.Name);
-			if (aFromObj.GetType() == typeof(XGServer))
+			if (aFromObj != null && aToObj != null)
 			{
-				(aToObj as XGServer).Clone(aFromObj as XGServer, aFull);
-			}
-			else if (aFromObj.GetType() == typeof(XGChannel))
-			{
-				(aToObj as XGChannel).Clone(aFromObj as XGChannel, aFull);
-			}
-			else if (aFromObj.GetType() == typeof(XGBot))
-			{
-				(aToObj as XGBot).Clone(aFromObj as XGBot, aFull);
-			}
-			else if (aFromObj.GetType() == typeof(XGPacket))
-			{
-				(aToObj as XGPacket).Clone(aFromObj as XGPacket, aFull);
-			}
-			else if (aFromObj.GetType() == typeof(XGFile))
-			{
-				(aToObj as XGFile).Clone(aFromObj as XGFile, aFull);
-			}
-			else if (aFromObj.GetType() == typeof(XGFilePart))
-			{
-				(aToObj as XGFilePart).Clone(aFromObj as XGFilePart, aFull);
+				//Console.WriteLine(aFromObj.Guid + " " + aFromObj.Name);
+				if (aFromObj.GetType() == typeof(XGServer))
+				{
+					(aToObj as XGServer).Clone(aFromObj as XGServer, aFull);
+				}
+				else if (aFromObj.GetType() == typeof(XGChannel))
+				{
+					(aToObj as XGChannel).Clone(aFromObj as XGChannel, aFull);
+				}
+				else if (aFromObj.GetType() == typeof(XGBot))
+				{
+					(aToObj as XGBot).Clone(aFromObj as XGBot, aFull);
+				}
+				else if (aFromObj.GetType() == typeof(XGPacket))
+				{
+					(aToObj as XGPacket).Clone(aFromObj as XGPacket, aFull);
+				}
+				else if (aFromObj.GetType() == typeof(XGFile))
+				{
+					(aToObj as XGFile).Clone(aFromObj as XGFile, aFull);
+				}
+				else if (aFromObj.GetType() == typeof(XGFilePart))
+				{
+					(aToObj as XGFilePart).Clone(aFromObj as XGFilePart, aFull);
+				}
 			}
 		}
 

@@ -344,7 +344,11 @@ namespace XG.Server.TCP
 					{
 						case TCPServerResponse.ObjectAdded:
 						case TCPServerResponse.ObjectChanged:
-							this.myFormatter.Serialize(aWriter.BaseStream, XGHelper.CloneObject(aObject, true));
+							object obj = XGHelper.CloneObject(aObject, true);
+							if (obj != null)
+							{
+								this.myFormatter.Serialize(aWriter.BaseStream, obj);
+							}
 							break;
 
 						case TCPServerResponse.ObjectRemoved:

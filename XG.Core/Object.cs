@@ -26,6 +26,9 @@ namespace XG.Core
 		[field: NonSerialized()]
 		public event ObjectDelegate EnabledChangedEvent;
 
+		[field: NonSerialized()]
+		public object locked = new object();
+
 		private Guid parentGuid;
 		public Guid ParentGuid
 		{

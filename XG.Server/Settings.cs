@@ -123,6 +123,7 @@ namespace XG.Server
 			this.downloadTimeout = 30000;
 			this.botOfflineTime = 7200000;
 			this.samePacketRequestTime = 10000;
+			this.maxNoDataReceived = 5;
 
 			this.parsingErrorFile = "./parsing_errors.txt";
 			this.dataBinary = "./xg.bin";
@@ -266,6 +267,12 @@ namespace XG.Server
 		public string FilesBinary
 		{
 			get { return filesBinary; }
+		}
+
+		int maxNoDataReceived;
+		public int MaxNoDataReceived
+		{
+			get { return maxNoDataReceived; }
 		}
 
 		#endregion

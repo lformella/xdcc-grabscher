@@ -27,7 +27,7 @@ namespace XG.Server.Web
 {	
 	public class WebServer : IServerPlugin
 	{
-		private const string VERSION = "0.2";
+		private const string VERSION = "0.5";
 		
 		private ServerRunner myRunner;
 
@@ -451,8 +451,9 @@ namespace XG.Server.Web
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.StartSize.ToString()) + ",\n");								//11
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",\n");								//12
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",\n");								//13
-				sb.Append("\t\t\t" + (tPack.Parent.getOldestActivePacket() != tPack ? "0" : "1") + ",\n");						//14
-				sb.Append("\t\t\t\"" + tPack.LastUpdated + "\"\n");																//15
+				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.IsChecked ? "1" : "0") + ",\n");								//14
+				sb.Append("\t\t\t" + (tPack.Parent.getOldestActivePacket() != tPack ? "0" : "1") + ",\n");						//15
+				sb.Append("\t\t\t\"" + tPack.LastUpdated + "\"\n");																//16
 			}
 			else
 			{

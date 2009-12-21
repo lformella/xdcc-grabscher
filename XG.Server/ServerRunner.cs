@@ -148,16 +148,7 @@ namespace XG.Server
 			{
 				foreach(XGFile file in this.myFiles.ToArray())
 				{
-					bool remove = false;
-					foreach(XGFilePart part in file.Children)
-					{
-						if(part.PartState == FilePartState.Ready)
-						{
-							remove = true;
-							break;
-						}
-					}
-					if(remove)
+					if(file.Enabled)
 					{
 						this.myFiles.Remove(file);
 						this.Log("Run() removing ready file " + file.Name, LogLevel.Notice);
@@ -173,62 +164,81 @@ namespace XG.Server
 			{
 				foreach(XGFile file in this.myFiles.ToArray())
 				{
-					bool complete = true;
-					string tmpPath = Settings.Instance.TempPath + file.TmpPath;
+					file.locked = new object();
 
-					foreach(XGFilePart part in file.Children)
+					if(!file.Enabled)
 					{
-						// check if the real file and the part is actual the same
-						if(!file.Enabled)
+						bool complete = true;
+						string tmpPath = Settings.Instance.TempPath + file.TmpPath;
+	
+						foreach(XGFilePart part in file.Children)
 						{
+							part.locked = new object();
+	
+							// check if the real file and the part is actual the same
 							FileInfo info = new FileInfo(tmpPath + part.StartSize);
 							if(info.Exists)
 							{
-								// TODO uhm, should we do smt here ?! maybee check the size...
+								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
+								if(part.CurrentSize != part.StartSize + info.Length)
+								{
+									this.Log("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length, LogLevel.Warning);
+									part.CurrentSize = part.StartSize + info.Length;
+									complete = false;
+								}
 							}
 							else
 							{
 								this.Log("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing", LogLevel.Error);
 								this.myServerHandler.RemovePart(file, part);
+								complete = false;
 							}
-						}
-
-						// uhh, this is bad - close it and hope it works again
-						if(part.PartState == FilePartState.Open) { part.PartState = FilePartState.Closed; }
-						// the file is closed, so do smt
-						else
-						{
-							// check the file for safety
-							if(part.IsChecked && part.PartState == FilePartState.Ready)
+	
+							// uhh, this is bad - close it and hope it works again
+							if(part.PartState == FilePartState.Open)
 							{
-								XGFilePart next = file.getNextChild(part) as XGFilePart;
-								if(next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
+								part.PartState = FilePartState.Closed;
+								complete = false;
+							}
+							// the file is closed, so do smt
+							else
+							{
+								// check the file for safety
+								if(part.IsChecked && part.PartState == FilePartState.Ready)
+								{
+									XGFilePart next = file.getNextChild(part) as XGFilePart;
+									if(next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
+									{
+										complete = false;
+										try
+										{
+											this.Log("Run() crash recovery checking " + next.Name, LogLevel.Exception);
+											FileStream fileStream = File.Open(this.myServerHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
+											BinaryReader fileReader = new BinaryReader(fileStream);
+											// extract the needed refernce bytes
+											fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
+											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+											fileReader.Close();
+			
+											this.myServerHandler.CheckNextReferenceBytes(part, bytes);
+										}
+										catch (Exception ex)
+										{
+											this.Log("Run() crash recovery: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+										}
+									}
+								}
+								else
 								{
 									complete = false;
-									try
-									{
-										this.Log("Run() crash recovery checking " + next.Name, LogLevel.Exception);
-										FileStream fileStream = File.Open(this.myServerHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
-										BinaryReader fileReader = new BinaryReader(fileStream);
-										// extract the needed refernce bytes
-										fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
-										byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
-										fileReader.Close();
-		
-										this.myServerHandler.CheckNextReferenceBytes(part, bytes);
-									}
-									catch (Exception ex)
-									{
-										this.Log("Run() crash recovery: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-									}
 								}
 							}
 						}
+	
+						// check and maybee join the files if something happend the last run
+						// for exaple the disk was full or the rights were not there
+						if(complete && file.Children.Length > 0) { this.myServerHandler.CheckFile(file); }
 					}
-
-					// check and maybee join the files if something happend the last run
-					// for exaple the disk was full or the rights were not there
-					if(!file.Enabled && complete && file.Children.Length > 0) { this.myServerHandler.CheckFile(file); }
 				}
 			}
 

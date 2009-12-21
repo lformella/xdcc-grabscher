@@ -142,6 +142,7 @@ namespace XG.Server
 
 					else
 					{
+						int failCounter = 0;
 						string data;
 						do
 						{
@@ -154,6 +155,7 @@ namespace XG.Server
 							}
 							if (data != "" && data != null)
 							{
+								failCounter = 0;
 								if (this.DataTextReceivedEvent != null)
 								{
 									this.DataTextReceivedEvent(data);
@@ -161,8 +163,16 @@ namespace XG.Server
 							}
 							else
 							{
-								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received", LogLevel.Warning);
-								break;
+								failCounter++;
+								if (failCounter > Settings.Instance.MaxNoDataReceived)
+								{
+									this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received", LogLevel.Warning);
+									break;
+								}
+								else
+								{
+									data = "";
+								}
 							}
 						}
 						while (data != null);
@@ -226,7 +236,7 @@ namespace XG.Server
 
 		private void Log(string aData, LogLevel aLevel)
 		{
-			XGHelper.Log("Connection(" + this.myHost + ", " + this.myPort + ")." + aData, aLevel);
+			XGHelper.Log("Connection(" + this.myHost + ":" + this.myPort + ")." + aData, aLevel);
 		}
 
 		#endregion

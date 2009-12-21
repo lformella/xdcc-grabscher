@@ -201,6 +201,7 @@ namespace XG.Server
 								if (tDataList[1] == "SEND")
 								{
 									this.Log("con_DataReceived() DCC from " + tBot.Name, LogLevel.Notice);
+									#region IP CALCULATING
 									try
 									{
 										// this works not in mono?!
@@ -228,6 +229,7 @@ namespace XG.Server
 										tBot.IP = IPAddress.Parse(realIp);
 										#endregion
 									}
+									#endregion
 									tPort = int.Parse(tDataList[4]);
 									tPacket.RealName = tDataList[2];
 									tPacket.RealSize = Int64.Parse(tDataList[5]);
@@ -238,7 +240,8 @@ namespace XG.Server
 										this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
 										tPacket.Enabled = false;
 										this.ObjectChange(tPacket);
-										this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
+										//this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
+										this.UnregisterFromBot(tBot);
 									}
 									else if (tChunk > 0)
 									{
@@ -969,7 +972,7 @@ namespace XG.Server
 						// ok, lets do a silent auto join
 						if (Settings.Instance.AutoJoinOnInvite)
 						{
-							this.Log("con_DataReceived() auto joining", LogLevel.Notice);
+							this.Log("con_DataReceived() auto joining " + tData, LogLevel.Notice);
 							this.myCon.SendData("JOIN " + tData);
 						}
 					}

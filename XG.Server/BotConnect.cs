@@ -300,8 +300,12 @@ namespace XG.Server
 					{
 						this.Part.PartState = FilePartState.Broken;
 						this.Log("con_Disconnected() size is bigger than excepted: " + this.CurrrentSize + " > " + this.StopSize, LogLevel.Error);
-						// TODO do something here - for example remove that part
-						// or set the size to 0 and remove the file
+						// this mostly happens on the last part of a file - so lets remove the file and load the package again
+						if (this.File.Children.Length == 1 || this.Part.StopSize == this.File.Size)
+						{
+							this.myParent.RemoveFile(this.File);
+							this.Log("con_Disconnected() removing corputed file " + this.File.Name, LogLevel.Error);
+						}
 					}
 					// it did not start
 					else if (this.myReceivedBytes == 0)

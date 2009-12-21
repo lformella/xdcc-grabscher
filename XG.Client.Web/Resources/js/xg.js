@@ -221,7 +221,7 @@ $(function()
 	jQuery("#packets").jqGrid(
 	{
 		datatype: "json",
-		colNames:['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', 'Order', 'Lastupdated'],
+		colNames:['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', '', '', 'Lastupdated'],
 		colModel:[
 			{name:'parent',			index:'parent',			hidden:true},
 			{name:'connected',		index:'connected',		hidden:true},
@@ -237,6 +237,7 @@ $(function()
 			{name:'sizestart',		index:'sizestart',		hidden:true},
 			{name:'sizestop',		index:'sizestop',		hidden:true},
 			{name:'sizecur',		index:'sizecur',		hidden:true},
+			{name:'checked',		index:'checked',		hidden:true},
 			{name:'order',			index:'order',			hidden:true},
 			{name:'lastupdated',	index:'lastupdated',	width:130, align:"right", fixed:true}
 		],
@@ -768,8 +769,9 @@ function RefreshPacket(guid)
 			data['sizestart'] = result.cell[11];
 			data['sizestop'] = result.cell[12];
 			data['sizecur'] = result.cell[13];
-			data['order'] = result.cell[14];
-			data['lastupdated'] = result.cell[15];
+			data['checked'] = result.cell[14];
+			data['order'] = result.cell[15];
+			data['lastupdated'] = result.cell[16];
 			var check = jQuery("#packets").setRowData(result.id, data);
 			return;
 		}
@@ -797,8 +799,9 @@ function Array2Packet(array)
 	data.sizestart = array[11];
 	data.sizestop = array[12];
 	data.sizecur = array[13];
-	data.order = array[14];
-	data.lastupdated = array[15];
+	data.checked = array[14];
+	data.order = array[15];
+	data.lastupdated = array[16];
 	return data;
 }
 
@@ -999,8 +1002,19 @@ function FormatPacketName(cellvalue, options, rowObject)
 	{
 		ret += "<br />";
 
-		var val = ((rowObject.sizecur - rowObject.sizestart) / (rowObject.sizestop - rowObject.sizestart)).toFixed(2) * 100;
-		ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-widget-content ui-corner-all' style='height:3px'><div style='width: " + val + "%' class='ui-progressbar-value ui-widget-header ui-corner-left'></div></div>";
+		var a = ((rowObject.sizestart) / rowObject.size).toFixed(2) * 100;
+		var b = ((rowObject.sizecur - rowObject.sizestart) / rowObject.size).toFixed(2) * 100;
+		var c = ((rowObject.sizestop - rowObject.sizecur) / rowObject.size).toFixed(2) * 100;
+		if(a + b + c > 100)
+		{
+			c = 100 - a - b;
+		}
+		// Enum.TangoColor.SkyBlue.Middle
+		ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-widget-content ui-corner-all' style='height:3px'>" +
+					"<div style='width: " + a + "%;float:left' class='ui-progressbar-value ui-corner-left'></div>" +
+					"<div style='width: " + b + "%;float:left;background:#" + (rowObject.checked ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
+					"<div style='width: " + c + "%;float:left;background:#" + (rowObject.checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
+				"</div><div class='clear'></div>";
 	}
 
 	return ret;

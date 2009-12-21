@@ -255,11 +255,8 @@ namespace XG.Server
 
 				try
 				{
-					// if a download is only one part it wil never call the next refbytes function, so we hab to trigger the checkfile here
-					if(aCon.Part.Parent.Children.Length == 1 && aCon.Part.IsChecked)
-					{
-						this.CheckFile(aCon.Part.Parent);
-					}
+					// do this here because the bothandler sets the part state and after this we can check the file
+					this.CheckFile(aCon.Part.Parent);
 				}
 				catch (Exception ex)
 				{
@@ -713,7 +710,7 @@ namespace XG.Server
 							}
 							else
 							{
-								this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked", LogLevel.Warning);
+								this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked", LogLevel.Notice);
 								part.IsChecked = true;
 								this.ObjectChangedEvent(part);
 								return 0;
@@ -746,9 +743,8 @@ namespace XG.Server
 								part.IsChecked = true;
 								this.ObjectChangedEvent(part);
 
-								// TODO cut
 								if (part.PartState == FilePartState.Ready)
-								{
+								{									
 									// file is not the last, so check the next one
 									if (part.StopSize < tFile.Size)
 									{
@@ -758,7 +754,8 @@ namespace XG.Server
 										fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
 										bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 										// and truncate the file
-										fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheck);
+										//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheck);
+										fileStream.SetLength(part.StopSize - part.StartSize);
 										fileReader.Close();
 
 										// dont open a new thread if we are already threaded
@@ -770,12 +767,6 @@ namespace XG.Server
 										{
 											new Thread(new ParameterizedThreadStart(CheckNextReferenceBytes)).Start(new PartBytesObject(part, bytes));
 										}
-									}
-									// last file, so check all downloaded files
-									else
-									{
-										this.Log("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") ready, starting file check", LogLevel.Notice);
-										this.CheckFile(tFile);
 									}
 								}
 							}
@@ -806,23 +797,26 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		public void CheckFile(XGFile aFile)
 		{
-			this.Log("CheckFile(" + aFile.Name + ")", LogLevel.Notice);
-			if (aFile.Children.Length == 0) { return; }
-
-			bool complete = true;
-			XGObject[] parts = aFile.Children;
-			foreach (XGFilePart part in parts)
+			lock(aFile.locked)
 			{
-				if (part.PartState != FilePartState.Ready)
+				this.Log("CheckFile(" + aFile.Name + ")", LogLevel.Notice);
+				if (aFile.Children.Length == 0) { return; }
+	
+				bool complete = true;
+				XGObject[] parts = aFile.Children;
+				foreach (XGFilePart part in parts)
 				{
-					complete = false;
-					this.Log("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete", LogLevel.Notice);
-					break;
+					if (part.PartState != FilePartState.Ready)
+					{
+						complete = false;
+						this.Log("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete", LogLevel.Notice);
+						break;
+					}
 				}
-			}
-			if (complete)
-			{
-				new Thread(new ParameterizedThreadStart(JoinCompleteParts)).Start(aFile);
+				if (complete)
+				{
+					new Thread(new ParameterizedThreadStart(JoinCompleteParts)).Start(aFile);
+				}
 			}
 		}
 
@@ -835,112 +829,115 @@ namespace XG.Server
 		public void JoinCompleteParts(object aObject)
 		{
 			XGFile tFile = aObject as XGFile;
-			this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting", LogLevel.Notice);
-
-			#region DISABLE ALL MATCHING PACKETS
-
-			// TODO remove all CD* packets if a multi packet was downloaded
-			
-			string fileName = XGHelper.ShrinkFileName(tFile.Name, 0);
-
-			foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
+			lock(tFile.locked)
 			{
-				XGServer tServ = kvp.Key;
-				foreach (XGChannel tChan in tServ.Children)
+				this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting", LogLevel.Notice);
+	
+				#region DISABLE ALL MATCHING PACKETS
+	
+				// TODO remove all CD* packets if a multi packet was downloaded
+				
+				string fileName = XGHelper.ShrinkFileName(tFile.Name, 0);
+	
+				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
 				{
-					if (tChan.Connected)
+					XGServer tServ = kvp.Key;
+					foreach (XGChannel tChan in tServ.Children)
 					{
-						foreach (XGBot tBot in tChan.Children)
+						if (tChan.Connected)
 						{
-							foreach (XGPacket tPack in tBot.Children)
+							foreach (XGBot tBot in tChan.Children)
 							{
-								if (tPack.Enabled && (
-									XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || 
-									XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
-									))
-								{									
-									this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
-									this.Log("REMOVE ME - " + fileName + " vs " + XGHelper.ShrinkFileName(tPack.RealName, 0) + " / " + XGHelper.ShrinkFileName(tPack.Name, 0), LogLevel.Notice);
-									tPack.Enabled = false;
-									this.ObjectChangedEvent(tPack);
+								foreach (XGPacket tPack in tBot.Children)
+								{
+									if (tPack.Enabled && (
+										XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || 
+										XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
+										))
+									{									
+										this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
+										this.Log("REMOVE ME - " + fileName + " vs " + XGHelper.ShrinkFileName(tPack.RealName, 0) + " / " + XGHelper.ShrinkFileName(tPack.Name, 0), LogLevel.Notice);
+										tPack.Enabled = false;
+										this.ObjectChangedEvent(tPack);
+									}
 								}
 							}
 						}
 					}
 				}
-			}
-
-			#endregion
-
-			if(tFile.Children.Length == 0)
-			{
-				return;
-			}
-
-			bool error = true;
-			XGObject[] parts = tFile.Children;
-			string fileReady = Settings.Instance.ReadyPath + tFile.Name;
-
-			try
-			{
-				FileStream stream = File.Open(fileReady, FileMode.Create, FileAccess.Write);
-				BinaryWriter writer = new BinaryWriter(stream);
-				foreach (XGFilePart part in parts)
+	
+				#endregion
+	
+				if(tFile.Children.Length == 0)
 				{
-					try
+					return;
+				}
+	
+				bool error = true;
+				XGObject[] parts = tFile.Children;
+				string fileReady = Settings.Instance.ReadyPath + tFile.Name;
+	
+				try
+				{
+					FileStream stream = File.Open(fileReady, FileMode.Create, FileAccess.Write);
+					BinaryWriter writer = new BinaryWriter(stream);
+					foreach (XGFilePart part in parts)
 					{
-						FileStream fs = File.Open(this.GetCompletePath(part), FileMode.Open, FileAccess.Read);
-						BinaryReader reader = new BinaryReader(fs);
-						byte[] data;
-						while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerRead)).Length > 0)
+						try
 						{
-							writer.Write(data);
-							writer.Flush();
+							FileStream fs = File.Open(this.GetCompletePath(part), FileMode.Open, FileAccess.Read);
+							BinaryReader reader = new BinaryReader(fs);
+							byte[] data;
+							while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerRead)).Length > 0)
+							{
+								writer.Write(data);
+								writer.Flush();
+							}
+							reader.Close();
 						}
-						reader.Close();
+						catch (Exception ex)
+						{
+							this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							break;
+						}
 					}
-					catch (Exception ex)
+					writer.Close();
+					stream.Close();
+	
+					Int64 size = new FileInfo(fileReady).Length;
+					if (size == tFile.Size)
 					{
-						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-						break;
+						this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
+						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
+	
+						// the file is complete and enabled
+						tFile.Enabled = true;
+						error = false;
+	
+						// maybee clear it
+						if(Settings.Instance.ClearReadyDownloads)
+						{
+							this.RemoveFile(tFile);
+						}
+	
+						// great, all went right, so lets check what we can do with the file
+						new Thread(delegate() { this.HandleFile(fileReady); }).Start();
 					}
-				}
-				writer.Close();
-				stream.Close();
-
-				Int64 size = new FileInfo(fileReady).Length;
-				if (size == tFile.Size)
-				{
-					this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
-					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
-
-					// the file is complete and enabled
-					tFile.Enabled = true;
-					error = false;
-
-					// maybee clear it
-					if(Settings.Instance.ClearReadyDownloads)
+					else
 					{
-						this.RemoveFile(tFile);
+						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size, LogLevel.Error);
 					}
-
-					// great, all went right, so lets check what we can do with the file
-					new Thread(delegate() { this.HandleFile(fileReady); }).Start();
 				}
-				else
+				catch (Exception ex)
 				{
-					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size, LogLevel.Error);
+					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
-			}
-			catch (Exception ex)
-			{
-				this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-			}
-			if(error)
-			{
-				// the creation was not successfull, so delete the files and parts
-				this.FileDelete(fileReady);
-				this.RemoveFile(tFile);
+				if(error)
+				{
+					// the creation was not successfull, so delete the files and parts
+					this.FileDelete(fileReady);
+					this.RemoveFile(tFile);
+				}
 			}
 		}
 
