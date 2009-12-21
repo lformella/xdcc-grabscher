@@ -24,11 +24,11 @@ using XG.Client.Web;
 using XG.Core;
 
 namespace XG.Server.Web
-{	
+{
 	public class WebServer : IServerPlugin
 	{
 		private const string VERSION = "0.5";
-		
+
 		private ServerRunner myRunner;
 
 		private Thread myServerThread;
@@ -42,7 +42,7 @@ namespace XG.Server.Web
 		public void Start(ServerRunner aParent)
 		{
 			this.myRunner = aParent;
-			
+
 			// start the server thread
 			this.myServerThread = new Thread(new ThreadStart(OpenServer));
 			this.myServerThread.Start();
@@ -109,7 +109,7 @@ namespace XG.Server.Web
 			}
 #endif
 		}
-		
+
 		private void CloseServer()
 		{
 			this.myListener.Close();
@@ -126,7 +126,7 @@ namespace XG.Server.Web
 		private void OpenClient(object aObject)
 		{
 			HttpListenerContext client = aObject as HttpListenerContext;
-			
+
 			Dictionary<string, string> tDic = new Dictionary<string, string>();
 
 			string str = client.Request.RawUrl;
@@ -135,19 +135,19 @@ namespace XG.Server.Web
 #if !UNSAFE
 			try
 			{
-#endif	
-				if(str.StartsWith("/?"))
+#endif
+				if (str.StartsWith("/?"))
 				{
 					string[] tCommand = str.Split('?')[1].Split('&');
-					foreach(string tStr in tCommand)
+					foreach (string tStr in tCommand)
 					{
-						if(tStr.Contains("="))
+						if (tStr.Contains("="))
 						{
 							string[] tArr = tStr.Split('=');
 							tDic.Add(tArr[0], tArr[1].Replace("%20", " "));
 						}
 					}
-					
+
 					// no pass, no way
 					try
 					{
@@ -163,9 +163,9 @@ namespace XG.Server.Web
 						client.Response.Close();
 						return;
 					}
-		
+
 					TCPClientRequest tMessage = TCPClientRequest.None;
-		
+
 					// read the request id
 					try { tMessage = (TCPClientRequest)int.Parse(tDic["request"]); }
 					catch (Exception ex)
@@ -173,163 +173,163 @@ namespace XG.Server.Web
 						this.Log("OpenClient() read client request: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 						return;
 					}
-					
+
 					Comparison<XGObject> tComp = null;
-					if(tDic.ContainsKey("sidx"))
+					if (tDic.ContainsKey("sidx"))
 					{
-						switch(tDic["sidx"])
+						switch (tDic["sidx"])
 						{
 							case "name":
 								tComp = XGHelper.CompareObjectName;
-								if(tDic["sord"] == "desc") tComp = XGHelper.CompareObjectNameReverse;
+								if (tDic["sord"] == "desc") tComp = XGHelper.CompareObjectNameReverse;
 								break;
 							case "connected":
 								tComp = XGHelper.CompareObjectConnected;
-								if(tDic["sord"] == "desc") tComp = XGHelper.CompareObjectConnectedReverse;
+								if (tDic["sord"] == "desc") tComp = XGHelper.CompareObjectConnectedReverse;
 								break;
 							case "enabled":
 								tComp = XGHelper.CompareObjectEnabled;
-								if(tDic["sord"] == "desc") tComp = XGHelper.CompareObjectEnabledReverse;
+								if (tDic["sord"] == "desc") tComp = XGHelper.CompareObjectEnabledReverse;
 								break;
 							case "id":
 								tComp = XGHelper.ComparePacketId;
-								if(tDic["sord"] == "desc") tComp = XGHelper.ComparePacketIdReverse;
+								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketIdReverse;
 								break;
 							case "size":
 								tComp = XGHelper.ComparePacketSize;
-								if(tDic["sord"] == "desc") tComp = XGHelper.ComparePacketSizeReverse;
+								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketSizeReverse;
 								break;
 						}
 					}
-		
+
 					#region DATA HANDLING
 
 					switch (tMessage)
 					{
 						# region VERSION
-	
+
 						case TCPClientRequest.Version:
 							this.WriteToStream(client.Response, VERSION);
 							break;
-						
+
 						#endregion
-						
+
 						# region SERVER
-	
+
 						case TCPClientRequest.AddServer:
 							this.myRunner.AddServer(tDic["name"]);
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						case TCPClientRequest.RemoveServer:
 							this.myRunner.RemoveServer(new Guid(tDic["guid"]));
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						#endregion
-	
+
 						# region CHANNEL
-	
+
 						case TCPClientRequest.AddChannel:
 							this.myRunner.AddChannel(new Guid(tDic["guid"]), tDic["name"]);
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						case TCPClientRequest.RemoveChannel:
 							this.myRunner.RemoveChannel(new Guid(tDic["guid"]));
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						#endregion
-	
+
 						# region OBJECT
-	
+
 						case TCPClientRequest.ActivateObject:
 							this.myRunner.ActivateObject(new Guid(tDic["guid"]));
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						case TCPClientRequest.DeactivateObject:
 							this.myRunner.DeactivateObject(new Guid(tDic["guid"]));
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						#endregion
-	
+
 						# region SEARCH
-	
+
 						case TCPClientRequest.SearchPacket:
 							this.WriteToStream(client.Response, this.myRunner.SearchPacket(tDic["name"], tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchPacketTime:
 							this.WriteToStream(client.Response, this.myRunner.SearchPacketTime(tDic["name"], tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchPacketActiveDownloads:
 							this.WriteToStream(client.Response, this.myRunner.SearchPacketActiveDownloads(tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchPacketsEnabled:
 							this.WriteToStream(client.Response, this.myRunner.SearchPacketsEnabled(tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchBot:
 							this.WriteToStream(client.Response, this.myRunner.SearchBot(tDic["name"], tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchBotTime:
 							this.WriteToStream(client.Response, this.myRunner.SearchBotTime(tDic["name"], tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchBotActiveDownloads:
 							this.WriteToStream(client.Response, this.myRunner.SearchBotActiveDownloads(tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.SearchBotsEnabled:
 							this.WriteToStream(client.Response, this.myRunner.SearchBotsEnabled(tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						#endregion
-	
+
 						# region GET
-	
+
 						case TCPClientRequest.GetObject:
 							this.WriteToStream(client.Response, this.myRunner.GetObject(new Guid(tDic["guid"])));
 							break;
-	
+
 						case TCPClientRequest.GetServersChannels:
 							this.WriteToStream(client.Response, this.myRunner.GetServersChannels(), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.GetActivePackets:
 							this.WriteToStream(client.Response, this.myRunner.GetActivePackets(), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.GetFiles:
 							this.WriteToStream(client.Response, this.myRunner.GetFiles(), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						case TCPClientRequest.GetChildrenFromObject:
 							this.WriteToStream(client.Response, this.myRunner.GetChildrenFromObject(new Guid(tDic["guid"]), tComp), tDic["page"], tDic["rows"]);
 							break;
-	
+
 						#endregion
-	
+
 						# region COMMANDS
-	
+
 						case TCPClientRequest.RestartServer:
 							this.Restart();
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						case TCPClientRequest.CloseServer:
 							this.Stop();
 							this.WriteToStream(client.Response, "");
 							break;
-	
+
 						#endregion
-	
+
 						default:
 							this.WriteToStream(client.Response, "");
 							break;
@@ -340,27 +340,27 @@ namespace XG.Server.Web
 				else
 				{
 					// load an image
-					if(str.StartsWith("/image&"))
+					if (str.StartsWith("/image&"))
 					{
 						this.WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage(str.Split('&')[1]));
 					}
 					// serve the favicon
-					else if(str == "/favicon.ico")
+					else if (str == "/favicon.ico")
 					{
 						this.WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage("Client"));
 					}
 					// load a file
 					else
 					{
-						if(str.Contains("?")) { str = str.Split('?')[0]; }	
-						if(str == "/") { str = "/index.html"; }
+						if (str.Contains("?")) { str = str.Split('?')[0]; }
+						if (str == "/") { str = "/index.html"; }
 
-						if(str.StartsWith("/css/style/"))
-						{			
+						if (str.StartsWith("/css/style/"))
+						{
 							str = str.Replace("/css/style/", "/css/" + Settings.InstanceReload.StyleWebServer + "/");
 						}
-						
-						if(str.EndsWith(".png")) { this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str)); }
+
+						if (str.EndsWith(".png")) { this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str)); }
 						else { this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str)); }
 					}
 				}
@@ -380,7 +380,7 @@ namespace XG.Server.Web
 
 		private void WriteToStream(HttpListenerResponse aResponse, XGObject aObj)
 		{
-			this.WriteToStream(aResponse, new XGObject[] {aObj}, "", "");
+			this.WriteToStream(aResponse, new XGObject[] { aObj }, "", "");
 		}
 
 		private void WriteToStream(HttpListenerResponse aResponse, XGObject[] aList, string aPage, string aRows)
@@ -391,19 +391,19 @@ namespace XG.Server.Web
 
 			StringBuilder sb = new StringBuilder();
 			bool first = true;
-			if(aPage != "" && aRows != "") { sb.Append("{\"page\":\"" + page + "\",\"total\":\"" + Math.Ceiling((double)aList.Length / (double)rows).ToString() + "\",\"records\":\"" + aList.Length + "\",\"rows\":[\n"); }
+			if (aPage != "" && aRows != "") { sb.Append("{\"page\":\"" + page + "\",\"total\":\"" + Math.Ceiling((double)aList.Length / (double)rows).ToString() + "\",\"records\":\"" + aList.Length + "\",\"rows\":[\n"); }
 			foreach (XGObject tObj in aList)
 			{
-				if(count >= (page - 1) * rows && count < page * rows)
+				if (count >= (page - 1) * rows && count < page * rows)
 				{
-					if(first) { first = false; sb.Append("\t"); }
+					if (first) { first = false; sb.Append("\t"); }
 					else { sb.Append(", "); }
 					sb.Append(this.Object2Json(tObj));
 				}
 				count++;
 			}
-			if(aPage != "" && aRows != "") { sb.Append("]\n}\n"); }
-			
+			if (aPage != "" && aRows != "") { sb.Append("]\n}\n"); }
+
 			this.WriteToStream(aResponse, sb.ToString());
 		}
 
@@ -420,24 +420,24 @@ namespace XG.Server.Web
 		}
 
 		#endregion
-		
+
 		#region JSON
-		
+
 		private string Object2Json(XGObject aObject)
 		{
 			StringBuilder sb = new StringBuilder();
-			
+
 			sb.Append("{\n");
 			sb.Append("\t\t\"id\":\"" + aObject.Guid.ToString() + "\",\n");
 			sb.Append("\t\t\"cell\":[\n");
-			
+
 			sb.Append("\t\t\t\"" + aObject.ParentGuid.ToString() + "\",\n");													//0
 			sb.Append("\t\t\t" + aObject.Connected.ToString().ToLower() + ",\n");												//1
 			sb.Append("\t\t\t" + aObject.Enabled.ToString().ToLower() + ",\n");													//2
 			sb.Append("\t\t\t\"" + aObject.LastModified + "\",\n");																//3
 			sb.Append("\t\t\t\"\",\n");																							//4
 
-			if(aObject.GetType() == typeof(XGPacket))
+			if (aObject.GetType() == typeof(XGPacket))
 			{
 				XGPacket tPack = (XGPacket)aObject;
 				XGFilePart tPart = this.myRunner.GetFilePart4Packet(tPack);
@@ -457,7 +457,7 @@ namespace XG.Server.Web
 			}
 			else
 			{
-				if(aObject.GetType() == typeof(XGServer))
+				if (aObject.GetType() == typeof(XGServer))
 				{
 					XGServer tServ = (XGServer)aObject;
 
@@ -467,8 +467,8 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t " + (aObject.Children.Length > 0 ? "false" : " true") + ",\n");							//8	
 					sb.Append("\t\t\tfalse\n");																					//9	
 				}
-				
-				if(aObject.GetType() == typeof(XGChannel))
+
+				if (aObject.GetType() == typeof(XGChannel))
 				{
 					sb.Append("\t\t\t\"" + aObject.Name + "\",\n");																//5
 					sb.Append("\t\t\t1,\n");																					//6
@@ -476,8 +476,8 @@ namespace XG.Server.Web
 					sb.Append("\t\t\ttrue,\n");																					//8
 					sb.Append("\t\t\tfalse\n");																					//9
 				}
-				
-				if(aObject.GetType() == typeof(XGBot))
+
+				if (aObject.GetType() == typeof(XGBot))
 				{
 					XGBot tBot = (XGBot)aObject;
 					XGFilePart tPart = this.myRunner.GetFilePart4Bot(tBot);

@@ -169,7 +169,7 @@ namespace XG.Core
 			this.startSize = aCopy.startSize;
 			this.currentSize = aCopy.currentSize;
 			this.stopSize = aCopy.stopSize;
-			if(aFull) { this.Parent = aCopy.Parent; }
+			if (aFull) { this.Parent = aCopy.Parent; }
 		}
 	}
 }

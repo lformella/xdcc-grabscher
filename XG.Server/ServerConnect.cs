@@ -435,9 +435,9 @@ namespace XG.Server
 							}
 
 							#endregion
-							
+
 							#region COULD NOT PARSE
-							
+
 							// maybee delete this because it is flooding the logfile
 							/*if (!isParsed && tBot.Children.Length > 0)
 							{
@@ -878,7 +878,7 @@ namespace XG.Server
 							if (tUserName == Settings.Instance.IRCName)
 							{
 								tChan.Connected = false;
-								this.Log("con_DataReceived() kicked from " + tChan.Name + (tCommandList.Length >= 5 ? " (" + tCommandList[4] + ")" : "" ) + " - rejoining", LogLevel.Warning);
+								this.Log("con_DataReceived() kicked from " + tChan.Name + (tCommandList.Length >= 5 ? " (" + tCommandList[4] + ")" : "") + " - rejoining", LogLevel.Warning);
 								this.Log("con_DataReceived() " + aData, LogLevel.Warning);
 								this.JoinChannel(tChan);
 							}
@@ -1164,10 +1164,10 @@ namespace XG.Server
 						else
 						{
 							string name = XGHelper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
-							if(this.myLatestPacketRequests.ContainsKey(name))
+							if (this.myLatestPacketRequests.ContainsKey(name))
 							{
 								double time = (this.myLatestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
-								if(time > 0)
+								if (time > 0)
 								{
 									this.Log("RequestFromBot(" + tBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms", LogLevel.Warning);
 									this.CreateTimer(tBot, (long)time + 1000);
@@ -1175,12 +1175,12 @@ namespace XG.Server
 								}
 							}
 
-							if(this.myServer.Connected)
+							if (this.myServer.Connected)
 							{
 								this.Log("RequestFromBot(" + tBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")", LogLevel.Notice);
 								this.myCon.SendData("PRIVMSG " + tBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
-								if(this.myLatestPacketRequests.ContainsKey(name)) { this.myLatestPacketRequests.Remove(name); }
+								if (this.myLatestPacketRequests.ContainsKey(name)) { this.myLatestPacketRequests.Remove(name); }
 								this.myLatestPacketRequests.Add(name, DateTime.Now.AddMilliseconds(Settings.Instance.SamePacketRequestTime));
 							}
 
@@ -1326,7 +1326,7 @@ namespace XG.Server
 		}
 		private void CreateTimer(XGObject aObject, Int64 aTime, bool aOverride)
 		{
-			if(aOverride && this.myTimedObjects.ContainsKey(aObject))
+			if (aOverride && this.myTimedObjects.ContainsKey(aObject))
 			{
 				this.myTimedObjects.Remove(aObject);
 			}

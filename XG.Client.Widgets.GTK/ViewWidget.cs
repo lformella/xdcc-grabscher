@@ -73,7 +73,7 @@ namespace XG.Client.Widgets.GTK
 			get { return showOfflineObjects; }
 			set
 			{
-				if(this.showOfflineObjects != value)
+				if (this.showOfflineObjects != value)
 				{
 					this.showOfflineObjects = value;
 					this.Refilter();
@@ -123,20 +123,20 @@ namespace XG.Client.Widgets.GTK
 			this.myObjectSorter.SetSortColumnId(0, SortType.Ascending);
 
 			this.treeView.Model = this.myObjectSorter;
-			
+
 			GLib.ExceptionManager.UnhandledException += delegate(UnhandledExceptionArgs args)
 			{
-				Console.WriteLine( args.ExceptionObject.ToString() );
+				Console.WriteLine(args.ExceptionObject.ToString());
 			};
 		}
 
-		protected TreeViewColumn CreateColumn( string aName, CellRenderer aRenderer, TreeCellDataFunc aFunc, int aWidth )
+		protected TreeViewColumn CreateColumn(string aName, CellRenderer aRenderer, TreeCellDataFunc aFunc, int aWidth)
 		{
 			TreeViewColumn col = this.View.AppendColumn("" + aName + "", aRenderer, aFunc);
-			if(aWidth == 0) { col.Expand = true; }
+			if (aWidth == 0) { col.Expand = true; }
 			else { col.FixedWidth = aWidth; }
 			col.Sizing = TreeViewColumnSizing.Fixed;
-			if(myColumnCounter > 0)
+			if (myColumnCounter > 0)
 			{
 				col.Clicked += new EventHandler(ColumnClicked);
 				col.SortColumnId = myColumnCounter;
@@ -152,7 +152,7 @@ namespace XG.Client.Widgets.GTK
 
 			if (sender is Gtk.TreeViewColumn)
 			{
-				foreach(TreeViewColumn tCol in this.View.Columns)
+				foreach (TreeViewColumn tCol in this.View.Columns)
 				{
 					tCol.SortIndicator = false;
 				}
@@ -183,10 +183,10 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGObject tObject = null;
 			try { tObject = (XGObject)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tObject != null)
 			{
-				if(this.showOfflineObjects || tObject.Connected)
+				if (this.showOfflineObjects || tObject.Connected)
 				{
 					return true;
 				}
@@ -196,7 +196,7 @@ namespace XG.Client.Widgets.GTK
 
 		public void Refilter()
 		{
-			if(!this.myObjectBlockMode)
+			if (!this.myObjectBlockMode)
 			{
 				Gtk.Application.Invoke(delegate
 				{
@@ -221,10 +221,10 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGObject tObject1 = null;
 			try { tObject1 = (XGObject)model.GetValue(iter1, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			XGObject tObject2 = null;
 			try { tObject2 = (XGObject)model.GetValue(iter2, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			return XGHelper.CompareObjects(tObject1, tObject2);
 		}
 
@@ -236,7 +236,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGObject tObj = null;
 			try { tObj = (XGObject)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tObj != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
@@ -259,7 +259,7 @@ namespace XG.Client.Widgets.GTK
 			Gtk.Application.Invoke(delegate
 			{
 				TreeIter ti;
-				if(aParent == null || !this.myDictObjectIter.ContainsKey(aParent)) { ti = this.myObjectStore.AppendValues(aObject); }
+				if (aParent == null || !this.myDictObjectIter.ContainsKey(aParent)) { ti = this.myObjectStore.AppendValues(aObject); }
 				else { ti = this.myObjectStore.AppendValues(this.myDictObjectIter[aParent], aObject); }
 				this.myDictObjectIter.Add(aObject, ti);
 			});
@@ -290,18 +290,18 @@ namespace XG.Client.Widgets.GTK
 			this.Refilter();
 		}
 
-		public void SelectObject( XGObject aObject )
+		public void SelectObject(XGObject aObject)
 		{
 			try
 			{
 				TreeIter ti = this.myDictObjectIter[aObject];
-				TreePath tp = this.myObjectStore.GetPath( ti );
+				TreePath tp = this.myObjectStore.GetPath(ti);
 				tp = this.myObjectFilter.ConvertChildPathToPath(tp);
 				this.treeView.Selection.SelectPath(tp);
 				/*TreeIter ti = this.myDictObjectIter[aObject.Parent];
 				this.treeView.Selection.SelectIter(ti);*/
 			}
-			catch (Exception ex) { Console.WriteLine( ex.ToString() ); }
+			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 		}
 
 		public void Clear()
@@ -313,7 +313,7 @@ namespace XG.Client.Widgets.GTK
 				this.myFilterObject = null;
 				this.myObjectStore.Clear();
 			}
-			catch (Exception ex) { Console.WriteLine( ex.ToString() ); }
+			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 		}
 
 		#endregion
@@ -331,7 +331,7 @@ namespace XG.Client.Widgets.GTK
 				if (tObj != null)
 				{
 					this.lastSelectedObject = tObj;
-					if(this.ObjectClickedEvent != null) { this.ObjectClickedEvent(tObj); }
+					if (this.ObjectClickedEvent != null) { this.ObjectClickedEvent(tObj); }
 				}
 			}
 		}
@@ -347,7 +347,7 @@ namespace XG.Client.Widgets.GTK
 				if (tObj != null)
 				{
 					this.lastSelectedObject = tObj;
-					if(this.ObjectDoubleClickedEvent != null) { this.ObjectDoubleClickedEvent(tObj); }
+					if (this.ObjectDoubleClickedEvent != null) { this.ObjectDoubleClickedEvent(tObj); }
 				}
 			}
 		}

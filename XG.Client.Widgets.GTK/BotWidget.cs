@@ -38,7 +38,7 @@ namespace XG.Client.Widgets.GTK
 			this.CreateColumn("Info Slot", rTextRight, new Gtk.TreeCellDataFunc(RenderBotInfoSlot), 80);
 			this.CreateColumn("Info Queue", rTextRight, new Gtk.TreeCellDataFunc(RenderBotInfoQueue), 90);
 			this.CreateColumn("Last Contact", rTextRight, new Gtk.TreeCellDataFunc(RenderBotLastContact), 100);
-			
+
 			//Tooltips tt = new Tooltips();
 			//tt.SetTip(null, "", "");
 		}
@@ -49,10 +49,10 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
-				if(base.FilterObjects(model, iter))
+				if (base.FilterObjects(model, iter))
 				{
 					switch (this.Filter)
 					{
@@ -62,7 +62,7 @@ namespace XG.Client.Widgets.GTK
 								return true;
 							}
 							break;
-	
+
 						case FilterType.Custom:
 							foreach (XGPacket tPack in tBot.Children)
 							{
@@ -80,18 +80,18 @@ namespace XG.Client.Widgets.GTK
 								if (add) { return true; }
 							}
 							break;
-	
+
 						case FilterType.Downloads:
 							if (tBot.BotState == BotState.Active) { return true; }
 							break;
-	
+
 						case FilterType.EnabledPackets:
 							foreach (XGPacket tPack in tBot.Children)
 							{
 								if (tPack.Enabled) { return true; }
 							}
 							break;
-	
+
 						case FilterType.ODay:
 							foreach (XGPacket tPack in tBot.Children)
 							{
@@ -105,7 +105,7 @@ namespace XG.Client.Widgets.GTK
 								if ((DateTime.Now - tPack.LastUpdated).TotalMilliseconds <= this.myTimeOWeek) { return true; }
 							}
 							break;
-	
+
 						case FilterType.OpenSlots:
 							if (tBot.Connected && tBot.InfoSlotTotal > 0 && tBot.InfoSlotCurrent > 0) { return true; }
 							break;
@@ -123,12 +123,12 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tObject1 = null;
 			try { tObject1 = (XGBot)model.GetValue(iter1, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			XGBot tObject2 = null;
 			try { tObject2 = (XGBot)model.GetValue(iter2, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 
-			switch(this.mySortColumn)
+			switch (this.mySortColumn)
 			{
 				case 2:
 					XGFilePart tPart1 = this.GetPartToObject(tObject1);
@@ -165,7 +165,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererPixbuf renderer = (cell as Gtk.CellRendererPixbuf);
@@ -188,7 +188,7 @@ namespace XG.Client.Widgets.GTK
 				else if (tBot.BotState == BotState.Waiting) { pb = ImageLoaderGTK.Instance.pbBotQueued; }
 				else if (tBot.InfoSlotTotal > 0)
 				{
-					if(tBot.InfoSlotCurrent > 0) { pb = ImageLoaderGTK.Instance.pbBotFree; }
+					if (tBot.InfoSlotCurrent > 0) { pb = ImageLoaderGTK.Instance.pbBotFree; }
 					else if (tBot.InfoSlotCurrent == 0) { pb = ImageLoaderGTK.Instance.pbBotFull; }
 				}
 				renderer.Pixbuf = pb;
@@ -199,7 +199,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
@@ -215,11 +215,11 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
-				if(tBot.BotState == BotState.Waiting)
+				if (tBot.BotState == BotState.Waiting)
 				{
 					renderer.Text = tBot.QueuePosition > 0 ? tBot.QueuePosition + (tBot.QueueTime > 0 ? " (" + WidgetHelper.Time2Human(tBot.QueueTime) + ")" : "") : "";
 				}
@@ -231,7 +231,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
@@ -243,7 +243,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
@@ -255,7 +255,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);
@@ -267,7 +267,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGBot tBot = null;
 			try { tBot = (XGBot)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tBot != null)
 			{
 				Gtk.CellRendererText renderer = (cell as Gtk.CellRendererText);

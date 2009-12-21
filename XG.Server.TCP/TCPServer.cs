@@ -29,10 +29,10 @@ namespace XG.Server.TCP
 	public class TCPServer : IServerPlugin
 	{
 		private ServerRunner myRunner;
-		
+
 		private Thread myServerThread;
 		private TcpListener myListener;
-		
+
 		private List<BinaryWriter> myWriter = new List<BinaryWriter>();
 		private BinaryFormatter myFormatter = new BinaryFormatter();
 
@@ -47,7 +47,7 @@ namespace XG.Server.TCP
 			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
 			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
-			
+
 			// start the server thread
 			this.myServerThread = new Thread(new ThreadStart(OpenServer));
 			this.myServerThread.Start();
@@ -61,7 +61,7 @@ namespace XG.Server.TCP
 			this.myRunner.ObjectAddedEvent -= new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
 			this.myRunner.ObjectChangedEvent -= new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 			this.myRunner.ObjectRemovedEvent -= new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
-			
+
 			this.CloseServer();
 			this.myServerThread.Abort();
 		}
@@ -109,7 +109,7 @@ namespace XG.Server.TCP
 				this.Log("OpenServer() server: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 			}
 		}
-		
+
 		/// <summary>
 		/// Close the server
 		/// </summary>
@@ -271,7 +271,7 @@ namespace XG.Server.TCP
 #if !UNSAFE
 				}
 				// this is ok
-				catch (SocketException) {} 
+				catch (SocketException) { }
 				catch (Exception ex)
 				{
 					this.Log("OpenClient() read: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
@@ -359,8 +359,8 @@ namespace XG.Server.TCP
 					ok = true;
 				}
 				// this is ok
-				catch (ObjectDisposedException) {}
-				catch (SocketException) {}
+				catch (ObjectDisposedException) { }
+				catch (SocketException) { }
 				catch (Exception ex)
 				{
 					this.Log("WriteToStream() write: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
@@ -370,9 +370,9 @@ namespace XG.Server.TCP
 		}
 
 		#endregion
-		
+
 		#region EVENTS
-		
+
 		/// <summary>
 		/// 
 		/// </summary>

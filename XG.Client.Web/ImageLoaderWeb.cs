@@ -28,7 +28,7 @@ namespace XG.Client.Web
 		}
 		class Nested
 		{
-			static Nested() {}
+			static Nested() { }
 			internal static readonly ImageLoaderWeb instance = new ImageLoaderWeb();
 		}
 
@@ -75,16 +75,16 @@ namespace XG.Client.Web
 			this.pbSearchSlots = this.LoadImage(base.SearchSlots);
 			this.pbODay = this.LoadImage(base.ODay);
 			this.pbOWeek = this.LoadImage(base.OWeek);
-			
+
 			this.pbAdd = this.LoadImage(base.Add);
 			this.pbRemove = this.LoadImage(base.Remove);
 			this.pbConnect = this.LoadImage(base.Connect);
 			this.pbDisconnect = this.LoadImage(base.Disconnect);
 			this.pbOk = this.LoadImage(base.Ok);
 			this.pbNo = this.LoadImage(base.No);
-			
+
 			this.pbLanguageDe = this.LoadImage(base.LanguageDe);
-			
+
 			this.pbExtAudio = this.LoadImage(base.ExtAudio);
 			this.pbExtCompressed = this.LoadImage(base.ExtCompressed);
 			this.pbExtDefault = this.LoadImage(base.ExtDefault);
@@ -99,16 +99,16 @@ namespace XG.Client.Web
 			while (remaining > 0)
 			{
 				int read = aStream.Read(data, offset, remaining);
-				if (read <= 0) { throw new EndOfStreamException (String.Format("End of stream reached with {0} bytes left to read", remaining)); }
+				if (read <= 0) { throw new EndOfStreamException(String.Format("End of stream reached with {0} bytes left to read", remaining)); }
 				remaining -= read;
 				offset += read;
 			}
 			return data;
 		}
-		
+
 		public byte[] GetImage(string aName)
 		{
-			switch(aName)
+			switch (aName)
 			{
 				case "Client":
 					return this.pbClient;
@@ -120,7 +120,7 @@ namespace XG.Client.Web
 					return this.pbServerConnected;
 
 				case "ServerDisabled":
-					return this.pbServerDisabled;					
+					return this.pbServerDisabled;
 
 				case "Channel":
 					return this.pbChannel;
@@ -129,7 +129,7 @@ namespace XG.Client.Web
 					return this.pbChannelConnected;
 
 				case "ChannelDisabled":
-					return this.pbChannelDisabled;					
+					return this.pbChannelDisabled;
 
 				case "Bot":
 					return this.pbBot;
@@ -162,7 +162,7 @@ namespace XG.Client.Web
 					return this.pbBotDL4;
 
 				case "BotDL5":
-					return this.pbBotDL5;					
+					return this.pbBotDL5;
 
 				case "Packet":
 					return this.pbPacket;
@@ -201,7 +201,7 @@ namespace XG.Client.Web
 					return this.pbPacketDL4;
 
 				case "PacketDL5":
-					return this.pbPacketDL5;					
+					return this.pbPacketDL5;
 
 				case "Blind":
 					return this.pbBlind;
@@ -216,7 +216,7 @@ namespace XG.Client.Web
 					return this.pbODay;
 
 				case "OWeek":
-					return this.pbOWeek;					
+					return this.pbOWeek;
 
 				case "Add":
 					return this.pbAdd;
@@ -302,9 +302,9 @@ namespace XG.Client.Web
 		private byte[] pbDisconnect;
 		private byte[] pbOk;
 		private byte[] pbNo;
-		
+
 		private byte[] pbLanguageDe;
-		
+
 		private byte[] pbExtAudio;
 		private byte[] pbExtCompressed;
 		private byte[] pbExtDefault;

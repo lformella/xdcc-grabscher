@@ -130,7 +130,7 @@ namespace XG.Server
 			this.filesBinary = "./xgfiles.bin";
 			this.password = "xgisgreat";
 			this.backupDataTime = 900000;
-			this.fileHandler = new string[] {""};
+			this.fileHandler = new string[] { "" };
 
 			this.startTCPServer = true;
 			this.tcpServerPort = 5555;
@@ -146,7 +146,7 @@ namespace XG.Server
 			this.logLevel = LogLevel.Warning;
 #endif
 		}
-		
+
 		#region PRIVATE
 
 		private long commandWaitTime;
@@ -154,7 +154,7 @@ namespace XG.Server
 		{
 			get { return commandWaitTime; }
 		}
-		
+
 		long botWaitTime;
 		public long BotWaitTime
 		{
@@ -192,7 +192,7 @@ namespace XG.Server
 		}
 
 		long downloadPerRead;
-		public long DownloadPerRead 
+		public long DownloadPerRead
 		{
 			get { return downloadPerRead; }
 		}
@@ -204,7 +204,7 @@ namespace XG.Server
 		}
 
 		long samePacketRequestTime;
-		public long SamePacketRequestTime 
+		public long SamePacketRequestTime
 		{
 			get { return samePacketRequestTime; }
 		}
@@ -234,7 +234,7 @@ namespace XG.Server
 		}
 
 		int reconnectWaitTime;
-		public int ReconnectWaitTime 
+		public int ReconnectWaitTime
 		{
 			get { return reconnectWaitTime; }
 		}
@@ -246,7 +246,7 @@ namespace XG.Server
 		}
 
 		long timerSleepTime;
-		public long TimerSleepTime 
+		public long TimerSleepTime
 		{
 			get { return timerSleepTime; }
 		}
@@ -276,18 +276,18 @@ namespace XG.Server
 		}
 
 		#endregion
-		
+
 		#region PUBLIC
 
 		string iRCName;
-		public string IRCName 
+		public string IRCName
 		{
 			get { return "XG-" + iRCName.Replace("XG-", ""); }
 			set { iRCName = value; }
 		}
 
 		string tempPath;
-		public string TempPath 
+		public string TempPath
 		{
 			get { return tempPath; }
 			set { tempPath = value; }
@@ -357,47 +357,47 @@ namespace XG.Server
 		}
 
 		string[] fileHandler;
-		public string[] FileHandler 
+		public string[] FileHandler
 		{
 			get { return fileHandler; }
 			set { fileHandler = value; }
 		}
 
 		bool startTCPServer;
-		public bool StartTCPServer 
+		public bool StartTCPServer
 		{
 			get { return startTCPServer; }
 			set { startTCPServer = value; }
 		}
 
 		bool startWebServer;
-		public bool StartWebServer 
+		public bool StartWebServer
 		{
 			get { return startWebServer; }
 			set { startWebServer = value; }
 		}
 
 		string styleWebServer;
-		public string StyleWebServer 
+		public string StyleWebServer
 		{
 			get { return styleWebServer; }
 			set { styleWebServer = value; }
 		}
 
 		bool autoJoinOnInvite;
-		public bool AutoJoinOnInvite 
+		public bool AutoJoinOnInvite
 		{
 			get { return autoJoinOnInvite; }
 			set { autoJoinOnInvite = value; }
 		}
 
 		LogLevel logLevel;
-		public LogLevel LogLevel 
+		public LogLevel LogLevel
 		{
 			get { return logLevel; }
 			set { logLevel = value; }
 		}
-		
+
 		#endregion
 	}
 }

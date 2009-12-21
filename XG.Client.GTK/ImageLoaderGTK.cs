@@ -25,7 +25,7 @@ namespace XG.Client.GTK
 		}
 		class Nested
 		{
-			static Nested() {}
+			static Nested() { }
 			internal static readonly ImageLoaderGTK instance = new ImageLoaderGTK();
 		}
 
@@ -72,7 +72,7 @@ namespace XG.Client.GTK
 			this.pbSearchSlots = new Gdk.Pixbuf(base.SearchSlots);
 			this.pbODay = new Gdk.Pixbuf(base.ODay);
 			this.pbOWeek = new Gdk.Pixbuf(base.OWeek);
-			
+
 			this.pbAdd = new Gdk.Pixbuf(base.Add);
 			this.pbRemove = new Gdk.Pixbuf(base.Remove);
 			this.pbConnect = new Gdk.Pixbuf(base.Connect);

@@ -46,25 +46,25 @@ namespace XG.Client.Widgets.GTK
 				Console.WriteLine("==>" + aObj.Guid);
 				//if(this.myDictPartPacket.ContainsKey(aPart))
 				//{
-					foreach (KeyValuePair<XGFilePart, XGObject> kvp in this.myDictPartObject)
+				foreach (KeyValuePair<XGFilePart, XGObject> kvp in this.myDictPartObject)
+				{
+					//Console.WriteLine(kvp.Key.Guid);
+					if (kvp.Key.Guid == aPart.Guid)
 					{
-						//Console.WriteLine(kvp.Key.Guid);
-						if (kvp.Key.Guid == aPart.Guid)
+						XGObject tObjOld = kvp.Value;//this.myDictPartPacket[aPart];
+						if (aObj.Guid != tObjOld.Guid)
 						{
-							XGObject tObjOld = kvp.Value;//this.myDictPartPacket[aPart];
-							if (aObj.Guid != tObjOld.Guid)
-							{
-								this.myDictPartObject.Remove(aPart);
-								break;
-							}
-							else
-							{
-								XGHelper.CloneObject(aPart, kvp.Key, true);
-								this.Refilter();
-								return;
-							}
+							this.myDictPartObject.Remove(aPart);
+							break;
+						}
+						else
+						{
+							XGHelper.CloneObject(aPart, kvp.Key, true);
+							this.Refilter();
+							return;
 						}
 					}
+				}
 				//}
 				this.myDictPartObject.Add(aPart, aObj);
 				this.Refilter();
@@ -91,7 +91,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			if (aObj != null)
 			{
-				if(this.myDictPartObject.ContainsValue(aObj))
+				if (this.myDictPartObject.ContainsValue(aObj))
 				{
 					foreach (KeyValuePair<XGFilePart, XGObject> kvp in this.myDictPartObject)
 					{

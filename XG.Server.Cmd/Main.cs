@@ -32,10 +32,10 @@ namespace XG.Server.Cmd
 				ServerRunner runner = new ServerRunner();
 				runner.Start();
 
-				if(Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
-				if(Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
+				if (Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
+				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				// die bitch, but stay there
 				Console.WriteLine(ex.ToString());

@@ -36,7 +36,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGObject tObj = null;
 			try { tObj = (XGObject)model.GetValue(iter, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			if (tObj != null)
 			{
 				Gtk.CellRendererPixbuf renderer = (cell as Gtk.CellRendererPixbuf);

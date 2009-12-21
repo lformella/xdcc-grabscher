@@ -484,31 +484,31 @@ namespace XG.Client.Widgets.GTK
 			cr.Rectangle(0, 0, rec.Width, rec.Height);
 			cr.Clip();
 
-			if(text != null & text != "")
+			if (text != null & text != "")
 			{
 				int lw, lh;
 				Pango.Layout layout = new Pango.Layout(widget.PangoContext);
 				layout.FontDescription = widget.Style.FontDescription;
-				layout.SetText( text );
-				layout.GetPixelSize( out lw, out lh );
+				layout.SetText(text);
+				layout.GetPixelSize(out lw, out lh);
 
-				if(this.segments.Count == 0)
+				if (this.segments.Count == 0)
 				{
-					cr.Translate( 0, (rec.Height - lh) / 2 );
+					cr.Translate(0, (rec.Height - lh) / 2);
 				}
 
-				window.DrawLayout(widget.Style.TextGC (StateType.Normal), rec.X, (this.segments.Count == 0) ? rec.Y + (rec.Height - lh) / 2 : rec.Y, layout);
+				window.DrawLayout(widget.Style.TextGC(StateType.Normal), rec.X, (this.segments.Count == 0) ? rec.Y + (rec.Height - lh) / 2 : rec.Y, layout);
 				layout.Dispose();
 
-				cr.Translate( 0, lh);
+				cr.Translate(0, lh);
 				bar_height = rec.Height - lh;
 			}
 			else
 			{
-				cr.Translate( 0, (rec.Height - bar_height) / 2 );
+				cr.Translate(0, (rec.Height - bar_height) / 2);
 			}
 
-			if(this.segments.Count > 0)
+			if (this.segments.Count > 0)
 			{
 				Pattern bar = RenderBar(rec.Width, bar_height);
 
@@ -580,18 +580,19 @@ namespace XG.Client.Widgets.GTK
 
 			double seg_w = 20;
 			double x = seg_w > r ? seg_w : r;
-				
-			while (x <= w - r) {
-				cr.MoveTo (x - 0.5, 1);
-				cr.LineTo (x - 0.5, h - 1);
+
+			while (x <= w - r)
+			{
+				cr.MoveTo(x - 0.5, 1);
+				cr.LineTo(x - 0.5, h - 1);
 				cr.Pattern = seg_sep_light;
-				cr.Stroke ();
-					
-				cr.MoveTo (x + 0.5, 1);
-				cr.LineTo (x + 0.5, h - 1);
+				cr.Stroke();
+
+				cr.MoveTo(x + 0.5, 1);
+				cr.LineTo(x + 0.5, h - 1);
 				cr.Pattern = seg_sep_dark;
-				cr.Stroke ();
-					
+				cr.Stroke();
+
 				x += seg_w;
 			}
 

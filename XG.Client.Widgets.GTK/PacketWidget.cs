@@ -48,7 +48,7 @@ namespace XG.Client.Widgets.GTK
 			catch (Exception) { }
 			if (tPack != null)
 			{
-				if(!this.ShowOfflineObjects && tPack.Parent != null && !tPack.Parent.Connected)
+				if (!this.ShowOfflineObjects && tPack.Parent != null && !tPack.Parent.Connected)
 				{
 					return false;
 				}
@@ -66,7 +66,7 @@ namespace XG.Client.Widgets.GTK
 							}
 							catch (NullReferenceException) { return false; }
 							break;
-	
+
 						case FilterType.Custom:
 							string name = tPack.Name.ToLower();
 							string[] list = this.myFilterObject as string[];
@@ -75,15 +75,15 @@ namespace XG.Client.Widgets.GTK
 								if (!name.Contains(list[i])) { return false; }
 							}
 							return true;
-	
+
 						case FilterType.Downloads:
 							if (tPack.Connected) { return true; }
 							break;
-	
+
 						case FilterType.EnabledPackets:
 							if (tPack.Enabled) { return true; }
 							break;
-	
+
 						case FilterType.ODay:
 							if ((DateTime.Now - tPack.LastUpdated).TotalMilliseconds <= this.myTimeODay) { return true; }
 							break;
@@ -113,17 +113,17 @@ namespace XG.Client.Widgets.GTK
 		{
 			XGPacket tObject1 = null;
 			try { tObject1 = (XGPacket)model.GetValue(iter1, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 			XGPacket tObject2 = null;
 			try { tObject2 = (XGPacket)model.GetValue(iter2, 0); }
-			catch (Exception) {}
+			catch (Exception) { }
 
-			switch(this.mySortColumn)
+			switch (this.mySortColumn)
 			{
 				case 2:
 					return tObject1.Name.CompareTo(tObject2.Name);
 				case 5:
-					if(tObject1.RealSize > 0) { tObject1.RealSize.CompareTo(tObject2.RealSize > 0 ? tObject2.RealSize : tObject2.Size); }
+					if (tObject1.RealSize > 0) { tObject1.RealSize.CompareTo(tObject2.RealSize > 0 ? tObject2.RealSize : tObject2.Size); }
 					else { tObject1.Size.CompareTo(tObject2.RealSize > 0 ? tObject2.RealSize : tObject2.Size); }
 					break;
 				case 3:
@@ -141,7 +141,7 @@ namespace XG.Client.Widgets.GTK
 						if (tPart2 == null) { return 1; }
 						else
 						{
-							switch(this.mySortColumn)
+							switch (this.mySortColumn)
 							{
 								case 3:
 									return tPart1.Speed.CompareTo(tPart2.Speed);

@@ -89,11 +89,11 @@ namespace XG.Client.TCP.GTK
 			this.myTrayIcon.Activate += delegate { this.Visible = !this.Visible; };
 			this.myTrayIcon.PopupMenu += OnTrayIconPopup;
 			this.myTrayIcon.Tooltip = "XG rocks the shit fat, twice!";
-/*
-			NotifyIcon ni = new NotifyIcon();
-			ni.Visible = true;
-			ni.ShowBalloonTip(2000, "Help", "You are infected", ToolTipIcon.Info);
-*/
+			/*
+						NotifyIcon ni = new NotifyIcon();
+						ni.Visible = true;
+						ni.ShowBalloonTip(2000, "Help", "You are infected", ToolTipIcon.Info);
+			*/
 
 #if MONO1
 			Notification myNote = new Notification();
@@ -322,7 +322,7 @@ namespace XG.Client.TCP.GTK
 				{
 					XGFilePart tPart = aObj as XGFilePart;
 					XGPacket tPack = this.myRootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
-					if(tPack != null)
+					if (tPack != null)
 					{
 						this.mainWidget.ChangeObject(aObj, tPack);
 					}
@@ -458,7 +458,7 @@ namespace XG.Client.TCP.GTK
 				this.mainWidget.AddObject(aObj, tFile);
 
 				XGPacket tPack = this.myRootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
-				if(tPack != null)
+				if (tPack != null)
 				{
 					this.mainWidget.ChangeObject(tPart, tPack);
 					tPart.Packet = tPack;

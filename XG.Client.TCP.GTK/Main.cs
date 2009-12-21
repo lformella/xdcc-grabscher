@@ -35,7 +35,7 @@ namespace XG.Client.TCP.GTK
 				Application.Run();
 #if !UNSAFE
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				MessageDialog md = new MessageDialog(view, DialogFlags.DestroyWithParent, MessageType.Error, ButtonsType.Close, "Error:\n" + ex.ToString());
 				md.Run();

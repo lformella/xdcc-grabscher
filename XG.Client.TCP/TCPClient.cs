@@ -86,11 +86,11 @@ namespace XG.Client.TCP
 							break;
 
 						case TCPServerResponse.ObjectBlockStart:
-							if(this.ObjectBlockStartEvent != null) { this.ObjectBlockStartEvent(); }
+							if (this.ObjectBlockStartEvent != null) { this.ObjectBlockStartEvent(); }
 							break;
 
 						case TCPServerResponse.ObjectBlockStop:
-							if(this.ObjectBlockStopEvent != null) { this.ObjectBlockStopEvent(); }
+							if (this.ObjectBlockStopEvent != null) { this.ObjectBlockStopEvent(); }
 							break;
 
 						default:

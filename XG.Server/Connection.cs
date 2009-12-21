@@ -36,7 +36,7 @@ namespace XG.Server
 		{
 			get { return myHost; }
 		}
-		
+
 		private int myPort;
 		public int Port
 		{
@@ -137,7 +137,7 @@ namespace XG.Server
 					}
 
 					#endregion
-					
+
 					#region TEXT READING
 
 					else

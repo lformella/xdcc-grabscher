@@ -65,7 +65,7 @@ namespace XG.Server
 			// create my stuff if its not there
 			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
 			new DirectoryInfo(Settings.Instance.TempPath).Create();
-			
+
 			// start the timed tasks
 			new Thread(new ThreadStart(RunBotWatchdog)).Start();
 			new Thread(new ThreadStart(RunTimer)).Start();
@@ -82,7 +82,7 @@ namespace XG.Server
 		public void ConnectServer(object aServer)
 		{
 			XGServer tServer = aServer as XGServer;
-			
+
 			if (!this.myServers.ContainsKey(tServer))
 			{
 				ServerConnect con = new ServerConnect(this);
@@ -96,7 +96,7 @@ namespace XG.Server
 				con.ObjectAddedEvent += new ObjectObjectDelegate(_ObjectAddedEventHandler);
 				con.ObjectChangedEvent += new ObjectDelegate(_ObjectChangedEventHandler);
 				con.ObjectRemovedEvent += new ObjectObjectDelegate(_ObjectRemovedEventHandler);
-				
+
 				// start a new thread wich connects to the given server
 				new Thread(delegate() { con.Connect(tServer); }).Start();
 			}
@@ -129,11 +129,11 @@ namespace XG.Server
 					con.DisconnectedEvent -= new ServerDelegate(server_DisconnectedEventHandler);
 					con.ConnectedEvent -= new ServerDelegate(server_ConnectedEventHandler);
 					con.ParsingErrorEvent -= new DataTextDelegate(server_ParsingErrorEventHandler);
-	
+
 					con.ObjectAddedEvent -= new ObjectObjectDelegate(_ObjectAddedEventHandler);
 					con.ObjectChangedEvent -= new ObjectDelegate(_ObjectChangedEventHandler);
 					con.ObjectRemovedEvent -= new ObjectObjectDelegate(_ObjectRemovedEventHandler);
-	
+
 					this.myServers.Remove(aServer);
 				}
 				else
@@ -142,7 +142,7 @@ namespace XG.Server
 				}
 			}
 		}
-		
+
 		private void ReconnectServer(object aServer)
 		{
 			XGServer tServer = aServer as XGServer;
@@ -457,22 +457,22 @@ namespace XG.Server
 		public void RemoveFile(XGFile aFile)
 		{
 			this.Log("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")", LogLevel.Notice);
-			
+
 			// check if this file is currently downloaded
 			bool skip = false;
 			foreach (XGFilePart part in aFile.Children)
 			{
 				// disable the packet if it is active
-				if(part.PartState == FilePartState.Open)
+				if (part.PartState == FilePartState.Open)
 				{
-					if(part.Packet != null)
+					if (part.Packet != null)
 					{
 						part.Packet.Enabled = false;
 						skip = true;
 					}
 				}
 			}
-			if(skip) { return; }
+			if (skip) { return; }
 
 			this.DirectoryDelete(this.GetCompletePath(aFile));
 			this.myFiles.Remove(aFile);
@@ -744,7 +744,7 @@ namespace XG.Server
 								this.ObjectChangedEvent(part);
 
 								if (part.PartState == FilePartState.Ready)
-								{									
+								{
 									// file is not the last, so check the next one
 									if (part.StopSize < tFile.Size)
 									{
@@ -759,7 +759,7 @@ namespace XG.Server
 										fileReader.Close();
 
 										// dont open a new thread if we are already threaded
-										if(aThreaded)
+										if (aThreaded)
 										{
 											this.CheckNextReferenceBytes(part, bytes, false);
 										}
@@ -797,11 +797,11 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		public void CheckFile(XGFile aFile)
 		{
-			lock(aFile.locked)
+			lock (aFile.locked)
 			{
 				this.Log("CheckFile(" + aFile.Name + ")", LogLevel.Notice);
 				if (aFile.Children.Length == 0) { return; }
-	
+
 				bool complete = true;
 				XGObject[] parts = aFile.Children;
 				foreach (XGFilePart part in parts)
@@ -829,16 +829,16 @@ namespace XG.Server
 		public void JoinCompleteParts(object aObject)
 		{
 			XGFile tFile = aObject as XGFile;
-			lock(tFile.locked)
+			lock (tFile.locked)
 			{
 				this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting", LogLevel.Notice);
-	
+
 				#region DISABLE ALL MATCHING PACKETS
-	
+
 				// TODO remove all CD* packets if a multi packet was downloaded
-				
+
 				string fileName = XGHelper.ShrinkFileName(tFile.Name, 0);
-	
+
 				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
 				{
 					XGServer tServ = kvp.Key;
@@ -851,10 +851,10 @@ namespace XG.Server
 								foreach (XGPacket tPack in tBot.Children)
 								{
 									if (tPack.Enabled && (
-										XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || 
+										XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) ||
 										XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
 										))
-									{									
+									{
 										this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
 										this.Log("REMOVE ME - " + fileName + " vs " + XGHelper.ShrinkFileName(tPack.RealName, 0) + " / " + XGHelper.ShrinkFileName(tPack.Name, 0), LogLevel.Notice);
 										tPack.Enabled = false;
@@ -865,18 +865,18 @@ namespace XG.Server
 						}
 					}
 				}
-	
+
 				#endregion
-	
-				if(tFile.Children.Length == 0)
+
+				if (tFile.Children.Length == 0)
 				{
 					return;
 				}
-	
+
 				bool error = true;
 				XGObject[] parts = tFile.Children;
 				string fileReady = Settings.Instance.ReadyPath + tFile.Name;
-	
+
 				try
 				{
 					FileStream stream = File.Open(fileReady, FileMode.Create, FileAccess.Write);
@@ -903,23 +903,23 @@ namespace XG.Server
 					}
 					writer.Close();
 					stream.Close();
-	
+
 					Int64 size = new FileInfo(fileReady).Length;
 					if (size == tFile.Size)
 					{
 						this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
 						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
-	
+
 						// the file is complete and enabled
 						tFile.Enabled = true;
 						error = false;
-	
+
 						// maybee clear it
-						if(Settings.Instance.ClearReadyDownloads)
+						if (Settings.Instance.ClearReadyDownloads)
 						{
 							this.RemoveFile(tFile);
 						}
-	
+
 						// great, all went right, so lets check what we can do with the file
 						new Thread(delegate() { this.HandleFile(fileReady); }).Start();
 					}
@@ -932,7 +932,7 @@ namespace XG.Server
 				{
 					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
-				if(error)
+				if (error)
 				{
 					// the creation was not successfull, so delete the files and parts
 					this.FileDelete(fileReady);
@@ -947,25 +947,25 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		public void HandleFile(string aFile)
 		{
-			if(aFile != null && aFile != "")
+			if (aFile != null && aFile != "")
 			{
 				int pos = aFile.LastIndexOf('/');
 				string folder = aFile.Substring(0, pos);
 				string file = aFile.Substring(pos + 1);
 
 				pos = file.LastIndexOf('.');
-				string filename =  pos != -1 ? file.Substring(0, pos) : file;
+				string filename = pos != -1 ? file.Substring(0, pos) : file;
 				string fileext = pos != -1 ? file.Substring(pos + 1) : "";
 
-				foreach(string line in Settings.InstanceReload.FileHandler)
+				foreach (string line in Settings.InstanceReload.FileHandler)
 				{
-					if(line == null || line == "") { continue; }
+					if (line == null || line == "") { continue; }
 					string[] values = line.Split('#');
 
 					Match tMatch = Regex.Match(file, values[0], RegexOptions.IgnoreCase);
-					if(tMatch.Success)
+					if (tMatch.Success)
 					{
-						for(int a = 1; a < values.Length; a++)
+						for (int a = 1; a < values.Length; a++)
 						{
 							pos = values[a].IndexOf(' ');
 							string process = values[a].Substring(0, pos);
@@ -983,7 +983,7 @@ namespace XG.Server
 								// TODO should we block all other procs?!
 								p.WaitForExit();
 							}
-							catch(Exception ex)
+							catch (Exception ex)
 							{
 								this.Log("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 							}
@@ -1003,10 +1003,10 @@ namespace XG.Server
 
 		private void RunBotWatchdog()
 		{
-			while(true)
+			while (true)
 			{
 				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
-				
+
 				int a = 0;
 				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
 				{
@@ -1029,14 +1029,14 @@ namespace XG.Server
 						}
 					}
 				}
-				if(a > 0) { this.Log("RunBotWatchdog() removed " + a + " offline bot(s)", LogLevel.Notice); }
+				if (a > 0) { this.Log("RunBotWatchdog() removed " + a + " offline bot(s)", LogLevel.Notice); }
 			}
 		}
-		
+
 		#endregion
 
 		#region TIMER
-		
+
 		private void RunTimer()
 		{
 			while (true)
@@ -1055,9 +1055,9 @@ namespace XG.Server
 		}
 
 		#endregion
-		
+
 		#endregion
-		
+
 		#region LOG
 
 		private void Log(string aData, LogLevel aLevel)

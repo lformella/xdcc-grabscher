@@ -84,11 +84,13 @@ namespace XG.Client.Widgets.GTK
 				}
 			}
 #if !DEBUG
-			try {
+			try
+			{
 #endif
 				bar.Draw(window, widget, cell_area, text);
 #if !DEBUG
-			} catch (Exception) { }
+			}
+			catch (Exception) { }
 #endif
 		}
 

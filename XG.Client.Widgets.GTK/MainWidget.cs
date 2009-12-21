@@ -49,7 +49,7 @@ namespace XG.Client.Widgets.GTK
 				this.hpanedIrc.Sensitive = value;
 				this.vboxFile.Sensitive = value;
 
-				if(!value)
+				if (!value)
 				{
 					this.serverchannelWidget.Clear();
 					this.botWidget.Clear();
@@ -170,7 +170,7 @@ namespace XG.Client.Widgets.GTK
 				else if (aObj.GetType() == typeof(XGBot))
 				{
 					this.botWidget.RemoveObject(aObj);
-					foreach(XGPacket tPack in aObj.Children)
+					foreach (XGPacket tPack in aObj.Children)
 					{
 						this.packetWidget.RemoveObject(tPack);
 					}
@@ -272,8 +272,8 @@ namespace XG.Client.Widgets.GTK
 
 		void serverChannelWidget_ObjectClickedEventHandler(XGObject aObj)
 		{
-			if(this.botWidget.Filter == FilterType.Disable) { this.botWidget.SetFilter(FilterType.Disable, aObj); }
-			if(this.packetWidget.Filter == FilterType.Disable) { this.packetWidget.SetFilter(FilterType.Disable, aObj); }
+			if (this.botWidget.Filter == FilterType.Disable) { this.botWidget.SetFilter(FilterType.Disable, aObj); }
+			if (this.packetWidget.Filter == FilterType.Disable) { this.packetWidget.SetFilter(FilterType.Disable, aObj); }
 
 			if (aObj.GetType() == typeof(XGServer))
 			{
@@ -291,18 +291,18 @@ namespace XG.Client.Widgets.GTK
 			{
 				this.btnAddChannel.Sensitive = false;
 
-				if(this.GetChildrenEvent != null) { this.GetChildrenEvent(aObj); }
+				if (this.GetChildrenEvent != null) { this.GetChildrenEvent(aObj); }
 			}
 		}
 		void serverChannelWidget_ObjectDoubleClickedEventHandler(XGObject aObj)
 		{
-			if(this.ObjectFlippedEvent != null) { this.ObjectFlippedEvent(aObj); }
+			if (this.ObjectFlippedEvent != null) { this.ObjectFlippedEvent(aObj); }
 		}
 
 		void botWidget_ObjectClickedEventHandler(XGObject aObj)
 		{
 			this.serverchannelWidget.SelectObject(aObj.Parent);
-			if(this.packetWidget.Filter == FilterType.Disable) { this.packetWidget.SetFilter(FilterType.Disable, aObj); }
+			if (this.packetWidget.Filter == FilterType.Disable) { this.packetWidget.SetFilter(FilterType.Disable, aObj); }
 
 			this.GetChildrenEvent(aObj);
 		}
@@ -312,10 +312,10 @@ namespace XG.Client.Widgets.GTK
 
 		void packetWidget_ObjectClickedEventHandler(XGObject aObj)
 		{
-			if(aObj.Parent != null)
+			if (aObj.Parent != null)
 			{
 				this.botWidget.SelectObject(aObj.Parent);
-				if(aObj.Parent.Parent != null)
+				if (aObj.Parent.Parent != null)
 				{
 					this.serverchannelWidget.SelectObject(aObj.Parent.Parent);
 				}
@@ -323,7 +323,7 @@ namespace XG.Client.Widgets.GTK
 		}
 		void packetWidget_ObjectDoubleClickedEventHandler(XGObject aObj)
 		{
-			if(this.ObjectFlippedEvent != null) { this.ObjectFlippedEvent(aObj); }
+			if (this.ObjectFlippedEvent != null) { this.ObjectFlippedEvent(aObj); }
 		}
 
 		void fileWidget_ObjectClickedEventHandler(XGObject aObj)
@@ -361,13 +361,13 @@ namespace XG.Client.Widgets.GTK
 			this.packetWidget.SetFilter(aFilter, aObject);
 		}
 
-		protected virtual void chkOfflineBots_Toggled (object sender, System.EventArgs e)
+		protected virtual void chkOfflineBots_Toggled(object sender, System.EventArgs e)
 		{
 			this.botWidget.ShowOfflineObjects = this.chkOfflineBots.Active;
 			this.packetWidget.ShowOfflineObjects = this.chkOfflineBots.Active;
 		}
 
-		protected virtual void chkFilesReady_Toggled (object sender, System.EventArgs e)
+		protected virtual void chkFilesReady_Toggled(object sender, System.EventArgs e)
 		{
 			this.fileWidget.ShowOfflineObjects = this.chkFilesReady.Active;
 		}

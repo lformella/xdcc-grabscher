@@ -204,7 +204,7 @@ namespace XG.Core
 
 		public static bool IsEqual(byte[] aBytes1, byte[] aBytes2)
 		{
-			if(aBytes1 == null || aBytes2 == null) { return false; }
+			if (aBytes1 == null || aBytes2 == null) { return false; }
 			for (int i = 0; i < aBytes1.Length; i++)
 			{
 				if (aBytes1[i] != aBytes2[i]) { return false; }
@@ -387,17 +387,17 @@ namespace XG.Core
 		{
 			if ((Int16)aLevel >= (Int16)LogLevel)
 			{
-				lock(LogLock)
-				{ 
+				lock (LogLock)
+				{
 					Console.Write(DateTime.Now.ToString() + " ");
-					switch(aLevel)
+					switch (aLevel)
 					{
-						case LogLevel.Traffic:		Console.Write("TRAFFIC  "); break;
-						case LogLevel.Info:			Console.Write("INFO     "); break;
-						case LogLevel.Notice:		Console.Write("NOTICE   "); break;
-						case LogLevel.Warning:		Console.Write("WARNING  "); break;
-						case LogLevel.Error:		Console.Write("ERROR    "); break;
-						case LogLevel.Exception:	Console.Write("EXCEPTION"); break;
+						case LogLevel.Traffic: Console.Write("TRAFFIC  "); break;
+						case LogLevel.Info: Console.Write("INFO     "); break;
+						case LogLevel.Notice: Console.Write("NOTICE   "); break;
+						case LogLevel.Warning: Console.Write("WARNING  "); break;
+						case LogLevel.Error: Console.Write("ERROR    "); break;
+						case LogLevel.Exception: Console.Write("EXCEPTION"); break;
 					}
 					Console.WriteLine(" " + aData);
 				}

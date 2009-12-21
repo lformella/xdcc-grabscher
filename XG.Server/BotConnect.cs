@@ -108,7 +108,7 @@ namespace XG.Server
 			get
 			{
 				// damn this should not happen
-				if(this.Part != null && this.File != null)
+				if (this.Part != null && this.File != null)
 				{
 					return Settings.Instance.TempPath + this.File.TmpPath + this.Part.StartSize;
 				}
@@ -166,7 +166,7 @@ namespace XG.Server
 			if (this.Part != null)
 			{
 				// wtf?
-				if(this.StartSize == this.StopSize)
+				if (this.StartSize == this.StopSize)
 				{
 					this.Log("con_Connected() startSize = stopsize (" + this.StartSize + ")", LogLevel.Error);
 					this.Disconnect();
@@ -374,7 +374,7 @@ namespace XG.Server
 					else
 					{
 						this.Log("con_DataReceived() rollback check failed", LogLevel.Error);
-						
+
 						// unregister from the event because if this is triggered
 						// it will remove the part
 						this.Packet.EnabledChangedEvent -= new ObjectDelegate(packet_ObjectStateChanged);

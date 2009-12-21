@@ -20,7 +20,7 @@ using XG.Client.GTK;
 
 namespace XG.Client.Widgets.GTK
 {
-	public delegate void FilterDelegate( FilterType aFilter, object aObject );
+	public delegate void FilterDelegate(FilterType aFilter, object aObject);
 
 	[System.ComponentModel.ToolboxItem(true)]
 	public class SearchWidget : ViewWidget
@@ -32,7 +32,7 @@ namespace XG.Client.Widgets.GTK
 		{
 			this.View.AppendColumn("", rPixbuf, "pixbuf", 0);
 			this.View.AppendColumn("", rText, "text", 1);
-			
+
 			this.mySpecialStore = new Gtk.TreeStore(typeof(Gdk.Pixbuf), typeof(string));
 			this.View.Model = this.mySpecialStore;
 			this.mySpecialStore.AppendValues(ImageLoaderGTK.Instance.pbODay, "ODay Packets");
@@ -69,7 +69,7 @@ namespace XG.Client.Widgets.GTK
 				}
 				else
 				{
-					
+
 					if (pb == ImageLoaderGTK.Instance.pbODay)
 					{
 						this.FilterActivated(FilterType.ODay, null);

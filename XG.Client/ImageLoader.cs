@@ -75,9 +75,9 @@ namespace XG.Client
 			this.Disconnect = assembly.GetManifestResourceStream(name + ".Resources.Disconnect.png");
 			this.Ok = assembly.GetManifestResourceStream(name + ".Resources.Ok.png");
 			this.No = assembly.GetManifestResourceStream(name + ".Resources.No.png");
-			
+
 			this.LanguageDe = assembly.GetManifestResourceStream(name + ".Resources.language.de.png");
-			
+
 			this.ExtAudio = assembly.GetManifestResourceStream(name + ".Resources.extension.audio.png");
 			this.ExtCompressed = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed.png");
 			this.ExtDefault = assembly.GetManifestResourceStream(name + ".Resources.extension.default.png");
@@ -132,9 +132,9 @@ namespace XG.Client
 		protected Stream Disconnect;
 		protected Stream Ok;
 		protected Stream No;
-		
+
 		protected Stream LanguageDe;
-		
+
 		protected Stream ExtAudio;
 		protected Stream ExtCompressed;
 		protected Stream ExtDefault;

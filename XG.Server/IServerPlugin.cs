@@ -29,12 +29,12 @@ namespace XG.Server
 		/// 
 		/// </summary>
 		void Start(ServerRunner aParent);
-		
+
 		/// <summary>
 		/// 
 		/// </summary>
 		void Stop();
-		
+
 		/// <summary>
 		/// 
 		/// </summary>

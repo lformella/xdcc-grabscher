@@ -137,15 +137,15 @@ namespace XG.Core
 				// wtf???
 				// System.ArgumentException: Destination array was not long enough. Check destIndex and length, and the array's lower bounds
 				try { return this.children.ToArray(); }
-				catch(Exception) { return new XGObject[0]; }
+				catch (Exception) { return new XGObject[0]; }
 			}
 		}
-		
+
 		#region ALTER CHILDREN
 
 		public bool addChild(XGObject aObject)
 		{
-			if(aObject != null)
+			if (aObject != null)
 			{
 				if (!this.children.Contains(aObject))
 				{
@@ -166,10 +166,10 @@ namespace XG.Core
 			}
 			return false;
 		}
-		
+
 		public bool removeChild(XGObject aObject)
 		{
-			if(aObject != null)
+			if (aObject != null)
 			{
 				if (this.children.Contains(aObject))
 				{
@@ -179,7 +179,7 @@ namespace XG.Core
 			}
 			return false;
 		}
-		
+
 		#endregion
 
 		#region GET CHILDREN

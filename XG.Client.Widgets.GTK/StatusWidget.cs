@@ -72,7 +72,7 @@ namespace XG.Client.Widgets.GTK
 
 				foreach (XGObject tObj in this.myRootObject.Children)
 				{
-					if(tObj.GetType() == typeof(XGServer))
+					if (tObj.GetType() == typeof(XGServer))
 					{
 						XGServer tServ = tObj as XGServer;
 						if (tServ.Connected) { countServOn++; }
@@ -93,7 +93,7 @@ namespace XG.Client.Widgets.GTK
 							}
 						}
 					}
-					if(tObj.GetType() == typeof(XGFile))
+					if (tObj.GetType() == typeof(XGFile))
 					{
 						XGFile tFile = tObj as XGFile;
 						foreach (XGFilePart tPart in tFile.Children)
@@ -102,8 +102,8 @@ namespace XG.Client.Widgets.GTK
 						}
 						//if(tFile.Enabled == false)
 						//{
-							countFileSizeReady += tFile.Size;
-							countFileReady++;
+						countFileSizeReady += tFile.Size;
+						countFileReady++;
 						//}
 					}
 				}

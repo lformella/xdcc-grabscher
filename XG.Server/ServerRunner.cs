@@ -39,7 +39,7 @@ namespace XG.Server
 		{
 			get { return this.myRootObject != null ? this.myRootObject.Guid : Guid.Empty; }
 		}
-		
+
 		private List<XGFile> myFiles;
 
 		private BinaryFormatter myFormatter = new BinaryFormatter();
@@ -67,7 +67,7 @@ namespace XG.Server
 		{
 			// set the loglevel
 			XGHelper.LogLevel = Settings.Instance.LogLevel;
-			
+
 			// the one and only root object
 			this.myRootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
 			if (this.myRootObject == null) { this.myRootObject = new RootObject(); }
@@ -80,56 +80,56 @@ namespace XG.Server
 
 			#region SERVER INIT
 
-			this.myServerHandler = new ServerHandler( this.myFiles );
-			this.myServerHandler.ParsingErrorEvent += new DataTextDelegate( myServerHandler_ParsingErrorEventHandler );
+			this.myServerHandler = new ServerHandler(this.myFiles);
+			this.myServerHandler.ParsingErrorEvent += new DataTextDelegate(myServerHandler_ParsingErrorEventHandler);
 
-			this.myServerHandler.ObjectAddedEvent += new ObjectObjectDelegate( myServerHandler_ObjectAddedEventHandler );
-			this.myServerHandler.ObjectChangedEvent += new ObjectDelegate( myServerHandler_ObjectChangedEventHandler );
-			this.myServerHandler.ObjectRemovedEvent += new ObjectObjectDelegate( myServerHandler_ObjectRemovedEventHandler );
+			this.myServerHandler.ObjectAddedEvent += new ObjectObjectDelegate(myServerHandler_ObjectAddedEventHandler);
+			this.myServerHandler.ObjectChangedEvent += new ObjectDelegate(myServerHandler_ObjectChangedEventHandler);
+			this.myServerHandler.ObjectRemovedEvent += new ObjectObjectDelegate(myServerHandler_ObjectRemovedEventHandler);
 
 			#endregion
 
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database			
-			foreach(XGServer serv in this.myRootObject.Children)
+			foreach (XGServer serv in this.myRootObject.Children)
 			{
-				foreach(XGServer s in this.myRootObject.Children)
+				foreach (XGServer s in this.myRootObject.Children)
 				{
-					if(s.Name == serv.Name && s.Guid != serv.Guid)
+					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
 						this.Log("Run() removing dupe server " + s.Name, LogLevel.Error);
 						this.myRootObject.removeServer(s);
 					}
 				}
-			
-				foreach(XGChannel chan in serv.Children)
+
+				foreach (XGChannel chan in serv.Children)
 				{
-					foreach(XGChannel c in serv.Children)
+					foreach (XGChannel c in serv.Children)
 					{
-						if(c.Name == chan.Name && c.Guid != chan.Guid)
+						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
 							this.Log("Run() removing dupe channel " + c.Name, LogLevel.Error);
 							serv.removeChannel(c);
 						}
 					}
-			
-					foreach(XGBot bot in chan.Children)
+
+					foreach (XGBot bot in chan.Children)
 					{
-						foreach(XGBot b in chan.Children)
+						foreach (XGBot b in chan.Children)
 						{
-							if(b.Name == bot.Name && b.Guid != bot.Guid)
+							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
 								this.Log("Run() removing dupe bot " + b.Name, LogLevel.Error);
 								chan.removeBot(b);
 							}
 						}
-			
-						foreach(XGPacket pack in bot.Children)
+
+						foreach (XGPacket pack in bot.Children)
 						{
-							foreach(XGPacket p in bot.Children)
+							foreach (XGPacket p in bot.Children)
 							{
-								if(p.Id == pack.Id && p.Guid != pack.Guid)
+								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
 									this.Log("Run() removing dupe Packet " + p.Name, LogLevel.Error);
 									bot.removePacket(p);
@@ -143,44 +143,44 @@ namespace XG.Server
 			#endregion
 
 			#region CLEAR OLD DL
-			
-			if(this.myFiles.Count > 0 && Settings.Instance.ClearReadyDownloads)
+
+			if (this.myFiles.Count > 0 && Settings.Instance.ClearReadyDownloads)
 			{
-				foreach(XGFile file in this.myFiles.ToArray())
+				foreach (XGFile file in this.myFiles.ToArray())
 				{
-					if(file.Enabled)
+					if (file.Enabled)
 					{
 						this.myFiles.Remove(file);
 						this.Log("Run() removing ready file " + file.Name, LogLevel.Notice);
 					}
 				}
 			}
-			
+
 			#endregion
-			
+
 			#region CRASH RECOVERY
 
-			if(this.myFiles.Count > 0)
+			if (this.myFiles.Count > 0)
 			{
-				foreach(XGFile file in this.myFiles.ToArray())
+				foreach (XGFile file in this.myFiles.ToArray())
 				{
 					file.locked = new object();
 
-					if(!file.Enabled)
+					if (!file.Enabled)
 					{
 						bool complete = true;
 						string tmpPath = Settings.Instance.TempPath + file.TmpPath;
-	
-						foreach(XGFilePart part in file.Children)
+
+						foreach (XGFilePart part in file.Children)
 						{
 							part.locked = new object();
-	
+
 							// check if the real file and the part is actual the same
 							FileInfo info = new FileInfo(tmpPath + part.StartSize);
-							if(info.Exists)
+							if (info.Exists)
 							{
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
-								if(part.CurrentSize != part.StartSize + info.Length)
+								if (part.CurrentSize != part.StartSize + info.Length)
 								{
 									this.Log("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length, LogLevel.Warning);
 									part.CurrentSize = part.StartSize + info.Length;
@@ -193,9 +193,9 @@ namespace XG.Server
 								this.myServerHandler.RemovePart(file, part);
 								complete = false;
 							}
-	
+
 							// uhh, this is bad - close it and hope it works again
-							if(part.PartState == FilePartState.Open)
+							if (part.PartState == FilePartState.Open)
 							{
 								part.PartState = FilePartState.Closed;
 								complete = false;
@@ -204,10 +204,10 @@ namespace XG.Server
 							else
 							{
 								// check the file for safety
-								if(part.IsChecked && part.PartState == FilePartState.Ready)
+								if (part.IsChecked && part.PartState == FilePartState.Ready)
 								{
 									XGFilePart next = file.getNextChild(part) as XGFilePart;
-									if(next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
+									if (next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
 									{
 										complete = false;
 										try
@@ -219,7 +219,7 @@ namespace XG.Server
 											fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
 											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 											fileReader.Close();
-			
+
 											this.myServerHandler.CheckNextReferenceBytes(part, bytes);
 										}
 										catch (Exception ex)
@@ -234,10 +234,10 @@ namespace XG.Server
 								}
 							}
 						}
-	
+
 						// check and maybee join the files if something happend the last run
 						// for exaple the disk was full or the rights were not there
-						if(complete && file.Children.Length > 0) { this.myServerHandler.CheckFile(file); }
+						if (complete && file.Children.Length > 0) { this.myServerHandler.CheckFile(file); }
 					}
 				}
 			}
@@ -294,12 +294,12 @@ namespace XG.Server
 		#endregion
 
 		#region SERVER PLUGIN
-		
+
 		public void AddServerPlugin(IServerPlugin aPlugin)
 		{
 			aPlugin.Start(this);
 		}
-		
+
 		#endregion
 
 		#region EVENTS
@@ -310,7 +310,7 @@ namespace XG.Server
 		/// <param name="aObj"></param>
 		private void serv_ObjectStateChangedEventHandler(XGObject aObj)
 		{
-			if(aObj.Enabled)
+			if (aObj.Enabled)
 			{
 				this.myServerHandler.ConnectServer(aObj as XGServer);
 			}
@@ -340,7 +340,7 @@ namespace XG.Server
 			aServer.Enabled = false;
 			this.myServerHandler.DisconnectServer(aServer);
 		}
-		
+
 		#endregion
 
 		#region SERVER
@@ -353,7 +353,7 @@ namespace XG.Server
 		private void myServerHandler_ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
 			// we are just interested in files or fileparts
-			if(aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
+			if (aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
 			{
 				// to save em now
 				this.SaveFileDataNow();
@@ -371,15 +371,15 @@ namespace XG.Server
 		/// <param name="aObj"></param>
 		private void myServerHandler_ObjectChangedEventHandler(XGObject aObj)
 		{
-			if(aObj.GetType() == typeof(XGFile))
+			if (aObj.GetType() == typeof(XGFile))
 			{
 				this.SaveFileDataNow();
 			}
-			else if(aObj.GetType() == typeof(XGFilePart))
+			else if (aObj.GetType() == typeof(XGFilePart))
 			{
 				XGFilePart part = aObj as XGFilePart;
 				// if this change is lost, the data might be corrupt, so save it NOW
-				if(part.PartState != FilePartState.Open)
+				if (part.PartState != FilePartState.Open)
 				{
 					this.SaveFileDataNow();
 				}
@@ -404,7 +404,7 @@ namespace XG.Server
 		private void myServerHandler_ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
 			// we are just interested in files or fileparts
-			if(aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
+			if (aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
 			{
 				// to save em now
 				this.SaveFileDataNow();
@@ -454,9 +454,9 @@ namespace XG.Server
 				this.myFormatter.Serialize(streamWrite, aObj);
 				streamWrite.Close();
 				try { File.Delete(aFile + ".bak"); }
-				catch (Exception) {};
+				catch (Exception) { };
 				try { File.Move(aFile, aFile + ".bak"); }
-				catch (Exception) {};
+				catch (Exception) { };
 				File.Move(aFile + ".new", aFile);
 				this.Log("Save(" + aFile + ")", LogLevel.Info);
 			}
@@ -469,12 +469,12 @@ namespace XG.Server
 		/// <summary>
 		/// Schedules the saving of the IrcData 
 		/// </summary>
-		private void SaveIrcData ()
+		private void SaveIrcData()
 		{
-			while (true) 
+			while (true)
 			{
-				Thread.Sleep ((int)Settings.Instance.BackupDataTime);
-				this.Save (XGHelper.CloneObject(this.myRootObject, false), Settings.Instance.DataBinary);
+				Thread.Sleep((int)Settings.Instance.BackupDataTime);
+				this.Save(XGHelper.CloneObject(this.myRootObject, false), Settings.Instance.DataBinary);
 			}
 		}
 
@@ -483,11 +483,11 @@ namespace XG.Server
 		/// </summary>
 		private void SaveFileData()
 		{
-			while(true)
+			while (true)
 			{
-				if(this.isSaveFile)
+				if (this.isSaveFile)
 				{
-					lock(this.mySaveFileLock)
+					lock (this.mySaveFileLock)
 					{
 						this.Save(this.myFiles, Settings.Instance.FilesBinary);
 						this.isSaveFile = false;
@@ -502,7 +502,7 @@ namespace XG.Server
 		/// </summary>
 		private void SaveFileDataNow()
 		{
-			lock(this.mySaveFileLock)
+			lock (this.mySaveFileLock)
 			{
 				this.Save(this.myFiles, Settings.Instance.FilesBinary);
 				this.isSaveFile = false;
@@ -549,9 +549,9 @@ namespace XG.Server
 		#endregion
 
 		#region CLIENT REQUEST HANDLER
-		
+
 		#region SERVER
-		
+
 		public void AddServer(string aString)
 		{
 			this.myRootObject.addServer(aString);
@@ -669,7 +669,7 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -706,7 +706,7 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -734,7 +734,7 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -762,7 +762,7 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -813,12 +813,12 @@ namespace XG.Server
 		private XGObject[] GetBots2Packets(XGObject[] aList, Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
-			foreach(XGPacket tPack in aList)
+			foreach (XGPacket tPack in aList)
 			{
-				if(tList.Contains(tPack.Parent)) { continue; }
+				if (tList.Contains(tPack.Parent)) { continue; }
 				tList.Add(tPack.Parent);
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -885,7 +885,7 @@ namespace XG.Server
 			foreach (XGPacket tPack in aBot.Children)
 			{
 				tPart = this.GetFilePart4Packet(tPack);
-				if(tPart != null)
+				if (tPart != null)
 				{
 					break;
 				}
@@ -909,7 +909,7 @@ namespace XG.Server
 					tList.Add(tPart);
 				}
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
@@ -922,9 +922,9 @@ namespace XG.Server
 			}
 			else
 			{
-				foreach(XGFile tFile in this.myFiles.ToArray())
+				foreach (XGFile tFile in this.myFiles.ToArray())
 				{
-					if(tFile.Guid == aGuid)
+					if (tFile.Guid == aGuid)
 					{
 						return tFile;
 					}
@@ -951,11 +951,11 @@ namespace XG.Server
 			}
 			else
 			{
-				foreach(XGFile tFile in this.myFiles.ToArray())
+				foreach (XGFile tFile in this.myFiles.ToArray())
 				{
-					if(tFile.Guid == aGuid)
+					if (tFile.Guid == aGuid)
 					{
-						foreach(XGFilePart tPart in tFile.Children)
+						foreach (XGFilePart tPart in tFile.Children)
 						{
 							tList.Add(tPart);
 						}
@@ -963,14 +963,14 @@ namespace XG.Server
 					}
 				}
 			}
-			if(aComp != null) { tList.Sort(aComp); }
+			if (aComp != null) { tList.Sort(aComp); }
 			return tList.ToArray();
 		}
 
 		#endregion
-		
+
 		#endregion
-		
+
 		#region LOG
 
 		/// <summary>
