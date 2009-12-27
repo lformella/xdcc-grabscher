@@ -203,6 +203,10 @@ namespace XG.Server.Web
 								tComp = XGHelper.ComparePacketSize;
 								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketSizeReverse;
 								break;
+							case "lastupdated":
+								tComp = XGHelper.ComparePacketLastUpdated;
+								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketLastUpdatedReverse;
+								break;
 						}
 					}
 

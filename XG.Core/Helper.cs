@@ -358,6 +358,29 @@ namespace XG.Core
 			return ComparePacketSize(aObj2, aObj1);
 		}
 
+		public static int ComparePacketLastUpdated(XGObject aObj1, XGObject aObj2)
+		{
+			if (aObj1 == null)
+			{
+				if (aObj2 == null) { return 0; }
+				else { return -1; }
+			}
+			else
+			{
+				if (aObj2 == null) { return 1; }
+				else
+				{
+					int ret = ((XGPacket)aObj1).LastUpdated.CompareTo(((XGPacket)aObj2).LastUpdated);
+					return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
+				}
+			}
+		}
+
+		public static int ComparePacketLastUpdatedReverse(XGObject aObj1, XGObject aObj2)
+		{
+			return ComparePacketLastUpdated(aObj2, aObj1);
+		}
+
 		#endregion
 
 		#region HELPER
