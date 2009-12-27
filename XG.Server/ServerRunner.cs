@@ -33,6 +33,8 @@ namespace XG.Server
 	/// </summary>
 	public class ServerRunner
 	{
+		#region VARIABLES
+
 		private ServerHandler myServerHandler;
 		private RootObject myRootObject;
 		public Guid RootGuid
@@ -50,7 +52,9 @@ namespace XG.Server
 		private bool isSaveFile = false;
 		private object mySaveFileLock = new object();
 
-		#region DELEGATES
+		#endregion
+
+		#region EVENTS
 
 		public event ObjectDelegate ObjectChangedEvent;
 		public event ObjectObjectDelegate ObjectAddedEvent;

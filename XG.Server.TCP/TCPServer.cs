@@ -28,6 +28,8 @@ namespace XG.Server.TCP
 {
 	public class TCPServer : IServerPlugin
 	{
+		#region VARIABLES
+
 		private ServerRunner myRunner;
 
 		private Thread myServerThread;
@@ -35,6 +37,8 @@ namespace XG.Server.TCP
 
 		private List<BinaryWriter> myWriter = new List<BinaryWriter>();
 		private BinaryFormatter myFormatter = new BinaryFormatter();
+
+		#endregion
 
 		#region RUN STOP RESTART
 

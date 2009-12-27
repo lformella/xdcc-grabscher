@@ -45,7 +45,7 @@ namespace XG.Server
 		private Dictionary<XGObject, DateTime> myTimedObjects;
 		private Dictionary<string, DateTime> myLatestPacketRequests;
 
-		#region DELEGATES
+		#region EVENTS
 
 		public event DownloadDelegate NewDownloadEvent;
 		public event ServerDelegate ConnectedEvent;

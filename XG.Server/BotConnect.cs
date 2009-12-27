@@ -31,6 +31,8 @@ namespace XG.Server
 	/// </summary>	
 	public class BotConnect
 	{
+		#region VARIABLES
+
 		private ServerHandler myParent;
 
 		private XGPacket myPacket;
@@ -52,7 +54,9 @@ namespace XG.Server
 		private bool myStreamOk = false;
 		private bool removePart = false;
 
-		#region DELEGATES
+		#endregion
+
+		#region EVENTS
 
 		public event PacketBotConnectDelegate ConnectedEvent;
 		public event PacketBotConnectDelegate DisconnectedEvent;

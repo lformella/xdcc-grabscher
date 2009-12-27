@@ -40,11 +40,15 @@ namespace XG.Server
 	/// </summary>
 	public class ServerHandler
 	{
+		#region VARIABLES
+
 		private Dictionary<XGServer, ServerConnect> myServers;
 		private Dictionary<XGPacket, BotConnect> myDownloads;
 		private List<XGFile> myFiles;
 
-		#region DELEGATES
+		#endregion
+
+		#region EVENTS
 
 		public event DataTextDelegate ParsingErrorEvent;
 

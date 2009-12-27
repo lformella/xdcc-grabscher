@@ -24,6 +24,8 @@ namespace XG.Server
 {
 	public class Connection
 	{
+		#region VARIABLES
+
 		private TcpClient myTcpClient;
 
 		private Int64 myMaxData;
@@ -49,7 +51,9 @@ namespace XG.Server
 			get { return myIsConnected; }
 		}
 
-		#region DELEGATES
+		#endregion
+
+		#region EVENTS
 
 		public event EmptyDelegate ConnectedEvent;
 		public event EmptyDelegate DisconnectedEvent;

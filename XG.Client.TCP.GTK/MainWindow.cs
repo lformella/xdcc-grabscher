@@ -29,18 +29,14 @@ namespace XG.Client.TCP.GTK
 {
 	public partial class MainWindow : Gtk.Window
 	{
-		private RootObject myRootObject;
-
-		private List<string> myCompleteSearches;
-		private List<XGObject> myCompleteObjects;
-		private List<XGObject> myParentlessObjects;
+		#region VARIABLES
 
 		private Thread myThread;
 		private TCPClient myClient;
 
 		private StatusIcon myTrayIcon;
 
-		private bool myEnabledPacketsFetched = false;
+		#endregion
 
 		#region INIT
 
@@ -48,13 +44,6 @@ namespace XG.Client.TCP.GTK
 			: base(Gtk.WindowType.Toplevel)
 		{
 			Build();
-
-			this.myParentlessObjects = new List<XGObject>();
-			this.myRootObject = new RootObject();
-			this.statusWidget.RootObject = this.myRootObject;
-
-			this.myCompleteSearches = new List<string>();
-			this.myCompleteObjects = new List<XGObject>();
 
 			#region MAINWIDGET EVENTS
 
@@ -211,13 +200,12 @@ namespace XG.Client.TCP.GTK
 
 			this.myClient = new TCPClient();
 
-			this.myClient.RootGuidReceivedEvent += new GuidDelegate(myClient_RootGuidReceived);
 			this.myClient.ConnectedEvent += new EmptyDelegate(myClient_Connected);
 			this.myClient.ConnectionErrorEvent += new DataTextDelegate(myClient_ConnectionError);
 			this.myClient.DisconnectedEvent += new EmptyDelegate(myClient_Disconnected);
-			this.myClient.ObjectAddedEvent += new ObjectDelegate(myClient_ObjectAddedOrChanged);
-			this.myClient.ObjectChangedEvent += new ObjectDelegate(myClient_ObjectAddedOrChanged);
-			this.myClient.ObjectRemovedEvent += new GuidDelegate(myClient_ObjectRemoved);
+			this.myClient.ObjectAddedEvent += new ObjectObjectDelegate(myClient_ObjectAdded);
+			this.myClient.ObjectChangedEvent += new ObjectDelegate(myClient_ObjectChanged);
+			this.myClient.ObjectRemovedEvent += new ObjectDelegate(myClient_ObjectRemoved);
 			this.myClient.ObjectBlockStartEvent += new EmptyDelegate(myClient_ObjectBlockStart);
 			this.myClient.ObjectBlockStopEvent += new EmptyDelegate(myClient_ObjectBlockStop);
 
@@ -228,8 +216,9 @@ namespace XG.Client.TCP.GTK
 		{
 			this.btnDisconnect.Sensitive = true;
 			this.mainWidget.Connected = true;
+			this.statusWidget.RootObject = this.myClient.RootObject;
 
-			this.WriteData(TCPClientRequest.GetFiles, Guid.Empty, null);
+			this.myClient.GetFiles();
 		}
 		private void myClient_ConnectionError(string aData)
 		{
@@ -244,10 +233,10 @@ namespace XG.Client.TCP.GTK
 		{
 			if (this.myClient != null)
 			{
-				this.WriteData(TCPClientRequest.CloseClient, Guid.Empty, null);
 				this.myClient.Disconnect();
 			}
 		}
+
 		private void myClient_Disconnected()
 		{
 			this.btnConnect.Sensitive = true;
@@ -256,216 +245,65 @@ namespace XG.Client.TCP.GTK
 
 			try
 			{
-				this.myClient.RootGuidReceivedEvent -= new GuidDelegate(myClient_RootGuidReceived);
 				this.myClient.ConnectedEvent -= new EmptyDelegate(myClient_Connected);
 				this.myClient.ConnectionErrorEvent -= new DataTextDelegate(myClient_ConnectionError);
 				this.myClient.DisconnectedEvent -= new EmptyDelegate(myClient_Disconnected);
-				this.myClient.ObjectAddedEvent -= new ObjectDelegate(myClient_ObjectAddedOrChanged);
-				this.myClient.ObjectChangedEvent -= new ObjectDelegate(myClient_ObjectAddedOrChanged);
-				this.myClient.ObjectRemovedEvent -= new GuidDelegate(myClient_ObjectRemoved);
+				this.myClient.ObjectAddedEvent -= new ObjectObjectDelegate(myClient_ObjectAdded);
+				this.myClient.ObjectChangedEvent -= new ObjectDelegate(myClient_ObjectChanged);
+				this.myClient.ObjectRemovedEvent -= new ObjectDelegate(myClient_ObjectRemoved);
 				this.myClient.ObjectBlockStartEvent -= new EmptyDelegate(myClient_ObjectBlockStart);
 				this.myClient.ObjectBlockStopEvent -= new EmptyDelegate(myClient_ObjectBlockStop);
 			}
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 
-			#region CLEAR THINGS
-
-			this.myParentlessObjects.Clear();
-			this.myCompleteSearches.Clear();
-			this.myCompleteObjects.Clear();
-
-			this.myEnabledPacketsFetched = false;
-
-			this.myRootObject = new RootObject();
-
-			this.statusWidget.RootObject = this.myRootObject;
+			this.statusWidget.RootObject = new RootObject();
 			this.statusWidget.Update();
-
-			#endregion
-
 			this.myClient = null;
-		}
-
-		private void WriteData(TCPClientRequest aMessage, Guid aGuid, string aData)
-		{
-			if (this.myClient != null)
-			{
-				this.myClient.WriteData(aMessage, aGuid, aData);
-			}
 		}
 
 		#endregion
 
 		#region DATA HANDLING
 
-		void myClient_RootGuidReceived(Guid aGuid)
+		void myClient_ObjectAdded(XGObject aObj, XGObject aParent)
 		{
-			this.myRootObject.SetGuid(aGuid);
-		}
+			this.mainWidget.AddObject(aObj, aParent);
 
-		void myClient_ObjectAddedOrChanged(XGObject aObj)
-		{
-			XGObject oldObj = this.myRootObject.getChildByGuid(aObj.Guid);
-			if (oldObj != null)
+			if (aObj.GetType() == typeof(XGFilePart))
 			{
-				XGHelper.CloneObject(aObj, oldObj, true);
-
-				if (aObj.GetType() == typeof(XGServer) ||
-					aObj.GetType() == typeof(XGChannel) ||
-					aObj.GetType() == typeof(XGBot) ||
-					aObj.GetType() == typeof(XGPacket) ||
-					aObj.GetType() == typeof(XGFile))
-				{
-					this.mainWidget.ChangeObject(aObj, null);
-				}
-				else if (aObj.GetType() == typeof(XGFilePart))
-				{
-					XGFilePart tPart = aObj as XGFilePart;
-					XGPacket tPack = this.myRootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
-					if (tPack != null)
-					{
-						this.mainWidget.ChangeObject(aObj, tPack);
-					}
-				}
-				this.statusWidget.Update();
-			}
-			else
-			{
-				XGObject parentObj = this.myRootObject.getChildByGuid(aObj.ParentGuid);
-				if (parentObj != null || aObj.ParentGuid == Guid.Empty)
-				{
-					this.AddObject(aObj);
-					foreach (XGObject obj in this.myParentlessObjects.ToArray())
-					{
-						if (obj.ParentGuid == aObj.Guid)
-						{
-							this.myParentlessObjects.Remove(obj);
-							this.AddObject(obj);
-						}
-					}
-				}
-				else
-				{
-					// just ask once on multiple parentless objects needing the same parent
-					bool ask = true;
-					foreach (XGObject tObj in this.myParentlessObjects.ToArray())
-					{
-						if (tObj.ParentGuid == aObj.ParentGuid)
-						{
-							ask = false;
-							break;
-						}
-					}
-					if (ask) { this.WriteData(TCPClientRequest.GetObject, aObj.ParentGuid, null); }
-					this.myParentlessObjects.Add(aObj);
-				}
-			}
-		}
-
-		void myClient_ObjectRemoved(Guid aGuid)
-		{
-			XGObject remObj = this.myRootObject.getChildByGuid(aGuid);
-			if (remObj != null)
-			{
-				XGHelper.Log("Removing " + remObj.GetType() + " - " + remObj.Name, LogLevel.Notice);
-
-				try
-				{
-					if (remObj.GetType() == typeof(XGServer))
-					{
-						XGServer tServ = remObj as XGServer;
-						this.myRootObject.removeServer(tServ);
-					}
-
-					else if (remObj.GetType() == typeof(XGChannel))
-					{
-						XGChannel tChan = remObj as XGChannel;
-						tChan.Parent.removeChannel(tChan);
-					}
-
-					else if (remObj.GetType() == typeof(XGBot))
-					{
-						XGBot tBot = remObj as XGBot;
-						tBot.Parent.removeBot(tBot);
-					}
-
-					else if (remObj.GetType() == typeof(XGPacket))
-					{
-						XGPacket tPack = remObj as XGPacket;
-						tPack.Parent.removePacket(tPack);
-					}
-
-					else if (remObj.GetType() == typeof(XGFile))
-					{
-						XGFile tFile = remObj as XGFile;
-						this.myRootObject.removeChild(tFile);
-					}
-
-					else if (remObj.GetType() == typeof(XGFilePart))
-					{
-						XGFilePart tPart = remObj as XGFilePart;
-						tPart.Parent.removePart(tPart);
-					}
-
-					this.mainWidget.RemoveObject(remObj);
-				}
-				catch (Exception ex) { Console.WriteLine(ex.ToString()); }
-			}
-		}
-
-		private void AddObject(XGObject aObj)
-		{
-			if (aObj.GetType() == typeof(XGServer))
-			{
-				this.myRootObject.addServer(aObj as XGServer);
-				this.mainWidget.AddObject(aObj);
-			}
-
-			else if (aObj.GetType() == typeof(XGChannel))
-			{
-				XGServer tServ = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGServer;
-				tServ.addChannel(aObj as XGChannel);
-				this.mainWidget.AddObject(aObj, tServ);
-			}
-
-			else if (aObj.GetType() == typeof(XGBot))
-			{
-				XGChannel tChan = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGChannel;
-				XGBot tBot = aObj as XGBot;
-				tChan.addBot(tBot);
-				this.mainWidget.AddObject(aObj);
-			}
-
-			else if (aObj.GetType() == typeof(XGPacket))
-			{
-				XGBot tBot = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGBot;
-				XGPacket tPack = aObj as XGPacket;
-				tBot.addPacket(tPack);
-				this.mainWidget.AddObject(aObj);
-			}
-
-			else if (aObj.GetType() == typeof(XGFile))
-			{
-				this.myRootObject.addChild(aObj as XGFile);
-				this.mainWidget.AddObject(aObj);
-			}
-
-			else if (aObj.GetType() == typeof(XGFilePart))
-			{
-				XGFile tFile = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGFile;
 				XGFilePart tPart = aObj as XGFilePart;
-				tFile.addPart(tPart);
-				this.mainWidget.AddObject(aObj, tFile);
-
-				XGPacket tPack = this.myRootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
+				XGPacket tPack = this.myClient.RootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
 				if (tPack != null)
 				{
 					this.mainWidget.ChangeObject(tPart, tPack);
-					tPart.Packet = tPack;
 				}
 			}
 
 			this.statusWidget.Update();
+		}
+
+		void myClient_ObjectChanged(XGObject aObj)
+		{
+			if (aObj.GetType() == typeof(XGFilePart))
+			{
+				XGFilePart tPart = aObj as XGFilePart;
+				XGPacket tPack = this.myClient.RootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
+				if (tPack != null)
+				{
+					this.mainWidget.ChangeObject(aObj, tPack);
+				}
+			}
+			else
+			{
+				this.mainWidget.ChangeObject(aObj, null);
+			}
+
+			this.statusWidget.Update();
+		}
+
+		void myClient_ObjectRemoved(XGObject aObj)
+		{
+			this.mainWidget.RemoveObject(aObj);
 		}
 
 		private void myClient_ObjectBlockStart()
@@ -541,76 +379,74 @@ namespace XG.Client.TCP.GTK
 
 		private void GetChildren(XGObject aObj)
 		{
-			if (!this.myCompleteObjects.Contains(aObj))
+			if (this.myClient != null)
 			{
-				this.WriteData(TCPClientRequest.GetChildrenFromObject, aObj.Guid, null);
-				this.myCompleteObjects.Add(aObj);
+				this.myClient.GetChildren(aObj);
 			}
 		}
 
 		private void ObjectFlippedEventHandler(XGObject aObj)
 		{
-			if (aObj != null)
+			if (this.myClient != null)
 			{
-				if (!aObj.Enabled) { this.WriteData(TCPClientRequest.ActivateObject, aObj.Guid, null); }
-				else { this.WriteData(TCPClientRequest.DeactivateObject, aObj.Guid, null); }
+				this.myClient.FlipObject(aObj);
 			}
 		}
 
 		private void GetEnabledPacketsEventHandler()
 		{
-			if (!this.myEnabledPacketsFetched)
+			if (this.myClient != null)
 			{
-				if (this.myClient != null)
-				{
-					this.myEnabledPacketsFetched = true;
-					this.WriteData(TCPClientRequest.GetActivePackets, Guid.Empty, null);
-				}
+				this.myClient.GetEnabledPackets();
 			}
 		}
 
 		private void SearchPacketEventHandler(string aSearch)
 		{
-			if (!this.myCompleteSearches.Contains(aSearch))
+			if (this.myClient != null)
 			{
-				if (this.myClient != null)
-				{
-					this.myCompleteSearches.Add(aSearch);
-					this.WriteData(TCPClientRequest.SearchPacket, Guid.Empty, aSearch);
-				}
+				this.myClient.SearchPacket(aSearch);
 			}
 		}
 
 		private void SearchPacketTimeEventHandler(string aSearch)
 		{
-			if (!this.myCompleteSearches.Contains(aSearch))
+			if (this.myClient != null)
 			{
-				if (this.myClient != null)
-				{
-					this.myCompleteSearches.Add(aSearch);
-					this.WriteData(TCPClientRequest.SearchPacketTime, Guid.Empty, aSearch);
-				}
+				this.myClient.SearchPacketTime(aSearch);
 			}
 		}
 
 		private void ServerAddedEventHandler(string aData)
 		{
-			this.WriteData(TCPClientRequest.AddServer, Guid.Empty, aData);
+			if (this.myClient != null)
+			{
+				this.myClient.AddServer(aData);
+			}
 		}
 
 		private void ChannelAddedEventHandler(string aData, Guid aGuid)
 		{
-			this.WriteData(TCPClientRequest.AddChannel, aGuid, aData);
+			if (this.myClient != null)
+			{
+				this.myClient.AddChannel(aData, aGuid);
+			}
 		}
 
 		private void ServerRemovedEventHandler(Guid aGuid)
 		{
-			this.WriteData(TCPClientRequest.RemoveServer, aGuid, null);
+			if (this.myClient != null)
+			{
+				this.myClient.RemoveServer(aGuid);
+			}
 		}
 
 		private void ChannelRemovedEventHandler(Guid aGuid)
 		{
-			this.WriteData(TCPClientRequest.RemoveChannel, aGuid, null);
+			if (this.myClient != null)
+			{
+				this.myClient.RemoveChannel(aGuid);
+			}
 		}
 
 		#endregion

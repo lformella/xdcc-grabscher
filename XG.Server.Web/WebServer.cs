@@ -27,12 +27,16 @@ namespace XG.Server.Web
 {
 	public class WebServer : IServerPlugin
 	{
+		#region VARIABLES
+
 		private const string VERSION = "0.5";
 
 		private ServerRunner myRunner;
 
 		private Thread myServerThread;
 		private HttpListener myListener;
+
+		#endregion
 
 		#region RUN STOP RESTART
 

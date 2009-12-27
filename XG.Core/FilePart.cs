@@ -39,7 +39,11 @@ namespace XG.Core
 				{
 					this.packet = value;
 					if (this.packet != null) { this.packetGuid = this.packet.Guid; }
-					else { this.packetGuid = Guid.Empty; }
+					else
+					{
+						this.packetGuidOld = packetGuid;
+						this.packetGuid = Guid.Empty;
+					}
 				}
 			}
 		}
@@ -48,6 +52,12 @@ namespace XG.Core
 		public Guid PacketGuid
 		{
 			get { return this.packetGuid; }
+		}
+
+		private Guid packetGuidOld;
+		public Guid PacketGuidOld
+		{
+			get { return this.packetGuidOld; }
 		}
 
 		private Int64 startSize = 0;
@@ -162,6 +172,7 @@ namespace XG.Core
 		public void Clone(XGFilePart aCopy, bool aFull)
 		{
 			base.Clone(aCopy, aFull);
+			this.packetGuidOld = aCopy.packetGuidOld;
 			this.packetGuid = aCopy.packetGuid;
 			this.isChecked = aCopy.isChecked;
 			this.partState = aCopy.partState;

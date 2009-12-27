@@ -16,7 +16,6 @@
 // 
 
 using System;
-using XG.Core;
 using XG.Server;
 using XG.Server.TCP;
 using XG.Server.Web;
