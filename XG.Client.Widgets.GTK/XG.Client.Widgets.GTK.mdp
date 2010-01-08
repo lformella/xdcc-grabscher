@@ -1,38 +1,38 @@
-<Project name="XG.Client.Widgets.GTK" fileversion="2.0" language="C#" releaseVersion="" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project releaseVersion="0.6" name="XG.Client.Widgets.GTK" fileversion="2.0" DefaultNamespace="XG.Client.Widgets.GTK" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.Widgets.GTK" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="3" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assembly="XG.Client.Widgets.GTK" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="3" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="gtk-gui/gui.stetic" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="gtk-gui/generated.cs" subtype="Code" buildaction="Compile" />
-    <File name="gtk-gui/XG.Client.Widgets.GTK.ViewWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="gtk-gui/XG.Client.Widgets.GTK.TextDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="ServerChannelWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="BotWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="CellRendererPacketProgress.cs" subtype="Code" buildaction="Compile" />
-    <File name="FileWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="Helper.cs" subtype="Code" buildaction="Compile" />
-    <File name="PacketWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="SearchWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="SegmentedBar.cs" subtype="Code" buildaction="Compile" />
-    <File name="ViewWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="TextDialog.cs" subtype="Code" buildaction="Compile" />
-    <File name="MainWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="gtk-gui/XG.Client.Widgets.GTK.MainWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="StatusWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="gtk-gui/XG.Client.Widgets.GTK.StatusWidget.cs" subtype="Code" buildaction="Compile" />
-    <File name="PartableWidget.cs" subtype="Code" buildaction="Compile" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui/gui.stetic" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/generated.cs" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/XG.Client.Widgets.GTK.ViewWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/XG.Client.Widgets.GTK.TextDialog.cs" />
+    <File subtype="Code" buildaction="Compile" name="ServerChannelWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="BotWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="CellRendererPacketProgress.cs" />
+    <File subtype="Code" buildaction="Compile" name="FileWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper.cs" />
+    <File subtype="Code" buildaction="Compile" name="PacketWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="SearchWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="SegmentedBar.cs" />
+    <File subtype="Code" buildaction="Compile" name="ViewWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="TextDialog.cs" />
+    <File subtype="Code" buildaction="Compile" name="MainWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/XG.Client.Widgets.GTK.MainWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="StatusWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/XG.Client.Widgets.GTK.StatusWidget.cs" />
+    <File subtype="Code" buildaction="Compile" name="PartableWidget.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

@@ -211,6 +211,8 @@ namespace XG.Server.Web
 					}
 
 					#region DATA HANDLING
+					
+					XGObject[] list = null;
 
 					switch (tMessage)
 					{
@@ -267,35 +269,35 @@ namespace XG.Server.Web
 						# region SEARCH
 
 						case TCPClientRequest.SearchPacket:
-							this.WriteToStream(client.Response, this.myRunner.SearchPacket(tDic["name"], tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchPacket(tDic["name"], tComp);
 							break;
 
 						case TCPClientRequest.SearchPacketTime:
-							this.WriteToStream(client.Response, this.myRunner.SearchPacketTime(tDic["name"], tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchPacketTime(tDic["name"], tComp);
 							break;
 
 						case TCPClientRequest.SearchPacketActiveDownloads:
-							this.WriteToStream(client.Response, this.myRunner.SearchPacketActiveDownloads(tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchPacketActiveDownloads(tComp);
 							break;
 
 						case TCPClientRequest.SearchPacketsEnabled:
-							this.WriteToStream(client.Response, this.myRunner.SearchPacketsEnabled(tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchPacketsEnabled(tComp);
 							break;
 
 						case TCPClientRequest.SearchBot:
-							this.WriteToStream(client.Response, this.myRunner.SearchBot(tDic["name"], tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchBot(tDic["name"], tComp);
 							break;
 
 						case TCPClientRequest.SearchBotTime:
-							this.WriteToStream(client.Response, this.myRunner.SearchBotTime(tDic["name"], tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchBotTime(tDic["name"], tComp);
 							break;
 
 						case TCPClientRequest.SearchBotActiveDownloads:
-							this.WriteToStream(client.Response, this.myRunner.SearchBotActiveDownloads(tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchBotActiveDownloads(tComp);
 							break;
 
 						case TCPClientRequest.SearchBotsEnabled:
-							this.WriteToStream(client.Response, this.myRunner.SearchBotsEnabled(tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.SearchBotsEnabled(tComp);
 							break;
 
 						#endregion
@@ -307,19 +309,19 @@ namespace XG.Server.Web
 							break;
 
 						case TCPClientRequest.GetServersChannels:
-							this.WriteToStream(client.Response, this.myRunner.GetServersChannels(), tDic["page"], tDic["rows"]);
+							list = this.myRunner.GetServersChannels();
 							break;
 
 						case TCPClientRequest.GetActivePackets:
-							this.WriteToStream(client.Response, this.myRunner.GetActivePackets(), tDic["page"], tDic["rows"]);
+							list = this.myRunner.GetActivePackets();
 							break;
 
 						case TCPClientRequest.GetFiles:
-							this.WriteToStream(client.Response, this.myRunner.GetFiles(), tDic["page"], tDic["rows"]);
+							list = this.myRunner.GetFiles();
 							break;
 
 						case TCPClientRequest.GetChildrenFromObject:
-							this.WriteToStream(client.Response, this.myRunner.GetChildrenFromObject(new Guid(tDic["guid"]), tComp), tDic["page"], tDic["rows"]);
+							list = this.myRunner.GetChildrenFromObject(new Guid(tDic["guid"]), tComp);
 							break;
 
 						#endregion
@@ -341,6 +343,11 @@ namespace XG.Server.Web
 						default:
 							this.WriteToStream(client.Response, "");
 							break;
+					}
+					
+					if (list != null)
+					{
+						this.WriteToStream(client.Response, list, tDic["page"], tDic["rows"], tDic["offBots"]);
 					}
 
 					#endregion
@@ -388,13 +395,14 @@ namespace XG.Server.Web
 
 		private void WriteToStream(HttpListenerResponse aResponse, XGObject aObj)
 		{
-			this.WriteToStream(aResponse, new XGObject[] { aObj }, "", "");
+			this.WriteToStream(aResponse, new XGObject[] { aObj }, "", "", "1");
 		}
 
-		private void WriteToStream(HttpListenerResponse aResponse, XGObject[] aList, string aPage, string aRows)
+		private void WriteToStream(HttpListenerResponse aResponse, XGObject[] aList, string aPage, string aRows, string aOffBots)
 		{
 			int page = aPage != "" ? int.Parse(aPage) : 1;
 			int rows = aRows != "" ? int.Parse(aRows) : 1;
+			int offBots = aOffBots != "1" ? "0" : "1";
 			int count = 0;
 
 			StringBuilder sb = new StringBuilder();

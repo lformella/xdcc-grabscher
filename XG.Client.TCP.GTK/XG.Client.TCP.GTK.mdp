@@ -1,27 +1,27 @@
-<Project name="XG.Client.TCP.GTK" fileversion="2.0" language="C#" releaseVersion="" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project releaseVersion="0.6" name="XG.Client.TCP.GTK" fileversion="2.0" DefaultNamespace="XG.Client.TCP.GTK" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.TCP.GTK" />
       <Build debugmode="True" target="WinExe" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG MONO" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assembly="XG.Client.TCP.GTK" />
       <Build debugmode="False" target="WinExe" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="MONO" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="gtk-gui/generated.cs" subtype="Code" buildaction="Compile" />
-    <File name="gtk-gui/gui.stetic" subtype="Code" buildaction="EmbedAsResource" />
-    <File name="gtk-gui/XG.Client.TCP.GTK.MainWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="MainWindow.cs" subtype="Code" buildaction="Compile" />
-    <File name="Main.cs" subtype="Code" buildaction="Compile" />
-    <File name="Properties/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
-    <File name="ClientSettings.Designer.cs" subtype="Code" buildaction="Compile" />
-    <File name="ClientSettings.settings" subtype="Code" buildaction="Nothing" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/generated.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui/gui.stetic" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui/XG.Client.TCP.GTK.MainWindow.cs" />
+    <File subtype="Code" buildaction="Compile" name="MainWindow.cs" />
+    <File subtype="Code" buildaction="Compile" name="Main.cs" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="ClientSettings.Designer.cs" />
+    <File subtype="Code" buildaction="Nothing" name="ClientSettings.settings" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

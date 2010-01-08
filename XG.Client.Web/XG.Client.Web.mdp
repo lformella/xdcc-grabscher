@@ -1,88 +1,88 @@
-<Project name="XG.Client.Web" fileversion="2.0" language="C#" releaseVersion="" targetFramework="2.0" ctype="DotNetProject">
+<Project releaseVersion="0.6" name="XG.Client.Web" fileversion="2.0" DefaultNamespace="XG.Client.Web" language="C#" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.Web" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assembly="XG.Client.Web" />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="FileLoaderWeb.cs" subtype="Code" buildaction="Compile" />
-    <File name="ImageLoaderWeb.cs" subtype="Code" buildaction="Compile" />
-    <File name="Resources" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/index.html" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.index.html" />
-    <File name="Resources/js" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/js/jquery.jqGrid.min.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.jquery.jqGrid.min.js" />
-    <File name="Resources/js/jquery.min.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.jquery.min.js" />
-    <File name="Resources/js/jquery-ui.min.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.jquery-ui.min.js" />
-    <File name="Resources/js/xg.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.xg.js" />
-    <File name="Resources/js/i18n" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/js/i18n/grid.locale-bg.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-bg.js" />
-    <File name="Resources/js/i18n/grid.locale-bg1251.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-bg1251.js" />
-    <File name="Resources/js/i18n/grid.locale-cat.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-cat.js" />
-    <File name="Resources/js/i18n/grid.locale-cs.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-cd.js" />
-    <File name="Resources/js/i18n/grid.locale-cn.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-cn.js" />
-    <File name="Resources/js/i18n/grid.locale-dk.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-dk.js" />
-    <File name="Resources/js/i18n/grid.locale-de.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-de.js" />
-    <File name="Resources/js/i18n/grid.locale-el.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-el.js" />
-    <File name="Resources/js/i18n/grid.locale-en.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-en.js" />
-    <File name="Resources/js/i18n/grid.locale-fa.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-fa.js" />
-    <File name="Resources/js/i18n/grid.locale-fi.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-fi.js" />
-    <File name="Resources/js/i18n/grid.locale-fr.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-fr.js" />
-    <File name="Resources/js/i18n/grid.locale-he.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-he.js" />
-    <File name="Resources/js/i18n/grid.locale-is.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-is.js" />
-    <File name="Resources/js/i18n/grid.locale-it.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-it.js" />
-    <File name="Resources/js/i18n/grid.locale-jp.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-jp.js" />
-    <File name="Resources/js/i18n/grid.locale-nl.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-nl.js" />
-    <File name="Resources/js/i18n/grid.locale-no.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-no.js" />
-    <File name="Resources/js/i18n/grid.locale-pl.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pl.js" />
-    <File name="Resources/js/i18n/grid.locale-pt.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pt.js" />
-    <File name="Resources/js/i18n/grid.locale-pt-br.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pt-br.js" />
-    <File name="Resources/js/i18n/grid.locale-ro.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ro.js" />
-    <File name="Resources/js/i18n/grid.locale-ru.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ru.js" />
-    <File name="Resources/js/i18n/grid.locale-sp.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-sp.js" />
-    <File name="Resources/js/i18n/grid.locale-sv.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-sv.js" />
-    <File name="Resources/js/i18n/grid.locale-tr.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-tr.js" />
-    <File name="Resources/js/i18n/grid.locale-ua.js" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ua.js" />
-    <File name="Resources/css" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/css/ui.jqgrid.css" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.ui.jqgrid.css" />
-    <File name="Resources/css/blitzer/jquery-ui.css" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.jquery-ui.css" />
-    <File name="Resources/css/blitzer/images/ui-bg_diagonals-thick_75_f3d8d8_40x40.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_dots-small_65_a6a6a6_2x2.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_dots-small_65_a6a6a6_2x2.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_flat_0_333333_40x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_flat_0_333333_40x100.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_flat_65_ffffff_40x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_flat_65_ffffff_40x100.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_flat_75_ffffff_40x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_flat_75_ffffff_40x100.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_glass_55_fbf8ee_1x400.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_glass_55_fbf8ee_1x400.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_highlight-hard_100_eeeeee_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_highlight-hard_100_eeeeee_1x100.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_highlight-hard_100_f6f6f6_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
-    <File name="Resources/css/blitzer/images/ui-bg_highlight-soft_15_cc0000_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_highlight-soft_15_cc0000_1x100.png" />
-    <File name="Resources/css/blitzer/images/ui-icons_004276_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_004276_256x240.png" />
-    <File name="Resources/css/blitzer/images/ui-icons_cc0000_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_cc0000_256x240.png" />
-    <File name="Resources/css/blitzer/images/ui-icons_ffffff_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_ffffff_256x240.png" />
-    <File name="Resources/css/cupertino" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/css/cupertino/images" subtype="Directory" buildaction="Compile" />
-    <File name="Resources/css/cupertino/images/ui-bg_diagonals-thick_90_eeeeee_40x40.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_flat_15_cd0a0a_40x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_flat_15_cd0a0a_40x100.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_glass_50_3baae3_1x400.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_glass_50_3baae3_1x400.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_glass_80_d7ebf9_1x400.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_glass_80_d7ebf9_1x400.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_glass_100_e4f1fb_1x400.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_glass_100_e4f1fb_1x400.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_highlight-hard_70_000000_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-hard_70_000000_1x100.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_highlight-hard_100_f2f5f7_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-hard_100_f2f5f7_1x100.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_highlight-soft_25_ffef8f_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-soft_25_ffef8f_1x100.png" />
-    <File name="Resources/css/cupertino/images/ui-bg_highlight-soft_100_deedf7_1x100.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-soft_100_deedf7_1x100.png" />
-    <File name="Resources/css/cupertino/images/ui-icons_2e83ff_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_2e83ff_256x240.png" />
-    <File name="Resources/css/cupertino/images/ui-icons_3d80b3_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_3d80b3_256x240.png" />
-    <File name="Resources/css/cupertino/images/ui-icons_72a7cf_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_72a7cf_256x240.png" />
-    <File name="Resources/css/cupertino/images/ui-icons_2694e8_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_2694e8_256x240.png" />
-    <File name="Resources/css/cupertino/images/ui-icons_ffffff_256x240.png" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_ffffff_256x240.png" />
-    <File name="Resources/css/cupertino/jquery-ui.css" subtype="Code" buildaction="EmbedAsResource" resource_id="XG.Client.Web.Resources.css.cupertino.jquery-ui.css" />
+    <File subtype="Code" buildaction="Compile" name="FileLoaderWeb.cs" />
+    <File subtype="Code" buildaction="Compile" name="ImageLoaderWeb.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Resources" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/index.html" resource_id="XG.Client.Web.Resources.index.html" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.jqGrid.min.js" resource_id="XG.Client.Web.Resources.js.jquery.jqGrid.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.min.js" resource_id="XG.Client.Web.Resources.js.jquery.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery-ui.min.js" resource_id="XG.Client.Web.Resources.js.jquery-ui.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.js" resource_id="XG.Client.Web.Resources.js.xg.js" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-bg.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-bg.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-bg1251.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-bg1251.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-cat.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-cat.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-cs.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-cd.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-cn.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-cn.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-dk.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-dk.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-de.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-de.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-el.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-el.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-en.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-en.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-fa.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-fa.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-fi.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-fi.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-fr.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-fr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-he.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-he.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-is.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-is.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-it.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-it.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-jp.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-jp.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-nl.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-nl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-no.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-no.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pl.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pt.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pt.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pt-br.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pt-br.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ro.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ro.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ru.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ru.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sp.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-sp.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sv.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-sv.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-tr.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-tr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ua.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ua.js" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/ui.jqgrid.css" resource_id="XG.Client.Web.Resources.css.ui.jqgrid.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/jquery-ui.css" resource_id="XG.Client.Web.Resources.css.blitzer.jquery-ui.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_diagonals-thick_75_f3d8d8_40x40.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_dots-small_65_a6a6a6_2x2.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_dots-small_65_a6a6a6_2x2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_flat_0_333333_40x100.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_flat_0_333333_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_flat_65_ffffff_40x100.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_flat_65_ffffff_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_flat_75_ffffff_40x100.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_flat_75_ffffff_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_glass_55_fbf8ee_1x400.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_glass_55_fbf8ee_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_highlight-hard_100_eeeeee_1x100.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_highlight-hard_100_eeeeee_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_highlight-hard_100_f6f6f6_1x100.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-bg_highlight-soft_15_cc0000_1x100.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-bg_highlight-soft_15_cc0000_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-icons_004276_256x240.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_004276_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-icons_cc0000_256x240.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_cc0000_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/images/ui-icons_ffffff_256x240.png" resource_id="XG.Client.Web.Resources.css.blitzer.images.ui-icons_ffffff_256x240.png" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/css/cupertino" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/css/cupertino/images" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_diagonals-thick_90_eeeeee_40x40.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_flat_15_cd0a0a_40x100.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_flat_15_cd0a0a_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_glass_50_3baae3_1x400.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_glass_50_3baae3_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_glass_80_d7ebf9_1x400.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_glass_80_d7ebf9_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_glass_100_e4f1fb_1x400.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_glass_100_e4f1fb_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_highlight-hard_70_000000_1x100.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-hard_70_000000_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_highlight-hard_100_f2f5f7_1x100.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-hard_100_f2f5f7_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_highlight-soft_25_ffef8f_1x100.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-soft_25_ffef8f_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-bg_highlight-soft_100_deedf7_1x100.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-bg_highlight-soft_100_deedf7_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_2e83ff_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_2e83ff_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_3d80b3_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_3d80b3_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_72a7cf_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_72a7cf_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_2694e8_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_2694e8_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_ffffff_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_ffffff_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/jquery-ui.css" resource_id="XG.Client.Web.Resources.css.cupertino.jquery-ui.css" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />

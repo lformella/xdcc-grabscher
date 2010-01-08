@@ -1,28 +1,28 @@
-<Project name="XG.Core" fileversion="2.0" language="C#" releaseVersion="" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project releaseVersion="0.6" name="XG.Core" fileversion="2.0" DefaultNamespace="XG.Core" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Core" />
       <Build debugmode="True" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
-      <Output directory="bin/Release" assemblyKeyFile="." assembly="XG.Core" />
+      <Output directory="bin/Release" assembly="XG.Core" assemblyKeyFile="." />
       <Build debugmode="False" target="Library" />
-      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="Packet.cs" subtype="Code" buildaction="Compile" />
-    <File name="Object.cs" subtype="Code" buildaction="Compile" />
-    <File name="Bot.cs" subtype="Code" buildaction="Compile" />
-    <File name="Channel.cs" subtype="Code" buildaction="Compile" />
-    <File name="Server.cs" subtype="Code" buildaction="Compile" />
-    <File name="RootObject.cs" subtype="Code" buildaction="Compile" />
-    <File name="Helper.cs" subtype="Code" buildaction="Compile" />
-    <File name="File.cs" subtype="Code" buildaction="Compile" />
-    <File name="FilePart.cs" subtype="Code" buildaction="Compile" />
+    <File subtype="Code" buildaction="Compile" name="Packet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object.cs" />
+    <File subtype="Code" buildaction="Compile" name="Bot.cs" />
+    <File subtype="Code" buildaction="Compile" name="Channel.cs" />
+    <File subtype="Code" buildaction="Compile" name="Server.cs" />
+    <File subtype="Code" buildaction="Compile" name="RootObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper.cs" />
+    <File subtype="Code" buildaction="Compile" name="File.cs" />
+    <File subtype="Code" buildaction="Compile" name="FilePart.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
