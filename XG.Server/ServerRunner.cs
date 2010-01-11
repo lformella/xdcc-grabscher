@@ -634,12 +634,12 @@ namespace XG.Server
 
 		#region PACKET
 
-		public XGObject[] SearchPacket(string aString)
+		public List<XGObject> SearchPacket(string aString)
 		{
 			return this.SearchPacket(aString, null);
 		}
 
-		public XGObject[] SearchPacket(string aString, Comparison<XGObject> aComp)
+		public List<XGObject> SearchPacket(string aString, Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			string[] searchList = aString.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -674,15 +674,15 @@ namespace XG.Server
 				}
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
-		public XGObject[] SearchPacketTime(string aString)
+		public List<XGObject> SearchPacketTime(string aString)
 		{
 			return this.SearchPacketTime(aString, null);
 		}
 
-		public XGObject[] SearchPacketTime(string aString, Comparison<XGObject> aComp)
+		public List<XGObject> SearchPacketTime(string aString, Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			string[] search = aString.Split('-');
@@ -711,15 +711,15 @@ namespace XG.Server
 				}
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
-		public XGObject[] SearchPacketActiveDownloads()
+		public List<XGObject> SearchPacketActiveDownloads()
 		{
 			return this.SearchPacketActiveDownloads(null);
 		}
 
-		public XGObject[] SearchPacketActiveDownloads(Comparison<XGObject> aComp)
+		public List<XGObject> SearchPacketActiveDownloads(Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGServer tServ in this.myRootObject.Children)
@@ -739,15 +739,15 @@ namespace XG.Server
 				}
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
-		public XGObject[] SearchPacketsEnabled()
+		public List<XGObject> SearchPacketsEnabled()
 		{
 			return this.SearchPacketsEnabled(null);
 		}
 
-		public XGObject[] SearchPacketsEnabled(Comparison<XGObject> aComp)
+		public List<XGObject> SearchPacketsEnabled(Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGServer tServ in this.myRootObject.Children)
@@ -767,54 +767,54 @@ namespace XG.Server
 				}
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
 		#endregion
 
 		#region BOT
 
-		public XGObject[] SearchBot(string aString)
+		public List<XGObject> SearchBot(string aString)
 		{
 			return this.SearchBot(aString, null);
 		}
 
-		public XGObject[] SearchBot(string aString, Comparison<XGObject> aComp)
+		public List<XGObject> SearchBot(string aString, Comparison<XGObject> aComp)
 		{
 			return this.GetBots2Packets(this.SearchPacket(aString, aComp), aComp);
 		}
 
-		public XGObject[] SearchBotTime(string aString)
+		public List<XGObject> SearchBotTime(string aString)
 		{
 			return this.SearchBotTime(aString, null);
 		}
 
-		public XGObject[] SearchBotTime(string aString, Comparison<XGObject> aComp)
+		public List<XGObject> SearchBotTime(string aString, Comparison<XGObject> aComp)
 		{
 			return this.GetBots2Packets(this.SearchPacketTime(aString, aComp), aComp);
 		}
 
-		public XGObject[] SearchBotActiveDownloads()
+		public List<XGObject> SearchBotActiveDownloads()
 		{
 			return this.SearchBotActiveDownloads(null);
 		}
 
-		public XGObject[] SearchBotActiveDownloads(Comparison<XGObject> aComp)
+		public List<XGObject> SearchBotActiveDownloads(Comparison<XGObject> aComp)
 		{
 			return this.GetBots2Packets(this.SearchPacketActiveDownloads(aComp), aComp);
 		}
 
-		public XGObject[] SearchBotsEnabled()
+		public List<XGObject> SearchBotsEnabled()
 		{
 			return this.SearchBotsEnabled(null);
 		}
 
-		public XGObject[] SearchBotsEnabled(Comparison<XGObject> aComp)
+		public List<XGObject> SearchBotsEnabled(Comparison<XGObject> aComp)
 		{
 			return this.GetBots2Packets(this.SearchPacketsEnabled(aComp), aComp);
 		}
 
-		private XGObject[] GetBots2Packets(XGObject[] aList, Comparison<XGObject> aComp)
+		private List<XGObject> GetBots2Packets(List<XGObject> aList, Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGPacket tPack in aList)
@@ -823,7 +823,7 @@ namespace XG.Server
 				tList.Add(tPack.Parent);
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
 		#endregion
@@ -832,7 +832,7 @@ namespace XG.Server
 
 		#region GET
 
-		public XGObject[] GetServersChannels()
+		public List<XGObject> GetServersChannels()
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGServer tServ in this.myRootObject.Children)
@@ -843,10 +843,10 @@ namespace XG.Server
 					tList.Add(tChan);
 				}
 			}
-			return tList.ToArray();
+			return tList;
 		}
 
-		public XGObject[] GetActivePackets()
+		public List<XGObject> GetActivePackets()
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGServer tServ in this.myRootObject.Children)
@@ -865,7 +865,7 @@ namespace XG.Server
 					}
 				}
 			}
-			return tList.ToArray();
+			return tList;
 		}
 
 		public XGFilePart GetFilePart4Packet(XGPacket aPacket)
@@ -897,12 +897,12 @@ namespace XG.Server
 			return tPart;
 		}
 
-		public XGObject[] GetFiles()
+		public List<XGObject> GetFiles()
 		{
 			return this.GetFiles(null);
 		}
 
-		public XGObject[] GetFiles(Comparison<XGObject> aComp)
+		public List<XGObject> GetFiles(Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGFile tFile in this.myFiles.ToArray())
@@ -914,7 +914,7 @@ namespace XG.Server
 				}
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
 		public XGObject GetObject(Guid aGuid)
@@ -937,12 +937,12 @@ namespace XG.Server
 			return null;
 		}
 
-		public XGObject[] GetChildrenFromObject(Guid aGuid)
+		public List<XGObject> GetChildrenFromObject(Guid aGuid)
 		{
 			return this.GetChildrenFromObject(aGuid, null);
 		}
 
-		public XGObject[] GetChildrenFromObject(Guid aGuid, Comparison<XGObject> aComp)
+		public List<XGObject> GetChildrenFromObject(Guid aGuid, Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
 			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
@@ -968,7 +968,7 @@ namespace XG.Server
 				}
 			}
 			if (aComp != null) { tList.Sort(aComp); }
-			return tList.ToArray();
+			return tList;
 		}
 
 		#endregion

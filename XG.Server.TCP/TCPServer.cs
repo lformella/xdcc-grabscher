@@ -303,7 +303,7 @@ namespace XG.Server.TCP
 		/// <param name="aWriter"></param>
 		/// <param name="aList"></param>
 		/// <param name="aMessage"></param>
-		private void WriteToStream(BinaryWriter aWriter, XGObject[] aList, TCPServerResponse aMessage)
+		private void WriteToStream(BinaryWriter aWriter, List<XGObject> aList, TCPServerResponse aMessage)
 		{
 			this.WriteToStream(aWriter, new XGObject(), TCPServerResponse.ObjectBlockStart);
 			foreach (XGObject tObj in aList)

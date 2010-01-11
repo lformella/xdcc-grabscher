@@ -212,7 +212,7 @@ namespace XG.Server.Web
 
 					#region DATA HANDLING
 					
-					XGObject[] list = null;
+					List<XGObject> list = null;
 
 					switch (tMessage)
 					{
@@ -347,7 +347,21 @@ namespace XG.Server.Web
 					
 					if (list != null)
 					{
-						this.WriteToStream(client.Response, list, tDic["page"], tDic["rows"], tDic["offBots"]);
+						if(tDic["offbots"] == "1")
+						{
+							foreach (XGObject tObj in list.ToArray())
+							{
+								if (tObj.GetType() == typeof(XGPacket) && !((XGPacket)tObj).Parent.Connected)
+								{
+									list.Remove(tObj);
+								}
+								else if (tObj.GetType() == typeof(XGBot) && !((XGBot)tObj).Connected)
+								{
+									list.Remove(tObj);
+								}
+							}
+						}
+						this.WriteToStream(client.Response, list, tDic["page"], tDic["rows"]);
 					}
 
 					#endregion
@@ -393,21 +407,22 @@ namespace XG.Server.Web
 
 		#region WRITE TO STREAM
 
-		private void WriteToStream(HttpListenerResponse aResponse, XGObject aObj)
+		private void WriteToStream (HttpListenerResponse aResponse, XGObject aObj)
 		{
-			this.WriteToStream(aResponse, new XGObject[] { aObj }, "", "", "1");
+			List<XGObject> list = new List<XGObject> ();
+			list.Add (aObj);
+			this.WriteToStream(aResponse, list, "", "");
 		}
 
-		private void WriteToStream(HttpListenerResponse aResponse, XGObject[] aList, string aPage, string aRows, string aOffBots)
+		private void WriteToStream(HttpListenerResponse aResponse, List<XGObject> aList, string aPage, string aRows)
 		{
 			int page = aPage != "" ? int.Parse(aPage) : 1;
 			int rows = aRows != "" ? int.Parse(aRows) : 1;
-			int offBots = aOffBots != "1" ? "0" : "1";
 			int count = 0;
 
 			StringBuilder sb = new StringBuilder();
 			bool first = true;
-			if (aPage != "" && aRows != "") { sb.Append("{\"page\":\"" + page + "\",\"total\":\"" + Math.Ceiling((double)aList.Length / (double)rows).ToString() + "\",\"records\":\"" + aList.Length + "\",\"rows\":[\n"); }
+			if (aPage != "" && aRows != "") { sb.Append("{\"page\":\"" + page + "\",\"total\":\"" + Math.Ceiling((double)aList.Count / (double)rows).ToString() + "\",\"records\":\"" + aList.Count + "\",\"rows\":[\n"); }
 			foreach (XGObject tObj in aList)
 			{
 				if (count >= (page - 1) * rows && count < page * rows)

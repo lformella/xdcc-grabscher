@@ -416,6 +416,7 @@ namespace XG.Server
 								this.Log("con_DataReceived() inserted packet #" + newPacket.Id + " into " + tBot.Name, LogLevel.Info);
 							}
 
+#if DEBUG
 							#region NOT NEEDED INFOS
 
 							if (!isParsed)
@@ -428,7 +429,7 @@ namespace XG.Server
 								if (tMatch.Success) { return; }
 								tMatch = Regex.Match(tData, "Total offered(\\!|): (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)\\s*Total transfer(r|)ed: (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)", RegexOptions.IgnoreCase);
 								if (tMatch.Success) { return; }
-								tMatch = Regex.Match(tData, "(brought to you|powered|sp(o|0)ns(o|0)red) by", RegexOptions.IgnoreCase);
+								tMatch = Regex.Match(tData, ".* (brought to you|powered|sp(o|0)ns(o|0)red) by .*", RegexOptions.IgnoreCase);
 								if (tMatch.Success) { return; }
 								tMatch = Regex.Match(tData, "(\\*){2,3} .*" + tChan.Name + " (\\*){2,3}", RegexOptions.IgnoreCase);
 								if (tMatch.Success) { return; }
@@ -439,12 +440,13 @@ namespace XG.Server
 							#region COULD NOT PARSE
 
 							// maybee delete this because it is flooding the logfile
-							/*if (!isParsed && tBot.Children.Length > 0)
+							if (!isParsed && tBot.Children.Length > 0)
 							{
 								this.ParsingErrorEvent("[DCC Info] " + tBot.Name + " : " + this.ClearString(tData));
-							}*/
+							}
 
 							#endregion
+#endif
 						}
 
 						#endregion
@@ -837,6 +839,16 @@ namespace XG.Server
 										this.CreateTimer(tBot, time * 1000, true);
 									}
 								}
+							}
+
+							#endregion
+
+							#region NOT NEEDED INFOS
+
+							if (!isParsed)
+							{
+								tMatch = Regex.Match(tData, ".* bandwidth limit .*", RegexOptions.IgnoreCase);
+								if (tMatch.Success) { isParsed = true; }
 							}
 
 							#endregion

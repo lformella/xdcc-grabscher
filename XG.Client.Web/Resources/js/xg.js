@@ -79,7 +79,7 @@ var id_search;
 
 var search_active = false;
 
-function JsonUrl(password) { return "/?password=" + (password != undefined ? password : Password) + "&request="; }
+function JsonUrl(password) { return "/?password=" + (password != undefined ? password : Password) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
 function NameUrl(id, name) { return JsonUrl() + id + "&name=" + name; }
 function GuidNameUrl(id, guid, name) { return JsonUrl() + id + "&guid=" + guid + "&name=" + name; }
@@ -1126,7 +1126,7 @@ function Resize()
 {
 	//alert($(window).height() / 2);
 	var width = $(window).width() - 6 * 5 - 200;
-	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25) / 2;
+	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25 - 25) / 2;
 
 	jQuery("#servers").setGridHeight(height - 15);
 	jQuery("#searches").setGridHeight(height);
