@@ -127,7 +127,6 @@ namespace XG.Core
 			: base()
 		{
 			this.realName = "";
-			this.lastUpdated = DateTime.Now;
 		}
 		public XGPacket(XGBot parent)
 			: this()
@@ -136,11 +135,12 @@ namespace XG.Core
 			this.Parent.addPacket(this);
 		}
 
-		public void Clone(XGPacket aCopy, bool aFull)
+		public void Clone (XGPacket aCopy, bool aFull)
 		{
-			base.Clone(aCopy, aFull);
+			base.Clone (aCopy, aFull);
 			this.id = aCopy.id;
 			this.size = aCopy.size;
+			this.lastUpdated = aCopy.lastUpdated;
 			if (aFull)
 			{
 				this.realName = aCopy.realName;

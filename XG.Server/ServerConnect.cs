@@ -363,9 +363,7 @@ namespace XG.Server
 										if (tPack.Name != name && tPack.Name != "")
 										{
 											//this.Log(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content", LogLevel.Warning);
-											//this.Log(this, "DATA: " + tData, LogLevel.Warning);
 											tPack.Enabled = false;
-											//tPack.LastUpdated = DateTime.Now;
 											if (!tPack.Connected)
 											{
 												tPack.RealName = "";
