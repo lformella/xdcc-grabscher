@@ -115,6 +115,7 @@ namespace XG.Core
 	public delegate void ObjectDelegate(XGObject aObj);
 	public delegate void ObjectObjectDelegate(XGObject aObj1, XGObject aObj2);
 	public delegate void ServerDelegate(XGServer aServer);
+	public delegate void BotDelegate (XGBot aBot);
 	public delegate void PacketDelegate(XGPacket aPack);
 
 	#endregion

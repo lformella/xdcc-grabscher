@@ -995,6 +995,10 @@ function FormatPacketName(cellvalue, options, rowObject)
 	{
 		ret += FormatIcon("LanguageDe") + "&nbsp;&nbsp;";
 	}
+	/*else
+	{
+		ret += FormatIcon("LanguageNone") + "&nbsp;&nbsp;";
+	}*/
 
 	ret += cellvalue;
 

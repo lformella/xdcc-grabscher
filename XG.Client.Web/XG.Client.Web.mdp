@@ -1,4 +1,4 @@
-<Project releaseVersion="0.6" name="XG.Client.Web" fileversion="2.0" DefaultNamespace="XG.Client.Web" language="C#" targetFramework="2.0" ctype="DotNetProject">
+<Project name="XG.Client.Web" fileversion="2.0" DefaultNamespace="XG.Client.Web" language="C#" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.Web" />

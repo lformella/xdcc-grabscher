@@ -83,16 +83,17 @@ namespace XG.Server
 		/// 
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void ConnectServer(object aServer)
+		public void ConnectServer (object aServer)
 		{
 			XGServer tServer = aServer as XGServer;
 
-			if (!this.myServers.ContainsKey(tServer))
+			if (!this.myServers.ContainsKey (tServer))
 			{
-				ServerConnect con = new ServerConnect(this);
-				this.myServers.Add(tServer, con);
+				ServerConnect con = new ServerConnect (this);
+				this.myServers.Add (tServer, con);
 
-				con.NewDownloadEvent += new DownloadDelegate(server_NewDownloadEventHandler);
+				con.NewDownloadEvent += new DownloadDelegate (server_NewDownloadEventHandler);
+				con.KillDownloadEvent += new BotDelegate (server_KillDownloadEventHandler);
 				con.DisconnectedEvent += new ServerDelegate(server_DisconnectedEventHandler);
 				con.ConnectedEvent += new ServerDelegate(server_ConnectedEventHandler);
 				con.ParsingErrorEvent += new DataTextDelegate(server_ParsingErrorEventHandler);
@@ -121,15 +122,16 @@ namespace XG.Server
 				con.Disconnect();
 			}
 		}
-		private void server_DisconnectedEventHandler(XGServer aServer)
+		private void server_DisconnectedEventHandler (XGServer aServer)
 		{
-			if (this.myServers.ContainsKey(aServer))
+			if (this.myServers.ContainsKey (aServer))
 			{
 				ServerConnect con = this.myServers[aServer];
 
 				if (!aServer.Enabled)
 				{
-					con.NewDownloadEvent -= new DownloadDelegate(server_NewDownloadEventHandler);
+					con.NewDownloadEvent -= new DownloadDelegate (server_NewDownloadEventHandler);
+					con.KillDownloadEvent -= new BotDelegate (server_KillDownloadEventHandler);
 					con.DisconnectedEvent -= new ServerDelegate(server_DisconnectedEventHandler);
 					con.ConnectedEvent -= new ServerDelegate(server_ConnectedEventHandler);
 					con.ParsingErrorEvent -= new DataTextDelegate(server_ParsingErrorEventHandler);
@@ -244,9 +246,20 @@ namespace XG.Server
 				}
 			}).Start();
 		}
-
-		private void bot_Connected(XGPacket aPack, BotConnect aCon)
+		private void bot_Connected (XGPacket aPack, BotConnect aCon)
 		{
+		}
+
+		private void server_KillDownloadEventHandler (XGBot aBot)
+		{
+			foreach (KeyValuePair<XGPacket, BotConnect> kvp in this.myDownloads)
+			{
+				if (kvp.Key.Parent == aBot)
+				{
+					kvp.Value.Disconnect();
+					break;
+				}
+			}
 		}
 		private void bot_Disconnected(XGPacket aPacket, BotConnect aCon)
 		{

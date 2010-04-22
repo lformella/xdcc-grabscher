@@ -38,7 +38,7 @@
       <Entry build="True" name="XG.Server.Cmd" configuration="Release" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="XG.Server.Cmd" single="True">
+  <StartMode startupentry="XG.Client.TCP.GTK" single="True">
     <Execute type="None" entry="XG.Core" />
     <Execute type="None" entry="XG.Server" />
     <Execute type="None" entry="XG.Client.TCP" />

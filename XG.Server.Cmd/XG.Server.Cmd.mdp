@@ -1,4 +1,4 @@
-<Project releaseVersion="0.6" name="XG.Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="3.5" ctype="DotNetProject">
+<Project name="XG.Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Server.Cmd" />

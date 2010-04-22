@@ -1,4 +1,4 @@
-<Project releaseVersion="0.6" name="XG.Client.TCP.GTK" fileversion="2.0" DefaultNamespace="XG.Client.TCP.GTK" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="XG.Client.TCP.GTK" fileversion="2.0" DefaultNamespace="XG.Client.TCP.GTK" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.TCP.GTK" />

@@ -48,6 +48,7 @@ namespace XG.Server
 		#region EVENTS
 
 		public event DownloadDelegate NewDownloadEvent;
+		public event BotDelegate KillDownloadEvent;
 		public event ServerDelegate ConnectedEvent;
 		public event ServerDelegate DisconnectedEvent;
 		public event DataTextDelegate ParsingErrorEvent;
@@ -477,7 +478,7 @@ namespace XG.Server
 								tMatch1 = Regex.Match(tData, "((\\*){2,3} All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*", RegexOptions.IgnoreCase);
 								tMatch2 = Regex.Match(tData, "Queueing you for pack [0-9]+ \\(.*\\) in slot (?<queue_cur>[0-9]+)/(?<queue_total>[0-9]+)\\. To remove you(r|)self from the queue, type: .*\\. To check your position in the queue, type: .*\\. Estimated time remaining in queue: (?<queue_d>[0-9]+) days, (?<queue_h>[0-9]+) hours, (?<queue_m>[0-9]+) minutes", RegexOptions.IgnoreCase);
 								tMatch3 = Regex.Match(tData, "[(\\*){2,3} |]Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
+								if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
 								{
 									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 									tMatch = tMatch.Success ? tMatch : tMatch3;
@@ -487,6 +488,7 @@ namespace XG.Server
 										tBot.BotState = BotState.Waiting;
 									}
 
+									tBot.InfoSlotCurrent = 0;
 									if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt))
 									{
 										tBot.QueuePosition = valueInt;
@@ -494,6 +496,7 @@ namespace XG.Server
 									}
 
 									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
+									else if(tBot.InfoQueueTotal < tBot.InfoQueueCurrent) { tBot.InfoQueueTotal = tBot.InfoQueueCurrent; }
 
 									int time = 0;
 									if (int.TryParse(tMatch.Groups["queue_m"].ToString(), out valueInt)) { time += valueInt * 60; }
@@ -759,9 +762,11 @@ namespace XG.Server
 									{
 										tBot.BotState = BotState.Waiting;
 									}
-
+									
+									tBot.InfoSlotCurrent = 0;
 									if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt)) { tBot.QueuePosition = valueInt; }
 									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
+									else if(tBot.InfoQueueTotal < tBot.QueuePosition) { tBot.InfoQueueTotal = tBot.QueuePosition; }
 
 									int time = 0;
 									if (int.TryParse(tMatch.Groups["queue_m"].ToString(), out valueInt)) { time += valueInt * 60; }
@@ -784,6 +789,13 @@ namespace XG.Server
 									if (tBot.BotState != BotState.Active)
 									{
 										tBot.BotState = BotState.Idle;
+									}
+									else
+									{
+										// kill that connection if the bot sends a close message , but our real bot 
+										// connection is still alive and hangs for some crapy reason - maybe because 
+										// some admins do some network fu to stop my downloads (happend to me)
+										this.KillDownloadEvent(tBot);
 									}
 									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
 								}
