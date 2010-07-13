@@ -19,4 +19,8 @@
   <StyleWebServer>blitzer</StyleWebServer>
   <AutoJoinOnInvite>true</AutoJoinOnInvite>
   <LogLevel>Notice</LogLevel>
+  <StartJabberClient>false</StartJabberClient>
+  <JabberServer>jabber.org</JabberServer>
+  <JabberUser>user</JabberUser>
+  <JabberPassword>password</JabberPassword>
 </Settings>
