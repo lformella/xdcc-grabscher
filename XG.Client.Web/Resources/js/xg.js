@@ -417,7 +417,7 @@ $(function()
 
 	$("#dialog_password").dialog({
 		bgiframe: true,
-		height: 160,
+		height: 200,
 		modal: true,
 		resizable: false,
 		buttons: {
@@ -440,7 +440,7 @@ $(function()
 		},
 		close: function()
 		{
-			if(Password == "");
+			if(Password == "")
 			{
 				$('#dialog_password').dialog('open');
 			}
@@ -466,7 +466,7 @@ $(function()
 	$("#dialog_server").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 160,
+		height: 190,
 		modal: true,
 		resizable: false,
 		buttons: {
@@ -500,7 +500,7 @@ $(function()
 	$("#dialog_channel").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 160,
+		height: 190,
 		modal: true,
 		resizable: false,
 		buttons: {
@@ -1130,7 +1130,7 @@ function Resize()
 {
 	//alert($(window).height() / 2);
 	var width = $(window).width() - 6 * 5 - 200;
-	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25 - 25) / 2;
+	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25 - 30) / 2;
 
 	jQuery("#servers").setGridHeight(height - 15);
 	jQuery("#searches").setGridHeight(height);
