@@ -66,7 +66,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Settings));
-				StreamReader sr = new StreamReader("./setings.xml");
+				StreamReader sr = new StreamReader("./settings.xml");
 				Settings settings = (Settings)ser.Deserialize(sr);
 				sr.Close();
 				return settings;
@@ -83,7 +83,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Settings));
-				StreamWriter sw = new StreamWriter("./setings.xml");
+				StreamWriter sw = new StreamWriter("./settings.xml");
 				ser.Serialize(sw, instance);
 				sw.Close();
 			}
@@ -116,7 +116,8 @@ namespace XG.Server
 			this.reconnectWaitTime = 45000;
 			this.enableMultiDownloads = true;
 			this.clearReadyDownloads = true;
-			this.ircVersion = "mIRC v6.16 Khaled Mardam-Bey";
+			this.ircVersion = "mIRC v6.16 Khaled Mardam-Bey"; // mIRC v6.35 Khaled Mardam-Bey
+			this.xgVersion = "5";
 			this.ircRegisterEmail = "anon@ymous.org";
 			this.ircRegisterPasswort = "password123";
 			this.botOfflineCheckTime = 1200000;
@@ -139,6 +140,11 @@ namespace XG.Server
 			this.webServerPort = 5556;
 			this.styleWebServer = "blitzer";
 			this.autoJoinOnInvite = true;
+
+			this.startJabberClient = false;
+			this.jabberServer = "";
+			this.jabberUser = "";
+			this.jabberPassword = "";
 
 #if DEBUG
 			this.logLevel = LogLevel.Notice;
@@ -213,6 +219,12 @@ namespace XG.Server
 		public string IrcVersion
 		{
 			get { return ircVersion; }
+		}
+
+		string xgVersion;
+		public string XgVersion
+		{
+			get { return xgVersion; }
 		}
 
 		int botOfflineCheckTime;
@@ -382,6 +394,34 @@ namespace XG.Server
 		{
 			get { return styleWebServer; }
 			set { styleWebServer = value; }
+		}
+
+		bool startJabberClient;
+		public bool StartJabberClient
+		{
+			get { return startJabberClient; }
+			set { startJabberClient = value; }
+		}
+
+		string jabberServer;
+		public string JabberServer
+		{
+			get { return jabberServer; }
+			set { jabberServer = value; }
+		}
+
+		string jabberUser;
+		public string JabberUser
+		{
+			get { return jabberUser; }
+			set { jabberUser = value; }
+		}
+
+		string jabberPassword;
+		public string JabberPassword
+		{
+			get { return jabberPassword; }
+			set { jabberPassword = value; }
 		}
 
 		bool autoJoinOnInvite;

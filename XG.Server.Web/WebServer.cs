@@ -29,8 +29,6 @@ namespace XG.Server.Web
 	{
 		#region VARIABLES
 
-		private const string VERSION = "0.5";
-
 		private ServerRunner myRunner;
 
 		private Thread myServerThread;
@@ -219,7 +217,7 @@ namespace XG.Server.Web
 						# region VERSION
 
 						case TCPClientRequest.Version:
-							this.WriteToStream(client.Response, VERSION);
+							this.WriteToStream(client.Response, Settings.Instance.XgVersion);
 							break;
 
 						#endregion
@@ -512,6 +510,10 @@ namespace XG.Server.Web
 				{
 					XGBot tBot = (XGBot)aObject;
 					XGFilePart tPart = this.myRunner.GetFilePart4Bot(tBot);
+					string msg = tBot.LastMessage.Replace('"', '\'');
+					msg = msg.Replace("ä", "&auml;").Replace("Ä", "&Auml;");
+					msg = msg.Replace("ö", "&ouml;").Replace("Ö", "&Ouml;");
+					msg = msg.Replace("ü", "&uuml;").Replace("Ü", "&Uuml;");
 
 					sb.Append("\t\t\t\"" + aObject.Name + "\",\n");																//5
 					sb.Append("\t\t\t\"" + tBot.BotState + "\",\n");															//6
@@ -524,7 +526,7 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t" + tBot.InfoSlotCurrent + ",\n");															//13
 					sb.Append("\t\t\t" + tBot.InfoQueueTotal + ",\n");															//14
 					sb.Append("\t\t\t" + tBot.InfoQueueCurrent + ",\n");														//15
-					sb.Append("\t\t\t\"" + tBot.LastMessage.Replace('"', '\'') + "\",\n");										//16
+					sb.Append("\t\t\t\"" + msg + "\",\n");																		//16
 					sb.Append("\t\t\t\"" + tBot.LastContact + "\"\n");															//17	
 				}
 			}

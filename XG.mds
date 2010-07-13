@@ -23,6 +23,7 @@
       <Entry build="True" name="XG.Server.Web" configuration="Debug" />
       <Entry build="True" name="XG.Client.Web" configuration="Debug" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Jabber" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Release" />
@@ -36,9 +37,10 @@
       <Entry build="True" name="XG.Server.Web" configuration="Release" />
       <Entry build="True" name="XG.Client.Web" configuration="Release" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Release" />
+      <Entry build="True" name="XG.Server.Jabber" configuration="Release" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="XG.Client.TCP.GTK" single="True">
+  <StartMode startupentry="XG.Server.Cmd" single="True">
     <Execute type="None" entry="XG.Core" />
     <Execute type="None" entry="XG.Server" />
     <Execute type="None" entry="XG.Client.TCP" />
@@ -50,6 +52,7 @@
     <Execute type="None" entry="XG.Server.Web" />
     <Execute type="None" entry="XG.Client.Web" />
     <Execute type="None" entry="XG.Server.Cmd" />
+    <Execute type="None" entry="XG.Server.Jabber" />
   </StartMode>
   <Entries>
     <Entry filename="XG.Core/XG.Core.mdp" />
@@ -63,5 +66,6 @@
     <Entry filename="XG.Server.Web/XG.Server.Web.mdp" />
     <Entry filename="XG.Client.Web/XG.Client.Web.mdp" />
     <Entry filename="XG.Server.Cmd/XG.Server.Cmd.mdp" />
+    <Entry filename="XG.Server.Jabber/XG.Server.Jabber.mdp" />
   </Entries>
 </Combine>

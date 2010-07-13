@@ -186,6 +186,17 @@ namespace XG.Server
 
 						#endregion
 
+						#region XGVERSION
+
+						else if (tData == "XGVERSION")
+						{
+							this.Log("con_DataReceived() XGVERSION: " + Settings.Instance.XgVersion, LogLevel.Info);
+							this.myCon.SendData("NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
+							return;
+						}
+
+						#endregion
+
 						#region DCC DOWNLOAD MESSAGE
 
 						else if (tData.StartsWith("DCC") && tBot != null)

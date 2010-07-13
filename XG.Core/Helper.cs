@@ -416,12 +416,12 @@ namespace XG.Core
 					Console.Write(DateTime.Now.ToString() + " ");
 					switch (aLevel)
 					{
-						case LogLevel.Traffic: Console.Write("TRAFFIC  "); break;
-						case LogLevel.Info: Console.Write("INFO     "); break;
-						case LogLevel.Notice: Console.Write("NOTICE   "); break;
-						case LogLevel.Warning: Console.Write("WARNING  "); break;
-						case LogLevel.Error: Console.Write("ERROR    "); break;
-						case LogLevel.Exception: Console.Write("EXCEPTION"); break;
+						case LogLevel.Traffic:		Console.Write("TRAFFIC  "); break;
+						case LogLevel.Info:			Console.Write("INFO     "); break;
+						case LogLevel.Notice:		Console.Write("NOTICE   "); break;
+						case LogLevel.Warning:		Console.Write("WARNING  "); break;
+						case LogLevel.Error:		Console.Write("ERROR    "); break;
+						case LogLevel.Exception:	Console.Write("EXCEPTION"); break;
 					}
 					Console.WriteLine(" " + aData);
 				}
