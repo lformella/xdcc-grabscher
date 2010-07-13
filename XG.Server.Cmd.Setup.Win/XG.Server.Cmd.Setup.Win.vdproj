@@ -1,4 +1,4 @@
-Ôªø"DeployProject"
+"DeployProject"
 {
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
@@ -351,8 +351,8 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_525D50C5F4C44A3BAE0129BC97F0CFB7"
             {
-            "SourcePath" = "8:..\\setings.example.xml"
-            "TargetName" = "8:setings.example.xml"
+            "SourcePath" = "8:..\\settings.example.xml"
+            "TargetName" = "8:settings.example.xml"
             "Tag" = "8:"
             "Folder" = "8:_862DC6470E9E4777B9F13B34D5D5DB08"
             "Condition" = "8:"
@@ -898,7 +898,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_FFD598E49B4746E1BAB11A52AAF07D26"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:Installation best√§tigen"
+                    "DisplayName" = "8:Installation best‰tigen"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
@@ -1021,7 +1021,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_2D6C8B56DA5448CBBA8E99608988B4C3"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:Installation best√§tigen"
+                    "DisplayName" = "8:Installation best‰tigen"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminConfirmDlg.wid"
