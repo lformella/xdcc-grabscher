@@ -242,6 +242,7 @@ namespace XG.Server
 										#endregion
 									}
 									#endregion
+									// TODO should we connect to port 0 (zero) ?
 									tPort = int.Parse(tDataList[4]);
 									tPacket.RealName = tDataList[2];
 									tPacket.RealSize = Int64.Parse(tDataList[5]);

@@ -314,13 +314,20 @@ namespace XG.Server
 					// it did not start
 					else if (this.myReceivedBytes == 0)
 					{
-						this.Log("con_Disconnected() did not start, disabling packet", LogLevel.Error);
+						this.Log("con_Disconnected() downloading did not start, disabling packet", LogLevel.Error);
 						this.Packet.Enabled = false;
 					}
 					// it is incomplete
 					else { this.Log("con_Disconnected() incomplete", LogLevel.Error); }
 				}
 				this.ObjectChangedEvent(this.Part);
+			}
+			// the connection didnt even connected to the given ip and port
+			else
+			{
+				// lets disable the packet, because the bot seems to have broken config or is firewalled
+				this.Log("con_Disconnected() connection did not work, disabling packet", LogLevel.Error);
+				this.Packet.Enabled = false;
 			}
 
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);

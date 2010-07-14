@@ -272,8 +272,12 @@ namespace XG.Server
 
 				try
 				{
-					// do this here because the bothandler sets the part state and after this we can check the file
-					this.CheckFile(aCon.Part.Parent);
+					// if the connection never connected, there will be no part!
+					if(aCon.Part != null)
+					{
+						// do this here because the bothandler sets the part state and after this we can check the file
+						this.CheckFile(aCon.Part.Parent);
+					}
 				}
 				catch (Exception ex)
 				{
