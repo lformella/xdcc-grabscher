@@ -125,6 +125,7 @@ namespace XG.Server
 			this.botOfflineTime = 7200000;
 			this.samePacketRequestTime = 10000;
 			this.maxNoDataReceived = 5;
+			this.backupStatisticTime = 60000;
 
 			this.parsingErrorFile = "./parsing_errors.txt";
 			this.dataBinary = "./xg.bin";
@@ -161,277 +162,283 @@ namespace XG.Server
 			get { return commandWaitTime; }
 		}
 
-		long botWaitTime;
+		private long botWaitTime;
 		public long BotWaitTime
 		{
 			get { return botWaitTime; }
 		}
 
-		long channelWaitTime;
+		private long channelWaitTime;
 		public long ChannelWaitTime
 		{
 			get { return channelWaitTime; }
 		}
 
-		long channelWaitTimeLong;
+		private long channelWaitTimeLong;
 		public long ChannelWaitTimeLong
 		{
 			get { return channelWaitTimeLong; }
 		}
 
-		long fileRollback;
+		private long fileRollback;
 		public long FileRollback
 		{
 			get { return fileRollback; }
 		}
 
-		long fileRollbackCheck;
+		private long fileRollbackCheck;
 		public long FileRollbackCheck
 		{
 			get { return fileRollbackCheck; }
 		}
 
-		int updateDownloadTime;
+		private int updateDownloadTime;
 		public int UpdateDownloadTime
 		{
 			get { return updateDownloadTime; }
 		}
 
-		long downloadPerRead;
+		private long downloadPerRead;
 		public long DownloadPerRead
 		{
 			get { return downloadPerRead; }
 		}
 
-		long botOfflineTime;
+		private long botOfflineTime;
 		public long BotOfflineTime
 		{
 			get { return botOfflineTime; }
 		}
 
-		long samePacketRequestTime;
+		private long samePacketRequestTime;
 		public long SamePacketRequestTime
 		{
 			get { return samePacketRequestTime; }
 		}
 
-		string ircVersion;
+		private string ircVersion;
 		public string IrcVersion
 		{
 			get { return ircVersion; }
 		}
 
-		string xgVersion;
+		private string xgVersion;
 		public string XgVersion
 		{
 			get { return xgVersion; }
 		}
 
-		int botOfflineCheckTime;
+		private int botOfflineCheckTime;
 		public int BotOfflineCheckTime
 		{
 			get { return botOfflineCheckTime; }
 		}
 
-		int downloadTimeout;
+		private int downloadTimeout;
 		public int DownloadTimeout
 		{
 			get { return downloadTimeout; }
 		}
-
-		int serverTimeout;
+		
+		private int serverTimeout;
 		public int ServerTimeout
 		{
 			get { return serverTimeout; }
 		}
 
-		int reconnectWaitTime;
+		private int reconnectWaitTime;
 		public int ReconnectWaitTime
 		{
 			get { return reconnectWaitTime; }
 		}
 
-		int mutliDownloadMinimumTime;
+		private int mutliDownloadMinimumTime;
 		public int MutliDownloadMinimumTime
 		{
 			get { return mutliDownloadMinimumTime; }
 		}
 
-		long timerSleepTime;
+		private long timerSleepTime;
 		public long TimerSleepTime
 		{
 			get { return timerSleepTime; }
 		}
 
-		string parsingErrorFile;
+		private string parsingErrorFile;
 		public string ParsingErrorFile
 		{
 			get { return parsingErrorFile; }
 		}
 
-		string dataBinary;
+		private string dataBinary;
 		public string DataBinary
 		{
 			get { return dataBinary; }
 		}
 
-		string filesBinary;
+		private string filesBinary;
 		public string FilesBinary
 		{
 			get { return filesBinary; }
 		}
 
-		int maxNoDataReceived;
+		private int maxNoDataReceived;
 		public int MaxNoDataReceived
 		{
 			get { return maxNoDataReceived; }
+		}
+
+		private int backupStatisticTime;
+		public int BackupStatisticTime
+		{
+			get { return backupStatisticTime; }
 		}
 
 		#endregion
 
 		#region PUBLIC
 
-		string iRCName;
+		private string iRCName;
 		public string IRCName
 		{
 			get { return "XG-" + iRCName.Replace("XG-", ""); }
 			set { iRCName = value; }
 		}
 
-		string tempPath;
+		private string tempPath;
 		public string TempPath
 		{
 			get { return tempPath; }
 			set { tempPath = value; }
 		}
 
-		string readyPath;
+		private string readyPath;
 		public string ReadyPath
 		{
 			get { return readyPath; }
 			set { readyPath = value; }
 		}
 
-		string ircRegisterPasswort;
+		private string ircRegisterPasswort;
 		public string IrcRegisterPasswort
 		{
 			get { return ircRegisterPasswort; }
 			set { ircRegisterPasswort = value; }
 		}
 
-		string ircRegisterEmail;
+		private string ircRegisterEmail;
 		public string IrcRegisterEmail
 		{
 			get { return ircRegisterEmail; }
 			set { ircRegisterEmail = value; }
 		}
 
-		bool enableMultiDownloads;
+		private bool enableMultiDownloads;
 		public bool EnableMultiDownloads
 		{
 			get { return enableMultiDownloads; }
 			set { enableMultiDownloads = value; }
 		}
 
-		bool clearReadyDownloads;
+		private bool clearReadyDownloads;
 		public bool ClearReadyDownloads
 		{
 			get { return clearReadyDownloads; }
 			set { clearReadyDownloads = value; }
 		}
 
-		int tcpServerPort;
+		private int tcpServerPort;
 		public int TcpServerPort
 		{
 			get { return tcpServerPort; }
 			set { tcpServerPort = value; }
 		}
 
-		int webServerPort;
+		private int webServerPort;
 		public int WebServerPort
 		{
 			get { return webServerPort; }
 			set { webServerPort = value; }
 		}
 
-		string password;
+		private string password;
 		public string Password
 		{
 			get { return password; }
 			set { password = value; }
 		}
 
-		long backupDataTime;
+		private long backupDataTime;
 		public long BackupDataTime
 		{
 			get { return backupDataTime; }
 			set { backupDataTime = value; }
 		}
 
-		string[] fileHandler;
+		private string[] fileHandler;
 		public string[] FileHandler
 		{
 			get { return fileHandler; }
 			set { fileHandler = value; }
 		}
 
-		bool startTCPServer;
+		private bool startTCPServer;
 		public bool StartTCPServer
 		{
 			get { return startTCPServer; }
 			set { startTCPServer = value; }
 		}
 
-		bool startWebServer;
+		private bool startWebServer;
 		public bool StartWebServer
 		{
 			get { return startWebServer; }
 			set { startWebServer = value; }
 		}
 
-		string styleWebServer;
+		private string styleWebServer;
 		public string StyleWebServer
 		{
 			get { return styleWebServer; }
 			set { styleWebServer = value; }
 		}
 
-		bool startJabberClient;
+		private bool startJabberClient;
 		public bool StartJabberClient
 		{
 			get { return startJabberClient; }
 			set { startJabberClient = value; }
 		}
 
-		string jabberServer;
+		private string jabberServer;
 		public string JabberServer
 		{
 			get { return jabberServer; }
 			set { jabberServer = value; }
 		}
 
-		string jabberUser;
+		private string jabberUser;
 		public string JabberUser
 		{
 			get { return jabberUser; }
 			set { jabberUser = value; }
 		}
 
-		string jabberPassword;
+		private string jabberPassword;
 		public string JabberPassword
 		{
 			get { return jabberPassword; }
 			set { jabberPassword = value; }
 		}
 
-		bool autoJoinOnInvite;
+		private bool autoJoinOnInvite;
 		public bool AutoJoinOnInvite
 		{
 			get { return autoJoinOnInvite; }
 			set { autoJoinOnInvite = value; }
 		}
 
-		LogLevel logLevel;
+		private LogLevel logLevel;
 		public LogLevel LogLevel
 		{
 			get { return logLevel; }

@@ -243,6 +243,9 @@ namespace XG.Server
 					return;
 				}
 #endif
+
+				// statistics
+				Statistic.Instance.Increase(StatisticType.BotConnectsOk);
 			}
 			else
 			{
@@ -298,6 +301,9 @@ namespace XG.Server
 					{
 						this.Part.PartState = FilePartState.Ready;
 						this.Log("con_Disconnected() ready" + (this.Part.IsChecked ? "" : " but unchecked"), LogLevel.Notice);
+
+						// statistics
+						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
 					}
 					// that should not happen
 					else if (this.CurrrentSize > this.StopSize)
@@ -510,6 +516,9 @@ namespace XG.Server
 				this.myReceivedBytes += aData.Length;
 				this.mySpeedCalcSize += aData.Length;
 				this.Part.CurrentSize += aData.Length;
+
+				// statistics
+				Statistic.Instance.Increase(StatisticType.BytesLoaded, aData.Length);
 			}
 			catch (Exception ex)
 			{
@@ -528,6 +537,16 @@ namespace XG.Server
 
 				this.ObjectChangedEvent(this.Part);
 				this.mySpeedCalcSize = 0;
+
+				// statistics
+				if(this.Part.Speed > Statistic.Instance.Get(StatisticType.SpeedMax))
+				{
+					Statistic.Instance.Set(StatisticType.SpeedMax, this.Part.Speed);
+				}
+				else if(this.Part.Speed < Statistic.Instance.Get(StatisticType.SpeedMin))
+				{
+					Statistic.Instance.Set(StatisticType.SpeedMin, this.Part.Speed);
+				}
 			}
 		}
 

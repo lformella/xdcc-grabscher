@@ -48,6 +48,7 @@ namespace XG.Server
 
 		private Thread mySaveBinThread;
 		private Thread mySaveFileThread;
+		private Thread mySaveStatisticThread;
 
 		private bool isSaveFile = false;
 		private object mySaveFileLock = new object();
@@ -258,6 +259,10 @@ namespace XG.Server
 			this.mySaveFileThread = new Thread(new ThreadStart(SaveFileData));
 			this.mySaveFileThread.Start();
 
+			// start saving routine
+			this.mySaveStatisticThread = new Thread(new ThreadStart(SaveStatisticData));
+			this.mySaveStatisticThread.Start();
+
 			#endregion
 
 			// connect to all servers which are enabled
@@ -285,6 +290,7 @@ namespace XG.Server
 			}
 			this.mySaveBinThread.Abort();
 			this.mySaveFileThread.Abort();
+			this.mySaveStatisticThread.Abort();
 		}
 
 		/// <summary>
@@ -510,6 +516,18 @@ namespace XG.Server
 			{
 				this.Save(this.myFiles, Settings.Instance.FilesBinary);
 				this.isSaveFile = false;
+			}
+		}
+
+		/// <summary>
+		/// Schedules the saving of the StatisticData 
+		/// </summary>
+		private void SaveStatisticData()
+		{
+			while (true)
+			{
+				Thread.Sleep((int)Settings.Instance.BackupStatisticTime);
+				Statistic.Instance.Save();
 			}
 		}
 

@@ -1088,6 +1088,9 @@ namespace XG.Server
 										tChan.Connected = true;
 										this.Log("con_DataReceived() joined channel " + tChan.Name, LogLevel.Notice);
 									}
+
+									// statistics
+									Statistic.Instance.Increase(StatisticType.ChannelConnectsOk);
 									break;
 
 
@@ -1100,6 +1103,9 @@ namespace XG.Server
 									{
 										if (chan.Enabled) { this.JoinChannel(chan); }
 									}
+
+									// statistics
+									Statistic.Instance.Increase(StatisticType.ServerConnectsOk);
 									break;
 
 
@@ -1123,6 +1129,9 @@ namespace XG.Server
 										this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
 										this.CreateTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
 									}
+
+									// statistics
+									Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
 									break;
 							}
 						}
@@ -1216,6 +1225,9 @@ namespace XG.Server
 
 								if (this.myLatestPacketRequests.ContainsKey(name)) { this.myLatestPacketRequests.Remove(name); }
 								this.myLatestPacketRequests.Add(name, DateTime.Now.AddMilliseconds(Settings.Instance.SamePacketRequestTime));
+
+								// statistics
+								Statistic.Instance.Increase(StatisticType.PacketsRequested);
 							}
 
 							// create a timer to re request if the bot didnt recognized the privmsg
