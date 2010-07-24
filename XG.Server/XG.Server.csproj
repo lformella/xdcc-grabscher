@@ -51,6 +51,7 @@
     <Compile Include="ServerHandler.cs" />
     <Compile Include="ServerRunner.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Statistic.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Core\XG.Core.csproj">
