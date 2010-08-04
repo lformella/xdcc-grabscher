@@ -111,11 +111,11 @@ namespace XG.Server
 		{
 			get
 			{
-				// damn this should not happen
 				if (this.Part != null && this.File != null)
 				{
 					return Settings.Instance.TempPath + this.File.TmpPath + this.Part.StartSize;
 				}
+				// damn this should not happen
 				else { return ""; }
 			}
 		}
@@ -316,15 +316,27 @@ namespace XG.Server
 							this.myParent.RemoveFile(this.File);
 							this.Log("con_Disconnected() removing corputed file " + this.File.Name, LogLevel.Error);
 						}
+
+						// statistics
+						Statistic.Instance.Increase(StatisticType.PacketsBroken);
 					}
 					// it did not start
 					else if (this.myReceivedBytes == 0)
 					{
 						this.Log("con_Disconnected() downloading did not start, disabling packet", LogLevel.Error);
 						this.Packet.Enabled = false;
+
+						// statistics
+						Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 					}
 					// it is incomplete
-					else { this.Log("con_Disconnected() incomplete", LogLevel.Error); }
+					else
+					{
+						this.Log("con_Disconnected() incomplete", LogLevel.Error);
+
+						// statistics
+						Statistic.Instance.Increase(StatisticType.PacketsIncompleted);
+					}
 				}
 				this.ObjectChangedEvent(this.Part);
 			}
@@ -334,6 +346,9 @@ namespace XG.Server
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
 				this.Log("con_Disconnected() connection did not work, disabling packet", LogLevel.Error);
 				this.Packet.Enabled = false;
+
+				// statistics
+				Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 			}
 
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);

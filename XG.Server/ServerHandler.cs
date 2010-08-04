@@ -895,6 +895,7 @@ namespace XG.Server
 				}
 
 				bool error = true;
+				bool deleteOnError = true;
 				XGObject[] parts = tFile.Children;
 				string fileReady = Settings.Instance.ReadyPath + tFile.Name;
 
@@ -919,6 +920,10 @@ namespace XG.Server
 						catch (Exception ex)
 						{
 							this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							// dont delete the source if the disk is full!
+							// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
+							int hresult = (int)ex.GetType().GetField("_HResult", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(ex);
+							if ((hresult & 0xFFFF) == 112L) { deleteOnError = false; }
 							break;
 						}
 					}
@@ -953,7 +958,8 @@ namespace XG.Server
 				{
 					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
-				if (error)
+
+				if (error && deleteOnError)
 				{
 					// the creation was not successfull, so delete the files and parts
 					this.FileDelete(fileReady);

@@ -24,12 +24,16 @@ using XG.Core;
 namespace XG.Server
 {
 	[Flags]
-	public enum StatisticType : byte
+	public enum StatisticType : int
 	{
 		BytesLoaded,
 
 		PacketsCompleted,
+		PacketsIncompleted,
+		PacketsBroken,
+
 		PacketsRequested,
+		PacketsRemoved,
 
 		FilesCompleted,
 		FilesBroken,
@@ -39,6 +43,9 @@ namespace XG.Server
 
 		ChannelConnectsOk,
 		ChannelConnectsFailed,
+		ChannelsJoined,
+		ChannelsParted,
+		ChannelsKicked,
 
 		BotConnectsOk,
 		BotConnectsFailed,
@@ -46,6 +53,69 @@ namespace XG.Server
 		SpeedMax,
 		SpeedMin,
 		SpeedAvg
+	}
+
+	[XmlRoot("dictionary")]
+	public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+	{
+		#region IXmlSerializable Members
+		public System.Xml.Schema.XmlSchema GetSchema()
+		{
+			return null;
+		}
+ 
+		public void ReadXml(System.Xml.XmlReader reader)
+		{
+			XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
+			XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+ 
+			bool wasEmpty = reader.IsEmptyElement;
+			reader.Read();
+ 
+			if (wasEmpty) { return; }
+ 
+			while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+			{
+				reader.ReadStartElement("item");
+ 
+				reader.ReadStartElement("key");
+				TKey key = (TKey)keySerializer.Deserialize(reader);
+				reader.ReadEndElement();
+ 
+				reader.ReadStartElement("value");
+				TValue value = (TValue)valueSerializer.Deserialize(reader);
+				reader.ReadEndElement();
+ 
+				this.Add(key, value);
+ 
+				reader.ReadEndElement();
+				reader.MoveToContent();
+			}
+			reader.ReadEndElement();
+		}
+ 
+		public void WriteXml(System.Xml.XmlWriter writer)
+		{
+			XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
+			XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
+ 
+			foreach (TKey key in this.Keys)
+			{
+				writer.WriteStartElement("item");
+ 
+				writer.WriteStartElement("key");
+				keySerializer.Serialize(writer, key);
+				writer.WriteEndElement();
+ 
+				writer.WriteStartElement("value");
+				TValue value = this[key];
+				valueSerializer.Serialize(writer, value);
+				writer.WriteEndElement();
+ 
+				writer.WriteEndElement();
+			}
+		}
+		#endregion
 	}
 
 	[Serializable()]
@@ -56,8 +126,19 @@ namespace XG.Server
 		[field: NonSerialized()]
 		private static object StatisticLock = new object();
 
-		private Dictionary<StatisticType, Int64> myValuesInt = new Dictionary<StatisticType, Int64>();
-		private Dictionary<StatisticType, double> myValuesDouble = new Dictionary<StatisticType, double>();
+		private SerializableDictionary<StatisticType, Int64> myValuesInt = new SerializableDictionary<StatisticType, Int64>();
+		public SerializableDictionary<StatisticType, Int64> ValuesInt
+		{
+			get { return myValuesInt; }
+			set { myValuesInt = value; }
+		}
+
+		private SerializableDictionary<StatisticType, double> myValuesDouble = new SerializableDictionary<StatisticType, double>();
+		public SerializableDictionary<StatisticType, double> ValuesDouble
+		{
+			get { return myValuesDouble; }
+			set { myValuesDouble = value; }
+		}
 
 		public static Statistic Instance
 		{
@@ -77,7 +158,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Statistic));
-				StreamReader sr = new StreamReader("./statistic.xml");
+				StreamReader sr = new StreamReader("./statistics.xml");
 				Statistic statistic = (Statistic)ser.Deserialize(sr);
 				sr.Close();
 				return statistic;
@@ -94,7 +175,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Statistic));
-				StreamWriter sw = new StreamWriter("./statistic.xml");
+				StreamWriter sw = new StreamWriter("./statistics.xml");
 				ser.Serialize(sw, instance);
 				sw.Close();
 			}

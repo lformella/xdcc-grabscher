@@ -242,28 +242,33 @@ namespace XG.Server
 										#endregion
 									}
 									#endregion
-									// TODO should we connect to port 0 (zero) ?
 									tPort = int.Parse(tDataList[4]);
-									tPacket.RealName = tDataList[2];
-									tPacket.RealSize = Int64.Parse(tDataList[5]);
-
-									tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
-									if (tChunk < 0)
+									// we cant connect to port <= 0
+									if(tPort <= 0)
 									{
-										this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
-										tPacket.Enabled = false;
-										this.ObjectChange(tPacket);
-										//this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
-										this.UnregisterFromBot(tBot);
+										this.Log("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort, LogLevel.Error);
 									}
-									else if (tChunk > 0)
+									else
 									{
-										this.Log("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk, LogLevel.Notice);
-										this.myCon.SendData("PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+										tPacket.RealName = tDataList[2];
+										tPacket.RealSize = Int64.Parse(tDataList[5]);
+	
+										tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
+										if (tChunk < 0)
+										{
+											this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
+											tPacket.Enabled = false;
+											this.ObjectChange(tPacket);
+											this.UnregisterFromBot(tBot);
+										}
+										else if (tChunk > 0)
+										{
+											this.Log("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk, LogLevel.Notice);
+											this.myCon.SendData("PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+										}
+										else { isOk = true; }
 									}
-									else { isOk = true; }
 								}
-
 								else if (tDataList[1] == "ACCEPT")
 								{
 									this.Log("con_DataReceived() DCC resume accepted from " + tBot.Name, LogLevel.Notice);
@@ -794,7 +799,7 @@ namespace XG.Server
 							if (!isParsed)
 							{
 								tMatch1 = Regex.Match(tData, "(\\*){2,3} (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} (Schliese Verbindung:).*", RegexOptions.IgnoreCase);
+								tMatch2 = Regex.Match(tData, "(\\*){2,3} (Schlie.e Verbindung:).*", RegexOptions.IgnoreCase);
 								if (tMatch1.Success || tMatch2.Success)
 								{
 									isParsed = true;
@@ -915,6 +920,9 @@ namespace XG.Server
 								this.Log("con_DataReceived() kicked from " + tChan.Name + (tCommandList.Length >= 5 ? " (" + tCommandList[4] + ")" : "") + " - rejoining", LogLevel.Warning);
 								this.Log("con_DataReceived() " + aData, LogLevel.Warning);
 								this.JoinChannel(tChan);
+
+								// statistics
+								Statistic.Instance.Increase(StatisticType.ChannelsKicked);
 							}
 							else
 							{
@@ -1246,6 +1254,9 @@ namespace XG.Server
 				this.Log("UnregisterFromBot(" + aBot.Name + ")", LogLevel.Notice);
 				this.myCon.SendData("PRIVMSG " + aBot.Name + " :XDCC REMOVE");
 				this.CreateTimer(aBot, Settings.Instance.CommandWaitTime);
+
+				// statistics
+				Statistic.Instance.Increase(StatisticType.PacketsRemoved);
 			}
 		}
 
@@ -1260,6 +1271,9 @@ namespace XG.Server
 			{
 				this.Log("JoinChannel(" + tChan.Name + ")", LogLevel.Notice);
 				this.myCon.SendData("JOIN " + tChan.Name);
+
+				// statistics
+				Statistic.Instance.Increase(StatisticType.ChannelsJoined);
 			}
 		}
 
@@ -1269,6 +1283,9 @@ namespace XG.Server
 			{
 				this.Log("PartChannel(" + aChan.Name + ")", LogLevel.Notice);
 				this.myCon.SendData("PART " + aChan.Name);
+
+				// statistics
+				Statistic.Instance.Increase(StatisticType.ChannelsParted);
 			}
 		}
 

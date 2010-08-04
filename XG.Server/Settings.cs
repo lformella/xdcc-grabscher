@@ -99,6 +99,7 @@ namespace XG.Server
 		/// </summary>
 		private Settings()
 		{
+			Random rand = new Random();
 			this.commandWaitTime = 15000;
 			this.botWaitTime = 240000;
 			this.channelWaitTime = 300000;
@@ -107,7 +108,7 @@ namespace XG.Server
 			this.fileRollbackCheck = 409600;
 			this.updateDownloadTime = 5000;
 			this.downloadPerRead = 102400;
-			this.iRCName = "Anonymous";
+			this.iRCName = "Anonymous" + rand.Next(10000, 99999);
 			this.tempPath = "./tmp/";
 			this.readyPath = "./dl/";
 			this.mutliDownloadMinimumTime = 300;
@@ -116,8 +117,8 @@ namespace XG.Server
 			this.reconnectWaitTime = 45000;
 			this.enableMultiDownloads = true;
 			this.clearReadyDownloads = true;
-			this.ircVersion = "mIRC v6.16 Khaled Mardam-Bey"; // mIRC v6.35 Khaled Mardam-Bey
-			this.xgVersion = "5";
+			this.ircVersion = "mIRC v6.35 Khaled Mardam-Bey";
+			this.xgVersion = "6";
 			this.ircRegisterEmail = "anon@ymous.org";
 			this.ircRegisterPasswort = "password123";
 			this.botOfflineCheckTime = 1200000;
@@ -301,7 +302,7 @@ namespace XG.Server
 		private string iRCName;
 		public string IRCName
 		{
-			get { return "XG-" + iRCName.Replace("XG-", ""); }
+			get { return "[XG] " + iRCName.Replace("[XG] ", ""); }
 			set { iRCName = value; }
 		}
 
