@@ -31,7 +31,7 @@ namespace XG.Client.Widgets.GTK
 		public PacketWidget()
 		{
 			this.CreateColumn("", rPixbuf, new Gtk.TreeCellDataFunc(RenderPacketIcon), 55);
-			this.CreateColumn("", rTextRight, new Gtk.TreeCellDataFunc(RenderPacketId), 35);
+			this.CreateColumn("#", rTextRight, new Gtk.TreeCellDataFunc(RenderPacketId), 35);
 			this.CreateColumn("Name", rProgress, new Gtk.TreeCellDataFunc(RenderPacketNameProgress), 0);
 			this.CreateColumn("Speed", rTextRight, new Gtk.TreeCellDataFunc(RenderPacketSpeed), 90);
 			this.CreateColumn("Missing", rTextRight, new Gtk.TreeCellDataFunc(RenderPacketSizeMissing), 60);
