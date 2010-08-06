@@ -302,7 +302,7 @@ namespace XG.Server
 		private string iRCName;
 		public string IRCName
 		{
-			get { return "[XG] " + iRCName.Replace("[XG] ", ""); }
+			get { return iRCName; }
 			set { iRCName = value; }
 		}
 
