@@ -119,9 +119,6 @@ namespace XG.Server
 			this.myServer.Connected = false;
 			this.ObjectChange(this.myServer);
 
-			//if (this.myWatchDogThread != null) { this.myWatchDogThread.Abort(); }
-			//if (this.myTimerThread != null) { this.myTimerThread.Abort(); }
-
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);
 			this.myCon.DisconnectedEvent -= new EmptyDelegate(con_DisconnectedEventHandler);
 			this.myCon.DataTextReceivedEvent -= new DataTextDelegate(con_DataReceivedEventHandler);

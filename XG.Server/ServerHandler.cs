@@ -877,7 +877,6 @@ namespace XG.Server
 										))
 									{
 										this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
-										this.Log("REMOVE ME - " + fileName + " vs " + XGHelper.ShrinkFileName(tPack.RealName, 0) + " / " + XGHelper.ShrinkFileName(tPack.Name, 0), LogLevel.Notice);
 										tPack.Enabled = false;
 										this.ObjectChangedEvent(tPack);
 									}

@@ -579,10 +579,11 @@ $(function()
 	/* RESIZE HELPER                                                          */
 	/* ********************************************************************** */
 	
-	$(window).resize(function(){
-	  Resize();
+	$(window).resize(function()
+	{
+		Resize();
 	});
-	 Resize();
+	Resize();
 });
 
 
@@ -1087,7 +1088,7 @@ function Speed2Human(speed)
 function Time2Human(time)
 {
 	var str = "";
-	if(time < 0) { return str; }
+	if(time < 0 || time == 2147483647 || time == "2147483647" || time == "9223372036854775807") { return str; }
 
 	var buff = 0;
 
@@ -1097,7 +1098,7 @@ function Time2Human(time)
 		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
 		time -= buff * 86400;
 	}
-	//else { str += "00:"; }
+	else if (str != "") { str += "00:"; }
 
 	if (time > 3600)
 	{
@@ -1105,7 +1106,7 @@ function Time2Human(time)
 		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
 		time -= buff * 3600;
 	}
-	//else { str += "00:"; }
+	else if (str != "") { str += "00:"; }
 
 	if (time > 60)
 	{
@@ -1113,7 +1114,7 @@ function Time2Human(time)
 		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
 		time -= buff * 60;
 	}
-	//else { str += "00:"; }
+	else if (str != "") { str += "00:"; }
 
 	if (time > 0)
 	{
@@ -1121,7 +1122,7 @@ function Time2Human(time)
 		str += (buff >= 10 ? "" + buff : "0" + buff);
 		time -= buff;
 	}
-	//else { str += "00"; }
+	else if (str != "") { str += "00"; }
 
 	return str;
 }
@@ -1140,4 +1141,3 @@ function Resize()
 	jQuery("#packets").setGridHeight(height);
 	jQuery("#packets").setGridWidth(width);
 }
-

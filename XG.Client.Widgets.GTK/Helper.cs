@@ -51,7 +51,7 @@ namespace XG.Client.Widgets.GTK
 				str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
 				aTime -= buff * 86400;
 			}
-			//else { str += "00:"; }
+			else if (str != "") { str += "00:"; }
 
 			if (aTime > 3600)
 			{
@@ -59,7 +59,7 @@ namespace XG.Client.Widgets.GTK
 				str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
 				aTime -= buff * 3600;
 			}
-			//else { str += "00:"; }
+			else if (str != "") { str += "00:"; }
 
 			if (aTime > 60)
 			{
@@ -67,7 +67,7 @@ namespace XG.Client.Widgets.GTK
 				str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
 				aTime -= buff * 60;
 			}
-			//else { str += "00:"; }
+			else if (str != "") { str += "00:"; }
 
 			if (aTime > 0)
 			{
@@ -75,7 +75,7 @@ namespace XG.Client.Widgets.GTK
 				str += buff >= 10 ? "" + buff : "0" + buff;
 				aTime -= buff;
 			}
-			else { str += "00"; }
+			else if (str != "") { str += "00"; }
 
 			return str;
 		}
