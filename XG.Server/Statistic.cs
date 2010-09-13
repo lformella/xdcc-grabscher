@@ -158,7 +158,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Statistic));
-				StreamReader sr = new StreamReader(File.Create("./statistics.xml"));
+				StreamReader sr = new StreamReader("./statistics.xml");
 				Statistic statistic = (Statistic)ser.Deserialize(sr);
 				sr.Close();
 				return statistic;
@@ -175,7 +175,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Statistic));
-				StreamWriter sw = new StreamWriter("./statistics.xml");
+				StreamWriter sw = new StreamWriter(File.Create("./statistics.xml"));
 				ser.Serialize(sw, instance);
 				sw.Close();
 			}
