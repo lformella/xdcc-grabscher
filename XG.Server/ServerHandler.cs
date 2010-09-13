@@ -921,6 +921,7 @@ namespace XG.Server
 							this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 							// dont delete the source if the disk is full!
 							// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
+							// TODO this doesnt work :(
 							int hresult = (int)ex.GetType().GetField("_HResult", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(ex);
 							if ((hresult & 0xFFFF) == 112L) { deleteOnError = false; }
 							break;

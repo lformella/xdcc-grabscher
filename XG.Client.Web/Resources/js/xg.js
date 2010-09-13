@@ -1088,7 +1088,7 @@ function Speed2Human(speed)
 function Time2Human(time)
 {
 	var str = "";
-	if(time < 0 || time == 2147483647 || time == "2147483647" || time == "9223372036854775807") { return str; }
+	if(time < 0 || time >= 106751991167300 || time == "106751991167300") { return str; }
 
 	var buff = 0;
 
