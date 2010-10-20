@@ -219,7 +219,9 @@ namespace XG.Server
 									catch (FormatException)
 									{
 										#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
-										string ip = new IPAddress(long.Parse(tDataList[3])).ToString();
+										string ip = "";
+										try { new IPAddress(long.Parse(tDataList[3])).ToString(); }
+										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
 										int pos = 0;
 										string realIp = "";
 										pos = ip.LastIndexOf('.');
@@ -235,11 +237,13 @@ namespace XG.Server
 										realIp += ip.Substring(pos + 1);
 
 										this.Log("con_DataReceived() IP parsing failed, using this: " + realIp, LogLevel.Notice);
-										tBot.IP = IPAddress.Parse(realIp);
+										try { tBot.IP = IPAddress.Parse(realIp); }
+										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
 										#endregion
 									}
 									#endregion
-									tPort = int.Parse(tDataList[4]);
+									try { tPort = int.Parse(tDataList[4]); }
+									catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
 									// we cant connect to port <= 0
 									if(tPort <= 0)
 									{
@@ -249,7 +253,7 @@ namespace XG.Server
 									{
 										tPacket.RealName = tDataList[2];
 										try { tPacket.RealSize = Int64.Parse(tDataList[5]); }
-										catch { this.Log("con_DataReceived() " + tBot.Name + " can not parse packet size from string: " + tData, LogLevel.Exception); return; }
+										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet size from string: " + tData, LogLevel.Exception); return; }
 
 										tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 										if (tChunk < 0)
@@ -271,9 +275,9 @@ namespace XG.Server
 								{
 									this.Log("con_DataReceived() DCC resume accepted from " + tBot.Name, LogLevel.Notice);
 									try { tPort = int.Parse(tDataList[3]); 	}
-									catch { this.Log("con_DataReceived() " + tBot.Name + " can not parse packet port from string: " + tData, LogLevel.Exception); return; }
+									catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
 									try { tChunk = Int64.Parse(tDataList[4]); }
-									catch { this.Log("con_DataReceived() " + tBot.Name + " can not parse packet chunk from string: " + tData, LogLevel.Exception); return; }
+									catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet chunk from string: " + tData, LogLevel.Exception); return; }
 									isOk = true;
 								}
 
@@ -362,7 +366,9 @@ namespace XG.Server
 
 									try
 									{
-										int tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString());
+										int tPacketId = -1;
+										try { tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString()); }
+										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet id from string: " + tData, LogLevel.Exception); return; }
 
 										XGPacket tPack = tBot[tPacketId];
 										if (tPack == null)
