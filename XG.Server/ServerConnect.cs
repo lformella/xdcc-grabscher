@@ -248,8 +248,9 @@ namespace XG.Server
 									else
 									{
 										tPacket.RealName = tDataList[2];
-										tPacket.RealSize = Int64.Parse(tDataList[5]);
-	
+										try { tPacket.RealSize = Int64.Parse(tDataList[5]); }
+										catch { this.Log("con_DataReceived() " + tBot.Name + " can not parse packet size from string: " + tData, LogLevel.Exception); return; }
+
 										tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 										if (tChunk < 0)
 										{
@@ -269,8 +270,10 @@ namespace XG.Server
 								else if (tDataList[1] == "ACCEPT")
 								{
 									this.Log("con_DataReceived() DCC resume accepted from " + tBot.Name, LogLevel.Notice);
-									tPort = int.Parse(tDataList[3]);
-									tChunk = Int64.Parse(tDataList[4]);
+									try { tPort = int.Parse(tDataList[3]); 	}
+									catch { this.Log("con_DataReceived() " + tBot.Name + " can not parse packet port from string: " + tData, LogLevel.Exception); return; }
+									try { tChunk = Int64.Parse(tDataList[4]); }
+									catch { this.Log("con_DataReceived() " + tBot.Name + " can not parse packet chunk from string: " + tData, LogLevel.Exception); return; }
 									isOk = true;
 								}
 
