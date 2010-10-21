@@ -64,13 +64,19 @@ namespace XG.Server
 
 		#region CONNECT / RECEIVE DATA
 
-		public void Connect(string aName, int aPort)
+		/// <summary>
+		/// Connect to Hostname:Port an read in text mode
+		/// </summary>
+		public void Connect(string aHostname, int aPort)
 		{
-			this.Connect(aName, aPort, 0);
+			this.Connect(aHostname, aPort, 0);
 		}
-		public void Connect(string aName, int aPort, Int64 aMaxData)
+		/// <summary>
+		/// Connect to Hostname:Port an read in binary mode if MaxData > 0
+		/// </summary>
+		public void Connect(string aHostename, int aPort, Int64 aMaxData)
 		{
-			this.myHost = aName;
+			this.myHost = aHostename;
 			this.myPort = aPort;
 
 			this.myMaxData = aMaxData;
@@ -81,12 +87,12 @@ namespace XG.Server
 			try
 			{
 				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") start", LogLevel.Notice);
-				this.myTcpClient.Connect(aName, aPort);
+				this.myTcpClient.Connect(aHostename, aPort);
 				this.myIsConnected = true;
 			}
 			catch (SocketException ex)
 			{
-				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 			}
 
 			if (this.myIsConnected)
@@ -113,17 +119,22 @@ namespace XG.Server
 					{
 						Int64 missing = this.myMaxData;
 						Int64 max = Settings.Instance.DownloadPerRead;
-						byte[] data;
+						byte[] data = null;
 						do
 						{
 							try { data = this.myReaderB.ReadBytes((int)(missing < max ? missing : max)); }
 							catch (ObjectDisposedException) { break; }
+							catch (SocketException ex)
+							{
+								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							}
 							catch (Exception ex)
 							{
 								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 								break;
 							}
-							if (data.Length != 0)
+
+							if (data != null && data.Length != 0)
 							{
 								if (this.DataBinaryReceivedEvent != null)
 								{
@@ -147,16 +158,21 @@ namespace XG.Server
 					else
 					{
 						int failCounter = 0;
-						string data;
+						string data = "";
 						do
 						{
 							try { data = this.myReaderT.ReadLine(); }
 							catch (ObjectDisposedException) { break; }
+							catch (SocketException ex)
+							{
+								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							}
 							catch (Exception ex)
 							{
 								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 								break;
 							}
+
 							if (data != "" && data != null)
 							{
 								failCounter = 0;
@@ -227,6 +243,10 @@ namespace XG.Server
 			if (this.myReaderT != null)
 			{
 				try { this.myWriter.WriteLine(aData); }
+				catch (SocketException ex)
+				{
+					this.Log("SendData(" + aData + ") : " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				}
 				catch (Exception ex)
 				{
 					this.Log("SendData(" + aData + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
