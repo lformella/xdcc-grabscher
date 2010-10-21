@@ -122,7 +122,7 @@ namespace XG.Server
 				con.Disconnect();
 			}
 		}
-		private void server_DisconnectedEventHandler (XGServer aServer)
+		private void server_DisconnectedEventHandler(XGServer aServer)
 		{
 			if (this.myServers.ContainsKey (aServer))
 			{

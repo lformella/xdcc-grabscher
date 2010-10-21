@@ -83,7 +83,7 @@ namespace XG.Server
 			this.myFiles = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
 			if (this.myFiles == null) { this.myFiles = new List<XGFile>(); }
 
-			#region SERVER INIT
+			#region SERVERHANDLER INIT
 
 			this.myServerHandler = new ServerHandler(this.myFiles);
 			this.myServerHandler.ParsingErrorEvent += new DataTextDelegate(myServerHandler_ParsingErrorEventHandler);

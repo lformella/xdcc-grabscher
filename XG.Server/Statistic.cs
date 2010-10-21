@@ -121,6 +121,9 @@ namespace XG.Server
 	[Serializable()]
 	public class Statistic
 	{
+		private static object locked = new object();
+		private static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));
+
 		[field: NonSerialized()]
 		private static Statistic instance = null;
 		[field: NonSerialized()]
@@ -155,33 +158,37 @@ namespace XG.Server
 
 		private static Statistic Deserialize()
 		{
-			try
+			lock(locked)
 			{
-				XmlSerializer ser = new XmlSerializer(typeof(Statistic));
-				StreamReader sr = new StreamReader("./statistics.xml");
-				Statistic statistic = (Statistic)ser.Deserialize(sr);
-				sr.Close();
-				return statistic;
-			}
-			catch (Exception ex)
-			{
-				XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-				return new Statistic();
+				try
+				{
+					Stream streamRead = File.OpenRead("./statistics.xml");
+					Statistic statistic = (Statistic)serializer.Deserialize(streamRead);
+					streamRead.Close();
+					return statistic;
+				}
+				catch (Exception ex)
+				{
+					XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					return new Statistic();
+				}
 			}
 		}
 
 		private static void Serialize()
 		{
-			try
+			lock(locked)
 			{
-				XmlSerializer ser = new XmlSerializer(typeof(Statistic));
-				StreamWriter sw = new StreamWriter(File.Create("./statistics.xml"));
-				ser.Serialize(sw, instance);
-				sw.Close();
-			}
-			catch (Exception ex)
-			{
-				XGHelper.Log("Statistic.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				try
+				{
+					Stream streamWrite = File.Create("./statistics.xml");
+					serializer.Serialize(streamWrite, instance);
+					streamWrite.Close();
+				}
+				catch (Exception ex)
+				{
+					XGHelper.Log("Statistic.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				}
 			}
 		}
 

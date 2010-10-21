@@ -1372,6 +1372,9 @@ namespace XG.Server
 
 		#region TIMER
 
+		/// <summary>
+		/// Is called from the parent onject ServerHandler (to have a single loop which triggers all ServerConnects) 
+		/// </summary>
 		public void TriggerTimerRun()
 		{
 			List<XGObject> remove = new List<XGObject>();
