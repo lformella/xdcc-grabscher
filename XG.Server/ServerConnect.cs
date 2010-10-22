@@ -220,21 +220,25 @@ namespace XG.Server
 									{
 										#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
 										string ip = "";
-										try { new IPAddress(long.Parse(tDataList[3])).ToString(); }
+										try { ip = new IPAddress(long.Parse(tDataList[3])).ToString(); }
 										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
 										int pos = 0;
 										string realIp = "";
 										pos = ip.LastIndexOf('.');
-										realIp += ip.Substring(pos + 1) + ".";
-										ip = ip.Substring(0, pos);
-										pos = ip.LastIndexOf('.');
-										realIp += ip.Substring(pos + 1) + ".";
-										ip = ip.Substring(0, pos);
-										pos = ip.LastIndexOf('.');
-										realIp += ip.Substring(pos + 1) + ".";
-										ip = ip.Substring(0, pos);
-										pos = ip.LastIndexOf('.');
-										realIp += ip.Substring(pos + 1);
+										try
+										{
+											realIp += ip.Substring(pos + 1) + ".";
+											ip = ip.Substring(0, pos);
+											pos = ip.LastIndexOf('.');
+											realIp += ip.Substring(pos + 1) + ".";
+											ip = ip.Substring(0, pos);
+											pos = ip.LastIndexOf('.');
+											realIp += ip.Substring(pos + 1) + ".";
+											ip = ip.Substring(0, pos);
+											pos = ip.LastIndexOf('.');
+											realIp += ip.Substring(pos + 1);
+										}
+										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + tData, LogLevel.Exception); return; }
 
 										this.Log("con_DataReceived() IP parsing failed, using this: " + realIp, LogLevel.Notice);
 										try { tBot.IP = IPAddress.Parse(realIp); }
