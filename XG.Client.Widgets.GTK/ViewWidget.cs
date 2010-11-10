@@ -17,9 +17,9 @@
 
 using System;
 using System.Collections.Generic;
+using GLib;
 using Gtk;
 using XG.Core;
-using GLib;
 
 namespace XG.Client.Widgets.GTK
 {

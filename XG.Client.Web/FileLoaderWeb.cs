@@ -17,9 +17,9 @@
 
 using System;
 using System.Collections.Generic;
-using XG.Core;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
+using XG.Core;
 
 namespace XG.Client.Web
 {

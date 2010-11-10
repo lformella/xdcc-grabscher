@@ -16,7 +16,6 @@
 // 
 
 using System;
-using System.Collections.Generic;
 using Gtk;
 using XG.Client.GTK;
 using XG.Core;

@@ -15,11 +15,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using System;
+using System.Threading;
 using agsXMPP;
 using agsXMPP.protocol.client;
 using agsXMPP.Xml.Dom;
-using System;
-using System.Threading;
 using XG.Core;
 
 namespace XG.Server.Jabber

@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading;
 using XG.Core;
 
 namespace XG.Server
@@ -1128,9 +1127,17 @@ namespace XG.Server
 
 
 								case 477: // ERR_NOCHANMODES
-									this.Log("con_DataReceived() registering myself", LogLevel.Notice);
+									tChannelName = tCommandList[3];
+									tChan = myServer[tChannelName];
+									// TODO register myself and login and so on
+									this.Log("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!", LogLevel.Notice);
 									this.myCon.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-									this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime);
+									if(tChan != null) { this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime); }
+									else
+									{
+										tBot = this.myServer.getBot(tCommandList[3]);
+										if(tBot != null) { this.CreateTimer(tBot, Settings.Instance.BotWaitTime); }
+									}
 									break;
 
 
