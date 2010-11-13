@@ -214,12 +214,12 @@ namespace XG.Server.Backend.MySql
 			}
 		}
 
-		public static Int64 Date2Timestamp(DateTime aDate)
-		{
-		    DateTime date = new DateTime(1970, 1, 1);
-		    TimeSpan ts = new TimeSpan(aDate.Ticks - date.Ticks);
-		    return(Convert.ToInt64(ts.TotalSeconds));
-		}
+        protected Int64 Date2Timestamp(DateTime aDate)
+        {
+            DateTime date = new DateTime(1970, 1, 1);
+            TimeSpan ts = new TimeSpan(aDate.Ticks - date.Ticks);
+            return (Convert.ToInt64(ts.TotalSeconds));
+        }
 
 		#endregion
 

@@ -118,7 +118,7 @@ namespace XG.Server
 			this.enableMultiDownloads = true;
 			this.clearReadyDownloads = true;
 			this.ircVersion = "mIRC v6.35 Khaled Mardam-Bey";
-			this.xgVersion = "6";
+			this.xgVersion = "7";
 			this.ircRegisterEmail = "anon@ymous.org";
 			this.ircRegisterPasswort = "password123";
 			this.botOfflineCheckTime = 1200000;

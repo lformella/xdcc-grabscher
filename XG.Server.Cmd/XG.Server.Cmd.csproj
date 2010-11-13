@@ -69,6 +69,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\XG.Server.Backend.MySql\XG.Server.Backend.MySql.csproj">
+      <Project>{6B448EF6-8B68-4902-AD92-81CAADD93EFC}</Project>
+      <Name>XG.Server.Backend.MySql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XG.Server.Jabber\XG.Server.Jabber.csproj">
       <Project>{4F03468E-E62B-43C2-84D9-98CB23704E0B}</Project>
       <Name>XG.Server.Jabber</Name>

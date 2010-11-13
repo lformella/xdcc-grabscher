@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Client.TCP.WinForms", "X
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Server.Jabber", "XG.Server.Jabber\XG.Server.Jabber.csproj", "{4F03468E-E62B-43C2-84D9-98CB23704E0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Server.Backend.MySql", "XG.Server.Backend.MySql\XG.Server.Backend.MySql.csproj", "{6B448EF6-8B68-4902-AD92-81CAADD93EFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +126,12 @@ Global
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B}.UnSafe|Any CPU.ActiveCfg = UnSafe|Any CPU
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B}.UnSafe|Any CPU.Build.0 = UnSafe|Any CPU
+		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.UnSafe|Any CPU.ActiveCfg = Release|Any CPU
+		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.UnSafe|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
