@@ -24,6 +24,7 @@
       <Entry build="True" name="XG.Client.Web" configuration="Debug" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Debug" />
       <Entry build="True" name="XG.Server.Jabber" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Backend.MySql" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Release" />
@@ -38,6 +39,7 @@
       <Entry build="True" name="XG.Client.Web" configuration="Release" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Release" />
       <Entry build="True" name="XG.Server.Jabber" configuration="Release" />
+      <Entry build="True" name="XG.Server.Backend.MySql" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="XG.Server.Cmd" single="True">
@@ -53,6 +55,7 @@
     <Execute type="None" entry="XG.Client.Web" />
     <Execute type="None" entry="XG.Server.Cmd" />
     <Execute type="None" entry="XG.Server.Jabber" />
+    <Execute type="None" entry="XG.Server.Backend.MySql" />
   </StartMode>
   <Entries>
     <Entry filename="XG.Core/XG.Core.mdp" />
@@ -67,5 +70,6 @@
     <Entry filename="XG.Client.Web/XG.Client.Web.mdp" />
     <Entry filename="XG.Server.Cmd/XG.Server.Cmd.mdp" />
     <Entry filename="XG.Server.Jabber/XG.Server.Jabber.mdp" />
+    <Entry filename="XG.Server.Backend.MySql/XG.Server.Backend.MySql.mdp" />
   </Entries>
 </Combine>
