@@ -42,12 +42,7 @@ namespace XG.Server.Backend.MySql
 			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 
-			string connectionString =
-				"Server=localhost;" +
-				"Database=xg;" +
-				"User ID=xg;" +
-				"Password=xg;" +
-				"Pooling=false";
+			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
 			this.myDbConnection = new MySqlConnection(connectionString);
 			this.myDbConnection.Open();
 		}
