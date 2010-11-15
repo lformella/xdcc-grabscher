@@ -67,6 +67,8 @@ namespace XG.Core
 		{
 			get
 			{
+				name = name.Trim().ToLower();
+				if (!name.StartsWith("#")) { name = "#" + name; }
 				foreach (XGChannel chan in base.Children)
 				{
 					if (chan.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) { return chan; }
@@ -75,7 +77,7 @@ namespace XG.Core
 			}
 		}
 
-		public XGBot getBot(string aName)
+		public XGBot GetBot(string aName)
 		{
 			XGBot tBot = null;
 			foreach (XGChannel chan in base.Children)
@@ -86,9 +88,9 @@ namespace XG.Core
 			return tBot;
 		}
 
-		public void addChannel(XGChannel aChannel)
+		public void AddChannel(XGChannel aChannel)
 		{
-			if (base.addChild(aChannel))
+			if (base.AddChild(aChannel))
 			{
 				if (this.ChannelAddedEvent != null)
 				{
@@ -96,23 +98,22 @@ namespace XG.Core
 				}
 			}
 		}
-		public void addChannel(string aChannel)
+		public void AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
-
 			if (!aChannel.StartsWith("#")) { aChannel = "#" + aChannel; }
 			if (this[aChannel] == null)
 			{
 				XGChannel tChannel = new XGChannel();
 				tChannel.Name = aChannel;
 				tChannel.Enabled = this.Enabled;
-				this.addChannel(tChannel);
+				this.AddChannel(tChannel);
 			}
 		}
 
-		public void removeChannel(XGChannel aChannel)
+		public void RemoveChannel(XGChannel aChannel)
 		{
-			if (base.removeChild(aChannel))
+			if (base.RemoveChild(aChannel))
 			{
 				if (this.ChannelRemovedEvent != null)
 				{
@@ -120,21 +121,19 @@ namespace XG.Core
 				}
 			}
 		}
-		public void removeChannel(string aChannel)
+		public void RemoveChannel(string aChannel)
 		{
 			XGChannel tChan = this[aChannel];
 			if (tChan != null)
 			{
-				this.removeChannel(tChan);
+				this.RemoveChannel(tChan);
 			}
 		}
 
-		public XGServer()
-			: base()
+		public XGServer() : base()
 		{
 		}
-		public XGServer(RootObject parent)
-			: this()
+		public XGServer(RootObject parent) : this()
 		{
 			this.Parent = parent;
 			this.Parent.addServer(this);

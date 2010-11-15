@@ -112,7 +112,7 @@ namespace XG.Client.TCP
 					case TCPServerResponse.ObjectAdded:
 					case TCPServerResponse.ObjectChanged:
 						XGObject tObj = (XGObject)binaryRead.Deserialize(stream);
-						XGObject oldObj = this.myRootObject.getChildByGuid(tObj.Guid);
+						XGObject oldObj = this.myRootObject.GetChildByGuid(tObj.Guid);
 						if (oldObj != null)
 						{
 							XGHelper.CloneObject(tObj, oldObj, true);
@@ -120,7 +120,7 @@ namespace XG.Client.TCP
 						}
 						else
 						{
-							XGObject parentObj = this.myRootObject.getChildByGuid(tObj.ParentGuid);
+							XGObject parentObj = this.myRootObject.GetChildByGuid(tObj.ParentGuid);
 							if (parentObj != null || tObj.ParentGuid == Guid.Empty)
 							{
 								this.AddObject(tObj);
@@ -153,7 +153,7 @@ namespace XG.Client.TCP
 
 					case TCPServerResponse.ObjectRemoved:
 						Guid tGuid = new Guid(reader.ReadBytes(16));
-						XGObject remObj = this.myRootObject.getChildByGuid(tGuid);
+						XGObject remObj = this.myRootObject.GetChildByGuid(tGuid);
 						if (remObj != null)
 						{
 							if (remObj.GetType() == typeof(XGServer))
@@ -165,13 +165,13 @@ namespace XG.Client.TCP
 							else if (remObj.GetType() == typeof(XGChannel))
 							{
 								XGChannel tChan = remObj as XGChannel;
-								tChan.Parent.removeChannel(tChan);
+								tChan.Parent.RemoveChannel(tChan);
 							}
 
 							else if (remObj.GetType() == typeof(XGBot))
 							{
 								XGBot tBot = remObj as XGBot;
-								tBot.Parent.removeBot(tBot);
+								tBot.Parent.RemoveBot(tBot);
 							}
 
 							else if (remObj.GetType() == typeof(XGPacket))
@@ -183,13 +183,13 @@ namespace XG.Client.TCP
 							else if (remObj.GetType() == typeof(XGFile))
 							{
 								XGFile tFile = remObj as XGFile;
-								this.myRootObject.removeChild(tFile);
+								this.myRootObject.RemoveChild(tFile);
 							}
 
 							else if (remObj.GetType() == typeof(XGFilePart))
 							{
 								XGFilePart tPart = remObj as XGFilePart;
-								tPart.Parent.removePart(tPart);
+								tPart.Parent.RemovePart(tPart);
 							}
 
 							if (this.ObjectRemovedEvent != null) { this.ObjectRemovedEvent(remObj); }
@@ -269,22 +269,22 @@ namespace XG.Client.TCP
 
 			else if (aObj.GetType() == typeof(XGChannel))
 			{
-				XGServer tServ = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGServer;
-				tServ.addChannel(aObj as XGChannel);
+				XGServer tServ = this.myRootObject.GetChildByGuid(aObj.ParentGuid) as XGServer;
+				tServ.AddChannel(aObj as XGChannel);
 				if (this.ObjectAddedEvent != null) { this.ObjectAddedEvent(aObj, tServ); }
 			}
 
 			else if (aObj.GetType() == typeof(XGBot))
 			{
-				XGChannel tChan = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGChannel;
+				XGChannel tChan = this.myRootObject.GetChildByGuid(aObj.ParentGuid) as XGChannel;
 				XGBot tBot = aObj as XGBot;
-				tChan.addBot(tBot);
+				tChan.AddBot(tBot);
 				if (this.ObjectAddedEvent != null) { this.ObjectAddedEvent(aObj, tChan); }
 			}
 
 			else if (aObj.GetType() == typeof(XGPacket))
 			{
-				XGBot tBot = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGBot;
+				XGBot tBot = this.myRootObject.GetChildByGuid(aObj.ParentGuid) as XGBot;
 				XGPacket tPack = aObj as XGPacket;
 				tBot.addPacket(tPack);
 				if (this.ObjectAddedEvent != null) { this.ObjectAddedEvent(aObj, tPack); }
@@ -292,18 +292,18 @@ namespace XG.Client.TCP
 
 			else if (aObj.GetType() == typeof(XGFile))
 			{
-				this.myRootObject.addChild(aObj as XGFile);
+				this.myRootObject.AddChild(aObj as XGFile);
 				if (this.ObjectAddedEvent != null) { this.ObjectAddedEvent(aObj, this.myRootObject); }
 			}
 
 			else if (aObj.GetType() == typeof(XGFilePart))
 			{
-				XGFile tFile = this.myRootObject.getChildByGuid(aObj.ParentGuid) as XGFile;
+				XGFile tFile = this.myRootObject.GetChildByGuid(aObj.ParentGuid) as XGFile;
 				XGFilePart tPart = aObj as XGFilePart;
-				tFile.addPart(tPart);
+				tFile.AddPart(tPart);
 				if (this.ObjectAddedEvent != null) { this.ObjectAddedEvent(aObj, tFile); }
 
-				XGPacket tPack = this.myRootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
+				XGPacket tPack = this.myRootObject.GetChildByGuid(tPart.PacketGuid) as XGPacket;
 				if (tPack != null)
 				{
 					tPart.Packet = tPack;

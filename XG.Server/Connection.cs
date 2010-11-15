@@ -51,12 +51,18 @@ namespace XG.Server
 			get { return myIsConnected; }
 		}
 
+		private SocketErrorCode errorCode = 0;
+		public SocketErrorCode ErrorCode
+		{
+			get { return this.errorCode; }
+		}
+
 		#endregion
 
 		#region EVENTS
 
 		public event EmptyDelegate ConnectedEvent;
-		public event EmptyDelegate DisconnectedEvent;
+		public event SocketErrorDelegate DisconnectedEvent;
 		public event DataTextDelegate DataTextReceivedEvent;
 		public event DataBinaryDelegate DataBinaryReceivedEvent;
 
@@ -92,7 +98,8 @@ namespace XG.Server
 			}
 			catch (SocketException ex)
 			{
-				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				this.errorCode = (SocketErrorCode)ex.ErrorCode;
+				this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
 			}
 
 			if (this.myIsConnected)
@@ -126,7 +133,23 @@ namespace XG.Server
 							catch (ObjectDisposedException) { break; }
 							catch (SocketException ex)
 							{
-								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+								this.errorCode = (SocketErrorCode)ex.ErrorCode;
+								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
+							}
+							catch (IOException ex)
+							{
+								if(ex.InnerException.GetType() == typeof(SocketException))
+								{
+									SocketException exi = (SocketException)ex.InnerException;
+									this.errorCode = (SocketErrorCode)exi.ErrorCode;
+									this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
+									break;
+								}
+								else
+								{
+									this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+								}
+								break;
 							}
 							catch (Exception ex)
 							{
@@ -165,7 +188,23 @@ namespace XG.Server
 							catch (ObjectDisposedException) { break; }
 							catch (SocketException ex)
 							{
-								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+								this.errorCode = (SocketErrorCode)ex.ErrorCode;
+								this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
+							}
+							catch (IOException ex)
+							{
+								if(ex.InnerException.GetType() == typeof(SocketException))
+								{
+									SocketException exi = (SocketException)ex.InnerException;
+									this.errorCode = (SocketErrorCode)exi.ErrorCode;
+									this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
+									break;
+								}
+								else
+								{
+									this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+								}
+								break;
 							}
 							catch (Exception ex)
 							{
@@ -216,7 +255,7 @@ namespace XG.Server
 
 			if (this.DisconnectedEvent != null)
 			{
-				this.DisconnectedEvent();
+				this.DisconnectedEvent(this.errorCode);
 			}
 		}
 
@@ -245,7 +284,21 @@ namespace XG.Server
 				try { this.myWriter.WriteLine(aData); }
 				catch (SocketException ex)
 				{
-					this.Log("SendData(" + aData + ") : " + ex.ErrorCode + " - " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					this.errorCode = (SocketErrorCode)ex.ErrorCode;
+					this.Log("SendData(" + aData + ") : " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
+				}
+				catch (IOException ex)
+				{
+					if(ex.InnerException.GetType() == typeof(SocketException))
+					{
+						SocketException exi = (SocketException)ex.InnerException;
+						this.errorCode = (SocketErrorCode)exi.ErrorCode;
+						this.Log("SendData(" + aData + ") : " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
+					}
+					else
+					{
+						this.Log("SendData(" + aData + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					}
 				}
 				catch (Exception ex)
 				{

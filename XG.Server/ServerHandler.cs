@@ -94,7 +94,7 @@ namespace XG.Server
 
 				con.NewDownloadEvent += new DownloadDelegate (server_NewDownloadEventHandler);
 				con.KillDownloadEvent += new BotDelegate (server_KillDownloadEventHandler);
-				con.DisconnectedEvent += new ServerDelegate(server_DisconnectedEventHandler);
+				con.DisconnectedEvent += new ServerSocketErrorDelegate(server_DisconnectedEventHandler);
 				con.ConnectedEvent += new ServerDelegate(server_ConnectedEventHandler);
 				con.ParsingErrorEvent += new DataTextDelegate(server_ParsingErrorEventHandler);
 
@@ -122,7 +122,7 @@ namespace XG.Server
 				con.Disconnect();
 			}
 		}
-		private void server_DisconnectedEventHandler(XGServer aServer)
+		private void server_DisconnectedEventHandler(XGServer aServer, SocketErrorCode aValue)
 		{
 			if (this.myServers.ContainsKey (aServer))
 			{
@@ -132,7 +132,7 @@ namespace XG.Server
 				{
 					con.NewDownloadEvent -= new DownloadDelegate (server_NewDownloadEventHandler);
 					con.KillDownloadEvent -= new BotDelegate (server_KillDownloadEventHandler);
-					con.DisconnectedEvent -= new ServerDelegate(server_DisconnectedEventHandler);
+					con.DisconnectedEvent -= new ServerSocketErrorDelegate(server_DisconnectedEventHandler);
 					con.ConnectedEvent -= new ServerDelegate(server_ConnectedEventHandler);
 					con.ParsingErrorEvent -= new DataTextDelegate(server_ParsingErrorEventHandler);
 
@@ -144,7 +144,19 @@ namespace XG.Server
 				}
 				else
 				{
-					new Timer(new TimerCallback(this.ReconnectServer), aServer, Settings.Instance.ReconnectWaitTime, System.Threading.Timeout.Infinite);
+					int time = Settings.Instance.ReconnectWaitTime;
+					switch(aValue)
+					{
+						case SocketErrorCode.HostIsDown:
+						case SocketErrorCode.HostNotFound:
+						case SocketErrorCode.HostNotFoundTryAgain:
+						case SocketErrorCode.HostUnreachable:
+						case SocketErrorCode.ConnectionTimedOut:
+						case SocketErrorCode.ConnectionRefused:
+							time = Settings.Instance.ReconnectWaitTimeLong;
+							break;
+					}
+					new Timer(new TimerCallback(this.ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
 				}
 			}
 		}
@@ -522,7 +534,7 @@ namespace XG.Server
 				returnPart.CurrentSize = aSize;
 				returnPart.StopSize = aFile.Size;
 				returnPart.IsChecked = true;
-				aFile.addPart(returnPart);
+				aFile.AddPart(returnPart);
 				this.ObjectAddedEvent(aFile, returnPart);
 			}
 			else
@@ -556,7 +568,7 @@ namespace XG.Server
 								// update previous part
 								part.StopSize = aSize;
 								this.ObjectChangedEvent(part);
-								aFile.addPart(returnPart);
+								aFile.AddPart(returnPart);
 								this.ObjectAddedEvent(aFile, returnPart);
 								break;
 							}
@@ -592,7 +604,7 @@ namespace XG.Server
 				}
 			}
 
-			aFile.removePart(aPart);
+			aFile.RemovePart(aPart);
 			if (aFile.Children.Length == 0) { this.RemoveFile(aFile); }
 			else
 			{
@@ -1048,7 +1060,7 @@ namespace XG.Server
 									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.getOldestActivePacket() == null)
 									{
 										a++;
-										tChan.removeBot(tBot);
+										tChan.RemoveBot(tBot);
 										this.ObjectRemovedEvent(tChan, tBot);
 									}
 								}

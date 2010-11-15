@@ -36,7 +36,7 @@ namespace XG.Server
 		#region VARIABLES
 
 		private ServerHandler myServerHandler;
-		private RootObject myRootObject;
+		public RootObject myRootObject;
 		public Guid RootGuid
 		{
 			get { return this.myRootObject != null ? this.myRootObject.Guid : Guid.Empty; }
@@ -115,7 +115,7 @@ namespace XG.Server
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
 							this.Log("Run() removing dupe channel " + c.Name, LogLevel.Error);
-							serv.removeChannel(c);
+							serv.RemoveChannel(c);
 						}
 					}
 
@@ -126,7 +126,7 @@ namespace XG.Server
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
 								this.Log("Run() removing dupe bot " + b.Name, LogLevel.Error);
-								chan.removeBot(b);
+								chan.RemoveBot(b);
 							}
 						}
 
@@ -211,7 +211,7 @@ namespace XG.Server
 								// check the file for safety
 								if (part.IsChecked && part.PartState == FilePartState.Ready)
 								{
-									XGFilePart next = file.getNextChild(part) as XGFilePart;
+									XGFilePart next = file.GetNextChild(part) as XGFilePart;
 									if (next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
 									{
 										complete = false;
@@ -337,6 +337,12 @@ namespace XG.Server
 		{
 			this.Log("rootObject_ServerAdded(" + aServer.Name + ")", LogLevel.Notice);
 			this.myServerHandler.ConnectServer(aServer);
+
+			// dispatch this info to the clients to!
+			if (this.ObjectAddedEvent != null)
+			{
+				this.ObjectAddedEvent(aObj, aServer);
+			}
 		}
 
 		/// <summary>
@@ -349,6 +355,12 @@ namespace XG.Server
 			this.Log("rootObject_ServerRemoved(" + aServer.Name + ")", LogLevel.Notice);
 			aServer.Enabled = false;
 			this.myServerHandler.DisconnectServer(aServer);
+
+			// dispatch this info to the clients to!
+			if (this.ObjectRemovedEvent != null)
+			{
+				this.ObjectRemovedEvent(aObj, aServer);
+			}
 		}
 
 		#endregion
@@ -581,7 +593,7 @@ namespace XG.Server
 
 		public void RemoveServer(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				this.myRootObject.removeServer(tObj as XGServer);
@@ -594,20 +606,20 @@ namespace XG.Server
 
 		public void AddChannel(Guid aGuid, string aString)
 		{
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
-				(tObj as XGServer).addChannel(aString);
+				(tObj as XGServer).AddChannel(aString);
 			}
 		}
 
 		public void RemoveChannel(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				XGChannel tChan = tObj as XGChannel;
-				tChan.Parent.removeChannel(tChan);
+				tChan.Parent.RemoveChannel(tChan);
 			}
 		}
 
@@ -617,7 +629,7 @@ namespace XG.Server
 
 		public void ActivateObject(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = true;
@@ -627,7 +639,7 @@ namespace XG.Server
 
 		public void DeactivateObject(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = false;
@@ -937,7 +949,7 @@ namespace XG.Server
 
 		public XGObject GetObject(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				return tObj;
@@ -963,7 +975,7 @@ namespace XG.Server
 		public List<XGObject> GetChildrenFromObject(Guid aGuid, Comparison<XGObject> aComp)
 		{
 			List<XGObject> tList = new List<XGObject>();
-			XGObject tObj = this.myRootObject.getChildByGuid(aGuid);
+			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				foreach (XGObject tChild in tObj.Children)

@@ -153,7 +153,7 @@ namespace XG.Server
 
 			this.myCon = new Connection();
 			this.myCon.ConnectedEvent += new EmptyDelegate(con_ConnectedEventHandler);
-			this.myCon.DisconnectedEvent += new EmptyDelegate(con_DisconnectedEventHandler);
+			this.myCon.DisconnectedEvent += new SocketErrorDelegate(con_DisconnectedEventHandler);
 			this.myCon.DataBinaryReceivedEvent += new DataBinaryDelegate(con_DataReceivedEventHandler);
 
 			this.myCon.Connect(aIp.ToString(), aPort, aPacket.RealSize - aStartSize);
@@ -271,7 +271,7 @@ namespace XG.Server
 				this.myCon.Disconnect();
 			}
 		}
-		private void con_DisconnectedEventHandler()
+		private void con_DisconnectedEventHandler(SocketErrorCode aValue)
 		{
 			// close the writer
 			if (this.myWriter != null) { this.myWriter.Close(); }
@@ -352,7 +352,7 @@ namespace XG.Server
 			}
 
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);
-			this.myCon.DisconnectedEvent -= new EmptyDelegate(con_DisconnectedEventHandler);
+			this.myCon.DisconnectedEvent -= new SocketErrorDelegate(con_DisconnectedEventHandler);
 			this.myCon.DataBinaryReceivedEvent -= new DataBinaryDelegate(con_DataReceivedEventHandler);
 			this.myCon = null;
 

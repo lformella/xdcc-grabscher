@@ -202,11 +202,11 @@ namespace XG.Core
 
 		public void addPacket(XGPacket aPacket)
 		{
-			this.addChild(aPacket);
+			this.AddChild(aPacket);
 		}
 		public void removePacket(XGPacket aPacket)
 		{
-			this.removeChild(aPacket);
+			this.RemoveChild(aPacket);
 		}
 
 		public XGPacket getOldestActivePacket()
@@ -236,16 +236,14 @@ namespace XG.Core
 			return returnPacket;
 		}
 
-		public XGBot()
-			: base()
+		public XGBot() : base()
 		{
 			this.botState = BotState.Idle;
 		}
-		public XGBot(XGChannel parent)
-			: this()
+		public XGBot(XGChannel parent) : this()
 		{
 			this.Parent = parent;
-			this.Parent.addBot(this);
+			this.Parent.AddBot(this);
 		}
 
 		public void Clone(XGBot aCopy, bool aFull)
@@ -258,7 +256,7 @@ namespace XG.Core
 			this.infoSpeedCurrent = aCopy.infoSpeedCurrent;
 			this.infoSpeedMax = aCopy.infoSpeedMax;
 			this.lastContact = aCopy.lastContact;
-			if (aFull)
+			if(aFull)
 			{
 				this.botState = aCopy.botState;
 				this.lastMessage = aCopy.lastMessage;

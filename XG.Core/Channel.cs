@@ -56,24 +56,22 @@ namespace XG.Core
 			}
 		}
 
-		public void addBot(XGBot aBot)
+		public void AddBot(XGBot aBot)
 		{
-			base.addChild(aBot);
+			base.AddChild(aBot);
 		}
-		public void removeBot(XGBot aBot)
+		public void RemoveBot(XGBot aBot)
 		{
-			base.removeChild(aBot);
+			base.RemoveChild(aBot);
 		}
 
-		public XGChannel()
-			: base()
+		public XGChannel() : base()
 		{
 		}
-		public XGChannel(XGServer parent)
-			: this()
+		public XGChannel(XGServer parent) : this()
 		{
 			this.Parent = parent;
-			this.Parent.addChannel(this);
+			this.Parent.AddChannel(this);
 		}
 
 		public void Clone(XGChannel aCopy, bool aFull)

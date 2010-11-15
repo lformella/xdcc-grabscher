@@ -17,10 +17,11 @@
 
 using System;
 using XG.Server;
+using XG.Server.Backend.MySql;
 using XG.Server.Jabber;
 using XG.Server.TCP;
 using XG.Server.Web;
-
+	
 namespace XG.Server.Cmd
 {
 	class MainClass
@@ -35,6 +36,7 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
+				/** / runner.AddServerPlugin(new MySqlBackend()); /**/
 			}
 			catch (Exception ex)
 			{

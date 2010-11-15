@@ -143,13 +143,13 @@ namespace XG.Core
 
 		#region ALTER CHILDREN
 
-		public bool addChild(XGObject aObject)
+		public bool AddChild(XGObject aObject)
 		{
 			if (aObject != null)
 			{
 				if (!this.children.Contains(aObject))
 				{
-					XGObject tObj = this.getChildByGuid(aObject.Guid);
+					XGObject tObj = this.GetChildByGuid(aObject.Guid);
 					if (tObj != null)
 					{
 						XGHelper.CloneObject(aObject, tObj, true);
@@ -167,7 +167,7 @@ namespace XG.Core
 			return false;
 		}
 
-		public bool removeChild(XGObject aObject)
+		public bool RemoveChild(XGObject aObject)
 		{
 			if (aObject != null)
 			{
@@ -184,7 +184,7 @@ namespace XG.Core
 
 		#region GET CHILDREN
 
-		public XGObject getChildByGuid(Guid aGuid)
+		public XGObject GetChildByGuid(Guid aGuid)
 		{
 			if (aGuid == Guid.Empty) { return null; }
 			if (this.Guid == aGuid) { return this; }
@@ -199,14 +199,14 @@ namespace XG.Core
 				}
 				else
 				{
-					tObj = o.getChildByGuid(aGuid);
+					tObj = o.GetChildByGuid(aGuid);
 					if (tObj != null) { break; }
 				}
 			}
 			return tObj;
 		}
 
-		public XGObject getNextChild(XGObject aObject)
+		public XGObject GetNextChild(XGObject aObject)
 		{
 			if (this.children.Contains(aObject))
 			{
@@ -243,7 +243,7 @@ namespace XG.Core
 			this.name = aCopy.name;
 			this.enabled = aCopy.enabled;
 			this.lastModified = aCopy.lastModified;
-			if (aFull)
+			if(aFull)
 			{
 				this.connected = aCopy.connected;
 			}

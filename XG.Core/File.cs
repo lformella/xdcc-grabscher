@@ -39,21 +39,19 @@ namespace XG.Core
 			get { return this.size; }
 		}
 
-		public bool addPart(XGFilePart aPart)
+		public bool AddPart(XGFilePart aPart)
 		{
-			return this.addChild(aPart);
+			return this.AddChild(aPart);
 		}
-		public bool removePart(XGFilePart aPart)
+		public bool RemovePart(XGFilePart aPart)
 		{
-			return this.removeChild(aPart);
+			return this.RemoveChild(aPart);
 		}
 
-		public XGFile()
-			: base()
+		public XGFile() : base()
 		{
 		}
-		public XGFile(string aName, Int64 aSize)
-			: this()
+		public XGFile(string aName, Int64 aSize) : this()
 		{
 			base.Name = aName;
 			this.size = aSize;

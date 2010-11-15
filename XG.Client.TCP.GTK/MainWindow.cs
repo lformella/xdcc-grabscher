@@ -271,7 +271,7 @@ namespace XG.Client.TCP.GTK
 			if (aObj.GetType() == typeof(XGFilePart))
 			{
 				XGFilePart tPart = aObj as XGFilePart;
-				XGPacket tPack = this.myClient.RootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
+				XGPacket tPack = this.myClient.RootObject.GetChildByGuid(tPart.PacketGuid) as XGPacket;
 				if (tPack != null)
 				{
 					this.mainWidget.ChangeObject(tPart, tPack);
@@ -286,7 +286,7 @@ namespace XG.Client.TCP.GTK
 			if (aObj.GetType() == typeof(XGFilePart))
 			{
 				XGFilePart tPart = aObj as XGFilePart;
-				XGPacket tPack = this.myClient.RootObject.getChildByGuid(tPart.PacketGuid) as XGPacket;
+				XGPacket tPack = this.myClient.RootObject.GetChildByGuid(tPart.PacketGuid) as XGPacket;
 				if (tPack != null)
 				{
 					this.mainWidget.ChangeObject(aObj, tPack);

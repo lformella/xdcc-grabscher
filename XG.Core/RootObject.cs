@@ -31,6 +31,7 @@ namespace XG.Core
 		{
 			get
 			{
+				name = name.Trim().ToLower();
 				foreach (XGServer serv in base.Children)
 				{
 					if (serv.Name == name)
@@ -44,7 +45,7 @@ namespace XG.Core
 
 		public void addServer(XGServer aServer)
 		{
-			if (base.addChild(aServer))
+			if (base.AddChild(aServer))
 			{
 				if (this.ServerAddedEvent != null)
 				{
@@ -54,10 +55,11 @@ namespace XG.Core
 		}
 		public void addServer(string aServer)
 		{
+			aServer = aServer.Trim().ToLower();
 			if (this[aServer] == null)
 			{
 				XGServer tServer = new XGServer();
-				tServer.Name = aServer.Trim().ToLower();
+				tServer.Name = aServer;
 				tServer.Port = 6667;
 				tServer.Enabled = true;
 				this.addServer(tServer);
@@ -66,7 +68,7 @@ namespace XG.Core
 
 		public void removeServer(XGServer aServer)
 		{
-			if (base.removeChild(aServer))
+			if (base.RemoveChild(aServer))
 			{
 				if (this.ServerRemovedEvent != null)
 				{
@@ -88,8 +90,7 @@ namespace XG.Core
 			base.SetGuid(aGuid);
 		}
 
-		public RootObject()
-			: base()
+		public RootObject() : base()
 		{
 		}
 
