@@ -36,7 +36,7 @@ namespace XG.Server.Web
 
 		#endregion
 
-		#region RUN STOP RESTART
+		#region RUN STOP
 
 		/// <summary>
 		/// Run method - opens itself in a new thread
@@ -57,15 +57,6 @@ namespace XG.Server.Web
 		{
 			this.CloseServer();
 			this.myServerThread.Abort();
-		}
-
-		/// <summary>
-		/// called if the client signals to do a restart
-		/// </summary>
-		public void Restart()
-		{
-			this.Stop();
-			this.Start(this.myRunner);
 		}
 
 		#endregion
@@ -326,11 +317,6 @@ namespace XG.Server.Web
 
 						# region COMMANDS
 
-						case TCPClientRequest.RestartServer:
-							this.Restart();
-							this.WriteToStream(client.Response, "");
-							break;
-
 						case TCPClientRequest.CloseServer:
 							this.Stop();
 							this.WriteToStream(client.Response, "");
@@ -541,7 +527,7 @@ namespace XG.Server.Web
 		#region LOG
 
 		/// <summary>
-		/// Calls XGGelper.Log()
+		/// Calls XGHelper.Log()
 		/// </summary>
 		/// <param name="aData"></param>
 		/// <param name="aLevel"></param>

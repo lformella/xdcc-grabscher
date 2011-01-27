@@ -35,7 +35,7 @@ namespace XG.Server.Jabber
 
 		#endregion
 
-		#region RUN STOP RESTART
+		#region RUN STOP
 		
 		public void Start (ServerRunner aParent)
 		{
@@ -54,13 +54,6 @@ namespace XG.Server.Jabber
 
 			this.CloseClient();
 			this.myServerThread.Abort();
-		}
-		
-		
-		public void Restart ()
-		{
-			this.Stop();
-			this.Start(this.myRunner);
 		}
 		
 		#endregion
@@ -142,7 +135,7 @@ namespace XG.Server.Jabber
 		#region LOG
 
 		/// <summary>
-		/// Calls XGGelper.Log()
+		/// Calls XGHelper.Log()
 		/// </summary>
 		/// <param name="aData"></param>
 		/// <param name="aLevel"></param>

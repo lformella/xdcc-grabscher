@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using MySql.Data.MySqlClient;
 using XG.Core;
 
@@ -29,11 +30,12 @@ namespace XG.Server.Backend.MySql
 		private ServerRunner myRunner;
 		private MySqlConnection myDbConnection;
 
+		//private Thread myServerThread;
 		private object locked = new object();
 
 		#endregion
 
-		#region RUN STOP RESTART
+		#region RUN STOP
 		
 		public void Start (ServerRunner aParent)
 		{
@@ -42,9 +44,10 @@ namespace XG.Server.Backend.MySql
 			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 
-			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
-			this.myDbConnection = new MySqlConnection(connectionString);
-			this.myDbConnection.Open();
+			// start the server thread
+			//this.myServerThread = new Thread(new ThreadStart(OpenClient));
+			//this.myServerThread.Start();
+			this.OpenClient();
 		}
 		
 		
@@ -53,15 +56,58 @@ namespace XG.Server.Backend.MySql
 			this.myRunner.ObjectAddedEvent -= new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
 			this.myRunner.ObjectChangedEvent -= new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 			this.myRunner.ObjectRemovedEvent -= new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
+
+			this.CloseClient();
+			//this.myServerThread.Abort();
 		}
 		
-		
-		public void Restart ()
+		#endregion
+
+		#region SERVER
+
+		/// <summary>
+		/// Opens the server port, waiting for clients
+		/// </summary>
+		private void OpenClient()
 		{
-			this.Stop();
-			this.Start(this.myRunner);
+			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
+			this.myDbConnection = new MySqlConnection(connectionString);
+			this.myDbConnection.Open();
+
+			#region CLEAN UP DATABASE
+			/** /
+			this.ExecuteQuery("DELETE FROM server", null);
+
+			List<XGObject> list = this.myRunner.GetServersChannels();
+			foreach(XGObject obj in list)
+			{
+				if (obj.GetType() == typeof(XGServer))
+				{
+					XGServer serv = (XGServer)obj;
+					myRunner_ObjectAddedEventHandler(null, serv);
+					foreach (XGChannel chan in serv.Children)
+					{
+						myRunner_ObjectAddedEventHandler(chan.Parent, chan);
+						foreach (XGBot bot in chan.Children)
+						{
+							myRunner_ObjectAddedEventHandler(bot.Parent, bot);
+							foreach (XGPacket pack in bot.Children)
+							{
+								myRunner_ObjectAddedEventHandler(pack.Parent, pack);
+							}
+						}
+					}
+				}
+			}
+			/**/
+			#endregion
 		}
-		
+
+		private void CloseClient()
+		{
+			this.myDbConnection.Close();
+		}
+
 		#endregion
 
 		#region EVENTS
@@ -194,9 +240,12 @@ namespace XG.Server.Backend.MySql
 			lock(locked)
 			{
 				MySqlCommand cmd = new MySqlCommand(aSql, this.myDbConnection);
-				foreach(KeyValuePair<string, object> kcp in aDic)
+				if(aDic != null)
 				{
-					cmd.Parameters.AddWithValue("@" + kcp.Key, kcp.Value);
+					foreach(KeyValuePair<string, object> kcp in aDic)
+					{
+						cmd.Parameters.AddWithValue("@" + kcp.Key, kcp.Value);
+					}
 				}
 				try
 				{
@@ -221,7 +270,7 @@ namespace XG.Server.Backend.MySql
 		#region LOG
 
 		/// <summary>
-		/// Calls XGGelper.Log()
+		/// Calls XGHelper.Log()
 		/// </summary>
 		/// <param name="aData"></param>
 		/// <param name="aLevel"></param>

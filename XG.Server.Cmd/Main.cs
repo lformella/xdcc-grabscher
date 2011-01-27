@@ -31,12 +31,13 @@ namespace XG.Server.Cmd
 			try
 			{
 				ServerRunner runner = new ServerRunner();
-				runner.Start();
 
 				if (Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
-				/** / runner.AddServerPlugin(new MySqlBackend()); /**/
+				/**/ runner.AddServerPlugin(new MySqlBackend()); /**/
+
+				runner.Start();
 			}
 			catch (Exception ex)
 			{

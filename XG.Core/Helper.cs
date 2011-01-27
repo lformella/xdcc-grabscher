@@ -94,8 +94,7 @@ namespace XG.Core
 		GetChildrenFromObject = 20,
 
 		CloseClient = 21,
-		RestartServer = 22,
-		CloseServer = 23
+		CloseServer = 22
 	}
 
 	[Flags]

@@ -63,12 +63,7 @@ namespace XG.Server
 
 		#endregion
 
-		#region RUN STOP RESTART
-
-		/// <summary>
-		/// Run method - should be called via thread
-		/// </summary>
-		public void Start()
+		public ServerRunner()
 		{
 			// set the loglevel
 			XGHelper.LogLevel = Settings.Instance.LogLevel;
@@ -248,9 +243,15 @@ namespace XG.Server
 			}
 
 			#endregion
+		}
 
-			#region THREADS
+		#region RUN STOP
 
+		/// <summary>
+		/// Run method - should be called via thread
+		/// </summary>
+		public void Start()
+		{
 			// start saving routine
 			this.mySaveBinThread = new Thread(new ThreadStart(SaveIrcData));
 			this.mySaveBinThread.Start();
@@ -262,8 +263,6 @@ namespace XG.Server
 			// start saving routine
 			this.mySaveStatisticThread = new Thread(new ThreadStart(SaveStatisticData));
 			this.mySaveStatisticThread.Start();
-
-			#endregion
 
 			// connect to all servers which are enabled
 			foreach (XGServer serv in this.myRootObject.Children)
@@ -291,14 +290,6 @@ namespace XG.Server
 			this.mySaveBinThread.Abort();
 			this.mySaveFileThread.Abort();
 			this.mySaveStatisticThread.Abort();
-		}
-
-		/// <summary>
-		/// restart
-		/// </summary>
-		public void Restart()
-		{
-			// TODO do something usefull
 		}
 
 		#endregion
@@ -1008,7 +999,7 @@ namespace XG.Server
 		#region LOG
 
 		/// <summary>
-		/// Calls XGGelper.Log()
+		/// Calls  XGHelper.Log()
 		/// </summary>
 		/// <param name="aData"></param>
 		/// <param name="aLevel"></param>
