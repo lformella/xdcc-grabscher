@@ -49,8 +49,7 @@ Enum.TCPClientRequest =
 	GetChildrenFromObject : 20,
 
 	CloseClient : 21,
-	RestartServer : 22,
-	CloseServer : 23
+	CloseServer : 22
 }
 Enum.TangoColor =
 {
