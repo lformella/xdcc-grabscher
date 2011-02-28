@@ -15,6 +15,7 @@
   </Configurations>
   <Contents>
     <File subtype="Code" buildaction="Compile" name="TCPClient.cs" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />

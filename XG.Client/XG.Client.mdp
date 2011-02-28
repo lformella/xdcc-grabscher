@@ -65,6 +65,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/default.png" resource_id="XG.Client.Resources.extension.default.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/compressed.png" resource_id="XG.Client.Resources.extension.compressed.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/audio.png" resource_id="XG.Client.Resources.extension.audio.png" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

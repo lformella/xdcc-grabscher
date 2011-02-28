@@ -17,6 +17,7 @@
     <File subtype="Code" buildaction="Compile" name="ImageLoaderGTK.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui/gui.stetic" />
     <File subtype="Code" buildaction="Compile" name="gtk-gui/generated.cs" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />
