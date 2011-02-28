@@ -69,6 +69,7 @@
     <Compile Include="BotConnect.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="IServerPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerConnect.cs" />
     <Compile Include="ServerHandler.cs" />
     <Compile Include="ServerRunner.cs" />

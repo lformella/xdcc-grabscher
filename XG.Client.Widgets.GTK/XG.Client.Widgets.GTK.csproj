@@ -87,6 +87,7 @@
     <Compile Include="Mono.cs" />
     <Compile Include="PacketWidget.cs" />
     <Compile Include="PartableWidget.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchWidget.cs" />
     <Compile Include="SegmentedBar.cs" />
     <Compile Include="ServerChannelWidget.cs" />

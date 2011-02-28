@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="FileLoaderWeb.cs" />
     <Compile Include="ImageLoaderWeb.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Client\XG.Client.csproj">
@@ -169,5 +170,8 @@
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-ja.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-sk.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-sr.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
 </Project>
