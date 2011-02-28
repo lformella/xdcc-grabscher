@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Web;
 using XG.Client.Web;
 using XG.Core;
 
@@ -137,7 +138,7 @@ namespace XG.Server.Web
 						if (tStr.Contains("="))
 						{
 							string[] tArr = tStr.Split('=');
-							tDic.Add(tArr[0], tArr[1].Replace("%20", " "));
+							tDic.Add(tArr[0], HttpUtility.UrlDecode(tArr[1]));
 						}
 					}
 

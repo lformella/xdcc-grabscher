@@ -78,10 +78,10 @@ var id_search;
 
 var search_active = false;
 
-function JsonUrl(password) { return "/?password=" + (password != undefined ? password : Password) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
+function JsonUrl(password) { return "/?password=" + (password != undefined ? escape(password) : escape(Password)) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
-function NameUrl(id, name) { return JsonUrl() + id + "&name=" + name; }
-function GuidNameUrl(id, guid, name) { return JsonUrl() + id + "&guid=" + guid + "&name=" + name; }
+function NameUrl(id, name) { return JsonUrl() + id + "&name=" + escape(name); }
+function GuidNameUrl(id, guid, name) { return JsonUrl() + id + "&guid=" + guid + "&name=" + escape(name); }
 
 /* ************************************************************************** */
 /* GRID / FORM LOADER                                                         */
