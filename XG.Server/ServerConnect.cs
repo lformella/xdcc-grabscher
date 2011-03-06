@@ -1345,10 +1345,10 @@ namespace XG.Server
 
 		private void UnregisterFromBot(XGBot aBot)
 		{
-			if (aBot != null && myServer[aBot.Name] != null)
+			if (aBot != null) // && myServer[aBot.Name] != null)
 			{
 				this.Log("UnregisterFromBot(" + aBot.Name + ")", LogLevel.Notice);
-				this.SendData("PRIVMSG " + aBot.Name + " :XDCC REMOVE");
+				this.SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC REMOVE\u0001");
 				this.CreateTimer(aBot, Settings.Instance.CommandWaitTime);
 
 				// statistics
@@ -1453,7 +1453,11 @@ namespace XG.Server
 			{
 				if (tBot.BotState == BotState.Waiting || tBot.BotState == BotState.Active)
 				{
-					if (tBot.getOldestActivePacket(true) == tPack) { this.UnregisterFromBot(tBot); }
+					XGPacket tmp = tBot.getOldestActivePacket(true);
+					if (tmp == tPack)
+					{
+						this.UnregisterFromBot(tBot);
+					}
 				}
 			}
 		}

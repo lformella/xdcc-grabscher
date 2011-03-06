@@ -226,7 +226,7 @@ namespace XG.Core
 						{
 							returnPacket = tPack;
 						}
-						else if (tPack.LastModified < returnPacket.LastModified)
+						else if (tPack.LastModified > returnPacket.LastModified)
 						{
 							returnPacket = tPack;
 						}

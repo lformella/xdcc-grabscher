@@ -460,7 +460,7 @@ namespace XG.Server.Web
 
 				sb.Append("\t\t\t\"" + tPack.Parent.Parent.Guid + "\",\n");														//5
 				sb.Append("\t\t\t" + tPack.Id + ",\n");																			//6
-				sb.Append("\t\t\t\"" + (tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");							//7
+				sb.Append("\t\t\t\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");							//7
 				sb.Append("\t\t\t" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",\n");								//8
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",\n");			//9
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.TimeMissing.ToString()) + ",\n");								//10
@@ -502,7 +502,7 @@ namespace XG.Server.Web
 					msg = msg.Replace("ö", "&ouml;").Replace("Ö", "&Ouml;");
 					msg = msg.Replace("ü", "&uuml;").Replace("Ü", "&Uuml;");
 
-					sb.Append("\t\t\t\"" + aObject.Name + "\",\n");																//5
+					sb.Append("\t\t\t\"" + this.ClearString(aObject.Name) + "\",\n");																//5
 					sb.Append("\t\t\t\"" + tBot.BotState + "\",\n");															//6
 					sb.Append("\t\t\t\"" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + "\",\n");	//7
 					sb.Append("\t\t\t" + tBot.QueuePosition + ",\n");															//8
@@ -521,6 +521,11 @@ namespace XG.Server.Web
 			sb.Append("\t\t]\n\t}");
 
 			return sb.ToString();
+		}
+
+		private string ClearString(string aString)
+		{
+			return aString.Replace("\\", "\\\\").Replace("\"", "\\\"");
 		}
 
 		#endregion
