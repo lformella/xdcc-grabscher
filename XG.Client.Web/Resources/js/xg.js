@@ -48,8 +48,12 @@ Enum.TCPClientRequest =
 	GetObject : 19,
 	GetChildrenFromObject : 20,
 
-	CloseClient : 21,
-	CloseServer : 22
+	AddSearch : 21,
+	RemoveSearch : 22,
+	GetSearches : 23,
+
+	CloseClient : 24,
+	CloseServer : 25
 }
 Enum.TangoColor =
 {
@@ -354,6 +358,8 @@ $(function()
 		{
 			if(id)
 			{
+				var data = jQuery('#searches').getRowData(id);
+				$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.name));
 				jQuery('#searches').delRowData(id);
 				//id_search_count--;
 			}
@@ -401,11 +407,17 @@ $(function()
 		var tbox = jQuery('#search-text');
 		if(tbox.val() != "")
 		{
-			var datarow = {id:id_search_count, name:tbox.val()};
-			var su = jQuery("#searches").addRowData(id_search_count, datarow);
-			id_search_count++;
+			$.get(NameUrl(Enum.TCPClientRequest.AddSearch, tbox.val()));
+			AddSearch(tbox.val());
 			tbox.val('');
 		}
+	}
+
+	function AddSearch(search)
+	{
+		var datarow = {id:id_search_count, name:search};
+		jQuery("#searches").addRowData(id_search_count, datarow);
+		id_search_count++;
 	}
 
 	$("#search-text").width($("#searches").width() - $("#search-button").width() - 20);
@@ -430,6 +442,15 @@ $(function()
 					$("#password").removeClass('ui-state-error');
 					SetPassword($("#password").val());
 					$(this).dialog('close');
+
+					// Get searches
+					$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSearches,
+						function(result) {
+							$.each(result.searches, function(i, item) {
+								AddSearch(item.search);
+							});
+						}
+					);
 				}
 				else
 				{

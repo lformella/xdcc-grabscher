@@ -292,6 +292,24 @@ namespace XG.Server.Web
 
 						#endregion
 
+						# region SEARCH SPECIAL
+
+						case TCPClientRequest.AddSearch:
+							this.myRunner.AddSearch(tDic["name"]);
+							this.WriteToStream(client.Response, "");
+							break;
+
+						case TCPClientRequest.RemoveSearch:
+							this.myRunner.RemoveSearch(tDic["name"]);
+							this.WriteToStream(client.Response, "");
+							break;
+
+						case TCPClientRequest.GetSearches:
+							this.WriteToStream(client.Response, this.Searches2Json(this.myRunner.GetSearches()));
+							break;
+
+						#endregion
+
 						# region GET
 
 						case TCPClientRequest.GetObject:
@@ -439,6 +457,27 @@ namespace XG.Server.Web
 
 		#region JSON
 
+		private string Searches2Json(List<string> aData)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append("{\n");
+			sb.Append("\t\"searches\":[\n");
+
+			int count = 0;
+			foreach (string str in aData)
+			{
+				count++;
+				sb.Append("\t\t{\"search\": \"" + this.ClearString(str) + "\"}");
+				if(count < aData.Count) { sb.Append(","); }
+				sb.Append("\n");
+			}
+
+			sb.Append("\t]\n}");
+
+			return sb.ToString();
+		}
+
 		private string Object2Json(XGObject aObject)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -460,7 +499,7 @@ namespace XG.Server.Web
 
 				sb.Append("\t\t\t\"" + tPack.Parent.Parent.Guid + "\",\n");														//5
 				sb.Append("\t\t\t" + tPack.Id + ",\n");																			//6
-				sb.Append("\t\t\t\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");							//7
+				sb.Append("\t\t\t\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");			//7
 				sb.Append("\t\t\t" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",\n");								//8
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",\n");			//9
 				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.TimeMissing.ToString()) + ",\n");								//10
@@ -502,7 +541,7 @@ namespace XG.Server.Web
 					msg = msg.Replace("ö", "&ouml;").Replace("Ö", "&Ouml;");
 					msg = msg.Replace("ü", "&uuml;").Replace("Ü", "&Uuml;");
 
-					sb.Append("\t\t\t\"" + this.ClearString(aObject.Name) + "\",\n");																//5
+					sb.Append("\t\t\t\"" + this.ClearString(aObject.Name) + "\",\n");											//5
 					sb.Append("\t\t\t\"" + tBot.BotState + "\",\n");															//6
 					sb.Append("\t\t\t\"" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + "\",\n");	//7
 					sb.Append("\t\t\t" + tBot.QueuePosition + ",\n");															//8

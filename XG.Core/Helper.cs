@@ -93,8 +93,12 @@ namespace XG.Core
 		GetObject = 19,
 		GetChildrenFromObject = 20,
 
-		CloseClient = 21,
-		CloseServer = 22
+		AddSearch = 21,
+		RemoveSearch = 22,
+		GetSearches = 23,
+
+		CloseClient = 24,
+		CloseServer = 25
 	}
 
 	[Flags]

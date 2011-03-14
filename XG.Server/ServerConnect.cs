@@ -188,310 +188,8 @@ namespace XG.Server
 
 					if (tComCodeStr == "PRIVMSG")
 					{
-						#region VERSION
-
-						if (tData == "VERSION")
-						{
-							this.Log("con_DataReceived() VERSION: " + Settings.Instance.IrcVersion, LogLevel.Info);
-							this.SendData("NOTICE " + tUserName + " :\u0001VERSION " + Settings.Instance.IrcVersion + "\u0001");
-							return;
-						}
-
-						#endregion
-
-						#region XGVERSION
-
-						else if (tData == "XGVERSION")
-						{
-							this.Log("con_DataReceived() XGVERSION: " + Settings.Instance.XgVersion, LogLevel.Info);
-							this.SendData("NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
-							return;
-						}
-
-						#endregion
-
-						#region DCC DOWNLOAD MESSAGE
-
-						else if (tData.StartsWith("DCC") && tBot != null)
-						{
-							XGPacket tPacket = tBot.getOldestActivePacket();
-							if (tPacket != null)
-							{
-								bool isOk = false;
-
-								int tPort = 0;
-								Int64 tChunk = 0;
-
-								string[] tDataList = tData.Split(' ');
-								if (tDataList[1] == "SEND")
-								{
-									this.Log("con_DataReceived() DCC from " + tBot.Name, LogLevel.Notice);
-									#region IP CALCULATING
-									try
-									{
-										// this works not in mono?!
-										tBot.IP = IPAddress.Parse(tDataList[3]);
-									}
-									catch (FormatException)
-									{
-										#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
-										string ip = "";
-										try { ip = new IPAddress(long.Parse(tDataList[3])).ToString(); }
-										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
-										int pos = 0;
-										string realIp = "";
-										pos = ip.LastIndexOf('.');
-										try
-										{
-											realIp += ip.Substring(pos + 1) + ".";
-											ip = ip.Substring(0, pos);
-											pos = ip.LastIndexOf('.');
-											realIp += ip.Substring(pos + 1) + ".";
-											ip = ip.Substring(0, pos);
-											pos = ip.LastIndexOf('.');
-											realIp += ip.Substring(pos + 1) + ".";
-											ip = ip.Substring(0, pos);
-											pos = ip.LastIndexOf('.');
-											realIp += ip.Substring(pos + 1);
-										}
-										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + tData, LogLevel.Exception); return; }
-
-										this.Log("con_DataReceived() IP parsing failed, using this: " + realIp, LogLevel.Notice);
-										try { tBot.IP = IPAddress.Parse(realIp); }
-										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
-										#endregion
-									}
-									#endregion
-									try { tPort = int.Parse(tDataList[4]); }
-									catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
-									// we cant connect to port <= 0
-									if(tPort <= 0)
-									{
-										this.Log("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort + " with string: " + tData, LogLevel.Error);
-									}
-									else
-									{
-										tPacket.RealName = tDataList[2];
-										try { tPacket.RealSize = Int64.Parse(tDataList[5]); }
-										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet size from string: " + tData, LogLevel.Exception); return; }
-
-										tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
-										if (tChunk < 0)
-										{
-											this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
-											tPacket.Enabled = false;
-											this.ObjectChange(tPacket);
-											this.UnregisterFromBot(tBot);
-										}
-										else if (tChunk > 0)
-										{
-											this.Log("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk, LogLevel.Notice);
-											this.SendData("PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
-										}
-										else { isOk = true; }
-									}
-								}
-								else if (tDataList[1] == "ACCEPT")
-								{
-									this.Log("con_DataReceived() DCC resume accepted from " + tBot.Name, LogLevel.Notice);
-									try { tPort = int.Parse(tDataList[3]); 	}
-									catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
-									try { tChunk = Int64.Parse(tDataList[4]); }
-									catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet chunk from string: " + tData, LogLevel.Exception); return; }
-									isOk = true;
-								}
-
-								if (isOk)
-								{
-									this.Log("con_DataReceived() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize, LogLevel.Notice);
-									this.NewDownloadEvent(tPacket, tChunk, tBot.IP, tPort);
-								}
-							}
-							else { this.Log("con_DataReceived() DCC not activated from " + tBot.Name, LogLevel.Error); }
-						}
-
-						#endregion
-
-						#region DCC INFO MESSAGE
-
-						else if (tChan != null)
-						{
-							bool insertBot = false;
-							if (tBot == null)
-							{
-								insertBot = true;
-								tBot = new XGBot(tChan);
-								tBot.Name = tUserName;
-								tBot.Connected = true;
-								tBot.LastMessage = "initial creation";
-							}
-
-							bool isParsed = false;
-							Match tMatch = null;
-							int valueInt = 0;
-							double valueDouble = 0;
-
-							#region PACKET /SLOT / QUEUE INFO
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} ([0-9]*) (pack(s|)|Pa(c|)ket(e|)) (\\*){2,3}\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_cur>[0-9]*),|).*(Record: (?<record>[0-9.]*)(K|)B\\/s|)|)", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-
-									if (int.TryParse(tMatch.Groups["slot_cur"].ToString(), out valueInt)) { tBot.InfoSlotCurrent = valueInt; }
-									if (int.TryParse(tMatch.Groups["slot_total"].ToString(), out valueInt)) { tBot.InfoSlotTotal = valueInt; }
-									if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt)) { tBot.InfoQueueCurrent = valueInt; }
-									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
-									// this is not the all over record speed!
-									//if (double.TryParse(tMatch.Groups["record"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
-
-									// uhm, there is a free slot and we are still waiting?
-									if (tBot.InfoSlotCurrent > 0 && tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-										this.CreateTimer(tBot, 0);
-									}
-								}
-							}
-
-							#endregion
-
-							#region BANDWIDTH
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "((\\*){2,3}|) ((Bandwidth Usage|Bandbreite) ((\\*){2,3}|)|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(K|)(i|)B(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(K|)(i|)B(\\/s|s)|)", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-
-									if (int.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueInt)) { tBot.InfoSpeedCurrent = valueInt; }
-									if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
-								}
-							}
-
-							#endregion
-
-							#region PACKET INFO
-
-							XGPacket newPacket = null;
-							if (!isParsed)
-							{ // what is this damn char \240 and how to rip it off ???
-								tMatch = Regex.Match(tData, "#(?<pack_id>\\d+)(\u0240|�|)\\s+(\\d*)x\\s+\\[\\s*(�|)(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-
-									try
-									{
-										int tPacketId = -1;
-										try { tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString()); }
-										catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet id from string: " + tData, LogLevel.Exception); return; }
-
-										XGPacket tPack = tBot[tPacketId];
-										if (tPack == null)
-										{
-											tPack = new XGPacket(tBot);
-											newPacket = tPack;
-											tPack.EnabledChangedEvent += new ObjectDelegate(packet_ObjectStateChangedEventHandler);
-											tPack.Id = tPacketId;
-										}
-										else
-										{
-											tPack.Modified = false;
-										}
-
-										string name = this.ClearString(tMatch.Groups["pack_name"].ToString());
-										if (tPack.Name != name && tPack.Name != "")
-										{
-											//this.Log(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content", LogLevel.Warning);
-											tPack.Enabled = false;
-											if (!tPack.Connected)
-											{
-												tPack.RealName = "";
-												tPack.RealSize = 0;
-											}
-										}
-										tPack.Name = name;
-
-										double tPacketSizeFormated = 0;
-										double.TryParse(tMatch.Groups["pack_size"].ToString().Replace(".", ",").Replace("<", "").Replace(">", ""), out tPacketSizeFormated);
-
-										string tPacketAdd = tMatch.Groups["pack_add"].ToString().ToLower();
-
-										if (tPacketAdd == "k" || tPacketAdd == "kb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024); }
-										else if (tPacketAdd == "m" || tPacketAdd == "mb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024); }
-										else if (tPacketAdd == "g" || tPacketAdd == "gb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024 * 1024); }
-
-										if (tPack.Modified)
-										{
-											this.ObjectChange(tPack);
-											this.Log("con_DataReceived() updated packet #" + tPack.Id + " from " + tBot.Name, LogLevel.Info);
-										}
-									}
-									catch (FormatException) { }
-								}
-							}
-
-							#endregion
-
-							// insert bot if ok
-							if (insertBot)
-							{
-								if (isParsed)
-								{
-									this.ObjectAddedEvent(tBot.Parent, tBot);
-									this.Log("con_DataReceived() inserted bot " + tBot.Name, LogLevel.Info);
-								}
-								else
-								{
-									tBot.Parent.RemoveBot(tBot);
-									tBot.Modified = false;
-								}
-							}
-							// and insert packet _AFTER_ this
-							if (newPacket != null)
-							{
-								this.ObjectAddedEvent(tBot, newPacket);
-								this.Log("con_DataReceived() inserted packet #" + newPacket.Id + " into " + tBot.Name, LogLevel.Info);
-							}
-
-#if DEBUG
-							#region NOT NEEDED INFOS
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} To request .* type .*", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { return; }
-								tMatch = Regex.Match(tData, ".*\\/(msg|ctcp) .* xdcc (info|send) .*", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { return; }
-								tMatch = Regex.Match(tData, "(\\*){2,3} To list a group, type .*", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { return; }
-								tMatch = Regex.Match(tData, "Total offered(\\!|): (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)\\s*Total transfer(r|)ed: (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { return; }
-								tMatch = Regex.Match(tData, ".* (brought to you|powered|sp(o|0)ns(o|0)red) by .*", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { return; }
-								tMatch = Regex.Match(tData, "(\\*){2,3} .*" + tChan.Name + " (\\*){2,3}", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { return; }
-							}
-
-							#endregion
-
-							#region COULD NOT PARSE
-
-							// maybee delete this because it is flooding the logfile
-							if (!isParsed && tBot.Children.Length > 0)
-							{
-								this.ParsingErrorEvent("[DCC Info] " + tBot.Name + " : " + this.ClearString(tData));
-							}
-
-							#endregion
-#endif
-						}
-
-						#endregion
+						this.HandelDataPrivateMessage(tData, tCommandList);
+						return;
 					}
 
 					#endregion
@@ -500,476 +198,8 @@ namespace XG.Server
 
 					else if (tComCodeStr == "NOTICE")
 					{
-						#region BOT MESSAGES
-
-						if (tBot != null)
-						{
-							bool isParsed = false;
-							Match tMatch = null;
-							Match tMatch1 = null;
-							Match tMatch2 = null;
-							Match tMatch3 = null;
-							Match tMatch4 = null;
-							Match tMatch5 = null;
-
-							int valueInt = 0;
-							tData = this.ClearString(tData);
-							//double valueDouble = 0;
-
-							#region ALL SLOTS FULL / ADDING TO QUEUE
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "((\\*){2,3} All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "Queueing you for pack [0-9]+ \\(.*\\) in slot (?<queue_cur>[0-9]+)/(?<queue_total>[0-9]+)\\. To remove you(r|)self from the queue, type: .*\\. To check your position in the queue, type: .*\\. Estimated time remaining in queue: (?<queue_d>[0-9]+) days, (?<queue_h>[0-9]+) hours, (?<queue_m>[0-9]+) minutes", RegexOptions.IgnoreCase);
-								tMatch3 = Regex.Match(tData, "[(\\*){2,3} |]Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
-								{
-									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
-									tMatch = tMatch.Success ? tMatch : tMatch3;
-									isParsed = true;
-									if (tBot.BotState == BotState.Idle)
-									{
-										tBot.BotState = BotState.Waiting;
-									}
-
-									tBot.InfoSlotCurrent = 0;
-									if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt))
-									{
-										tBot.QueuePosition = valueInt;
-										tBot.InfoQueueCurrent = tBot.QueuePosition;
-									}
-
-									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
-									else if(tBot.InfoQueueTotal < tBot.InfoQueueCurrent) { tBot.InfoQueueTotal = tBot.InfoQueueCurrent; }
-
-									int time = 0;
-									if (int.TryParse(tMatch.Groups["queue_m"].ToString(), out valueInt)) { time += valueInt * 60; }
-									if (int.TryParse(tMatch.Groups["queue_h"].ToString(), out valueInt)) { time += valueInt * 60 * 60; }
-									if (int.TryParse(tMatch.Groups["queue_d"].ToString(), out valueInt)) { time += valueInt * 60 * 60 * 24; }
-									tBot.QueueTime = time;
-								}
-							}
-
-							#endregion
-
-							#region REMOVE FROM QUEUE
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} Removed From Queue: .*", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
-								}
-							}
-
-							#endregion
-
-							#region INVALID PACKET NUMBER
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "(\\*){2,3} Die Nummer der Datei ist ung.ltig", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} Invalid Pack Number, Try Again", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
-									isParsed = true;
-									XGPacket tPack = tBot.getOldestActivePacket();
-									if (tPack != null)
-									{
-										tPack.Enabled = false;
-										tBot.removePacket(tPack);
-										this.ObjectRemovedEvent(tBot, tPack);
-									}
-									this.Log("con_DataReceived() invalid packetnumber from " + tBot.Name, LogLevel.Error);
-								}
-							}
-
-							#endregion
-
-							#region PACK ALREADY REQUESTED
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "(\\*){2,3} You already requested that pack(.*|)", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast diese Datei bereits angefordert(.*|)", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Idle)
-									{
-										tBot.BotState = BotState.Waiting;
-									}
-								}
-							}
-
-							#endregion
-
-							#region ALREADY QUEUED / RECEIVING
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "Denied, You already have ([0-9]+) item(s|) queued, Try Again Later", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Denied, You already have that item queued\\.", RegexOptions.IgnoreCase);
-								tMatch3 = Regex.Match(tData, "You are already receiving or are queued for the maximum number of packs .*", RegexOptions.IgnoreCase);
-								tMatch4 = Regex.Match(tData, "Du hast max\\. ([0-9]+) transfer auf einmal, Du bist jetzt in der Warteschlange f.r Datei .*", RegexOptions.IgnoreCase);
-								tMatch5 = Regex.Match(tData, "Es laufen bereits genug .bertragungen, abgewiesen, Du hast diese Datei bereits in der Warteschlange\\.", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success || tMatch3.Success || tMatch4.Success || tMatch5.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Idle)
-									{
-										tBot.BotState = BotState.Waiting;
-									}
-								}
-							}
-
-							#endregion
-
-							#region DCC PENDING
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "(\\*){2,3} You have a DCC pending, Set your client to receive the transfer\\. ((Type .*|Send XDCC CANCEL) to abort the transfer\\. |)\\((?<time>[0-9]+) seconds remaining until timeout\\)", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL)            an den Bot um die .bertragung abzubrechen\\. |)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
-									isParsed = true;
-									if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
-									{
-										if (valueInt == 30 && tBot.BotState != BotState.Active)
-										{
-											tBot.BotState = BotState.Idle;
-										}
-										this.CreateTimer(tBot, (valueInt + 2) * 1000);
-									}
-								}
-							}
-
-							#endregion
-
-							#region ALL SLOTS AND QUEUE FULL
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} Es laufen bereits genug .bertragungen, abgewiesen, die Warteschlange ist voll, max\\. (?<queue_total>[0-9]+) Dateien, Versuche es sp.ter nochmal", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-									tBot.InfoSlotCurrent = 0;
-									tBot.InfoQueueCurrent = 0;
-									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
-
-									this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
-								}
-							}
-
-							#endregion
-
-							#region TRANSFER LIMIT
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} You can only have ([0-9]+) transfer(s|) at a time,.*", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Idle)
-									{
-										tBot.BotState = BotState.Waiting;
-									}
-								}
-							}
-
-							#endregion
-
-							#region OWNER REQUEST
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} The Owner Has Requested That No New Connections Are Made In The Next (?<time>[0-9]+) Minute(s|)", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-
-									if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
-									{
-										this.CreateTimer(tBot, (valueInt * 60 + 1) * 1000);
-									}
-								}
-							}
-
-							#endregion
-
-							#region XDCC DOWN
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "The XDCC is down, try again later.*", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-									this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
-								}
-							}
-
-							#endregion
-
-							#region XDCC DENIED
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(\\*){2,3} XDCC SEND denied, (?<info>.*)", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-									string info = tMatch.Groups["info"].ToString().ToLower();
-									if (info.StartsWith("you must be on a known channel to request a pack"))
-									{
-										this.SendData("WHOIS " + tBot.Name);
-									}
-									else if (info.StartsWith("i don't send transfers to"))
-									{
-										foreach (XGPacket tPacket in tBot.Children)
-										{
-											if (tPacket.Enabled)
-											{
-												tPacket.Enabled = false;
-												this.ObjectChange(tPacket);
-											}
-										}
-									}
-									else
-									{
-										if (tBot.BotState == BotState.Waiting)
-										{
-											tBot.BotState = BotState.Idle;
-										}
-										this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
-										this.Log("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info, LogLevel.Error);
-									}
-								}
-							}
-
-							#endregion
-
-							#region XDCC SENDING
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "(\\*){2,3} Sending You (Your Queued |)Pack .*", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} Sende dir jetzt die Datei .*", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-								}
-							}
-
-							#endregion
-
-							#region QUEUED
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "Queued ([0-9]+)h([0-9]+)m for .*, in position (?<queue_cur>[0-9]+) of (?<queue_total>[0-9]+). (?<queue_h>[0-9]+)h(?<queue_m>[0-9]+)m or .* remaining\\.", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "In der Warteschlange seit  ([0-9]+)h([0-9]+)m f.r .*, in Position (?<queue_cur>[0-9]+) von (?<queue_total>[0-9]+). Ungef.hr (?<queue_h>[0-9]+)h(?<queue_m>[0-9]+)m oder .*", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									tMatch = tMatch1.Success ? tMatch1 : tMatch2;
-									isParsed = true;
-									if (tBot.BotState == BotState.Idle)
-									{
-										tBot.BotState = BotState.Waiting;
-									}
-									
-									tBot.InfoSlotCurrent = 0;
-									if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt)) { tBot.QueuePosition = valueInt; }
-									if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
-									else if(tBot.InfoQueueTotal < tBot.QueuePosition) { tBot.InfoQueueTotal = tBot.QueuePosition; }
-
-									int time = 0;
-									if (int.TryParse(tMatch.Groups["queue_m"].ToString(), out valueInt)) { time += valueInt * 60; }
-									if (int.TryParse(tMatch.Groups["queue_h"].ToString(), out valueInt)) { time += valueInt * 60 * 60; }
-									tBot.QueueTime = time;
-								}
-							}
-
-							#endregion
-
-							#region CLOSING CONNECTION
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "(\\*){2,3} (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "(\\*){2,3} (Schlie.e Verbindung:).*", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState != BotState.Active)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-									else
-									{
-										// kill that connection if the bot sends a close message , but our real bot 
-										// connection is still alive and hangs for some crapy reason - maybe because 
-										// some admins do some network fu to stop my downloads (happend to me)
-										this.KillDownloadEvent(tBot);
-									}
-									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
-								}
-							}
-
-							#endregion
-
-							#region YOU ARE NOT IN QUEUE
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, "(You Don't Appear To Be In A Queue|Removed you from the queue for.*)", RegexOptions.IgnoreCase);
-								if (tMatch.Success)
-								{
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-									tBot.QueuePosition = 0;
-									this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
-								}
-							}
-
-							#endregion
-
-							#region PUNISH / AUTO IGNORE
-
-							if (!isParsed)
-							{
-								tMatch1 = Regex.Match(tData, "Punish-ignore activated for .* \\(.*\\) (?<time_m>[0-9]*) minutes", RegexOptions.IgnoreCase);
-								tMatch2 = Regex.Match(tData, "Auto-ignore activated for .* lasting (?<time_m>[0-9]*)m(?<time_s>[0-9]*)s\\. Further messages will increase duration\\.", RegexOptions.IgnoreCase);
-								tMatch3 = Regex.Match(tData, "Zur Strafe wirst du .* \\(.*\\) f.r (?<time_m>[0-9]*) Minuten ignoriert(.|)", RegexOptions.IgnoreCase);
-								tMatch4 = Regex.Match(tData, "Auto-ignore activated for .* \\(.*\\)", RegexOptions.IgnoreCase);
-								if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
-								{
-									tMatch = tMatch1.Success ? tMatch1 : tMatch2.Success ? tMatch2 : tMatch3;
-									isParsed = true;
-									if (tBot.BotState == BotState.Waiting)
-									{
-										tBot.BotState = BotState.Idle;
-									}
-
-									if (int.TryParse(tMatch.Groups["time_m"].ToString(), out valueInt))
-									{
-										int time = valueInt * 60 + 1;
-										if (int.TryParse(tMatch.Groups["time_s"].ToString(), out valueInt))
-										{
-											time += valueInt;
-										}
-										this.CreateTimer(tBot, time * 1000, true);
-									}
-								}
-							}
-
-							#endregion
-
-							#region NOT NEEDED INFOS
-
-							if (!isParsed)
-							{
-								tMatch = Regex.Match(tData, ".* bandwidth limit .*", RegexOptions.IgnoreCase);
-								if (tMatch.Success) { isParsed = true; }
-							}
-
-							#endregion
-
-							if (!isParsed)
-							{
-								this.ParsingErrorEvent("[DCC Notice] " + tBot.Name + " : " + tData);
-							}
-							else
-							{
-								tBot.LastMessage = tData;
-								this.Log("con_DataReceived() message from " + tBot.Name + ": " + tData, LogLevel.Notice);
-							}
-						}
-
-						#endregion
-
-						#region NICKSERV
-
-						else if(tUserName.ToLower() == "nickserv")
-						{
-							if(tData.Contains("Password incorrect"))
-							{
-								this.Log("con_DataReceived(" + aData + ") - nickserv password wrong", LogLevel.Error);
-							}
-							else if(	tData.Contains("The given email address has reached it's usage limit of 1 user") ||
-							        	tData.Contains("This nick is being held for a registered user"))
-							{
-								this.Log("con_DataReceived(" + aData + ") - nickserv nick already registered", LogLevel.Error);
-							}
-							else if(tData.Contains("The given email address has reached it's usage limit of 1 user"))
-							{
-								this.Log("con_DataReceived(" + aData + ") - nickserv email already used", LogLevel.Error);
-							}
-							else if(tData.Contains("Your nick isn't registered"))
-							{
-								this.Log("con_DataReceived(" + aData + ") - nickserv registering nick", LogLevel.Warning);
-								this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-							}
-							else if(	tData.Contains("Nickname is already in use") ||
-							        	tData.Contains("Nickname is currently in use"))
-							{
-								this.SendData("nickserv ghost " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
-								this.SendData("nickserv recover " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
-							}
-							else if(	tData.Contains("This nickname is registered and protected") ||
-							        	tData.Contains("This nick is being held for a registered user"))
-							{
-								this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-							}
-							else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
-							{
-								// sleep the given time an reregister
-								this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-							}
-							else if(tData.Contains("Please try again with a more obscure password"))
-							{
-								this.Log("con_DataReceived(" + aData + ") - nickserv password is unsecure", LogLevel.Error);
-							}
-							else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail + ", please type /msg NickServ confirm <passcode> to complete registration"))
-							{
-								this.Log("con_DataReceived(" + aData + ") - nickserv confirm email", LogLevel.Error);
-							}
-						}
-
-						#endregion
+						this.HandleDataNotice(aData, tData, tCommandList);
+						return;
 					}
 
 					#endregion
@@ -1113,129 +343,8 @@ namespace XG.Server
 						int t_ComCode = 0;
 						if (int.TryParse(tComCodeStr, out t_ComCode))
 						{
-							switch (t_ComCode)
-							{
-								case 4: // 
-									this.myServer.Connected = true;
-									this.ObjectChange(this.myServer);
-									break;
-
-
-								case 319: // RPL_WHOISCHANNELS
-									tBot = this.myServer.GetBot(tCommandList[3]);
-									if (tBot != null)
-									{
-										string chanName = "";
-										bool addChan = true;
-										string[] tChannelList = aData.Split(':')[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-										foreach (string chan in tChannelList)
-										{
-											chanName = "#" + chan.Split('#')[1];
-											if (this.myServer[chanName] != null)
-											{
-												addChan = false;
-												this.RequestFromBot(tBot);
-												break;
-											}
-										}
-										if (addChan)
-										{
-											this.Log("con_DataReceived() auto adding channel " + chanName, LogLevel.Notice);
-											this.myServer.AddChannel(chanName);
-										}
-									}
-									break;
-
-
-								case 353: // RPL_NAMREPLY
-									tChannelName = tCommandList[4];
-									tChan = myServer[tChannelName];
-									if (tChan != null)
-									{
-										string[] tUsers = tData.Split(' ');
-										foreach (string user in tUsers)
-										{
-											string tUser = Regex.Replace(user, "^(@|!|%|\\+){1}", "");
-											tBot = tChan[tUser];
-											if (tBot != null)
-											{
-												tBot.Connected = true;
-												if (tBot.BotState != BotState.Active)
-												{
-													tBot.BotState = BotState.Idle;
-												}
-												this.Log("con_DataReceived() bot " + tBot.Name + " is online", LogLevel.Info);
-												this.ObjectChange(tBot);
-												this.RequestFromBot(tBot);
-											}
-										}
-									}
-									break;
-
-
-								case 366: // RPL_ENDOFNAMES
-									tChannelName = tCommandList[3];
-									tChan = myServer[tChannelName];
-									if (tChan != null)
-									{
-										tChan.Connected = true;
-										this.Log("con_DataReceived() joined channel " + tChan.Name, LogLevel.Notice);
-									}
-
-									// statistics
-									Statistic.Instance.Increase(StatisticType.ChannelConnectsOk);
-									break;
-
-
-								case 376: // RPL_ENDOFMOTD
-								case 422: // ERR_NOMOTD
-									this.Log("con_DataReceived() really connected", LogLevel.Notice);
-									myServer.Connected = true;
-									this.ObjectChange(myServer);
-									foreach (XGChannel chan in myServer.Children)
-									{
-										if (chan.Enabled) { this.JoinChannel(chan); }
-									}
-									this.SendData("nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-
-									// statistics
-									Statistic.Instance.Increase(StatisticType.ServerConnectsOk);
-									break;
-
-
-								case 477: // ERR_NOCHANMODES
-									tChannelName = tCommandList[3];
-									tChan = myServer[tChannelName];
-									// TODO register myself and login and so on
-									this.Log("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!", LogLevel.Notice);
-									/*this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-									if(tChan != null) { this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime); }
-									else
-									{
-										tBot = this.myServer.getBot(tCommandList[3]);
-										if(tBot != null) { this.CreateTimer(tBot, Settings.Instance.BotWaitTime); }
-									}*/
-									break;
-
-
-								case 471: // ERR_CHANNELISFULL
-								case 473: // ERR_INVITEONLYCHAN
-								case 474: // ERR_BANNEDFROMCHAN
-								case 475: // ERR_BADCHANNELKEY
-								case 485: // ERR_UNIQOPPRIVSNEEDED
-									tChannelName = tCommandList[3];
-									tChan = myServer[tChannelName];
-									if (tChan != null)
-									{
-										tChan.Connected = false;
-										this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
-										this.CreateTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
-									}
-
-									// statistics
-									Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
-									break;
-							}
+							this.HandleDataIntValues(aData, tData, t_ComCode, tCommandList);
+							return;
 						}
 						else
 						{
@@ -1261,6 +370,932 @@ namespace XG.Server
 			#endregion
 		}
 
+		private void HandleDataIntValues(string aData, string tData, int t_ComCode, string[] tCommandList)
+		{
+			XGChannel tChan = this.myServer[tCommandList[2]];
+			XGBot tBot = this.myServer.GetBot(tCommandList[0].Split('!')[0]);
+
+			switch (t_ComCode)
+			{
+				case 4: // 
+					this.myServer.Connected = true;
+					this.ObjectChange(this.myServer);
+					break;
+
+
+				case 319: // RPL_WHOISCHANNELS
+					tBot = this.myServer.GetBot(tCommandList[3]);
+					if (tBot != null)
+					{
+						string chanName = "";
+						bool addChan = true;
+						string[] tChannelList = aData.Split(':')[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+						foreach (string chan in tChannelList)
+						{
+							chanName = "#" + chan.Split('#')[1];
+							if (this.myServer[chanName] != null)
+							{
+								addChan = false;
+								this.RequestFromBot(tBot);
+								break;
+							}
+						}
+						if (addChan)
+						{
+							this.Log("con_DataReceived() auto adding channel " + chanName, LogLevel.Notice);
+							this.myServer.AddChannel(chanName);
+						}
+					}
+					break;
+
+
+				case 353: // RPL_NAMREPLY
+					tChan = myServer[tCommandList[4]];
+					if (tChan != null)
+					{
+						string[] tUsers = tData.Split(' ');
+						foreach (string user in tUsers)
+						{
+							string tUser = Regex.Replace(user, "^(@|!|%|\\+){1}", "");
+							tBot = tChan[tUser];
+							if (tBot != null)
+							{
+								tBot.Connected = true;
+								if (tBot.BotState != BotState.Active)
+								{
+									tBot.BotState = BotState.Idle;
+								}
+								this.Log("con_DataReceived() bot " + tBot.Name + " is online", LogLevel.Info);
+								this.ObjectChange(tBot);
+								this.RequestFromBot(tBot);
+							}
+						}
+					}
+					break;
+
+
+				case 366: // RPL_ENDOFNAMES
+					tChan = myServer[tCommandList[3]];
+					if (tChan != null)
+					{
+						tChan.Connected = true;
+						this.Log("con_DataReceived() joined channel " + tChan.Name, LogLevel.Notice);
+					}
+
+					// statistics
+					Statistic.Instance.Increase(StatisticType.ChannelConnectsOk);
+					break;
+
+
+				case 376: // RPL_ENDOFMOTD
+				case 422: // ERR_NOMOTD
+					this.Log("con_DataReceived() really connected", LogLevel.Notice);
+					myServer.Connected = true;
+					this.ObjectChange(myServer);
+					foreach (XGChannel chan in myServer.Children)
+					{
+						if (chan.Enabled) { this.JoinChannel(chan); }
+					}
+					this.SendData("nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+
+					// statistics
+					Statistic.Instance.Increase(StatisticType.ServerConnectsOk);
+					break;
+
+
+				case 477: // ERR_NOCHANMODES
+					tChan = myServer[tCommandList[3]];
+					// TODO register myself and login and so on
+					this.Log("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!", LogLevel.Notice);
+					/*this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					if(tChan != null) { this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime); }
+					else
+					{
+						tBot = this.myServer.getBot(tCommandList[3]);
+						if(tBot != null) { this.CreateTimer(tBot, Settings.Instance.BotWaitTime); }
+					}*/
+					break;
+
+
+				case 471: // ERR_CHANNELISFULL
+				case 473: // ERR_INVITEONLYCHAN
+				case 474: // ERR_BANNEDFROMCHAN
+				case 475: // ERR_BADCHANNELKEY
+				case 485: // ERR_UNIQOPPRIVSNEEDED
+					tChan = myServer[tCommandList[3]];
+					if (tChan != null)
+					{
+						tChan.Connected = false;
+						this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
+						this.CreateTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
+					}
+
+					// statistics
+					Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
+					break;
+			}
+
+			this.ObjectChange(tBot);
+			this.ObjectChange(tChan);
+		}
+
+		private void HandelDataPrivateMessage(string tData, string[] tCommandList)
+		{
+			string tUserName = tCommandList[0].Split('!')[0];
+			XGChannel tChan = this.myServer[tCommandList[2]];
+			XGBot tBot = this.myServer.GetBot(tUserName);
+
+			#region VERSION
+
+			if (tData == "VERSION")
+			{
+				this.Log("con_DataReceived() VERSION: " + Settings.Instance.IrcVersion, LogLevel.Info);
+				this.SendData("NOTICE " + tUserName + " :\u0001VERSION " + Settings.Instance.IrcVersion + "\u0001");
+				return;
+			}
+
+			#endregion
+
+			#region XGVERSION
+
+			else if (tData == "XGVERSION")
+			{
+				this.Log("con_DataReceived() XGVERSION: " + Settings.Instance.XgVersion, LogLevel.Info);
+				this.SendData("NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
+				return;
+			}
+
+			#endregion
+
+			#region DCC DOWNLOAD MESSAGE
+
+			else if (tData.StartsWith("DCC") && tBot != null)
+			{
+				XGPacket tPacket = tBot.getOldestActivePacket();
+				if (tPacket != null)
+				{
+					bool isOk = false;
+
+					int tPort = 0;
+					Int64 tChunk = 0;
+
+					string[] tDataList = tData.Split(' ');
+					if (tDataList[1] == "SEND")
+					{
+						this.Log("con_DataReceived() DCC from " + tBot.Name, LogLevel.Notice);
+						#region IP CALCULATING
+						try
+						{
+							// this works not in mono?!
+							tBot.IP = IPAddress.Parse(tDataList[3]);
+						}
+						catch (FormatException)
+						{
+							#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
+							string ip = "";
+							try { ip = new IPAddress(long.Parse(tDataList[3])).ToString(); }
+							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
+							int pos = 0;
+							string realIp = "";
+							pos = ip.LastIndexOf('.');
+							try
+							{
+								realIp += ip.Substring(pos + 1) + ".";
+								ip = ip.Substring(0, pos);
+								pos = ip.LastIndexOf('.');
+								realIp += ip.Substring(pos + 1) + ".";
+								ip = ip.Substring(0, pos);
+								pos = ip.LastIndexOf('.');
+								realIp += ip.Substring(pos + 1) + ".";
+								ip = ip.Substring(0, pos);
+								pos = ip.LastIndexOf('.');
+								realIp += ip.Substring(pos + 1);
+							}
+							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + tData, LogLevel.Exception); return; }
+
+							this.Log("con_DataReceived() IP parsing failed, using this: " + realIp, LogLevel.Notice);
+							try { tBot.IP = IPAddress.Parse(realIp); }
+							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
+							#endregion
+						}
+						#endregion
+						try { tPort = int.Parse(tDataList[4]); }
+						catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
+						// we cant connect to port <= 0
+						if(tPort <= 0)
+						{
+							this.Log("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort + " with string: " + tData, LogLevel.Error);
+						}
+						else
+						{
+							tPacket.RealName = tDataList[2];
+							try { tPacket.RealSize = Int64.Parse(tDataList[5]); }
+							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet size from string: " + tData, LogLevel.Exception); return; }
+
+							tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
+							if (tChunk < 0)
+							{
+								this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
+								tPacket.Enabled = false;
+								this.ObjectChange(tPacket);
+								this.UnregisterFromBot(tBot);
+							}
+							else if (tChunk > 0)
+							{
+								this.Log("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk, LogLevel.Notice);
+								this.SendData("PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+							}
+							else { isOk = true; }
+						}
+					}
+					else if (tDataList[1] == "ACCEPT")
+					{
+						this.Log("con_DataReceived() DCC resume accepted from " + tBot.Name, LogLevel.Notice);
+						try { tPort = int.Parse(tDataList[3]); 	}
+						catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
+						try { tChunk = Int64.Parse(tDataList[4]); }
+						catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet chunk from string: " + tData, LogLevel.Exception); return; }
+						isOk = true;
+					}
+
+					if (isOk)
+					{
+						this.Log("con_DataReceived() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize, LogLevel.Notice);
+						this.NewDownloadEvent(tPacket, tChunk, tBot.IP, tPort);
+					}
+				}
+				else { this.Log("con_DataReceived() DCC not activated from " + tBot.Name, LogLevel.Error); }
+			}
+
+			#endregion
+
+			#region DCC INFO MESSAGE
+
+			else if (tChan != null)
+			{
+				bool insertBot = false;
+				if (tBot == null)
+				{
+					insertBot = true;
+					tBot = new XGBot(tChan);
+					tBot.Name = tUserName;
+					tBot.Connected = true;
+					tBot.LastMessage = "initial creation";
+				}
+
+				bool isParsed = false;
+				Match tMatch = null;
+				int valueInt = 0;
+				double valueDouble = 0;
+
+				#region PACKET /SLOT / QUEUE INFO
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(\\*){2,3} ([0-9]*) (pack(s|)|Pa(c|)ket(e|)) (\\*){2,3}\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_cur>[0-9]*),|).*(Record: (?<record>[0-9.]*)(K|)B\\/s|)|)", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+
+						if (int.TryParse(tMatch.Groups["slot_cur"].ToString(), out valueInt)) { tBot.InfoSlotCurrent = valueInt; }
+						if (int.TryParse(tMatch.Groups["slot_total"].ToString(), out valueInt)) { tBot.InfoSlotTotal = valueInt; }
+						if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt)) { tBot.InfoQueueCurrent = valueInt; }
+						if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
+						// this is not the all over record speed!
+						//if (double.TryParse(tMatch.Groups["record"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
+
+						// uhm, there is a free slot and we are still waiting?
+						if (tBot.InfoSlotCurrent > 0 && tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+							this.CreateTimer(tBot, 0);
+						}
+					}
+				}
+
+				#endregion
+
+				#region BANDWIDTH
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "((\\*){2,3}|) ((Bandwidth Usage|Bandbreite) ((\\*){2,3}|)|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(K|)(i|)B(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(K|)(i|)B(\\/s|s)|)", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+
+						if (int.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueInt)) { tBot.InfoSpeedCurrent = valueInt; }
+						if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
+					}
+				}
+
+				#endregion
+
+				#region PACKET INFO
+
+				XGPacket newPacket = null;
+				if (!isParsed)
+				{ // what is this damn char \240 and how to rip it off ???
+					tMatch = Regex.Match(tData, "#(?<pack_id>\\d+)(\u0240|�|)\\s+(\\d*)x\\s+\\[\\s*(�|)(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+
+						try
+						{
+							int tPacketId = -1;
+							try { tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString()); }
+							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet id from string: " + tData, LogLevel.Exception); return; }
+
+							XGPacket tPack = tBot[tPacketId];
+							if (tPack == null)
+							{
+								tPack = new XGPacket(tBot);
+								newPacket = tPack;
+								tPack.EnabledChangedEvent += new ObjectDelegate(packet_ObjectStateChangedEventHandler);
+								tPack.Id = tPacketId;
+							}
+							else
+							{
+								tPack.Modified = false;
+							}
+
+							string name = this.ClearPacketName(tMatch.Groups["pack_name"].ToString());
+							if (tPack.Name != name && tPack.Name != "")
+							{
+								//this.Log(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content", LogLevel.Warning);
+								tPack.Enabled = false;
+								if (!tPack.Connected)
+								{
+									tPack.RealName = "";
+									tPack.RealSize = 0;
+								}
+							}
+							tPack.Name = name;
+
+							double tPacketSizeFormated = 0;
+							double.TryParse(tMatch.Groups["pack_size"].ToString().Replace(".", ",").Replace("<", "").Replace(">", ""), out tPacketSizeFormated);
+
+							string tPacketAdd = tMatch.Groups["pack_add"].ToString().ToLower();
+
+							if (tPacketAdd == "k" || tPacketAdd == "kb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024); }
+							else if (tPacketAdd == "m" || tPacketAdd == "mb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024); }
+							else if (tPacketAdd == "g" || tPacketAdd == "gb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024 * 1024); }
+
+							if (tPack.Modified)
+							{
+								this.ObjectChange(tPack);
+								this.Log("con_DataReceived() updated packet #" + tPack.Id + " from " + tBot.Name, LogLevel.Info);
+							}
+						}
+						catch (FormatException) { }
+					}
+				}
+
+				#endregion
+
+				// insert bot if ok
+				if (insertBot)
+				{
+					if (isParsed)
+					{
+						this.ObjectAddedEvent(tBot.Parent, tBot);
+						this.Log("con_DataReceived() inserted bot " + tBot.Name, LogLevel.Info);
+					}
+					else
+					{
+						tBot.Parent.RemoveBot(tBot);
+						tBot.Modified = false;
+					}
+				}
+				// and insert packet _AFTER_ this
+				if (newPacket != null)
+				{
+					this.ObjectAddedEvent(tBot, newPacket);
+					this.Log("con_DataReceived() inserted packet #" + newPacket.Id + " into " + tBot.Name, LogLevel.Info);
+				}
+
+#if DEBUG
+				#region NOT NEEDED INFOS
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(\\*){2,3} To request .* type .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { return; }
+					tMatch = Regex.Match(tData, ".*\\/(msg|ctcp) .* xdcc (info|send) .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { return; }
+					tMatch = Regex.Match(tData, "(\\*){2,3} To list a group, type .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { return; }
+					tMatch = Regex.Match(tData, "Total offered(\\!|): (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)\\s*Total transfer(r|)ed: (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { return; }
+					tMatch = Regex.Match(tData, ".* (brought to you|powered|sp(o|0)ns(o|0)red) by .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { return; }
+					tMatch = Regex.Match(tData, "(\\*){2,3} .*" + tChan.Name + " (\\*){2,3}", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { return; }
+				}
+
+				#endregion
+
+				#region COULD NOT PARSE
+
+				// maybee delete this because it is flooding the logfile
+				if (!isParsed && tBot.Children.Length > 0)
+				{
+					this.ParsingErrorEvent("[DCC Info] " + tBot.Name + " : " + this.ClearString(tData));
+				}
+
+				#endregion
+#endif
+			}
+
+			#endregion
+
+			this.ObjectChange(tBot);
+			this.ObjectChange(tChan);
+		}
+
+		private void HandleDataNotice(string aData, string tData, string[] tCommandList)
+		{
+			string tUserName = tCommandList[0].Split('!')[0];
+			XGBot tBot = this.myServer.GetBot(tUserName);
+
+			#region BOT MESSAGES
+
+			if (tBot != null)
+			{
+				bool isParsed = false;
+				Match tMatch = null;
+				Match tMatch1 = null;
+				Match tMatch2 = null;
+				Match tMatch3 = null;
+				Match tMatch4 = null;
+				Match tMatch5 = null;
+
+				int valueInt = 0;
+				tData = this.ClearString(tData);
+				//double valueDouble = 0;
+
+				#region ALL SLOTS FULL / ADDING TO QUEUE
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "((\\*){2,3} All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "Queueing you for pack [0-9]+ \\(.*\\) in slot (?<queue_cur>[0-9]+)/(?<queue_total>[0-9]+)\\. To remove you(r|)self from the queue, type: .*\\. To check your position in the queue, type: .*\\. Estimated time remaining in queue: (?<queue_d>[0-9]+) days, (?<queue_h>[0-9]+) hours, (?<queue_m>[0-9]+) minutes", RegexOptions.IgnoreCase);
+					tMatch3 = Regex.Match(tData, "[(\\*){2,3} |]Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
+					{
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
+						tMatch = tMatch.Success ? tMatch : tMatch3;
+						isParsed = true;
+						if (tBot.BotState == BotState.Idle)
+						{
+							tBot.BotState = BotState.Waiting;
+						}
+
+						tBot.InfoSlotCurrent = 0;
+						if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt))
+						{
+							tBot.QueuePosition = valueInt;
+							tBot.InfoQueueCurrent = tBot.QueuePosition;
+						}
+
+						if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
+						else if(tBot.InfoQueueTotal < tBot.InfoQueueCurrent) { tBot.InfoQueueTotal = tBot.InfoQueueCurrent; }
+
+						int time = 0;
+						if (int.TryParse(tMatch.Groups["queue_m"].ToString(), out valueInt)) { time += valueInt * 60; }
+						if (int.TryParse(tMatch.Groups["queue_h"].ToString(), out valueInt)) { time += valueInt * 60 * 60; }
+						if (int.TryParse(tMatch.Groups["queue_d"].ToString(), out valueInt)) { time += valueInt * 60 * 60 * 24; }
+						tBot.QueueTime = time;
+					}
+				}
+
+				#endregion
+
+				#region REMOVE FROM QUEUE
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(\\*){2,3} Removed From Queue: .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+						this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
+					}
+				}
+
+				#endregion
+
+				#region INVALID PACKET NUMBER
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "(\\*){2,3} Die Nummer der Datei ist ung.ltig", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} Invalid Pack Number, Try Again", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
+						isParsed = true;
+						XGPacket tPack = tBot.getOldestActivePacket();
+						if (tPack != null)
+						{
+							tPack.Enabled = false;
+							tBot.removePacket(tPack);
+							this.ObjectRemovedEvent(tBot, tPack);
+						}
+						this.Log("con_DataReceived() invalid packetnumber from " + tBot.Name, LogLevel.Error);
+					}
+				}
+
+				#endregion
+
+				#region PACK ALREADY REQUESTED
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "(\\*){2,3} You already requested that pack(.*|)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast diese Datei bereits angefordert(.*|)", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Idle)
+						{
+							tBot.BotState = BotState.Waiting;
+						}
+					}
+				}
+
+				#endregion
+
+				#region ALREADY QUEUED / RECEIVING
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "Denied, You already have ([0-9]+) item(s|) queued, Try Again Later", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Denied, You already have that item queued\\.", RegexOptions.IgnoreCase);
+					tMatch3 = Regex.Match(tData, "You are already receiving or are queued for the maximum number of packs .*", RegexOptions.IgnoreCase);
+					tMatch4 = Regex.Match(tData, "Du hast max\\. ([0-9]+) transfer auf einmal, Du bist jetzt in der Warteschlange f.r Datei .*", RegexOptions.IgnoreCase);
+					tMatch5 = Regex.Match(tData, "Es laufen bereits genug .bertragungen, abgewiesen, Du hast diese Datei bereits in der Warteschlange\\.", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success || tMatch3.Success || tMatch4.Success || tMatch5.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Idle)
+						{
+							tBot.BotState = BotState.Waiting;
+						}
+						else if(tBot.BotState == BotState.Waiting)
+						{
+							// if there is no active packets lets remove us from the queue
+							if(tBot.getOldestActivePacket() == null) { this.UnregisterFromBot(tBot); }
+						}
+					}
+				}
+
+				#endregion
+
+				#region DCC PENDING
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "(\\*){2,3} You have a DCC pending, Set your client to receive the transfer\\. ((Type .*|Send XDCC CANCEL) to abort the transfer\\. |)\\((?<time>[0-9]+) seconds remaining until timeout\\)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL)            an den Bot um die .bertragung abzubrechen\\. |)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
+						isParsed = true;
+						if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
+						{
+							if (valueInt == 30 && tBot.BotState != BotState.Active)
+							{
+								tBot.BotState = BotState.Idle;
+							}
+							this.CreateTimer(tBot, (valueInt + 2) * 1000);
+						}
+					}
+				}
+
+				#endregion
+
+				#region ALL SLOTS AND QUEUE FULL
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} Es laufen bereits genug .bertragungen, abgewiesen, die Warteschlange ist voll, max\\. (?<queue_total>[0-9]+) Dateien, Versuche es sp.ter nochmal", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+						tBot.InfoSlotCurrent = 0;
+						tBot.InfoQueueCurrent = 0;
+						if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
+
+						this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
+					}
+				}
+
+				#endregion
+
+				#region TRANSFER LIMIT
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(\\*){2,3} You can only have ([0-9]+) transfer(s|) at a time,.*", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Idle)
+						{
+							tBot.BotState = BotState.Waiting;
+						}
+					}
+				}
+
+				#endregion
+
+				#region OWNER REQUEST
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(\\*){2,3} The Owner Has Requested That No New Connections Are Made In The Next (?<time>[0-9]+) Minute(s|)", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+
+						if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
+						{
+							this.CreateTimer(tBot, (valueInt * 60 + 1) * 1000);
+						}
+					}
+				}
+
+				#endregion
+
+				#region XDCC DOWN
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "The XDCC is down, try again later.*", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+						this.CreateTimer(tBot, Settings.Instance.BotWaitTime);
+					}
+				}
+
+				#endregion
+
+				#region XDCC DENIED
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(\\*){2,3} XDCC SEND denied, (?<info>.*)", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+						string info = tMatch.Groups["info"].ToString().ToLower();
+						if (info.StartsWith("you must be on a known channel to request a pack"))
+						{
+							this.SendData("WHOIS " + tBot.Name);
+						}
+						else if (info.StartsWith("i don't send transfers to"))
+						{
+							foreach (XGPacket tPacket in tBot.Children)
+							{
+								if (tPacket.Enabled)
+								{
+									tPacket.Enabled = false;
+									this.ObjectChange(tPacket);
+								}
+							}
+						}
+						else
+						{
+							if (tBot.BotState == BotState.Waiting)
+							{
+								tBot.BotState = BotState.Idle;
+							}
+							this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
+							this.Log("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info, LogLevel.Error);
+						}
+					}
+				}
+
+				#endregion
+
+				#region XDCC SENDING
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "(\\*){2,3} Sending You (Your Queued |)Pack .*", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} Sende dir jetzt die Datei .*", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+					}
+				}
+
+				#endregion
+
+				#region QUEUED
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "Queued ([0-9]+)h([0-9]+)m for .*, in position (?<queue_cur>[0-9]+) of (?<queue_total>[0-9]+). (?<queue_h>[0-9]+)h(?<queue_m>[0-9]+)m or .* remaining\\.", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "In der Warteschlange seit  ([0-9]+)h([0-9]+)m f.r .*, in Position (?<queue_cur>[0-9]+) von (?<queue_total>[0-9]+). Ungef.hr (?<queue_h>[0-9]+)h(?<queue_m>[0-9]+)m oder .*", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
+						isParsed = true;
+						if (tBot.BotState == BotState.Idle)
+						{
+							tBot.BotState = BotState.Waiting;
+						}
+						
+						tBot.InfoSlotCurrent = 0;
+						if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt)) { tBot.QueuePosition = valueInt; }
+						if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
+						else if(tBot.InfoQueueTotal < tBot.QueuePosition) { tBot.InfoQueueTotal = tBot.QueuePosition; }
+
+						int time = 0;
+						if (int.TryParse(tMatch.Groups["queue_m"].ToString(), out valueInt)) { time += valueInt * 60; }
+						if (int.TryParse(tMatch.Groups["queue_h"].ToString(), out valueInt)) { time += valueInt * 60 * 60; }
+						tBot.QueueTime = time;
+					}
+				}
+
+				#endregion
+
+				#region CLOSING CONNECTION
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "(\\*){2,3} (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "(\\*){2,3} (Schlie.e Verbindung:).*", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState != BotState.Active)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+						else
+						{
+							// kill that connection if the bot sends a close message , but our real bot 
+							// connection is still alive and hangs for some crapy reason - maybe because 
+							// some admins do some network fu to stop my downloads (happend to me)
+							this.KillDownloadEvent(tBot);
+						}
+						this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
+					}
+				}
+
+				#endregion
+
+				#region YOU ARE NOT IN QUEUE
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, "(You Don't Appear To Be In A Queue|Removed you from the queue for.*)", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+						tBot.QueuePosition = 0;
+						this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
+					}
+				}
+
+				#endregion
+
+				#region PUNISH / AUTO IGNORE
+
+				if (!isParsed)
+				{
+					tMatch1 = Regex.Match(tData, "Punish-ignore activated for .* \\(.*\\) (?<time_m>[0-9]*) minutes", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, "Auto-ignore activated for .* lasting (?<time_m>[0-9]*)m(?<time_s>[0-9]*)s\\. Further messages will increase duration\\.", RegexOptions.IgnoreCase);
+					tMatch3 = Regex.Match(tData, "Zur Strafe wirst du .* \\(.*\\) f.r (?<time_m>[0-9]*) Minuten ignoriert(.|)", RegexOptions.IgnoreCase);
+					tMatch4 = Regex.Match(tData, "Auto-ignore activated for .* \\(.*\\)", RegexOptions.IgnoreCase);
+					if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
+					{
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2.Success ? tMatch2 : tMatch3;
+						isParsed = true;
+						if (tBot.BotState == BotState.Waiting)
+						{
+							tBot.BotState = BotState.Idle;
+						}
+
+						if (int.TryParse(tMatch.Groups["time_m"].ToString(), out valueInt))
+						{
+							int time = valueInt * 60 + 1;
+							if (int.TryParse(tMatch.Groups["time_s"].ToString(), out valueInt))
+							{
+								time += valueInt;
+							}
+							this.CreateTimer(tBot, time * 1000, true);
+						}
+					}
+				}
+
+				#endregion
+
+				#region NOT NEEDED INFOS
+
+				if (!isParsed)
+				{
+					tMatch = Regex.Match(tData, ".* bandwidth limit .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success) { isParsed = true; }
+				}
+
+				#endregion
+
+				if (!isParsed)
+				{
+					this.ParsingErrorEvent("[DCC Notice] " + tBot.Name + " : " + tData);
+				}
+				else
+				{
+					tBot.LastMessage = tData;
+					this.Log("con_DataReceived() message from " + tBot.Name + ": " + tData, LogLevel.Notice);
+				}
+			}
+
+			#endregion
+
+			#region NICKSERV
+
+			else if(tUserName.ToLower() == "nickserv")
+			{
+				if(tData.Contains("Password incorrect"))
+				{
+					this.Log("con_DataReceived(" + aData + ") - nickserv password wrong", LogLevel.Error);
+				}
+				else if(	tData.Contains("The given email address has reached it's usage limit of 1 user") ||
+				        	tData.Contains("This nick is being held for a registered user"))
+				{
+					this.Log("con_DataReceived(" + aData + ") - nickserv nick already registered", LogLevel.Error);
+				}
+				else if(tData.Contains("The given email address has reached it's usage limit of 1 user"))
+				{
+					this.Log("con_DataReceived(" + aData + ") - nickserv email already used", LogLevel.Error);
+				}
+				else if(tData.Contains("Your nick isn't registered"))
+				{
+					this.Log("con_DataReceived(" + aData + ") - nickserv registering nick", LogLevel.Warning);
+					this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+				}
+				else if(	tData.Contains("Nickname is already in use") ||
+				        	tData.Contains("Nickname is currently in use"))
+				{
+					this.SendData("nickserv ghost " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendData("nickserv recover " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
+				}
+				else if(	tData.Contains("This nickname is registered and protected") ||
+				        	tData.Contains("This nick is being held for a registered user"))
+				{
+					this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+				}
+				else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
+				{
+					// sleep the given time an reregister
+					this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+				}
+				else if(tData.Contains("Please try again with a more obscure password"))
+				{
+					this.Log("con_DataReceived(" + aData + ") - nickserv password is unsecure", LogLevel.Error);
+				}
+				else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail + ", please type /msg NickServ confirm <passcode> to complete registration"))
+				{
+					this.Log("con_DataReceived(" + aData + ") - nickserv confirm email", LogLevel.Error);
+				}
+			}
+
+			#endregion
+		}
+
 		#endregion
 
 		#region HELPER
@@ -1270,6 +1305,17 @@ namespace XG.Server
 			aData = Regex.Replace(aData, "\u0003(\\d+(,\\d+|)|)", "");
 			aData = Regex.Replace(aData, "(\u000F)", "");
 			return aData.Trim();
+		}
+
+		private string ClearPacketName(string aData)
+		{
+			string tData = this.ClearString(aData);
+			tData = tData.Replace("Movies", string.Empty);
+			tData = tData.Replace("Charts", string.Empty);
+			tData = tData.Replace("[]", string.Empty);
+			tData = tData.Replace("\u000F", string.Empty);
+			tData = tData.Replace("\uFFFD", string.Empty);
+			return tData;
 		}
 
 		#endregion

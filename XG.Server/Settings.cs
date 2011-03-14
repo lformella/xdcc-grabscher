@@ -132,6 +132,7 @@ namespace XG.Server
 			this.parsingErrorFile = "./parsing_errors.txt";
 			this.dataBinary = "./xg.bin";
 			this.filesBinary = "./xgfiles.bin";
+			this.searchesBinary = "./xgsearches.bin";
 			this.password = "xgisgreat";
 			this.backupDataTime = 900000;
 			this.fileHandler = new string[] { "" };
@@ -288,6 +289,12 @@ namespace XG.Server
 		public string FilesBinary
 		{
 			get { return filesBinary; }
+		}
+
+		private string searchesBinary;
+		public string SearchesBinary
+		{
+			get { return searchesBinary; }
 		}
 
 		private int maxNoDataReceived;

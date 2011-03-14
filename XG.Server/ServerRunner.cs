@@ -43,6 +43,7 @@ namespace XG.Server
 		}
 
 		private List<XGFile> myFiles;
+		private List<string> mySearches;
 
 		private BinaryFormatter myFormatter = new BinaryFormatter();
 
@@ -52,6 +53,8 @@ namespace XG.Server
 
 		private bool isSaveFile = false;
 		private object mySaveFileLock = new object();
+
+		private object mySaveSearchLock = new object();
 
 		#endregion
 
@@ -77,6 +80,10 @@ namespace XG.Server
 			// the file data
 			this.myFiles = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
 			if (this.myFiles == null) { this.myFiles = new List<XGFile>(); }
+
+			// previous searches
+			this.mySearches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
+			if (this.mySearches == null) { this.mySearches = new List<string>(); }
 
 			#region SERVERHANDLER INIT
 
@@ -849,6 +856,30 @@ namespace XG.Server
 
 		#endregion
 
+		#region SPECIAL
+
+		public void AddSearch(string aSearch)
+		{
+			this.mySearches.Add(aSearch);
+
+			lock (this.mySaveSearchLock)
+			{
+				this.Save(this.mySearches, Settings.Instance.SearchesBinary);
+			}
+		}
+
+		public void RemoveSearch(string aSearch)
+		{
+			this.mySearches.Remove(aSearch);
+
+			lock (this.mySaveSearchLock)
+			{
+				this.Save(this.mySearches, Settings.Instance.SearchesBinary);
+			}
+		}
+
+		#endregion
+
 		#endregion
 
 		#region GET
@@ -921,6 +952,11 @@ namespace XG.Server
 		public List<XGObject> GetFiles()
 		{
 			return this.GetFiles(null);
+		}
+
+		public List<string> GetSearches()
+		{
+			return this.mySearches;
 		}
 
 		public List<XGObject> GetFiles(Comparison<XGObject> aComp)
