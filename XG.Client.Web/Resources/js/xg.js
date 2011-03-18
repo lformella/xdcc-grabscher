@@ -242,7 +242,7 @@ $(function()
 			{name:'sizecur',		index:'sizecur',		hidden:true},
 			{name:'checked',		index:'checked',		hidden:true},
 			{name:'order',			index:'order',			hidden:true},
-			{name:'lastupdated',	index:'lastupdated',	width:130, align:"right", fixed:true}
+			{name:'lastupdated',	index:'lastupdated',	width:135, align:"right", fixed:true}
 		],
 		onSelectRow: function(id)
 		{
@@ -699,8 +699,11 @@ function RefreshGrid()
 {
 	// refresh bot grid
 	var ids = jQuery("#bots").getDataIDs();
-	for each (var id in ids)
+	//for each (var id in ids)
+	//{
+	for (var i = 0; i < ids.length; i++)
 	{
+		var id = ids[i];
 		var data = jQuery("#bots").getRowData(id);
 		if(data.botstate == "Active")
 		{
@@ -710,8 +713,11 @@ function RefreshGrid()
 
 	// refresh packet grid
 	var ids = jQuery("#packets").getDataIDs();
-	for each (var id in ids)
+	//for each (var id in ids)
+	//{
+	for (var i = 0; i < ids.length; i++)
 	{
+		var id = ids[i];
 		var data = jQuery("#packets").getRowData(id);
 		if(data.connected == "true")
 		{
@@ -1116,6 +1122,7 @@ function Time2Human(time)
 	{
 		buff = Math.floor(time / 86400);
 		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
+
 		time -= buff * 86400;
 	}
 	else if (str != "") { str += "00:"; }
@@ -1150,7 +1157,7 @@ function Time2Human(time)
 function Resize()
 {
 	//alert($(window).height() / 2);
-	var width = $(window).width() - 6 * 5 - 200;
+	var width = $(window).width() - 6 * 5 - 210;
 	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25 - 30) / 2;
 
 	jQuery("#servers").setGridHeight(height - 15);

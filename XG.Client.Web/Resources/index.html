@@ -25,6 +25,7 @@
 		<title>XG Webclient</title>
 
 		<link rel="stylesheet" type="text/css" href="css/style/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
 
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -34,8 +35,6 @@
 
 		<script type="text/javascript" src="js/xg.js"></script>
 
-		<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
-
 		<style type="text/css">
 			body{ font-size: 11px; }
 		</style>
@@ -44,7 +43,7 @@
 	<body>
 		<div id="dialog_password" title="Password required">
 			<p id="password_tip">Please enter the password for this webfrontend.</p>
-			<form>
+			<form onsubmit="return false;">
 				<fieldset>
 					<label for="password">Password</label>
 					<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />

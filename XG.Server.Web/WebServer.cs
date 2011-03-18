@@ -564,7 +564,16 @@ namespace XG.Server.Web
 
 		private string ClearString(string aString)
 		{
-			return aString.Replace("\\", "\\\\").Replace("\"", "\\\"");
+			string str = "";
+			str = aString.Replace("\\", "\\\\");
+			str = aString.Replace("\"", "\\\"");
+			str = aString.Replace("Ä", "&Auml;");
+			str = aString.Replace("ä", "&auml;");
+			str = aString.Replace("Ö", "&Ouml;");
+			str = aString.Replace("ö", "&ouml;");
+			str = aString.Replace("Ü", "&Uuml;");
+			str = aString.Replace("ü", "&uuml;");
+			return str;
 		}
 
 		#endregion

@@ -28,31 +28,12 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
-		// why did i do this?
-		/*
-		public new bool Enabled
-		{
-			get { return base.Enabled; }
-			set
-			{
-				if (value)
-				{
-					if(this.Parent != null && !this.Parent.Enabled)
-					{
-						this.Parent.Enabled = value;
-					}
-				}
-				base.Enabled = value;
-			}
-		}
-		*/
-
 		public new string Name
 		{
 			get { return base.Name; }
 			set
 			{
-				// iam updated if my name changes
+				// iam updated if the packet name changes
 				if (base.Name != value)
 				{
 					this.lastUpdated = DateTime.Now;

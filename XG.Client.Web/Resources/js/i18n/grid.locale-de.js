@@ -2,7 +2,7 @@
 /**
  * jqGrid German Translation
  * Version 1.0.0 (developed for jQuery Grid 3.3.1)
- * Olaf Klöppel opensource@blue-hit.de
+ * Olaf Kl&ouml;ppel opensource@blue-hit.de
  * http://blue-hit.de/ 
  *
  * Updated for jqGrid 3.8
@@ -16,42 +16,42 @@
 $.jgrid = {
 	defaults : {
 		recordtext: "Zeige {0} - {1} von {2}",
-	    emptyrecords: "Keine Datensätze vorhanden",
-		loadtext: "Lädt...",
+	    emptyrecords: "Keine Datens&auml;tze vorhanden",
+		loadtext: "L&auml;dt...",
 		pgtext : "Seite {0} von {1}"
 	},
 	search : {
 		caption: "Suche...",
 		Find: "Suchen",
-		Reset: "Zurücksetzen",
-	    odata : ['gleich', 'ungleich', 'kleiner', 'kleiner gleich','größer','größer gleich', 'beginnt mit','beginnt nicht mit','ist in','ist nicht in','endet mit','endet nicht mit','enthält','enthält nicht'],
+		Reset: "Zur&uuml;cksetzen",
+	    odata : ['gleich', 'ungleich', 'kleiner', 'kleiner gleich','gr&ouml;ßer','gr&ouml;ßer gleich', 'beginnt mit','beginnt nicht mit','ist in','ist nicht in','endet mit','endet nicht mit','enth&auml;lt','enth&auml;lt nicht'],
 	    groupOps: [	{ op: "AND", text: "alle" },	{ op: "OR",  text: "mindestens eine" }	],
-		matchText: " erfülle",
+		matchText: " erf&uuml;lle",
 		rulesText: " Bedingung(en)"
 	},
 	edit : {
-		addCaption: "Datensatz hinzufügen",
+		addCaption: "Datensatz hinzuf&uuml;gen",
 		editCaption: "Datensatz bearbeiten",
 		bSubmit: "Speichern",
 		bCancel: "Abbrechen",
 		bClose: "Schließen",
-		saveData: "Daten wurden geändert! Änderungen speichern?",
+		saveData: "Daten wurden ge&auml;ndert! &Auml;nderungen speichern?",
 		bYes : "ja",
 		bNo : "nein",
 		bExit : "abbrechen",
 		msg: {
 		    required:"Feld ist erforderlich",
 		    number: "Bitte geben Sie eine Zahl ein",
-		    minValue:"Wert muss größer oder gleich sein, als ",
+		    minValue:"Wert muss gr&ouml;ßer oder gleich sein, als ",
 		    maxValue:"Wert muss kleiner oder gleich sein, als ",
-		    email: "ist keine gültige E-Mail-Adresse",
+		    email: "ist keine g&uuml;ltige E-Mail-Adresse",
 		    integer: "Bitte geben Sie eine Ganzzahl ein",
-			date: "Bitte geben Sie ein gültiges Datum ein",
-			url: "ist keine gültige URL. Präfix muss eingegeben werden ('http://' oder 'https://')",
+			date: "Bitte geben Sie ein g&uuml;ltiges Datum ein",
+			url: "ist keine g&uuml;ltige URL. Pr&auml;fix muss eingegeben werden ('http://' oder 'https://')",
 			nodefined : " ist nicht definiert!",
-			novalue : " Rückgabewert ist erforderlich!",
-			customarray : "Benutzerdefinierte Funktion sollte ein Array zurückgeben!",
-			customfcheck : "Benutzerdefinierte Funktion sollte im Falle der benutzerdefinierten Überprüfung vorhanden sein!"
+			novalue : " R&uuml;ckgabewert ist erforderlich!",
+			customarray : "Benutzerdefinierte Funktion sollte ein Array zur&uuml;ckgeben!",
+			customfcheck : "Benutzerdefinierte Funktion sollte im Falle der benutzerdefinierten &Uuml;berpr&uuml;fung vorhanden sein!"
 		}
 	},
 	view : {
@@ -59,36 +59,36 @@ $.jgrid = {
 	    bClose: "Schließen"
 	},
 	del : {
-		caption: "Löschen",
-		msg: "Ausgewählte Datensätze löschen?",
-		bSubmit: "Löschen",
+		caption: "L&ouml;schen",
+		msg: "Ausgew&auml;hlte Datens&auml;tze l&ouml;schen?",
+		bSubmit: "L&ouml;schen",
 		bCancel: "Abbrechen"
 	},
 	nav : {
 		edittext: " ",
-	    edittitle: "Ausgewählte Zeile editieren",
+	    edittitle: "Ausgew&auml;hlte Zeile editieren",
 		addtext:" ",
-	    addtitle: "Neue Zeile einfügen",
+	    addtitle: "Neue Zeile einf&uuml;gen",
 	    deltext: " ",
-	    deltitle: "Ausgewählte Zeile löschen",
+	    deltitle: "Ausgew&auml;hlte Zeile l&ouml;schen",
 	    searchtext: " ",
 	    searchtitle: "Datensatz suchen",
 	    refreshtext: "",
 	    refreshtitle: "Tabelle neu laden",
 	    alertcap: "Warnung",
-	    alerttext: "Bitte Zeile auswählen",
+	    alerttext: "Bitte Zeile ausw&auml;hlen",
 		viewtext: "",
-		viewtitle: "Ausgewählte Zeile anzeigen"
+		viewtitle: "Ausgew&auml;hlte Zeile anzeigen"
 	},
 	col : {
-		caption: "Spalten auswählen",
+		caption: "Spalten ausw&auml;hlen",
 		bSubmit: "Speichern",
 		bCancel: "Abbrechen"	
 	},
 	errors : {
 		errcap : "Fehler",
 		nourl : "Keine URL angegeben",
-		norecords: "Keine Datensätze zu bearbeiten",
+		norecords: "Keine Datens&auml;tze zu bearbeiten",
 		model : "colNames und colModel sind unterschiedlich lang!"
 	},
 	formatter : {
@@ -102,7 +102,7 @@ $.jgrid = {
 			],
 			monthNames: [
 				"Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez",
-				"Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"
+				"Januar", "Februar", "M&auml;rz", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"
 			],
 			AmPm : ["am","pm","AM","PM"],
 			S: function (j) {return 'ter'},
