@@ -30,10 +30,11 @@
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
-		<script type="text/javascript" src="js/i18n/grid.locale-de.js"></script>
+		<script type="text/javascript" src="js/i18n/grid.locale-#LANGUAGE_SHORT#.js"></script>
 		<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
 
 		<script type="text/javascript" src="js/xg.js"></script>
+		<script type="text/javascript" src="js/i18n/xg.locale-#LANGUAGE_SHORT#.js"></script>
 
 		<style type="text/css">
 			body{ font-size: 11px; }
@@ -45,7 +46,7 @@
 			<p id="password_tip">Please enter the password for this webfrontend.</p>
 			<form onsubmit="return false;">
 				<fieldset>
-					<label for="password">Password</label>
+					<label id="password_label" for="password">Password</label>
 					<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
@@ -55,7 +56,7 @@
 			<p id="server_tip">Please insert the new server name.</p>
 			<form>
 				<fieldset>
-					<label for="server">Server</label>
+					<label id="server_label" for="server">Server</label>
 					<input type="text" name="server" id="server" value="" class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
@@ -65,14 +66,14 @@
 			<p id="channel_tip">Please insert the new channel name.</p>
 			<form>
 				<fieldset>
-					<label for="server">Channel</label>
+					<label id="channel_label" for="channel">Channel</label>
 					<input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
 		</div>
 
 		<div id="dialog_delete" title="Really delete">
-			<p id="channel_tip">Do you really want to delete the item you selected?</p>
+			<p id="delete_tip">Do you really want to delete the item you selected?</p>
 		</div>
 
 		<table width="100%">
@@ -82,10 +83,10 @@
 					<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
 					<div id="server-pager" class="scroll" style="text-align:center;"></div>
 
-					<button id="add-server" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span style="margin-left:20px">Server</span></button>
-					<button id="add-channel" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span style="margin-left:20px">Channel</span></button>
+					<button id="add-server" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span id="server_button" style="margin-left:20px">Server</span></button>
+					<button id="add-channel" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span id="channel_button" style="margin-left:20px">Channel</span></button>
 					<br />
-					<button id="delete" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-minus" style="position:absolute;"></span><span style="margin-left:20px">Current Item</span></button>
+					<button id="delete" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-minus" style="position:absolute;"></span><span id="current_item_button" style="margin-left:20px">Current Item</span></button>
 
 					<br /><br />
 
@@ -96,7 +97,7 @@
 				</td>
 				<td valign="top">
 				
-					<input type="checkbox" name="offbots" id="offbots" value="1" /> hide offline Bots
+					<input type="checkbox" name="offbots" id="offbots" value="1" /> <span id="offline_bots">hide offline Bots</span>
 					
 					<br />
 

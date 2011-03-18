@@ -44,7 +44,7 @@ namespace XG.Client.Web
 			this.myDicByt = new Dictionary<string, byte[]>();
 		}
 
-		public string LoadFile(string aFile)
+		public string LoadFile(string aFile, string[] aLanguages)
 		{
 			if (this.myDicStr.ContainsKey(aFile))
 			{
@@ -57,11 +57,11 @@ namespace XG.Client.Web
 				{
 #endif
 #if DEBUG
-					return File.OpenText("./Resources" +  aFile).ReadToEnd();
+					return this.PatchLanguage(File.OpenText("./Resources" +  aFile).ReadToEnd(), aLanguages);
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
 					string name = assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					this.myDicStr.Add(aFile, new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd());
+					this.myDicStr.Add(aFile, this.PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
 					return this.myDicStr[aFile];
 #endif
 #if !UNSAFE
@@ -73,6 +73,12 @@ namespace XG.Client.Web
 #endif
 			}
 			return "";
+		}
+
+		private string PatchLanguage(string aContent, string[] aLanguages)
+		{
+			string lng = aLanguages[0].Substring(0, 2);
+			return aContent.Replace("#LANGUAGE_SHORT#", lng);
 		}
 
 		public byte[] LoadImage(string aFile)

@@ -87,6 +87,8 @@ function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
 function NameUrl(id, name) { return JsonUrl() + id + "&name=" + escape(name); }
 function GuidNameUrl(id, guid, name) { return JsonUrl() + id + "&guid=" + guid + "&name=" + escape(name); }
 
+var id_search_count = 1;
+
 /* ************************************************************************** */
 /* GRID / FORM LOADER                                                         */
 /* ************************************************************************** */
@@ -224,7 +226,7 @@ $(function()
 	jQuery("#packets").jqGrid(
 	{
 		datatype: "json",
-		colNames:['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', '', '', 'Lastupdated'],
+		colNames:['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', '', '', 'Updated'],
 		colModel:[
 			{name:'parent',			index:'parent',			hidden:true},
 			{name:'connected',		index:'connected',		hidden:true},
@@ -372,7 +374,6 @@ $(function()
 		caption:"Search"
 	});
 
-	var id_search_count = 1;
 	var mydata = [
 		{id:"1",name:"ODay Packets"},
 		{id:"2",name:"OWeek Packets"},
@@ -402,24 +403,6 @@ $(function()
 		}
 	});
 
-	function AddNewSearch()
-	{
-		var tbox = jQuery('#search-text');
-		if(tbox.val() != "")
-		{
-			$.get(NameUrl(Enum.TCPClientRequest.AddSearch, tbox.val()));
-			AddSearch(tbox.val());
-			tbox.val('');
-		}
-	}
-
-	function AddSearch(search)
-	{
-		var datarow = {id:id_search_count, name:search};
-		jQuery("#searches").addRowData(id_search_count, datarow);
-		id_search_count++;
-	}
-
 	$("#search-text").width($("#searches").width() - $("#search-button").width() - 20);
 
 	/* ********************************************************************** */
@@ -434,28 +417,7 @@ $(function()
 		buttons: {
 			'Connect': function()
 			{
-				var bValid = true;
-				bValid = CheckPassword($("#password").val());
-
-				if (bValid)
-				{
-					$("#password").removeClass('ui-state-error');
-					SetPassword($("#password").val());
-					$(this).dialog('close');
-
-					// Get searches
-					$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSearches,
-						function(result) {
-							$.each(result.searches, function(i, item) {
-								AddSearch(item.search);
-							});
-						}
-					);
-				}
-				else
-				{
-					$("#password").addClass('ui-state-error');
-				}
+				ButtonConnectClicked($(this));
 			}
 		},
 		close: function()
@@ -492,17 +454,11 @@ $(function()
 		buttons: {
 			'Insert Server': function()
 			{
-				if($("#server").val() != "")
-				{
-					$.get(NameUrl(Enum.TCPClientRequest.AddServer, $("#server").val()));
-					$("#server").val("");
-					setTimeout("ReloadGrid('servers')", 1000);
-					$(this).dialog('close');
-				}
+				ButtonInsertServerClicked($(this));
 			},
-			Cancel: function()
+			'Cancel': function()
 			{
-				$(this).dialog('close');
+				ButtonCancelClicked($(this));
 			}
 		},
 		close: function()
@@ -526,17 +482,11 @@ $(function()
 		buttons: {
 			'Insert Channel': function()
 			{
-				if($("#channel").val() != "")
-				{
-					$.get(GuidNameUrl(Enum.TCPClientRequest.AddChannel, id_server , $("#channel").val()));
-					$("#channel").val("");
-					setTimeout("ReloadGrid('servers')", 1000);
-					$(this).dialog('close');
-				}
+				ButtonInsertChannelClicked($(this));
 			},
-			Cancel: function()
+			'Cancel': function()
 			{
-				$(this).dialog('close');
+				ButtonCancelClicked($(this));
 			}
 		},
 		close: function()
@@ -559,27 +509,11 @@ $(function()
 		buttons: {
 			'Yes': function()
 			{
-				if(obj_current)
-				{
-					if(obj_current.level == 0)
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.RemoveServer, id_server));
-					}
-					else
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.RemoveChannel, id_channel));
-					}
-					setTimeout("ReloadGrid('servers')", 1000);
-					obj_current = "";
-					id_server = "";
-					id_channel = "";
-
-					$(this).dialog('close');
-				}
+				ButtonYesClicked($(this));
 			},
 			'No': function()
 			{
-				$(this).dialog('close');
+				ButtonCancelClicked($(this));
 			}
 		},
 		close: function()
@@ -606,6 +540,28 @@ $(function()
 	Resize();
 });
 
+
+/* ************************************************************************** */
+/* SEARCH STUFF                                                               */
+/* ************************************************************************** */
+
+function AddNewSearch()
+{
+	var tbox = jQuery('#search-text');
+	if(tbox.val() != "")
+	{
+		$.get(NameUrl(Enum.TCPClientRequest.AddSearch, tbox.val()));
+		AddSearch(tbox.val());
+		tbox.val('');
+	}
+}
+
+function AddSearch(search)
+{
+	var datarow = {id:id_search_count, name:search};
+	jQuery("#searches").addRowData(id_search_count, datarow);
+	id_search_count++;
+}
 
 /* ************************************************************************** */
 /* COLOR STUFF                                                                */
@@ -655,6 +611,84 @@ function GetColor(id)
 		case 24: return Enum.TangoColor.Aluminium2.Light;
 		case 25: return Enum.TangoColor.Aluminium2.Middle;
 		case 26: return Enum.TangoColor.Aluminium2.Dark;
+	}
+}
+
+/* ************************************************************************** */
+/* DIALOG BUTTON HANDLER                                                      */
+/* ************************************************************************** */
+
+function ButtonConnectClicked(dialog)
+{
+	var bValid = true;
+	bValid = CheckPassword($("#password").val());
+
+	if (bValid)
+	{
+		$("#password").removeClass('ui-state-error');
+		SetPassword($("#password").val());
+		dialog.dialog('close');
+
+		// Get searches
+		$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSearches,
+			function(result) {
+				$.each(result.searches, function(i, item) {
+					AddSearch(item.search);
+				});
+			}
+		);
+	}
+	else
+	{
+		$("#password").addClass('ui-state-error');
+	}
+}
+
+function ButtonCancelClicked(dialog)
+{
+	dialog.dialog('close');
+}
+
+function ButtonInsertServerClicked(dialog)
+{
+	if($("#server").val() != "")
+	{
+		$.get(NameUrl(Enum.TCPClientRequest.AddServer, $("#server").val()));
+		$("#server").val("");
+		setTimeout("ReloadGrid('servers')", 1000);
+		dialog.dialog('close');
+	}
+}
+
+function ButtonInsertChannelClicked(dialog)
+{
+	if($("#channel").val() != "")
+	{
+		$.get(GuidNameUrl(Enum.TCPClientRequest.AddChannel, id_server , $("#channel").val()));
+		$("#channel").val("");
+		setTimeout("ReloadGrid('servers')", 1000);
+		dialog.dialog('close');
+	}
+}
+
+function ButtonYesClicked(dialog)
+{
+	if(obj_current)
+	{
+		if(obj_current.level == 0)
+		{
+			$.get(GuidUrl(Enum.TCPClientRequest.RemoveServer, id_server));
+		}
+		else
+		{
+			$.get(GuidUrl(Enum.TCPClientRequest.RemoveChannel, id_channel));
+		}
+		setTimeout("ReloadGrid('servers')", 1000);
+		obj_current = "";
+		id_server = "";
+		id_channel = "";
+
+		dialog.dialog('close');
 	}
 }
 

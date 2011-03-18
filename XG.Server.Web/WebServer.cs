@@ -122,7 +122,6 @@ namespace XG.Server.Web
 			HttpListenerContext client = aObject as HttpListenerContext;
 
 			Dictionary<string, string> tDic = new Dictionary<string, string>();
-
 			string str = client.Request.RawUrl;
 			this.Log("OpenClient() " + str, LogLevel.Traffic);
 
@@ -392,8 +391,14 @@ namespace XG.Server.Web
 							str = str.Replace("/css/style/", "/css/" + Settings.InstanceReload.StyleWebServer + "/");
 						}
 
-						if (str.EndsWith(".png")) { this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str)); }
-						else { this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str)); }
+						if (str.EndsWith(".png"))
+						{
+							this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str));
+						}
+						else
+						{
+							this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
+						}
 					}
 				}
 #if !UNSAFE
