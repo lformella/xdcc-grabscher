@@ -948,6 +948,9 @@ namespace XG.Server
 						this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
 						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
 
+						// statistics
+						Statistic.Instance.Increase(StatisticType.FilesCompleted);
+
 						// the file is complete and enabled
 						tFile.Enabled = true;
 						error = false;
@@ -964,11 +967,17 @@ namespace XG.Server
 					else
 					{
 						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size, LogLevel.Error);
+
+						// statistics
+						Statistic.Instance.Increase(StatisticType.FilesBroken);
 					}
 				}
 				catch (Exception ex)
 				{
 					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+
+					// statistics
+					Statistic.Instance.Increase(StatisticType.FilesBroken);
 				}
 
 				if (error && deleteOnError)
