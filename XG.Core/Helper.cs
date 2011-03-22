@@ -97,8 +97,10 @@ namespace XG.Core
 		RemoveSearch = 22,
 		GetSearches = 23,
 
-		CloseClient = 24,
-		CloseServer = 25
+		GetStatistics = 24,
+
+		CloseClient = 25,
+		CloseServer = 26
 	}
 
 	[Flags]

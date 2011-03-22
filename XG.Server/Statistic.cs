@@ -217,8 +217,21 @@ namespace XG.Server
 
 		public double Get(StatisticType aType)
 		{
-			if(!this.myValuesDouble.ContainsKey(aType)) { return 0; }
-			else { return this.myValuesDouble[aType]; }
+			if(!this.myValuesDouble.ContainsKey(aType))
+			{
+				if(!this.myValuesInt.ContainsKey(aType))
+				{
+					return 0;
+				}
+				else
+				{
+					return this.myValuesInt[aType];
+				}
+			}
+			else
+			{
+				return this.myValuesDouble[aType];
+			}
 		}
 
 		public void Set(StatisticType aType, double aValue)

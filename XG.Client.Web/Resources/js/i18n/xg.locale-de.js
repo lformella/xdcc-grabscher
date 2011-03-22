@@ -84,4 +84,6 @@ $(function()
 	/* ********************************************************************** */
 
 	$("#offline_bots").html("inaktive Bots ausblenden");
+	$("#tab-1").html("IRC &Uuml;bersicht");
+	$("#tab-2").html("Statistiken");
 });

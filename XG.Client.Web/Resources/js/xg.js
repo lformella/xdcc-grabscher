@@ -52,8 +52,10 @@ Enum.TCPClientRequest =
 	RemoveSearch : 22,
 	GetSearches : 23,
 
-	CloseClient : 24,
-	CloseServer : 25
+	GetStatistics : 24,
+
+	CloseClient : 25,
+	CloseServer : 26
 }
 Enum.TangoColor =
 {
@@ -167,6 +169,7 @@ $(function()
 		sortorder: "asc",
 		caption:"Servers"
 	});
+	jQuery("#servers").jqGrid('gridResize',{minWidth: 200, maxWidth: 200});
 
 	/* ********************************************************************** */
 	/* BOT GRID                                                               */
@@ -373,6 +376,7 @@ $(function()
 		sortorder: "desc",
 		caption:"Search"
 	});
+	jQuery("#searches").jqGrid('gridResize',{minWidth: 200, maxWidth: 200});
 
 	var mydata = [
 		{id:"1",name:"ODay Packets"},
@@ -538,6 +542,12 @@ $(function()
 		Resize();
 	});
 	Resize();
+
+	/* ********************************************************************** */
+	/* OTHERS                                                                 */
+	/* ********************************************************************** */
+
+	jQuery("#tabs").tabs();
 });
 
 
@@ -1191,14 +1201,16 @@ function Time2Human(time)
 function Resize()
 {
 	//alert($(window).height() / 2);
-	var width = $(window).width() - 6 * 5 - 210;
-	var height = ($(window).height() - 6 * 5 - 2 * 3 * 25 - 30) / 2;
+	var width = $(window).width() - 230;
+	var height = ($(window).height() - 240) / 2;
 
 	jQuery("#servers").setGridHeight(height - 15);
 	jQuery("#searches").setGridHeight(height);
 
 	jQuery("#bots").setGridHeight(height);
 	jQuery("#bots").setGridWidth(width);
+	jQuery("#bots").jqGrid('gridResize',{minWidth: width, maxWidth: width});
 	jQuery("#packets").setGridHeight(height);
 	jQuery("#packets").setGridWidth(width);
+	jQuery("#packets").jqGrid('gridResize',{minWidth: width, maxWidth: width});
 }

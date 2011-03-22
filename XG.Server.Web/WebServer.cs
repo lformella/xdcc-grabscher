@@ -331,6 +331,10 @@ namespace XG.Server.Web
 							list = this.myRunner.GetChildrenFromObject(new Guid(tDic["guid"]), tComp);
 							break;
 
+						case TCPClientRequest.GetStatistics:
+							this.WriteToStream(client.Response, this.Statistic2Json());
+							break;
+
 						#endregion
 
 						# region COMMANDS
@@ -567,6 +571,25 @@ namespace XG.Server.Web
 			return sb.ToString();
 		}
 
+		private string Statistic2Json()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("{\n");
+
+			List<StatisticType> types = new List<StatisticType>();
+			// uncool, but works
+			for(int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedAvg; a++) { types.Add((StatisticType)a); }
+			
+			foreach(StatisticType type in types)
+			{
+				double val = Statistic.Instance.Get(type);
+				sb.Append("\t" + type + ":" + val + ";\n");
+			}
+
+			sb.Append("}");
+			return sb.ToString();
+		}
+		
 		private string ClearString(string aString)
 		{
 			string str = "";
@@ -578,6 +601,7 @@ namespace XG.Server.Web
 			str = aString.Replace("ö", "&ouml;");
 			str = aString.Replace("Ü", "&Uuml;");
 			str = aString.Replace("ü", "&uuml;");
+			str = aString.Replace("ß", "&szlig;");
 			return str;
 		}
 

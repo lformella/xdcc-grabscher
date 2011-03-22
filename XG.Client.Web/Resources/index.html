@@ -37,7 +37,7 @@
 		<script type="text/javascript" src="js/i18n/xg.locale-#LANGUAGE_SHORT#.js"></script>
 
 		<style type="text/css">
-			body{ font-size: 11px; }
+			body { font-size: 11px; padding: 0px; }
 		</style>
 	</head>
 
@@ -76,42 +76,79 @@
 			<p id="delete_tip">Do you really want to delete the item you selected?</p>
 		</div>
 
-		<table width="100%">
-			<tr>
-				<td width="210" valign="top">
+		<div id="tabs">
+			<ul>
+				<li><a id="tab-1" href="#tabs-1">IRC View</a></li>
+				<li><a id="tab-2" href="#tabs-2">Statistics</a></li>
+			</ul>
 
-					<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="server-pager" class="scroll" style="text-align:center;"></div>
+			<div id="tabs-1" style="padding: 0px;">
 
-					<button id="add-server" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span id="server_button" style="margin-left:20px">Server</span></button>
-					<button id="add-channel" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span id="channel_button" style="margin-left:20px">Channel</span></button>
-					<br />
-					<button id="delete" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-minus" style="position:absolute;"></span><span id="current_item_button" style="margin-left:20px">Current Item</span></button>
+				<table width="100%">
+					<tr>
+						<td width="210" valign="top">
+							<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="server-pager" class="scroll" style="text-align:center;"></div>
 
-					<br /><br />
+							<button id="add-server" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span id="server_button" style="margin-left:20px">Server</span></button>
+							<button id="add-channel" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-plus" style="position:absolute;"></span><span id="channel_button" style="margin-left:20px">Channel</span></button>
+							<br />
+							<button id="delete" class="ui-button ui-state-default ui-corner-all"><span class="ui-icon ui-icon-circle-minus" style="position:absolute;"></span><span id="current_item_button" style="margin-left:20px">Current Item</span></button>
 
-					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<input type="text" id="search-text" />
-					<button id="search-button" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-search"></span></button>
+							<br /><br />
 
-				</td>
-				<td valign="top">
-				
-					<input type="checkbox" name="offbots" id="offbots" value="1" /> <span id="offline_bots">hide offline Bots</span>
-					
-					<br />
+							<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<input type="text" id="search-text" />
+							<button id="search-button" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-search"></span></button>
+						</td>
+						<td valign="top">
+							<input type="checkbox" name="offbots" id="offbots" value="1" /> <span id="offline_bots">hide offline Bots</span>
+							<br />
 
-					<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+							<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+							<br />
 
-					<br />
+							<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="packet-pager" class="scroll" style="text-align:center;"></div>		
+						</td>
+					</tr>
+				</table>
 
-					<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="packet-pager" class="scroll" style="text-align:center;"></div>
+			</div>
+			<div id="tabs-2">
 
-				</td>
-			</tr>
-		</table>
+				BytesLoaded: <span id="BytesLoaded"></span><br /><br />
+
+				PacketsCompleted: <span id="PacketsCompleted"></span><br />
+				PacketsIncompleted: <span id="PacketsIncompleted"></span><br />
+				PacketsBroken: <span id="PacketsBroken"></span><br /><br />
+
+				PacketsRequested: <span id="PacketsRequested"></span><br />
+				PacketsRemoved: <span id="PacketsRemoved"></span><br /><br />
+
+				FilesCompleted: <span id="FilesCompleted"></span><br />
+				FilesBroken: <span id="FilesBroken"></span><br /><br />
+
+				ServerConnectsOk: <span id="ServerConnectsOk"></span><br />
+				ServerConnectsFailed: <span id="ServerConnectsFailed"></span><br />
+
+				ChannelConnectsOk: <span id="ChannelConnectsOk"></span><br />
+				ChannelConnectsFailed: <span id="ChannelConnectsFailed"></span><br />
+				ChannelsJoined: <span id="ChannelsJoined"></span><br />
+				ChannelsParted: <span id="ChannelsParted"></span><br />
+				ChannelsKicked: <span id="ChannelsKicked"></span><br /><br />
+
+				BotConnectsOk: <span id="BotConnectsOk"></span><br />
+				BotConnectsFailed: <span id="BotConnectsFailed"></span><br /><br />
+
+				SpeedMax: <span id="SpeedMax"></span><br />
+				SpeedMin: <span id="SpeedMin"></span><br />
+				SpeedAvg: <span id="SpeedAvg"></span><br /><br />
+
+			</div>
+
+		</div>
 
 	</body>
 </html>
