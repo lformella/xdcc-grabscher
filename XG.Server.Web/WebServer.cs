@@ -578,12 +578,19 @@ namespace XG.Server.Web
 
 			List<StatisticType> types = new List<StatisticType>();
 			// uncool, but works
-			for(int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedAvg; a++) { types.Add((StatisticType)a); }
-			
-			foreach(StatisticType type in types)
+			for (int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedAvg; a++)
 			{
+				types.Add((StatisticType)a);
+			}
+
+			int count = 0;
+			foreach (StatisticType type in types)
+			{
+				count++;
 				double val = Statistic.Instance.Get(type);
-				sb.Append("\t" + type + ":" + val + ";\n");
+				sb.Append ("\t\"" + type + "\":" + val.ToString().Replace(",", "."));
+				if (count < types.Count) { sb.Append(","); }
+				sb.Append("\n");
 			}
 
 			sb.Append("}");

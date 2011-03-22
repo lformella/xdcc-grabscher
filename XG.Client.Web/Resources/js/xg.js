@@ -527,13 +527,6 @@ $(function()
 	});
 
 	/* ********************************************************************** */
-	/* START TIMER                                                            */
-	/* ********************************************************************** */
-	
-	// start the refresh
-	RefreshGrid();
-
-	/* ********************************************************************** */
 	/* RESIZE HELPER                                                          */
 	/* ********************************************************************** */
 	
@@ -647,6 +640,10 @@ function ButtonConnectClicked(dialog)
 				});
 			}
 		);
+
+		// start the refresh
+		RefreshGrid();
+		RefreshStatistic();
 	}
 	else
 	{
@@ -847,6 +844,46 @@ function RefreshPacket(guid)
 			return;
 		}
 	);
+}
+
+function RefreshStatistic()
+{
+	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetStatistics,
+		function(result)
+		{
+			$("#BytesLoaded").html(Size2Human(result.BytesLoaded));
+
+			$("#PacketsCompleted").html(result.PacketsCompleted);
+			$("#PacketsIncompleted").html(result.PacketsIncompleted);
+			$("#PacketsBroken").html(result.PacketsBroken);
+
+			$("#PacketsRequested").html(result.PacketsRequested);
+			$("#PacketsRemoved").html(result.PacketsRemoved);
+
+			$("#FilesCompleted").html(result.FilesCompleted);
+			$("#FilesBroken").html(result.FilesBroken);
+
+			$("#ServerConnectsOk").html(result.ServerConnectsOk);
+			$("#ServerConnectsFailed").html(result.ServerConnectsFailed);
+
+			$("#ChannelConnectsOk").html(result.ChannelConnectsOk);
+			$("#ChannelConnectsFailed").html(result.ChannelConnectsFailed);
+			$("#ChannelsJoined").html(result.ChannelsJoined);
+			$("#ChannelsParted").html(result.ChannelsParted);
+			$("#ChannelsKicked").html(result.ChannelsKicked);
+
+			$("#BotConnectsOk").html(result.BotConnectsOk);
+			$("#BotConnectsFailed").html(result.BotConnectsFailed);
+
+			$("#SpeedMax").html(Speed2Human(result.SpeedMax));
+			$("#SpeedMin").html(Speed2Human(result.SpeedMin));
+			$("#SpeedAvg").html(Speed2Human(result.SpeedAvg));
+
+			return;
+		}
+	);
+
+	setTimeout("RefreshStatistic()", 10000);
 }
 
 /* ************************************************************************** */
@@ -1201,8 +1238,8 @@ function Time2Human(time)
 function Resize()
 {
 	//alert($(window).height() / 2);
-	var width = $(window).width() - 230;
-	var height = ($(window).height() - 240) / 2;
+	var width = $(window).width() - 240;
+	var height = ($(window).height() - 260) / 2;
 
 	jQuery("#servers").setGridHeight(height - 15);
 	jQuery("#searches").setGridHeight(height);
