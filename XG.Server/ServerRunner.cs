@@ -106,7 +106,7 @@ namespace XG.Server
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
 						this.Log("Run() removing dupe server " + s.Name, LogLevel.Error);
-						this.myRootObject.removeServer(s);
+						this.myRootObject.RemoveServer(s);
 					}
 				}
 
@@ -586,7 +586,7 @@ namespace XG.Server
 
 		public void AddServer(string aString)
 		{
-			this.myRootObject.addServer(aString);
+			this.myRootObject.AddServer(aString);
 		}
 
 		public void RemoveServer(Guid aGuid)
@@ -594,7 +594,7 @@ namespace XG.Server
 			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
-				this.myRootObject.removeServer(tObj as XGServer);
+				this.myRootObject.RemoveServer(tObj as XGServer);
 			}
 		}
 

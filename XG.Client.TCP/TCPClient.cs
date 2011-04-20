@@ -159,7 +159,7 @@ namespace XG.Client.TCP
 							if (remObj.GetType() == typeof(XGServer))
 							{
 								XGServer tServ = remObj as XGServer;
-								this.myRootObject.removeServer(tServ);
+								this.myRootObject.RemoveServer(tServ);
 							}
 
 							else if (remObj.GetType() == typeof(XGChannel))
@@ -263,7 +263,7 @@ namespace XG.Client.TCP
 		{
 			if (aObj.GetType() == typeof(XGServer))
 			{
-				this.myRootObject.addServer(aObj as XGServer);
+				this.myRootObject.AddServer(aObj as XGServer);
 				if (this.ObjectAddedEvent != null) { this.ObjectAddedEvent(aObj, this.myRootObject); }
 			}
 

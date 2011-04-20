@@ -43,7 +43,7 @@ namespace XG.Core
 			}
 		}
 
-		public void addServer(XGServer aServer)
+		public void AddServer(XGServer aServer)
 		{
 			if (base.AddChild(aServer))
 			{
@@ -53,7 +53,7 @@ namespace XG.Core
 				}
 			}
 		}
-		public void addServer(string aServer)
+		public void AddServer(string aServer)
 		{
 			aServer = aServer.Trim().ToLower();
 			if (this[aServer] == null)
@@ -62,11 +62,11 @@ namespace XG.Core
 				tServer.Name = aServer;
 				tServer.Port = 6667;
 				tServer.Enabled = true;
-				this.addServer(tServer);
+				this.AddServer(tServer);
 			}
 		}
 
-		public void removeServer(XGServer aServer)
+		public void RemoveServer(XGServer aServer)
 		{
 			if (base.RemoveChild(aServer))
 			{
@@ -76,12 +76,12 @@ namespace XG.Core
 				}
 			}
 		}
-		public void removeServer(string aServer)
+		public void RemoveServer(string aServer)
 		{
 			XGServer tServ = this[aServer];
 			if (tServ != null)
 			{
-				this.removeServer(tServ);
+				this.RemoveServer(tServ);
 			}
 		}
 

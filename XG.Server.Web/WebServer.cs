@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using XG.Client.Web;
@@ -545,10 +546,6 @@ namespace XG.Server.Web
 				{
 					XGBot tBot = (XGBot)aObject;
 					XGFilePart tPart = this.myRunner.GetFilePart4Bot(tBot);
-					string msg = tBot.LastMessage.Replace('"', '\'');
-					msg = msg.Replace("ä", "&auml;").Replace("Ä", "&Auml;");
-					msg = msg.Replace("ö", "&ouml;").Replace("Ö", "&Ouml;");
-					msg = msg.Replace("ü", "&uuml;").Replace("Ü", "&Uuml;");
 
 					sb.Append("\t\t\t\"" + this.ClearString(aObject.Name) + "\",\n");											//5
 					sb.Append("\t\t\t\"" + tBot.BotState + "\",\n");															//6
@@ -561,7 +558,7 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t" + tBot.InfoSlotCurrent + ",\n");															//13
 					sb.Append("\t\t\t" + tBot.InfoQueueTotal + ",\n");															//14
 					sb.Append("\t\t\t" + tBot.InfoQueueCurrent + ",\n");														//15
-					sb.Append("\t\t\t\"" + msg + "\",\n");																		//16
+					sb.Append("\t\t\t\"" + this.ClearString(tBot.LastMessage) + "\",\n");										//16
 					sb.Append("\t\t\t\"" + tBot.LastContact + "\"\n");															//17	
 				}
 			}
@@ -596,19 +593,18 @@ namespace XG.Server.Web
 			sb.Append("}");
 			return sb.ToString();
 		}
-		
+
+		private Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß_.\[\]\{\}\(\)-]");
 		private string ClearString(string aString)
 		{
-			string str = "";
-			str = aString.Replace("\\", "\\\\");
-			str = aString.Replace("\"", "\\\"");
-			str = aString.Replace("Ä", "&Auml;");
-			str = aString.Replace("ä", "&auml;");
-			str = aString.Replace("Ö", "&Ouml;");
-			str = aString.Replace("ö", "&ouml;");
-			str = aString.Replace("Ü", "&Uuml;");
-			str = aString.Replace("ü", "&uuml;");
-			str = aString.Replace("ß", "&szlig;");
+			string str = this.myClearRegex.Replace(aString, "");
+			str = str.Replace("Ä", "&Auml;");
+			str = str.Replace("ä", "&auml;");
+			str = str.Replace("Ö", "&Ouml;");
+			str = str.Replace("ö", "&ouml;");
+			str = str.Replace("Ü", "&Uuml;");
+			str = str.Replace("ü", "&uuml;");
+			str = str.Replace("ß", "&szlig;");
 			return str;
 		}
 

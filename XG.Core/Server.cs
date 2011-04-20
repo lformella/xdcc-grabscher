@@ -136,7 +136,7 @@ namespace XG.Core
 		public XGServer(RootObject parent) : this()
 		{
 			this.Parent = parent;
-			this.Parent.addServer(this);
+			this.Parent.AddServer(this);
 		}
 
 		public void Clone(XGServer aCopy, bool aFull)

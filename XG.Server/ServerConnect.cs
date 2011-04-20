@@ -1254,7 +1254,7 @@ namespace XG.Server
 					this.Log("con_DataReceived(" + aData + ") - nickserv password wrong", LogLevel.Error);
 				}
 				else if(	tData.Contains("The given email address has reached it's usage limit of 1 user") ||
-				        	tData.Contains("This nick is being held for a registered user"))
+							tData.Contains("This nick is being held for a registered user"))
 				{
 					this.Log("con_DataReceived(" + aData + ") - nickserv nick already registered", LogLevel.Error);
 				}
@@ -1265,23 +1265,23 @@ namespace XG.Server
 				else if(tData.Contains("Your nick isn't registered"))
 				{
 					this.Log("con_DataReceived(" + aData + ") - nickserv registering nick", LogLevel.Warning);
-					this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
 				else if(	tData.Contains("Nickname is already in use") ||
-				        	tData.Contains("Nickname is currently in use"))
+							tData.Contains("Nickname is currently in use"))
 				{
 					this.SendData("nickserv ghost " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
 					this.SendData("nickserv recover " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
 				}
 				else if(	tData.Contains("This nickname is registered and protected") ||
-				        	tData.Contains("This nick is being held for a registered user"))
+							tData.Contains("This nick is being held for a registered user"))
 				{
 					this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
 				}
 				else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
 				{
-					// sleep the given time an reregister
-					this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					// sleep the given time and reregister
+					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
 				else if(tData.Contains("Please try again with a more obscure password"))
 				{
