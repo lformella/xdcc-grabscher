@@ -594,7 +594,7 @@ namespace XG.Server.Web
 			return sb.ToString();
 		}
 
-		private Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß_.\[\]\{\}\(\)-]");
+		private Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß _.\[\]\{\}\(\)-]");
 		private string ClearString(string aString)
 		{
 			string str = this.myClearRegex.Replace(aString, "");
