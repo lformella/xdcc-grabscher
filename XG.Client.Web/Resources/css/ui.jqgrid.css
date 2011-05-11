@@ -29,6 +29,7 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}
 /* body */ 
 .ui-jqgrid .ui-jqgrid-bdiv {position: relative; margin: 0em; padding:0; overflow: auto; text-align:left;}
 .ui-jqgrid .ui-jqgrid-btable {table-layout:fixed; margin:0em;}
+.ui-jqgrid tr.jqgrow { outline-style: none; }
 .ui-jqgrid tr.jqgrow td {font-weight: normal; overflow: hidden; white-space: pre; height: 22px;padding: 0 2px 0 2px;border-bottom-width: 1px; border-bottom-color: inherit; border-bottom-style: solid;}
 .ui-jqgrid tr.jqgfirstrow td {padding: 0 2px 0 2px;border-right-width: 1px; border-right-style: solid;}
 .ui-jqgrid tr.jqgroup td {font-weight: normal; overflow: hidden; white-space: pre; height: 22px;padding: 0 2px 0 2px;border-bottom-width: 1px; border-bottom-color: inherit; border-bottom-style: solid;}
@@ -52,8 +53,8 @@ tr.ui-search-toolbar select {margin: 1px 0px 0px 0px}
 .ui-jqgrid .ui-pg-button span { display: block; margin: 1px; float:left;}
 .ui-jqgrid .ui-pg-button:hover { padding: 0px; }
 .ui-jqgrid .ui-state-disabled:hover {padding:1px;}
-.ui-jqgrid .ui-pg-input { /*height:13px;*/font-size:.8em; margin: 0em;}
-.ui-jqgrid .ui-pg-selbox {font-size:.8em; line-height:18px; display:block; /*height:18px;*/ margin: 0em;}
+.ui-jqgrid .ui-pg-input { height:13px;font-size:.8em; margin: 0em;}
+.ui-jqgrid .ui-pg-selbox {font-size:.8em; line-height:18px; display:block; height:18px; margin: 0em;}
 .ui-jqgrid .ui-separator {height: 18px; border-left: 1px solid #ccc ; border-right: 1px solid #ccc ; margin: 1px; float: right;}
 .ui-jqgrid .ui-paging-info {font-weight: normal;height:19px; margin-top:3px;margin-right:4px;}
 .ui-jqgrid .ui-jqgrid-pager .ui-pg-div {padding:1px 0;float:left;list-style-image:none;list-style-position:outside;list-style-type:none;position:relative;}

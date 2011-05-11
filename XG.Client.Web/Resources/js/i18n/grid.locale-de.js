@@ -35,7 +35,7 @@ $.jgrid = {
 		bSubmit: "Speichern",
 		bCancel: "Abbrechen",
 		bClose: "Schließen",
-		saveData: "Daten wurden ge&auml;ndert! &Auml;nderungen speichern?",
+		saveData: "Daten wurden ge&auml;ndert! &auml;nderungen speichern?",
 		bYes : "ja",
 		bNo : "nein",
 		bExit : "abbrechen",
@@ -51,7 +51,7 @@ $.jgrid = {
 			nodefined : " ist nicht definiert!",
 			novalue : " R&uuml;ckgabewert ist erforderlich!",
 			customarray : "Benutzerdefinierte Funktion sollte ein Array zur&uuml;ckgeben!",
-			customfcheck : "Benutzerdefinierte Funktion sollte im Falle der benutzerdefinierten &Uuml;berpr&uuml;fung vorhanden sein!"
+			customfcheck : "Benutzerdefinierte Funktion sollte im Falle der benutzerdefinierten &uuml;berpr&uuml;fung vorhanden sein!"
 		}
 	},
 	view : {
