@@ -29,6 +29,9 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
+		[field: NonSerialized()]
+		private XGPacket currentQueuedPacket = null;
+
 		private BotState botState;
 		public BotState BotState
 		{
@@ -39,6 +42,15 @@ namespace XG.Core
 				{
 					botState = value;
 					this.Modified = true;
+				}
+
+				if(value == BotState.Waiting)
+				{
+					this.currentQueuedPacket = this.getOldestActivePacket();
+				}
+				else
+				{
+					// this.currentQueuedPacket = null;
 				}
 			}
 		}
@@ -211,22 +223,18 @@ namespace XG.Core
 
 		public XGPacket getOldestActivePacket()
 		{
-			return this.getOldestActivePacket(false);
-		}
-		public XGPacket getOldestActivePacket(bool aAll)
-		{
 			XGPacket returnPacket = null;
 			if (Children.Length > 0)
 			{
 				foreach (XGPacket tPack in base.Children)
 				{
-					if (aAll || tPack.Enabled)
+					if (tPack.Enabled)
 					{
 						if (returnPacket == null)
 						{
 							returnPacket = tPack;
 						}
-						else if (tPack.LastModified > returnPacket.LastModified)
+						else if (tPack.LastModified < returnPacket.LastModified)
 						{
 							returnPacket = tPack;
 						}
@@ -234,6 +242,11 @@ namespace XG.Core
 				}
 			}
 			return returnPacket;
+		}
+
+		public XGPacket GetCurrentQueuedPacket()
+		{
+			return this.currentQueuedPacket;
 		}
 
 		public XGBot() : base()

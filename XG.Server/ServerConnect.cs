@@ -1499,7 +1499,7 @@ namespace XG.Server
 			{
 				if (tBot.BotState == BotState.Waiting || tBot.BotState == BotState.Active)
 				{
-					XGPacket tmp = tBot.getOldestActivePacket(true);
+					XGPacket tmp = tBot.GetCurrentQueuedPacket();
 					if (tmp == tPack)
 					{
 						this.UnregisterFromBot(tBot);
