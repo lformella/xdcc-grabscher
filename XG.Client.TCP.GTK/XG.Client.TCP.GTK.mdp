@@ -1,4 +1,4 @@
-<Project name="XG.Client.TCP.GTK" fileversion="2.0" DefaultNamespace="XG.Client.TCP.GTK" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="XG.Client.TCP.GTK" fileversion="2.0" DefaultNamespace="XG.Client.TCP.GTK" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Client.TCP.GTK" />
@@ -34,5 +34,5 @@
     <ProjectReference type="Gac" localcopy="True" refto="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <ProjectReference type="Gac" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
   </References>
-  <LanguageParameters ApplicationIcon="../../../../../Programmierung/CSharp/own_projects/XG/XG.Client.TCP.GTK" ctype="CSharpProjectParameters" />
+  <LanguageParameters StartupObject="XG.Client.TCP.GTK.MainClass" ApplicationIcon="../../../../../Programmierung/CSharp/own_projects/XG/XG.Client.TCP.GTK" ctype="CSharpProjectParameters" />
 </Project>
