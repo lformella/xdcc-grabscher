@@ -30,7 +30,7 @@ namespace XG.Server.Backend.MySql
 		private ServerRunner myRunner;
 		private MySqlConnection myDbConnection;
 
-		//private Thread myServerThread;
+		private Thread myServerThread;
 		private object locked = new object();
 
 		#endregion
@@ -45,9 +45,8 @@ namespace XG.Server.Backend.MySql
 			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 
 			// start the server thread
-			//this.myServerThread = new Thread(new ThreadStart(OpenClient));
-			//this.myServerThread.Start();
-			this.OpenClient();
+			this.myServerThread = new Thread(new ThreadStart(OpenClient));
+			this.myServerThread.Start();
 		}
 		
 		
@@ -58,7 +57,7 @@ namespace XG.Server.Backend.MySql
 			this.myRunner.ObjectRemovedEvent -= new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 
 			this.CloseClient();
-			//this.myServerThread.Abort();
+			this.myServerThread.Abort();
 		}
 		
 		#endregion
@@ -75,7 +74,7 @@ namespace XG.Server.Backend.MySql
 			this.myDbConnection.Open();
 
 			#region CLEAN UP DATABASE
-			/** /
+			/**/
 			this.ExecuteQuery("DELETE FROM server", null);
 
 			List<XGObject> list = this.myRunner.GetServersChannels();
@@ -253,7 +252,15 @@ namespace XG.Server.Backend.MySql
 				}
 				catch (Exception ex)
 				{
-					this.Log("ExecuteQuery() '" + aSql + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					string param = "";
+					if(aDic != null)
+					{
+						foreach(KeyValuePair<string, object> kcp in aDic)
+						{
+							param += "@" + kcp.Key + ":" + kcp.Value + " ";
+						}
+					}
+					this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
 			}
 		}

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `server` (
 	`LastModified` bigint(11) DEFAULT '0',
 	`Port` int(5) NOT NULL,
 	PRIMARY KEY (`guid`)
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `channel` (
 	`Guid` varchar(37) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `channel` (
 		REFERENCES `server` (`Guid`)
 		ON DELETE CASCADE
 		ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `bot` (
 	`Guid` varchar(37) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `bot` (
 		REFERENCES `channel` (`Guid`)
 		ON DELETE CASCADE
 		ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
 CREATE TABLE IF NOT EXISTS `packet` (
 	`Guid` varchar(37) NOT NULL,
@@ -67,4 +67,4 @@ CREATE TABLE IF NOT EXISTS `packet` (
 		REFERENCES `bot` (`Guid`)
 		ON DELETE CASCADE
 		ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
