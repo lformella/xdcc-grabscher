@@ -17,7 +17,7 @@
 
 using System;
 using XG.Server;
-using XG.Server.Backend.MySql;
+//using XG.Server.Backend.MySql;
 using XG.Server.Jabber;
 using XG.Server.TCP;
 using XG.Server.Web;
@@ -36,6 +36,47 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
 				/** / runner.AddServerPlugin(new MySqlBackend()); /**/
+
+/*
+				// import routine
+				StreamReader reader = new StreamReader("./import");
+				string str = reader.ReadToEnd();
+				reader.Close();
+				HtmlDocument doc = new HtmlDocument();
+				doc.LoadHtml(str);
+				HtmlNodeCollection col = doc.DocumentNode.SelectNodes("//a");
+				string last_server = "";
+				int count = 0;
+				foreach(HtmlNode node in col)
+				{
+					string href = node.Attributes["href"].Value;
+					if(href.StartsWith("irc://"))
+					{
+						string[] strs = href.Split(new char[] {'/'});
+						string server = strs[2].ToLower();
+						string channel = strs[3].ToLower();
+						if(last_server != server)
+						{
+							last_server = server;
+							runner.AddServer(server);
+							Console.WriteLine("-> " + server);
+						}
+						List<XGObject> list = runner.GetServersChannels();
+						XGObject s = null;
+						foreach(XGObject obj in list)
+						{
+							if(obj.Name == server)
+							{
+								s = obj;
+							}
+						}
+						runner.AddChannel(s.Guid, channel);
+						Console.WriteLine("-> " + server + " - " + channel);
+						count++;
+					}
+				}
+				Console.WriteLine("----> " + count);
+*/
 
 				runner.Start();
 			}

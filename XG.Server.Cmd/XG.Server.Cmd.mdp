@@ -4,13 +4,13 @@
       <Output directory="bin/Debug" assembly="XG.Server.Cmd" />
       <Build debugmode="True" target="Exe" />
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Release" assembly="XG.Server.Cmd" />
       <Build debugmode="False" target="Exe" />
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
-      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
@@ -22,7 +22,6 @@
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Web" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.TCP" />
-    <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Jabber" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Backend.MySql" />
   </References>
