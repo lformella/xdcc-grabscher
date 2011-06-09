@@ -104,6 +104,20 @@ namespace XG.Core
 			get { return this.lastUpdated; }
 		}
 
+		private DateTime lastMentioned = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		public DateTime LastMentioned
+		{
+			get { return this.lastMentioned; }
+			set
+			{
+				if (this.lastMentioned != value)
+				{
+					this.lastMentioned = value;
+					this.Modified = true;
+				}
+			}
+		}
+
 		public XGPacket() : base()
 		{
 			this.realName = "";

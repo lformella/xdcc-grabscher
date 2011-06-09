@@ -123,6 +123,7 @@ namespace XG.Server
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);
 			this.myCon.DisconnectedEvent -= new SocketErrorDelegate(con_DisconnectedEventHandler);
 			this.myCon.DataTextReceivedEvent -= new DataTextDelegate(con_DataReceivedEventHandler);
+			// @TODO evaluate the error code from the connection
 			this.myCon = null;
 
 			this.myServer.ChannelAddedEvent -= new ServerChannelDelegate(server_ChannelAddedEventHandler);
@@ -715,10 +716,7 @@ namespace XG.Server
 								tPack.EnabledChangedEvent += new ObjectDelegate(packet_ObjectStateChangedEventHandler);
 								tPack.Id = tPacketId;
 							}
-							else
-							{
-								tPack.Modified = false;
-							}
+							tPack.LastMentioned = DateTime.Now;
 
 							string name = this.ClearPacketName(tMatch.Groups["pack_name"].ToString());
 							if (tPack.Name != name && tPack.Name != "")
@@ -742,11 +740,8 @@ namespace XG.Server
 							else if (tPacketAdd == "m" || tPacketAdd == "mb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024); }
 							else if (tPacketAdd == "g" || tPacketAdd == "gb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024 * 1024); }
 
-							if (tPack.Modified)
-							{
-								this.ObjectChange(tPack);
-								this.Log("con_DataReceived() updated packet #" + tPack.Id + " from " + tBot.Name, LogLevel.Info);
-							}
+							this.ObjectChange(tPack);
+							this.Log("con_DataReceived() updated packet #" + tPack.Id + " from " + tBot.Name, LogLevel.Info);
 						}
 						catch (FormatException) { }
 					}
