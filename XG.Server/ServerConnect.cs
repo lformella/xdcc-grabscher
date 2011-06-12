@@ -126,6 +126,7 @@ namespace XG.Server
 
 			// @TODO evaluate the error code from the connection
 			this.myServer.ErrorCode = aValue;
+			this.ObjectChange(this.myServer);
 
 			this.myCon = null;
 
