@@ -691,7 +691,7 @@ namespace XG.Server
 					{
 						isParsed = true;
 
-						if (int.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueInt)) { tBot.InfoSpeedCurrent = valueInt; }
+						if (double.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueDouble)) { tBot.InfoSpeedCurrent = valueDouble; }
 						if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
 					}
 				}
