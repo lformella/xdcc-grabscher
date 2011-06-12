@@ -64,9 +64,6 @@ namespace XG.Server.Backend.MySql
 
 		#region SERVER
 
-		/// <summary>
-		/// Opens the server port, waiting for clients
-		/// </summary>
 		private void OpenClient()
 		{
 			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
@@ -228,6 +225,7 @@ namespace XG.Server.Backend.MySql
 				dic.Add("ParentGuid", obj.ParentGuid);
 				dic.Add("Id", obj.Id);
 				dic.Add("LastUpdated", this.Date2Timestamp(obj.LastUpdated));
+				dic.Add("LastMentioned", this.Date2Timestamp(obj.LastMentioned));
 				dic.Add("Size", obj.Size);
 			}
 

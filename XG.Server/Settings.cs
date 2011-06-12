@@ -137,7 +137,7 @@ namespace XG.Server
 			this.backupDataTime = 900000;
 			this.fileHandler = new string[] { "" };
 
-			this.startTCPServer = true;
+			this.startTCPServer = false;
 			this.tcpServerPort = 5555;
 
 			this.startWebServer = true;
@@ -149,6 +149,8 @@ namespace XG.Server
 			this.jabberServer = "";
 			this.jabberUser = "";
 			this.jabberPassword = "";
+
+			this.startMySqlBackend = false;
 
 #if DEBUG
 			this.logLevel = LogLevel.Notice;
@@ -162,151 +164,151 @@ namespace XG.Server
 		private long commandWaitTime;
 		public long CommandWaitTime
 		{
-			get { return commandWaitTime; }
+			get { return this.commandWaitTime; }
 		}
 
 		private long botWaitTime;
 		public long BotWaitTime
 		{
-			get { return botWaitTime; }
+			get { return this.botWaitTime; }
 		}
 
 		private long channelWaitTime;
 		public long ChannelWaitTime
 		{
-			get { return channelWaitTime; }
+			get { return this.channelWaitTime; }
 		}
 
 		private long channelWaitTimeLong;
 		public long ChannelWaitTimeLong
 		{
-			get { return channelWaitTimeLong; }
+			get { return this.channelWaitTimeLong; }
 		}
 
 		private long fileRollback;
 		public long FileRollback
 		{
-			get { return fileRollback; }
+			get { return this.fileRollback; }
 		}
 
 		private long fileRollbackCheck;
 		public long FileRollbackCheck
 		{
-			get { return fileRollbackCheck; }
+			get { return this.fileRollbackCheck; }
 		}
 
 		private int updateDownloadTime;
 		public int UpdateDownloadTime
 		{
-			get { return updateDownloadTime; }
+			get { return this.updateDownloadTime; }
 		}
 
 		private long downloadPerRead;
 		public long DownloadPerRead
 		{
-			get { return downloadPerRead; }
+			get { return this.downloadPerRead; }
 		}
 
 		private long botOfflineTime;
 		public long BotOfflineTime
 		{
-			get { return botOfflineTime; }
+			get { return this.botOfflineTime; }
 		}
 
 		private long samePacketRequestTime;
 		public long SamePacketRequestTime
 		{
-			get { return samePacketRequestTime; }
+			get { return this.samePacketRequestTime; }
 		}
 
 		private string ircVersion;
 		public string IrcVersion
 		{
-			get { return ircVersion; }
+			get { return this.ircVersion; }
 		}
 
 		private string xgVersion;
 		public string XgVersion
 		{
-			get { return xgVersion; }
+			get { return this.xgVersion; }
 		}
 
 		private int botOfflineCheckTime;
 		public int BotOfflineCheckTime
 		{
-			get { return botOfflineCheckTime; }
+			get { return this.botOfflineCheckTime; }
 		}
 
 		private int downloadTimeout;
 		public int DownloadTimeout
 		{
-			get { return downloadTimeout; }
+			get { return this.downloadTimeout; }
 		}
 		
 		private int serverTimeout;
 		public int ServerTimeout
 		{
-			get { return serverTimeout; }
+			get { return this.serverTimeout; }
 		}
 
 		private int reconnectWaitTime;
 		public int ReconnectWaitTime
 		{
-			get { return reconnectWaitTime; }
+			get { return this.reconnectWaitTime; }
 		}
 
 		private int reconnectWaitTimeLong;
 		public int ReconnectWaitTimeLong
 		{
-			get { return reconnectWaitTimeLong; }
+			get { return this.reconnectWaitTimeLong; }
 		}
 
 		private int mutliDownloadMinimumTime;
 		public int MutliDownloadMinimumTime
 		{
-			get { return mutliDownloadMinimumTime; }
+			get { return this.mutliDownloadMinimumTime; }
 		}
 
 		private long timerSleepTime;
 		public long TimerSleepTime
 		{
-			get { return timerSleepTime; }
+			get { return this.timerSleepTime; }
 		}
 
 		private string parsingErrorFile;
 		public string ParsingErrorFile
 		{
-			get { return parsingErrorFile; }
+			get { return this.parsingErrorFile; }
 		}
 
 		private string dataBinary;
 		public string DataBinary
 		{
-			get { return dataBinary; }
+			get { return this.dataBinary; }
 		}
 
 		private string filesBinary;
 		public string FilesBinary
 		{
-			get { return filesBinary; }
+			get { return this.filesBinary; }
 		}
 
 		private string searchesBinary;
 		public string SearchesBinary
 		{
-			get { return searchesBinary; }
+			get { return this.searchesBinary; }
 		}
 
 		private int maxNoDataReceived;
 		public int MaxNoDataReceived
 		{
-			get { return maxNoDataReceived; }
+			get { return this.maxNoDataReceived; }
 		}
 
 		private int backupStatisticTime;
 		public int BackupStatisticTime
 		{
-			get { return backupStatisticTime; }
+			get { return this.backupStatisticTime; }
 		}
 
 		#endregion
@@ -316,148 +318,155 @@ namespace XG.Server
 		private string iRCName;
 		public string IRCName
 		{
-			get { return iRCName; }
-			set { iRCName = value; }
+			get { return this.iRCName; }
+			set { this.iRCName = value; }
 		}
 
 		private string tempPath;
 		public string TempPath
 		{
-			get { return tempPath; }
-			set { tempPath = value; }
+			get { return this.tempPath; }
+			set { this.tempPath = value; }
 		}
 
 		private string readyPath;
 		public string ReadyPath
 		{
-			get { return readyPath; }
-			set { readyPath = value; }
+			get { return this.readyPath; }
+			set { this.readyPath = value; }
 		}
 
 		private string ircRegisterPasswort;
 		public string IrcRegisterPasswort
 		{
-			get { return ircRegisterPasswort; }
-			set { ircRegisterPasswort = value; }
+			get { return this.ircRegisterPasswort; }
+			set { this.ircRegisterPasswort = value; }
 		}
 
 		private string ircRegisterEmail;
 		public string IrcRegisterEmail
 		{
-			get { return ircRegisterEmail; }
-			set { ircRegisterEmail = value; }
+			get { return this.ircRegisterEmail; }
+			set { this.ircRegisterEmail = value; }
 		}
 
 		private bool enableMultiDownloads;
 		public bool EnableMultiDownloads
 		{
-			get { return enableMultiDownloads; }
-			set { enableMultiDownloads = value; }
+			get { return this.enableMultiDownloads; }
+			set { this.enableMultiDownloads = value; }
 		}
 
 		private bool clearReadyDownloads;
 		public bool ClearReadyDownloads
 		{
-			get { return clearReadyDownloads; }
-			set { clearReadyDownloads = value; }
+			get { return this.clearReadyDownloads; }
+			set { this.clearReadyDownloads = value; }
 		}
 
 		private int tcpServerPort;
 		public int TcpServerPort
 		{
-			get { return tcpServerPort; }
-			set { tcpServerPort = value; }
+			get { return this.tcpServerPort; }
+			set { this.tcpServerPort = value; }
 		}
 
 		private int webServerPort;
 		public int WebServerPort
 		{
-			get { return webServerPort; }
-			set { webServerPort = value; }
+			get { return this.webServerPort; }
+			set { this.webServerPort = value; }
 		}
 
 		private string password;
 		public string Password
 		{
-			get { return password; }
-			set { password = value; }
+			get { return this.password; }
+			set { this.password = value; }
 		}
 
 		private long backupDataTime;
 		public long BackupDataTime
 		{
-			get { return backupDataTime; }
-			set { backupDataTime = value; }
+			get { return this.backupDataTime; }
+			set { this.backupDataTime = value; }
 		}
 
 		private string[] fileHandler;
 		public string[] FileHandler
 		{
-			get { return fileHandler; }
-			set { fileHandler = value; }
+			get { return this.fileHandler; }
+			set { this.fileHandler = value; }
 		}
 
 		private bool startTCPServer;
 		public bool StartTCPServer
 		{
-			get { return startTCPServer; }
-			set { startTCPServer = value; }
+			get { return this.startTCPServer; }
+			set { this.startTCPServer = value; }
 		}
 
 		private bool startWebServer;
 		public bool StartWebServer
 		{
-			get { return startWebServer; }
-			set { startWebServer = value; }
+			get { return this.startWebServer; }
+			set { this.startWebServer = value; }
 		}
 
 		private string styleWebServer;
 		public string StyleWebServer
 		{
-			get { return styleWebServer; }
-			set { styleWebServer = value; }
+			get { return this.styleWebServer; }
+			set { this.styleWebServer = value; }
 		}
 
 		private bool startJabberClient;
 		public bool StartJabberClient
 		{
-			get { return startJabberClient; }
-			set { startJabberClient = value; }
+			get { return this.startJabberClient; }
+			set { this.startJabberClient = value; }
 		}
 
 		private string jabberServer;
 		public string JabberServer
 		{
-			get { return jabberServer; }
-			set { jabberServer = value; }
+			get { return this.jabberServer; }
+			set { this.jabberServer = value; }
 		}
 
 		private string jabberUser;
 		public string JabberUser
 		{
-			get { return jabberUser; }
-			set { jabberUser = value; }
+			get { return this.jabberUser; }
+			set { this.jabberUser = value; }
 		}
 
 		private string jabberPassword;
 		public string JabberPassword
 		{
-			get { return jabberPassword; }
-			set { jabberPassword = value; }
+			get { return this.jabberPassword; }
+			set { this.jabberPassword = value; }
+		}
+
+		private bool startMySqlBackend;
+		public bool StartMySqlBackend
+		{
+			get { return this.startMySqlBackend; }
+			set { this.startMySqlBackend = value; }
 		}
 
 		private bool autoJoinOnInvite;
 		public bool AutoJoinOnInvite
 		{
-			get { return autoJoinOnInvite; }
-			set { autoJoinOnInvite = value; }
+			get { return this.autoJoinOnInvite; }
+			set { this.autoJoinOnInvite = value; }
 		}
 
 		private LogLevel logLevel;
 		public LogLevel LogLevel
 		{
-			get { return logLevel; }
-			set { logLevel = value; }
+			get { return this.logLevel; }
+			set { this.logLevel = value; }
 		}
 
 		#endregion

@@ -457,7 +457,10 @@ namespace XG.Server
 					{
 						if (chan.Enabled) { this.JoinChannel(chan); }
 					}
-					this.SendData("nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					if(Settings.Instance.IrcRegisterPasswort != "")
+					{
+						this.SendData("nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					}
 
 					// statistics
 					Statistic.Instance.Increase(StatisticType.ServerConnectsOk);
@@ -1260,7 +1263,10 @@ namespace XG.Server
 				else if(tData.Contains("Your nick isn't registered"))
 				{
 					this.Log("con_DataReceived(" + aData + ") - nickserv registering nick", LogLevel.Warning);
-					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					if(Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
+					{
+						//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					}
 				}
 				else if(	tData.Contains("Nickname is already in use") ||
 							tData.Contains("Nickname is currently in use"))
@@ -1271,7 +1277,10 @@ namespace XG.Server
 				else if(	tData.Contains("This nickname is registered and protected") ||
 							tData.Contains("This nick is being held for a registered user"))
 				{
-					this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					if(Settings.Instance.IrcRegisterPasswort != "")
+					{
+						this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					}
 				}
 				else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
 				{

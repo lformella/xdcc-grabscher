@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `packet` (
 	`Name` varchar(100) NOT NULL,
 	`LastModified` bigint(11) DEFAULT '0',
 	`LastUpdated` bigint(11) DEFAULT '0',
+	`LastMentioned` bigint(11) DEFAULT '0',
 	`Id` int(4) DEFAULT '0',
 	`Size` bigint(20) DEFAULT '0',
 	PRIMARY KEY (`Guid`),
