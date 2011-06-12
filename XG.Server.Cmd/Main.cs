@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Threading;
 using XG.Server;
 using XG.Server.Backend.MySql;
 using XG.Server.Jabber;
@@ -36,6 +37,9 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
 				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend()); }
+
+				// sleep 5 seconds to let the serverplugins do their initial stuff
+				Thread.Sleep(5000);
 
 /*
 				// import routine
