@@ -123,7 +123,10 @@ namespace XG.Server
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);
 			this.myCon.DisconnectedEvent -= new SocketErrorDelegate(con_DisconnectedEventHandler);
 			this.myCon.DataTextReceivedEvent -= new DataTextDelegate(con_DataReceivedEventHandler);
+
 			// @TODO evaluate the error code from the connection
+			this.myServer.ErrorCode = aValue;
+
 			this.myCon = null;
 
 			this.myServer.ChannelAddedEvent -= new ServerChannelDelegate(server_ChannelAddedEventHandler);
@@ -656,7 +659,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} ([0-9]*) (pack(s|)|Pa(c|)ket(e|)) (\\*){2,3}\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_cur>[0-9]*),|).*(Record: (?<record>[0-9.]*)(K|)B\\/s|)|)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, "(\\*){2,3} ([0-9]*) (pack(s|)|Pa(c|)ket(e|)) (\\*){2,3}\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_total>[0-9]*),|).*(Record: (?<record>[0-9.]*)(K|)B\\/s|)|)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;

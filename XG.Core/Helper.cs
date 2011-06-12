@@ -106,6 +106,7 @@ namespace XG.Core
 	[Flags]
 	public enum SocketErrorCode : int
 	{
+		None							= 0,
 		InterruptedFunctionCall			= 10004,
 		PermissionDenied				= 10013,
 		BadAddress						= 10014,

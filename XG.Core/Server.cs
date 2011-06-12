@@ -52,12 +52,26 @@ namespace XG.Core
 		private int port = 0;
 		public int Port
 		{
-			get { return port; }
+			get { return this.port; }
 			set
 			{
-				if (port != value)
+				if (this.port != value)
 				{
-					port = value;
+					this.port = value;
+					this.Modified = true;
+				}
+			}
+		}
+
+		private SocketErrorCode errorCode = SocketErrorCode.None;
+		public SocketErrorCode ErrorCode
+		{
+			get { return this.errorCode; }
+			set
+			{
+				if (this.errorCode != value)
+				{
+					this.errorCode = value;
 					this.Modified = true;
 				}
 			}
