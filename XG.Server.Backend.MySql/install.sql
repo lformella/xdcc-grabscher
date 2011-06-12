@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS `server` (
 	`Guid` varchar(37) NOT NULL,
 	`Enabled` int(1) DEFAULT '0',
@@ -5,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `server` (
 	`Name` varchar(100) NOT NULL,
 	`LastModified` bigint(11) DEFAULT '0',
 	`Port` int(5) NOT NULL,
+	`ErrorCode` int(5) DEFAULT '0',
 	PRIMARY KEY (`guid`)
 ) ENGINE=MyISAM DEFAULT CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 

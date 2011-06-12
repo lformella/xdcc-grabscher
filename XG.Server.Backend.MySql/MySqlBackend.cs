@@ -37,7 +37,7 @@ namespace XG.Server.Backend.MySql
 
 		#region RUN STOP
 		
-		public void Start (ServerRunner aParent)
+		public void Start(ServerRunner aParent)
 		{
 			this.myRunner = aParent;
 			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
@@ -50,7 +50,7 @@ namespace XG.Server.Backend.MySql
 		}
 		
 		
-		public void Stop ()
+		public void Stop()
 		{
 			this.myRunner.ObjectAddedEvent -= new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
 			this.myRunner.ObjectChangedEvent -= new ObjectDelegate(myRunner_ObjectChangedEventHandler);
@@ -67,11 +67,21 @@ namespace XG.Server.Backend.MySql
 		private void OpenClient()
 		{
 			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
-			this.myDbConnection = new MySqlConnection(connectionString);
-			this.myDbConnection.Open();
+			try
+			{
+				this.myDbConnection = new MySqlConnection(connectionString);
+				this.myDbConnection.Open();
+			}
+			catch (Exception ex)
+			{
+				this.Log("OpenClient() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+
+				// stop it
+				this.Stop();
+			}
 
 			#region CLEAN UP DATABASE
-			/**/
+			/** /
 			this.ExecuteQuery("DELETE FROM server", null);
 
 			List<XGObject> list = this.myRunner.GetServersChannels();
@@ -101,7 +111,14 @@ namespace XG.Server.Backend.MySql
 
 		private void CloseClient()
 		{
-			this.myDbConnection.Close();
+			try
+			{
+				this.myDbConnection.Close();
+			}
+			catch (Exception ex)
+			{
+				this.Log("CloseClient() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+			}
 		}
 
 		#endregion
@@ -171,9 +188,33 @@ namespace XG.Server.Backend.MySql
 			string table = "";
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 
-			if (aObj.GetType() == typeof(XGServer)) { table = "server"; }
-			else if (aObj.GetType() == typeof(XGChannel)) { table = "channel"; }
-			else if (aObj.GetType() == typeof(XGBot)) { table = "bot"; }
+			if (aObj.GetType() == typeof(XGServer))
+			{
+				// drop chans to!
+				foreach(XGChannel chan in aObj.Children)
+				{
+					this.myRunner_ObjectRemovedEventHandler(aObj, chan);
+				}
+				table = "server";
+			}
+			else if (aObj.GetType() == typeof(XGChannel))
+			{
+				// drop bots to!
+				foreach(XGBot bot in aObj.Children)
+				{
+					this.myRunner_ObjectRemovedEventHandler(aObj, bot);
+				}
+				table = "channel";
+			}
+			else if (aObj.GetType() == typeof(XGBot))
+			{
+				// drop packets to!
+				foreach(XGPacket pack in aObj.Children)
+				{
+					this.myRunner_ObjectRemovedEventHandler(aObj, pack);
+				}
+				table = "bot";
+			}
 			else if (aObj.GetType() == typeof(XGPacket)) { table = "packet"; }
 
 			if(table != "")
@@ -199,6 +240,7 @@ namespace XG.Server.Backend.MySql
 			{
 				XGServer obj = (XGServer)aObj;
 				dic.Add("Port", obj.Port);
+				dic.Add("ErrorCode", obj.ErrorCode);
 			}
 			else if (aObj.GetType() == typeof(XGChannel))
 			{
