@@ -672,6 +672,15 @@ namespace XG.Server
 						// this is not the all over record speed!
 						//if (double.TryParse(tMatch.Groups["record"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
 
+						if(tBot.InfoSlotCurrent > tBot.InfoSlotTotal)
+						{
+							tBot.InfoSlotTotal = tBot.InfoSlotCurrent;
+						}
+						if(tBot.InfoQueueCurrent > tBot.InfoQueueTotal)
+						{
+							tBot.InfoQueueTotal = tBot.InfoQueueCurrent;
+						}
+
 						// uhm, there is a free slot and we are still waiting?
 						if (tBot.InfoSlotCurrent > 0 && tBot.BotState == BotState.Waiting)
 						{
@@ -694,6 +703,11 @@ namespace XG.Server
 
 						if (double.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueDouble)) { tBot.InfoSpeedCurrent = valueDouble; }
 						if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
+
+//						if(tBot.InfoSpeedCurrent > tBot.InfoSpeedMax)
+//						{
+//							tBot.InfoSpeedMax = tBot.InfoSpeedCurrent;
+//						}
 					}
 				}
 
@@ -1323,7 +1337,8 @@ namespace XG.Server
 			tData = tData.Replace("[]", string.Empty);
 			tData = tData.Replace("\u000F", string.Empty);
 			tData = tData.Replace("\uFFFD", string.Empty);
-			return tData;
+			tData = tData.Replace("\u0016", string.Empty);
+			return tData.Trim();
 		}
 
 		#endregion
