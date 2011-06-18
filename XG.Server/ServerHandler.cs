@@ -80,7 +80,7 @@ namespace XG.Server
 		#region SERVER
 
 		/// <summary>
-		/// 
+		/// Connects to the given server by using a new ServerConnnect class
 		/// </summary>
 		/// <param name="aServer"></param>
 		public void ConnectServer (object aServer)
@@ -105,13 +105,18 @@ namespace XG.Server
 				// start a new thread wich connects to the given server
 				new Thread(delegate() { con.Connect(tServer); }).Start();
 			}
+			else
+			{
+				this.Log("ConnectServer(" + tServer.Name + ") server is already in the dictionary", LogLevel.Error);
+			}
 		}
 		private void server_ConnectedEventHandler(XGServer aServer)
 		{
+			// nom nom nom ...
 		}
 
 		/// <summary>
-		/// 
+		/// Disconnects the given server
 		/// </summary>
 		/// <param name="aServer"></param>
 		public void DisconnectServer(XGServer aServer)
@@ -173,6 +178,10 @@ namespace XG.Server
 				{
 					con.Connect(tServer);
 				}
+			}
+			else
+			{
+				this.Log("ReconnectServer(" + tServer.Name + ") server is not in the dictionary", LogLevel.Error);
 			}
 		}
 

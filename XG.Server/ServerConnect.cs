@@ -76,6 +76,7 @@ namespace XG.Server
 			this.myServer.ChannelAddedEvent += new ServerChannelDelegate(server_ChannelAddedEventHandler);
 			this.myServer.ChannelRemovedEvent += new ServerChannelDelegate(server_ChannelRemovedEventHandler);
 
+			// @TODO maybe it is possible to reuse old connections and not create a new on every reconnect
 			this.myCon = new Connection();
 			this.myCon.ConnectedEvent += new EmptyDelegate(con_ConnectedEventHandler);
 			this.myCon.DisconnectedEvent += new SocketErrorDelegate(con_DisconnectedEventHandler);
@@ -104,6 +105,9 @@ namespace XG.Server
 			this.myLatestPacketRequests = new Dictionary<string, DateTime>();
 			this.myIsRunning = true;
 
+			this.myServer.ErrorCode = SocketErrorCode.None;
+			this.ObjectChange(this.myServer);
+
 			this.ConnectedEvent(this.myServer);
 		}
 
@@ -117,16 +121,13 @@ namespace XG.Server
 			this.myIsRunning = false;
 			this.myRegistered = false;
 
+			this.myServer.ErrorCode = aValue;
 			this.myServer.Connected = false;
 			this.ObjectChange(this.myServer);
 
 			this.myCon.ConnectedEvent -= new EmptyDelegate(con_ConnectedEventHandler);
 			this.myCon.DisconnectedEvent -= new SocketErrorDelegate(con_DisconnectedEventHandler);
 			this.myCon.DataTextReceivedEvent -= new DataTextDelegate(con_DataReceivedEventHandler);
-
-			// @TODO evaluate the error code from the connection
-			this.myServer.ErrorCode = aValue;
-			this.ObjectChange(this.myServer);
 
 			this.myCon = null;
 
