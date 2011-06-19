@@ -266,9 +266,14 @@ namespace XG.Server
 		public void Disconnect()
 		{
 			if (this.myReaderB != null) { this.myReaderB.Close(); }
+			this.myReaderB = null;
 			if (this.myReaderT != null) { this.myReaderT.Close(); }
+			this.myReaderT = null;
 			if (this.myWriter != null) { this.myWriter.Close(); }
-			this.myTcpClient.Close();
+			this.myWriter = null;
+			if (this.myTcpClient != null) { this.myTcpClient.Close(); }
+			this.myTcpClient = null;
+
 			this.myIsConnected = false;
 		}
 
