@@ -116,7 +116,7 @@ namespace XG.Server
 			this.serverTimeout = 60000;
 			this.reconnectWaitTime = 45000;
 			this.reconnectWaitTimeLong = 900000;
-			this.enableMultiDownloads = true;
+			this.enableMultiDownloads = false;
 			this.clearReadyDownloads = true;
 			this.ircVersion = "mIRC v6.35 Khaled Mardam-Bey";
 			this.xgVersion = "9";
