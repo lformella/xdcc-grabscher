@@ -116,6 +116,7 @@ namespace XG.Server
 			this.serverTimeout = 60000;
 			this.reconnectWaitTime = 45000;
 			this.reconnectWaitTimeLong = 900000;
+			this.reconnectWaitTimeReallyLong = 2700000;
 			this.enableMultiDownloads = false;
 			this.clearReadyDownloads = true;
 			this.ircVersion = "mIRC v6.35 Khaled Mardam-Bey";
@@ -261,6 +262,12 @@ namespace XG.Server
 		public int ReconnectWaitTimeLong
 		{
 			get { return this.reconnectWaitTimeLong; }
+		}
+
+		private int reconnectWaitTimeReallyLong;
+		public int ReconnectWaitTimeReallyLong
+		{
+			get { return this.reconnectWaitTimeReallyLong; }
 		}
 
 		private int mutliDownloadMinimumTime;

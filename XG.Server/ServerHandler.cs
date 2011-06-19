@@ -153,12 +153,14 @@ namespace XG.Server
 					switch(aValue)
 					{
 						case SocketErrorCode.HostIsDown:
-						case SocketErrorCode.HostNotFound:
-						case SocketErrorCode.HostNotFoundTryAgain:
 						case SocketErrorCode.HostUnreachable:
 						case SocketErrorCode.ConnectionTimedOut:
 						case SocketErrorCode.ConnectionRefused:
 							time = Settings.Instance.ReconnectWaitTimeLong;
+							break;
+						case SocketErrorCode.HostNotFound:
+						case SocketErrorCode.HostNotFoundTryAgain:
+							time = Settings.Instance.ReconnectWaitTimeReallyLong;
 							break;
 					}
 					new Timer(new TimerCallback(this.ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
