@@ -5,20 +5,20 @@
   <ReadyPath>./dl/</ReadyPath>
   <IrcRegisterPasswort>password123</IrcRegisterPasswort>
   <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail>
-  <EnableMultiDownloads>true</EnableMultiDownloads>
+  <EnableMultiDownloads>false</EnableMultiDownloads>
   <ClearReadyDownloads>true</ClearReadyDownloads>
   <Password>xgisgreat</Password>
   <BackupDataTime>900000</BackupDataTime>
   <FileHandler>
     <string>.*#mv %PATH% %FOLDER%/_%FILE%</string>
   </FileHandler>
-  <StartTCPServer>true</StartTCPServer>
+  <StartTCPServer>false</StartTCPServer>
   <TcpServerPort>5555</TcpServerPort>
   <StartWebServer>true</StartWebServer>
   <WebServerPort>5556</WebServerPort>
   <StyleWebServer>blitzer</StyleWebServer>
   <AutoJoinOnInvite>true</AutoJoinOnInvite>
-  <LogLevel>Notice</LogLevel>
+  <LogLevel>Warning</LogLevel>
   <StartJabberClient>false</StartJabberClient>
   <JabberServer>jabber.org</JabberServer>
   <JabberUser>user</JabberUser>
