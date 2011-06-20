@@ -260,6 +260,28 @@ namespace XG.Server
 
 					#endregion
 
+					#region KILL
+
+					else if (tComCodeStr == "KILL")
+					{
+						tUserName = tCommandList[2];
+						if (tUserName == Settings.Instance.IRCName)
+						{
+							tChan.Connected = false;
+							this.Log("con_DataReceived() i was killed from server because of " + tData, LogLevel.Warning);
+						}
+						else
+						{
+							tBot = this.myServer.GetBot(tUserName);
+							if (tBot != null)
+							{
+								this.Log("con_DataReceived() bot " + tBot.Name + " was killed from server?", LogLevel.Warning);
+							}
+						}
+					}
+
+					#endregion
+
 					#region JOIN
 
 					else if (tComCodeStr == "JOIN")
