@@ -289,6 +289,10 @@ namespace XG.Server
 			if (this.myReaderT != null)
 			{
 				try { this.myWriter.WriteLine(aData); }
+				catch (ObjectDisposedException)
+				{
+					// this is ok...
+				}
 				catch (SocketException ex)
 				{
 					this.errorCode = (SocketErrorCode)ex.ErrorCode;
