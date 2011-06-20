@@ -81,10 +81,8 @@ namespace XG.Server.Backend.MySql
 				this.Stop();
 			}
 
-			#region CLEAN UP DATABASE
+			#region INIT DATABASE
 			/** /
-			this.ExecuteQuery("DELETE FROM server", null);
-
 			List<XGObject> list = this.myRunner.GetServersChannels();
 			foreach(XGObject obj in list)
 			{
@@ -291,6 +289,32 @@ namespace XG.Server.Backend.MySql
 				{
 					cmd.ExecuteNonQuery();
 				}
+				catch (MySqlException ex)
+				{
+					string param = "";
+					if(aDic != null)
+					{
+						foreach(KeyValuePair<string, object> kcp in aDic)
+						{
+							param += "@" + kcp.Key + ":" + kcp.Value + " ";
+						}
+					}
+					this.Log("ExecuteQuery(" + ex.Number + ") '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				}
+				catch (System.InvalidOperationException ex)
+				{
+					string param = "";
+					if(aDic != null)
+					{
+						foreach(KeyValuePair<string, object> kcp in aDic)
+						{
+							param += "@" + kcp.Key + ":" + kcp.Value + " ";
+						}
+					}
+					this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					this.Log("ExecuteQuery() : stopping server plugin!", LogLevel.Warning);
+					this.Stop();
+				}
 				catch (Exception ex)
 				{
 					string param = "";
@@ -302,10 +326,6 @@ namespace XG.Server.Backend.MySql
 						}
 					}
 					this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					if(ex.InnerException != null)
-					{
-						this.Log("ExecuteQuery() : " + XGHelper.GetExceptionMessage(ex.InnerException), LogLevel.Exception);
-					}
 				}
 			}
 		}
