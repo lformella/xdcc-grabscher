@@ -96,33 +96,6 @@ namespace XG.Server
 
 			#endregion
 
-			#region RESET
-
-			// reset all objects if the server crashed
-			foreach (XGServer serv in this.myRootObject.Children)
-			{
-				serv.Connected = false;
-				serv.ErrorCode = SocketErrorCode.None;
-
-				foreach (XGChannel chan in serv.Children)
-				{
-					chan.Connected = false;
-
-					foreach (XGBot bot in chan.Children)
-					{
-						bot.Connected = false;
-						bot.BotState = BotState.Idle;
-
-						foreach (XGPacket pack in bot.Children)
-						{
-							pack.Connected = false;
-						}
-					}
-				}
-			}
-
-			#endregion
-
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database
@@ -169,6 +142,33 @@ namespace XG.Server
 									bot.removePacket(p);
 								}
 							}
+						}
+					}
+				}
+			}
+
+			#endregion
+
+			#region RESET
+
+			// reset all objects if the server crashed
+			foreach (XGServer serv in this.myRootObject.Children)
+			{
+				serv.Connected = false;
+				serv.ErrorCode = SocketErrorCode.None;
+
+				foreach (XGChannel chan in serv.Children)
+				{
+					chan.Connected = false;
+
+					foreach (XGBot bot in chan.Children)
+					{
+						bot.Connected = false;
+						bot.BotState = BotState.Idle;
+
+						foreach (XGPacket pack in bot.Children)
+						{
+							pack.Connected = false;
 						}
 					}
 				}
