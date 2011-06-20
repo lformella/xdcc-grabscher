@@ -48,13 +48,14 @@ namespace XG.Server.TCP
 		public void Start(ServerRunner aParent)
 		{
 			this.myRunner = aParent;
-			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
-			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
-			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 
 			// start the server thread
 			this.myServerThread = new Thread(new ThreadStart(OpenServer));
 			this.myServerThread.Start();
+
+			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
+			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
+			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 		}
 
 		/// <summary>

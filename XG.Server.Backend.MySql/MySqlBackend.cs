@@ -40,13 +40,14 @@ namespace XG.Server.Backend.MySql
 		public void Start(ServerRunner aParent)
 		{
 			this.myRunner = aParent;
-			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
-			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
-			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 
 			// start the server thread
 			this.myServerThread = new Thread(new ThreadStart(OpenClient));
 			this.myServerThread.Start();
+
+			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
+			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
+			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
 		}
 		
 		
@@ -301,6 +302,10 @@ namespace XG.Server.Backend.MySql
 						}
 					}
 					this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					if(ex.InnerException != null)
+					{
+						this.Log("ExecuteQuery() : " + XGHelper.GetExceptionMessage(ex.InnerException), LogLevel.Exception);
+					}
 				}
 			}
 		}

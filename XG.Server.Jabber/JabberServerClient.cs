@@ -40,11 +40,12 @@ namespace XG.Server.Jabber
 		public void Start (ServerRunner aParent)
 		{
 			this.myRunner = aParent;
-			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 
 			// start the server thread
 			this.myServerThread = new Thread(new ThreadStart(OpenClient));
 			this.myServerThread.Start();
+
+			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
 		}
 		
 		
