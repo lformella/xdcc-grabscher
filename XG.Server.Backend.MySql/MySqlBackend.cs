@@ -301,7 +301,7 @@ namespace XG.Server.Backend.MySql
 					}
 					this.Log("ExecuteQuery(" + ex.Number + ") '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
-				catch (System.InvalidOperationException ex)
+				catch (InvalidOperationException ex)
 				{
 					string param = "";
 					if(aDic != null)

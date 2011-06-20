@@ -36,10 +36,12 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
-				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend()); }
-
-				// sleep 5 seconds to let the serverplugins do their initial stuff
-				Thread.Sleep(5000);
+				if (Settings.Instance.StartMySqlBackend)
+				{
+					runner.AddServerPlugin(new MySqlBackend());
+					// sleep 15 seconds to let the mysql plugin do the initial stuff
+					Thread.Sleep(15000);
+				}
 
 /*
 				// import routine
