@@ -81,8 +81,15 @@ namespace XG.Server.Backend.MySql
 				this.Stop();
 			}
 
-			#region INIT DATABASE
-			/** /
+			#region REINIT DATABASE
+
+			// drop all at first
+			this.ExecuteNonQuery("DELETE FROM server", null);
+			this.ExecuteNonQuery("DELETE FROM channel", null);
+			this.ExecuteNonQuery("DELETE FROM bot", null);
+			this.ExecuteNonQuery("DELETE FROM packet", null);
+
+			// create new
 			List<XGObject> list = this.myRunner.GetServersChannels();
 			foreach(XGObject obj in list)
 			{
@@ -104,7 +111,7 @@ namespace XG.Server.Backend.MySql
 					}
 				}
 			}
-			/**/
+
 			#endregion
 		}
 
@@ -151,7 +158,7 @@ namespace XG.Server.Backend.MySql
 					values2 += "@" + kcp.Key;
 				}
 
-				this.ExecuteQuery("INSERT INTO " + table +" (" + values1 + ") VALUES (" + values2 + ")", dic);
+				this.ExecuteNonQuery("INSERT INTO " + table +" (" + values1 + ") VALUES (" + values2 + ")", dic);
 			}
 		}
 
@@ -178,7 +185,7 @@ namespace XG.Server.Backend.MySql
 				}
 
 				dic.Add("guid", aObj.Guid.ToString());
-				this.ExecuteQuery("UPDATE " + table +" SET " + values1 + " WHERE Guid = @guid", dic);
+				this.ExecuteNonQuery("UPDATE " + table +" SET " + values1 + " WHERE Guid = @guid", dic);
 			}
 		}
 
@@ -219,7 +226,7 @@ namespace XG.Server.Backend.MySql
 			if(table != "")
 			{
 				dic.Add("guid", aObj.Guid.ToString());
-				this.ExecuteQuery("DELETE FROM " + table +" WHERE Guid = @guid", dic);
+				this.ExecuteNonQuery("DELETE FROM " + table +" WHERE Guid = @guid", dic);
 			}
 		}
 
@@ -273,7 +280,7 @@ namespace XG.Server.Backend.MySql
 			return dic;
 		}
 
-		protected void ExecuteQuery(string aSql, Dictionary<string, object> aDic)
+		protected void ExecuteNonQuery(string aSql, Dictionary<string, object> aDic)
 		{
 			lock(locked)
 			{

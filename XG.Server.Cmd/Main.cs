@@ -39,8 +39,8 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartMySqlBackend)
 				{
 					runner.AddServerPlugin(new MySqlBackend());
-					// sleep 15 seconds to let the mysql plugin do the initial stuff
-					Thread.Sleep(15000);
+					// sleep a minute to let the mysql plugin do the initial stuff
+					Thread.Sleep(60000);
 				}
 
 /*
