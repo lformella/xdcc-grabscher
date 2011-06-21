@@ -174,4 +174,11 @@
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ar.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-lt.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-mne.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-th.js" />
+    <EmbeddedResource Include="Resources\js\i18n\xg.locale-de.js" />
+  </ItemGroup>
 </Project>

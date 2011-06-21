@@ -8,7 +8,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>EAgAgIATQSgZIkAEOBnEEAQAIAiGBgAgIBISSCkYgAA=</HashCode>
+      <HashCode>AAgAwIATQSgZIkAEOBnEEAQAIAiGBgEgIBISSCmYgAU=</HashCode>
       <FileName>ServerRunner.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -20,13 +20,13 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="XG.Server.ServerHandler">
-    <Position X="3.5" Y="3.25" Width="1.75" />
+    <Position X="3.5" Y="3" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>DABCQIAABEAMEAEkUAgUAKAQAQgOgCEBAoAEBAAIAAA=</HashCode>
+      <HashCode>DABCQIAABEAMEAEkUAgUAKAQAQgOgCEBAoAEBCAIAAA=</HashCode>
       <FileName>ServerHandler.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -35,14 +35,14 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="XG.Server.ServerConnect">
-    <Position X="6.25" Y="3.25" Width="1.75" />
+    <Position X="6.25" Y="2.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AEQAQAIAAAAoEAABkAUEwIgAkIpKEAhAAIAAAAAABEA=</HashCode>
+      <HashCode>AEQAQAIBAIAoEEABlAUEwogAkIpKFAhAAIAAAAAABEA=</HashCode>
       <FileName>ServerConnect.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -50,7 +50,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="XG.Server.BotConnect">
-    <Position X="0.5" Y="3.25" Width="1.75" />
+    <Position X="0.5" Y="2.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
@@ -58,8 +58,8 @@
     </Compartments>
     <AssociationLine Name="myPacket" Type="XG.Core.XGPacket" FixedFromPoint="true">
       <Path>
-        <Point X="1.5" Y="5.212" />
-        <Point X="1.5" Y="6.5" />
+        <Point X="1.5" Y="4.462" />
+        <Point X="1.5" Y="5.75" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -79,11 +79,11 @@
     <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.XGServer" Collapsed="true">
-    <Position X="6.25" Y="6.5" Width="1.5" />
+    <Position X="6.25" Y="5.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.XGPacket" Collapsed="true">
-    <Position X="0.5" Y="6.5" Width="1.5" />
+    <Position X="0.5" Y="5.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Font Name="Tahoma" Size="8.25" />
