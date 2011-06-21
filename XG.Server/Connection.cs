@@ -193,7 +193,8 @@ namespace XG.Server
 									catch (SocketException ex)
 									{
 										this.errorCode = (SocketErrorCode)ex.ErrorCode;
-										this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
+										// we dont need to log this kind of exception, because it is just normal
+										//this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
 									}
 									catch (IOException ex)
 									{
@@ -201,7 +202,8 @@ namespace XG.Server
 										{
 											SocketException exi = (SocketException)ex.InnerException;
 											this.errorCode = (SocketErrorCode)exi.ErrorCode;
-											this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
+											// we dont need to log this kind of exception, because it is just normal
+											//this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
 											break;
 										}
 										else
@@ -249,10 +251,6 @@ namespace XG.Server
 						{
 							// this is ok...
 						}
-						/*catch (Exception ex)
-						{
-							this.Log("Connect(" + aName + ", " + aPort + (aMaxData > 0 ? ", " + aMaxData : "") + ") Exception: " + XGHelper.GetExceptionMessage(ex), LogLevel.Error);
-						}*/
 
 						this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") end", LogLevel.Notice);
 					}
@@ -296,7 +294,8 @@ namespace XG.Server
 				catch (SocketException ex)
 				{
 					this.errorCode = (SocketErrorCode)ex.ErrorCode;
-					this.Log("SendData(" + aData + ") : " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
+					// we dont need to log this kind of exception, because it is just normal
+					//this.Log("SendData(" + aData + ") : " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
 				}
 				catch (IOException ex)
 				{
@@ -304,7 +303,8 @@ namespace XG.Server
 					{
 						SocketException exi = (SocketException)ex.InnerException;
 						this.errorCode = (SocketErrorCode)exi.ErrorCode;
-						this.Log("SendData(" + aData + ") : " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
+						// we dont need to log this kind of exception, because it is just normal
+						//this.Log("SendData(" + aData + ") : " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
 					}
 					else
 					{

@@ -169,7 +169,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					XGHelper.Log("Settings.Instance.Deserialize() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 					return new Statistic();
 				}
 			}
@@ -185,9 +185,17 @@ namespace XG.Server
 					serializer.Serialize(streamWrite, instance);
 					streamWrite.Close();
 				}
+				catch (InvalidOperationException)
+				{
+					// this is ok and happens once in a while
+				}
+				catch (IOException)
+				{
+					// this is not really ok, but happens once in a while
+				}
 				catch (Exception ex)
 				{
-					XGHelper.Log("Statistic.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					XGHelper.Log("Statistic.Instance.Serialize() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 				}
 			}
 		}
