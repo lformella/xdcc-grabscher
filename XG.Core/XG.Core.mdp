@@ -1,4 +1,4 @@
-<Project name="XG.Core" fileversion="2.0" DefaultNamespace="XG.Core" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
+<Project name="XG.Core" fileversion="2.0" releaseVersion="0.9" DefaultNamespace="XG.Core" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Core" />
@@ -13,7 +13,7 @@
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Unsafe" ctype="DotNetProjectConfiguration">
-      <Output directory="bin/Debug" assembly="XG.Core" />
+      <Output directory="bin/Unsafe" assembly="XG.Core" />
       <Build debugmode="True" target="Library" />
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG UNSAFE" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />

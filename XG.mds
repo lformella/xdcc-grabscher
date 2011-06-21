@@ -1,4 +1,4 @@
-<Combine fileversion="2.0" name="XG">
+<Combine fileversion="2.0" description="XG is an irc download tool which can split packages, download it from different bots and merge them back after a successfully download. Note: you need a xg server too, the client wont download anything. Take a look at the project hompage! " version="0.9" name="XG">
   <Policies>
     <VersionControlPolicy inheritsSet="Mono">
       <CommitMessageStyle LastFilePostfix=":&#xA;  " InterMessageLines="0" />

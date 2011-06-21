@@ -1,7 +1,7 @@
-<Project name="XG.Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="3.5" ctype="DotNetProject">
+<Project name="XG.Server.Cmd" fileversion="2.0" releaseVersion="0.9" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
-      <Output directory="bin/Debug" assembly="XG.Server.Cmd" />
+      <Output directory="bin/Unsafe" assembly="XG.Server.Cmd" />
       <Build debugmode="True" target="Exe" />
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
