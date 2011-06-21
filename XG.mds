@@ -43,6 +43,21 @@
       <Entry build="True" name="XG.Server.Jabber" configuration="Release" />
       <Entry build="True" name="XG.Server.Backend.MySql" configuration="Release" />
     </Configuration>
+    <Configuration name="Unsafe" ctype="CombineConfiguration">
+      <Entry build="True" name="XG.Core" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server" configuration="Unsafe" />
+      <Entry build="True" name="XG.Client.TCP" configuration="Unsafe" />
+      <Entry build="True" name="XG.Client.TCP.GTK" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.TCP" configuration="Unsafe" />
+      <Entry build="True" name="XG.Client" configuration="Unsafe" />
+      <Entry build="True" name="XG.Client.GTK" configuration="Unsafe" />
+      <Entry build="True" name="XG.Client.Widgets.GTK" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Web" configuration="Unsafe" />
+      <Entry build="True" name="XG.Client.Web" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Cmd" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Jabber" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Backend.MySql" configuration="Unsafe" />
+    </Configuration>
   </Configurations>
   <StartMode startupentry="XG.Server.Cmd" single="True">
     <Execute type="None" entry="XG.Core" />

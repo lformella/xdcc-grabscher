@@ -12,6 +12,12 @@
       <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
+    <Configuration name="Unsafe" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="XG.Server.Backend.MySql" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG UNSAFE" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
   </Configurations>
   <Contents>
     <File subtype="Code" buildaction="Compile" name="MySqlBackend.cs" />

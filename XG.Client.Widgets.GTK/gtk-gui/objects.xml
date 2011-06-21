@@ -61,8 +61,15 @@
   </object>
   <object type="XG.Client.Widgets.GTK.BotWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
     <itemgroups>
+      <itemgroup label="ViewWidget Properties">
+        <property name="ShowOfflineObjects" />
+      </itemgroup>
     </itemgroups>
     <signals>
+      <itemgroup label="ViewWidget Signals">
+        <signal name="ObjectClickedEvent" />
+        <signal name="ObjectDoubleClickedEvent" />
+      </itemgroup>
     </signals>
   </object>
   <object type="XG.Client.Widgets.GTK.ServerChannelWidget" palette-category="General" allow-children="false" base-type="Gtk.Bin">
@@ -80,8 +87,15 @@
   </object>
   <object type="XG.Client.Widgets.GTK.PacketWidget" palette-category="General" allow-children="false" base-type="XG.Client.Widgets.GTK.PartableWidget">
     <itemgroups>
+      <itemgroup label="ViewWidget Properties">
+        <property name="ShowOfflineObjects" />
+      </itemgroup>
     </itemgroups>
     <signals>
+      <itemgroup label="ViewWidget Signals">
+        <signal name="ObjectClickedEvent" />
+        <signal name="ObjectDoubleClickedEvent" />
+      </itemgroup>
     </signals>
   </object>
 </objects>

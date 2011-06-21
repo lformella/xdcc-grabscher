@@ -12,6 +12,12 @@
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
+    <Configuration name="Unsafe" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="XG.Server.Cmd" />
+      <Build debugmode="True" target="Exe" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG UNSAFE" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
   </Configurations>
   <Contents>
     <File subtype="Code" buildaction="Compile" name="Main.cs" />
