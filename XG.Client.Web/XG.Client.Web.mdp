@@ -42,7 +42,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-hu.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-hu.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-is.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-is.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-it.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-it.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ja.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ja.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ja.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-nl.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-nl.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-no.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-no.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pl.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-pl.js" />
@@ -55,6 +55,11 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sv.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-sv.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-tr.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-tr.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ua.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ua.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ar.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-ar.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-lt.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-lt.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-mne.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-mne.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-th.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-th.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg.locale-de.js" resource_id="XG.Client.Web.Resources.js.i18n.xg.locale-de.js" />
     <File subtype="Directory" buildaction="Compile" name="Resources/css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/ui.jqgrid.css" resource_id="XG.Client.Web.Resources.css.ui.jqgrid.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/blitzer/jquery-ui.css" resource_id="XG.Client.Web.Resources.css.blitzer.jquery-ui.css" />
@@ -88,7 +93,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_ffffff_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_ffffff_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/jquery-ui.css" resource_id="XG.Client.Web.Resources.css.cupertino.jquery-ui.css" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg.locale-de.js" resource_id="XG.Client.Web.Resources.js.i18n.xg.locale-de.js" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />
