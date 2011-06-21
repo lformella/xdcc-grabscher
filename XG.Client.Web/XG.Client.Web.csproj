@@ -144,6 +144,18 @@
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-sv.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-tr.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-ua.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-da.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-es.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-gl.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-hu.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ja.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sk.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ar.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-lt.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-mne.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-th.js" />
+    <EmbeddedResource Include="Resources\js\i18n\xg.locale-de.js" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -163,22 +175,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-da.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-es.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-gl.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-hu.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ja.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sk.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sr.js" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-ar.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-lt.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-mne.js" />
-    <EmbeddedResource Include="Resources\js\i18n\grid.locale-th.js" />
-    <EmbeddedResource Include="Resources\js\i18n\xg.locale-de.js" />
   </ItemGroup>
 </Project>
