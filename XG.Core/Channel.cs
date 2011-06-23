@@ -44,6 +44,20 @@ namespace XG.Core
 			}
 		}
 
+		private int errorCode = 0;
+		public int ErrorCode
+		{
+			get { return this.errorCode; }
+			set
+			{
+				if (this.errorCode != value)
+				{
+					this.errorCode = value;
+					this.Modified = true;
+				}
+			}
+		}
+
 		public XGBot this[string name]
 		{
 			get

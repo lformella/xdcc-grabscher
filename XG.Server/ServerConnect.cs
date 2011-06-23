@@ -516,6 +516,7 @@ namespace XG.Server
 					tChan = myServer[tCommandList[3]];
 					if (tChan != null)
 					{
+						tChan.ErrorCode = 0;
 						tChan.Connected = true;
 						this.Log("con_DataReceived() joined channel " + tChan.Name, LogLevel.Notice);
 					}
@@ -554,13 +555,17 @@ namespace XG.Server
 					tChan = myServer[tCommandList[3]];
 					// TODO register myself and login and so on
 					this.Log("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!", LogLevel.Notice);
-					/*this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-					if(tChan != null) { this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime); }
+					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					if(tChan != null)
+					{
+						tChan.ErrorCode = t_ComCode;
+						//this.CreateTimer(tChan, Settings.Instance.ChannelWaitTime);
+					}
 					else
 					{
-						tBot = this.myServer.getBot(tCommandList[3]);
-						if(tBot != null) { this.CreateTimer(tBot, Settings.Instance.BotWaitTime); }
-					}*/
+						//tBot = this.myServer.getBot(tCommandList[3]);
+						//if(tBot != null) { this.CreateTimer(tBot, Settings.Instance.BotWaitTime); }
+					}
 					break;
 
 				#endregion
@@ -575,6 +580,7 @@ namespace XG.Server
 					tChan = myServer[tCommandList[3]];
 					if (tChan != null)
 					{
+						tChan.ErrorCode = t_ComCode;
 						tChan.Connected = false;
 						this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
 						this.CreateTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
