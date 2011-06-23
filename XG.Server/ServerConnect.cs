@@ -280,7 +280,6 @@ namespace XG.Server
 						tUserName = tCommandList[2];
 						if (tUserName == Settings.Instance.IRCName)
 						{
-							tChan.Connected = false;
 							this.Log("con_DataReceived() i was killed from server because of " + tData, LogLevel.Warning);
 						}
 						else
@@ -478,11 +477,6 @@ namespace XG.Server
 					tChan = myServer[tCommandList[4]];
 					if (tChan != null)
 					{
-						if(!this.myOnlineUsers.ContainsKey(tChan.Guid))
-						{
-							this.myOnlineUsers.Add(tChan.Guid, new List<string>());
-						}
-
 						string[] tUsers = tData.Split(' ');
 						foreach (string user in tUsers)
 						{
@@ -536,6 +530,10 @@ namespace XG.Server
 					this.ObjectChange(myServer);
 					foreach (XGChannel chan in myServer.Children)
 					{
+						if(!this.myOnlineUsers.ContainsKey(chan.Guid))
+						{
+							this.myOnlineUsers.Add(chan.Guid, new List<string>());
+						}
 						if (chan.Enabled) { this.JoinChannel(chan); }
 					}
 					if(Settings.Instance.IrcRegisterPasswort != "")
