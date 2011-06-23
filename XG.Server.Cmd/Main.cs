@@ -48,50 +48,15 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartMySqlBackend)
 				{
 					runner.AddServerPlugin(new MySqlBackend());
-					// sleep a minute to let the mysql plugin do the initial stuff
-					Thread.Sleep(60000);
+					// sleep a time to let the mysql plugin do the initial stuff
+					Thread.Sleep(300000);
 				}
 
-/*
+/** /
 				// import routine
-				StreamReader reader = new StreamReader("./import");
-				string str = reader.ReadToEnd();
-				reader.Close();
-				HtmlDocument doc = new HtmlDocument();
-				doc.LoadHtml(str);
-				HtmlNodeCollection col = doc.DocumentNode.SelectNodes("//a");
-				string last_server = "";
-				int count = 0;
-				foreach(HtmlNode node in col)
-				{
-					string href = node.Attributes["href"].Value;
-					if(href.StartsWith("irc://"))
-					{
-						string[] strs = href.Split(new char[] {'/'});
-						string server = strs[2].ToLower();
-						string channel = strs[3].ToLower();
-						if(last_server != server)
-						{
-							last_server = server;
-							runner.AddServer(server);
-							Console.WriteLine("-> " + server);
-						}
-						List<XGObject> list = runner.GetServersChannels();
-						XGObject s = null;
-						foreach(XGObject obj in list)
-						{
-							if(obj.Name == server)
-							{
-								s = obj;
-							}
-						}
-						runner.AddChannel(s.Guid, channel);
-						Console.WriteLine("-> " + server + " - " + channel);
-						count++;
-					}
-				}
-				Console.WriteLine("----> " + count);
-*/
+				Importer importer = new Importer(runner);
+				importer.Import("./import");
+/**/
 
 				runner.Start();
 			}
