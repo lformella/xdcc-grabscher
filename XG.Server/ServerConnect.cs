@@ -457,6 +457,11 @@ namespace XG.Server
 								this.ObjectChange(tBot);
 								this.RequestFromBot(tBot);
 							}
+							else
+							{
+								// TODO maybe send a "xdcc list" command to the people in there
+								// in some channels the bots are silent and have the same (no) rights like normal users
+							}
 						}
 					}
 					break;
@@ -837,7 +842,6 @@ namespace XG.Server
 
 				#region COULD NOT PARSE
 
-				// maybee delete this because it is flooding the logfile
 				if (!isParsed && tBot.Children.Length > 0)
 				{
 					this.ParsingErrorEvent("[DCC Info] " + tBot.Name + " : " + this.ClearString(tData));
@@ -1354,6 +1358,7 @@ namespace XG.Server
 
 		private string ClearPacketName(string aData)
 		{
+			// TODO remove all chars not matching this [a-z0-9.-_()]
 			string tData = this.ClearString(aData);
 			tData = tData.Replace("Movies", string.Empty);
 			tData = tData.Replace("Charts", string.Empty);
@@ -1455,10 +1460,14 @@ namespace XG.Server
 		private void JoinChannel(object aChan)
 		{
 			XGChannel tChan = aChan as XGChannel;
-			if (tChan != null && myServer[tChan.Name] != null)
+			// only join if the channel isnt connected
+			if (tChan != null && myServer[tChan.Name] != null && !tChan.Connected)
 			{
 				this.Log("JoinChannel(" + tChan.Name + ")", LogLevel.Notice);
 				this.SendData("JOIN " + tChan.Name);
+
+				// TODO maybe set a time to resend the command if the channel is not connected
+				// it happend to me, that some available channels werent joined because no confirm messaes appeared
 
 				// statistics
 				Statistic.Instance.Increase(StatisticType.ChannelsJoined);
