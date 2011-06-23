@@ -45,6 +45,9 @@ namespace XG.Server
 		private Dictionary<XGObject, DateTime> myTimedObjects;
 		private Dictionary<string, DateTime> myLatestPacketRequests;
 
+		private Dictionary<Guid, List<string>> myOnlineUsers;
+		public Dictionary<Guid, List<string>> OnlineUsers { get { return this.myOnlineUsers; } }
+
 		#region EVENTS
 
 		public event DownloadDelegate NewDownloadEvent;
@@ -103,6 +106,7 @@ namespace XG.Server
 
 			this.myTimedObjects = new Dictionary<XGObject, DateTime>();
 			this.myLatestPacketRequests = new Dictionary<string, DateTime>();
+			this.myOnlineUsers = new Dictionary<Guid, List<string>>();
 			this.myIsRunning = true;
 
 			this.myServer.ErrorCode = SocketErrorCode.None;
@@ -224,6 +228,11 @@ namespace XG.Server
 							// what should i do now?!
 							this.Log("con_DataReceived() wtf? i was renamed to " + tData, LogLevel.Error);
 						}
+						else
+						{
+							this.myOnlineUsers[tChan.Guid].Remove(tUserName);
+							this.myOnlineUsers[tChan.Guid].Add(tData);
+						}
 					}
 
 					#endregion
@@ -254,6 +263,10 @@ namespace XG.Server
 									tBot.LastMessage = "kicked from channel " + tChan.Name;
 									this.Log("con_DataReceived() bot " + tBot.Name + " is offline", LogLevel.Info);
 								}
+								else
+								{
+									this.myOnlineUsers[tChan.Guid].Remove(tUserName);
+								}
 							}
 						}
 					}
@@ -276,6 +289,10 @@ namespace XG.Server
 							if (tBot != null)
 							{
 								this.Log("con_DataReceived() bot " + tBot.Name + " was killed from server?", LogLevel.Warning);
+							}
+							else
+							{
+								this.myOnlineUsers[tChan.Guid].Remove(tUserName);
 							}
 						}
 					}
@@ -301,6 +318,10 @@ namespace XG.Server
 								this.Log("con_DataReceived() bot " + tUserName + " is online", LogLevel.Info);
 								this.RequestFromBot(tBot);
 							}
+							else
+							{
+								this.myOnlineUsers[tChan.Guid].Add(tUserName);
+							}
 						}
 					}
 
@@ -318,6 +339,10 @@ namespace XG.Server
 								tBot.LastMessage = "parted channel " + tChan.Name;
 								this.Log("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name, LogLevel.Info);
 							}
+							else
+							{
+								this.myOnlineUsers[tChan.Guid].Remove(tUserName);
+							}
 						}
 					}
 
@@ -332,6 +357,10 @@ namespace XG.Server
 							tBot.Connected = false;
 							tBot.LastMessage = "quited";
 							this.Log("con_DataReceived() bot " + tBot.Name + " quited", LogLevel.Info);
+						}
+						else
+						{
+							this.myOnlineUsers[tChan.Guid].Remove(tUserName);
 						}
 					}
 
@@ -405,11 +434,16 @@ namespace XG.Server
 
 			switch (t_ComCode)
 			{
+				#region 4
+
 				case 4: // 
 					this.myServer.Connected = true;
 					this.ObjectChange(this.myServer);
 					break;
 
+				#endregion
+
+				#region RPL_WHOISCHANNELS
 
 				case 319: // RPL_WHOISCHANNELS
 					tBot = this.myServer.GetBot(tCommandList[3]);
@@ -436,11 +470,19 @@ namespace XG.Server
 					}
 					break;
 
+				#endregion
+
+				#region RPL_NAMREPLY
 
 				case 353: // RPL_NAMREPLY
 					tChan = myServer[tCommandList[4]];
 					if (tChan != null)
 					{
+						if(!this.myOnlineUsers.ContainsKey(tChan.Guid))
+						{
+							this.myOnlineUsers.Add(tChan.Guid, new List<string>());
+						}
+
 						string[] tUsers = tData.Split(' ');
 						foreach (string user in tUsers)
 						{
@@ -449,6 +491,7 @@ namespace XG.Server
 							if (tBot != null)
 							{
 								tBot.Connected = true;
+								tBot.LastMessage = "joined channel " + tChan.Name;
 								if (tBot.BotState != BotState.Active)
 								{
 									tBot.BotState = BotState.Idle;
@@ -459,13 +502,15 @@ namespace XG.Server
 							}
 							else
 							{
-								// TODO maybe send a "xdcc list" command to the people in there
-								// in some channels the bots are silent and have the same (no) rights like normal users
+								this.myOnlineUsers[tChan.Guid].Add(tUser);
 							}
 						}
 					}
 					break;
 
+				#endregion
+
+				#region RPL_ENDOFNAMES
 
 				case 366: // RPL_ENDOFNAMES
 					tChan = myServer[tCommandList[3]];
@@ -479,6 +524,9 @@ namespace XG.Server
 					Statistic.Instance.Increase(StatisticType.ChannelConnectsOk);
 					break;
 
+				#endregion
+
+				#region RPL_ENDOFMOTD | ERR_NOMOTD
 
 				case 376: // RPL_ENDOFMOTD
 				case 422: // ERR_NOMOTD
@@ -498,6 +546,9 @@ namespace XG.Server
 					Statistic.Instance.Increase(StatisticType.ServerConnectsOk);
 					break;
 
+				#endregion
+
+				#region ERR_NOCHANMODES
 
 				case 477: // ERR_NOCHANMODES
 					tChan = myServer[tCommandList[3]];
@@ -512,6 +563,9 @@ namespace XG.Server
 					}*/
 					break;
 
+				#endregion
+
+				#region ERR_CHANNELISFULL | ERR_INVITEONLYCHAN | ERR_BANNEDFROMCHAN | ERR_BADCHANNELKEY | ERR_UNIQOPPRIVSNEEDED
 
 				case 471: // ERR_CHANNELISFULL
 				case 473: // ERR_INVITEONLYCHAN
@@ -529,6 +583,8 @@ namespace XG.Server
 					// statistics
 					Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
 					break;
+
+				#endregion
 			}
 
 			this.ObjectChange(tBot);
@@ -1294,19 +1350,27 @@ namespace XG.Server
 			{
 				if(tData.Contains("Password incorrect"))
 				{
+					this.myRegistered = false;
+
 					this.Log("con_DataReceived(" + aData + ") - nickserv password wrong", LogLevel.Error);
 				}
 				else if(	tData.Contains("The given email address has reached it's usage limit of 1 user") ||
 							tData.Contains("This nick is being held for a registered user"))
 				{
+					this.myRegistered = false;
+
 					this.Log("con_DataReceived(" + aData + ") - nickserv nick already registered", LogLevel.Error);
 				}
 				else if(tData.Contains("The given email address has reached it's usage limit of 1 user"))
 				{
+					this.myRegistered = false;
+
 					this.Log("con_DataReceived(" + aData + ") - nickserv email already used", LogLevel.Error);
 				}
 				else if(tData.Contains("Your nick isn't registered"))
 				{
+					this.myRegistered = false;
+
 					this.Log("con_DataReceived(" + aData + ") - nickserv registering nick", LogLevel.Warning);
 					if(Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
@@ -1316,12 +1380,15 @@ namespace XG.Server
 				else if(	tData.Contains("Nickname is already in use") ||
 							tData.Contains("Nickname is currently in use"))
 				{
+					this.myRegistered = false;
+
 					this.SendData("nickserv ghost " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
 					this.SendData("nickserv recover " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
 				}
 				else if(	tData.Contains("This nickname is registered and protected") ||
 							tData.Contains("This nick is being held for a registered user"))
 				{
+					this.myRegistered = false;
 					if(Settings.Instance.IrcRegisterPasswort != "")
 					{
 						this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
@@ -1329,6 +1396,8 @@ namespace XG.Server
 				}
 				else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
 				{
+					this.myRegistered = false;
+
 					// sleep the given time and reregister
 					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
