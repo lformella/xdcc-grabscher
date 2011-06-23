@@ -56,7 +56,7 @@ Enum.TCPClientRequest =
 
 	CloseClient : 25,
 	CloseServer : 26
-}
+};
 Enum.TangoColor =
 {
 	Butter		: { Light : "fce94f", Middle : "edd400", Dark : "c4a000"},
@@ -68,7 +68,7 @@ Enum.TangoColor =
 	ScarletRed	: { Light : "ef2929", Middle : "cc0000", Dark : "a40000"},
 	Aluminium1	: { Light : "eeeeec", Middle : "d3d7cf", Dark : "babdb6"},
 	Aluminium2	: { Light : "888a85", Middle : "555753", Dark : "2e3436"}
-}
+};
 
 /* ************************************************************************** */
 /* GLOBAL VARS / FUNCTIONS                                                    */
@@ -615,6 +615,7 @@ function GetColor(id)
 		case 25: return Enum.TangoColor.Aluminium2.Middle;
 		case 26: return Enum.TangoColor.Aluminium2.Dark;
 	}
+	return "";
 }
 
 /* ************************************************************************** */
