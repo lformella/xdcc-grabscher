@@ -137,9 +137,33 @@ namespace XG.Server.Backend.MySql
 			Dictionary<string, object> dic = this.GetObjectData(aObj);
 
 			if (aObj.GetType() == typeof(XGServer)) { table = "server"; }
-			else if (aObj.GetType() == typeof(XGChannel)) { table = "channel"; }
-			else if (aObj.GetType() == typeof(XGBot)) { table = "bot"; }
-			else if (aObj.GetType() == typeof(XGPacket)) { table = "packet"; }
+			else if (aObj.GetType() == typeof(XGChannel))
+			{
+				// update server variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent);
+
+				table = "channel";
+			}
+			else if (aObj.GetType() == typeof(XGBot))
+			{
+				// update channel variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				// update server variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+
+				table = "bot";
+			}
+			else if (aObj.GetType() == typeof(XGPacket))
+			{
+				// update bot variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				// update channel variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+				// update server variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent.Parent);
+
+				table = "packet";
+			}
 
 			if(table != "")
 			{
@@ -210,6 +234,9 @@ namespace XG.Server.Backend.MySql
 				{
 					this.myRunner_ObjectRemovedEventHandler(aObj, bot);
 				}
+				// update server variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent);
+
 				table = "channel";
 			}
 			else if (aObj.GetType() == typeof(XGBot))
@@ -219,9 +246,24 @@ namespace XG.Server.Backend.MySql
 				{
 					this.myRunner_ObjectRemovedEventHandler(aObj, pack);
 				}
+				// update channel variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				// update server variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+
 				table = "bot";
 			}
-			else if (aObj.GetType() == typeof(XGPacket)) { table = "packet"; }
+			else if (aObj.GetType() == typeof(XGPacket))
+			{
+				// update bot variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				// update channel variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+				// update server variable count
+				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent.Parent);
+
+				table = "packet";
+			}
 
 			if(table != "")
 			{
@@ -247,11 +289,23 @@ namespace XG.Server.Backend.MySql
 				XGServer obj = (XGServer)aObj;
 				dic.Add("Port", obj.Port);
 				dic.Add("ErrorCode", obj.ErrorCode);
+				dic.Add("ChannelCount", obj.Children.Length);
+				int count = 0;
+				foreach(XGObject o in obj.Children) { count += o.Children.Length; }
+				dic.Add("BotCount", count);
+				count = 0;
+				foreach(XGObject o in obj.Children) { foreach(XGObject ob in o.Children) { count += ob.Children.Length; } }
+				dic.Add("PacketCount", count);
 			}
 			else if (aObj.GetType() == typeof(XGChannel))
 			{
 				XGChannel obj = (XGChannel)aObj;
 				dic.Add("ParentGuid", obj.ParentGuid);
+				dic.Add("ErrorCode", obj.ErrorCode);
+				dic.Add("BotCount", obj.Children.Length);
+				int count = 0;
+				foreach(XGObject o in obj.Children) { count += o.Children.Length; }
+				dic.Add("PacketCount", count);
 			}
 			else if (aObj.GetType() == typeof(XGBot))
 			{
@@ -266,6 +320,7 @@ namespace XG.Server.Backend.MySql
 				dic.Add("InfoSpeedMax", obj.InfoSpeedMax);
 				dic.Add("LastContact", this.Date2Timestamp(obj.LastContact));
 				dic.Add("LastMessage", obj.LastMessage);
+				dic.Add("PacketCount", obj.Children.Length);
 			}
 			else if (aObj.GetType() == typeof(XGPacket))
 			{
