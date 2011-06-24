@@ -230,8 +230,14 @@ namespace XG.Server
 						}
 						else
 						{
-							this.myOnlineUsers[tChan.Guid].Remove(tUserName);
-							this.myOnlineUsers[tChan.Guid].Add(tData);
+							foreach(Guid guid in this.myOnlineUsers.Keys)
+							{
+								if(this.myOnlineUsers[guid].Contains(tUserName))
+								{
+									this.myOnlineUsers[guid].Remove(tUserName);
+									this.myOnlineUsers[guid].Add(tData);
+								}
+							}
 						}
 					}
 
@@ -291,7 +297,10 @@ namespace XG.Server
 							}
 							else
 							{
-								this.myOnlineUsers[tChan.Guid].Remove(tUserName);
+								foreach(Guid guid in this.myOnlineUsers.Keys)
+								{
+									this.myOnlineUsers[guid].Remove(tUserName);
+								}
 							}
 						}
 					}
@@ -359,7 +368,10 @@ namespace XG.Server
 						}
 						else
 						{
-							this.myOnlineUsers[tChan.Guid].Remove(tUserName);
+							foreach(Guid guid in this.myOnlineUsers.Keys)
+							{
+								this.myOnlineUsers[guid].Remove(tUserName);
+							}
 						}
 					}
 
