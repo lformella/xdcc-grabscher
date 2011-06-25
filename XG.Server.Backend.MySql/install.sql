@@ -12,7 +12,7 @@ CREATE  TABLE IF NOT EXISTS `xg`.`server` (
   `PacketCount` INT(5) NULL DEFAULT 0 ,
   PRIMARY KEY (`Guid`) ,
   INDEX `index2` (`Name` ASC) )
-ENGINE = MyISAM
+ENGINE = MEMORY
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -34,7 +34,7 @@ CREATE  TABLE IF NOT EXISTS `xg`.`channel` (
     REFERENCES `xg`.`server` (`Guid` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = MyISAM
+ENGINE = MEMORY
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -63,7 +63,7 @@ CREATE  TABLE IF NOT EXISTS `xg`.`bot` (
     REFERENCES `xg`.`channel` (`Guid` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = MyISAM
+ENGINE = MEMORY
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -86,6 +86,6 @@ CREATE  TABLE IF NOT EXISTS `xg`.`packet` (
     REFERENCES `xg`.`bot` (`Guid` )
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
-ENGINE = MyISAM
+ENGINE = MEMORY
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
