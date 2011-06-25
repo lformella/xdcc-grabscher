@@ -580,6 +580,23 @@ namespace XG.Server
 
 				#endregion
 
+				#region ERR_TOOMANYCHANNELS
+
+				case 405:
+					tChan = myServer[tCommandList[3]];
+					if (tChan != null)
+					{
+						tChan.ErrorCode = t_ComCode;
+						tChan.Connected = false;
+						this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
+					}
+
+					// statistics
+					Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
+					break;
+
+				#endregion
+
 				#region ERR_CHANNELISFULL | ERR_INVITEONLYCHAN | ERR_BANNEDFROMCHAN | ERR_BADCHANNELKEY | ERR_UNIQOPPRIVSNEEDED
 
 				case 471: // ERR_CHANNELISFULL
