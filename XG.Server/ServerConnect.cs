@@ -1453,7 +1453,7 @@ namespace XG.Server
 
 		private string ClearString(string aData)
 		{ // |\u0031|\u0015)
-			aData = Regex.Replace(aData, "\u0003(\\d+(,\\d+|)|)", "");
+			aData = Regex.Replace(aData, "(\u0002|\u0003)(\\d+(,\\d{1,2}|)|)", "");
 			aData = Regex.Replace(aData, "(\u000F)", "");
 			return aData.Trim();
 		}
