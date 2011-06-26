@@ -45,8 +45,8 @@ namespace XG.Server
 		private Dictionary<XGObject, DateTime> myTimedObjects;
 		private Dictionary<string, DateTime> myLatestPacketRequests;
 
-		private Dictionary<Guid, List<string>> myOnlineUsers;
-		public Dictionary<Guid, List<string>> OnlineUsers { get { return this.myOnlineUsers; } }
+		//private Dictionary<Guid, List<string>> myOnlineUsers;
+		//public Dictionary<Guid, List<string>> OnlineUsers { get { return this.myOnlineUsers; } }
 
 		#region EVENTS
 
@@ -106,7 +106,7 @@ namespace XG.Server
 
 			this.myTimedObjects = new Dictionary<XGObject, DateTime>();
 			this.myLatestPacketRequests = new Dictionary<string, DateTime>();
-			this.myOnlineUsers = new Dictionary<Guid, List<string>>();
+			//this.myOnlineUsers = new Dictionary<Guid, List<string>>();
 			this.myIsRunning = true;
 
 			this.myServer.ErrorCode = SocketErrorCode.None;
@@ -228,7 +228,7 @@ namespace XG.Server
 							// what should i do now?!
 							this.Log("con_DataReceived() wtf? i was renamed to " + tData, LogLevel.Error);
 						}
-						else
+						/*else
 						{
 							foreach(Guid guid in this.myOnlineUsers.Keys)
 							{
@@ -238,7 +238,7 @@ namespace XG.Server
 									this.myOnlineUsers[guid].Add(tData);
 								}
 							}
-						}
+						}*/
 					}
 
 					#endregion
@@ -269,10 +269,10 @@ namespace XG.Server
 									tBot.LastMessage = "kicked from channel " + tChan.Name;
 									this.Log("con_DataReceived() bot " + tBot.Name + " is offline", LogLevel.Info);
 								}
-								else
+								/*else
 								{
 									this.myOnlineUsers[tChan.Guid].Remove(tUserName);
-								}
+								}*/
 							}
 						}
 					}
@@ -295,13 +295,13 @@ namespace XG.Server
 							{
 								this.Log("con_DataReceived() bot " + tBot.Name + " was killed from server?", LogLevel.Warning);
 							}
-							else
+							/*else
 							{
 								foreach(Guid guid in this.myOnlineUsers.Keys)
 								{
 									this.myOnlineUsers[guid].Remove(tUserName);
 								}
-							}
+							}*/
 						}
 					}
 
@@ -326,10 +326,10 @@ namespace XG.Server
 								this.Log("con_DataReceived() bot " + tUserName + " is online", LogLevel.Info);
 								this.RequestFromBot(tBot);
 							}
-							else
+							/*else
 							{
 								this.myOnlineUsers[tChan.Guid].Add(tUserName);
-							}
+							}*/
 						}
 					}
 
@@ -347,10 +347,10 @@ namespace XG.Server
 								tBot.LastMessage = "parted channel " + tChan.Name;
 								this.Log("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name, LogLevel.Info);
 							}
-							else
+							/*else
 							{
 								this.myOnlineUsers[tChan.Guid].Remove(tUserName);
-							}
+							}*/
 						}
 					}
 
@@ -366,13 +366,13 @@ namespace XG.Server
 							tBot.LastMessage = "quited";
 							this.Log("con_DataReceived() bot " + tBot.Name + " quited", LogLevel.Info);
 						}
-						else
+						/*else
 						{
 							foreach(Guid guid in this.myOnlineUsers.Keys)
 							{
 								this.myOnlineUsers[guid].Remove(tUserName);
 							}
-						}
+						}*/
 					}
 
 					#endregion
@@ -506,10 +506,10 @@ namespace XG.Server
 								this.ObjectChange(tBot);
 								this.RequestFromBot(tBot);
 							}
-							else
+							/*else
 							{
 								this.myOnlineUsers[tChan.Guid].Add(tUser);
-							}
+							}*/
 						}
 					}
 					break;
@@ -542,10 +542,10 @@ namespace XG.Server
 					this.ObjectChange(myServer);
 					foreach (XGChannel chan in myServer.Children)
 					{
-						if(!this.myOnlineUsers.ContainsKey(chan.Guid))
+						/*if(!this.myOnlineUsers.ContainsKey(chan.Guid))
 						{
 							this.myOnlineUsers.Add(chan.Guid, new List<string>());
-						}
+						}*/
 						if (chan.Enabled) { this.JoinChannel(chan); }
 					}
 					if(Settings.Instance.IrcRegisterPasswort != "")
