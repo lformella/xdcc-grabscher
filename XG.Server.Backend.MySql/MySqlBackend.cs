@@ -82,7 +82,7 @@ namespace XG.Server.Backend.MySql
 			}
 
 			#region REINIT DATABASE
-
+/*
 			// drop all at first
 			this.ExecuteNonQuery("DELETE FROM server", null);
 			this.ExecuteNonQuery("DELETE FROM channel", null);
@@ -111,7 +111,7 @@ namespace XG.Server.Backend.MySql
 					}
 				}
 			}
-
+*/
 			#endregion
 		}
 
@@ -340,54 +340,57 @@ namespace XG.Server.Backend.MySql
 			lock(locked)
 			{
 				MySqlCommand cmd = new MySqlCommand(aSql, this.myDbConnection);
-				if(aDic != null)
+				using(cmd)
 				{
-					foreach(KeyValuePair<string, object> kcp in aDic)
-					{
-						cmd.Parameters.AddWithValue("@" + kcp.Key, kcp.Value);
-					}
-				}
-				try
-				{
-					cmd.ExecuteNonQuery();
-				}
-				catch (MySqlException ex)
-				{
-					string param = "";
 					if(aDic != null)
 					{
 						foreach(KeyValuePair<string, object> kcp in aDic)
 						{
-							param += "@" + kcp.Key + ":" + kcp.Value + " ";
+							cmd.Parameters.AddWithValue("@" + kcp.Key, kcp.Value);
 						}
 					}
-					this.Log("ExecuteQuery(" + ex.Number + ") '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-				}
-				catch (InvalidOperationException ex)
-				{
-					string param = "";
-					if(aDic != null)
+					try
 					{
-						foreach(KeyValuePair<string, object> kcp in aDic)
-						{
-							param += "@" + kcp.Key + ":" + kcp.Value + " ";
-						}
+						cmd.ExecuteNonQuery();
 					}
-					this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					this.Log("ExecuteQuery() : stopping server plugin!", LogLevel.Warning);
-					this.Stop();
-				}
-				catch (Exception ex)
-				{
-					string param = "";
-					if(aDic != null)
+					catch (MySqlException ex)
 					{
-						foreach(KeyValuePair<string, object> kcp in aDic)
+						string param = "";
+						if(aDic != null)
 						{
-							param += "@" + kcp.Key + ":" + kcp.Value + " ";
+							foreach(KeyValuePair<string, object> kcp in aDic)
+							{
+								param += "@" + kcp.Key + ":" + kcp.Value + " ";
+							}
 						}
+						this.Log("ExecuteQuery(" + ex.Number + ") '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
 					}
-					this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					catch (InvalidOperationException ex)
+					{
+						string param = "";
+						if(aDic != null)
+						{
+							foreach(KeyValuePair<string, object> kcp in aDic)
+							{
+								param += "@" + kcp.Key + ":" + kcp.Value + " ";
+							}
+						}
+						this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						this.Log("ExecuteQuery() : stopping server plugin!", LogLevel.Warning);
+						this.Stop();
+					}
+					catch (Exception ex)
+					{
+						string param = "";
+						if(aDic != null)
+						{
+							foreach(KeyValuePair<string, object> kcp in aDic)
+							{
+								param += "@" + kcp.Key + ":" + kcp.Value + " ";
+							}
+						}
+						this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					}
 				}
 			}
 		}
