@@ -31,9 +31,9 @@ namespace XG.Server.Cmd
 	class MainClass
 	{
 		public static void Main(string[] args)
-        {
+		{
 #if !WINDOWS
-            PlatformID id  = Environment.OSVersion.Platform;
+			PlatformID id  = Environment.OSVersion.Platform;
 			// Don't allow running as root on Linux or Mac
 			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
 			{
