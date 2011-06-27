@@ -549,7 +549,9 @@ namespace XG.Server
 				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
 				{
 					timeIrc = DateTime.Now;
-					this.Save(XGHelper.CloneObject(this.myRootObject, false), Settings.Instance.DataBinary);
+					RootObject clone = XGHelper.CloneObject(this.myRootObject, false);
+					this.Save(clone, Settings.Instance.DataBinary);
+					clone = null;
 				}
 
 				// File Data

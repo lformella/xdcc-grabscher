@@ -126,6 +126,10 @@ namespace XG.Server
 				ServerConnect con = myServers[aServer];
 				con.Disconnect();
 			}
+			else
+			{
+				this.Log("DisconnectServer(" + aServer.Name + ") server is not in the dictionary", LogLevel.Error);
+			}
 		}
 		private void server_DisconnectedEventHandler(XGServer aServer, SocketErrorCode aValue)
 		{
@@ -176,6 +180,15 @@ namespace XG.Server
 					this.myServers.Remove(aServer);
 				}
 			}
+			else
+			{
+				this.Log("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary", LogLevel.Error);
+			}
+
+#if !DEBUG
+			// run a collect to remove temporary stuff used by the ServerConnect obj
+			GC.Collect();
+#endif
 		}
 
 		private void ReconnectServer(object aServer)

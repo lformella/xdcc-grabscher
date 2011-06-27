@@ -67,6 +67,8 @@ namespace XG.Server
 		public ServerConnect(ServerHandler aParent)
 		{
 			this.myParent = aParent;
+
+			// TODO attach to the ObjectRemovedEvent if the BOT WATCHDOG loop removes a bot an we are still connected to his packet events
 		}
 
 		#endregion
@@ -1594,8 +1596,8 @@ namespace XG.Server
 
 		private void server_ChannelAddedEventHandler(XGServer aServer, XGChannel aChan)
 		{
-			aChan.EnabledChangedEvent += new ObjectDelegate(channel_ObjectStateChangedEventHandler);
 			this.ObjectAddedEvent(aServer, aChan);
+			aChan.EnabledChangedEvent += new ObjectDelegate(channel_ObjectStateChangedEventHandler);
 			foreach (XGBot tBot in aChan.Children)
 			{
 				foreach (XGPacket tPack in tBot.Children)
