@@ -17,7 +17,9 @@
 
 using System;
 using System.Threading;
+#if !WINDOWS
 using Mono.Unix;
+#endif
 using XG.Server;
 using XG.Server.Backend.MySql;
 using XG.Server.Jabber;
@@ -29,14 +31,16 @@ namespace XG.Server.Cmd
 	class MainClass
 	{
 		public static void Main(string[] args)
-		{
-			PlatformID id  = Environment.OSVersion.Platform;
+        {
+#if !WINDOWS
+            PlatformID id  = Environment.OSVersion.Platform;
 			// Don't allow running as root on Linux or Mac
 			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
 			{
 				Console.WriteLine ("Sorry, you can't run XG with these permissions. Safety first!");
 				Environment.Exit (-1);
 			}
+#endif
 
 			try
 			{
