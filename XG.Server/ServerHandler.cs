@@ -133,6 +133,34 @@ namespace XG.Server
 			{
 				ServerConnect con = this.myServers[aServer];
 
+				if (aServer.Enabled)
+				{
+					// disable the server if the host was not found
+					if(	aValue == SocketErrorCode.HostNotFound ||
+						aValue == SocketErrorCode.HostNotFoundTryAgain)
+					{
+						aServer.Enabled = false;
+					}
+					else
+					{
+						int time = Settings.Instance.ReconnectWaitTime;
+						switch(aValue)
+						{
+							case SocketErrorCode.HostIsDown:
+							case SocketErrorCode.HostUnreachable:
+							case SocketErrorCode.ConnectionTimedOut:
+							case SocketErrorCode.ConnectionRefused:
+								time = Settings.Instance.ReconnectWaitTimeLong;
+								break;
+//							case SocketErrorCode.HostNotFound:
+//							case SocketErrorCode.HostNotFoundTryAgain:
+//								time = Settings.Instance.ReconnectWaitTimeReallyLong;
+//								break;
+						}
+						new Timer(new TimerCallback(this.ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
+					}
+				}
+
 				if (!aServer.Enabled)
 				{
 					con.NewDownloadEvent -= new DownloadDelegate (server_NewDownloadEventHandler);
@@ -146,24 +174,6 @@ namespace XG.Server
 					con.ObjectRemovedEvent -= new ObjectObjectDelegate(_ObjectRemovedEventHandler);
 
 					this.myServers.Remove(aServer);
-				}
-				else
-				{
-					int time = Settings.Instance.ReconnectWaitTime;
-					switch(aValue)
-					{
-						case SocketErrorCode.HostIsDown:
-						case SocketErrorCode.HostUnreachable:
-						case SocketErrorCode.ConnectionTimedOut:
-						case SocketErrorCode.ConnectionRefused:
-							time = Settings.Instance.ReconnectWaitTimeLong;
-							break;
-						case SocketErrorCode.HostNotFound:
-						case SocketErrorCode.HostNotFoundTryAgain:
-							time = Settings.Instance.ReconnectWaitTimeReallyLong;
-							break;
-					}
-					new Timer(new TimerCallback(this.ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
 				}
 			}
 		}
