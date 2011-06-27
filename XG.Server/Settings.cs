@@ -112,7 +112,7 @@ namespace XG.Server
 			this.tempPath = "./tmp/";
 			this.readyPath = "./dl/";
 			this.mutliDownloadMinimumTime = 300;
-			this.timerSleepTime = 10000;
+			this.timerSleepTime = 5000;
 			this.serverTimeout = 60000;
 			this.reconnectWaitTime = 45000;
 			this.reconnectWaitTimeLong = 900000;

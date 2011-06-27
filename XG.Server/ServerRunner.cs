@@ -47,9 +47,7 @@ namespace XG.Server
 
 		private BinaryFormatter myFormatter = new BinaryFormatter();
 
-		private Thread mySaveBinThread;
-		private Thread mySaveFileThread;
-		private Thread mySaveStatisticThread;
+		private Thread mySaveDataThread;
 
 		private bool isSaveFile = false;
 		private object mySaveFileLock = new object();
@@ -286,17 +284,9 @@ namespace XG.Server
 		/// </summary>
 		public void Start()
 		{
-			// start saving routine
-			this.mySaveBinThread = new Thread(new ThreadStart(SaveIrcData));
-			this.mySaveBinThread.Start();
-
-			// start saving routine
-			this.mySaveFileThread = new Thread(new ThreadStart(SaveFileData));
-			this.mySaveFileThread.Start();
-
-			// start saving routine
-			this.mySaveStatisticThread = new Thread(new ThreadStart(SaveStatisticData));
-			this.mySaveStatisticThread.Start();
+			// start data saving routine
+			this.mySaveDataThread = new Thread(new ThreadStart(SaveDataLoop));
+			this.mySaveDataThread.Start();
 
 			// connect to all servers which are enabled
 			foreach (XGServer serv in this.myRootObject.Children)
@@ -321,9 +311,7 @@ namespace XG.Server
 			{
 				this.myServerHandler.DisconnectServer(serv);
 			}
-			this.mySaveBinThread.Abort();
-			this.mySaveFileThread.Abort();
-			this.mySaveStatisticThread.Abort();
+			this.mySaveDataThread.Abort();
 		}
 
 		#endregion
@@ -514,61 +502,6 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// Schedules the saving of the IrcData 
-		/// </summary>
-		private void SaveIrcData()
-		{
-			while (true)
-			{
-				Thread.Sleep((int)Settings.Instance.BackupDataTime);
-				this.Save(XGHelper.CloneObject(this.myRootObject, false), Settings.Instance.DataBinary);
-			}
-		}
-
-		/// <summary>
-		/// Schedules the saving of the FileData 
-		/// </summary>
-		private void SaveFileData()
-		{
-			while (true)
-			{
-				if (this.isSaveFile)
-				{
-					lock (this.mySaveFileLock)
-					{
-						this.Save(this.myFiles, Settings.Instance.FilesBinary);
-						this.isSaveFile = false;
-					}
-				}
-				Thread.Sleep(5000);
-			}
-		}
-
-		/// <summary>
-		/// Save the FileData right now 
-		/// </summary>
-		private void SaveFileDataNow()
-		{
-			lock (this.mySaveFileLock)
-			{
-				this.Save(this.myFiles, Settings.Instance.FilesBinary);
-				this.isSaveFile = false;
-			}
-		}
-
-		/// <summary>
-		/// Schedules the saving of the StatisticData 
-		/// </summary>
-		private void SaveStatisticData()
-		{
-			while (true)
-			{
-				Thread.Sleep((int)Settings.Instance.BackupStatisticTime);
-				Statistic.Instance.Save();
-			}
-		}
-
-		/// <summary>
 		/// Deserializes an object from a file
 		/// </summary>
 		/// <param name="aFile">Name of the File</param>
@@ -603,6 +536,53 @@ namespace XG.Server
 				}
 			}
 			return obj;
+		}
+
+		private void SaveDataLoop()
+		{
+			DateTime timeIrc = DateTime.Now;
+			DateTime timeStats = DateTime.Now;
+
+			while (true)
+			{
+				// IRC Data
+				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
+				{
+					timeIrc = DateTime.Now;
+					this.Save(XGHelper.CloneObject(this.myRootObject, false), Settings.Instance.DataBinary);
+				}
+
+				// File Data
+				if (this.isSaveFile)
+				{
+					lock (this.mySaveFileLock)
+					{
+						this.Save(this.myFiles, Settings.Instance.FilesBinary);
+						this.isSaveFile = false;
+					}
+				}
+
+				// Statistics
+				if ((DateTime.Now - timeStats).TotalMilliseconds > Settings.Instance.BackupStatisticTime)
+				{
+					timeStats = DateTime.Now;
+					Statistic.Instance.Save();
+				}
+
+				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
+			}
+		}
+
+		/// <summary>
+		/// Save the FileData right now 
+		/// </summary>
+		private void SaveFileDataNow()
+		{
+			lock (this.mySaveFileLock)
+			{
+				this.Save(this.myFiles, Settings.Instance.FilesBinary);
+				this.isSaveFile = false;
+			}
 		}
 
 		#endregion
