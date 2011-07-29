@@ -113,6 +113,10 @@ $(function()
 			{name:'icon',			index:'icon',			hidden:true},
 			{name:'name',			index:'name',			width:200,	formatter:FormatServerIcon}
 		],
+		onHeaderClick: function(gridstate)
+		{
+			$.cookie('xg.servers', gridstate);
+		},
 		onSelectRow: function(id)
 		{
 			if(id)
@@ -169,7 +173,8 @@ $(function()
 		sortorder: "asc",
 		caption:"Servers"
 	});
-	jQuery("#servers").jqGrid('gridResize',{minWidth: 200, maxWidth: 200});
+	jQuery("#servers").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
+	jQuery("#servers").setGridState($.cookie('xg.servers'));
 
 	/* ********************************************************************** */
 	/* BOT GRID                                                               */
@@ -199,6 +204,10 @@ $(function()
 			{name:'lastmessage',	index:'lastmessage',	hidden:true},
 			{name:'lastcontact',	index:'lastcontact',	hidden:true}
 		],
+		onHeaderClick: function(gridstate)
+		{
+			$.cookie('xg.bots', gridstate);
+		},
 		onSelectRow: function(id)
 		{
 			if(id && id !== id_bot)
@@ -220,7 +229,8 @@ $(function()
 		height: 300,
 		sortorder: "asc",
 		caption:"Bots"
-	}).navGrid('#bot-pager',{edit:false,add:false,del:false,search:false});
+	}).navGrid('#bot-pager', {edit:false, add:false, del:false, search:false});
+	jQuery("#bots").setGridState($.cookie('xg.bots'));
 
 	/* ********************************************************************** */
 	/* PACKET GRID                                                            */
@@ -249,6 +259,10 @@ $(function()
 			{name:'order',			index:'order',			hidden:true},
 			{name:'lastupdated',	index:'lastupdated',	width:135, align:"right", fixed:true}
 		],
+		onHeaderClick: function(gridstate)
+		{
+			$.cookie('xg.packets', gridstate);
+		},
 		onSelectRow: function(id)
 		{
 			if(id)
@@ -302,7 +316,8 @@ $(function()
 		height: 300,
 		sortorder: "asc",
 		caption:"Packets"
-	}).navGrid('#packet-pager',{edit:false,add:false,del:false,search:false});
+	}).navGrid('#packet-pager', {edit:false, add:false, del:false, search:false});
+	jQuery("#packets").setGridState($.cookie('xg.packets'));
 
 	/* ********************************************************************** */
 	/* SEARCH GRID                                                            */
@@ -316,6 +331,10 @@ $(function()
 			{name:'id',		index:'id',		width:26, formatter:FormatSearchIcon},
 			{name:'name',	index:'name',	width:174}
 		],
+		onHeaderClick: function(gridstate)
+		{
+			$.cookie('xg.searches', gridstate);
+		},
 		onSelectRow: function(id)
 		{
 			search_active = true;
@@ -376,7 +395,8 @@ $(function()
 		sortorder: "desc",
 		caption:"Search"
 	});
-	jQuery("#searches").jqGrid('gridResize',{minWidth: 200, maxWidth: 200});
+	jQuery("#searches").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
+	jQuery("#searches").setGridState($.cookie('xg.searches'));
 
 	var mydata = [
 		{id:"1",name:"ODay Packets"},
