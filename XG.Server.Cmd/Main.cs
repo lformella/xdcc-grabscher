@@ -42,6 +42,7 @@ namespace XG.Server.Cmd
 			}
 #endif
 
+			Console.WriteLine("starting...");
 			try
 			{
 				ServerRunner runner = new ServerRunner();
@@ -49,12 +50,7 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
-				if (Settings.Instance.StartMySqlBackend)
-				{
-					runner.AddServerPlugin(new MySqlBackend());
-					// sleep a time to let the mysql plugin do the initial stuff
-					Thread.Sleep(300000);
-				}
+				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
 
 /** /
 				// import routine
@@ -70,6 +66,7 @@ namespace XG.Server.Cmd
 				Console.WriteLine(ex.ToString());
 				Console.ReadLine();
 			}
+			Console.WriteLine("ending...");
 		}
 	}
 }

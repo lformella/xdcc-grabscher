@@ -35,6 +35,56 @@ namespace XG.Server.Backend.MySql
 
 		#endregion
 
+		public MySqlBackend(ServerRunner aParent)
+		{
+			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
+			try
+			{
+				this.myDbConnection = new MySqlConnection(connectionString);
+				this.myDbConnection.Open();
+			}
+			catch (Exception ex)
+			{
+				this.Log("MySqlBackend() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+
+				// stop it
+				this.Stop();
+			}
+
+			#region REINIT DATABASE
+/**/
+			// drop all at first
+			this.ExecuteNonQuery("DELETE FROM server", null);
+			this.ExecuteNonQuery("DELETE FROM channel", null);
+			this.ExecuteNonQuery("DELETE FROM bot", null);
+			this.ExecuteNonQuery("DELETE FROM packet", null);
+
+			// create new
+			List<XGObject> list = aParent.GetServersChannels();
+			foreach(XGObject obj in list)
+			{
+				if (obj.GetType() == typeof(XGServer))
+				{
+					XGServer serv = (XGServer)obj;
+					myRunner_ObjectAddedEventHandler(null, serv);
+					foreach (XGChannel chan in serv.Children)
+					{
+						myRunner_ObjectAddedEventHandler(chan.Parent, chan);
+						foreach (XGBot bot in chan.Children)
+						{
+							myRunner_ObjectAddedEventHandler(bot.Parent, bot);
+							foreach (XGPacket pack in bot.Children)
+							{
+								myRunner_ObjectAddedEventHandler(pack.Parent, pack);
+							}
+						}
+					}
+				}
+			}
+/**/
+			#endregion
+		}
+
 		#region RUN STOP
 		
 		public void Start(ServerRunner aParent)
@@ -67,52 +117,6 @@ namespace XG.Server.Backend.MySql
 
 		private void OpenClient()
 		{
-			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
-			try
-			{
-				this.myDbConnection = new MySqlConnection(connectionString);
-				this.myDbConnection.Open();
-			}
-			catch (Exception ex)
-			{
-				this.Log("OpenClient() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-
-				// stop it
-				this.Stop();
-			}
-
-			#region REINIT DATABASE
-/*
-			// drop all at first
-			this.ExecuteNonQuery("DELETE FROM server", null);
-			this.ExecuteNonQuery("DELETE FROM channel", null);
-			this.ExecuteNonQuery("DELETE FROM bot", null);
-			this.ExecuteNonQuery("DELETE FROM packet", null);
-
-			// create new
-			List<XGObject> list = this.myRunner.GetServersChannels();
-			foreach(XGObject obj in list)
-			{
-				if (obj.GetType() == typeof(XGServer))
-				{
-					XGServer serv = (XGServer)obj;
-					myRunner_ObjectAddedEventHandler(null, serv);
-					foreach (XGChannel chan in serv.Children)
-					{
-						myRunner_ObjectAddedEventHandler(chan.Parent, chan);
-						foreach (XGBot bot in chan.Children)
-						{
-							myRunner_ObjectAddedEventHandler(bot.Parent, bot);
-							foreach (XGPacket pack in bot.Children)
-							{
-								myRunner_ObjectAddedEventHandler(pack.Parent, pack);
-							}
-						}
-					}
-				}
-			}
-*/
-			#endregion
 		}
 
 		private void CloseClient()
