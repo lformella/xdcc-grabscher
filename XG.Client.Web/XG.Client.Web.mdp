@@ -99,7 +99,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/images/ui-icons_ffffff_256x240.png" resource_id="XG.Client.Web.Resources.css.cupertino.images.ui-icons_ffffff_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/cupertino/jquery-ui.css" resource_id="XG.Client.Web.Resources.css.cupertino.jquery-ui.css" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/jquery.cookie.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.cookie.min.js" resource_id="XG.Client.Web.Resources.js.jquery.cookie.min.js" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />

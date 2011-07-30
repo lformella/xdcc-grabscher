@@ -116,6 +116,7 @@
     <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_ffffff_256x240.png" />
     <EmbeddedResource Include="Resources\css\cupertino\jquery-ui.css" />
     <EmbeddedResource Include="Resources\index.html" />
+    <EmbeddedResource Include="Resources\js\jquery.cookie.min.js" />
     <EmbeddedResource Include="Resources\js\jquery.jqGrid.min.js" />
     <EmbeddedResource Include="Resources\js\jquery.min.js" />
     <EmbeddedResource Include="Resources\js\jquery-ui.min.js" />
