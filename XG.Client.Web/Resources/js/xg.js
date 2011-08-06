@@ -116,6 +116,7 @@ $(function()
 		onHeaderClick: function(gridstate)
 		{
 			$.cookie('xg.servers', gridstate);
+			Resize();
 		},
 		onSelectRow: function(id)
 		{
@@ -207,6 +208,7 @@ $(function()
 		onHeaderClick: function(gridstate)
 		{
 			$.cookie('xg.bots', gridstate);
+			Resize();
 		},
 		onSelectRow: function(id)
 		{
@@ -262,6 +264,7 @@ $(function()
 		onHeaderClick: function(gridstate)
 		{
 			$.cookie('xg.packets', gridstate);
+			Resize();
 		},
 		onSelectRow: function(id)
 		{
@@ -334,6 +337,7 @@ $(function()
 		onHeaderClick: function(gridstate)
 		{
 			$.cookie('xg.searches', gridstate);
+			Resize();
 		},
 		onSelectRow: function(id)
 		{
@@ -1262,13 +1266,55 @@ function Resize()
 	var width = $(window).width() - 240;
 	var height = ($(window).height() - 260) / 2;
 
-	jQuery("#servers").setGridHeight(height - 15);
-	jQuery("#searches").setGridHeight(height);
+	if(jQuery("#searches").getGridParam("gridstate") == "hidden")
+	{
+		if(jQuery("#servers").getGridParam("gridstate") != "hidden")
+		{
+			jQuery("#servers").setGridHeight((height + 20) * 2);
+		}
+	}
+	else if(jQuery("#servers").getGridParam("gridstate") != "hidden")
+	{
+		jQuery("#servers").setGridHeight((height + 10));
+	}
 
-	jQuery("#bots").setGridHeight(height);
+	if(jQuery("#servers").getGridParam("gridstate") == "hidden")
+	{
+		if(jQuery("#searches").getGridParam("gridstate") != "hidden")
+		{
+			jQuery("#searches").setGridHeight((height + 20) * 2);
+		}
+	}
+	else if(jQuery("#searches").getGridParam("gridstate") != "hidden")
+	{
+		jQuery("#searches").setGridHeight((height + 10));
+	}
+
+	if(jQuery("#packets").getGridParam("gridstate") == "hidden")
+	{
+		if(jQuery("#bots").getGridParam("gridstate") != "hidden")
+		{
+			jQuery("#bots").setGridHeight((height + 20) * 2);
+		}
+	}
+	else if(jQuery("#bots").getGridParam("gridstate") != "hidden")
+	{
+		jQuery("#bots").setGridHeight(height);
+	}
 	jQuery("#bots").setGridWidth(width);
-	jQuery("#bots").jqGrid('gridResize',{minWidth: width, maxWidth: width});
-	jQuery("#packets").setGridHeight(height);
+	jQuery("#bots").jqGrid('gridResize', {minWidth: width, maxWidth: width});
+
+	if(jQuery("#bots").getGridParam("gridstate") == "hidden")
+	{
+		if(jQuery("#packets").getGridParam("gridstate") != "hidden")
+		{
+			jQuery("#packets").setGridHeight((height + 20) * 2);
+		}
+	}
+	else if(jQuery("#packets").getGridParam("gridstate") != "hidden")
+	{
+		jQuery("#packets").setGridHeight(height);
+	}
 	jQuery("#packets").setGridWidth(width);
-	jQuery("#packets").jqGrid('gridResize',{minWidth: width, maxWidth: width});
+	jQuery("#packets").jqGrid('gridResize', {minWidth: width, maxWidth: width});
 }
