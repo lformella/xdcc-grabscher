@@ -491,6 +491,13 @@ namespace XG.Server
 				//Console.WriteLine(file.TmpPath + " - " + name);
 				if (file.TmpPath == name)
 				{
+					// lets check if the directory is still on the harddisk
+					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+					{
+						this.Log("GetFile(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ", LogLevel.Warning);
+						this.RemoveFile(file);
+						break;
+					}
 					return file;
 				}
 			}
@@ -511,7 +518,15 @@ namespace XG.Server
 				tFile = new XGFile(aName, aSize);
 				this.myFiles.Add(tFile);
 				this.ObjectAddedEvent(null, tFile);
-				new DirectoryInfo(Settings.Instance.TempPath + tFile.TmpPath).Create();
+				try
+				{
+					Directory.CreateDirectory(Settings.Instance.TempPath + tFile.TmpPath);
+				}
+				catch (Exception ex)
+				{
+					this.Log("GetNewFile() Exception: " + XGHelper.GetExceptionMessage(ex), LogLevel.Error);
+					tFile = null;
+				}
 			}
 			return tFile;
 		}

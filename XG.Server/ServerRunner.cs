@@ -196,6 +196,13 @@ namespace XG.Server
 			{
 				foreach (XGFile file in this.myFiles.ToArray())
 				{
+					// lets check if the directory is still on the harddisk
+					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+					{
+						this.Log("Run() crash recovery directory " + file.TmpPath + " is missing ", LogLevel.Warning);
+						this.myServerHandler.RemoveFile(file);
+					}
+
 					file.locked = new object();
 
 					if (!file.Enabled)
