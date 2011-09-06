@@ -201,6 +201,7 @@ namespace XG.Server
 					{
 						this.Log("Run() crash recovery directory " + file.TmpPath + " is missing ", LogLevel.Warning);
 						this.myServerHandler.RemoveFile(file);
+						continue;
 					}
 
 					file.locked = new object();
