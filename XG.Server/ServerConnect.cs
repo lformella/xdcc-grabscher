@@ -711,7 +711,12 @@ namespace XG.Server
 						// we cant connect to port <= 0
 						if(tPort <= 0)
 						{
-							this.Log("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort + " with string: " + tData, LogLevel.Error);
+							this.Log("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort + ", disabling packet", LogLevel.Error);
+							tPacket.Enabled = false;
+							this.ObjectChange(tPacket);
+
+							// statistics
+							Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 						}
 						else
 						{
