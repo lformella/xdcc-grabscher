@@ -190,7 +190,7 @@ $(function()
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
 			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			width:26,	formatter:FormatBotIcon, fixed:true},
+			{name:'icon',			index:'icon',			width:24,	formatter:FormatBotIcon, fixed:true},
 			{name:'name',			index:'name',			width:370,	formatter:FormatBotName},
 			{name:'botstate',		index:'botstate',		hidden:true},
 			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right", fixed:true},
@@ -247,7 +247,7 @@ $(function()
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
 			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			width:26,	formatter:FormatPacketIcon, fixed:true},
+			{name:'icon',			index:'icon',			width:24,	formatter:FormatPacketIcon, fixed:true},
 			{name:'channelguid',	index:'channelguid',	hidden:true},
 			{name:'id',				index:'id',				width:40,	formatter:FormatPacketId, align:"right", fixed:true},
 			{name:'name',			index:'name',			width:400,	formatter:FormatPacketName},
@@ -331,7 +331,7 @@ $(function()
 		datatype: "local",
 		colNames:['', 'Search'],
 		colModel:[
-			{name:'id',		index:'id',		width:26, formatter:FormatSearchIcon},
+			{name:'id',		index:'id',		width:24, formatter:FormatSearchIcon},
 			{name:'name',	index:'name',	width:174}
 		],
 		onHeaderClick: function(gridstate)
@@ -976,7 +976,7 @@ function FormatServerIcon(cellvalue, options, rowObject)
 	if(!rowObject[2]) { str += "Disabled"; }
 	else if(rowObject[1]) { str += "Connected"; }
 
-	return FormatIcon(str) + " " + rowObject[5];
+	return FormatIcon2(str) + " " + rowObject[5];
 }
 
 /* ************************************************************************** */
@@ -994,7 +994,7 @@ function FormatSearchIcon(cellvalue, options, rowObject)
 		case "4": str = "Ok"; break;
 		default: str = "Search"; break;
 	}
-	return FormatIcon(str);
+	return FormatIcon2(str);
 }
 
 /* ************************************************************************** */
@@ -1026,7 +1026,7 @@ function FormatBotIcon(cellvalue, options, rowObject)
 		}
 	}
 
-	return FormatIcon(str);
+	return FormatIcon2(str);
 }
 
 function FormatBotName(cellvalue, options, rowObject)
@@ -1093,7 +1093,7 @@ function FormatPacketIcon(cellvalue, options, rowObject)
 		else { str += "New"; }
 	}
 
-	return FormatIcon(str);
+	return FormatIcon2(str);
 }
 
 function FormatPacketId(cellvalue, options, rowObject)
@@ -1164,6 +1164,11 @@ function FormatPacketName(cellvalue, options, rowObject)
 function FormatIcon(img)
 {
 	return "<img src='image&" + img + "' />";
+}
+
+function FormatIcon2(img)
+{
+	return "<div style='background-image:url(image&" + img + ");width:22px;height:22px;float:left;'></div>";
 }
 
 function FormatSize(cellvalue, options, rowObject)
