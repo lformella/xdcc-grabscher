@@ -104,8 +104,8 @@ $(function()
 	jQuery("#servers").jqGrid(
 	{
 		datatype: "json",
-		colNames:['', '', '', '', '', 'Name'],
-		colModel:[
+		colNames: ['', '', '', '', '', 'Name'],
+		colModel: [
 			{name:'parent',			index:'parent',			hidden:true},
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
@@ -165,14 +165,14 @@ $(function()
 		},
 		treeGrid: true,
 		treeGridModel: 'adjacency',
-		rowNum:100,
-		rowList:[100, 200, 400, 800],
+		rowNum: 100,
+		rowList: [100, 200, 400, 800],
 		sortname: 'name',
 		ExpandColumn: 'name',
 		viewrecords: true,
 		height: 300,
 		sortorder: "asc",
-		caption:"Servers"
+		caption: "Servers"
 	});
 	jQuery("#servers").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
 	jQuery("#servers").setGridState($.cookie('xg.servers'));
@@ -184,8 +184,8 @@ $(function()
 	jQuery("#bots").jqGrid(
 	{
 		datatype: "json",
-		colNames:['', '', '', '', '', 'Name', '', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', '', 'Slots', '', 'Queue', '', '', ''],
-		colModel:[
+		colNames: ['', '', '', '', '', 'Name', '', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', '', 'Slots', '', 'Queue', '', '', ''],
+		colModel: [
 			{name:'parent',			index:'parent',			hidden:true},
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
@@ -221,8 +221,8 @@ $(function()
 				jQuery('#servers').setSelection(bot.parent, false);
 			}
 		},
-		rowNum:100,
-		rowList:[100, 200, 400, 800],
+		rowNum: 100,
+		rowList: [100, 200, 400, 800],
 		pager: jQuery('#bot-pager'),
 		sortname: 'name',
 		viewrecords: true,
@@ -230,7 +230,7 @@ $(function()
 		scrollrows: true,
 		height: 300,
 		sortorder: "asc",
-		caption:"Bots"
+		caption: "Bots"
 	}).navGrid('#bot-pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#bots").setGridState($.cookie('xg.bots'));
 
@@ -241,8 +241,8 @@ $(function()
 	jQuery("#packets").jqGrid(
 	{
 		datatype: "json",
-		colNames:['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', '', '', 'Updated'],
-		colModel:[
+		colNames: ['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', '', '', 'Updated'],
+		colModel: [
 			{name:'parent',			index:'parent',			hidden:true},
 			{name:'connected',		index:'connected',		hidden:true},
 			{name:'enabled',		index:'enabled',		hidden:true},
@@ -310,15 +310,15 @@ $(function()
 				jQuery('#packets').setCell(rowid, 'id', '', {'background-color': '#' + color}, '');
 			}
 		},
-		rowNum:100,
-		rowList:[100, 200, 400, 800],
+		rowNum: 100,
+		rowList: [100, 200, 400, 800],
 		pager: jQuery('#packet-pager'),
 		sortname: 'id',
 		viewrecords: true,
 		autowidth: true,
 		height: 300,
 		sortorder: "asc",
-		caption:"Packets"
+		caption: "Packets"
 	}).navGrid('#packet-pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#packets").setGridState($.cookie('xg.packets'));
 
@@ -329,8 +329,8 @@ $(function()
 	jQuery("#searches").jqGrid(
 	{
 		datatype: "local",
-		colNames:['', 'Search'],
-		colModel:[
+		colNames: ['', 'Search'],
+		colModel: [
 			{name:'id',		index:'id',		width:24, formatter:FormatSearchIcon},
 			{name:'name',	index:'name',	width:174}
 		],
@@ -397,20 +397,20 @@ $(function()
 		viewrecords: true,
 		height: 300,
 		sortorder: "desc",
-		caption:"Search"
+		caption: "Search"
 	});
 	jQuery("#searches").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
 	jQuery("#searches").setGridState($.cookie('xg.searches'));
 
 	var mydata = [
-		{id:"1",name:"ODay Packets"},
-		{id:"2",name:"OWeek Packets"},
-		{id:"3",name:"Downloads"},
-		{id:"4",name:"Enabled Packets"}
+		{id:"1", name:"ODay Packets"},
+		{id:"2", name:"OWeek Packets"},
+		{id:"3", name:"Downloads"},
+		{id:"4", name:"Enabled Packets"}
 	];
-	for(var i=0;i<=mydata.length;i++)
+	for(var i=0; i<=mydata.length; i++)
 	{
-		jQuery("#searches").addRowData(i+1, mydata[i]);
+		jQuery("#searches").addRowData(i + 1, mydata[i]);
 		id_search_count++;
 	}
 

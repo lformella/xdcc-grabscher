@@ -23,7 +23,6 @@ using Mono.Unix;
 using XG.Server;
 using XG.Server.Backend.MySql;
 using XG.Server.Jabber;
-using XG.Server.TCP;
 using XG.Server.Web;
 	
 namespace XG.Server.Cmd
@@ -47,7 +46,6 @@ namespace XG.Server.Cmd
 			{
 				ServerRunner runner = new ServerRunner();
 
-				if (Settings.Instance.StartTCPServer) { runner.AddServerPlugin(new TCPServer()); }
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
 				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }

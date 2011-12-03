@@ -1,4 +1,4 @@
-<Project name="XG.Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="3.5" ctype="DotNetProject">
+<Project name="XG.Server.Cmd" fileversion="2.0" releaseVersion="0.9" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Server.Cmd" />
@@ -28,7 +28,6 @@
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Web" />
-    <ProjectReference type="Project" localcopy="True" refto="XG.Server.TCP" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Jabber" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Backend.MySql" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
