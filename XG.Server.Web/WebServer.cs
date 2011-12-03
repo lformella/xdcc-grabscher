@@ -201,7 +201,7 @@ namespace XG.Server.Web
 					}
 
 					#region DATA HANDLING
-					
+
 					List<XGObject> list = null;
 
 					switch (tMessage)
@@ -500,7 +500,7 @@ namespace XG.Server.Web
 			sb.Append("\t\t\t" + aObject.Connected.ToString().ToLower() + ",\n");												//1
 			sb.Append("\t\t\t" + aObject.Enabled.ToString().ToLower() + ",\n");													//2
 			sb.Append("\t\t\t\"" + aObject.LastModified + "\",\n");																//3
-			sb.Append("\t\t\t\"\",\n");																							//4
+			sb.Append("\t\t\t\"\",\n");	// used for icon																		//4
 
 			if (aObject.GetType() == typeof(XGPacket))
 			{
@@ -529,8 +529,8 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t\"" + aObject.Name + ":" + tServ.Port + "\",\n");											//5
 					sb.Append("\t\t\t0,\n");																					//6	
 					sb.Append("\t\t\t0,\n");																					//7			
-					sb.Append("\t\t\t " + (aObject.Children.Length > 0 ? "false" : " true") + ",\n");							//8	
-					sb.Append("\t\t\tfalse\n");																					//9	
+					sb.Append("\t\t\t" + (aObject.Children.Length > 0 ? "false" : " true") + ",\n");							//8	
+					sb.Append("\t\t\ttrue\n");																					//9	
 				}
 
 				if (aObject.GetType() == typeof(XGChannel))
@@ -539,7 +539,7 @@ namespace XG.Server.Web
 					sb.Append("\t\t\t1,\n");																					//6
 					sb.Append("\t\t\t\"" + aObject.ParentGuid + "\",\n");														//7
 					sb.Append("\t\t\ttrue,\n");																					//8
-					sb.Append("\t\t\tfalse\n");																					//9
+					sb.Append("\t\t\ttrue\n");																					//9
 				}
 
 				if (aObject.GetType() == typeof(XGBot))
