@@ -1,4 +1,4 @@
-<Project name="XG.Server.Backend.MySql" fileversion="2.0" releaseVersion="0.9" DefaultNamespace="XG.Server.Backend.MySql" language="C#" targetFramework="3.5" ctype="DotNetProject">
+<Project name="XG.Server.Backend.MySql" fileversion="2.0" DefaultNamespace="XG.Server.Backend.MySql" language="C#" targetFramework="4.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Server.Backend.MySql" />
@@ -25,9 +25,9 @@
     <File subtype="Code" buildaction="Nothing" name="install.sql" />
   </Contents>
   <References>
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="lib/MySql.Data.dll" />
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
 </Project>
