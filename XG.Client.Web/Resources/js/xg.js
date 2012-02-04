@@ -79,7 +79,6 @@ var Password = "";
 var obj_current;
 var id_server;
 var id_channel;
-var id_bot;
 var id_search;
 
 var search_active = false;
@@ -126,19 +125,14 @@ $(function()
 				obj_current = serv;
 				if(serv && serv.level == 1)
 				{
-					if(id !== id_channel)
-					{
-						search_active = false;
-						jQuery("#bots").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id)}).trigger("reloadGrid");
-						id_channel = id;
-						//jQuery("#add-channel").attr("disabled","disabled");
-					}
+					search_active = false;
+					jQuery("#bots").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
+					id_channel = id;
 					jQuery("#add-channel").hide();
 				}
 				else
 				{
 					id_server = id;
-					//jQuery("#add-channel").removeAttr("disabled");
 					jQuery("#add-channel").show();
 				}
 			}
@@ -212,12 +206,11 @@ $(function()
 		},
 		onSelectRow: function(id)
 		{
-			if(id && id !== id_bot)
+			if(id)
 			{
 				search_active = false;
 				var bot = jQuery('#bots').getRowData(id);
-				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id)}).trigger("reloadGrid");
-				id_bot = id;
+				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
 				jQuery('#servers').setSelection(bot.parent, false);
 			}
 		},
@@ -342,7 +335,7 @@ $(function()
 		onSelectRow: function(id)
 		{
 			search_active = true;
-			if(id && id !== id_search)
+			if(id)
 			{
 				var data = jQuery('#searches').getRowData(id);
 				var url1 = "";
@@ -386,10 +379,13 @@ $(function()
 		{
 			if(id)
 			{
+				if(id <= 4)
+				{
+					return;
+				}
 				var data = jQuery('#searches').getRowData(id);
 				$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.name));
 				jQuery('#searches').delRowData(id);
-				//id_search_count--;
 			}
 		},
 		sortname: 'name',
@@ -667,7 +663,7 @@ function ButtonConnectClicked(dialog)
 		);
 
 		// start the refresh
-		RefreshGrid();
+		RefreshGrid(0);
 		RefreshStatistic();
 	}
 	else
@@ -717,8 +713,8 @@ function ButtonYesClicked(dialog)
 		}
 		setTimeout("ReloadGrid('servers')", 1000);
 		obj_current = "";
-		id_server = "";
-		id_channel = "";
+		id_server = 0;
+		id_channel = 0;
 
 		dialog.dialog('close');
 	}
@@ -756,22 +752,23 @@ function ReloadGrid(grid, url)
 {
 	if(url != undefined)
 	{
-		jQuery("#" + grid).setGridParam({url: url});
+		jQuery("#" + grid).setGridParam({url: url, page: 1});
 	}
 	jQuery("#" + grid).trigger("reloadGrid");
 }
 
-function RefreshGrid()
+function RefreshGrid(count)
 {
+	// connected things every 2,5 seconds, waiting just every 25 seconds
+	var mod = count % 10 == 0 ? true : false;
+
 	// refresh bot grid
 	var ids = jQuery("#bots").getDataIDs();
-	//for each (var id in ids)
-	//{
 	for (var i = 0; i < ids.length; i++)
 	{
 		var id = ids[i];
 		var data = jQuery("#bots").getRowData(id);
-		if(data.botstate == "Active")
+		if(data.botstate == "Active" || (mod && data.enabled == "Waiting"))
 		{
 			RefreshBot(id);
 		}
@@ -779,19 +776,17 @@ function RefreshGrid()
 
 	// refresh packet grid
 	var ids = jQuery("#packets").getDataIDs();
-	//for each (var id in ids)
-	//{
 	for (var i = 0; i < ids.length; i++)
 	{
 		var id = ids[i];
 		var data = jQuery("#packets").getRowData(id);
-		if(data.connected == "true")
+		if(data.connected == "true" || (mod && data.enabled == "true"))
 		{
 			RefreshPacket(id);
 		}
 	}
 
-	setTimeout("RefreshGrid()", 2500);
+	setTimeout("RefreshGrid(" + (count + 1) +")", 2500);
 }
 
 function RefreshServer(guid)
