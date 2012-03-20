@@ -140,12 +140,13 @@ namespace XG.Server
 				if (aServer.Enabled)
 				{
 					// disable the server if the host was not found
-					if(	aValue == SocketErrorCode.HostNotFound ||
+					// this is also triggered if we have no internet connection and disables all channels
+					/*if(	aValue == SocketErrorCode.HostNotFound ||
 						aValue == SocketErrorCode.HostNotFoundTryAgain)
 					{
 						aServer.Enabled = false;
 					}
-					else
+					else*/
 					{
 						int time = Settings.Instance.ReconnectWaitTime;
 						switch(aValue)
