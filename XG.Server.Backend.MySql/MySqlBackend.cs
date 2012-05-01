@@ -29,105 +29,107 @@ namespace XG.Server.Backend.MySql
 
 		private ServerRunner myRunner;
 		private MySqlConnection myDbConnection;
-
 		private Thread myServerThread;
-		private object locked = new object();
+		private object locked = new object ();
 
 		#endregion
 
-		public MySqlBackend(ServerRunner aParent)
+		public MySqlBackend (ServerRunner aParent)
 		{
-			string connectionString = "Server=localhost;Database=xg;User ID=xg;Password=xg;Pooling=false";
+			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
 			try
 			{
-				this.myDbConnection = new MySqlConnection(connectionString);
-				this.myDbConnection.Open();
+				this.myDbConnection = new MySqlConnection (connectionString);
+				this.myDbConnection.Open ();
 			}
 			catch (Exception ex)
 			{
-				this.Log("MySqlBackend() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				this.Log ("MySqlBackend(" + connectionString + ") : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
 
 				// stop it
-				this.Stop();
+				this.Stop ();
+				return;
 			}
 
 			#region REINIT DATABASE
-/**/
-			// drop all at first
-			this.ExecuteNonQuery("DELETE FROM server", null);
-			this.ExecuteNonQuery("DELETE FROM channel", null);
-			this.ExecuteNonQuery("DELETE FROM bot", null);
-			this.ExecuteNonQuery("DELETE FROM packet", null);
 
-			// create new
-			List<XGObject> list = aParent.GetServersChannels();
-			foreach(XGObject obj in list)
+			if (Settings.Instance.MySqlBackendClearOnStart)
 			{
-				if (obj.GetType() == typeof(XGServer))
+				// drop all at first
+				this.ExecuteNonQuery ("DELETE FROM server", null);
+				this.ExecuteNonQuery ("DELETE FROM channel", null);
+				this.ExecuteNonQuery ("DELETE FROM bot", null);
+				this.ExecuteNonQuery ("DELETE FROM packet", null);
+
+				// create new
+				List<XGObject> list = aParent.GetServersChannels ();
+				foreach (XGObject obj in list)
 				{
-					XGServer serv = (XGServer)obj;
-					myRunner_ObjectAddedEventHandler(null, serv);
-					foreach (XGChannel chan in serv.Children)
+					if (obj.GetType () == typeof(XGServer))
 					{
-						myRunner_ObjectAddedEventHandler(chan.Parent, chan);
-						foreach (XGBot bot in chan.Children)
+						XGServer serv = (XGServer)obj;
+						myRunner_ObjectAddedEventHandler (null, serv);
+						foreach (XGChannel chan in serv.Children)
 						{
-							myRunner_ObjectAddedEventHandler(bot.Parent, bot);
-							foreach (XGPacket pack in bot.Children)
+							myRunner_ObjectAddedEventHandler (chan.Parent, chan);
+							foreach (XGBot bot in chan.Children)
 							{
-								myRunner_ObjectAddedEventHandler(pack.Parent, pack);
+								myRunner_ObjectAddedEventHandler (bot.Parent, bot);
+								foreach (XGPacket pack in bot.Children)
+								{
+									myRunner_ObjectAddedEventHandler (pack.Parent, pack);
+								}
 							}
 						}
 					}
 				}
 			}
-/**/
+
 			#endregion
 		}
 
 		#region RUN STOP
 		
-		public void Start(ServerRunner aParent)
+		public void Start (ServerRunner aParent)
 		{
 			this.myRunner = aParent;
 
 			// start the server thread
-			this.myServerThread = new Thread(new ThreadStart(OpenClient));
-			this.myServerThread.Start();
+			this.myServerThread = new Thread (new ThreadStart (OpenClient));
+			this.myServerThread.Start ();
 
-			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
-			this.myRunner.ObjectChangedEvent += new ObjectDelegate(myRunner_ObjectChangedEventHandler);
-			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
+			this.myRunner.ObjectAddedEvent += new ObjectObjectDelegate (myRunner_ObjectAddedEventHandler);
+			this.myRunner.ObjectChangedEvent += new ObjectDelegate (myRunner_ObjectChangedEventHandler);
+			this.myRunner.ObjectRemovedEvent += new ObjectObjectDelegate (myRunner_ObjectRemovedEventHandler);
 		}
 		
-		
-		public void Stop()
+		public void Stop ()
 		{
-			this.myRunner.ObjectAddedEvent -= new ObjectObjectDelegate(myRunner_ObjectAddedEventHandler);
-			this.myRunner.ObjectChangedEvent -= new ObjectDelegate(myRunner_ObjectChangedEventHandler);
-			this.myRunner.ObjectRemovedEvent -= new ObjectObjectDelegate(myRunner_ObjectRemovedEventHandler);
+			this.myRunner.ObjectAddedEvent -= new ObjectObjectDelegate (myRunner_ObjectAddedEventHandler);
+			this.myRunner.ObjectChangedEvent -= new ObjectDelegate (myRunner_ObjectChangedEventHandler);
+			this.myRunner.ObjectRemovedEvent -= new ObjectObjectDelegate (myRunner_ObjectRemovedEventHandler);
 
-			this.CloseClient();
-			this.myServerThread.Abort();
+			this.CloseClient ();
+			this.myServerThread.Abort ();
 		}
 		
 		#endregion
 
 		#region SERVER
 
-		private void OpenClient()
+		private void OpenClient ()
 		{
 		}
 
-		private void CloseClient()
+		private void CloseClient ()
 		{
 			try
 			{
-				this.myDbConnection.Close();
+				this.myDbConnection.Close ();
 			}
 			catch (Exception ex)
 			{
-				this.Log("CloseClient() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				this.Log ("CloseClient() : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
 			}
 		}
 
@@ -135,49 +137,55 @@ namespace XG.Server.Backend.MySql
 
 		#region EVENTS
 
-		protected void myRunner_ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
+		protected void myRunner_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
 			string table = "";
-			Dictionary<string, object> dic = this.GetObjectData(aObj);
+			Dictionary<string, object> dic = this.GetObjectData (aObj);
 
-			if (aObj.GetType() == typeof(XGServer)) { table = "server"; }
-			else if (aObj.GetType() == typeof(XGChannel))
+			if (aObj.GetType () == typeof(XGServer))
+			{
+				table = "server";
+			}
+			else
+			if (aObj.GetType () == typeof(XGChannel))
 			{
 				// update server variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent);
 
 				table = "channel";
 			}
-			else if (aObj.GetType() == typeof(XGBot))
+			else
+			if (aObj.GetType () == typeof(XGBot))
 			{
 				// update channel variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent);
 				// update server variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent.Parent);
 
 				table = "bot";
 			}
-			else if (aObj.GetType() == typeof(XGPacket))
+			else
+			if (aObj.GetType () == typeof(XGPacket))
 			{
 				// update bot variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent);
 				// update channel variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent.Parent);
 				// update server variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent.Parent.Parent);
 
 				table = "packet";
 			}
 
-			if(table != "")
+			if (table != "")
 			{
-				dic.Add("guid", aObj.Guid.ToString());
+				dic.Add ("guid", aObj.Guid.ToString ());
 
 				string values1 = "";
 				string values2 = "";
-				foreach(KeyValuePair<string, object> kcp in dic)
+				foreach (KeyValuePair<string, object> kcp in dic)
 				{
-					if(values1 != "")
+					if (values1 != "")
 					{
 						values1 += ", ";
 						values2 += ", ";
@@ -186,93 +194,111 @@ namespace XG.Server.Backend.MySql
 					values2 += "@" + kcp.Key;
 				}
 
-				this.ExecuteNonQuery("INSERT INTO " + table +" (" + values1 + ") VALUES (" + values2 + ")", dic);
+				this.ExecuteNonQuery ("INSERT INTO " + table + " (" + values1 + ") VALUES (" + values2 + ")", dic);
 			}
 		}
 
-		protected void myRunner_ObjectChangedEventHandler(XGObject aObj)
+		protected void myRunner_ObjectChangedEventHandler (XGObject aObj)
 		{
 			string table = "";
-			Dictionary<string, object> dic = this.GetObjectData(aObj);
+			Dictionary<string, object> dic = this.GetObjectData (aObj);
 
-			if (aObj.GetType() == typeof(XGServer)) { table = "server"; }
-			else if (aObj.GetType() == typeof(XGChannel)) { table = "channel"; }
-			else if (aObj.GetType() == typeof(XGBot)) { table = "bot"; }
-			else if (aObj.GetType() == typeof(XGPacket)) { table = "packet"; }
+			if (aObj.GetType () == typeof(XGServer))
+			{
+				table = "server";
+			}
+			else
+			if (aObj.GetType () == typeof(XGChannel))
+			{
+				table = "channel";
+			}
+			else
+			if (aObj.GetType () == typeof(XGBot))
+			{
+				table = "bot";
+			}
+			else
+			if (aObj.GetType () == typeof(XGPacket))
+			{
+				table = "packet";
+			}
 
-			if(table != "")
+			if (table != "")
 			{
 				string values1 = "";
-				foreach(KeyValuePair<string, object> kcp in dic)
+				foreach (KeyValuePair<string, object> kcp in dic)
 				{
-					if(values1 != "")
+					if (values1 != "")
 					{
 						values1 += ", ";
 					}
 					values1 += kcp.Key + " = @" + kcp.Key;
 				}
 
-				dic.Add("guid", aObj.Guid.ToString());
-				this.ExecuteNonQuery("UPDATE " + table +" SET " + values1 + " WHERE Guid = @guid", dic);
+				dic.Add ("guid", aObj.Guid.ToString ());
+				this.ExecuteNonQuery ("UPDATE " + table + " SET " + values1 + " WHERE Guid = @guid", dic);
 			}
 		}
 
-		protected void myRunner_ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
+		protected void myRunner_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
 			string table = "";
-			Dictionary<string, object> dic = new Dictionary<string, object>();
+			Dictionary<string, object> dic = new Dictionary<string, object> ();
 
-			if (aObj.GetType() == typeof(XGServer))
+			if (aObj.GetType () == typeof(XGServer))
 			{
 				// drop chans to!
-				foreach(XGChannel chan in aObj.Children)
+				foreach (XGChannel chan in aObj.Children)
 				{
-					this.myRunner_ObjectRemovedEventHandler(aObj, chan);
+					this.myRunner_ObjectRemovedEventHandler (aObj, chan);
 				}
 				table = "server";
 			}
-			else if (aObj.GetType() == typeof(XGChannel))
+			else
+			if (aObj.GetType () == typeof(XGChannel))
 			{
 				// drop bots to!
-				foreach(XGBot bot in aObj.Children)
+				foreach (XGBot bot in aObj.Children)
 				{
-					this.myRunner_ObjectRemovedEventHandler(aObj, bot);
+					this.myRunner_ObjectRemovedEventHandler (aObj, bot);
 				}
 				// update server variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent);
 
 				table = "channel";
 			}
-			else if (aObj.GetType() == typeof(XGBot))
+			else
+			if (aObj.GetType () == typeof(XGBot))
 			{
 				// drop packets to!
-				foreach(XGPacket pack in aObj.Children)
+				foreach (XGPacket pack in aObj.Children)
 				{
-					this.myRunner_ObjectRemovedEventHandler(aObj, pack);
+					this.myRunner_ObjectRemovedEventHandler (aObj, pack);
 				}
 				// update channel variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent);
 				// update server variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent.Parent);
 
 				table = "bot";
 			}
-			else if (aObj.GetType() == typeof(XGPacket))
+			else
+			if (aObj.GetType () == typeof(XGPacket))
 			{
 				// update bot variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent);
 				// update channel variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent.Parent);
 				// update server variable count
-				myRunner_ObjectChangedEventHandler(aObj.Parent.Parent.Parent);
+				myRunner_ObjectChangedEventHandler (aObj.Parent.Parent.Parent);
 
 				table = "packet";
 			}
 
-			if(table != "")
+			if (table != "")
 			{
-				dic.Add("guid", aObj.Guid.ToString());
-				this.ExecuteNonQuery("DELETE FROM " + table +" WHERE Guid = @guid", dic);
+				dic.Add ("guid", aObj.Guid.ToString ());
+				this.ExecuteNonQuery ("DELETE FROM " + table + " WHERE Guid = @guid", dic);
 			}
 		}
 
@@ -280,130 +306,145 @@ namespace XG.Server.Backend.MySql
 
 		#region HELPER
 
-		protected Dictionary<string, object> GetObjectData(XGObject aObj)
+		protected Dictionary<string, object> GetObjectData (XGObject aObj)
 		{
-			Dictionary<string, object> dic = new Dictionary<string, object>();
-			dic.Add("Name", aObj.Name);
-			dic.Add("Connected", aObj.Connected);
-			dic.Add("Enabled", aObj.Enabled);
-			dic.Add("LastModified", this.Date2Timestamp(aObj.LastModified));
+			Dictionary<string, object> dic = new Dictionary<string, object> ();
+			dic.Add ("Name", aObj.Name);
+			dic.Add ("Connected", aObj.Connected);
+			dic.Add ("Enabled", aObj.Enabled);
+			dic.Add ("LastModified", this.Date2Timestamp (aObj.LastModified));
 
-			if (aObj.GetType() == typeof(XGServer))
+			if (aObj.GetType () == typeof(XGServer))
 			{
 				XGServer obj = (XGServer)aObj;
-				dic.Add("Port", obj.Port);
-				dic.Add("ErrorCode", obj.ErrorCode);
-				dic.Add("ChannelCount", obj.Children.Length);
+				dic.Add ("Port", obj.Port);
+				dic.Add ("ErrorCode", obj.ErrorCode);
+				dic.Add ("ChannelCount", obj.Children.Length);
 				int count = 0;
-				foreach(XGObject o in obj.Children) { count += o.Children.Length; }
-				dic.Add("BotCount", count);
+				foreach (XGObject o in obj.Children)
+				{
+					count += o.Children.Length;
+				}
+				dic.Add ("BotCount", count);
 				count = 0;
-				foreach(XGObject o in obj.Children) { foreach(XGObject ob in o.Children) { count += ob.Children.Length; } }
-				dic.Add("PacketCount", count);
+				foreach (XGObject o in obj.Children)
+				{
+					foreach (XGObject ob in o.Children)
+					{
+						count += ob.Children.Length;
+					}
+				}
+				dic.Add ("PacketCount", count);
 			}
-			else if (aObj.GetType() == typeof(XGChannel))
+			else
+			if (aObj.GetType () == typeof(XGChannel))
 			{
 				XGChannel obj = (XGChannel)aObj;
-				dic.Add("ParentGuid", obj.ParentGuid);
-				dic.Add("ErrorCode", obj.ErrorCode);
-				dic.Add("BotCount", obj.Children.Length);
+				dic.Add ("ParentGuid", obj.ParentGuid);
+				dic.Add ("ErrorCode", obj.ErrorCode);
+				dic.Add ("BotCount", obj.Children.Length);
 				int count = 0;
-				foreach(XGObject o in obj.Children) { count += o.Children.Length; }
-				dic.Add("PacketCount", count);
+				foreach (XGObject o in obj.Children)
+				{
+					count += o.Children.Length;
+				}
+				dic.Add ("PacketCount", count);
 			}
-			else if (aObj.GetType() == typeof(XGBot))
+			else
+			if (aObj.GetType () == typeof(XGBot))
 			{
 				XGBot obj = (XGBot)aObj;
-				dic.Add("ParentGuid", obj.ParentGuid);
-				dic.Add("BotState", obj.BotState);
-				dic.Add("InfoQueueCurrent", obj.InfoQueueCurrent);
-				dic.Add("InfoQueueTotal", obj.InfoQueueTotal);
-				dic.Add("InfoSlotCurrent", obj.InfoSlotCurrent);
-				dic.Add("InfoSlotTotal", obj.InfoSlotTotal);
-				dic.Add("InfoSpeedCurrent", obj.InfoSpeedCurrent);
-				dic.Add("InfoSpeedMax", obj.InfoSpeedMax);
-				dic.Add("LastContact", this.Date2Timestamp(obj.LastContact));
-				dic.Add("LastMessage", obj.LastMessage);
-				dic.Add("PacketCount", obj.Children.Length);
+				dic.Add ("ParentGuid", obj.ParentGuid);
+				dic.Add ("BotState", obj.BotState);
+				dic.Add ("InfoQueueCurrent", obj.InfoQueueCurrent);
+				dic.Add ("InfoQueueTotal", obj.InfoQueueTotal);
+				dic.Add ("InfoSlotCurrent", obj.InfoSlotCurrent);
+				dic.Add ("InfoSlotTotal", obj.InfoSlotTotal);
+				dic.Add ("InfoSpeedCurrent", obj.InfoSpeedCurrent);
+				dic.Add ("InfoSpeedMax", obj.InfoSpeedMax);
+				dic.Add ("LastContact", this.Date2Timestamp (obj.LastContact));
+				dic.Add ("LastMessage", obj.LastMessage);
+				dic.Add ("PacketCount", obj.Children.Length);
 			}
-			else if (aObj.GetType() == typeof(XGPacket))
+			else
+			if (aObj.GetType () == typeof(XGPacket))
 			{
 				XGPacket obj = (XGPacket)aObj;
-				dic.Add("ParentGuid", obj.ParentGuid);
-				dic.Add("Id", obj.Id);
-				dic.Add("LastUpdated", this.Date2Timestamp(obj.LastUpdated));
-				dic.Add("LastMentioned", this.Date2Timestamp(obj.LastMentioned));
-				dic.Add("Size", obj.Size);
+				dic.Add ("ParentGuid", obj.ParentGuid);
+				dic.Add ("Id", obj.Id);
+				dic.Add ("LastUpdated", this.Date2Timestamp (obj.LastUpdated));
+				dic.Add ("LastMentioned", this.Date2Timestamp (obj.LastMentioned));
+				dic.Add ("Size", obj.Size);
 			}
 
 			return dic;
 		}
 
-		protected void ExecuteNonQuery(string aSql, Dictionary<string, object> aDic)
+		protected void ExecuteNonQuery (string aSql, Dictionary<string, object> aDic)
 		{
-			lock(locked)
+			lock (locked)
 			{
-				MySqlCommand cmd = new MySqlCommand(aSql, this.myDbConnection);
-				using(cmd)
+				MySqlCommand cmd = new MySqlCommand (aSql, this.myDbConnection);
+				using (cmd)
 				{
-					if(aDic != null)
+					if (aDic != null)
 					{
-						foreach(KeyValuePair<string, object> kcp in aDic)
+						foreach (KeyValuePair<string, object> kcp in aDic)
 						{
-							cmd.Parameters.AddWithValue("@" + kcp.Key, kcp.Value);
+							cmd.Parameters.AddWithValue ("@" + kcp.Key, kcp.Value);
 						}
 					}
 					try
 					{
-						cmd.ExecuteNonQuery();
+						cmd.ExecuteNonQuery ();
 					}
 					catch (MySqlException ex)
 					{
 						string param = "";
-						if(aDic != null)
+						if (aDic != null)
 						{
-							foreach(KeyValuePair<string, object> kcp in aDic)
+							foreach (KeyValuePair<string, object> kcp in aDic)
 							{
 								param += "@" + kcp.Key + ":" + kcp.Value + " ";
 							}
 						}
-						this.Log("ExecuteQuery(" + ex.Number + ") '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						this.Log ("ExecuteQuery(" + ex.Number + ") '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
 					}
 					catch (InvalidOperationException ex)
 					{
 						string param = "";
-						if(aDic != null)
+						if (aDic != null)
 						{
-							foreach(KeyValuePair<string, object> kcp in aDic)
+							foreach (KeyValuePair<string, object> kcp in aDic)
 							{
 								param += "@" + kcp.Key + ":" + kcp.Value + " ";
 							}
 						}
-						this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-						this.Log("ExecuteQuery() : stopping server plugin!", LogLevel.Warning);
-						this.Stop();
+						this.Log ("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+						this.Log ("ExecuteQuery() : stopping server plugin!", LogLevel.Warning);
+						this.Stop ();
 					}
 					catch (Exception ex)
 					{
 						string param = "";
-						if(aDic != null)
+						if (aDic != null)
 						{
-							foreach(KeyValuePair<string, object> kcp in aDic)
+							foreach (KeyValuePair<string, object> kcp in aDic)
 							{
 								param += "@" + kcp.Key + ":" + kcp.Value + " ";
 							}
 						}
-						this.Log("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						this.Log ("ExecuteQuery() '" + aSql + " with params: " + param + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
 					}
 				}
 			}
 		}
 
-		protected Int64 Date2Timestamp(DateTime aDate)
+		protected Int64 Date2Timestamp (DateTime aDate)
 		{
-			DateTime date = new DateTime(1970, 1, 1);
-			TimeSpan ts = new TimeSpan(aDate.Ticks - date.Ticks);
-			return (Convert.ToInt64(ts.TotalSeconds));
+			DateTime date = new DateTime (1970, 1, 1);
+			TimeSpan ts = new TimeSpan (aDate.Ticks - date.Ticks);
+			return (Convert.ToInt64 (ts.TotalSeconds));
 		}
 
 		#endregion
@@ -415,9 +456,9 @@ namespace XG.Server.Backend.MySql
 		/// </summary>
 		/// <param name="aData"></param>
 		/// <param name="aLevel"></param>
-		private void Log(string aData, LogLevel aLevel)
+		private void Log (string aData, LogLevel aLevel)
 		{
-			XGHelper.Log("MySqlBackend." + aData, aLevel);
+			XGHelper.Log ("MySqlBackend." + aData, aLevel);
 		}
 
 		#endregion

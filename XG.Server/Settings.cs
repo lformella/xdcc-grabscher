@@ -127,7 +127,7 @@ namespace XG.Server
 			this.downloadTimeout = 30000;
 			this.botOfflineTime = 7200000;
 			this.samePacketRequestTime = 10000;
-			this.maxNoDataReceived = 5;
+			this.maxNoDataReceived = 15;
 			this.backupStatisticTime = 60000;
 
 			this.parsingErrorFile = "./parsing_errors.txt";
@@ -152,6 +152,11 @@ namespace XG.Server
 			this.jabberPassword = "";
 
 			this.startMySqlBackend = false;
+			this.mySqlBackendServer = "127.0.0.1";
+			this.mySqlBackendDatabase = "xg";
+			this.mySqlBackendUser = "xg";
+			this.mySqlBackendPassword = "xg";
+			this.mySqlBackendClearOnStart = false;
 
 #if DEBUG
 			this.logLevel = LogLevel.Notice;
@@ -460,6 +465,41 @@ namespace XG.Server
 		{
 			get { return this.startMySqlBackend; }
 			set { this.startMySqlBackend = value; }
+		}
+
+		private string mySqlBackendServer;
+		public string MySqlBackendServer
+		{
+			get { return this.mySqlBackendServer; }
+			set { this.mySqlBackendServer = value; }
+		}
+
+		private string mySqlBackendDatabase;
+		public string MySqlBackendDatabase
+		{
+			get { return this.mySqlBackendDatabase; }
+			set { this.mySqlBackendDatabase = value; }
+		}
+
+		private string mySqlBackendUser;
+		public string MySqlBackendUser
+		{
+			get { return this.mySqlBackendUser; }
+			set { this.mySqlBackendUser = value; }
+		}
+
+		private string mySqlBackendPassword;
+		public string MySqlBackendPassword
+		{
+			get { return this.mySqlBackendPassword; }
+			set { this.mySqlBackendPassword = value; }
+		}
+
+		private bool mySqlBackendClearOnStart;
+		public bool MySqlBackendClearOnStart
+		{
+			get { return this.mySqlBackendClearOnStart; }
+			set { this.mySqlBackendClearOnStart = value; }
 		}
 
 		private bool autoJoinOnInvite;

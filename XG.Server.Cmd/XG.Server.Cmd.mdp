@@ -1,4 +1,13 @@
 <Project name="XG.Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="4.0" ctype="DotNetProject">
+  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" SyncReferences="True">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Server.Cmd" />
@@ -24,15 +33,6 @@
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
     <File subtype="Code" buildaction="Compile" name="Importer.cs" />
   </Contents>
-  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" SyncReferences="True">
-    <BuildFilesVar Sync="True" Name="FILES" />
-    <DeployFilesVar />
-    <ResourcesVar Sync="True" Name="RESOURCES" />
-    <OthersVar />
-    <GacRefVar Sync="True" Name="REFERENCES" />
-    <AsmRefVar Sync="True" Name="REFERENCES" />
-    <ProjectRefVar Sync="True" Name="REFERENCES" />
-  </MonoDevelop.Autotools.MakefileInfo>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Web" />
