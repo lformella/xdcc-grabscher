@@ -180,49 +180,6 @@ namespace XG.Core
 	{
 		#region CLONING
 
-		public static RootObject CloneObject(RootObject aFromObj, bool aFull)
-		{
-			RootObject tObj = new RootObject();
-			XGHelper.CloneObject(aFromObj, tObj, aFull);
-			foreach (XGServer oldServ in aFromObj.Children)
-			{
-				XGServer newServ = new XGServer(tObj);
-				XGHelper.CloneObject(oldServ, newServ, aFull);
-				foreach (XGChannel oldChan in oldServ.Children)
-				{
-					XGChannel newChan = new XGChannel(newServ);
-					XGHelper.CloneObject(oldChan, newChan, aFull);
-					foreach (XGBot oldBot in oldChan.Children)
-					{
-						XGBot newBot = new XGBot(newChan);
-						XGHelper.CloneObject(oldBot, newBot, aFull);
-						foreach (XGPacket oldPack in oldBot.Children)
-						{
-							XGPacket newPack = new XGPacket(newBot);
-							XGHelper.CloneObject(oldPack, newPack, aFull);
-						}
-					}
-				}
-			}
-			return tObj;
-		}
-
-		public static XGObject CloneObject(XGObject aFromObj, bool aFull)
-		{
-			XGObject tObj = null;
-			if (aFromObj != null)
-			{
-				if (aFromObj.GetType() == typeof(XGServer)) { tObj = new XGServer(); }
-				else if (aFromObj.GetType() == typeof(XGChannel)) { tObj = new XGChannel(); }
-				else if (aFromObj.GetType() == typeof(XGBot)) { tObj = new XGBot(); }
-				else if (aFromObj.GetType() == typeof(XGPacket)) { tObj = new XGPacket(); }
-				else if (aFromObj.GetType() == typeof(XGFile)) { tObj = new XGFile(); }
-				else if (aFromObj.GetType() == typeof(XGFilePart)) { tObj = new XGFilePart(); }
-				CloneObject(aFromObj, tObj, aFull);
-			}
-			return tObj;
-		}
-
 		public static void CloneObject(XGObject aFromObj, XGObject aToObj, bool aFull)
 		{
 			if (aFromObj != null && aToObj != null)

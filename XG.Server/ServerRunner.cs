@@ -557,9 +557,34 @@ namespace XG.Server
 				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
 				{
 					timeIrc = DateTime.Now;
-					RootObject clone = XGHelper.CloneObject(this.myRootObject, false);
-					this.Save(clone, Settings.Instance.DataBinary);
-					clone = null;
+
+					RootObject tObj = new RootObject();
+					tObj.Clone(this.myRootObject, false);
+
+					foreach (XGServer oldServ in this.myRootObject.Children)
+					{
+						XGServer newServ = new XGServer(tObj);
+						newServ.Clone(oldServ, false);
+						foreach (XGChannel oldChan in oldServ.Children)
+						{
+							XGChannel newChan = new XGChannel(newServ);
+							newChan.Clone(oldChan, false);
+							foreach (XGBot oldBot in oldChan.Children)
+							{
+								XGBot newBot = new XGBot(newChan);
+								newBot.Clone(oldBot, false);
+								foreach (XGPacket oldPack in oldBot.Children)
+								{
+									XGPacket newPack = new XGPacket(newBot);
+									newPack.Clone(oldPack, false);
+								}
+							}
+						}
+					}
+
+					this.Save(tObj, Settings.Instance.DataBinary);
+
+					tObj = null;
 				}
 
 				// File Data

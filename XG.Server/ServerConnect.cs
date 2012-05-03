@@ -156,6 +156,8 @@ namespace XG.Server
 			if (this.myLatestPacketRequests != null) { this.myLatestPacketRequests.Clear(); }
 
 			this.DisconnectedEvent(this.myServer, aValue);
+
+			this.myServer = null;
 		}
 
 		private void SendData(string aData)

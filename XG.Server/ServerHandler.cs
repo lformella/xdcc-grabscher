@@ -202,6 +202,7 @@ namespace XG.Server
 
 				if (tServer.Enabled)
 				{
+					this.Log("ReconnectServer(" + tServer.Name + ")", LogLevel.Error);
 					con.Connect(tServer);
 				}
 			}
