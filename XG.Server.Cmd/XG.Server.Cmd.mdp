@@ -31,7 +31,6 @@
   <Contents>
     <File subtype="Code" buildaction="Compile" name="Main.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
-    <File subtype="Code" buildaction="Compile" name="Importer.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />

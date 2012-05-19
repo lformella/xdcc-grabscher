@@ -127,7 +127,7 @@ namespace XG.Server
 			this.downloadTimeout = 30000;
 			this.botOfflineTime = 7200000;
 			this.samePacketRequestTime = 10000;
-			this.maxNoDataReceived = 15;
+			this.maxNoDataReceived = 50;
 			this.backupStatisticTime = 60000;
 
 			this.parsingErrorFile = "./parsing_errors.txt";
@@ -156,7 +156,6 @@ namespace XG.Server
 			this.mySqlBackendDatabase = "xg";
 			this.mySqlBackendUser = "xg";
 			this.mySqlBackendPassword = "xg";
-			this.mySqlBackendClearOnStart = false;
 
 #if DEBUG
 			this.logLevel = LogLevel.Notice;
@@ -493,13 +492,6 @@ namespace XG.Server
 		{
 			get { return this.mySqlBackendPassword; }
 			set { this.mySqlBackendPassword = value; }
-		}
-
-		private bool mySqlBackendClearOnStart;
-		public bool MySqlBackendClearOnStart
-		{
-			get { return this.mySqlBackendClearOnStart; }
-			set { this.mySqlBackendClearOnStart = value; }
 		}
 
 		private bool autoJoinOnInvite;

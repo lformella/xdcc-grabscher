@@ -89,57 +89,56 @@ CREATE  TABLE IF NOT EXISTS `xg`.`packet` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
-
 DELIMITER |
 
-CREATE TRIGGER insert_package AFTER INSERT ON `xg`.`packet` FOR EACH ROW
+CREATE TRIGGER insert_packet AFTER INSERT ON `xg`.`packet` FOR EACH ROW
 BEGIN
-	UPDATE `xg`.`bot` SET `PacketCount` = `PacketCount` + 1 WHERE `Guid` = NEW.`ParentGuid`;
+	UPDATE `xg`.`bot` SET `PacketCount` = (SELECT COUNT(`Guid`) FROM `xg`.`packet` WHERE `ParentGuid` = NEW.`ParentGuid`) WHERE `Guid` = NEW.`ParentGuid`;
 END;
 |
 
-CREATE TRIGGER delete_package AFTER DELETE ON `xg`.`packet` FOR EACH ROW
+CREATE TRIGGER delete_packet AFTER DELETE ON `xg`.`packet` FOR EACH ROW
 BEGIN
-	UPDATE `xg`.`bot` SET `PacketCount` = `PacketCount` - 1 WHERE `Guid` = OLD.`ParentGuid`;
+	UPDATE `xg`.`bot` SET `PacketCount` = (SELECT COUNT(`Guid`) FROM `xg`.`packet` WHERE `ParentGuid` = OLD.`ParentGuid`) WHERE `Guid` = OLD.`ParentGuid`;
 END;
 |
 
 CREATE TRIGGER insert_bot AFTER INSERT ON `xg`.`bot` FOR EACH ROW
 BEGIN
-	UPDATE `xg`.`channel` SET `BotCount` = `BotCount` + 1 WHERE `Guid` = NEW.`ParentGuid`;
+	UPDATE `xg`.`channel` SET `BotCount` = (SELECT COUNT(`Guid`) FROM `xg`.`bot` WHERE `ParentGuid` = NEW.`ParentGuid`) WHERE `Guid` = NEW.`ParentGuid`;
 END;
 |
 
 CREATE TRIGGER delete_bot AFTER DELETE ON `xg`.`bot` FOR EACH ROW
 BEGIN
-	UPDATE `xg`.`channel` SET `BotCount` = `BotCount` - 1 WHERE `Guid` = OLD.`ParentGuid`;
+	UPDATE `xg`.`channel` SET `BotCount` = (SELECT COUNT(`Guid`) FROM `xg`.`bot` WHERE `ParentGuid` = OLD.`ParentGuid`) WHERE `Guid` = OLD.`ParentGuid`;
 END;
 |
 
 CREATE TRIGGER update_bot AFTER UPDATE ON `xg`.`bot` FOR EACH ROW
 BEGIN
 	IF NEW.`PacketCount` != OLD.`PacketCount` THEN
-		UPDATE `xg`.`channel` SET `PacketCount` = (`PacketCount` - OLD.`PacketCount`) + NEW.`PacketCount` WHERE `Guid` = NEW.`ParentGuid`;
+		UPDATE `xg`.`channel` SET `PacketCount` = (SELECT SUM(`PacketCount`) FROM `xg`.`bot` WHERE `ParentGuid` = NEW.`ParentGuid`) WHERE `Guid` = NEW.`ParentGuid`;
 	END IF;
 END;
 |
 
 CREATE TRIGGER insert_channel AFTER INSERT ON `xg`.`channel` FOR EACH ROW
 BEGIN
-	UPDATE `xg`.`server` SET `ChannelCount` = `ChannelCount` + 1 WHERE `Guid` = NEW.`ParentGuid`;
+	UPDATE `xg`.`server` SET `ChannelCount` = (SELECT COUNT(`Guid`) FROM `xg`.`channel` WHERE `ParentGuid` = NEW.`ParentGuid`) WHERE `Guid` = NEW.`ParentGuid`;
 END;
 |
 
 CREATE TRIGGER delete_channel AFTER DELETE ON `xg`.`channel` FOR EACH ROW
 BEGIN
-	UPDATE `xg`.`server` SET `ChannelCount` = `ChannelCount` - 1 WHERE `Guid` = OLD.`ParentGuid`;
+	UPDATE `xg`.`server` SET `ChannelCount` = (SELECT COUNT(`Guid`) FROM `xg`.`channel` WHERE `ParentGuid` = OLD.`ParentGuid`) WHERE `Guid` = OLD.`ParentGuid`;
 END;
 |
 
 CREATE TRIGGER update_channel AFTER UPDATE ON `xg`.`channel` FOR EACH ROW
 BEGIN
 	IF NEW.`PacketCount` != OLD.`PacketCount` OR NEW.`BotCount` != OLD.`BotCount` THEN
-		UPDATE `xg`.`server` SET `PacketCount` = (`PacketCount` - OLD.`PacketCount`) + NEW.`PacketCount`, `BotCount` = (`BotCount` - OLD.`BotCount`) + NEW.`BotCount` WHERE `Guid` = NEW.`ParentGuid`;
+		UPDATE `xg`.`server` SET `PacketCount` = (SELECT SUM(`PacketCount`) FROM `xg`.`channel` WHERE `ParentGuid` = NEW.`ParentGuid`), `BotCount` = (SELECT SUM(`BotCount`) FROM `xg`.`channel` WHERE `ParentGuid` = NEW.`ParentGuid`) WHERE `Guid` = NEW.`ParentGuid`;
 	END IF;
 END;
 |

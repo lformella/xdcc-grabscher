@@ -15,7 +15,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-/** /
+/**/
 
 using System;
 using System.Collections.Generic;
@@ -24,19 +24,26 @@ using HtmlAgilityPack;
 using XG.Core;
 using System.Threading;
 
-namespace XG.Server.Cmd
+namespace XG.Server.Backend.MySql
 {
 	public class Importer
 	{
-		private ServerRunner myRunner;
+		private RootObject myRootObject;
 
-		public Importer (ServerRunner aRunner)
+		public event ObjectObjectDelegate ObjectAddedEvent;
+
+		public Importer (RootObject aRootObject)
 		{
-			this.myRunner = aRunner;
+			this.myRootObject = aRootObject;
 		}
 
 		public void Import(string aFile)
 		{
+			if(!File.Exists(aFile))
+			{
+				return;
+			}
+			
 			// import routine
 			StreamReader reader = new StreamReader(aFile);
 
@@ -59,14 +66,17 @@ namespace XG.Server.Cmd
 					XGServer s = this.GetServer(server);
 					if(s == null)
 					{
-						this.myRunner.AddServer(server);
+						this.myRootObject.AddServer(server);
 						s = this.GetServer(server);
+						this.ObjectAddedEvent(this.myRootObject, s);
 						Console.WriteLine("-> " + server);
 					}
 
-					if(this.GetChannelFromServer(s.Guid, channel) == null)
+					if(this.GetChannelFromServer(s, channel) == null)
 					{
-						this.myRunner.AddChannel(s.Guid, channel);
+						s.AddChannel(channel);
+						XGChannel c = this.GetChannelFromServer(s, channel);
+						this.ObjectAddedEvent(s, c);
 						Console.WriteLine("-> " + server + " - " + channel);
 					}
 					//Thread.Sleep(500);
@@ -76,8 +86,7 @@ namespace XG.Server.Cmd
 
 		private XGServer GetServer(string aServerName)
 		{
-			List<XGObject> list = this.myRunner.GetServersChannels();
-			foreach(XGObject obj in list)
+			foreach(XGObject obj in this.myRootObject.Children)
 			{
 				if(obj.Name == aServerName)
 				{
@@ -87,14 +96,13 @@ namespace XG.Server.Cmd
 			return null;
 		}
 
-		private XGChannel GetChannelFromServer(Guid aServerGuid, string aChannelName)
+		private XGChannel GetChannelFromServer(XGServer aServer, string aChannelName)
 		{
-			List<XGObject> list = this.myRunner.GetServersChannels();
-			foreach(XGObject obj in list)
+			foreach(XGChannel chan in aServer.Children)
 			{
-				if(obj.Name == aChannelName && obj.ParentGuid == aServerGuid)
+				if((chan.Name == aChannelName || chan.Name == "#" + aChannelName) && chan.ParentGuid == aServer.Guid)
 				{
-					return (XGChannel)obj;
+					return chan;
 				}
 			}
 			return null;
