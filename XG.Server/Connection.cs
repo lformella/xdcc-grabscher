@@ -111,6 +111,7 @@ namespace XG.Server
 						if (this.myMaxData == 0)
 						{
 							this.myWriter = new StreamWriter(stream);
+							this.myWriter.NewLine = "\r\n";
 							this.myWriter.AutoFlush = true;
 						}
 
@@ -141,7 +142,7 @@ namespace XG.Server
 										}
 										catch (IOException ex)
 										{
-											if(ex.InnerException.GetType() == typeof(SocketException))
+											if(ex.InnerException != null && ex.InnerException.GetType() == typeof(SocketException))
 											{
 												SocketException exi = (SocketException)ex.InnerException;
 												this.errorCode = (SocketErrorCode)exi.ErrorCode;
