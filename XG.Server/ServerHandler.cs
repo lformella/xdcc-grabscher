@@ -185,11 +185,6 @@ namespace XG.Server
 			{
 				this.Log("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary", LogLevel.Error);
 			}
-
-//#if !DEBUG
-			// run a collect to remove temporary stuff used by the ServerConnect obj
-			GC.Collect();
-//#endif
 		}
 
 		private void ReconnectServer(object aServer)
