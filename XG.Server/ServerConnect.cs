@@ -822,13 +822,15 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "((\\*){2,3}|) ((Bandwidth Usage|Bandbreite) ((\\*){2,3}|)|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(K|)(i|)B(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(K|)(i|)B(\\/s|s)|)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, "((\\*){2,3}|) ((Bandwidth Usage|Bandbreite) ((\\*){2,3}|)|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(?<speed_cur_end>(K|)(i|)B)(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(?<speed_max_end>(K|)(i|))B(\\/s|s)|)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
 
-						if (double.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueDouble)) { tBot.InfoSpeedCurrent = valueDouble; }
-						if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
+						string speed_cur_end =tMatch.Groups["speed_cur_end"].ToString();
+						string speed_max_end =tMatch.Groups["speed_max_end"].ToString();
+						if (double.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
+						if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
 
 //						if(tBot.InfoSpeedCurrent > tBot.InfoSpeedMax)
 //						{
