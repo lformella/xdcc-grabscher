@@ -70,8 +70,22 @@ namespace XG.Server
 			XGHelper.LogLevel = Settings.Instance.LogLevel;
 
 			// the one and only root object
-			this.myRootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
+			this.myRootObject = null;
+			// In case of using a MySqlBackend, we dont need to load the data binary
+			if (!Settings.Instance.StartMySqlBackend)
+			{
+				this.myRootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
+			}
 			if (this.myRootObject == null) { this.myRootObject = new RootObject(); }
+		}
+
+		#region RUN STOP
+
+		/// <summary>
+		/// Run method - should be called via thread
+		/// </summary>
+		public void Start()
+		{
 			this.myRootObject.ServerAddedEvent += new RootServerDelegate(rootObject_ServerAddedEventHandler);
 			this.myRootObject.ServerRemovedEvent += new RootServerDelegate(rootObject_ServerRemovedEventHandler);
 
@@ -105,6 +119,12 @@ namespace XG.Server
 					{
 						this.Log("Run() removing dupe server " + s.Name, LogLevel.Error);
 						this.myRootObject.RemoveServer(s);
+
+						// dispatch this info to the clients to!
+						if (this.ObjectRemovedEvent != null)
+						{
+							this.ObjectRemovedEvent(myRootObject, s);
+						}
 					}
 				}
 
@@ -116,6 +136,12 @@ namespace XG.Server
 						{
 							this.Log("Run() removing dupe channel " + c.Name, LogLevel.Error);
 							serv.RemoveChannel(c);
+
+							// dispatch this info to the clients to!
+							if (this.ObjectRemovedEvent != null)
+							{
+								this.ObjectRemovedEvent(serv, c);
+							}
 						}
 					}
 
@@ -127,6 +153,12 @@ namespace XG.Server
 							{
 								this.Log("Run() removing dupe bot " + b.Name, LogLevel.Error);
 								chan.RemoveBot(b);
+
+								// dispatch this info to the clients to!
+								if (this.ObjectRemovedEvent != null)
+								{
+									this.ObjectRemovedEvent(chan, b);
+								}
 							}
 						}
 
@@ -138,6 +170,12 @@ namespace XG.Server
 								{
 									this.Log("Run() removing dupe Packet " + p.Name, LogLevel.Error);
 									bot.removePacket(p);
+
+									// dispatch this info to the clients to!
+									if (this.ObjectRemovedEvent != null)
+									{
+										this.ObjectRemovedEvent(bot, p);
+									}
 								}
 							}
 						}
@@ -158,6 +196,7 @@ namespace XG.Server
 				foreach (XGChannel chan in serv.Children)
 				{
 					chan.Connected = false;
+					chan.ErrorCode = 0;
 
 					foreach (XGBot bot in chan.Children)
 					{
@@ -283,15 +322,7 @@ namespace XG.Server
 			}
 
 			#endregion
-		}
 
-		#region RUN STOP
-
-		/// <summary>
-		/// Run method - should be called via thread
-		/// </summary>
-		public void Start()
-		{
 			// start data saving routine
 			this.mySaveDataThread = new Thread(new ThreadStart(SaveDataLoop));
 			this.mySaveDataThread.Start();
@@ -314,6 +345,9 @@ namespace XG.Server
 		/// </summary>
 		public void Stop()
 		{
+			this.myRootObject.ServerAddedEvent -= new RootServerDelegate(rootObject_ServerAddedEventHandler);
+			this.myRootObject.ServerRemovedEvent -= new RootServerDelegate(rootObject_ServerRemovedEventHandler);
+
 			// TODO stop server plugins
 			foreach (XGServer serv in myRootObject.Children)
 			{
@@ -553,38 +587,42 @@ namespace XG.Server
 
 			while (true)
 			{
-				// IRC Data
-				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
+				// We dont need this with the MySqlBackend
+				if (!Settings.Instance.StartMySqlBackend)
 				{
-					timeIrc = DateTime.Now;
-
-					RootObject tObj = new RootObject();
-					tObj.Clone(this.myRootObject, false);
-
-					foreach (XGServer oldServ in this.myRootObject.Children)
+					// IRC Data
+					if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
 					{
-						XGServer newServ = new XGServer(tObj);
-						newServ.Clone(oldServ, false);
-						foreach (XGChannel oldChan in oldServ.Children)
+						timeIrc = DateTime.Now;
+	
+						RootObject tObj = new RootObject();
+						tObj.Clone(this.myRootObject, false);
+	
+						foreach (XGServer oldServ in this.myRootObject.Children)
 						{
-							XGChannel newChan = new XGChannel(newServ);
-							newChan.Clone(oldChan, false);
-							foreach (XGBot oldBot in oldChan.Children)
+							XGServer newServ = new XGServer(tObj);
+							newServ.Clone(oldServ, false);
+							foreach (XGChannel oldChan in oldServ.Children)
 							{
-								XGBot newBot = new XGBot(newChan);
-								newBot.Clone(oldBot, false);
-								foreach (XGPacket oldPack in oldBot.Children)
+								XGChannel newChan = new XGChannel(newServ);
+								newChan.Clone(oldChan, false);
+								foreach (XGBot oldBot in oldChan.Children)
 								{
-									XGPacket newPack = new XGPacket(newBot);
-									newPack.Clone(oldPack, false);
+									XGBot newBot = new XGBot(newChan);
+									newBot.Clone(oldBot, false);
+									foreach (XGPacket oldPack in oldBot.Children)
+									{
+										XGPacket newPack = new XGPacket(newBot);
+										newPack.Clone(oldPack, false);
+									}
 								}
 							}
 						}
+	
+						this.Save(tObj, Settings.Instance.DataBinary);
+	
+						tObj = null;
 					}
-
-					this.Save(tObj, Settings.Instance.DataBinary);
-
-					tObj = null;
 				}
 
 				// File Data
