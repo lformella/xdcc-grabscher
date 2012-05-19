@@ -222,7 +222,7 @@ namespace XG.Core
 
 		#endregion
 
-		protected void SetGuid(Guid aGuid)
+		public void SetGuid(Guid aGuid)
 		{
 			this.guid = aGuid;
 		}

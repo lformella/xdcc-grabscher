@@ -102,6 +102,14 @@ namespace XG.Core
 		public DateTime LastUpdated
 		{
 			get { return this.lastUpdated; }
+			set
+			{
+				if (lastUpdated != value)
+				{
+					lastUpdated = value;
+					this.Modified = true;
+				}
+			}
 		}
 
 		private DateTime lastMentioned = new DateTime(1, 1, 1, 0, 0, 0, 0);

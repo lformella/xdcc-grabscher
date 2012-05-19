@@ -85,11 +85,6 @@ namespace XG.Core
 			}
 		}
 
-		public new void SetGuid(Guid aGuid)
-		{
-			base.SetGuid(aGuid);
-		}
-
 		public RootObject() : base()
 		{
 		}
