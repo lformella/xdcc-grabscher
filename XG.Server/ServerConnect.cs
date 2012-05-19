@@ -408,6 +408,15 @@ namespace XG.Server
 
 					#endregion
 
+					#region PONG
+		
+					else if (tComCodeStr == "PONG")
+					{
+						this.Log("con_DataReceived() PONG", LogLevel.Info);
+					}
+		
+					#endregion
+
 					#region	INT VALUES
 
 					else
@@ -437,6 +446,15 @@ namespace XG.Server
 			{
 				this.Log("con_DataReceived() PING", LogLevel.Info);
 				this.SendData("PONG " + aData.Split(':')[1]);
+			}
+
+			#endregion
+
+			#region ERROR
+
+			else if (aData.StartsWith("ERROR"))
+			{
+				this.Log("con_DataReceived() ERROR: " + aData, LogLevel.Error);
 			}
 
 			#endregion
@@ -1698,6 +1716,8 @@ namespace XG.Server
 				if (obj.GetType() == typeof(XGChannel)) { this.JoinChannel(obj as XGChannel); }
 				else if (obj.GetType() == typeof(XGBot)) { this.RequestFromBot(obj as XGBot); }
 			}
+
+			//this.SendData("PING " + this.myServer.Name);
 		}
 
 		public void CreateTimer(XGObject aObject, Int64 aTime)
