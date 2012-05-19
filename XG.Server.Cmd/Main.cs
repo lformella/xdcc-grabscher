@@ -40,8 +40,6 @@ namespace XG.Server.Cmd
 				Environment.Exit (-1);
 			}
 #endif
-
-			Console.WriteLine("starting...");
 			try
 			{
 				ServerRunner runner = new ServerRunner();
@@ -49,12 +47,6 @@ namespace XG.Server.Cmd
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
 				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
-
-/** /
-				// import routine
-				Importer importer = new Importer(runner);
-				importer.Import("./import");
-/**/
 
 				runner.Start();
 			}
@@ -64,7 +56,6 @@ namespace XG.Server.Cmd
 				Console.WriteLine(ex.ToString());
 				Console.ReadLine();
 			}
-			Console.WriteLine("ending...");
 		}
 	}
 }
