@@ -62,7 +62,7 @@ namespace XG.Server.Backend.MySql
 			dic.Add ("guid", Guid.Empty);
 			foreach(XGServer serv in this.ExecuteQuery ("SELECT * FROM server;", null, typeof(XGServer)))
 			{
-				aParent.myRootObject.AddServer(serv);
+				aParent.RootObject.AddServer(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
 				foreach(XGChannel chan in this.ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(XGChannel)))
@@ -87,7 +87,7 @@ namespace XG.Server.Backend.MySql
 
 			/**/
 			// import routine
-			Importer importer = new Importer(aParent.myRootObject);
+			Importer importer = new Importer(aParent.RootObject);
 
 			importer.ObjectAddedEvent += new ObjectObjectDelegate (myRunner_ObjectAddedEventHandler);
 

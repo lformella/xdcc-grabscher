@@ -36,14 +36,32 @@ namespace XG.Server
 		#region VARIABLES
 
 		private ServerHandler myServerHandler;
-		public RootObject myRootObject = null;
+
+		private RootObject myRootObject = null;
+		public RootObject RootObject
+		{
+			get { return this.myRootObject; }
+			set { myRootObject = value; }
+		}
 		public Guid RootGuid
 		{
 			get { return this.myRootObject != null ? this.myRootObject.Guid : Guid.Empty; }
 		}
 
-		public List<XGFile> myFiles;
-		public List<string> mySearches;
+		private List<XGFile> myFiles;
+		public List<XGFile> Files
+		{
+			get { return this.myFiles; }
+			set { myFiles = value; }
+		}
+
+		private List<string> mySearches;
+		public List<string> Searches
+		{
+			get { return this.mySearches; }
+			set { mySearches = value; }
+		}
+
 
 		#endregion
 

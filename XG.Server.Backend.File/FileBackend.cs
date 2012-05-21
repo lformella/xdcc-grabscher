@@ -46,16 +46,16 @@ namespace XG.Server.Backend.File
 			this.myRunner = aParent;
 
 			// the one and only root object
-			this.myRunner.myRootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
-			if (this.myRunner.myRootObject == null) { this.myRunner.myRootObject = new RootObject(); }
+			this.myRunner.RootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
+			if (this.myRunner.RootObject == null) { this.myRunner.RootObject = new RootObject(); }
 
 			// the file data
-			this.myRunner.myFiles = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
-			if (this.myRunner.myFiles == null) { this.myRunner.myFiles = new List<XGFile>(); }
+			this.myRunner.Files = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
+			if (this.myRunner.Files == null) { this.myRunner.Files = new List<XGFile>(); }
 
 			// previous searches
-			this.myRunner.mySearches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
-			if (this.myRunner.mySearches == null) { this.myRunner.mySearches = new List<string>(); }
+			this.myRunner.Searches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
+			if (this.myRunner.Searches == null) { this.myRunner.Searches = new List<string>(); }
 		}
 
 		#region RUN STOP
@@ -136,7 +136,7 @@ namespace XG.Server.Backend.File
 		{
 			lock (this.mySaveSearchLock)
 			{
-				this.Save(this.myRunner.mySearches, Settings.Instance.SearchesBinary);
+				this.Save(this.myRunner.Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 
@@ -144,7 +144,7 @@ namespace XG.Server.Backend.File
 		{
 			lock (this.mySaveSearchLock)
 			{
-				this.Save(this.myRunner.mySearches, Settings.Instance.SearchesBinary);
+				this.Save(this.myRunner.Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 
@@ -227,9 +227,9 @@ namespace XG.Server.Backend.File
 					timeIrc = DateTime.Now;
 
 					RootObject tObj = new RootObject();
-					tObj.Clone(this.myRunner.myRootObject, false);
+					tObj.Clone(this.myRunner.RootObject, false);
 
-					foreach (XGServer oldServ in this.myRunner.myRootObject.Children)
+					foreach (XGServer oldServ in this.myRunner.RootObject.Children)
 					{
 						XGServer newServ = new XGServer(tObj);
 						newServ.Clone(oldServ, false);
@@ -260,7 +260,7 @@ namespace XG.Server.Backend.File
 				{
 					lock (this.mySaveFileLock)
 					{
-						this.Save(this.myRunner.myFiles, Settings.Instance.FilesBinary);
+						this.Save(this.myRunner.Files, Settings.Instance.FilesBinary);
 						this.isSaveFile = false;
 					}
 				}
@@ -283,7 +283,7 @@ namespace XG.Server.Backend.File
 		{
 			lock (this.mySaveFileLock)
 			{
-				this.Save(this.myRunner.myFiles, Settings.Instance.FilesBinary);
+				this.Save(this.myRunner.Files, Settings.Instance.FilesBinary);
 				this.isSaveFile = false;
 			}
 		}
