@@ -1,0 +1,23 @@
+<Project name="XG.Server.Backend.File" fileversion="2.0" DefaultNamespace="XG.Server.Backend.File" language="C#" targetFramework="4.0" ctype="DotNetProject">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="XG.Server.Backend.File" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG;" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="XG.Server.Backend.File" />
+      <Build debugmode="False" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Code" buildaction="Compile" name="FileBackend.cs" />
+  </Contents>
+  <References>
+    <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
+  </References>
+</Project>

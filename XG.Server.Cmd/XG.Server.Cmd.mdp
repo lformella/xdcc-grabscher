@@ -39,6 +39,8 @@
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Backend.MySql" />
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Server.Backend.File" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
   </References>
   <LanguageParameters StartupObject="XG.Server.Cmd.MainClass" ctype="CSharpProjectParameters" />
 </Project>

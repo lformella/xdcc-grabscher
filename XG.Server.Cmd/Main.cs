@@ -15,22 +15,27 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using System;
-using System.Threading;
 #if !WINDOWS
 using Mono.Unix;
 #endif
+using System;
+using System.Threading;
+using XG.Core;
 using XG.Server;
+using XG.Server.Backend.File;
 using XG.Server.Backend.MySql;
 using XG.Server.Jabber;
 using XG.Server.Web;
-	
+
 namespace XG.Server.Cmd
 {
 	class MainClass
 	{
 		public static void Main(string[] args)
 		{
+			// set the loglevel
+			XGHelper.LogLevel = Settings.Instance.LogLevel;
+
 #if !WINDOWS
 			PlatformID id  = Environment.OSVersion.Platform;
 			// Don't allow running as root on Linux or Mac
@@ -44,9 +49,11 @@ namespace XG.Server.Cmd
 			{
 				ServerRunner runner = new ServerRunner();
 
+				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
+				else { runner.AddServerPlugin(new FileBackend(runner)); }
+
 				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
 				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
-				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
 
 				runner.Start();
 			}

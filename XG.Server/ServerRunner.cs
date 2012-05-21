@@ -36,23 +36,14 @@ namespace XG.Server
 		#region VARIABLES
 
 		private ServerHandler myServerHandler;
-		public RootObject myRootObject;
+		public RootObject myRootObject = null;
 		public Guid RootGuid
 		{
 			get { return this.myRootObject != null ? this.myRootObject.Guid : Guid.Empty; }
 		}
 
-		private List<XGFile> myFiles;
-		private List<string> mySearches;
-
-		private BinaryFormatter myFormatter = new BinaryFormatter();
-
-		private Thread mySaveDataThread;
-
-		private bool isSaveFile = false;
-		private object mySaveFileLock = new object();
-
-		private object mySaveSearchLock = new object();
+		public List<XGFile> myFiles;
+		public List<string> mySearches;
 
 		#endregion
 
@@ -62,21 +53,15 @@ namespace XG.Server
 		public event ObjectObjectDelegate ObjectAddedEvent;
 		public event ObjectObjectDelegate ObjectRemovedEvent;
 
+		public event DataTextDelegate SearchAddedEvent;
+		public event DataTextDelegate SearchRemovedEvent;
+
 		#endregion
 
 		public ServerRunner()
 		{
-			// set the loglevel
-			XGHelper.LogLevel = Settings.Instance.LogLevel;
-
 			// the one and only root object
-			this.myRootObject = null;
-			// In case of using a MySqlBackend, we dont need to load the data binary
-			if (!Settings.Instance.StartMySqlBackend)
-			{
-				this.myRootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
-			}
-			if (this.myRootObject == null) { this.myRootObject = new RootObject(); }
+			this.myRootObject = new RootObject();
 		}
 
 		#region RUN STOP
@@ -88,14 +73,6 @@ namespace XG.Server
 		{
 			this.myRootObject.ServerAddedEvent += new RootServerDelegate(rootObject_ServerAddedEventHandler);
 			this.myRootObject.ServerRemovedEvent += new RootServerDelegate(rootObject_ServerRemovedEventHandler);
-
-			// the file data
-			this.myFiles = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
-			if (this.myFiles == null) { this.myFiles = new List<XGFile>(); }
-
-			// previous searches
-			this.mySearches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
-			if (this.mySearches == null) { this.mySearches = new List<string>(); }
 
 			#region SERVERHANDLER INIT
 
@@ -323,10 +300,6 @@ namespace XG.Server
 
 			#endregion
 
-			// start data saving routine
-			this.mySaveDataThread = new Thread(new ThreadStart(SaveDataLoop));
-			this.mySaveDataThread.Start();
-
 			// connect to all servers which are enabled
 			foreach (XGServer serv in this.myRootObject.Children)
 			{
@@ -353,7 +326,6 @@ namespace XG.Server
 			{
 				this.myServerHandler.DisconnectServer(serv);
 			}
-			this.mySaveDataThread.Abort();
 		}
 
 		#endregion
@@ -429,13 +401,6 @@ namespace XG.Server
 		/// <param name="aObj"></param>
 		private void myServerHandler_ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
-			// we are just interested in files or fileparts
-			if (aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
-			{
-				// to save em now
-				this.SaveFileDataNow();
-			}
-
 			if (this.ObjectAddedEvent != null)
 			{
 				this.ObjectAddedEvent(aParentObj, aObj);
@@ -448,25 +413,6 @@ namespace XG.Server
 		/// <param name="aObj"></param>
 		private void myServerHandler_ObjectChangedEventHandler(XGObject aObj)
 		{
-			if (aObj.GetType() == typeof(XGFile))
-			{
-				this.SaveFileDataNow();
-			}
-			else if (aObj.GetType() == typeof(XGFilePart))
-			{
-				XGFilePart part = aObj as XGFilePart;
-				// if this change is lost, the data might be corrupt, so save it NOW
-				if (part.PartState != FilePartState.Open)
-				{
-					this.SaveFileDataNow();
-				}
-				// the data saving can be scheduled
-				else
-				{
-					this.isSaveFile = true;
-				}
-			}
-
 			if (this.ObjectChangedEvent != null)
 			{
 				this.ObjectChangedEvent(aObj);
@@ -480,13 +426,6 @@ namespace XG.Server
 		/// <param name="aObj"></param>
 		private void myServerHandler_ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
 		{
-			// we are just interested in files or fileparts
-			if (aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
-			{
-				// to save em now
-				this.SaveFileDataNow();
-			}
-
 			if (this.ObjectRemovedEvent != null)
 			{
 				this.ObjectRemovedEvent(aParentObj, aObj);
@@ -513,150 +452,6 @@ namespace XG.Server
 		}
 
 		#endregion
-
-		#endregion
-
-		#region SAVE + LOAD
-
-		/// <summary>
-		/// Serializes an object into a file
-		/// </summary>
-		/// <param name="aObj"></param>
-		/// <param name="aFile"></param>
-		private void Save(object aObj, string aFile)
-		{
-			try
-			{
-				Stream streamWrite = File.Create(aFile + ".new");
-				this.myFormatter.Serialize(streamWrite, aObj);
-				streamWrite.Close();
-				try { File.Delete(aFile + ".bak"); }
-				catch (Exception) { };
-				try { File.Move(aFile, aFile + ".bak"); }
-				catch (Exception) { };
-				File.Move(aFile + ".new", aFile);
-				this.Log("Save(" + aFile + ")", LogLevel.Info);
-			}
-			catch (Exception ex)
-			{
-				this.Log("Save(" + aFile + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-			}
-		}
-
-		/// <summary>
-		/// Deserializes an object from a file
-		/// </summary>
-		/// <param name="aFile">Name of the File</param>
-		/// <returns>the object or null if the deserializing failed</returns>
-		private object Load(string aFile)
-		{
-			object obj = null;
-			if (File.Exists(aFile))
-			{
-				try
-				{
-					Stream streamRead = File.OpenRead(aFile);
-					obj = this.myFormatter.Deserialize(streamRead);
-					streamRead.Close();
-					this.Log("Load(" + aFile + ")", LogLevel.Info);
-				}
-				catch (Exception ex)
-				{
-					this.Log("Load(" + aFile + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					// try to load the backup
-					try
-					{
-						Stream streamRead = File.OpenRead(aFile + ".bak");
-						obj = this.myFormatter.Deserialize(streamRead);
-						streamRead.Close();
-						this.Log("Load(" + aFile + ".bak)", LogLevel.Info);
-					}
-					catch (Exception)
-					{
-						this.Log("Load(" + aFile + ".bak) : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
-					}
-				}
-			}
-			return obj;
-		}
-
-		private void SaveDataLoop()
-		{
-			DateTime timeIrc = DateTime.Now;
-			DateTime timeStats = DateTime.Now;
-
-			while (true)
-			{
-				// We dont need this with the MySqlBackend
-				if (!Settings.Instance.StartMySqlBackend)
-				{
-					// IRC Data
-					if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
-					{
-						timeIrc = DateTime.Now;
-	
-						RootObject tObj = new RootObject();
-						tObj.Clone(this.myRootObject, false);
-	
-						foreach (XGServer oldServ in this.myRootObject.Children)
-						{
-							XGServer newServ = new XGServer(tObj);
-							newServ.Clone(oldServ, false);
-							foreach (XGChannel oldChan in oldServ.Children)
-							{
-								XGChannel newChan = new XGChannel(newServ);
-								newChan.Clone(oldChan, false);
-								foreach (XGBot oldBot in oldChan.Children)
-								{
-									XGBot newBot = new XGBot(newChan);
-									newBot.Clone(oldBot, false);
-									foreach (XGPacket oldPack in oldBot.Children)
-									{
-										XGPacket newPack = new XGPacket(newBot);
-										newPack.Clone(oldPack, false);
-									}
-								}
-							}
-						}
-	
-						this.Save(tObj, Settings.Instance.DataBinary);
-	
-						tObj = null;
-					}
-				}
-
-				// File Data
-				if (this.isSaveFile)
-				{
-					lock (this.mySaveFileLock)
-					{
-						this.Save(this.myFiles, Settings.Instance.FilesBinary);
-						this.isSaveFile = false;
-					}
-				}
-
-				// Statistics
-				if ((DateTime.Now - timeStats).TotalMilliseconds > Settings.Instance.BackupStatisticTime)
-				{
-					timeStats = DateTime.Now;
-					Statistic.Instance.Save();
-				}
-
-				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
-			}
-		}
-
-		/// <summary>
-		/// Save the FileData right now 
-		/// </summary>
-		private void SaveFileDataNow()
-		{
-			lock (this.mySaveFileLock)
-			{
-				this.Save(this.myFiles, Settings.Instance.FilesBinary);
-				this.isSaveFile = false;
-			}
-		}
 
 		#endregion
 
@@ -942,9 +737,9 @@ namespace XG.Server
 		{
 			this.mySearches.Add(aSearch);
 
-			lock (this.mySaveSearchLock)
+			if (this.SearchAddedEvent != null)
 			{
-				this.Save(this.mySearches, Settings.Instance.SearchesBinary);
+				this.SearchAddedEvent(aSearch);
 			}
 		}
 
@@ -952,9 +747,9 @@ namespace XG.Server
 		{
 			this.mySearches.Remove(aSearch);
 
-			lock (this.mySaveSearchLock)
+			if (this.SearchRemovedEvent != null)
 			{
-				this.Save(this.mySearches, Settings.Instance.SearchesBinary);
+				this.SearchRemovedEvent(aSearch);
 			}
 		}
 

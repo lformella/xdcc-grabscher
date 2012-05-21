@@ -27,6 +27,7 @@
       <Entry build="True" name="XG.Server.Cmd" configuration="Debug" />
       <Entry build="True" name="XG.Server.Jabber" configuration="Debug" />
       <Entry build="True" name="XG.Server.Backend.MySql" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Backend.File" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Release" />
@@ -37,6 +38,7 @@
       <Entry build="True" name="XG.Server.Cmd" configuration="Release" />
       <Entry build="True" name="XG.Server.Jabber" configuration="Release" />
       <Entry build="True" name="XG.Server.Backend.MySql" configuration="Release" />
+      <Entry build="True" name="XG.Server.Backend.File" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Unsafe" />
@@ -47,6 +49,7 @@
       <Entry build="True" name="XG.Server.Cmd" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Jabber" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Backend.MySql" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Backend.File" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="XG.Server.Cmd" single="True">
@@ -58,6 +61,7 @@
     <Execute type="None" entry="XG.Server.Cmd" />
     <Execute type="None" entry="XG.Server.Jabber" />
     <Execute type="None" entry="XG.Server.Backend.MySql" />
+    <Execute type="None" entry="XG.Server.Backend.File" />
   </StartMode>
   <Entries>
     <Entry filename="XG.Core/XG.Core.mdp" />
@@ -68,5 +72,6 @@
     <Entry filename="XG.Server.Cmd/XG.Server.Cmd.mdp" />
     <Entry filename="XG.Server.Jabber/XG.Server.Jabber.mdp" />
     <Entry filename="XG.Server.Backend.MySql/XG.Server.Backend.MySql.mdp" />
+    <Entry filename="XG.Server.Backend.File/XG.Server.Backend.File.mdp" />
   </Entries>
 </Combine>
