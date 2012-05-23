@@ -319,7 +319,7 @@ namespace XG.Server
 						if (this.File.Children.Length == 1 || this.Part.StopSize == this.File.Size)
 						{
 							this.myParent.RemoveFile(this.File);
-							myLog.Error("con_Disconnected() removing corputed file " + this.File.Name);
+							myLog.Error("con_Disconnected() removing corupted file " + this.File.Name);
 						}
 
 						// statistics
