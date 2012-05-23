@@ -19,8 +19,9 @@
 using Mono.Unix;
 #endif
 using System;
+using System.IO;
 using System.Threading;
-using XG.Core;
+using log4net.Config;
 using XG.Server;
 using XG.Server.Backend.File;
 using XG.Server.Backend.MySql;
@@ -33,8 +34,16 @@ namespace XG.Server.Cmd
 	{
 		public static void Main(string[] args)
 		{
-			// set the loglevel
-			XGHelper.LogLevel = Settings.Instance.LogLevel;
+			if(File.Exists("./log4net"))
+			{
+				// BasicConfigurator replaced with XmlConfigurator.
+				XmlConfigurator.Configure(new System.IO.FileInfo("./log4net"));
+			}
+			else
+			{
+				// Set up a simple configuration that logs on the console.
+				BasicConfigurator.Configure();
+			}
 
 #if !WINDOWS
 			PlatformID id  = Environment.OSVersion.Platform;
@@ -45,24 +54,16 @@ namespace XG.Server.Cmd
 				Environment.Exit (-1);
 			}
 #endif
-			try
-			{
-				ServerRunner runner = new ServerRunner();
 
-				if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
-				else { runner.AddServerPlugin(new FileBackend(runner)); }
+			ServerRunner runner = new ServerRunner();
 
-				if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
-				if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
+			if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
+			else { runner.AddServerPlugin(new FileBackend(runner)); }
 
-				runner.Start();
-			}
-			catch (Exception ex)
-			{
-				// die bitch, but stay there
-				Console.WriteLine(ex.ToString());
-				Console.ReadLine();
-			}
+			if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
+			if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
+
+			runner.Start();
 		}
 	}
 }

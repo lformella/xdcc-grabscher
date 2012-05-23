@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using log4net;
 using XG.Core;
 
 namespace XG.Server
@@ -34,6 +35,8 @@ namespace XG.Server
 	public class ServerRunner
 	{
 		#region VARIABLES
+
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(ServerRunner));
 
 		private ServerHandler myServerHandler;
 
@@ -112,7 +115,7 @@ namespace XG.Server
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
-						this.Log("Run() removing dupe server " + s.Name, LogLevel.Error);
+						myLog.Error("Run() removing dupe server " + s.Name);
 						this.myRootObject.RemoveServer(s);
 
 						// dispatch this info to the clients to!
@@ -129,7 +132,7 @@ namespace XG.Server
 					{
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
-							this.Log("Run() removing dupe channel " + c.Name, LogLevel.Error);
+							myLog.Error("Run() removing dupe channel " + c.Name);
 							serv.RemoveChannel(c);
 
 							// dispatch this info to the clients to!
@@ -146,7 +149,7 @@ namespace XG.Server
 						{
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
-								this.Log("Run() removing dupe bot " + b.Name, LogLevel.Error);
+								myLog.Error("Run() removing dupe bot " + b.Name);
 								chan.RemoveBot(b);
 
 								// dispatch this info to the clients to!
@@ -163,7 +166,7 @@ namespace XG.Server
 							{
 								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
-									this.Log("Run() removing dupe Packet " + p.Name, LogLevel.Error);
+									myLog.Error("Run() removing dupe Packet " + p.Name);
 									bot.removePacket(p);
 
 									// dispatch this info to the clients to!
@@ -217,7 +220,7 @@ namespace XG.Server
 					if (file.Enabled)
 					{
 						this.myFiles.Remove(file);
-						this.Log("Run() removing ready file " + file.Name, LogLevel.Notice);
+						myLog.Info("Run() removing ready file " + file.Name);
 					}
 				}
 			}
@@ -233,7 +236,7 @@ namespace XG.Server
 					// lets check if the directory is still on the harddisk
 					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						this.Log("Run() crash recovery directory " + file.TmpPath + " is missing ", LogLevel.Warning);
+						myLog.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
 						this.myServerHandler.RemoveFile(file);
 						continue;
 					}
@@ -256,14 +259,14 @@ namespace XG.Server
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
 								if (part.CurrentSize != part.StartSize + info.Length)
 								{
-									this.Log("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length, LogLevel.Warning);
+									myLog.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length);
 									part.CurrentSize = part.StartSize + info.Length;
 									complete = false;
 								}
 							}
 							else
 							{
-								this.Log("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing", LogLevel.Error);
+								myLog.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
 								this.myServerHandler.RemovePart(file, part);
 								complete = false;
 							}
@@ -286,7 +289,7 @@ namespace XG.Server
 										complete = false;
 										try
 										{
-											this.Log("Run() crash recovery checking " + next.Name, LogLevel.Exception);
+											myLog.Fatal("Run() crash recovery checking " + next.Name);
 											FileStream fileStream = File.Open(this.myServerHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
 											BinaryReader fileReader = new BinaryReader(fileStream);
 											// extract the needed refernce bytes
@@ -298,7 +301,7 @@ namespace XG.Server
 										}
 										catch (Exception ex)
 										{
-											this.Log("Run() crash recovery: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+											myLog.Fatal("Run() crash recovery", ex);
 										}
 									}
 								}
@@ -380,7 +383,7 @@ namespace XG.Server
 		/// <param name="aServer"></param>
 		private void rootObject_ServerAddedEventHandler(RootObject aObj, XGServer aServer)
 		{
-			this.Log("rootObject_ServerAdded(" + aServer.Name + ")", LogLevel.Notice);
+			myLog.Info("rootObject_ServerAdded(" + aServer.Name + ")");
 			this.myServerHandler.ConnectServer(aServer);
 
 			// dispatch this info to the clients to!
@@ -397,7 +400,7 @@ namespace XG.Server
 		/// <param name="aServer"></param>
 		private void rootObject_ServerRemovedEventHandler(RootObject aObj, XGServer aServer)
 		{
-			this.Log("rootObject_ServerRemoved(" + aServer.Name + ")", LogLevel.Notice);
+			myLog.Info("rootObject_ServerRemoved(" + aServer.Name + ")");
 			aServer.Enabled = false;
 			this.myServerHandler.DisconnectServer(aServer);
 
@@ -922,20 +925,6 @@ namespace XG.Server
 		}
 
 		#endregion
-
-		#endregion
-
-		#region LOG
-
-		/// <summary>
-		/// Calls  XGHelper.Log()
-		/// </summary>
-		/// <param name="aData"></param>
-		/// <param name="aLevel"></param>
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("ServerRunner." + aData, aLevel);
-		}
 
 		#endregion
 	}

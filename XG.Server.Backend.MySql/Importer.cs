@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using HtmlAgilityPack;
+using log4net;
 using XG.Core;
 using System.Threading;
 
@@ -28,6 +29,8 @@ namespace XG.Server.Backend.MySql
 {
 	public class Importer
 	{
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(MySqlBackend));
+
 		private RootObject myRootObject;
 
 		public event ObjectObjectDelegate ObjectAddedEvent;
@@ -69,7 +72,7 @@ namespace XG.Server.Backend.MySql
 						this.myRootObject.AddServer(server);
 						s = this.GetServer(server);
 						this.ObjectAddedEvent(this.myRootObject, s);
-						Console.WriteLine("-> " + server);
+						myLog.Debug("-> " + server);
 					}
 
 					if(this.GetChannelFromServer(s, channel) == null)
@@ -77,7 +80,7 @@ namespace XG.Server.Backend.MySql
 						s.AddChannel(channel);
 						XGChannel c = this.GetChannelFromServer(s, channel);
 						this.ObjectAddedEvent(s, c);
-						Console.WriteLine("-> " + server + " - " + channel);
+						myLog.Debug("-> " + server + " - " + channel);
 					}
 					//Thread.Sleep(500);
 				}

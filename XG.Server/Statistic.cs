@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using log4net;
 using XG.Core;
 
 namespace XG.Server
@@ -121,6 +122,8 @@ namespace XG.Server
 	[Serializable()]
 	public class Statistic
 	{
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(Statistic));
+
 		private static object locked = new object();
 		private static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));
 
@@ -169,7 +172,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					XGHelper.Log("Settings.Instance.Deserialize() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("Settings.Instance.Deserialize() ", ex);
 					return new Statistic();
 				}
 			}
@@ -195,7 +198,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					XGHelper.Log("Statistic.Instance.Serialize() : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("Statistic.Instance.Serialize() ", ex);
 				}
 			}
 		}

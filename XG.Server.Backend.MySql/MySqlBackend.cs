@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using log4net;
 using MySql.Data.MySqlClient;
 using XG.Core;
 
@@ -26,6 +27,8 @@ namespace XG.Server.Backend.MySql
 	public class MySqlBackend : IServerPlugin
 	{
 		#region VARIABLES
+
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(MySqlBackend));
 
 		private ServerRunner myRunner;
 		private MySqlConnection myDbConnection;
@@ -36,6 +39,8 @@ namespace XG.Server.Backend.MySql
 
 		public MySqlBackend (ServerRunner aParent)
 		{
+			this.myRunner = aParent;
+
 			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
 			try
 			{
@@ -44,7 +49,7 @@ namespace XG.Server.Backend.MySql
 			}
 			catch (Exception ex)
 			{
-				this.Log ("MySqlBackend(" + connectionString + ") : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+				myLog.Fatal("MySqlBackend(" + connectionString + ") ", ex);
 
 				// stop it
 				this.Stop ();
@@ -62,7 +67,7 @@ namespace XG.Server.Backend.MySql
 			dic.Add ("guid", Guid.Empty);
 			foreach(XGServer serv in this.ExecuteQuery ("SELECT * FROM server;", null, typeof(XGServer)))
 			{
-				aParent.RootObject.AddServer(serv);
+				this.myRunner.RootObject.AddServer(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
 				foreach(XGChannel chan in this.ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(XGChannel)))
@@ -85,9 +90,15 @@ namespace XG.Server.Backend.MySql
 
 			#endregion
 
+			// the file data
+			this.myRunner.Files = new List<XGFile>();
+
+			// previous searches
+			this.myRunner.Searches = new List<string>();
+
 			/**/
 			// import routine
-			Importer importer = new Importer(aParent.RootObject);
+			Importer importer = new Importer(this.myRunner.RootObject);
 
 			importer.ObjectAddedEvent += new ObjectObjectDelegate (myRunner_ObjectAddedEventHandler);
 
@@ -138,7 +149,7 @@ namespace XG.Server.Backend.MySql
 			}
 			catch (Exception ex)
 			{
-				this.Log ("CloseClient() : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+				myLog.Fatal("CloseClient() ", ex);
 			}
 		}
 
@@ -338,17 +349,17 @@ namespace XG.Server.Backend.MySql
 					}
 					catch (MySqlException ex)
 					{
-						this.Log ("ExecuteQuery(" + ex.Number + ") '" + this.GetSqlString (aSql, aDic) + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+						myLog.Fatal("ExecuteQuery(" + ex.Number + ") '" + this.GetSqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						this.Log ("ExecuteQuery() '" + this.GetSqlString (aSql, aDic) + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
-						this.Log ("ExecuteQuery() : stopping server plugin!", LogLevel.Warning);
+						myLog.Fatal("ExecuteQuery() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						myLog.Warn("ExecuteQuery() : stopping server plugin!");
 						this.Stop ();
 					}
 					catch (Exception ex)
 					{
-						this.Log ("ExecuteQuery() '" + this.GetSqlString (aSql, aDic) + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+						myLog.Fatal("ExecuteQuery() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
 					}
 				}
 			}
@@ -389,17 +400,17 @@ namespace XG.Server.Backend.MySql
 					}
 					catch (MySqlException ex)
 					{
-						this.Log ("ExecuteReader(" + ex.Number + ") '" + this.GetSqlString (aSql, aDic) + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+						myLog.Fatal("ExecuteReader(" + ex.Number + ") '" + this.GetSqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						this.Log ("ExecuteReader() '" + this.GetSqlString (aSql, aDic) + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
-						this.Log ("ExecuteReader() : stopping server plugin!", LogLevel.Warning);
+						myLog.Fatal("ExecuteReader() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						myLog.Warn("ExecuteReader() : stopping server plugin!");
 						this.Stop ();
 					}
 					catch (Exception ex)
 					{
-						this.Log ("ExecuteReader() '" + this.GetSqlString (aSql, aDic) + "' : " + XGHelper.GetExceptionMessage (ex), LogLevel.Exception);
+						myLog.Fatal("ExecuteReader() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
 					}
 				}
 			}
@@ -452,20 +463,6 @@ namespace XG.Server.Backend.MySql
 				}
 			}
 			return aSql;
-		}
-
-		#endregion
-
-		#region LOG
-
-		/// <summary>
-		/// Calls XGHelper.Log()
-		/// </summary>
-		/// <param name="aData"></param>
-		/// <param name="aLevel"></param>
-		private void Log (string aData, LogLevel aLevel)
-		{
-			XGHelper.Log ("MySqlBackend." + aData, aLevel);
 		}
 
 		#endregion

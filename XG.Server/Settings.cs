@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using log4net;
 using XG.Core;
 
 namespace XG.Server
@@ -25,6 +26,8 @@ namespace XG.Server
 	[Serializable()]
 	public class Settings
 	{
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(Settings));
+
 		private static Settings instance = null;
 
 		/// <value>
@@ -73,7 +76,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("Settings.Instance", ex);
 				return new Settings();
 			}
 		}
@@ -89,7 +92,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				XGHelper.Log("Settings.Instance: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("Settings.Instance", ex);
 			}
 		}
 
@@ -156,12 +159,6 @@ namespace XG.Server
 			this.mySqlBackendDatabase = "xg";
 			this.mySqlBackendUser = "xg";
 			this.mySqlBackendPassword = "xg";
-
-#if DEBUG
-			this.logLevel = LogLevel.Notice;
-#else
-			this.logLevel = LogLevel.Warning;
-#endif
 		}
 
 		#region PRIVATE
@@ -499,13 +496,6 @@ namespace XG.Server
 		{
 			get { return this.autoJoinOnInvite; }
 			set { this.autoJoinOnInvite = value; }
-		}
-
-		private LogLevel logLevel;
-		public LogLevel LogLevel
-		{
-			get { return this.logLevel; }
-			set { this.logLevel = value; }
 		}
 
 		#endregion

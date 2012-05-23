@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using log4net;
 using XG.Core;
 
 namespace XG.Server.Backend.File
@@ -27,6 +28,8 @@ namespace XG.Server.Backend.File
 	public class FileBackend : IServerPlugin
 	{
 		#region VARIABLES
+
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(FileBackend));
 
 		private ServerRunner myRunner;
 
@@ -36,7 +39,6 @@ namespace XG.Server.Backend.File
 
 		private bool isSaveFile = false;
 		private object mySaveFileLock = new object();
-
 		private object mySaveSearchLock = new object();
 
 		#endregion
@@ -169,11 +171,11 @@ namespace XG.Server.Backend.File
 				try { System.IO.File.Move(aFile, aFile + ".bak"); }
 				catch (Exception) { };
 				System.IO.File.Move(aFile + ".new", aFile);
-				this.Log("Save(" + aFile + ")", LogLevel.Info);
+				myLog.Debug("Save(" + aFile + ")");
 			}
 			catch (Exception ex)
 			{
-				this.Log("Save(" + aFile + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("Save(" + aFile + ")", ex);
 			}
 		}
 
@@ -192,22 +194,22 @@ namespace XG.Server.Backend.File
 					Stream streamRead = System.IO.File.OpenRead(aFile);
 					obj = this.myFormatter.Deserialize(streamRead);
 					streamRead.Close();
-					this.Log("Load(" + aFile + ")", LogLevel.Info);
+					myLog.Debug("Load(" + aFile + ")");
 				}
 				catch (Exception ex)
 				{
-					this.Log("Load(" + aFile + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("Load(" + aFile + ")" , ex);
 					// try to load the backup
 					try
 					{
 						Stream streamRead = System.IO.File.OpenRead(aFile + ".bak");
 						obj = this.myFormatter.Deserialize(streamRead);
 						streamRead.Close();
-						this.Log("Load(" + aFile + ".bak)", LogLevel.Info);
+						myLog.Debug("Load(" + aFile + ".bak)");
 					}
 					catch (Exception)
 					{
-						this.Log("Load(" + aFile + ".bak) : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						myLog.Fatal("Load(" + aFile + ".bak)", ex);
 					}
 				}
 			}
@@ -286,20 +288,6 @@ namespace XG.Server.Backend.File
 				this.Save(this.myRunner.Files, Settings.Instance.FilesBinary);
 				this.isSaveFile = false;
 			}
-		}
-
-		#endregion
-
-		#region LOG
-
-		/// <summary>
-		/// Calls  XGHelper.Log()
-		/// </summary>
-		/// <param name="aData"></param>
-		/// <param name="aLevel"></param>
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("FileBackend." + aData, aLevel);
 		}
 
 		#endregion

@@ -105,5 +105,6 @@
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../XG.Lib/log4net.dll" />
   </References>
 </Project>

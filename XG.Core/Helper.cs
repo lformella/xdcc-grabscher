@@ -40,18 +40,6 @@ namespace XG.Core
 	}
 
 	[Flags]
-	public enum LogLevel : byte
-	{
-		Traffic,
-		Info,
-		Notice,
-		Warning,
-		Error,
-		Exception,
-		None
-	}
-
-	[Flags]
 	public enum TCPServerResponse : byte
 	{
 		None,
@@ -412,42 +400,6 @@ namespace XG.Core
 				return Regex.Replace(aName, "(\\(|\\)|\\[|\\]|\\{|\\}|-|_|\\.)", "").ToLower() + "." + aSize + "/";
 			}
 			else { return ""; }
-		}
-
-		#endregion
-
-		#region LOGGING
-
-		private static object LogLock = new object();
-		public static LogLevel LogLevel = LogLevel.Warning;
-		public static void Log(string aData, LogLevel aLevel)
-		{
-			if ((Int16)aLevel >= (Int16)LogLevel)
-			{
-				lock (LogLock)
-				{
-					Console.Write(DateTime.Now.ToString() + " ");
-					switch (aLevel)
-					{
-						case LogLevel.Traffic:		Console.Write("TRAFFIC  "); break;
-						case LogLevel.Info:			Console.Write("INFO     "); break;
-						case LogLevel.Notice:		Console.Write("NOTICE   "); break;
-						case LogLevel.Warning:		Console.Write("WARNING  "); break;
-						case LogLevel.Error:		Console.Write("ERROR    "); break;
-						case LogLevel.Exception:	Console.Write("EXCEPTION"); break;
-					}
-					Console.WriteLine(" " + aData);
-				}
-			}
-		}
-
-		public static string GetExceptionMessage(Exception aException)
-		{
-#if DEBUG
-			return aException.ToString();
-#else
-			return aException.Message;
-#endif
 		}
 
 		#endregion

@@ -22,6 +22,7 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+using log4net;
 using XG.Core;
 
 namespace XG.Server
@@ -41,6 +42,8 @@ namespace XG.Server
 	public class ServerHandler
 	{
 		#region VARIABLES
+
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(ServerHandler));
 
 		private Dictionary<XGServer, ServerConnect> myServers;
 		private Dictionary<XGPacket, BotConnect> myDownloads;
@@ -107,7 +110,7 @@ namespace XG.Server
 			}
 			else
 			{
-				this.Log("ConnectServer(" + tServer.Name + ") server is already in the dictionary", LogLevel.Error);
+				myLog.Error("ConnectServer(" + tServer.Name + ") server is already in the dictionary");
 			}
 		}
 		private void server_ConnectedEventHandler(XGServer aServer)
@@ -128,7 +131,7 @@ namespace XG.Server
 			}
 			else
 			{
-				this.Log("DisconnectServer(" + aServer.Name + ") server is not in the dictionary", LogLevel.Error);
+				myLog.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
 		private void server_DisconnectedEventHandler(XGServer aServer, SocketErrorCode aValue)
@@ -183,7 +186,7 @@ namespace XG.Server
 			}
 			else
 			{
-				this.Log("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary", LogLevel.Error);
+				myLog.Error("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
 			}
 		}
 
@@ -197,13 +200,13 @@ namespace XG.Server
 
 				if (tServer.Enabled)
 				{
-					this.Log("ReconnectServer(" + tServer.Name + ")", LogLevel.Error);
+					myLog.Error("ReconnectServer(" + tServer.Name + ")");
 					con.Connect(tServer);
 				}
 			}
 			else
 			{
-				this.Log("ReconnectServer(" + tServer.Name + ") server is not in the dictionary", LogLevel.Error);
+				myLog.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
 			}
 		}
 
@@ -285,7 +288,7 @@ namespace XG.Server
 				else
 				{
 					// uhh - that should not happen
-					this.Log("StartDownload(" + aPack.Name + ") is already downloading", LogLevel.Error);
+					myLog.Error("StartDownload(" + aPack.Name + ") is already downloading");
 				}
 			}).Start();
 		}
@@ -324,7 +327,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("bot_Disconnected() " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("bot_Disconnected()", ex);
 				}
 
 				try
@@ -334,7 +337,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("bot_Disconnected() request: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("bot_Disconnected() request", ex);
 				}
 			}
 		}
@@ -386,7 +389,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("FileMove(" + aNameOld + ", " + aNameNew + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("FileMove(" + aNameOld + ", " + aNameNew + ") ", ex);
 					return false;
 				}
 			}
@@ -409,7 +412,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("FileDlete(" + aName + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("FileDlete(" + aName + ") ", ex);
 					return false;
 				}
 			}
@@ -432,7 +435,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("DirectoryDlete(" + aName + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("DirectoryDlete(" + aName + ") ", ex);
 					return false;
 				}
 			}
@@ -465,7 +468,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				this.Log("ListDirectory(" + aDir + ") : " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("ListDirectory(" + aDir + ") ", ex);
 			}
 			return files;
 		}
@@ -491,7 +494,7 @@ namespace XG.Server
 					// lets check if the directory is still on the harddisk
 					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						this.Log("GetFile(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ", LogLevel.Warning);
+						myLog.Warn("GetFile(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
 						this.RemoveFile(file);
 						break;
 					}
@@ -521,7 +524,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("GetNewFile() Exception: " + XGHelper.GetExceptionMessage(ex), LogLevel.Error);
+					myLog.Fatal("GetNewFile()", ex);
 					tFile = null;
 				}
 			}
@@ -535,7 +538,7 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		public void RemoveFile(XGFile aFile)
 		{
-			this.Log("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")", LogLevel.Notice);
+			myLog.Info("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")");
 
 			// check if this file is currently downloaded
 			bool skip = false;
@@ -632,7 +635,7 @@ namespace XG.Server
 		/// <param name="aPart"></param>
 		public void RemovePart(XGFile aFile, XGFilePart aPart)
 		{
-			this.Log("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")", LogLevel.Notice);
+			myLog.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
 
 			XGObject[] parts = aFile.Children;
 			foreach (XGFilePart part in parts)
@@ -642,7 +645,7 @@ namespace XG.Server
 					part.StopSize = aPart.StopSize;
 					if (part.PartState == FilePartState.Ready)
 					{
-						this.Log("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize, LogLevel.Notice);
+						myLog.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize);
 						part.PartState = FilePartState.Closed;
 						this.ObjectChangedEvent(part);
 						break;
@@ -754,7 +757,7 @@ namespace XG.Server
 		{
 			XGFile tFile = aPart.Parent;
 			XGObject[] parts = tFile.Children;
-			this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Length + " parts called", LogLevel.Notice);
+			myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Length + " parts called");
 
 			foreach (XGFilePart part in parts)
 			{
@@ -781,7 +784,7 @@ namespace XG.Server
 						{
 							if (!XGHelper.IsEqual(bc.ReferenceBytes, aBytes))
 							{
-								this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize, LogLevel.Warning);
+								myLog.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
 								bc.Remove();
 								pack.Enabled = false;
 								this.RemovePart(tFile, part);
@@ -789,7 +792,7 @@ namespace XG.Server
 							}
 							else
 							{
-								this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked", LogLevel.Notice);
+								myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked");
 								part.IsChecked = true;
 								this.ObjectChangedEvent(part);
 								return 0;
@@ -797,7 +800,7 @@ namespace XG.Server
 						}
 						else
 						{
-							this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no bot connect", LogLevel.Error);
+							myLog.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no bot connect");
 							return 0;
 						}
 					}
@@ -813,7 +816,7 @@ namespace XG.Server
 
 							if (!XGHelper.IsEqual(bytes, aBytes))
 							{
-								this.Log("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize, LogLevel.Warning);
+								myLog.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize);
 								this.RemovePart(tFile, part);
 								return part.StopSize;
 							}
@@ -852,12 +855,12 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							this.Log("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							myLog.Fatal("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " + part.StartSize + "", ex);
 						}
 					}
 					else
 					{
-						this.Log("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") do not know what to do with part " + part.StartSize, LogLevel.Error);
+						myLog.Error("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") do not know what to do with part " + part.StartSize);
 					}
 
 					break;
@@ -878,7 +881,7 @@ namespace XG.Server
 		{
 			lock (aFile.locked)
 			{
-				this.Log("CheckFile(" + aFile.Name + ")", LogLevel.Notice);
+				myLog.Info("CheckFile(" + aFile.Name + ")");
 				if (aFile.Children.Length == 0) { return; }
 
 				bool complete = true;
@@ -888,7 +891,7 @@ namespace XG.Server
 					if (part.PartState != FilePartState.Ready)
 					{
 						complete = false;
-						this.Log("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete", LogLevel.Notice);
+						myLog.Info("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete");
 						break;
 					}
 				}
@@ -910,7 +913,7 @@ namespace XG.Server
 			XGFile tFile = aObject as XGFile;
 			lock (tFile.locked)
 			{
-				this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting", LogLevel.Notice);
+				myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting");
 
 				#region DISABLE ALL MATCHING PACKETS
 
@@ -934,7 +937,7 @@ namespace XG.Server
 										XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
 										))
 									{
-										this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name, LogLevel.Notice);
+										myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name);
 										tPack.Enabled = false;
 										this.ObjectChangedEvent(tPack);
 									}
@@ -976,7 +979,7 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + ": " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							myLog.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + "", ex);
 							// dont delete the source if the disk is full!
 							// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
 							// TODO this doesnt work :(
@@ -992,7 +995,7 @@ namespace XG.Server
 					if (size == tFile.Size)
 					{
 						this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
-						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build", LogLevel.Notice);
+						myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build");
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.FilesCompleted);
@@ -1012,7 +1015,7 @@ namespace XG.Server
 					}
 					else
 					{
-						this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size, LogLevel.Error);
+						myLog.Error("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size);
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.FilesBroken);
@@ -1020,7 +1023,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make", ex);
 
 					// statistics
 					Statistic.Instance.Increase(StatisticType.FilesBroken);
@@ -1079,7 +1082,7 @@ namespace XG.Server
 							}
 							catch (Exception ex)
 							{
-								this.Log("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+								myLog.Fatal("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ")", ex);
 							}
 						}
 					}
@@ -1123,7 +1126,7 @@ namespace XG.Server
 						}
 					}
 				}
-				if (a > 0) { this.Log("RunBotWatchdog() removed " + a + " offline bot(s)", LogLevel.Notice); }
+				if (a > 0) { myLog.Info("RunBotWatchdog() removed " + a + " offline bot(s)"); }
 
 				// TODO scan for empty channels and send a "xdcc list" command to all the people in there
 				// in some channels the bots are silent and have the same (no) rights like normal users
@@ -1152,15 +1155,6 @@ namespace XG.Server
 		}
 
 		#endregion
-
-		#endregion
-
-		#region LOG
-
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("ServerHandler." + aData, aLevel);
-		}
 
 		#endregion
 	}

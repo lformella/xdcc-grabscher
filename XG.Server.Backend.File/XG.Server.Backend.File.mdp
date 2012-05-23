@@ -19,5 +19,6 @@
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../XG.Lib/log4net.dll" />
   </References>
 </Project>

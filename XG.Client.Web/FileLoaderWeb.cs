@@ -19,12 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using log4net;
 using XG.Core;
 
 namespace XG.Client.Web
 {
 	public class FileLoaderWeb
 	{
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(FileLoaderWeb));
+
 		private Dictionary<string, string> myDicStr;
 		private Dictionary<string, byte[]> myDicByt;
 
@@ -68,7 +71,7 @@ namespace XG.Client.Web
 				}
 				catch (Exception ex)
 				{
-					this.Log("LoadFile(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("LoadFile(" + aFile + ")", ex);
 				}
 #endif
 			}
@@ -112,20 +115,11 @@ namespace XG.Client.Web
 				}
 				catch (Exception ex)
 				{
-					this.Log("LoadImage(" + aFile + ") " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+					myLog.Fatal("LoadImage(" + aFile + ")", ex);
 				}
 #endif
 			}
 			return null;
 		}
-
-		#region LOG
-
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("FileLoaderWeb." + aData, aLevel);
-		}
-
-		#endregion
 	}
 }

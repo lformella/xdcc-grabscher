@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
+using log4net;
 using XG.Core;
 
 namespace XG.Server
@@ -33,6 +34,8 @@ namespace XG.Server
 	/// </summary>	
 	public class ServerConnect
 	{
+		private ILog myLog;
+
 		private ServerHandler myParent;
 
 		private XGServer myServer;
@@ -77,6 +80,8 @@ namespace XG.Server
 
 		public void Connect(XGServer aServer)
 		{
+			this.myLog = LogManager.GetLogger("Connection(" + aServer.Name + ":" + aServer.Port + ")");
+
 			this.myServer = aServer;
 			this.myServer.ChannelAddedEvent += new ServerChannelDelegate(server_ChannelAddedEventHandler);
 			this.myServer.ChannelRemovedEvent += new ServerChannelDelegate(server_ChannelRemovedEventHandler);
@@ -174,7 +179,7 @@ namespace XG.Server
 
 		private void con_DataReceivedEventHandler(string aData)
 		{
-			this.Log("con_DataReceived(" + aData + ")", LogLevel.Traffic);
+			myLog.Debug("con_DataReceived(" + aData + ")");
 
 			if (aData.StartsWith(":"))
 			{
@@ -225,12 +230,12 @@ namespace XG.Server
 						if (tBot != null)
 						{
 							tBot.Name = tData;
-							this.Log("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name, LogLevel.Info);
+							myLog.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name);
 						}
 						else if(tUserName == Settings.Instance.IRCName)
 						{
 							// what should i do now?!
-							this.Log("con_DataReceived() wtf? i was renamed to " + tData, LogLevel.Error);
+							myLog.Error("con_DataReceived() wtf? i was renamed to " + tData);
 						}
 						/*else
 						{
@@ -257,8 +262,8 @@ namespace XG.Server
 							if (tUserName == Settings.Instance.IRCName)
 							{
 								tChan.Connected = false;
-								this.Log("con_DataReceived() kicked from " + tChan.Name + (tCommandList.Length >= 5 ? " (" + tCommandList[4] + ")" : "") + " - rejoining", LogLevel.Warning);
-								this.Log("con_DataReceived() " + aData, LogLevel.Warning);
+								myLog.Warn("con_DataReceived() kicked from " + tChan.Name + (tCommandList.Length >= 5 ? " (" + tCommandList[4] + ")" : "") + " - rejoining");
+								myLog.Warn("con_DataReceived() " + aData);
 								this.JoinChannel(tChan);
 
 								// statistics
@@ -271,7 +276,7 @@ namespace XG.Server
 								{
 									tBot.Connected = false;
 									tBot.LastMessage = "kicked from channel " + tChan.Name;
-									this.Log("con_DataReceived() bot " + tBot.Name + " is offline", LogLevel.Info);
+									myLog.Info("con_DataReceived() bot " + tBot.Name + " is offline");
 								}
 								/*else
 								{
@@ -290,14 +295,14 @@ namespace XG.Server
 						tUserName = tCommandList[2];
 						if (tUserName == Settings.Instance.IRCName)
 						{
-							this.Log("con_DataReceived() i was killed from server because of " + tData, LogLevel.Warning);
+							myLog.Warn("con_DataReceived() i was killed from server because of " + tData);
 						}
 						else
 						{
 							tBot = this.myServer.GetBot(tUserName);
 							if (tBot != null)
 							{
-								this.Log("con_DataReceived() bot " + tBot.Name + " was killed from server?", LogLevel.Warning);
+								myLog.Warn("con_DataReceived() bot " + tBot.Name + " was killed from server?");
 							}
 							/*else
 							{
@@ -327,7 +332,7 @@ namespace XG.Server
 								{
 									tBot.BotState = BotState.Idle;
 								}
-								this.Log("con_DataReceived() bot " + tUserName + " is online", LogLevel.Info);
+								myLog.Info("con_DataReceived() bot " + tUserName + " is online");
 								this.RequestFromBot(tBot);
 							}
 							/*else
@@ -349,7 +354,7 @@ namespace XG.Server
 							{
 								tBot.Connected = true;
 								tBot.LastMessage = "parted channel " + tChan.Name;
-								this.Log("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name, LogLevel.Info);
+								myLog.Info("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name);
 							}
 							/*else
 							{
@@ -368,7 +373,7 @@ namespace XG.Server
 						{
 							tBot.Connected = false;
 							tBot.LastMessage = "quited";
-							this.Log("con_DataReceived() bot " + tBot.Name + " quited", LogLevel.Info);
+							myLog.Info("con_DataReceived() bot " + tBot.Name + " quited");
 						}
 						/*else
 						{
@@ -396,12 +401,12 @@ namespace XG.Server
 
 					else if (tComCodeStr == "INVITE")
 					{
-						this.Log("con_DataReceived() received an invite for channel " + tData, LogLevel.Notice);
+						myLog.Info("con_DataReceived() received an invite for channel " + tData);
 
 						// ok, lets do a silent auto join
 						if (Settings.Instance.AutoJoinOnInvite)
 						{
-							this.Log("con_DataReceived() auto joining " + tData, LogLevel.Notice);
+							myLog.Info("con_DataReceived() auto joining " + tData);
 							this.SendData("JOIN " + tData);
 						}
 					}
@@ -412,7 +417,7 @@ namespace XG.Server
 		
 					else if (tComCodeStr == "PONG")
 					{
-						this.Log("con_DataReceived() PONG", LogLevel.Info);
+						myLog.Info("con_DataReceived() PONG");
 					}
 		
 					#endregion
@@ -429,7 +434,7 @@ namespace XG.Server
 						}
 						else
 						{
-							this.Log("con_DataReceived() Irc code " + tComCodeStr + " could not be parsed. (" + aData + ")", LogLevel.Error);
+							myLog.Error("con_DataReceived() Irc code " + tComCodeStr + " could not be parsed. (" + aData + ")");
 						}
 					}
 
@@ -444,7 +449,7 @@ namespace XG.Server
 
 			else if (aData.StartsWith("PING"))
 			{
-				this.Log("con_DataReceived() PING", LogLevel.Info);
+				myLog.Info("con_DataReceived() PING");
 				this.SendData("PONG " + aData.Split(':')[1]);
 			}
 
@@ -454,7 +459,7 @@ namespace XG.Server
 
 			else if (aData.StartsWith("ERROR"))
 			{
-				this.Log("con_DataReceived() ERROR: " + aData, LogLevel.Error);
+				myLog.Error("con_DataReceived() ERROR: " + aData);
 			}
 
 			#endregion
@@ -497,7 +502,7 @@ namespace XG.Server
 						}
 						if (addChan)
 						{
-							this.Log("con_DataReceived() auto adding channel " + chanName, LogLevel.Notice);
+							myLog.Info("con_DataReceived() auto adding channel " + chanName);
 							this.myServer.AddChannel(chanName);
 						}
 					}
@@ -524,7 +529,7 @@ namespace XG.Server
 								{
 									tBot.BotState = BotState.Idle;
 								}
-								this.Log("con_DataReceived() bot " + tBot.Name + " is online", LogLevel.Info);
+								myLog.Info("con_DataReceived() bot " + tBot.Name + " is online");
 								this.ObjectChange(tBot);
 								this.RequestFromBot(tBot);
 							}
@@ -546,7 +551,7 @@ namespace XG.Server
 					{
 						tChan.ErrorCode = 0;
 						tChan.Connected = true;
-						this.Log("con_DataReceived() joined channel " + tChan.Name, LogLevel.Notice);
+						myLog.Info("con_DataReceived() joined channel " + tChan.Name);
 					}
 
 					// statistics
@@ -559,7 +564,7 @@ namespace XG.Server
 
 				case 376: // RPL_ENDOFMOTD
 				case 422: // ERR_NOMOTD
-					this.Log("con_DataReceived() really connected", LogLevel.Notice);
+					myLog.Info("con_DataReceived() really connected");
 					myServer.Connected = true;
 					this.ObjectChange(myServer);
 					foreach (XGChannel chan in myServer.Children)
@@ -586,7 +591,7 @@ namespace XG.Server
 				case 477: // ERR_NOCHANMODES
 					tChan = myServer[tCommandList[3]];
 					// TODO register myself and login and so on
-					this.Log("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!", LogLevel.Notice);
+					myLog.Info("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!");
 					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 					if(tChan != null)
 					{
@@ -610,7 +615,7 @@ namespace XG.Server
 					{
 						tChan.ErrorCode = t_ComCode;
 						tChan.Connected = false;
-						this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
+						myLog.Warn("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode);
 					}
 
 					// statistics
@@ -631,7 +636,7 @@ namespace XG.Server
 					{
 						tChan.ErrorCode = t_ComCode;
 						tChan.Connected = false;
-						this.Log("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode, LogLevel.Warning);
+						myLog.Warn("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode);
 						this.CreateTimer(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong);
 					}
 
@@ -656,7 +661,7 @@ namespace XG.Server
 
 			if (tData == "VERSION")
 			{
-				this.Log("con_DataReceived() VERSION: " + Settings.Instance.IrcVersion, LogLevel.Info);
+				myLog.Info("con_DataReceived() VERSION: " + Settings.Instance.IrcVersion);
 				this.SendData("NOTICE " + tUserName + " :\u0001VERSION " + Settings.Instance.IrcVersion + "\u0001");
 				return;
 			}
@@ -667,7 +672,7 @@ namespace XG.Server
 
 			else if (tData == "XGVERSION")
 			{
-				this.Log("con_DataReceived() XGVERSION: " + Settings.Instance.XgVersion, LogLevel.Info);
+				myLog.Info("con_DataReceived() XGVERSION: " + Settings.Instance.XgVersion);
 				this.SendData("NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
 				return;
 			}
@@ -689,7 +694,7 @@ namespace XG.Server
 					string[] tDataList = tData.Split(' ');
 					if (tDataList[1] == "SEND")
 					{
-						this.Log("con_DataReceived() DCC from " + tBot.Name, LogLevel.Notice);
+						myLog.Info("con_DataReceived() DCC from " + tBot.Name);
 						#region IP CALCULATING
 						try
 						{
@@ -701,7 +706,7 @@ namespace XG.Server
 							#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
 							string ip = "";
 							try { ip = new IPAddress(long.Parse(tDataList[3])).ToString(); }
-							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
+							catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, ex); return; }
 							int pos = 0;
 							string realIp = "";
 							pos = ip.LastIndexOf('.');
@@ -718,20 +723,20 @@ namespace XG.Server
 								pos = ip.LastIndexOf('.');
 								realIp += ip.Substring(pos + 1);
 							}
-							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + tData, LogLevel.Exception); return; }
+							catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + tData, ex); return; }
 
-							this.Log("con_DataReceived() IP parsing failed, using this: " + realIp, LogLevel.Notice);
+							myLog.Info("con_DataReceived() IP parsing failed, using this: " + realIp);
 							try { tBot.IP = IPAddress.Parse(realIp); }
-							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, LogLevel.Exception); return; }
+							catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse bot ip from string: " + tData, ex); return; }
 							#endregion
 						}
 						#endregion
 						try { tPort = int.Parse(tDataList[4]); }
-						catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
+						catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, ex); return; }
 						// we cant connect to port <= 0
 						if(tPort <= 0)
 						{
-							this.Log("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort + ", disabling packet", LogLevel.Error);
+							myLog.Error("con_DataReceived() " + tBot.Name + " submitted wrong port: " + tPort + ", disabling packet");
 							tPacket.Enabled = false;
 							this.ObjectChange(tPacket);
 
@@ -742,19 +747,19 @@ namespace XG.Server
 						{
 							tPacket.RealName = tDataList[2];
 							try { tPacket.RealSize = Int64.Parse(tDataList[5]); }
-							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet size from string: " + tData, LogLevel.Exception); return; }
+							catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse packet size from string: " + tData, ex); return; }
 
 							tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 							if (tChunk < 0)
 							{
-								this.Log("con_DataReceived() file from " + tBot.Name + " already in use", LogLevel.Error);
+								myLog.Error("con_DataReceived() file from " + tBot.Name + " already in use");
 								tPacket.Enabled = false;
 								this.ObjectChange(tPacket);
 								this.UnregisterFromBot(tBot);
 							}
 							else if (tChunk > 0)
 							{
-								this.Log("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk, LogLevel.Notice);
+								myLog.Info("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk);
 								this.SendData("PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
 							}
 							else { isOk = true; }
@@ -762,21 +767,21 @@ namespace XG.Server
 					}
 					else if (tDataList[1] == "ACCEPT")
 					{
-						this.Log("con_DataReceived() DCC resume accepted from " + tBot.Name, LogLevel.Notice);
+						myLog.Info("con_DataReceived() DCC resume accepted from " + tBot.Name);
 						try { tPort = int.Parse(tDataList[3]); 	}
-						catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, LogLevel.Exception); return; }
+						catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse bot port from string: " + tData, ex); return; }
 						try { tChunk = Int64.Parse(tDataList[4]); }
-						catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet chunk from string: " + tData, LogLevel.Exception); return; }
+						catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse packet chunk from string: " + tData, ex); return; }
 						isOk = true;
 					}
 
 					if (isOk)
 					{
-						this.Log("con_DataReceived() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize, LogLevel.Notice);
+						myLog.Info("con_DataReceived() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
 						this.NewDownloadEvent(tPacket, tChunk, tBot.IP, tPort);
 					}
 				}
-				else { this.Log("con_DataReceived() DCC not activated from " + tBot.Name, LogLevel.Error); }
+				else { myLog.Error("con_DataReceived() DCC not activated from " + tBot.Name); }
 			}
 
 			#endregion
@@ -873,7 +878,7 @@ namespace XG.Server
 						{
 							int tPacketId = -1;
 							try { tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString()); }
-							catch { this.Log("con_DataReceived() " + tBot.Name + " - can not parse packet id from string: " + tData, LogLevel.Exception); return; }
+							catch (Exception ex) { myLog.Fatal("con_DataReceived() " + tBot.Name + " - can not parse packet id from string: " + tData, ex); return; }
 
 							XGPacket tPack = tBot[tPacketId];
 							if (tPack == null)
@@ -888,7 +893,7 @@ namespace XG.Server
 							string name = this.ClearPacketName(tMatch.Groups["pack_name"].ToString());
 							if (tPack.Name != name && tPack.Name != "")
 							{
-								//this.Log(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content", LogLevel.Warning);
+								//myLog.Warn(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content");
 								tPack.Enabled = false;
 								if (!tPack.Connected)
 								{
@@ -908,7 +913,7 @@ namespace XG.Server
 							else if (tPacketAdd == "g" || tPacketAdd == "gb") { tPack.Size = (Int64)(tPacketSizeFormated * 1024 * 1024 * 1024); }
 
 							this.ObjectChange(tPack);
-							this.Log("con_DataReceived() updated packet #" + tPack.Id + " from " + tBot.Name, LogLevel.Info);
+							myLog.Info("con_DataReceived() updated packet #" + tPack.Id + " from " + tBot.Name);
 						}
 						catch (FormatException) { }
 					}
@@ -922,7 +927,7 @@ namespace XG.Server
 					if (isParsed)
 					{
 						this.ObjectAddedEvent(tBot.Parent, tBot);
-						this.Log("con_DataReceived() inserted bot " + tBot.Name, LogLevel.Info);
+						myLog.Info("con_DataReceived() inserted bot " + tBot.Name);
 					}
 					else
 					{
@@ -934,7 +939,7 @@ namespace XG.Server
 				if (newPacket != null)
 				{
 					this.ObjectAddedEvent(tBot, newPacket);
-					this.Log("con_DataReceived() inserted packet #" + newPacket.Id + " into " + tBot.Name, LogLevel.Info);
+					myLog.Info("con_DataReceived() inserted packet #" + newPacket.Id + " into " + tBot.Name);
 				}
 
 #if DEBUG
@@ -1068,7 +1073,7 @@ namespace XG.Server
 							tBot.removePacket(tPack);
 							this.ObjectRemovedEvent(tBot, tPack);
 						}
-						this.Log("con_DataReceived() invalid packetnumber from " + tBot.Name, LogLevel.Error);
+						myLog.Error("con_DataReceived() invalid packetnumber from " + tBot.Name);
 					}
 				}
 
@@ -1253,7 +1258,7 @@ namespace XG.Server
 								tBot.BotState = BotState.Idle;
 							}
 							this.CreateTimer(tBot, Settings.Instance.CommandWaitTime);
-							this.Log("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info, LogLevel.Error);
+							myLog.Error("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info);
 						}
 					}
 				}
@@ -1400,7 +1405,7 @@ namespace XG.Server
 				else
 				{
 					tBot.LastMessage = tData;
-					this.Log("con_DataReceived() message from " + tBot.Name + ": " + tData, LogLevel.Notice);
+					myLog.Info("con_DataReceived() message from " + tBot.Name + ": " + tData);
 				}
 			}
 
@@ -1414,26 +1419,26 @@ namespace XG.Server
 				{
 					this.myRegistered = false;
 
-					this.Log("con_DataReceived(" + aData + ") - nickserv password wrong", LogLevel.Error);
+					myLog.Error("con_DataReceived(" + aData + ") - nickserv password wrong");
 				}
 				else if(	tData.Contains("The given email address has reached it's usage limit of 1 user") ||
 							tData.Contains("This nick is being held for a registered user"))
 				{
 					this.myRegistered = false;
 
-					this.Log("con_DataReceived(" + aData + ") - nickserv nick already registered", LogLevel.Error);
+					myLog.Error("con_DataReceived(" + aData + ") - nickserv nick already registered");
 				}
 				else if(tData.Contains("The given email address has reached it's usage limit of 1 user"))
 				{
 					this.myRegistered = false;
 
-					this.Log("con_DataReceived(" + aData + ") - nickserv email already used", LogLevel.Error);
+					myLog.Error("con_DataReceived(" + aData + ") - nickserv email already used");
 				}
 				else if(tData.Contains("Your nick isn't registered"))
 				{
 					this.myRegistered = false;
 
-					this.Log("con_DataReceived(" + aData + ") - nickserv registering nick", LogLevel.Warning);
+					myLog.Warn("con_DataReceived(" + aData + ") - nickserv registering nick");
 					if(Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
 						//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
@@ -1465,11 +1470,11 @@ namespace XG.Server
 				}
 				else if(tData.Contains("Please try again with a more obscure password"))
 				{
-					this.Log("con_DataReceived(" + aData + ") - nickserv password is unsecure", LogLevel.Error);
+					myLog.Error("con_DataReceived(" + aData + ") - nickserv password is unsecure");
 				}
 				else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail + ", please type /msg NickServ confirm <passcode> to complete registration"))
 				{
-					this.Log("con_DataReceived(" + aData + ") - nickserv confirm email", LogLevel.Error);
+					myLog.Error("con_DataReceived(" + aData + ") - nickserv confirm email");
 				}
 			}
 
@@ -1531,7 +1536,7 @@ namespace XG.Server
 						Int64 tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1 || tChunk == -2)
 						{
-							this.Log("RequestFromBot(" + tBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use", LogLevel.Warning);
+							myLog.Warn("RequestFromBot(" + tBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
 							this.ObjectChange(tPacket);
 							tPacket = tBot.getOldestActivePacket();
@@ -1544,7 +1549,7 @@ namespace XG.Server
 								double time = (this.myLatestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
 								if (time > 0)
 								{
-									this.Log("RequestFromBot(" + tBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms", LogLevel.Warning);
+									myLog.Warn("RequestFromBot(" + tBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
 									this.CreateTimer(tBot, (long)time + 1000);
 									return;
 								}
@@ -1552,7 +1557,7 @@ namespace XG.Server
 
 							if (this.myServer.Connected)
 							{
-								this.Log("RequestFromBot(" + tBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")", LogLevel.Notice);
+								myLog.Info("RequestFromBot(" + tBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
 								this.SendData("PRIVMSG " + tBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
 								if (this.myLatestPacketRequests.ContainsKey(name)) { this.myLatestPacketRequests.Remove(name); }
@@ -1575,7 +1580,7 @@ namespace XG.Server
 		{
 			if (aBot != null) // && myServer[aBot.Name] != null)
 			{
-				this.Log("UnregisterFromBot(" + aBot.Name + ")", LogLevel.Notice);
+				myLog.Info("UnregisterFromBot(" + aBot.Name + ")");
 				this.SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC REMOVE\u0001");
 				this.CreateTimer(aBot, Settings.Instance.CommandWaitTime);
 
@@ -1594,7 +1599,7 @@ namespace XG.Server
 			// only join if the channel isnt connected
 			if (tChan != null && myServer[tChan.Name] != null && !tChan.Connected)
 			{
-				this.Log("JoinChannel(" + tChan.Name + ")", LogLevel.Notice);
+				myLog.Info("JoinChannel(" + tChan.Name + ")");
 				this.SendData("JOIN " + tChan.Name);
 
 				// TODO maybe set a time to resend the command if the channel is not connected
@@ -1609,7 +1614,7 @@ namespace XG.Server
 		{
 			if (aChan != null)
 			{
-				this.Log("PartChannel(" + aChan.Name + ")", LogLevel.Notice);
+				myLog.Info("PartChannel(" + aChan.Name + ")");
 				this.SendData("PART " + aChan.Name);
 
 				// statistics
@@ -1728,7 +1733,7 @@ namespace XG.Server
 		{
 			if(aObject == null)
 			{
-				this.Log("CreateTimer(null, " + aTime + ", " + aOverride + ") object is null!", LogLevel.Exception);
+				myLog.Fatal("CreateTimer(null, " + aTime + ", " + aOverride + ") object is null!");
 				return;
 			}
 			if (aOverride && this.myTimedObjects.ContainsKey(aObject))
@@ -1740,15 +1745,6 @@ namespace XG.Server
 			{
 				this.myTimedObjects.Add(aObject, DateTime.Now.AddMilliseconds(aTime));
 			}
-		}
-
-		#endregion
-
-		#region LOG
-
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("ServerConnect(" + this.myServer.Name + ":" + this.myServer.Port + ")." + aData, aLevel);
 		}
 
 		#endregion

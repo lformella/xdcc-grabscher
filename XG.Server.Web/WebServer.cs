@@ -22,6 +22,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
+using log4net;
 using XG.Client.Web;
 using XG.Core;
 
@@ -30,6 +31,8 @@ namespace XG.Server.Web
 	public class WebServer : IServerPlugin
 	{
 		#region VARIABLES
+
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(WebServer));
 
 		private ServerRunner myRunner;
 
@@ -92,7 +95,7 @@ namespace XG.Server.Web
 					}
 					catch (Exception ex)
 					{
-						this.Log("OpenServer() client: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						myLog.Fatal("OpenServer() client", ex);
 					}
 #endif
 				}
@@ -100,7 +103,7 @@ namespace XG.Server.Web
 			}
 			catch (Exception ex)
 			{
-				this.Log("OpenServer() server: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("OpenServer() server", ex);
 			}
 #endif
 		}
@@ -124,7 +127,7 @@ namespace XG.Server.Web
 
 			Dictionary<string, string> tDic = new Dictionary<string, string>();
 			string str = client.Request.RawUrl;
-			this.Log("OpenClient() " + str, LogLevel.Traffic);
+			myLog.Debug("OpenClient() " + str);
 
 #if !UNSAFE
 			try
@@ -153,7 +156,7 @@ namespace XG.Server.Web
 					}
 					catch (Exception ex)
 					{
-						this.Log("OpenClient() password: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						myLog.Fatal("OpenClient() password", ex);
 						client.Response.Close();
 						return;
 					}
@@ -164,7 +167,7 @@ namespace XG.Server.Web
 					try { tMessage = (TCPClientRequest)int.Parse(tDic["request"]); }
 					catch (Exception ex)
 					{
-						this.Log("OpenClient() read client request: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+						myLog.Fatal("OpenClient() read client request", ex);
 						return;
 					}
 
@@ -410,10 +413,10 @@ namespace XG.Server.Web
 			}
 			catch (Exception ex)
 			{
-				this.Log("OpenClient() read: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("OpenClient() read", ex);
 			}
 #endif
-			this.Log("OpenClient() disconnected", LogLevel.Info);
+			myLog.Info("OpenClient() disconnected");
 		}
 
 		#endregion
@@ -606,20 +609,6 @@ namespace XG.Server.Web
 			str = str.Replace("ü", "&uuml;");
 			str = str.Replace("ß", "&szlig;");
 			return str;
-		}
-
-		#endregion
-
-		#region LOG
-
-		/// <summary>
-		/// Calls XGHelper.Log()
-		/// </summary>
-		/// <param name="aData"></param>
-		/// <param name="aLevel"></param>
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("WebServer." + aData, aLevel);
 		}
 
 		#endregion

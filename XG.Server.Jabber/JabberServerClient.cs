@@ -20,6 +20,7 @@ using System.Threading;
 using agsXMPP;
 using agsXMPP.protocol.client;
 using agsXMPP.Xml.Dom;
+using log4net;
 using XG.Core;
 
 namespace XG.Server.Jabber
@@ -27,6 +28,8 @@ namespace XG.Server.Jabber
 	public class JabberClient : IServerPlugin
 	{
 		#region VARIABLES
+
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(Connection));
 
 		private ServerRunner myRunner;
 		private XmppClientConnection myClient;
@@ -74,11 +77,11 @@ namespace XG.Server.Jabber
 			};
 			this.myClient.OnError += delegate(object sender, Exception ex)
 			{
-				this.Log("OpenServer() Exception: " + ex.ToString(), LogLevel.Exception);
+				myLog.Fatal("OpenServer()", ex);
 			};
 			this.myClient.OnAuthError += delegate(object sender, Element e)
 			{
-				this.Log("OpenServer() AuthError: " + e.ToString(), LogLevel.Exception);
+				myLog.Fatal("OpenServer() " + e.ToString());
 			};
 		}
 
@@ -129,20 +132,6 @@ namespace XG.Server.Jabber
 				}
 				this.UpdateState(speed);
 			}
-		}
-
-		#endregion
-
-		#region LOG
-
-		/// <summary>
-		/// Calls XGHelper.Log()
-		/// </summary>
-		/// <param name="aData"></param>
-		/// <param name="aLevel"></param>
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("JabberServerClient." + aData, aLevel);
 		}
 
 		#endregion

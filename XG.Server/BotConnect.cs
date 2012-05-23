@@ -18,6 +18,7 @@
 using System;
 using System.IO;
 using System.Net;
+using log4net;
 using XG.Core;
 
 namespace XG.Server
@@ -32,6 +33,8 @@ namespace XG.Server
 	public class BotConnect
 	{
 		#region VARIABLES
+
+		private ILog myLog;
 
 		private ServerHandler myParent;
 
@@ -97,7 +100,7 @@ namespace XG.Server
 			set
 			{
 				this.Part.StopSize = value;
-				this.Log("StopSize.set(" + value + ")", LogLevel.Notice);
+				myLog.Info("StopSize.set(" + value + ")");
 				this.ObjectChangedEvent(this.Part);
 			}
 		}
@@ -148,6 +151,8 @@ namespace XG.Server
 		/// <param name="aObject"></param>
 		public void Connect(XGPacket aPacket, Int64 aStartSize, IPAddress aIp, int aPort)
 		{
+			this.myLog = LogManager.GetLogger("Connection(" + aIp.ToString() + ":" + aPort + ")");
+
 			this.myPacket = aPacket;
 			this.myStartSize = aStartSize;
 
@@ -172,7 +177,7 @@ namespace XG.Server
 				// wtf?
 				if (this.StartSize == this.StopSize)
 				{
-					this.Log("con_Connected() startSize = stopsize (" + this.StartSize + ")", LogLevel.Error);
+					myLog.Error("con_Connected() startSize = stopsize (" + this.StartSize + ")");
 					this.Disconnect();
 					return;
 				}
@@ -180,7 +185,7 @@ namespace XG.Server
 				this.Part.PartState = FilePartState.Open;
 				this.Part.Packet = this.Packet;
 
-				this.Log("con_Connected() startet (" + this.StartSize + " - " + this.StopSize + ")", LogLevel.Notice);
+				myLog.Info("con_Connected() startet (" + this.StartSize + " - " + this.StopSize + ")");
 
 #if !UNSAFE
 				try
@@ -212,7 +217,7 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							this.Log("con_Connected() seek: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+							myLog.Fatal("con_Connected() seek", ex);
 							this.Disconnect();
 							return;
 						}
@@ -238,7 +243,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					this.Log("con_Connected() Exception: " + XGHelper.GetExceptionMessage(ex), LogLevel.Error);
+					myLog.Fatal("con_Connected()", ex);
 					this.Disconnect();
 					return;
 				}
@@ -249,7 +254,7 @@ namespace XG.Server
 			}
 			else
 			{
-				this.Log("con_Connected() cant find a part to download", LogLevel.Error);
+				myLog.Error("con_Connected() cant find a part to download");
 				this.Disconnect();
 			}
 		}
@@ -300,7 +305,7 @@ namespace XG.Server
 					if (this.CurrrentSize == this.StopSize || (!this.Part.IsChecked && this.CurrrentSize == this.StopSize + Settings.Instance.FileRollbackCheck))
 					{
 						this.Part.PartState = FilePartState.Ready;
-						this.Log("con_Disconnected() ready" + (this.Part.IsChecked ? "" : " but unchecked"), LogLevel.Notice);
+						myLog.Info("con_Disconnected() ready" + (this.Part.IsChecked ? "" : " but unchecked"));
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
@@ -309,12 +314,12 @@ namespace XG.Server
 					else if (this.CurrrentSize > this.StopSize)
 					{
 						this.Part.PartState = FilePartState.Broken;
-						this.Log("con_Disconnected() size is bigger than excepted: " + this.CurrrentSize + " > " + this.StopSize, LogLevel.Error);
+						myLog.Error("con_Disconnected() size is bigger than excepted: " + this.CurrrentSize + " > " + this.StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
 						if (this.File.Children.Length == 1 || this.Part.StopSize == this.File.Size)
 						{
 							this.myParent.RemoveFile(this.File);
-							this.Log("con_Disconnected() removing corputed file " + this.File.Name, LogLevel.Error);
+							myLog.Error("con_Disconnected() removing corputed file " + this.File.Name);
 						}
 
 						// statistics
@@ -323,7 +328,7 @@ namespace XG.Server
 					// it did not start
 					else if (this.myReceivedBytes == 0)
 					{
-						this.Log("con_Disconnected() downloading did not start, disabling packet", LogLevel.Error);
+						myLog.Error("con_Disconnected() downloading did not start, disabling packet");
 						this.Packet.Enabled = false;
 
 						// statistics
@@ -332,7 +337,7 @@ namespace XG.Server
 					// it is incomplete
 					else
 					{
-						this.Log("con_Disconnected() incomplete", LogLevel.Error);
+						myLog.Error("con_Disconnected() incomplete");
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsIncompleted);
@@ -344,7 +349,7 @@ namespace XG.Server
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
-				this.Log("con_Disconnected() connection did not work, disabling packet", LogLevel.Error);
+				myLog.Error("con_Disconnected() connection did not work, disabling packet");
 				this.Packet.Enabled = false;
 
 				// statistics
@@ -397,7 +402,7 @@ namespace XG.Server
 					// all ok
 					if (XGHelper.IsEqual(this.myRollbackRefernce, this.myStartBuffer))
 					{
-						this.Log("con_DataReceived() rollback check ok", LogLevel.Notice);
+						myLog.Info("con_DataReceived() rollback check ok");
 						aData = this.myStartBuffer;
 						this.myStartBuffer = null;
 						this.myStreamOk = true;
@@ -405,7 +410,7 @@ namespace XG.Server
 					// data mismatch
 					else
 					{
-						this.Log("con_DataReceived() rollback check failed", LogLevel.Error);
+						myLog.Error("con_DataReceived() rollback check failed");
 
 						// unregister from the event because if this is triggered
 						// it will remove the part
@@ -487,7 +492,7 @@ namespace XG.Server
 						// all ok
 						if (stopSize == 0)
 						{
-							this.Log("con_DataReceived() reference check ok", LogLevel.Notice);
+							myLog.Info("con_DataReceived() reference check ok");
 							aData = new byte[0];
 							this.Disconnect();
 							return;
@@ -495,7 +500,7 @@ namespace XG.Server
 						// data mismatch
 						else
 						{
-							this.Log("con_DataReceived() reference check failed", LogLevel.Error);
+							myLog.Error("con_DataReceived() reference check failed");
 							aData = this.myStopBuffer;
 							this.StopSize = stopSize;
 						}
@@ -537,7 +542,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				this.Log("con_DataReceived() write: " + XGHelper.GetExceptionMessage(ex), LogLevel.Exception);
+				myLog.Fatal("con_DataReceived() write", ex);
 				this.myStreamOk = false;
 				this.Disconnect();
 				return;
@@ -563,15 +568,6 @@ namespace XG.Server
 					Statistic.Instance.Set(StatisticType.SpeedMin, this.Part.Speed);
 				}
 			}
-		}
-
-		#endregion
-
-		#region LOG
-
-		private void Log(string aData, LogLevel aLevel)
-		{
-			XGHelper.Log("BotConnect(" + (this.myCon != null ? this.myCon.Host + ":" + this.myCon.Port + ", " : "") + this.FileName + ")." + aData, aLevel);
 		}
 
 		#endregion
