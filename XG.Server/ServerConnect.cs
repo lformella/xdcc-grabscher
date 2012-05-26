@@ -203,6 +203,11 @@ namespace XG.Server
 					XGChannel tChan = this.myServer[tChannelName];
 					XGBot tBot = this.myServer.GetBot(tUserName);
 
+					if(tBot != null)
+					{
+						tBot.LastContact = DateTime.Now;
+					}
+
 					#region PRIVMSG
 
 					if (tComCodeStr == "PRIVMSG")
@@ -798,6 +803,7 @@ namespace XG.Server
 					tBot.Name = tUserName;
 					tBot.Connected = true;
 					tBot.LastMessage = "initial creation";
+					tBot.LastContact = DateTime.Now;
 				}
 
 				bool isParsed = false;
