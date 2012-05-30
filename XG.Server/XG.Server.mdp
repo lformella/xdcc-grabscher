@@ -29,6 +29,7 @@
     <File subtype="Code" buildaction="Compile" name="Settings.cs" />
     <File subtype="Code" buildaction="Compile" name="Statistic.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="IServerBackendPlugin.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />

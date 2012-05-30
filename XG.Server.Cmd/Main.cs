@@ -57,11 +57,25 @@ namespace XG.Server.Cmd
 
 			ServerRunner runner = new ServerRunner();
 
-			if (Settings.Instance.StartMySqlBackend) { runner.AddServerPlugin(new MySqlBackend(runner)); }
-			else { runner.AddServerPlugin(new FileBackend(runner)); }
+			IServerBackendPlugin backend = null;
+			if (Settings.Instance.StartMySqlBackend)
+			{
+				backend = new MySqlBackend();
+			}
+			else
+			{
+				backend = new FileBackend();
+			}
+			runner.AddServerBackendPlugin(backend);
 
-			if (Settings.Instance.StartWebServer) { runner.AddServerPlugin(new WebServer()); }
-			if (Settings.Instance.StartJabberClient) { runner.AddServerPlugin(new JabberClient()); }
+			if (Settings.Instance.StartWebServer)
+			{
+				runner.AddServerPlugin(new WebServer());
+			}
+			if (Settings.Instance.StartJabberClient)
+			{
+				runner.AddServerPlugin(new JabberClient());
+			}
 
 			runner.Start();
 		}

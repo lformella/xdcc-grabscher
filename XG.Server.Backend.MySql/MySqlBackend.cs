@@ -13,7 +13,7 @@
 // 
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-// 
+//
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ using XG.Core;
 
 namespace XG.Server.Backend.MySql
 {
-	public class MySqlBackend : IServerPlugin
+	public class MySqlBackend : IServerBackendPlugin
 	{
 		#region VARIABLES
 
@@ -37,37 +37,40 @@ namespace XG.Server.Backend.MySql
 
 		#endregion
 
-		public MySqlBackend (ServerRunner aParent)
+		public MySqlBackend ()
 		{
-			this.myRunner = aParent;
-
 			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
 			try
 			{
 				this.myDbConnection = new MySqlConnection (connectionString);
 				this.myDbConnection.Open ();
+
+				// cleanup database
+				this.ExecuteNonQuery ("UPDATE server SET connected = 0;", null);
+				this.ExecuteNonQuery ("UPDATE channel SET connected = 0;", null);
+				this.ExecuteNonQuery ("UPDATE bot SET connected = 0;", null);
+				this.ExecuteNonQuery ("UPDATE packet SET connected = 0;", null);
 			}
 			catch (Exception ex)
 			{
 				myLog.Fatal("MySqlBackend(" + connectionString + ") ", ex);
-
-				// stop it
-				this.Stop ();
-				return;
+				throw ex;
 			}
+		}
+
+		#region IServerBackendPlugin
+
+		public RootObject GetRootObject ()
+		{
+			RootObject rootObject = new RootObject();
 
 			#region DUMP DATABASE
-
-			this.ExecuteNonQuery ("UPDATE server SET connected = 0;", null);
-			this.ExecuteNonQuery ("UPDATE channel SET connected = 0;", null);
-			this.ExecuteNonQuery ("UPDATE bot SET connected = 0;", null);
-			this.ExecuteNonQuery ("UPDATE packet SET connected = 0;", null);
 
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 			dic.Add ("guid", Guid.Empty);
 			foreach(XGServer serv in this.ExecuteQuery ("SELECT * FROM server;", null, typeof(XGServer)))
 			{
-				this.myRunner.RootObject.AddServer(serv);
+				rootObject.AddServer(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
 				foreach(XGChannel chan in this.ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(XGChannel)))
@@ -90,23 +93,34 @@ namespace XG.Server.Backend.MySql
 
 			#endregion
 
-			// the file data
-			this.myRunner.Files = new List<XGFile>();
+			#region import routine
 
-			// previous searches
-			this.myRunner.Searches = new List<string>();
-
-			/**/
-			// import routine
-			Importer importer = new Importer(this.myRunner.RootObject);
+			Importer importer = new Importer(rootObject);
 
 			importer.ObjectAddedEvent += new ObjectObjectDelegate (myRunner_ObjectAddedEventHandler);
 
 			importer.Import("./import");
 
 			importer.ObjectAddedEvent -= new ObjectObjectDelegate (myRunner_ObjectAddedEventHandler);
-			/**/
+
+			#endregion
+
+			return rootObject;
 		}
+
+		public List<XGFile> GetFiles ()
+		{
+			List<XGFile> files =new List<XGFile>();
+			return files;
+		}
+
+		public List<string> GetSearches ()
+		{
+			List<string> searches = new List<string>();
+			return searches;
+		}
+
+		#endregion
 
 		#region RUN STOP
 		

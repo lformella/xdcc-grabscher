@@ -25,7 +25,7 @@ using XG.Core;
 
 namespace XG.Server.Backend.File
 {
-	public class FileBackend : IServerPlugin
+	public class FileBackend : IServerBackendPlugin
 	{
 		#region VARIABLES
 
@@ -43,27 +43,46 @@ namespace XG.Server.Backend.File
 
 		#endregion
 
-		public FileBackend (ServerRunner aParent)
+		#region IServerBackendPlugin
+
+		public RootObject GetRootObject ()
 		{
-			this.myRunner = aParent;
-
-			// the one and only root object
-			this.myRunner.RootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
-			if (this.myRunner.RootObject == null) { this.myRunner.RootObject = new RootObject(); }
-
-			// the file data
-			this.myRunner.Files = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
-			if (this.myRunner.Files == null) { this.myRunner.Files = new List<XGFile>(); }
-
-			// previous searches
-			this.myRunner.Searches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
-			if (this.myRunner.Searches == null) { this.myRunner.Searches = new List<string>(); }
+			RootObject rootObject = (RootObject)this.Load(Settings.Instance.DataBinary);
+			if (rootObject == null)
+			{
+				rootObject = new RootObject();
+			}
+			return rootObject;
 		}
+
+		public List<XGFile> GetFiles ()
+		{
+			List<XGFile> files = (List<XGFile>)this.Load(Settings.Instance.FilesBinary);
+			if (files == null)
+			{
+				files = new List<XGFile>();
+			}
+			return files;
+		}
+
+		public List<string> GetSearches ()
+		{
+			List<string> searches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
+			if (searches == null)
+			{
+				searches = new List<string>();
+			}
+			return searches;
+		}
+
+		#endregion
 
 		#region RUN STOP
 
 		public void Start (ServerRunner aParent)
 		{
+			this.myRunner = aParent;
+
 			// start data saving routine
 			this.mySaveDataThread = new Thread(new ThreadStart(SaveDataLoop));
 			this.mySaveDataThread.Start();

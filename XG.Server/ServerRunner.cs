@@ -44,7 +44,6 @@ namespace XG.Server
 		public RootObject RootObject
 		{
 			get { return this.myRootObject; }
-			set { myRootObject = value; }
 		}
 		public Guid RootGuid
 		{
@@ -55,16 +54,13 @@ namespace XG.Server
 		public List<XGFile> Files
 		{
 			get { return this.myFiles; }
-			set { myFiles = value; }
 		}
 
 		private List<string> mySearches;
 		public List<string> Searches
 		{
 			get { return this.mySearches; }
-			set { mySearches = value; }
 		}
-
 
 		#endregion
 
@@ -347,6 +343,19 @@ namespace XG.Server
 			{
 				this.myServerHandler.DisconnectServer(serv);
 			}
+		}
+
+		#endregion
+
+		#region SERVER BACKEND PLUGIN
+
+		public void AddServerBackendPlugin(IServerBackendPlugin aPlugin)
+		{
+			this.myRootObject = aPlugin.GetRootObject();
+			this.myFiles = aPlugin.GetFiles();
+			this.mySearches = aPlugin.GetSearches();
+
+			this.AddServerPlugin(aPlugin);
 		}
 
 		#endregion
