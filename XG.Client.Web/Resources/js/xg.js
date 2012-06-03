@@ -155,7 +155,7 @@ $(function()
 				var serv = jQuery('#servers').getRowData(id);
 				if(serv)
 				{
-					if(serv.enabled == "false")
+					if(serv.Enabled == "false")
 					{
 						$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
 					}
@@ -673,6 +673,8 @@ function ButtonConnectClicked(dialog)
 				});
 			}
 		);
+
+		$("#tabs").show();
 
 		// start the refresh
 		RefreshGrid(0);

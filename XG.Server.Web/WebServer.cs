@@ -592,11 +592,11 @@ namespace XG.Server.Web
 
 				sb.Append("\"Name\":\"" + this.ClearString(aObject.Name) + "\",");
 				sb.Append("\"BotState\":\"" + tBot.BotState + "\",");
-				sb.Append("\"Speed\":\"" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + "\",");
+				sb.Append("\"Speed\":" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",");
 				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
-				sb.Append("\"QueueTime\":\"" + tBot.QueueTime + "\",");
-				sb.Append("\"InfoSpeedMax\":\"" + tBot.InfoSpeedMax.ToString().Replace(',', '.') + "\",");
-				sb.Append("\"InfoSpeedCurrent\":\"" + tBot.InfoSpeedCurrent.ToString().Replace(',', '.') + "\",");
+				sb.Append("\"QueueTime\":" + tBot.QueueTime + ",");
+				sb.Append("\"InfoSpeedMax\":" + tBot.InfoSpeedMax.ToString().Replace(',', '.') + ",");
+				sb.Append("\"InfoSpeedCurrent\":" + tBot.InfoSpeedCurrent.ToString().Replace(',', '.') + ",");
 				sb.Append("\"InfoSlotTotal\":" + tBot.InfoSlotTotal + ",");
 				sb.Append("\"InfoSlotCurrent\":" + tBot.InfoSlotCurrent + ",");
 				sb.Append("\"InfoQueueTotal\":" + tBot.InfoQueueTotal + ",");
@@ -618,8 +618,8 @@ namespace XG.Server.Web
 				sb.Append("\"StartSize\":" + (tPart == null ? "0" : tPart.StartSize.ToString()) + ",");
 				sb.Append("\"StopSize\":" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",");
 				sb.Append("\"CurrentSize\":" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",");
-				sb.Append("\"IsChecked\":" + (tPart == null ? "0" : tPart.IsChecked ? "1" : "0") + ",");
-				sb.Append("\"Order\":" + (tPack.Parent.getOldestActivePacket() != tPack ? "0" : "1") + ",");
+				sb.Append("\"IsChecked\":\"" + (tPart == null ? "false" : tPart.IsChecked ? "true" : "false") + "\",");
+				sb.Append("\"Order\":\"" + (tPack.Parent.getOldestActivePacket() != tPack ? "false" : "true") + "\",");
 				sb.Append("\"LastUpdated\":\"" + tPack.LastUpdated + "\"");
 			}
 
