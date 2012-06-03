@@ -88,7 +88,9 @@ namespace XG.Core
 		GetStatistics = 24,
 
 		CloseClient = 25,
-		CloseServer = 26
+		CloseServer = 26,
+
+		ParseXdccLink = 27
 	}
 
 	[Flags]

@@ -20,6 +20,7 @@
 /* ************************************************************************** */
 
 function Enum() {}
+
 Enum.TCPClientRequest =
 {
 	None : 0,
@@ -55,8 +56,11 @@ Enum.TCPClientRequest =
 	GetStatistics : 24,
 
 	CloseClient : 25,
-	CloseServer : 26
+	CloseServer : 26,
+
+	ParseXdccLink : 27
 };
+
 Enum.TangoColor =
 {
 	Butter		: { Light : "fce94f", Middle : "edd400", Dark : "c4a000"},
@@ -90,12 +94,21 @@ function GuidNameUrl(id, guid, name) { return JsonUrl() + id + "&guid=" + guid +
 
 var id_search_count = 1;
 
+var LANG_MONTH = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+var LANG_WEEKDAY = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+
+var Formatter;
+var Helper = new XGHelper();
+
+
 /* ************************************************************************** */
 /* GRID / FORM LOADER                                                         */
 /* ************************************************************************** */
 
 $(function()
 {
+	Formatter = new XGFormatter();
+
 	/* ********************************************************************** */
 	/* SERVER / CHANNEL GRID                                                  */
 	/* ********************************************************************** */
@@ -103,14 +116,12 @@ $(function()
 	jQuery("#servers").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', '', '', '', '', 'Name'],
+		colNames: ['Name', '', '', ''],
 		colModel: [
-			{name:'parent',			index:'parent',			hidden:true},
-			{name:'connected',		index:'connected',		hidden:true},
-			{name:'enabled',		index:'enabled',		hidden:true},
-			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			hidden:true},
-			{name:'name',			index:'name',			width:200,	formatter:FormatServerIcon}
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return !r.isLeaf ? Formatter.formatServerIcon(r) : Formatter.formatChannelIcon(r);}, width:200},
+			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
+			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
 		],
 		onHeaderClick: function(gridstate)
 		{
@@ -157,12 +168,13 @@ $(function()
 				ReloadGrid("servers");
 			}
 		},
+		treeIcons: {leaf:'ui-icon-document-b'},
 		treeGrid: true,
 		treeGridModel: 'adjacency',
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		sortname: 'name',
-		ExpandColumn: 'name',
+		sortname: 'Name',
+		ExpandColumn: 'Name',
 		viewrecords: true,
 		height: 300,
 		sortorder: "asc",
@@ -178,26 +190,27 @@ $(function()
 	jQuery("#bots").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', '', '', '', '', 'Name', '', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', '', 'Slots', '', 'Queue', '', '', ''],
+		cmTemplate:{fixed:true},
+		colNames: ['', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue', '', '', '', '', '', '', '', '', '', ''],
 		colModel: [
-			{name:'parent',			index:'parent',			hidden:true},
-			{name:'connected',		index:'connected',		hidden:true},
-			{name:'enabled',		index:'enabled',		hidden:true},
-			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			width:24,	formatter:FormatBotIcon, fixed:true},
-			{name:'name',			index:'name',			width:370,	formatter:FormatBotName},
-			{name:'botstate',		index:'botstate',		hidden:true},
-			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right", fixed:true},
-			{name:'queueposition',	index:'queueposition',	width:70,	formatter:FormatInteger, align:"right", fixed:true},
-			{name:'queuetime',		index:'queuetime',		width:70,	formatter:FormatTime, align:"right", fixed:true},
-			{name:'speedmax',		index:'speedmax',		width:100,	formatter:FormatBotSpeed, align:"right", fixed:true},
-			{name:'speedcurrent',	index:'speedcurrent',	hidden:true},
-			{name:'slottotal',		index:'slottotal',		width:60,	formatter:FormatBotSlots, align:"right", fixed:true},
-			{name:'slotcurrent',	index:'slotcurrent',	hidden:true},
-			{name:'queuetotal',		index:'queuetotal',		width:60,	formatter:FormatBotQueue, align:"right", fixed:true},
-			{name:'queuecurrent',	index:'queuecurrent',	hidden:true},
-			{name:'lastmessage',	index:'lastmessage',	hidden:true},
-			{name:'lastcontact',	index:'lastcontact',	hidden:true}
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
+			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
+			{name:'QueuePosition',	index:'QueuePosition',	formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : ""; }, width:70, align:"right"},
+			{name:'QueueTime',		index:'QueueTime',		formatter: function(c, o, r) { return Helper.time2Human(r.QueueTime); }, width:70, align:"right"},
+			{name:'SpeedMax',		index:'SpeedMax',		formatter: function(c, o, r) { return Formatter.formatBotSpeed(r); }, width:100, align:"right"},
+			{name:'SlotTotal',		index:'SlotTotal',		formatter: function(c, o, r) { return Formatter.formatBotSlots(r); }, width:60, align:"right"},
+			{name:'QueueTotal',		index:'QueueTotal',		formatter: function(c, o, r) { return Formatter.formatBotQueue(r); }, width:60, align:"right"},
+			{name:'SlotCurrent',	index:'SlotCurrent',	formatter: function(c, o, r) { return r.SlotCurrent; }, hidden:true},
+			{name:'SpeedCurrent',	index:'SpeedCurrent',	formatter: function(c, o, r) { return r.SpeedCurrent; }, hidden:true},
+			{name:'BotState',		index:'BotState',		formatter: function(c, o, r) { return r.BotState; }, hidden:true},
+			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
+			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
+			{name:'LastModified',	index:'LastModified',	formatter: function(c, o, r) { return r.LastModified; }, hidden:true},
+			{name:'QueueCurrent',	index:'QueueCurrent',	formatter: function(c, o, r) { return r.QueueCurrent; }, hidden:true},
+			{name:'LastMessage',	index:'LastMessage',	formatter: function(c, o, r) { return r.LastMessage; }, hidden:true},
+			{name:'LastContact',	index:'LastContact',	formatter: function(c, o, r) { return r.LastContact; }, hidden:true}
 		],
 		onHeaderClick: function(gridstate)
 		{
@@ -211,13 +224,14 @@ $(function()
 				search_active = false;
 				var bot = jQuery('#bots').getRowData(id);
 				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
-				jQuery('#servers').setSelection(bot.parent, false);
+				jQuery('#servers').setSelection(bot.ParentGuid, false);
 			}
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
 		pager: jQuery('#bot-pager'),
-		sortname: 'name',
+		sortname: 'Name',
+		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
 		scrollrows: true,
@@ -234,25 +248,26 @@ $(function()
 	jQuery("#packets").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', '', '', '', '', '', 'Id', 'Name', 'Size', 'Speed', 'Time', '', '', '', '', '', 'Updated'],
+		cmTemplate:{fixed:true},
+		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', '', ''],
 		colModel: [
-			{name:'parent',			index:'parent',			hidden:true},
-			{name:'connected',		index:'connected',		hidden:true},
-			{name:'enabled',		index:'enabled',		hidden:true},
-			{name:'lastmodified',	index:'lastmodified',	hidden:true},
-			{name:'icon',			index:'icon',			width:24,	formatter:FormatPacketIcon, fixed:true},
-			{name:'channelguid',	index:'channelguid',	hidden:true},
-			{name:'id',				index:'id',				width:40,	formatter:FormatPacketId, align:"right", fixed:true},
-			{name:'name',			index:'name',			width:400,	formatter:FormatPacketName},
-			{name:'size',			index:'size',			width:70,	formatter:FormatSize, align:"right", fixed:true},
-			{name:'speed',			index:'speed',			width:70,	formatter:FormatSpeed, align:"right", fixed:true},
-			{name:'time',			index:'time',			width:90,	formatter:FormatTime, align:"right", fixed:true},
-			{name:'sizestart',		index:'sizestart',		hidden:true},
-			{name:'sizestop',		index:'sizestop',		hidden:true},
-			{name:'sizecur',		index:'sizecur',		hidden:true},
-			{name:'checked',		index:'checked',		hidden:true},
-			{name:'order',			index:'order',			hidden:true},
-			{name:'lastupdated',	index:'lastupdated',	width:135, align:"right", fixed:true}
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r) }, width:24},
+			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r) }, width:40, align:"right"},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r) }, width:400, fixed:false},
+			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:70, align:"right"},
+			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
+			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Helper.time2Human(r.TimeMissing); }, width:90, align:"right"},
+			{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"},
+			{name:'ChannelGuid',	index:'ChannelGuid',	formatter: function(c, o, r) { return r.ChannelGuid; }, hidden:true},
+			{name:'StartSize',		index:'StartSize',		formatter: function(c, o, r) { return r.StartSize; }, hidden:true},
+			{name:'StopSize',		index:'StopSize',		formatter: function(c, o, r) { return r.StopSize; }, hidden:true},
+			{name:'CurrentSize',	index:'CurrentSize',	formatter: function(c, o, r) { return r.CurrentSize; }, hidden:true},
+			{name:'IsChecked',		index:'IsChecked',		formatter: function(c, o, r) { return r.IsChecked; }, hidden:true},
+			{name:'Order',			index:'Order',			formatter: function(c, o, r) { return r.Order; }, hidden:true},
+			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
+			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
+			{name:'LastModified',	index:'LastModified',	formatter: function(c, o, r) { return r.LastModified; }, hidden:true}
 		],
 		onHeaderClick: function(gridstate)
 		{
@@ -266,12 +281,8 @@ $(function()
 				var pack = jQuery('#packets').getRowData(id);
 				if(pack)
 				{
-					var bot = jQuery('#bots').getRowData(pack.parent);
-					if(bot)
-					{
-						jQuery('#bots').setSelection(pack.parent, false);
-					}
-					jQuery('#servers').setSelection(pack.channelguid, false);
+					jQuery('#bots').setSelection(pack.ParentGuid, false);
+					jQuery('#servers').setSelection(pack.ChannelGuid, false);
 				}
 			}
 		},
@@ -282,7 +293,7 @@ $(function()
 				var pack = jQuery('#packets').getRowData(id);
 				if(pack)
 				{
-					if(pack.enabled == "false")
+					if(pack.Enabled == "false")
 					{
 						$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
 						setTimeout("RefreshPacket('" + id + "')", 1000);
@@ -295,18 +306,20 @@ $(function()
 				}				
 			}
 		},
-		afterInsertRow: function(rowid, rowdata, rowelem)
+		afterInsertRow: function(id, rowdata)
 		{
-			if(search_active)
+			var pack = jQuery('#packets').getRowData(id);
+			if(search_active && pack)
 			{
-				var color = GetColorByGuid(rowdata.channelguid);
-				jQuery('#packets').setCell(rowid, 'id', '', {'background-color': '#' + color}, '');
+				var color = GetColorByGuid(pack.ChannelGuid);
+				jQuery('#packets').setCell(id, 'Id', '', {'background-color': '#' + color}, '');
 			}
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
 		pager: jQuery('#packet-pager'),
-		sortname: 'id',
+		sortname: 'Id',
+		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
 		height: 300,
@@ -324,8 +337,8 @@ $(function()
 		datatype: "local",
 		colNames: ['', 'Search'],
 		colModel: [
-			{name:'id',		index:'id',		width:24, formatter:FormatSearchIcon},
-			{name:'name',	index:'name',	width:174}
+			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:24},
+			{name:'Name',	index:'Name',	width:174}
 		],
 		onHeaderClick: function(gridstate)
 		{
@@ -351,16 +364,16 @@ $(function()
 						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketTime, "0-604800000");
 						break;
 					case "3":
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBotActiveDownloads, data.name);
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketActiveDownloads, data.name);
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBotActiveDownloads, data.Name);
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketActiveDownloads, data.Name);
 						break;
 					case "4":
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBotsEnabled, data.name);
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketsEnabled, data.name);
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBotsEnabled, data.Name);
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketsEnabled, data.Name);
 						break;
 					default:
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.name);
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.name);
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name);
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name);
 						break;
 				}
 
@@ -384,7 +397,7 @@ $(function()
 					return;
 				}
 				var data = jQuery('#searches').getRowData(id);
-				$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.name));
+				$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
 				jQuery('#searches').delRowData(id);
 			}
 		},
@@ -399,10 +412,10 @@ $(function()
 	jQuery("#searches").setGridState($.cookie('xg.searches'));
 
 	var mydata = [
-		{id:"1", name:"ODay Packets"},
-		{id:"2", name:"OWeek Packets"},
-		{id:"3", name:"Downloads"},
-		{id:"4", name:"Enabled Packets"}
+		{Id:"1", Name:"ODay Packets"},
+		{Id:"2", Name:"OWeek Packets"},
+		{Id:"3", Name:"Downloads"},
+		{Id:"4", Name:"Enabled Packets"}
 	];
 	for(var i=0; i<=mydata.length; i++)
 	{
@@ -581,7 +594,7 @@ function AddNewSearch()
 
 function AddSearch(search)
 {
-	var datarow = {id:id_search_count, name:search};
+	var datarow = {Id:id_search_count, Name:search};
 	jQuery("#searches").addRowData(id_search_count, datarow);
 	id_search_count++;
 }
@@ -644,8 +657,7 @@ function GetColor(id)
 
 function ButtonConnectClicked(dialog)
 {
-	var bValid = true;
-	bValid = CheckPassword($("#password").val());
+	var bValid = CheckPassword($("#password").val());
 
 	if (bValid)
 	{
@@ -656,8 +668,8 @@ function ButtonConnectClicked(dialog)
 		// Get searches
 		$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSearches,
 			function(result) {
-				$.each(result.searches, function(i, item) {
-					AddSearch(item.search);
+				$.each(result.Searches, function(i, item) {
+					AddSearch(item.Search);
 				});
 			}
 		);
@@ -737,7 +749,7 @@ function CheckPassword(password)
 		url: JsonUrl(password) + Enum.TCPClientRequest.Version,
 		success: function(result)
 		{
-			res = result != "" ? true : false;
+			res = !!(result != "");
 		},
 		async: false
 	});
@@ -760,29 +772,27 @@ function ReloadGrid(grid, url)
 function RefreshGrid(count)
 {
 	// connected things every 2,5 seconds, waiting just every 25 seconds
-	var mod = count % 10 == 0 ? true : false;
+	var mod = !!(count % 10 == 0);
 
 	// refresh bot grid
 	var ids = jQuery("#bots").getDataIDs();
 	for (var i = 0; i < ids.length; i++)
 	{
-		var id = ids[i];
-		var data = jQuery("#bots").getRowData(id);
-		if(data.botstate == "Active" || (mod && data.enabled == "Waiting"))
+		var bot = jQuery("#bots").getRowData(ids[i]);
+		if(bot.BotState == "Active" || (mod && bot.BotState == "Waiting"))
 		{
-			RefreshBot(id);
+			RefreshBot(ids[i]);
 		}
 	}
 
 	// refresh packet grid
-	var ids = jQuery("#packets").getDataIDs();
-	for (var i = 0; i < ids.length; i++)
+	ids = jQuery("#packets").getDataIDs();
+	for (i = 0; i < ids.length; i++)
 	{
-		var id = ids[i];
-		var data = jQuery("#packets").getRowData(id);
-		if(data.connected == "true" || (mod && data.enabled == "true"))
+		var pack = jQuery("#packets").getRowData(ids[i]);
+		if(pack.Connected == "true" || (mod && pack.Enabled == "true"))
 		{
-			RefreshPacket(id);
+			RefreshPacket(ids[i]);
 		}
 	}
 
@@ -794,15 +804,7 @@ function RefreshServer(guid)
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
-			var data = new Array();
-			data['parent'] = result.cell[0];
-			data['connected'] = result.cell[1];
-			data['enabled'] = result.cell[2];
-			data['lastmodified'] = result.cell[3];
-			data['icon'] = "";
-			data['name'] = result.cell[5];
-			var check = jQuery("#servers").setRowData(result.id, data);
-			return;
+			jQuery("#servers").setRowData(result.id, result.cell);
 		}
 	);
 }
@@ -812,27 +814,7 @@ function RefreshBot(guid)
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
-			var data = new Array();
-			data['parent'] = result.cell[0];
-			data['connected'] = result.cell[1];
-			data['enabled'] = result.cell[2];
-			data['lastmodified'] = result.cell[3];
-			data['icon'] = "";
-			data['name'] = result.cell[5];
-			data['botstate'] = result.cell[6];
-			data['speed'] = result.cell[7];
-			data['queueposition'] = result.cell[8];
-			data['queuetime'] = result.cell[9];
-			data['speedmax'] = result.cell[10];
-			data['speedcurrent'] = result.cell[11];
-			data['slottotal'] = result.cell[12];
-			data['slotcurrent'] = result.cell[13];
-			data['queuetotal'] = result.cell[14];
-			data['queuecurrent'] = result.cell[15];
-			data['lastmessage'] = result.cell[16];
-			data['lastcontact'] = result.cell[17];
-			var check = jQuery("#bots").setRowData(result.id, data);
-			return;
+			jQuery("#bots").setRowData(result.id, result.cell);
 		}
 	);
 }
@@ -842,26 +824,7 @@ function RefreshPacket(guid)
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
-			var data = new Array();
-			data['parent'] = result.cell[0];
-			data['connected'] = result.cell[1];
-			data['enabled'] = result.cell[2];
-			data['lastmodified'] = result.cell[3];
-			data['icon'] = "";
-			data['channelguid'] = result.cell[5];
-			data['id'] = result.cell[6];
-			data['name'] = result.cell[7];
-			data['size'] = result.cell[8];
-			data['speed'] = result.cell[9];
-			data['time'] = result.cell[10];
-			data['sizestart'] = result.cell[11];
-			data['sizestop'] = result.cell[12];
-			data['sizecur'] = result.cell[13];
-			data['checked'] = result.cell[14];
-			data['order'] = result.cell[15];
-			data['lastupdated'] = result.cell[16];
-			var check = jQuery("#packets").setRowData(result.id, data);
-			return;
+			jQuery("#packets").setRowData(result.id, result.cell);
 		}
 	);
 }
@@ -871,7 +834,7 @@ function RefreshStatistic()
 	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetStatistics,
 		function(result)
 		{
-			$("#BytesLoaded").html(Size2Human(result.BytesLoaded));
+			$("#BytesLoaded").html(Helper.size2Human(result.BytesLoaded));
 
 			$("#PacketsCompleted").html(result.PacketsCompleted);
 			$("#PacketsIncompleted").html(result.PacketsIncompleted);
@@ -895,11 +858,9 @@ function RefreshStatistic()
 			$("#BotConnectsOk").html(result.BotConnectsOk);
 			$("#BotConnectsFailed").html(result.BotConnectsFailed);
 
-			$("#SpeedMax").html(Speed2Human(result.SpeedMax));
-			$("#SpeedMin").html(Speed2Human(result.SpeedMin));
-			$("#SpeedAvg").html(Speed2Human(result.SpeedAvg));
-
-			return;
+			$("#SpeedMax").html(Helper.speed2Human(result.SpeedMax));
+			$("#SpeedMin").html(Helper.speed2Human(result.SpeedMin));
+			$("#SpeedAvg").html(Helper.speed2Human(result.SpeedAvg));
 		}
 	);
 
@@ -907,358 +868,8 @@ function RefreshStatistic()
 }
 
 /* ************************************************************************** */
-/* OBJECT / ARRAY HELPER                                                      */
-/* ************************************************************************** */
-
-function Array2Packet(array)
-{
-	var data = new Object();
-	data.parent = array[0];
-	data.connected = array[1];
-	data.enabled = array[2];
-	data.lastmodified = array[3];
-	data.icon = "";
-	data.channelguid = array[5];
-	data.id = array[6];
-	data.name = array[7];
-	data.size = array[8];
-	data.speed = array[9];
-	data.time = array[10];
-	data.sizestart = array[11];
-	data.sizestop = array[12];
-	data.sizecur = array[13];
-	data.checked = array[14];
-	data.order = array[15];
-	data.lastupdated = array[16];
-	return data;
-}
-
-function Array2Bot(array)
-{
-	var data = new Object();
-	data.parent = array[0];
-	data.connected = array[1];
-	data.enabled = array[2];
-	data.lastmodified = array[3];
-	data.icon = "";
-	data.name = array[5];
-	data.botstate = array[6];
-	data.speed = array[7];
-	data.queueposition = array[8];
-	data.queuetime = array[9];
-	data.speedmax = array[10];
-	data.speedcurrent = array[11];
-	data.slottotal = array[12];
-	data.slotcurrent = array[13];
-	data.queuetotal = array[14];
-	data.queuecurrent = array[15];
-	data.lastmessage = array[16];
-	data.lastcontact = array[17];
-	return data;
-}
-
-/* ************************************************************************** */
-/* SERVER FORMATER                                                            */
-/* ************************************************************************** */
-
-function FormatServerIcon(cellvalue, options, rowObject)
-{
-	var str = "";
-
-	if(rowObject[6] == 0) { str += "Server"; }
-	else { str += "Channel"; }
-
-	if(!rowObject[2]) { str += "Disabled"; }
-	else if(rowObject[1]) { str += "Connected"; }
-
-	return FormatIcon2(str) + " " + rowObject[5];
-}
-
-/* ************************************************************************** */
-/* SEARCH FORMATER                                                            */
-/* ************************************************************************** */
-
-function FormatSearchIcon(cellvalue, options, rowObject)
-{
-	var str = "";
-	switch(cellvalue)
-	{
-		case "1": str = "ODay"; break;
-		case "2": str = "OWeek"; break;
-		case "3": str = "BotDL0"; break;
-		case "4": str = "Ok"; break;
-		default: str = "Search"; break;
-	}
-	return FormatIcon2(str);
-}
-
-/* ************************************************************************** */
-/* BOT FORMATER                                                               */
-/* ************************************************************************** */
-
-function FormatBotIcon(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Bot(rowObject); }
-
-	var str = "Bot";
-
-	if(!rowObject.connected) { str += "Off"; }
-	else
-	{
-		switch(rowObject.botstate)
-		{
-			case "Idle": 
-				if(rowObject.speedcurrent > 0)
-				{
-					if(rowObject.slotcurrent > 0) str += "Free";
-					else if(rowObject.slotcurrent == 0) str += "Full";
-				}
-				break;
-			case "Active":
-				str += Speed2Image(rowObject.speed); break;
-			case "Waiting":
-				str += "Queued"; break;
-		}
-	}
-
-	return FormatIcon2(str);
-}
-
-function FormatBotName(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Bot(rowObject); }
-
-	var ret = "";
-	ret += cellvalue;
-	if(/*rowObject.botstate != "Idle" &&*/ rowObject.lastmessage != "")
-	{
-		ret += "<br /><small><b>" + rowObject.lastcontact + ":</b> " + rowObject.lastmessage + "</small>";
-	}
-	return ret;
-}
-
-function FormatBotSpeed(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Bot(rowObject); }
-
-	var ret = "";
-	ret += rowObject.speedcurrent;
-	ret += " / ";
-	ret += rowObject.speedmax;
-	return ret;
-}
-
-function FormatBotSlots(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Bot(rowObject); }
-
-	var ret = "";
-	ret += rowObject.slotcurrent;
-	ret += " / ";
-	ret += rowObject.slottotal;
-	return ret;
-}
-
-function FormatBotQueue(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Bot(rowObject); }
-
-	var ret = "";
-	ret += rowObject.queuecurrent;
-	ret += " / ";
-	ret += rowObject.queuetotal;
-	return ret;
-}
-
-/* ************************************************************************** */
-/* PACKET FORMATER                                                            */
-/* ************************************************************************** */
-
-function FormatPacketIcon(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Packet(rowObject); }
-
-	var str = "Packet";
-
-	if(!rowObject.enabled) { str += "Disabled"; }
-	else
-	{
-		if(rowObject.connected) { str += Speed2Image(rowObject.speed); }
-		else if (rowObject.order == 1) { str += "Queued"; }
-		else { str += "New"; }
-	}
-
-	return FormatIcon2(str);
-}
-
-function FormatPacketId(cellvalue, options, rowObject)
-{
-	return "#" + cellvalue;
-}
-
-function FormatPacketName(cellvalue, options, rowObject)
-{
-	if(rowObject[0] != undefined) { rowObject = Array2Packet(rowObject); }
-
-	var ext = cellvalue.toLowerCase().substr(-3);
-	var ret = "";
-	if(ext == "avi" || ext == "wmv" || ext == "mkv")
-	{
-		ret += FormatIcon("ExtVideo") + "&nbsp;&nbsp;";
-	}
-	else if(ext == "mp3")
-	{
-		ret += FormatIcon("ExtAudio") + "&nbsp;&nbsp;";
-	}
-	else if(ext == "rar" || ext == "tar" || ext == "zip")
-	{
-		ret += FormatIcon("ExtCompressed") + "&nbsp;&nbsp;";
-	}
-	else
-	{
-		ret += FormatIcon("ExtDefault") + "&nbsp;&nbsp;";
-	}
-
-	if(cellvalue.toLowerCase().indexOf("german") > -1)
-	{
-		ret += FormatIcon("LanguageDe") + "&nbsp;&nbsp;";
-	}
-	/*else
-	{
-		ret += FormatIcon("LanguageNone") + "&nbsp;&nbsp;";
-	}*/
-
-	ret += cellvalue;
-
-	if(rowObject.connected)
-	{
-		ret += "<br />";
-
-		var a = ((rowObject.sizestart) / rowObject.size).toFixed(2) * 100;
-		var b = ((rowObject.sizecur - rowObject.sizestart) / rowObject.size).toFixed(2) * 100;
-		var c = ((rowObject.sizestop - rowObject.sizecur) / rowObject.size).toFixed(2) * 100;
-		if(a + b + c > 100)
-		{
-			c = 100 - a - b;
-		}
-		// Enum.TangoColor.SkyBlue.Middle
-		ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-widget-content ui-corner-all' style='height:3px'>" +
-					"<div style='width: " + a + "%;float:left' class='ui-progressbar-value ui-corner-left'></div>" +
-					"<div style='width: " + b + "%;float:left;background:#" + (rowObject.checked ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
-					"<div style='width: " + c + "%;float:left;background:#" + (rowObject.checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
-				"</div><div class='clear'></div>";
-	}
-
-	return ret;
-}
-
-/* ************************************************************************** */
-/* GLOBAL FORMATER                                                            */
-/* ************************************************************************** */
-
-function FormatIcon(img)
-{
-	return "<img src='image&" + img + "' />";
-}
-
-function FormatIcon2(img)
-{
-	return "<div style='background-image:url(image&" + img + ");width:22px;height:22px;float:left;'></div>";
-}
-
-function FormatSize(cellvalue, options, rowObject)
-{
-	return Size2Human(cellvalue);
-}
-
-function FormatTime(cellvalue, options, rowObject)
-{
-	return Time2Human(cellvalue);
-}
-
-function FormatSpeed(cellvalue, options, rowObject)
-{
-	return Speed2Human(cellvalue);
-}
-
-function FormatInteger(cellvalue, options, rowObject)
-{
-	return cellvalue > 0 ? cellvalue : "";
-}
-
-/* ************************************************************************** */
 /* HELPER                                                                     */
 /* ************************************************************************** */
-
-function Size2Human(size)
-{
-	if (size == 0) { return ""; }
-	if (size < 1024) { return size + " B"; }
-	else if (size < 1024 * 1024) { return (size / 1024).toFixed(2) + " KB"; }
-	else if (size < 1024 * 1024 * 1024) { return (size / (1024 * 1024)).toFixed(2) + " MB"; }
-	else { return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB"; }
-}
-
-function Speed2Image(speed)
-{
-	if (speed < 1024 * 125) { return "DL0"; }
-	else if (speed < 1024 * 250) { return "DL1"; }
-	else if (speed < 1024 * 500) { return "DL2"; }
-	else if (speed < 1024 * 750) { return "DL3"; }
-	else if (speed < 1024 * 1000) { return "DL4"; }
-	else { return "DL5"; }
-}
-
-function Speed2Human(speed)
-{
-	if (speed == 0) { return ""; }
-	if (speed < 1024) { return speed + " B"; }
-	else if (speed < 1024 * 1024) { return (speed / 1024).toFixed(2) + " KB"; }
-	else { return (speed / (1024 * 1024)).toFixed(2) + " MB"; }
-}
-
-function Time2Human(time)
-{
-	var str = "";
-	if(time < 0 || time >= 106751991167300 || time == "106751991167300") { return str; }
-
-	var buff = 0;
-
-	if (time > 86400)
-	{
-		buff = Math.floor(time / 86400);
-		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
-
-		time -= buff * 86400;
-	}
-	else if (str != "") { str += "00:"; }
-
-	if (time > 3600)
-	{
-		buff = Math.floor(time / 3600);
-		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
-		time -= buff * 3600;
-	}
-	else if (str != "") { str += "00:"; }
-
-	if (time > 60)
-	{
-		buff = Math.floor(time / 60);
-		str += (buff >= 10 ? "" + buff : "0" + buff) + ":";
-		time -= buff * 60;
-	}
-	else if (str != "") { str += "00:"; }
-
-	if (time > 0)
-	{
-		buff = time;
-		str += (buff >= 10 ? "" + buff : "0" + buff);
-		time -= buff;
-	}
-	else if (str != "") { str += "00"; }
-
-	return str;
-}
 
 function Resize()
 {

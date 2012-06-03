@@ -28,6 +28,9 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.jqGrid.min.js" resource_id="XG.Client.Web.Resources.js.jquery.jqGrid.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.min.js" resource_id="XG.Client.Web.Resources.js.jquery.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery-ui.min.js" resource_id="XG.Client.Web.Resources.js.jquery-ui.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.class.js" resource_id="XG.Client.Web.Resources.js.jquery.class.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.formatter.js" resource_id="XG.Client.Web.Resources.js.xg.formatter.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.helper.js" resource_id="XG.Client.Web.Resources.js.xg.helper.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.js" resource_id="XG.Client.Web.Resources.js.xg.js" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-bg.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-bg.js" />

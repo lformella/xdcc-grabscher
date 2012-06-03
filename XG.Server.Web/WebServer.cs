@@ -350,6 +350,58 @@ namespace XG.Server.Web
 
 						#endregion
 
+						# region XDCC Link
+
+						case TCPClientRequest.ParseXdccLink:
+							//xdcc://irc.1andallirc.net/irc.1andallirc.net/#cosmic/{CoSmIc-Mp3Z}-{21667}/#6/Asking_Alexandria-Stepped_Up_And_Scratched-2011-MTD.rar/
+							string[] link = tDic["xdcc"].Split('/');
+							string serverName = link[0];
+							string channelName = link[2];
+							string botName = link[3];
+							int packetId = int.Parse(link[4].Substring(1));
+
+							// checking server
+							XGServer serv = this.myRunner.RootObject[serverName];
+							if(serv == null)
+							{
+								this.myRunner.RootObject.AddServer(serverName);
+								serv = this.myRunner.RootObject[serverName];
+							}
+							serv.Enabled = true;
+
+							// checking channel
+							XGChannel chan = serv[channelName];
+							if(chan == null)
+							{
+								serv.AddChannel(channelName);
+								chan = serv[channelName];
+							}
+							chan.Enabled = true;
+
+							// checking bot
+							XGBot bot = chan[botName];
+							if(bot == null)
+							{
+								bot = new XGBot();
+								bot.Name = botName;
+								chan.AddBot(bot);
+							}
+
+							// checking packet
+							XGPacket pack = bot[packetId];
+							if(pack == null)
+							{
+								pack = new XGPacket();
+								pack.Id = packetId;
+								bot.addPacket(pack);
+							}
+							pack.Enabled = true;
+
+							this.WriteToStream(client.Response, "");
+							break;
+
+						#endregion
+
 						default:
 							this.WriteToStream(client.Response, "");
 							break;
@@ -438,19 +490,30 @@ namespace XG.Server.Web
 
 			StringBuilder sb = new StringBuilder();
 			bool first = true;
-			if (aPage != "" && aRows != "") { sb.Append("{\"page\":\"" + page + "\",\"total\":\"" + Math.Ceiling((double)aList.Count / (double)rows).ToString() + "\",\"records\":\"" + aList.Count + "\",\"rows\":[\n"); }
+			if (aPage != "" && aRows != "")
+			{
+				sb.Append("{");
+				sb.Append("\"page\":\"" + page + "\",");
+				sb.Append("\"total\":\"" + Math.Ceiling((double)aList.Count / (double)rows).ToString() + "\",");
+				sb.Append("\"records\":\"" + aList.Count + "\",");
+				sb.Append("\"rows\":[");
+			}
 			foreach (XGObject tObj in aList)
 			{
 				if (count >= (page - 1) * rows && count < page * rows)
 				{
-					if (first) { first = false; sb.Append("\t"); }
+					if (first) { first = false; sb.Append(""); }
 					else { sb.Append(", "); }
 					sb.Append(this.Object2Json(tObj));
 				}
 				count++;
 			}
-			if (aPage != "" && aRows != "") { sb.Append("]\n}\n"); }
+			if (aPage != "" && aRows != "")
+			{
+				sb.Append("]}");
+			}
 
+			aResponse.ContentType = "text/json";
 			this.WriteToStream(aResponse, sb.ToString());
 		}
 
@@ -474,19 +537,19 @@ namespace XG.Server.Web
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.Append("{\n");
-			sb.Append("\t\"searches\":[\n");
+			sb.Append("{");
+			sb.Append("\"Searches\":[");
 
 			int count = 0;
 			foreach (string str in aData)
 			{
 				count++;
-				sb.Append("\t\t{\"search\": \"" + this.ClearString(str) + "\"}");
+				sb.Append("{\"Search\": \"" + this.ClearString(str) + "\"}");
 				if(count < aData.Count) { sb.Append(","); }
-				sb.Append("\n");
+				sb.Append("");
 			}
 
-			sb.Append("\t]\n}");
+			sb.Append("]}");
 
 			return sb.ToString();
 		}
@@ -495,78 +558,72 @@ namespace XG.Server.Web
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.Append("{\n");
-			sb.Append("\t\t\"id\":\"" + aObject.Guid.ToString() + "\",\n");
-			sb.Append("\t\t\"cell\":[\n");
+			sb.Append("{");
+			sb.Append("\"id\":\"" + aObject.Guid.ToString() + "\",");
+			sb.Append("\"cell\":{");
 
-			sb.Append("\t\t\t\"" + aObject.ParentGuid.ToString() + "\",\n");													//0
-			sb.Append("\t\t\t" + aObject.Connected.ToString().ToLower() + ",\n");												//1
-			sb.Append("\t\t\t" + aObject.Enabled.ToString().ToLower() + ",\n");													//2
-			sb.Append("\t\t\t\"" + aObject.LastModified + "\",\n");																//3
-			sb.Append("\t\t\t\"\",\n");	// used for icon																		//4
+			sb.Append("\"ParentGuid\":\"" + aObject.ParentGuid.ToString() + "\",");
+			sb.Append("\"Connected\":\"" + aObject.Connected.ToString().ToLower() + "\",");
+			sb.Append("\"Enabled\":\"" + aObject.Enabled.ToString().ToLower() + "\",");
+			sb.Append("\"LastModified\":\"" + aObject.LastModified + "\",");
 
-			if (aObject.GetType() == typeof(XGPacket))
+			if (aObject.GetType() == typeof(XGServer))
+			{
+				XGServer tServ = (XGServer)aObject;
+
+				sb.Append("\"Name\":\"" + aObject.Name + ":" + tServ.Port + "\",");
+				sb.Append("\"level\":0,");
+				sb.Append("\"parent\":0,");
+				sb.Append("\"isLeaf\":false,");
+				sb.Append("\"loaded\":true");
+			}
+			else if (aObject.GetType() == typeof(XGChannel))
+			{
+				sb.Append("\"Name\":\"" + aObject.Name + "\",");
+				sb.Append("\"level\":1,");
+				sb.Append("\"parent\":\"" + aObject.ParentGuid + "\",");
+				sb.Append("\"isLeaf\":true,");
+				sb.Append("\"loaded\":true");
+			}
+			else if (aObject.GetType() == typeof(XGBot))
+			{
+				XGBot tBot = (XGBot)aObject;
+				XGFilePart tPart = this.myRunner.GetFilePart4Bot(tBot);
+
+				sb.Append("\"Name\":\"" + this.ClearString(aObject.Name) + "\",");
+				sb.Append("\"BotState\":\"" + tBot.BotState + "\",");
+				sb.Append("\"Speed\":\"" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + "\",");
+				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
+				sb.Append("\"QueueTime\":\"" + tBot.QueueTime + "\",");
+				sb.Append("\"InfoSpeedMax\":\"" + tBot.InfoSpeedMax.ToString().Replace(',', '.') + "\",");
+				sb.Append("\"InfoSpeedCurrent\":\"" + tBot.InfoSpeedCurrent.ToString().Replace(',', '.') + "\",");
+				sb.Append("\"InfoSlotTotal\":" + tBot.InfoSlotTotal + ",");
+				sb.Append("\"InfoSlotCurrent\":" + tBot.InfoSlotCurrent + ",");
+				sb.Append("\"InfoQueueTotal\":" + tBot.InfoQueueTotal + ",");
+				sb.Append("\"InfoQueueCurrent\":" + tBot.InfoQueueCurrent + ",");
+				sb.Append("\"LastMessage\":\"" + this.ClearString(tBot.LastMessage) + "\",");
+				sb.Append("\"LastContact\":\"" + tBot.LastContact + "\"");
+			}
+			else if (aObject.GetType() == typeof(XGPacket))
 			{
 				XGPacket tPack = (XGPacket)aObject;
 				XGFilePart tPart = this.myRunner.GetFilePart4Packet(tPack);
 
-				sb.Append("\t\t\t\"" + tPack.Parent.Parent.Guid + "\",\n");														//5
-				sb.Append("\t\t\t" + tPack.Id + ",\n");																			//6
-				sb.Append("\t\t\t\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",\n");			//7
-				sb.Append("\t\t\t" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",\n");								//8
-				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",\n");			//9
-				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.TimeMissing.ToString()) + ",\n");								//10
-				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.StartSize.ToString()) + ",\n");								//11
-				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",\n");								//12
-				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",\n");								//13
-				sb.Append("\t\t\t" + (tPart == null ? "0" : tPart.IsChecked ? "1" : "0") + ",\n");								//14
-				sb.Append("\t\t\t" + (tPack.Parent.getOldestActivePacket() != tPack ? "0" : "1") + ",\n");						//15
-				sb.Append("\t\t\t\"" + tPack.LastUpdated + "\"\n");																//16
-			}
-			else
-			{
-				if (aObject.GetType() == typeof(XGServer))
-				{
-					XGServer tServ = (XGServer)aObject;
-
-					sb.Append("\t\t\t\"" + aObject.Name + ":" + tServ.Port + "\",\n");											//5
-					sb.Append("\t\t\t0,\n");																					//6	
-					sb.Append("\t\t\t0,\n");																					//7			
-					sb.Append("\t\t\t" + (aObject.Children.Length > 0 ? "false" : " true") + ",\n");							//8	
-					sb.Append("\t\t\ttrue\n");																					//9	
-				}
-
-				if (aObject.GetType() == typeof(XGChannel))
-				{
-					sb.Append("\t\t\t\"" + aObject.Name + "\",\n");																//5
-					sb.Append("\t\t\t1,\n");																					//6
-					sb.Append("\t\t\t\"" + aObject.ParentGuid + "\",\n");														//7
-					sb.Append("\t\t\ttrue,\n");																					//8
-					sb.Append("\t\t\ttrue\n");																					//9
-				}
-
-				if (aObject.GetType() == typeof(XGBot))
-				{
-					XGBot tBot = (XGBot)aObject;
-					XGFilePart tPart = this.myRunner.GetFilePart4Bot(tBot);
-
-					sb.Append("\t\t\t\"" + this.ClearString(aObject.Name) + "\",\n");											//5
-					sb.Append("\t\t\t\"" + tBot.BotState + "\",\n");															//6
-					sb.Append("\t\t\t\"" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + "\",\n");	//7
-					sb.Append("\t\t\t" + tBot.QueuePosition + ",\n");															//8
-					sb.Append("\t\t\t\"" + tBot.QueueTime + "\",\n");															//9
-					sb.Append("\t\t\t" + tBot.InfoSpeedMax + ",\n");															//10
-					sb.Append("\t\t\t" + tBot.InfoSpeedCurrent + ",\n");														//11
-					sb.Append("\t\t\t" + tBot.InfoSlotTotal + ",\n");															//12
-					sb.Append("\t\t\t" + tBot.InfoSlotCurrent + ",\n");															//13
-					sb.Append("\t\t\t" + tBot.InfoQueueTotal + ",\n");															//14
-					sb.Append("\t\t\t" + tBot.InfoQueueCurrent + ",\n");														//15
-					sb.Append("\t\t\t\"" + this.ClearString(tBot.LastMessage) + "\",\n");										//16
-					sb.Append("\t\t\t\"" + tBot.LastContact + "\"\n");															//17	
-				}
+				sb.Append("\"ChannelGuid\":\"" + tPack.Parent.Parent.Guid + "\",");
+				sb.Append("\"Id\":" + tPack.Id + ",");
+				sb.Append("\"Name\":\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
+				sb.Append("\"Size\":" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",");
+				sb.Append("\"Speed\":" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",");
+				sb.Append("\"TimeMissing\":" + (tPart == null ? "0" : tPart.TimeMissing.ToString()) + ",");
+				sb.Append("\"StartSize\":" + (tPart == null ? "0" : tPart.StartSize.ToString()) + ",");
+				sb.Append("\"StopSize\":" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",");
+				sb.Append("\"CurrentSize\":" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",");
+				sb.Append("\"IsChecked\":" + (tPart == null ? "0" : tPart.IsChecked ? "1" : "0") + ",");
+				sb.Append("\"Order\":" + (tPack.Parent.getOldestActivePacket() != tPack ? "0" : "1") + ",");
+				sb.Append("\"LastUpdated\":\"" + tPack.LastUpdated + "\"");
 			}
 
-			sb.Append("\t\t]\n\t}");
+			sb.Append("}}");
 
 			return sb.ToString();
 		}
@@ -574,7 +631,7 @@ namespace XG.Server.Web
 		private string Statistic2Json()
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.Append("{\n");
+			sb.Append("{");
 
 			List<StatisticType> types = new List<StatisticType>();
 			// uncool, but works
@@ -588,9 +645,9 @@ namespace XG.Server.Web
 			{
 				count++;
 				double val = Statistic.Instance.Get(type);
-				sb.Append ("\t\"" + type + "\":" + val.ToString().Replace(",", "."));
+				sb.Append ("\"" + type + "\":" + val.ToString().Replace(",", "."));
 				if (count < types.Count) { sb.Append(","); }
-				sb.Append("\n");
+				sb.Append("");
 			}
 
 			sb.Append("}");
