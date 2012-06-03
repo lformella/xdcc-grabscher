@@ -58,9 +58,9 @@ var XGHelper = Class.create(
 		}
 		else if (speed < 1024 * 1024)
 		{
-			return (speed / 1024).toFixed(2) + " KB";
+			return (speed > 100 * 1024 ? (speed / 1024).toFixed(1) : (speed / 1024).toFixed(2)) + " KB";
 		}
-		return (speed / (1024 * 1024)).toFixed(2) + " MB";
+		return (speed > 100 * 1024 * 1024 ? (speed / (1024 * 1024)).toFixed(1) : (speed / (1024 * 1024)).toFixed(2)) + " MB";
 	},
 
 	/**
