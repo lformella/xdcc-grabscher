@@ -49,7 +49,7 @@
 	</head>
 
 	<body>
-		<div id="dialog_password" title="Password required">
+		<div id="dialog_password" title="Password required" style="display: none;">
 			<p id="password_tip">Please enter the password for this webfrontend.</p>
 			<form onsubmit="return false;">
 				<fieldset>
@@ -59,7 +59,7 @@
 			</form>
 		</div>
 
-		<div id="dialog_server" title="Insert new server">
+		<div id="dialog_server" title="Insert new server" style="display: none;">
 			<p id="server_tip">Please insert the new server name.</p>
 			<form>
 				<fieldset>
@@ -69,7 +69,7 @@
 			</form>
 		</div>
 
-		<div id="dialog_channel" title="Insert new channel">
+		<div id="dialog_channel" title="Insert new channel" style="display: none;">
 			<p id="channel_tip">Please insert the new channel name.</p>
 			<form>
 				<fieldset>
@@ -79,11 +79,11 @@
 			</form>
 		</div>
 
-		<div id="dialog_delete" title="Really delete">
+		<div id="dialog_delete" title="Really delete" style="display: none;">
 			<p id="delete_tip">Do you really want to delete the item you selected?</p>
 		</div>
 
-		<div id="tabs">
+		<div id="tabs" style="display: none;">
 			<ul>
 				<li><a id="tab-1" href="#tabs-1">IRC View</a></li>
 				<li><a id="tab-2" href="#tabs-2">Statistics</a></li>
@@ -157,7 +157,7 @@
 			</div>
 			<div id="tabs-3">
 
-                <label for="xg_bitpir_at-search"><img class="icon left" src="images/Search.png"/> Search for: </label>
+                <label for="xg_bitpir_at-search"><img class="icon left" src="image&Search"/> Search for: </label>
                 <input type="text" name="xg_bitpir_at-search" id="xg_bitpir_at-search-input" class="input form-field" value="" size="100" tabindex="10"/>
 
                 <table id="xg_bitpir_at"></table>
