@@ -103,7 +103,11 @@ namespace XG.Server
 				catch (SocketException ex)
 				{
 					this.errorCode = (SocketErrorCode)ex.ErrorCode;
-					myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + ((SocketErrorCode)ex.ErrorCode), ex);
+					myLog.Error("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + ((SocketErrorCode)ex.ErrorCode), ex);
+				}
+				catch (Exception ex)
+				{
+					myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ")", ex);
 				}
 
 				if (this.myIsConnected)
