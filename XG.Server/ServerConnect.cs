@@ -1666,22 +1666,7 @@ namespace XG.Server
 			XGChannel tChan = aObj as XGChannel;
 
 			if (tChan.Enabled) { this.JoinChannel(tChan); }
-			else
-			{
-				bool exit = true;
-				foreach (XGChannel chan in myServer.Children)
-				{
-					if (chan.Enabled)
-					{
-						exit = false;
-						break;
-					}
-				}
-				// just part the channel
-				if (!exit) { this.PartChannel(tChan); }
-				// nothing left, so we can disconnect
-				else { this.Disconnect(); }
-			}
+			else { this.PartChannel(tChan); }
 		}
 
 		private void packet_ObjectStateChangedEventHandler(XGObject aObj)
