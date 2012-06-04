@@ -75,7 +75,7 @@ namespace XG.Core
 		SearchBotActiveDownloads = 14,
 		SearchBotsEnabled = 15,
 
-		GetServersChannels = 16,
+		GetServers = 16,
 		GetActivePackets = 17,
 		GetFiles = 18,
 		GetObject = 19,

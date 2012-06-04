@@ -789,16 +789,12 @@ namespace XG.Server
 
 		#region GET
 
-		public List<XGObject> GetServersChannels()
+		public List<XGObject> GetServers()
 		{
 			List<XGObject> tList = new List<XGObject>();
 			foreach (XGServer tServ in this.myRootObject.Children)
 			{
 				tList.Add(tServ);
-				foreach (XGChannel tChan in tServ.Children)
-				{
-					tList.Add(tChan);
-				}
 			}
 			return tList;
 		}

@@ -319,8 +319,8 @@ namespace XG.Server.Web
 							this.WriteToStream(client.Response, this.myRunner.GetObject(new Guid(tDic["guid"])));
 							break;
 
-						case TCPClientRequest.GetServersChannels:
-							list = this.myRunner.GetServersChannels();
+						case TCPClientRequest.GetServers:
+							list = this.myRunner.GetServers();
 							break;
 
 						case TCPClientRequest.GetActivePackets:
