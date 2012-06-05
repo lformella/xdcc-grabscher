@@ -473,7 +473,7 @@ namespace XG.Server.Backend.MySql
 			{
 				foreach (KeyValuePair<string, object> kcp in aDic)
 				{
-					aSql.Replace ("@" + kcp.Key, "" + kcp.Value);
+					aSql = aSql.Replace ("@" + kcp.Key, "" + kcp.Value);
 				}
 			}
 			return aSql;
