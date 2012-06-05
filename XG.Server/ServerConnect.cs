@@ -125,7 +125,11 @@ namespace XG.Server
 		public void Disconnect()
 		{
 			this.SendData("QUIT : thank you for using (XG) XdccGrabscher");
-			this.myCon.Disconnect();
+			// sometimes we dont have a connection
+			if(this.myCon != null)
+			{
+				this.myCon.Disconnect();
+			}
 		}
 		private void con_DisconnectedEventHandler(SocketErrorCode aValue)
 		{
