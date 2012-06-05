@@ -21,7 +21,10 @@ using Mono.Unix;
 using System;
 using System.IO;
 using System.Threading;
+using log4net;
+using log4net.Appender;
 using log4net.Config;
+using log4net.Repository.Hierarchy;
 using XG.Server;
 using XG.Server.Backend.File;
 using XG.Server.Backend.MySql;
@@ -36,13 +39,23 @@ namespace XG.Server.Cmd
 		{
 			if(File.Exists("./log4net"))
 			{
-				// BasicConfigurator replaced with XmlConfigurator.
+				// load settings from file
 				XmlConfigurator.Configure(new System.IO.FileInfo("./log4net"));
 			}
 			else
 			{
-				// Set up a simple configuration that logs on the console.
-				BasicConfigurator.Configure();
+				// build our own, who logs only fatals to console
+				Logger root = ((Hierarchy)LogManager.GetRepository()).Root;
+
+				ConsoleAppender lAppender = new ConsoleAppender();
+				lAppender.Name = "Console";
+				lAppender.Layout = new
+				log4net.Layout.PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %message (%logger{1}:%line)%n");
+				lAppender.Threshold = log4net.Core.Level.Fatal;
+				lAppender.ActivateOptions();
+
+				root.AddAppender(lAppender);
+				root.Repository.Configured = true;
 			}
 
 #if !WINDOWS
