@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 using log4net;
 using XG.Core;
 
@@ -860,10 +861,17 @@ namespace XG.Server
 					{
 						isParsed = true;
 
-						string speed_cur_end =tMatch.Groups["speed_cur_end"].ToString();
-						string speed_max_end =tMatch.Groups["speed_max_end"].ToString();
-						if (double.TryParse(tMatch.Groups["speed_cur"].ToString(), out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
-						if (double.TryParse(tMatch.Groups["speed_max"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
+						string speed_cur_end = tMatch.Groups["speed_cur_end"].ToString();
+						string speed_max_end = tMatch.Groups["speed_max_end"].ToString();
+						string speed_cur = tMatch.Groups["speed_cur"].ToString();
+						string speed_max = tMatch.Groups["speed_max"].ToString();
+						if(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
+						{
+							speed_cur = speed_cur.Replace('.', ',');
+							speed_max = speed_max.Replace('.', ',');
+						}
+						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
+						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
 
 //						if(tBot.InfoSpeedCurrent > tBot.InfoSpeedMax)
 //						{
@@ -914,7 +922,12 @@ namespace XG.Server
 							tPack.Name = name;
 
 							double tPacketSizeFormated = 0;
-							double.TryParse(tMatch.Groups["pack_size"].ToString().Replace(".", ",").Replace("<", "").Replace(">", ""), out tPacketSizeFormated);
+							string stringSize = tMatch.Groups["pack_size"].ToString().Replace("<", "").Replace(">", "");
+							if(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
+							{
+								stringSize = stringSize.Replace('.', ',');
+							}
+							double.TryParse(stringSize, out tPacketSizeFormated);
 
 							string tPacketAdd = tMatch.Groups["pack_add"].ToString().ToLower();
 
