@@ -17,39 +17,18 @@
 
 $(function()
 {
-	/* ********************************************************************** */
-	/* PASSWORD DIALOG                                                        */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* PASSWORD DIALOG                                                                                                */
+	/* ************************************************************************************************************** */
 
 	$("#password_tip").html("Bitte gib das Passwort f&uuml;r diese Webseite ein.");
 	$("#password_label").html("Passwort");
 	$("#dialog_password").dialog("option", "title", "Passwort ben&ouml;tigt");
 	$("#dialog_password").dialog("option", "buttons", [{ text: "Verbinden", click: function() { ButtonConnectClicked($("#dialog_password")); } }]);
 
-	/* ********************************************************************** */
-	/* SERVER / CHANNEL DIALOG                                                */
-	/* ********************************************************************** */
-
-	$("#server_button").html("Server");
-	$("#server_tip").html("Bitte gib den neuen Server Namen ein.");
-	$("#server_label").html("Server");
-	$("#dialog_server").dialog("option", "title", "Neuen Server einf&uuml;gen");
-	$("#dialog_server").dialog("option", "buttons", [{ html: "Server einf&uuml;gen", click: function() { ButtonInsertServerClicked($("#dialog_server")); } }, { html: "Abbrechen", click: function() { ButtonCancelClicked($("#dialog_server")); } }]);
-
-	$("#channel_button").html("Kanal");
-	$("#channel_tip").html("Bitte gib den neuen Channel Namen ein.");
-	$("#channel_label").html("Kanal");
-	$("#dialog_channel").dialog("option", "title", "Neuen Kanal einf&uuml;gen");
-	$("#dialog_channel").dialog("option", "buttons", [{ html: "Kanal einf&uuml;gen", click: function() { ButtonInsertChannelClicked($("#dialog_channel")); } }, { html: "Abbrechen", click: function() { ButtonCancelClicked($("#dialog_channel")); } }]);
-
-	$("#current_item_button").html("Aktuelles Objekt");
-	$("#delete_tip").html("Willst du wirklich das ausgew&auml;lte Objekt l&ouml;schen.");
-	$("#dialog_delete").dialog("option", "title", "Wirklich l&ouml;schen");
-	$("#dialog_delete").dialog("option", "buttons", [{ html: "Ja", click: function() { ButtonYesClicked($("#dialog_delete")); } }, { html: "Nein", click: function() { ButtonCancelClicked($("#dialog_delete")); } }]);
-
-	/* ********************************************************************** */
-	/* BOT GRID                                                               */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* BOT GRID                                                                                                       */
+	/* ************************************************************************************************************** */
 
 	jQuery("#bots").setLabel(7, 'Geschwindigkeit');
 	jQuery("#bots").setLabel(8, 'S-Pos');
@@ -58,9 +37,9 @@ $(function()
 	jQuery("#bots").setLabel(12, 'Pl&auml;tze');
 	jQuery("#bots").setLabel(14, 'Schlange');
 
-	/* ********************************************************************** */
-	/* PACKET GRID                                                            */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* PACKET GRID                                                                                                    */
+	/* ************************************************************************************************************** */
 
 	jQuery("#packets").setCaption("Pakete");
 	jQuery("#packets").setLabel(8, 'Gr&ouml;&szlig;e');
@@ -68,9 +47,9 @@ $(function()
 	jQuery("#packets").setLabel(10, 'Zeit');
 	jQuery("#packets").setLabel(16, 'Aktualisiert');
 
-	/* ********************************************************************** */
-	/* SEARCH GRID                                                            */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* SEARCH GRID                                                                                                    */
+	/* ************************************************************************************************************** */
 
 	jQuery("#searches").setCaption("Suche");
 	jQuery("#searches").setLabel(1, "Suche");
@@ -79,11 +58,11 @@ $(function()
 	jQuery("#searches").setRowData(3, {name:"Downloads"});
 	jQuery("#searches").setRowData(4, {name:"Aktivierte Pakete"});
 
-	/* ********************************************************************** */
-	/* OTHERS                                                                 */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* OTHERS                                                                                                         */
+	/* ************************************************************************************************************** */
 
-	$("#offline_bots").html("inaktive Bots ausblenden");
+	$("#offline_bots").text("inaktive Bots ausblenden");
 	$("#tab-1").html("IRC &Uuml;bersicht");
 	$("#tab-2").html("Statistiken");
 });

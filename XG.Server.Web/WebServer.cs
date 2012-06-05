@@ -609,7 +609,6 @@ namespace XG.Server.Web
 				XGPacket tPack = (XGPacket)aObject;
 				XGFilePart tPart = this.myRunner.GetFilePart4Packet(tPack);
 
-				sb.Append("\"ChannelGuid\":\"" + tPack.Parent.Parent.Guid + "\",");
 				sb.Append("\"Id\":" + tPack.Id + ",");
 				sb.Append("\"Name\":\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
 				sb.Append("\"Size\":" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",");

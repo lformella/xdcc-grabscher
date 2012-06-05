@@ -15,9 +15,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-/* ************************************************************************** */
-/* ENUM STUFF                                                                 */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* ENUM STUFF                                                                                                         */
+/* ****************************************************************************************************************** */
 
 function Enum() {}
 
@@ -43,7 +43,7 @@ Enum.TCPClientRequest =
 	SearchBotActiveDownloads : 14,
 	SearchBotsEnabled : 15,
 
-	GetServersChannels : 16,
+	GetServers : 16,
 	GetActivePackets : 17,
 	GetFiles : 18,
 	GetObject : 19,
@@ -74,15 +74,13 @@ Enum.TangoColor =
 	Aluminium2	: { Light : "888a85", Middle : "555753", Dark : "2e3436"}
 };
 
-/* ************************************************************************** */
-/* GLOBAL VARS / FUNCTIONS                                                    */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* GLOBAL VARS / FUNCTIONS                                                                                            */
+/* ****************************************************************************************************************** */
 
 var Password = "";
 
-var obj_current;
 var id_server;
-var id_channel;
 var id_search;
 
 var search_active = false;
@@ -90,7 +88,6 @@ var search_active = false;
 function JsonUrl(password) { return "/?password=" + (password != undefined ? escape(password) : escape(Password)) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
 function NameUrl(id, name) { return JsonUrl() + id + "&name=" + escape(name); }
-function GuidNameUrl(id, guid, name) { return JsonUrl() + id + "&guid=" + guid + "&name=" + escape(name); }
 
 var id_search_count = 1;
 
@@ -101,50 +98,38 @@ var Formatter;
 var Helper = new XGHelper();
 
 
-/* ************************************************************************** */
-/* GRID / FORM LOADER                                                         */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* GRID / FORM LOADER                                                                                                 */
+/* ****************************************************************************************************************** */
 
 $(function()
 {
 	Formatter = new XGFormatter();
 
-	/* ********************************************************************** */
-	/* SERVER / CHANNEL GRID                                                  */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* SERVER GRID                                                                                                    */
+	/* ************************************************************************************************************** */
 
 	jQuery("#servers").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['Name', '', '', ''],
+		colNames: ['', 'Name', '', '', ''],
 		colModel: [
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return !r.isLeaf ? Formatter.formatServerIcon(r) : Formatter.formatChannelIcon(r);}, width:200},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r); }, width:24},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:200, editable:true},
 			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
 			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
 		],
-		onHeaderClick: function(gridstate)
-		{
-			$.cookie('xg.servers', gridstate);
-			Resize();
-		},
 		onSelectRow: function(id)
 		{
 			if(id)
 			{
+				id_server = id;
 				var serv = jQuery('#servers').getRowData(id);
-				obj_current = serv;
-				if(serv && serv.level == 1)
+				if(serv)
 				{
-					search_active = false;
-					jQuery("#bots").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
-					id_channel = id;
-					jQuery("#add-channel").hide();
-				}
-				else
-				{
-					id_server = id;
-					jQuery("#add-channel").show();
+					jQuery("#channels").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
 				}
 			}
 		},
@@ -168,24 +153,110 @@ $(function()
 				ReloadGrid("servers");
 			}
 		},
-		treeIcons: {leaf:'ui-icon-document-b'},
-		treeGrid: true,
-		treeGridModel: 'adjacency',
+		pager: jQuery('#server-pager'),
 		rowNum: 100,
-		rowList: [100, 200, 400, 800],
+		pgbuttons: false,
+		pginput: false,
+		recordtext: '',
+		pgtext: '',
 		sortname: 'Name',
 		ExpandColumn: 'Name',
 		viewrecords: true,
+		autowidth: true,
+		scrollrows: true,
 		height: 300,
 		sortorder: "asc",
 		caption: "Servers"
-	});
+	}).navGrid('#server-pager', {edit:false, search:false}, {},
+		{
+			mtype: "GET",
+			url: "/",
+			serializeEditData: function (postdata)
+			{
+				return { password: escape(Password), request: Enum.TCPClientRequest.AddServer, name: postdata.Name };
+			}
+		},
+		{
+			mtype: "GET",
+			url: "/",
+			serializeDelData: function (postdata)
+			{
+				return { password: escape(Password), request: Enum.TCPClientRequest.RemoveServer, guid: postdata.id };
+			}
+		});
 	jQuery("#servers").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
-	jQuery("#servers").setGridState($.cookie('xg.servers'));
 
-	/* ********************************************************************** */
-	/* BOT GRID                                                               */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* CHANNEL GRID                                                                                                   */
+	/* ************************************************************************************************************** */
+
+	jQuery("#channels").jqGrid(
+		{
+			datatype: "json",
+			colNames: ['', 'Name', '', '', ''],
+			colModel: [
+				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r); }, width:24},
+				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:200, editable:true},
+				{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
+				{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
+				{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
+			],
+			ondblClickRow: function(id)
+			{
+				if(id)
+				{
+					var chan = jQuery('#channels').getRowData(id);
+					if(chan)
+					{
+						if(chan.Enabled == "false")
+						{
+							$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
+						}
+						else
+						{
+							$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
+						}
+						setTimeout("ReloadGrid('channels')", 1000);
+					}
+					ReloadGrid("channels");
+				}
+			},
+			pager: jQuery('#channel-pager'),
+			rowNum: 100,
+			pgbuttons: false,
+			pginput: false,
+			recordtext: '',
+			pgtext: '',
+			sortname: 'Name',
+			ExpandColumn: 'Name',
+			viewrecords: true,
+			autowidth: true,
+			scrollrows: true,
+			height: 300,
+			sortorder: "asc",
+			caption: "channels"
+		}).navGrid('#channel-pager', {edit:false, search:false}, {},
+		{
+			mtype: "GET",
+			url: "/",
+			serializeEditData: function (postdata)
+			{
+				return { password: escape(Password), request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: id_server };
+			}
+		},
+		{
+			mtype: "GET",
+			url: "/",
+			serializeDelData: function (postdata)
+			{
+				return { password: escape(Password), request: Enum.TCPClientRequest.RemoveChannel, guid: postdata.id };
+			}
+		});
+	jQuery("#channels").jqGrid('gridResize', {minWidth: 300, maxWidth: 300});
+
+	/* ************************************************************************************************************** */
+	/* BOT GRID                                                                                                       */
+	/* ************************************************************************************************************** */
 
 	jQuery("#bots").jqGrid(
 	{
@@ -224,7 +295,6 @@ $(function()
 				search_active = false;
 				var bot = jQuery('#bots').getRowData(id);
 				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
-				jQuery('#servers').setSelection(bot.ParentGuid, false);
 			}
 		},
 		rowNum: 100,
@@ -241,15 +311,15 @@ $(function()
 	}).navGrid('#bot-pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#bots").setGridState($.cookie('xg.bots'));
 
-	/* ********************************************************************** */
-	/* PACKET GRID                                                            */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* PACKET GRID                                                                                                    */
+	/* ************************************************************************************************************** */
 
 	jQuery("#packets").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate:{fixed:true},
-		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', '', ''],
+		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', ''],
 		colModel: [
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r) }, width:24},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r) }, width:40, align:"right"},
@@ -258,7 +328,6 @@ $(function()
 			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
 			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Helper.time2Human(r.TimeMissing); }, width:90, align:"right"},
 			{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"},
-			{name:'ChannelGuid',	index:'ChannelGuid',	formatter: function(c, o, r) { return r.ChannelGuid; }, hidden:true},
 			{name:'StartSize',		index:'StartSize',		formatter: function(c, o, r) { return r.StartSize; }, hidden:true},
 			{name:'StopSize',		index:'StopSize',		formatter: function(c, o, r) { return r.StopSize; }, hidden:true},
 			{name:'CurrentSize',	index:'CurrentSize',	formatter: function(c, o, r) { return r.CurrentSize; }, hidden:true},
@@ -282,7 +351,6 @@ $(function()
 				if(pack)
 				{
 					jQuery('#bots').setSelection(pack.ParentGuid, false);
-					jQuery('#servers').setSelection(pack.ChannelGuid, false);
 				}
 			}
 		},
@@ -328,9 +396,9 @@ $(function()
 	}).navGrid('#packet-pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#packets").setGridState($.cookie('xg.packets'));
 
-	/* ********************************************************************** */
-	/* SEARCH GRID                                                            */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* SEARCH GRID                                                                                                    */
+	/* ************************************************************************************************************** */
 
 	jQuery("#searches").jqGrid(
 	{
@@ -338,13 +406,8 @@ $(function()
 		colNames: ['', 'Search'],
 		colModel: [
 			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:24},
-			{name:'Name',	index:'Name',	width:174}
+			{name:'Name',	index:'Name',	width:259}
 		],
-		onHeaderClick: function(gridstate)
-		{
-			$.cookie('xg.searches', gridstate);
-			Resize();
-		},
 		onSelectRow: function(id)
 		{
 			search_active = true;
@@ -401,15 +464,22 @@ $(function()
 				jQuery('#searches').delRowData(id);
 			}
 		},
+		pager: jQuery('#searches-pager'),
+		pgbuttons: false,
+		pginput: false,
+		recordtext: '',
+		pgtext: '',
 		sortname: 'name',
 		ExpandColumn : 'name',
 		viewrecords: true,
 		height: 300,
 		sortorder: "desc",
 		caption: "Search"
-	});
+	}).navGrid('#searches-pager', {edit:false, add:false, del:false, search:false, refresh:false});
 	jQuery("#searches").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
 	jQuery("#searches").setGridState($.cookie('xg.searches'));
+
+	jQuery("#searches-pager_left").html("<input type=\"text\" id=\"search-text\" />");
 
 	var mydata = [
 		{Id:"1", Name:"ODay Packets"},
@@ -423,16 +493,11 @@ $(function()
 		id_search_count++;
 	}
 
-	/* ********************************************************************** */
-	/* SEARCH STUFF                                                           */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* SEARCH STUFF                                                                                                   */
+	/* ************************************************************************************************************** */
 
-	jQuery("#search-button").click( function()
-	{
-		AddNewSearch();
-	});
-
-	$("#search-text").keypress( function (e)
+	$("#search-text").keyup( function (e)
 	{
 		if (e.which == 13)
 		{
@@ -440,11 +505,11 @@ $(function()
 		}
 	});
 
-	$("#search-text").width($("#searches").width() - $("#search-button").width() - 20);
+	$("#search-text").width($("#gbox_searches").width() - 9);
 
-	/* ********************************************************************** */
-	/* PASSWORD DIALOG                                                        */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* PASSWORD DIALOG                                                                                                */
+	/* ************************************************************************************************************** */
 
 	$("#dialog_password").dialog({
 		bgiframe: true,
@@ -467,101 +532,33 @@ $(function()
 		}
 	});
 
-	$("#password").keypress(function (e) {
+	$("#password").keyup(function (e) {
 		if (e.which == 13) {
 			//$('[aria-labelledby$=dialog_password]').find(":button:contains('Connect')").click();
 		}
 	});
 
-	/* ********************************************************************** */
-	/* SERVER / CHANNEL DIALOG                                                */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* SERVER / CHANNEL DIALOG                                                                                        */
+	/* ************************************************************************************************************** */
 
-	jQuery("#add-server").click( function()
+	jQuery("#change-server-channels").button({icons: { primary: "ui-icon-gear" }});
+	jQuery("#change-server-channels").click( function()
 	{
-		$("#dialog_server").dialog("open");
+		$("#dialog_server_channels").dialog("open");
 	});
 
-	$("#dialog_server").dialog({
+	$("#dialog_server_channels").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 190,
+		width: 505,
 		modal: true,
-		resizable: false,
-		buttons: {
-			'Insert Server': function()
-			{
-				ButtonInsertServerClicked($(this));
-			},
-			'Cancel': function()
-			{
-				ButtonCancelClicked($(this));
-			}
-		},
-		close: function()
-		{
-			//allFields.val('').removeClass('ui-state-error');
-		}
+		resizable: false
 	});
 
-	jQuery("#add-channel").click( function()
-	{
-		$("#dialog_channel").dialog("open");
-	});
-	jQuery("#add-channel").hide();
-	
-	$("#dialog_channel").dialog({
-		bgiframe: true,
-		autoOpen: false,
-		height: 190,
-		modal: true,
-		resizable: false,
-		buttons: {
-			'Insert Channel': function()
-			{
-				ButtonInsertChannelClicked($(this));
-			},
-			'Cancel': function()
-			{
-				ButtonCancelClicked($(this));
-			}
-		},
-		close: function()
-		{
-			//allFields.val('').removeClass('ui-state-error');
-		}
-	});
-
-	jQuery("#delete").click( function()
-	{
-		$("#dialog_delete").dialog("open");
-	});
-	
-	$("#dialog_delete").dialog({
-		bgiframe: true,
-		autoOpen: false,
-		height: 160,
-		modal: true,
-		resizable: false,
-		buttons: {
-			'Yes': function()
-			{
-				ButtonYesClicked($(this));
-			},
-			'No': function()
-			{
-				ButtonCancelClicked($(this));
-			}
-		},
-		close: function()
-		{
-			//allFields.val('').removeClass('ui-state-error');
-		}
-	});
-
-	/* ********************************************************************** */
-	/* RESIZE HELPER                                                          */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* RESIZE HELPER                                                                                                  */
+	/* ************************************************************************************************************** */
 	
 	$(window).resize(function()
 	{
@@ -569,17 +566,18 @@ $(function()
 	});
 	Resize();
 
-	/* ********************************************************************** */
-	/* OTHERS                                                                 */
-	/* ********************************************************************** */
+	/* ************************************************************************************************************** */
+	/* OTHERS                                                                                                         */
+	/* ************************************************************************************************************** */
 
 	jQuery("#tabs").tabs();
+
+	jQuery("#offbots").button();
 });
 
-
-/* ************************************************************************** */
-/* SEARCH STUFF                                                               */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* SEARCH STUFF                                                                                                       */
+/* ****************************************************************************************************************** */
 
 function AddNewSearch()
 {
@@ -599,9 +597,9 @@ function AddSearch(search)
 	id_search_count++;
 }
 
-/* ************************************************************************** */
-/* COLOR STUFF                                                                */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* COLOR STUFF                                                                                                        */
+/* ****************************************************************************************************************** */
 
 var colors = new Array();
 var color_count = 0;
@@ -651,9 +649,9 @@ function GetColor(id)
 	return "";
 }
 
-/* ************************************************************************** */
-/* DIALOG BUTTON HANDLER                                                      */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* DIALOG BUTTON HANDLER                                                                                              */
+/* ****************************************************************************************************************** */
 
 function ButtonConnectClicked(dialog)
 {
@@ -686,62 +684,14 @@ function ButtonConnectClicked(dialog)
 	}
 }
 
-function ButtonCancelClicked(dialog)
-{
-	dialog.dialog('close');
-}
-
-function ButtonInsertServerClicked(dialog)
-{
-	if($("#server").val() != "")
-	{
-		$.get(NameUrl(Enum.TCPClientRequest.AddServer, $("#server").val()));
-		$("#server").val("");
-		setTimeout("ReloadGrid('servers')", 1000);
-		dialog.dialog('close');
-	}
-}
-
-function ButtonInsertChannelClicked(dialog)
-{
-	if($("#channel").val() != "")
-	{
-		$.get(GuidNameUrl(Enum.TCPClientRequest.AddChannel, id_server , $("#channel").val()));
-		$("#channel").val("");
-		setTimeout("ReloadGrid('servers')", 1000);
-		dialog.dialog('close');
-	}
-}
-
-function ButtonYesClicked(dialog)
-{
-	if(obj_current)
-	{
-		if(obj_current.level == 0)
-		{
-			$.get(GuidUrl(Enum.TCPClientRequest.RemoveServer, id_server));
-		}
-		else
-		{
-			$.get(GuidUrl(Enum.TCPClientRequest.RemoveChannel, id_channel));
-		}
-		setTimeout("ReloadGrid('servers')", 1000);
-		obj_current = "";
-		id_server = 0;
-		id_channel = 0;
-
-		dialog.dialog('close');
-	}
-}
-
-/* ************************************************************************** */
-/* PASSWORD STUFF                                                             */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* PASSWORD STUFF                                                                                                     */
+/* ****************************************************************************************************************** */
 
 function SetPassword(password)
 {
 	Password = password;
-	ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServersChannels, ''));
+	ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
 }
 
 function CheckPassword(password)
@@ -758,9 +708,9 @@ function CheckPassword(password)
 	return res;
 }
 
-/* ************************************************************************** */
-/* RELOAD / REFRESH STUFF                                                     */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* RELOAD / REFRESH STUFF                                                                                             */
+/* ****************************************************************************************************************** */
 
 function ReloadGrid(grid, url)
 {
@@ -799,16 +749,6 @@ function RefreshGrid(count)
 	}
 
 	setTimeout("RefreshGrid(" + (count + 1) +")", 2500);
-}
-
-function RefreshServer(guid)
-{
-	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
-		function(result)
-		{
-			jQuery("#servers").setRowData(result.id, result.cell);
-		}
-	);
 }
 
 function RefreshBot(guid)
@@ -869,39 +809,17 @@ function RefreshStatistic()
 	setTimeout("RefreshStatistic()", 10000);
 }
 
-/* ************************************************************************** */
-/* HELPER                                                                     */
-/* ************************************************************************** */
+/* ****************************************************************************************************************** */
+/* HELPER                                                                                                             */
+/* ****************************************************************************************************************** */
 
 function Resize()
 {
 	//alert($(window).height() / 2);
-	var width = $(window).width() - 240;
-	var height = ($(window).height() - 260) / 2;
+	var width = $(window).width() - 330;
+	var height = ($(window).height() - 250) / 2;
 
-	if(jQuery("#searches").getGridParam("gridstate") == "hidden")
-	{
-		if(jQuery("#servers").getGridParam("gridstate") != "hidden")
-		{
-			jQuery("#servers").setGridHeight((height + 20) * 2);
-		}
-	}
-	else if(jQuery("#servers").getGridParam("gridstate") != "hidden")
-	{
-		jQuery("#servers").setGridHeight((height + 10));
-	}
-
-	if(jQuery("#servers").getGridParam("gridstate") == "hidden")
-	{
-		if(jQuery("#searches").getGridParam("gridstate") != "hidden")
-		{
-			jQuery("#searches").setGridHeight((height + 20) * 2);
-		}
-	}
-	else if(jQuery("#searches").getGridParam("gridstate") != "hidden")
-	{
-		jQuery("#searches").setGridHeight((height + 10));
-	}
+	jQuery("#searches").setGridHeight(height * 2 + 65);
 
 	if(jQuery("#packets").getGridParam("gridstate") == "hidden")
 	{
