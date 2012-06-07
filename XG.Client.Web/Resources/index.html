@@ -80,6 +80,7 @@
 			<ul>
 				<li><a id="tab-1" href="#tabs-1">IRC View</a></li>
 				<li><a id="tab-2" href="#tabs-2">Statistics</a></li>
+				<li><a id="tab-3" href="#tabs-3">external Search via xg.bitpir.at</a></li>
 			</ul>
 
 			<div id="tabs-1" style="padding: 0px;">
@@ -137,6 +138,17 @@
 				SpeedMax: <span id="SpeedMax"></span><br />
 				SpeedMin: <span id="SpeedMin"></span><br />
 				SpeedAvg: <span id="SpeedAvg"></span><br /><br />
+
+			</div>
+			<div id="tabs-3" style="padding: 0px;">
+
+				<div style="margin: 0 0 4px 0;">
+					<label for="search-input"><img class="icon left" src="images/Search.png"/> Search for: </label>
+					<input type="text" name="search" id="search-input" class="input form-field" value="" size="100" tabindex="10"/>
+				</div>
+
+				<table width="100%" id="search-xg-bitpir-at"></table>
+				<div id="search-pager-xg-bitpir-at"></div>
 
 			</div>
 

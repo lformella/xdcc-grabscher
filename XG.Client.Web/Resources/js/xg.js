@@ -82,6 +82,7 @@ var Password = "";
 
 var id_server;
 var id_search;
+var last_search;
 
 var search_active = false;
 
@@ -507,6 +508,46 @@ $(function()
 
 	$("#search-text").width($("#gbox_searches").width() - 9);
 
+	/******************************************************************************************************************/
+	/* SEARCH GRID                                                                                                    */
+	/******************************************************************************************************************/
+
+	jQuery("#search-xg-bitpir-at").jqGrid(
+		{
+			datatype:'jsonp',
+			cmTemplate:{fixed:true},
+			colNames:['', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
+			colModel:[
+				{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r); }, width:26},
+				{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
+				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
+				{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return Helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},
+				{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:60, align:"right"},
+				{name:'BotName',		index:'BotName',		formatter: function(c, o, r) { return r.BotName; }, width:160},
+				{name:'BotSpeed',		index:'BotSpeed',		formatter: function(c, o, r) { return Helper.speed2Human(r.BotSpeed); }, width:80, align:"right"},
+
+				{name:'IrcLink',		index:'IrcLink',		formatter: function(c, o, r) { return r.IrcLink; }, hidden:true}
+			],
+			rowNum:20,
+			rowList:[20, 40, 80, 160],
+			pager:jQuery('#search-pager-xg-bitpir-at'),
+			sortname:'Id',
+			viewrecords:true,
+			ExpandColumn:'Name',
+			height:'100%',
+			autowidth:true,
+			sortorder:"asc",
+			caption: "Search via xg.bitpir.at"
+		}).navGrid('#search-pager-xg-bitpir-at', {edit:false, add:false, del:false, search:false});
+
+	$("#search-input").keyup(function (e)
+	{
+		if (e.which == 13)
+		{
+			DoSearch($(this).val());
+		}
+	});
+
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
 	/* ************************************************************************************************************** */
@@ -815,11 +856,16 @@ function RefreshStatistic()
 
 function Resize()
 {
-	//alert($(window).height() / 2);
-	var width = $(window).width() - 330;
-	var height = ($(window).height() - 250) / 2;
+	var max_height = $(window).height() - 175;
+	var max_width = $(window).width() - 25;
 
-	jQuery("#searches").setGridHeight(height * 2 + 65);
+	jQuery("#searches").setGridHeight(max_height);
+
+	jQuery("#search-xg-bitpir-at").setGridHeight(max_height);
+	jQuery("#search-xg-bitpir-at").setGridWidth(max_width);
+
+	var width = max_width - 305;
+	var height = max_height / 2 - 32;
 
 	if(jQuery("#packets").getGridParam("gridstate") == "hidden")
 	{
@@ -848,4 +894,19 @@ function Resize()
 	}
 	jQuery("#packets").setGridWidth(width);
 	jQuery("#packets").jqGrid('gridResize', {minWidth: width, maxWidth: width});
+}
+
+/**********************************************************************************************************************/
+/* DO SOMETHING                                                                                                       */
+/**********************************************************************************************************************/
+
+function DoSearch (value)
+{
+	if (last_search != value)
+	{
+		last_search = value;
+
+		jQuery("#search-xg-bitpir-at").clearGridData();
+		jQuery("#search-xg-bitpir-at").setGridParam({url:"http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + value}).trigger("reloadGrid");
+	}
 }
