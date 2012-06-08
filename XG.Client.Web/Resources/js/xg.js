@@ -86,9 +86,9 @@ var last_search;
 
 var search_active = false;
 
-function JsonUrl(password) { return "/?password=" + (password != undefined ? escape(password) : escape(Password)) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
+function JsonUrl(password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
-function NameUrl(id, name) { return JsonUrl() + id + "&name=" + escape(name); }
+function NameUrl(id, name) { return JsonUrl() + id + "&name=" + encodeURIComponent(name); }
 
 var id_search_count = 1;
 
@@ -528,6 +528,14 @@ $(function()
 
 				{name:'IrcLink',		index:'IrcLink',		formatter: function(c, o, r) { return r.IrcLink; }, hidden:true}
 			],
+			ondblClickRow: function(id)
+			{
+				if(id)
+				{
+					var data = jQuery("#search-xg-bitpir-at").getRowData(id);
+					$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
+				}
+			},
 			rowNum:20,
 			rowList:[20, 40, 80, 160],
 			pager:jQuery('#search-pager-xg-bitpir-at'),

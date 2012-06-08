@@ -149,7 +149,7 @@ namespace XG.Server.Web
 					try
 					{
 						// nice try
-						if (!tDic.ContainsKey("password") || tDic["password"] != Settings.Instance.Password)
+						if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != Settings.Instance.Password)
 						{
 							throw new Exception("Password wrong!");
 						}
@@ -220,7 +220,7 @@ namespace XG.Server.Web
 						# region SERVER
 
 						case TCPClientRequest.AddServer:
-							this.myRunner.AddServer(tDic["name"]);
+							this.myRunner.AddServer(HttpUtility.UrlDecode(tDic["name"]));
 							this.WriteToStream(client.Response, "");
 							break;
 
@@ -262,11 +262,11 @@ namespace XG.Server.Web
 						# region SEARCH
 
 						case TCPClientRequest.SearchPacket:
-							list = this.myRunner.SearchPacket(tDic["name"], tComp);
+							list = this.myRunner.SearchPacket(HttpUtility.UrlDecode(tDic["name"]), tComp);
 							break;
 
 						case TCPClientRequest.SearchPacketTime:
-							list = this.myRunner.SearchPacketTime(tDic["name"], tComp);
+							list = this.myRunner.SearchPacketTime(HttpUtility.UrlDecode(tDic["name"]), tComp);
 							break;
 
 						case TCPClientRequest.SearchPacketActiveDownloads:
@@ -278,11 +278,11 @@ namespace XG.Server.Web
 							break;
 
 						case TCPClientRequest.SearchBot:
-							list = this.myRunner.SearchBot(tDic["name"], tComp);
+							list = this.myRunner.SearchBot(HttpUtility.UrlDecode(tDic["name"]), tComp);
 							break;
 
 						case TCPClientRequest.SearchBotTime:
-							list = this.myRunner.SearchBotTime(tDic["name"], tComp);
+							list = this.myRunner.SearchBotTime(HttpUtility.UrlDecode(tDic["name"]), tComp);
 							break;
 
 						case TCPClientRequest.SearchBotActiveDownloads:
@@ -298,12 +298,12 @@ namespace XG.Server.Web
 						# region SEARCH SPECIAL
 
 						case TCPClientRequest.AddSearch:
-							this.myRunner.AddSearch(tDic["name"]);
+							this.myRunner.AddSearch(HttpUtility.UrlDecode(tDic["name"]));
 							this.WriteToStream(client.Response, "");
 							break;
 
 						case TCPClientRequest.RemoveSearch:
-							this.myRunner.RemoveSearch(tDic["name"]);
+							this.myRunner.RemoveSearch(HttpUtility.UrlDecode(tDic["name"]));
 							this.WriteToStream(client.Response, "");
 							break;
 
@@ -354,7 +354,7 @@ namespace XG.Server.Web
 
 						case TCPClientRequest.ParseXdccLink:
 							//xdcc://irc.1andallirc.net/irc.1andallirc.net/#cosmic/{CoSmIc-Mp3Z}-{21667}/#6/Asking_Alexandria-Stepped_Up_And_Scratched-2011-MTD.rar/
-							string[] link = tDic["xdcc"].Split('/');
+							string[] link = HttpUtility.UrlDecode(tDic["name"]).Substring(7).Split('/');
 							string serverName = link[0];
 							string channelName = link[2];
 							string botName = link[3];
@@ -393,6 +393,7 @@ namespace XG.Server.Web
 							{
 								pack = new XGPacket();
 								pack.Id = packetId;
+								pack.Name = link[5];
 								bot.addPacket(pack);
 							}
 							pack.Enabled = true;
