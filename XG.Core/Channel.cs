@@ -16,12 +16,16 @@
 // 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XG.Core
 {
 	[Serializable()]
 	public class XGChannel : XGObject
 	{
+		#region VARIABLES
+
 		public new XGServer Parent
 		{
 			get { return base.Parent as XGServer; }
@@ -58,14 +62,24 @@ namespace XG.Core
 			}
 		}
 
+		#endregion
+
+		#region CHILDREN
+
+		public IEnumerable<XGBot> Bots
+		{
+			get { return base.Children.Cast<XGBot>(); }
+		}
+
 		public XGBot this[string name]
 		{
 			get
 			{
-				foreach (XGBot bot in base.Children)
+				try
 				{
-					if (bot.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) { return bot; }
+					return this.Bots.First(bot => bot.Name.Trim().ToLower() == name.Trim().ToLower());
 				}
+				catch {}
 				return null;
 			}
 		}
@@ -74,10 +88,15 @@ namespace XG.Core
 		{
 			base.AddChild(aBot);
 		}
+		
 		public void RemoveBot(XGBot aBot)
 		{
 			base.RemoveChild(aBot);
 		}
+
+		#endregion
+
+		#region CONSTRUCTOR
 
 		public XGChannel() : base()
 		{
@@ -92,5 +111,7 @@ namespace XG.Core
 		{
 			base.Clone(aCopy, aFull);
 		}
+
+		#endregion
 	}
 }

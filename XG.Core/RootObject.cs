@@ -16,29 +16,40 @@
 // 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XG.Core
 {
 	[Serializable()]
 	public class RootObject : XGObject
 	{
+		#region EVENTS
+
 		[field: NonSerialized()]
 		public event RootServerDelegate ServerAddedEvent;
+
 		[field: NonSerialized()]
 		public event RootServerDelegate ServerRemovedEvent;
+
+		#endregion
+
+		#region CHILDREN
+
+		public IEnumerable<XGServer> Servers
+		{
+			get { return base.Children.Cast<XGServer>(); }
+		}
 
 		public XGServer this[string name]
 		{
 			get
 			{
-				name = name.Trim().ToLower();
-				foreach (XGServer serv in base.Children)
+				try
 				{
-					if (serv.Name == name)
-					{
-						return serv;
-					}
+					return this.Servers.First(serv => serv.Name == name.Trim().ToLower());
 				}
+				catch {}
 				return null;
 			}
 		}
@@ -76,14 +87,10 @@ namespace XG.Core
 				}
 			}
 		}
-		public void RemoveServer(string aServer)
-		{
-			XGServer tServ = this[aServer];
-			if (tServ != null)
-			{
-				this.RemoveServer(tServ);
-			}
-		}
+
+		#endregion
+
+		#region CONSTRUCTOR
 
 		public RootObject() : base()
 		{
@@ -93,5 +100,7 @@ namespace XG.Core
 		{
 			base.Clone(aCopy, aFull);
 		}
+
+		#endregion
 	}
 }

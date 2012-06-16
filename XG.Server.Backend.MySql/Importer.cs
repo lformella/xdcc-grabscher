@@ -17,13 +17,10 @@
 
 /**/
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using HtmlAgilityPack;
 using log4net;
 using XG.Core;
-using System.Threading;
 
 namespace XG.Server.Backend.MySql
 {
@@ -89,7 +86,7 @@ namespace XG.Server.Backend.MySql
 
 		private XGServer GetServer(string aServerName)
 		{
-			foreach(XGObject obj in this.myRootObject.Children)
+			foreach(XGObject obj in this.myRootObject.Servers)
 			{
 				if(obj.Name == aServerName)
 				{
@@ -101,7 +98,7 @@ namespace XG.Server.Backend.MySql
 
 		private XGChannel GetChannelFromServer(XGServer aServer, string aChannelName)
 		{
-			foreach(XGChannel chan in aServer.Children)
+			foreach(XGChannel chan in aServer.Channels)
 			{
 				if((chan.Name == aChannelName || chan.Name == "#" + aChannelName) && chan.ParentGuid == aServer.Guid)
 				{

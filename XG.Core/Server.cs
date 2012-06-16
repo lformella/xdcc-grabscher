@@ -16,16 +16,25 @@
 // 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XG.Core
 {
 	[Serializable()]
 	public class XGServer : XGObject
 	{
+		#region EVENTS
+
 		[field: NonSerialized()]
 		public event ServerChannelDelegate ChannelAddedEvent;
+
 		[field: NonSerialized()]
 		public event ServerChannelDelegate ChannelRemovedEvent;
+
+		#endregion
+
+		#region VARIABLES
 
 		public new RootObject Parent
 		{
@@ -77,16 +86,26 @@ namespace XG.Core
 			}
 		}
 
+		#endregion
+
+		#region CHILDREN
+
+		public IEnumerable<XGChannel> Channels
+		{
+			get { return base.Children.Cast<XGChannel>(); }
+		}
+
 		public XGChannel this[string name]
 		{
 			get
 			{
 				name = name.Trim().ToLower();
 				if (!name.StartsWith("#")) { name = "#" + name; }
-				foreach (XGChannel chan in base.Children)
+				try
 				{
-					if (chan.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) { return chan; }
+					return this.Channels.First(chan => chan.Name.Trim().ToLower() == name.Trim().ToLower());
 				}
+				catch {}
 				return null;
 			}
 		}
@@ -97,7 +116,7 @@ namespace XG.Core
 			foreach (XGChannel chan in base.Children)
 			{
 				tBot = chan[aName];
-				if (tBot != null) { return tBot; }
+				if (tBot != null){ break; }
 			}
 			return tBot;
 		}
@@ -112,6 +131,7 @@ namespace XG.Core
 				}
 			}
 		}
+
 		public void AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
@@ -135,18 +155,15 @@ namespace XG.Core
 				}
 			}
 		}
-		public void RemoveChannel(string aChannel)
-		{
-			XGChannel tChan = this[aChannel];
-			if (tChan != null)
-			{
-				this.RemoveChannel(tChan);
-			}
-		}
+
+		#endregion
+
+		#region CONSTRUCTOR
 
 		public XGServer() : base()
 		{
 		}
+
 		public XGServer(RootObject parent) : this()
 		{
 			this.Parent = parent;
@@ -158,5 +175,7 @@ namespace XG.Core
 			base.Clone(aCopy, aFull);
 			this.port = aCopy.port;
 		}
+
+		#endregion
 	}
 }

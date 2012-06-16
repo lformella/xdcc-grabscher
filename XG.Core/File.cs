@@ -16,12 +16,16 @@
 // 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XG.Core
 {
 	[Serializable()]
 	public class XGFile : XGObject
 	{
+		#region VARIABLES
+
 		public new string Name
 		{
 			get { return base.Name; }
@@ -39,14 +43,28 @@ namespace XG.Core
 			get { return this.size; }
 		}
 
+		#endregion
+
+		#region CHILDREN
+
+		public IEnumerable<XGFilePart> Parts
+		{
+			get { return base.Children.Cast<XGFilePart>(); }
+		}
+
 		public bool AddPart(XGFilePart aPart)
 		{
-			return this.AddChild(aPart);
+			return base.AddChild(aPart);
 		}
+
 		public bool RemovePart(XGFilePart aPart)
 		{
-			return this.RemoveChild(aPart);
+			return base.RemoveChild(aPart);
 		}
+
+		#endregion
+
+		#region CONSTRUCTOR
 
 		public XGFile() : base()
 		{
@@ -64,5 +82,7 @@ namespace XG.Core
 			this.size = aCopy.size;
 			this.tmpPath = aCopy.tmpPath;
 		}
+
+		#endregion
 	}
 }

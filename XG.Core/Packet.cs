@@ -22,6 +22,8 @@ namespace XG.Core
 	[Serializable()]
 	public class XGPacket : XGObject
 	{
+		#region VARIABLES
+
 		public new XGBot Parent
 		{
 			get { return base.Parent as XGBot; }
@@ -126,14 +128,19 @@ namespace XG.Core
 			}
 		}
 
+		#endregion
+
+		#region CONSTRUCTOR
+
 		public XGPacket() : base()
 		{
 			this.realName = "";
 		}
+
 		public XGPacket(XGBot parent) : this()
 		{
 			this.Parent = parent;
-			this.Parent.addPacket(this);
+			this.Parent.AddPacket(this);
 		}
 
 		public void Clone(XGPacket aCopy, bool aFull)
@@ -148,5 +155,7 @@ namespace XG.Core
 				this.realSize = aCopy.realSize;
 			}
 		}
+
+		#endregion
 	}
 }

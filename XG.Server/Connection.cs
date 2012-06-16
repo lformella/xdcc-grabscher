@@ -300,7 +300,11 @@ namespace XG.Server
 
 		public void SendData(string aData)
 		{
-			myLog.Debug("SendData(" + aData + ")");
+			// we have to wait, until the connection is initialized - otherwise ther is nor logger
+			if(this.myLog != null)
+			{
+				myLog.Debug("SendData(" + aData + ")");
+			}
 			if (this.myWriter != null)
 			{
 				try { this.myWriter.WriteLine(aData); }

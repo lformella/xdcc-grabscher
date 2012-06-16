@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Linq;
 using System.Threading;
 using agsXMPP;
 using agsXMPP.protocol.client;
@@ -123,13 +124,11 @@ namespace XG.Server.Jabber
 			if(aObj.GetType() == typeof(XGFilePart))
 			{
 				double speed = 0;
-				foreach(XGObject obj in this.myRunner.GetFiles())
+				try
 				{
-					if(obj.GetType() == typeof(XGFilePart))
-					{
-						speed += ((XGFilePart)obj).Speed;
-					}
+					speed = (from file in this.myRunner.Files from part in file.Parts select part.Speed).Sum();
 				}
+				catch  {}
 				this.UpdateState(speed);
 			}
 		}

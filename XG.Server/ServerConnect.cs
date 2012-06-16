@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -81,7 +82,7 @@ namespace XG.Server
 
 		public void Connect(XGServer aServer)
 		{
-			this.myLog = LogManager.GetLogger("Connection(" + aServer.Name + ":" + aServer.Port + ")");
+			this.myLog = LogManager.GetLogger("ServerConnect(" + aServer.Name + ":" + aServer.Port + ")");
 
 			this.myServer = aServer;
 			this.myServer.ChannelAddedEvent += new ServerChannelDelegate(server_ChannelAddedEventHandler);
@@ -100,12 +101,12 @@ namespace XG.Server
 			this.SendData("NICK " + Settings.Instance.IRCName);
 			this.SendData("USER " + Settings.Instance.IRCName + " " + Settings.Instance.IRCName + " " + this.myServer.Name + " :root");
 
-			foreach (XGChannel tChan in this.myServer.Children)
+			foreach (XGChannel tChan in this.myServer.Channels)
 			{
 				tChan.EnabledChangedEvent += new ObjectDelegate(channel_ObjectStateChangedEventHandler);
-				foreach (XGBot tBot in tChan.Children)
+				foreach (XGBot tBot in tChan.Bots)
 				{
-					foreach (XGPacket tPack in tBot.Children)
+					foreach (XGPacket tPack in tBot.Packets)
 					{
 						tPack.EnabledChangedEvent += new ObjectDelegate(packet_ObjectStateChangedEventHandler);
 					}
@@ -150,12 +151,12 @@ namespace XG.Server
 			this.myServer.ChannelAddedEvent -= new ServerChannelDelegate(server_ChannelAddedEventHandler);
 			this.myServer.ChannelRemovedEvent -= new ServerChannelDelegate(server_ChannelRemovedEventHandler);
 
-			foreach (XGChannel tChan in this.myServer.Children)
+			foreach (XGChannel tChan in this.myServer.Channels)
 			{
 				tChan.EnabledChangedEvent -= new ObjectDelegate(channel_ObjectStateChangedEventHandler);
-				foreach (XGBot tBot in tChan.Children)
+				foreach (XGBot tBot in tChan.Bots)
 				{
-					foreach (XGPacket tPack in tBot.Children)
+					foreach (XGPacket tPack in tBot.Packets)
 					{
 						tPack.EnabledChangedEvent -= new ObjectDelegate(packet_ObjectStateChangedEventHandler);
 					}
@@ -577,7 +578,7 @@ namespace XG.Server
 					myLog.Info("con_DataReceived() really connected");
 					myServer.Connected = true;
 					this.ObjectChange(myServer);
-					foreach (XGChannel chan in myServer.Children)
+					foreach (XGChannel chan in myServer.Channels)
 					{
 						/*if(!this.myOnlineUsers.ContainsKey(chan.Guid))
 						{
@@ -693,7 +694,7 @@ namespace XG.Server
 
 			else if (tData.StartsWith("DCC") && tBot != null)
 			{
-				XGPacket tPacket = tBot.getOldestActivePacket();
+				XGPacket tPacket = tBot.GetOldestActivePacket();
 				if (tPacket != null)
 				{
 					bool isOk = false;
@@ -705,6 +706,18 @@ namespace XG.Server
 					if (tDataList[1] == "SEND")
 					{
 						myLog.Info("con_DataReceived() DCC from " + tBot.Name);
+
+						// if the name of the file contains spaces, we have to replace em
+						if(tData.StartsWith("DCC SEND \""))
+						{
+							Match tMatch = Regex.Match(tData, "DCC SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
+							if (tMatch.Success)
+							{
+								tData = "DCC SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"];
+								tDataList = tData.Split(' ');
+							}
+						}
+
 						#region IP CALCULATING
 						try
 						{
@@ -988,7 +1001,7 @@ namespace XG.Server
 
 				#region COULD NOT PARSE
 
-				if (!isParsed && tBot.Children.Length > 0)
+				if (!isParsed && tBot.Packets.Count() > 0)
 				{
 					this.ParsingErrorEvent("[DCC Info] " + tBot.Name + " : " + this.ClearString(tData));
 				}
@@ -1089,11 +1102,11 @@ namespace XG.Server
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 						isParsed = true;
-						XGPacket tPack = tBot.getOldestActivePacket();
+						XGPacket tPack = tBot.GetOldestActivePacket();
 						if (tPack != null)
 						{
 							tPack.Enabled = false;
-							tBot.removePacket(tPack);
+							tBot.RemovePacket(tPack);
 							this.ObjectRemovedEvent(tBot, tPack);
 						}
 						myLog.Error("con_DataReceived() invalid packetnumber from " + tBot.Name);
@@ -1139,7 +1152,7 @@ namespace XG.Server
 						else if(tBot.BotState == BotState.Waiting)
 						{
 							// if there is no active packets lets remove us from the queue
-							if(tBot.getOldestActivePacket() == null) { this.UnregisterFromBot(tBot); }
+							if(tBot.GetOldestActivePacket() == null) { this.UnregisterFromBot(tBot); }
 						}
 					}
 				}
@@ -1265,7 +1278,7 @@ namespace XG.Server
 						}
 						else if (info.StartsWith("i don't send transfers to"))
 						{
-							foreach (XGPacket tPacket in tBot.Children)
+							foreach (XGPacket tPacket in tBot.Packets)
 							{
 								if (tPacket.Enabled)
 								{
@@ -1553,7 +1566,7 @@ namespace XG.Server
 				if (tBot.BotState == BotState.Idle)
 				{
 					// check if the packet is already downloaded, or active - than disable it and get the next one
-					XGPacket tPacket = tBot.getOldestActivePacket();
+					XGPacket tPacket = tBot.GetOldestActivePacket();
 					while (tPacket != null)
 					{
 						Int64 tChunk = this.myParent.GetNextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
@@ -1562,7 +1575,7 @@ namespace XG.Server
 							myLog.Warn("RequestFromBot(" + tBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
 							this.ObjectChange(tPacket);
-							tPacket = tBot.getOldestActivePacket();
+							tPacket = tBot.GetOldestActivePacket();
 						}
 						else
 						{
@@ -1653,9 +1666,9 @@ namespace XG.Server
 		{
 			this.ObjectAddedEvent(aServer, aChan);
 			aChan.EnabledChangedEvent += new ObjectDelegate(channel_ObjectStateChangedEventHandler);
-			foreach (XGBot tBot in aChan.Children)
+			foreach (XGBot tBot in aChan.Bots)
 			{
-				foreach (XGPacket tPack in tBot.Children)
+				foreach (XGPacket tPack in tBot.Packets)
 				{
 					tPack.EnabledChangedEvent += new ObjectDelegate(packet_ObjectStateChangedEventHandler);
 				}
@@ -1667,9 +1680,9 @@ namespace XG.Server
 		{
 			this.ObjectRemovedEvent(aServer, aChan);
 			aChan.EnabledChangedEvent -= new ObjectDelegate(channel_ObjectStateChangedEventHandler);
-			foreach (XGBot tBot in aChan.Children)
+			foreach (XGBot tBot in aChan.Bots)
 			{
-				foreach (XGPacket tPack in tBot.Children)
+				foreach (XGPacket tPack in tBot.Packets)
 				{
 					tPack.Enabled = false;
 					tPack.EnabledChangedEvent -= new ObjectDelegate(packet_ObjectStateChangedEventHandler);
@@ -1692,7 +1705,7 @@ namespace XG.Server
 			XGBot tBot = tPack.Parent;
 			if (tPack.Enabled)
 			{
-				if (tBot.getOldestActivePacket() == tPack) { this.RequestFromBot(tBot); }
+				if (tBot.GetOldestActivePacket() == tPack) { this.RequestFromBot(tBot); }
 			}
 			else
 			{

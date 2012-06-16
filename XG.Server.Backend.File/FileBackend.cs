@@ -250,19 +250,19 @@ namespace XG.Server.Backend.File
 					RootObject tObj = new RootObject();
 					tObj.Clone(this.myRunner.RootObject, false);
 
-					foreach (XGServer oldServ in this.myRunner.RootObject.Children)
+					foreach (XGServer oldServ in this.myRunner.RootObject.Servers)
 					{
 						XGServer newServ = new XGServer(tObj);
 						newServ.Clone(oldServ, false);
-						foreach (XGChannel oldChan in oldServ.Children)
+						foreach (XGChannel oldChan in oldServ.Channels)
 						{
 							XGChannel newChan = new XGChannel(newServ);
 							newChan.Clone(oldChan, false);
-							foreach (XGBot oldBot in oldChan.Children)
+							foreach (XGBot oldBot in oldChan.Bots)
 							{
 								XGBot newBot = new XGBot(newChan);
 								newBot.Clone(oldBot, false);
-								foreach (XGPacket oldPack in oldBot.Children)
+								foreach (XGPacket oldPack in oldBot.Packets)
 								{
 									XGPacket newPack = new XGPacket(newBot);
 									newPack.Clone(oldPack, false);

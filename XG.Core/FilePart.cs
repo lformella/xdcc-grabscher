@@ -22,6 +22,8 @@ namespace XG.Core
 	[Serializable()]
 	public class XGFilePart : XGObject
 	{
+		#region VARIABLES
+
 		public new XGFile Parent
 		{
 			get { return base.Parent as XGFile; }
@@ -156,9 +158,14 @@ namespace XG.Core
 			}
 		}
 
+		#endregion
+
+		#region CONSTRUCTOR
+
 		public XGFilePart() : base()
 		{
 		}
+
 		public XGFilePart(XGFile aParent) : this()
 		{
 			this.Parent = aParent;
@@ -180,5 +187,7 @@ namespace XG.Core
 			this.stopSize = aCopy.stopSize;
 			if(aFull) { this.Parent = aCopy.Parent; }
 		}
+
+		#endregion
 	}
 }

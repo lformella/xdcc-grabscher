@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using log4net;
 using MySql.Data.MySqlClient;
@@ -85,7 +86,7 @@ namespace XG.Server.Backend.MySql
 						dic["guid"] = bot.Guid.ToString ();
 						foreach(XGPacket pack in this.ExecuteQuery ("SELECT * FROM packet WHERE ParentGuid = @guid;", dic, typeof(XGPacket)))
 						{
-							bot.addPacket(pack);
+							bot.AddPacket(pack);
 						}
 					}
 				}
@@ -248,14 +249,14 @@ namespace XG.Server.Backend.MySql
 				XGServer obj = (XGServer)aObj;
 				dic.Add ("Port", obj.Port);
 				dic.Add ("ErrorCode", obj.ErrorCode);
-				dic.Add ("ChannelCount", obj.Children.Length);
+				dic.Add ("ChannelCount", obj.Channels.Count());
 			}
 			else if (aObj.GetType () == typeof(XGChannel))
 			{
 				XGChannel obj = (XGChannel)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
 				dic.Add ("ErrorCode", obj.ErrorCode);
-				dic.Add ("BotCount", obj.Children.Length);
+				dic.Add ("BotCount", obj.Bots.Count());
 			}
 			else if (aObj.GetType () == typeof(XGBot))
 			{
@@ -289,7 +290,7 @@ namespace XG.Server.Backend.MySql
 			if (aType == typeof(XGServer))
 			{
 				XGServer serv = new XGServer();
-				serv.SetGuid(new Guid((string)aDic ["Guid"]));
+				serv.Guid = new Guid((string)aDic ["Guid"]);
 				serv.Name = (string)aDic ["Name"];
 				serv.Connected = false;
 				serv.Enabled = (bool)aDic ["Enabled"];
@@ -299,7 +300,7 @@ namespace XG.Server.Backend.MySql
 			else if (aType == typeof(XGChannel))
 			{
 				XGChannel chan = new XGChannel();
-				chan.SetGuid(new Guid((string)aDic ["Guid"]));
+				chan.Guid = new Guid((string)aDic ["Guid"]);
 				chan.Name = (string)aDic ["Name"];
 				chan.Connected = false;
 				chan.Enabled = (bool)aDic ["Enabled"];
@@ -309,7 +310,7 @@ namespace XG.Server.Backend.MySql
 			else if (aType == typeof(XGBot))
 			{
 				XGBot bot = new XGBot();
-				bot.SetGuid(new Guid((string)aDic ["Guid"]));
+				bot.Guid = new Guid((string)aDic ["Guid"]);
 				bot.Name = (string)aDic ["Name"];
 				bot.Connected = false;
 				bot.Enabled = (bool)aDic ["Enabled"];
@@ -327,7 +328,7 @@ namespace XG.Server.Backend.MySql
 			else if (aType == typeof(XGPacket))
 			{
 				XGPacket pack = new XGPacket();
-				pack.SetGuid(new Guid((string)aDic ["Guid"]));
+				pack.Guid = new Guid((string)aDic ["Guid"]);
 				pack.Name = (string)aDic ["Name"];
 				pack.Connected = false;
 				pack.Enabled = (bool)aDic ["Enabled"];

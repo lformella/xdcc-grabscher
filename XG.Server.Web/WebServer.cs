@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -146,73 +147,25 @@ namespace XG.Server.Web
 					}
 
 					// no pass, no way
-					try
+					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != Settings.Instance.Password)
 					{
-						// nice try
-						if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != Settings.Instance.Password)
-						{
-							throw new Exception("Password wrong!");
-						}
-					}
-					catch (Exception ex)
-					{
-						myLog.Fatal("OpenClient() password", ex);
+						//throw new Exception("Password wrong!");
 						client.Response.Close();
 						return;
 					}
 
-					TCPClientRequest tMessage = TCPClientRequest.None;
-
-					// read the request id
-					try { tMessage = (TCPClientRequest)int.Parse(tDic["request"]); }
-					catch (Exception ex)
-					{
-						myLog.Fatal("OpenClient() read client request", ex);
-						return;
-					}
-
-					Comparison<XGObject> tComp = null;
-					if (tDic.ContainsKey("sidx"))
-					{
-						switch (tDic["sidx"])
-						{
-							case "name":
-								tComp = XGHelper.CompareObjectName;
-								if (tDic["sord"] == "desc") tComp = XGHelper.CompareObjectNameReverse;
-								break;
-							case "connected":
-								tComp = XGHelper.CompareObjectConnected;
-								if (tDic["sord"] == "desc") tComp = XGHelper.CompareObjectConnectedReverse;
-								break;
-							case "enabled":
-								tComp = XGHelper.CompareObjectEnabled;
-								if (tDic["sord"] == "desc") tComp = XGHelper.CompareObjectEnabledReverse;
-								break;
-							case "id":
-								tComp = XGHelper.ComparePacketId;
-								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketIdReverse;
-								break;
-							case "size":
-								tComp = XGHelper.ComparePacketSize;
-								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketSizeReverse;
-								break;
-							case "lastupdated":
-								tComp = XGHelper.ComparePacketLastUpdated;
-								if (tDic["sord"] == "desc") tComp = XGHelper.ComparePacketLastUpdatedReverse;
-								break;
-						}
-					}
+					TCPClientRequest tMessage = (TCPClientRequest)int.Parse(tDic["request"]);
 
 					#region DATA HANDLING
 
-					List<XGObject> list = null;
+					string response = "";
 
 					switch (tMessage)
 					{
 						# region VERSION
 
 						case TCPClientRequest.Version:
-							this.WriteToStream(client.Response, Settings.Instance.XgVersion);
+							response = Settings.Instance.XgVersion;
 							break;
 
 						#endregion
@@ -221,12 +174,10 @@ namespace XG.Server.Web
 
 						case TCPClientRequest.AddServer:
 							this.myRunner.AddServer(HttpUtility.UrlDecode(tDic["name"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						case TCPClientRequest.RemoveServer:
 							this.myRunner.RemoveServer(new Guid(tDic["guid"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						#endregion
@@ -235,12 +186,10 @@ namespace XG.Server.Web
 
 						case TCPClientRequest.AddChannel:
 							this.myRunner.AddChannel(new Guid(tDic["guid"]), tDic["name"]);
-							this.WriteToStream(client.Response, "");
 							break;
 
 						case TCPClientRequest.RemoveChannel:
 							this.myRunner.RemoveChannel(new Guid(tDic["guid"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						#endregion
@@ -249,12 +198,10 @@ namespace XG.Server.Web
 
 						case TCPClientRequest.ActivateObject:
 							this.myRunner.ActivateObject(new Guid(tDic["guid"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						case TCPClientRequest.DeactivateObject:
 							this.myRunner.DeactivateObject(new Guid(tDic["guid"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						#endregion
@@ -262,35 +209,18 @@ namespace XG.Server.Web
 						# region SEARCH
 
 						case TCPClientRequest.SearchPacket:
-							list = this.myRunner.SearchPacket(HttpUtility.UrlDecode(tDic["name"]), tComp);
-							break;
-
-						case TCPClientRequest.SearchPacketTime:
-							list = this.myRunner.SearchPacketTime(HttpUtility.UrlDecode(tDic["name"]), tComp);
-							break;
-
-						case TCPClientRequest.SearchPacketActiveDownloads:
-							list = this.myRunner.SearchPacketActiveDownloads(tComp);
-							break;
-
-						case TCPClientRequest.SearchPacketsEnabled:
-							list = this.myRunner.SearchPacketsEnabled(tComp);
+							client.Response.ContentType = "text/json";
+							response = this.Objects2Json(
+								this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"]),
+								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
 						case TCPClientRequest.SearchBot:
-							list = this.myRunner.SearchBot(HttpUtility.UrlDecode(tDic["name"]), tComp);
-							break;
-
-						case TCPClientRequest.SearchBotTime:
-							list = this.myRunner.SearchBotTime(HttpUtility.UrlDecode(tDic["name"]), tComp);
-							break;
-
-						case TCPClientRequest.SearchBotActiveDownloads:
-							list = this.myRunner.SearchBotActiveDownloads(tComp);
-							break;
-
-						case TCPClientRequest.SearchBotsEnabled:
-							list = this.myRunner.SearchBotsEnabled(tComp);
+							client.Response.ContentType = "text/json";
+							IEnumerable<XGPacket> tPacketList = this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"]);
+							response = this.Objects2Json(
+								(from s in this.myRunner.RootObject.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct(),
+								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
 						#endregion
@@ -299,16 +229,14 @@ namespace XG.Server.Web
 
 						case TCPClientRequest.AddSearch:
 							this.myRunner.AddSearch(HttpUtility.UrlDecode(tDic["name"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						case TCPClientRequest.RemoveSearch:
 							this.myRunner.RemoveSearch(HttpUtility.UrlDecode(tDic["name"]));
-							this.WriteToStream(client.Response, "");
 							break;
 
 						case TCPClientRequest.GetSearches:
-							this.WriteToStream(client.Response, this.Searches2Json(this.myRunner.GetSearches()));
+							response = this.Searches2Json(this.myRunner.Searches);
 							break;
 
 						#endregion
@@ -316,27 +244,48 @@ namespace XG.Server.Web
 						# region GET
 
 						case TCPClientRequest.GetObject:
-							this.WriteToStream(client.Response, this.myRunner.GetObject(new Guid(tDic["guid"])));
+							client.Response.ContentType = "text/json";
+							response = this.Object2Json(this.myRunner.RootObject.GetChildByGuid(new Guid(tDic["guid"])));
 							break;
 
 						case TCPClientRequest.GetServers:
-							list = this.myRunner.GetServers();
+							client.Response.ContentType = "text/json";
+							response = this.Objects2Json(this.myRunner.RootObject.Servers, int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
-						case TCPClientRequest.GetActivePackets:
-							list = this.myRunner.GetActivePackets();
+						case TCPClientRequest.GetChannelsFromServer:
+							client.Response.ContentType = "text/json";
+							response = this.Objects2Json(
+								from server in this.myRunner.RootObject.Servers
+								from channel in server.Channels
+									where channel.ParentGuid == new Guid(tDic["guid"]) select channel,
+								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
-						case TCPClientRequest.GetFiles:
-							list = this.myRunner.GetFiles();
+						case TCPClientRequest.GetBotsFromChannel:
+							client.Response.ContentType = "text/json";
+							response = this.Objects2Json(
+								from server in this.myRunner.RootObject.Servers
+								from channel in server.Channels
+								from bot in channel.Bots
+									where bot.ParentGuid == new Guid(tDic["guid"]) select bot,
+								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
-						case TCPClientRequest.GetChildrenFromObject:
-							list = this.myRunner.GetChildrenFromObject(new Guid(tDic["guid"]), tComp);
+						case TCPClientRequest.GetPacketsFromBot:
+							client.Response.ContentType = "text/json";
+							response = this.Objects2Json(
+								from server in this.myRunner.RootObject.Servers
+								from channel in server.Channels
+								from bot in channel.Bots
+								from packet in bot.Packets
+									where packet.ParentGuid == new Guid(tDic["guid"]) select packet,
+								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
 						case TCPClientRequest.GetStatistics:
-							this.WriteToStream(client.Response, this.Statistic2Json());
+							client.Response.ContentType = "text/json";
+							response = this.Statistic2Json();
 							break;
 
 						#endregion
@@ -345,7 +294,6 @@ namespace XG.Server.Web
 
 						case TCPClientRequest.CloseServer:
 							this.Stop();
-							this.WriteToStream(client.Response, "");
 							break;
 
 						#endregion
@@ -353,7 +301,6 @@ namespace XG.Server.Web
 						# region XDCC Link
 
 						case TCPClientRequest.ParseXdccLink:
-							//xdcc://irc.1andallirc.net/irc.1andallirc.net/#cosmic/{CoSmIc-Mp3Z}-{21667}/#6/Asking_Alexandria-Stepped_Up_And_Scratched-2011-MTD.rar/
 							string[] link = HttpUtility.UrlDecode(tDic["name"]).Substring(7).Split('/');
 							string serverName = link[0];
 							string channelName = link[2];
@@ -394,38 +341,15 @@ namespace XG.Server.Web
 								pack = new XGPacket();
 								pack.Id = packetId;
 								pack.Name = link[5];
-								bot.addPacket(pack);
+								bot.AddPacket(pack);
 							}
 							pack.Enabled = true;
-
-							this.WriteToStream(client.Response, "");
 							break;
 
 						#endregion
+					}
 
-						default:
-							this.WriteToStream(client.Response, "");
-							break;
-					}
-					
-					if (list != null)
-					{
-						if(tDic["offbots"] == "1")
-						{
-							foreach (XGObject tObj in list.ToArray())
-							{
-								if (tObj.GetType() == typeof(XGPacket) && !((XGPacket)tObj).Parent.Connected)
-								{
-									list.Remove(tObj);
-								}
-								else if (tObj.GetType() == typeof(XGBot) && !((XGBot)tObj).Connected)
-								{
-									list.Remove(tObj);
-								}
-							}
-						}
-						this.WriteToStream(client.Response, list, tDic["page"], tDic["rows"]);
-					}
+					this.WriteToStream(client.Response, response);
 
 					#endregion
 				}
@@ -466,7 +390,12 @@ namespace XG.Server.Web
 			}
 			catch (Exception ex)
 			{
-				myLog.Fatal("OpenClient() read", ex);
+				try
+				{
+					client.Response.Close();
+				}
+				catch {}
+				myLog.Fatal("OpenClient(" + str + ")", ex);
 			}
 #endif
 			myLog.Info("OpenClient() disconnected");
@@ -474,49 +403,80 @@ namespace XG.Server.Web
 
 		#endregion
 
+		private IEnumerable<XGPacket> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy)
+		{
+			IEnumerable<XGBot> bots = from server in this.myRunner.RootObject.Servers from channel in server.Channels from bot in channel.Bots select bot;
+			if(aShowOffBots)
+			{
+				bots = from bot in bots where bot.Connected select bot;
+			}
+			IEnumerable<XGPacket> tPackets = from bot in bots from packet in bot.Packets select packet;
+
+			switch(aSearchBy)
+			{
+				case "name":
+					string[] searches = aSearchString.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+					foreach (string search in searches)
+					{
+						tPackets = from packet in tPackets where packet.Name.ToLower().Contains(search.ToLower()) select packet;
+					}
+					break;
+
+				case "time":
+					string[] search = aSearchString.Split('-');
+					double start = Double.Parse(search[0]);
+					double stop = Double.Parse(search[1]);
+					DateTime init = new DateTime(1, 1, 1);
+					DateTime now = DateTime.Now;
+
+					tPackets =
+						from packet in tPackets where
+							packet.LastUpdated != init &&
+							start <= (now - packet.LastUpdated).TotalMilliseconds &&
+							stop >= (now - packet.LastUpdated).TotalMilliseconds
+						select packet;
+					break;
+
+				case "connected":
+					tPackets = from packet in tPackets where packet.Connected select packet;
+					break;
+
+				case "enabled":
+					tPackets = from packet in tPackets where packet.Enabled select packet;
+					break;
+			}
+
+			switch (aSortBy)
+			{
+				case "name":
+					tPackets = from packet in tPackets orderby packet.Name select packet;
+					break;
+
+				case "connected":
+					tPackets = from packet in tPackets orderby packet.Connected select packet;
+					break;
+
+				case "enabled":
+					tPackets = from packet in tPackets orderby packet.Enabled select packet;
+					break;
+
+				case "id":
+					tPackets = from packet in tPackets orderby packet.Id select packet;
+					break;
+
+				case "size":
+					tPackets = from packet in tPackets orderby packet.Size select packet;
+					break;
+
+				case "lastupdated":
+					tPackets = from packet in tPackets orderby packet.LastUpdated select packet;
+					break;
+			}
+
+			return tPackets;
+		}
+
 		#region WRITE TO STREAM
-
-		private void WriteToStream (HttpListenerResponse aResponse, XGObject aObj)
-		{
-			List<XGObject> list = new List<XGObject> ();
-			list.Add (aObj);
-			this.WriteToStream(aResponse, list, "", "");
-		}
-
-		private void WriteToStream(HttpListenerResponse aResponse, List<XGObject> aList, string aPage, string aRows)
-		{
-			int page = aPage != "" ? int.Parse(aPage) : 1;
-			int rows = aRows != "" ? int.Parse(aRows) : 1;
-			int count = 0;
-
-			StringBuilder sb = new StringBuilder();
-			bool first = true;
-			if (aPage != "" && aRows != "")
-			{
-				sb.Append("{");
-				sb.Append("\"page\":\"" + page + "\",");
-				sb.Append("\"total\":\"" + Math.Ceiling((double)aList.Count / (double)rows).ToString() + "\",");
-				sb.Append("\"records\":\"" + aList.Count + "\",");
-				sb.Append("\"rows\":[");
-			}
-			foreach (XGObject tObj in aList)
-			{
-				if (count >= (page - 1) * rows && count < page * rows)
-				{
-					if (first) { first = false; sb.Append(""); }
-					else { sb.Append(", "); }
-					sb.Append(this.Object2Json(tObj));
-				}
-				count++;
-			}
-			if (aPage != "" && aRows != "")
-			{
-				sb.Append("]}");
-			}
-
-			aResponse.ContentType = "text/json";
-			this.WriteToStream(aResponse, sb.ToString());
-		}
 
 		private void WriteToStream(HttpListenerResponse aResponse, string aData)
 		{
@@ -549,6 +509,28 @@ namespace XG.Server.Web
 				if(count < aData.Count) { sb.Append(","); }
 				sb.Append("");
 			}
+
+			sb.Append("]}");
+
+			return sb.ToString();
+		}
+
+		private string Objects2Json(IEnumerable<XGObject> aObjects, int aPage, int aRows)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append("{");
+			sb.Append("\"page\":\"" + aPage + "\",");
+			sb.Append("\"total\":\"" + Math.Ceiling((double)aObjects.Count() / (double)aRows).ToString() + "\",");
+			sb.Append("\"records\":\"" + aObjects.Count() + "\",");
+			sb.Append("\"rows\":[");
+
+			List<string> tList = new List<string>();
+			foreach (XGObject tObj in aObjects.Skip((aPage - 1) * aRows).Take(aRows))
+			{
+				tList.Add(this.Object2Json(tObj));
+			}
+			sb.Append(string.Join(",", tList));
 
 			sb.Append("]}");
 
@@ -589,11 +571,16 @@ namespace XG.Server.Web
 			else if (aObject.GetType() == typeof(XGBot))
 			{
 				XGBot tBot = (XGBot)aObject;
-				XGFilePart tPart = this.myRunner.GetFilePart4Bot(tBot);
+				double speed = 0;
+				try
+				{
+					speed = (from file in this.myRunner.Files from part in file.Parts where part.Packet.ParentGuid == tBot.Guid select part.Speed).Sum();
+				}
+				catch {}
 
 				sb.Append("\"Name\":\"" + this.ClearString(aObject.Name) + "\",");
 				sb.Append("\"BotState\":\"" + tBot.BotState + "\",");
-				sb.Append("\"Speed\":" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",");
+				sb.Append("\"Speed\":" + speed.ToString("0.00").Replace(",", ".") + ",");
 				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
 				sb.Append("\"QueueTime\":" + tBot.QueueTime + ",");
 				sb.Append("\"InfoSpeedMax\":" + tBot.InfoSpeedMax.ToString().Replace(',', '.') + ",");
@@ -608,7 +595,13 @@ namespace XG.Server.Web
 			else if (aObject.GetType() == typeof(XGPacket))
 			{
 				XGPacket tPack = (XGPacket)aObject;
-				XGFilePart tPart = this.myRunner.GetFilePart4Packet(tPack);
+
+				XGFilePart tPart = null;
+				try
+				{
+					tPart = (from file in this.myRunner.Files from part in file.Parts where part.Packet.Guid == tPack.Guid select part).SingleOrDefault();
+				}
+				catch {}
 
 				sb.Append("\"Id\":" + tPack.Id + ",");
 				sb.Append("\"Name\":\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
@@ -619,7 +612,7 @@ namespace XG.Server.Web
 				sb.Append("\"StopSize\":" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",");
 				sb.Append("\"CurrentSize\":" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",");
 				sb.Append("\"IsChecked\":\"" + (tPart == null ? "false" : tPart.IsChecked ? "true" : "false") + "\",");
-				sb.Append("\"Order\":\"" + (tPack.Parent.getOldestActivePacket() != tPack ? "false" : "true") + "\",");
+				sb.Append("\"Order\":\"" + (tPack.Parent.GetOldestActivePacket() != tPack ? "false" : "true") + "\",");
 				sb.Append("\"LastUpdated\":\"" + tPack.LastUpdated + "\"");
 			}
 

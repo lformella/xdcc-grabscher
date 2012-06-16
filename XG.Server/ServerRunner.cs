@@ -18,8 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
+using System.Linq;
 using log4net;
 using XG.Core;
 
@@ -44,10 +43,6 @@ namespace XG.Server
 		public RootObject RootObject
 		{
 			get { return this.myRootObject; }
-		}
-		public Guid RootGuid
-		{
-			get { return this.myRootObject != null ? this.myRootObject.Guid : Guid.Empty; }
 		}
 
 		private List<XGFile> myFiles;
@@ -105,9 +100,9 @@ namespace XG.Server
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database
-			foreach (XGServer serv in this.myRootObject.Children)
+			foreach (XGServer serv in this.myRootObject.Servers)
 			{
-				foreach (XGServer s in this.myRootObject.Children)
+				foreach (XGServer s in this.myRootObject.Servers)
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
@@ -122,9 +117,9 @@ namespace XG.Server
 					}
 				}
 
-				foreach (XGChannel chan in serv.Children)
+				foreach (XGChannel chan in serv.Channels)
 				{
-					foreach (XGChannel c in serv.Children)
+					foreach (XGChannel c in serv.Channels)
 					{
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
@@ -139,9 +134,9 @@ namespace XG.Server
 						}
 					}
 
-					foreach (XGBot bot in chan.Children)
+					foreach (XGBot bot in chan.Bots)
 					{
-						foreach (XGBot b in chan.Children)
+						foreach (XGBot b in chan.Bots)
 						{
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
@@ -156,14 +151,14 @@ namespace XG.Server
 							}
 						}
 
-						foreach (XGPacket pack in bot.Children)
+						foreach (XGPacket pack in bot.Packets)
 						{
-							foreach (XGPacket p in bot.Children)
+							foreach (XGPacket p in bot.Packets)
 							{
 								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
 									myLog.Error("Run() removing dupe Packet " + p.Name);
-									bot.removePacket(p);
+									bot.RemovePacket(p);
 
 									// dispatch this info to the clients to!
 									if (this.ObjectRemovedEvent != null)
@@ -182,22 +177,22 @@ namespace XG.Server
 			#region RESET
 
 			// reset all objects if the server crashed
-			foreach (XGServer serv in this.myRootObject.Children)
+			foreach (XGServer serv in this.myRootObject.Servers)
 			{
 				serv.Connected = false;
 				serv.ErrorCode = SocketErrorCode.None;
 
-				foreach (XGChannel chan in serv.Children)
+				foreach (XGChannel chan in serv.Channels)
 				{
 					chan.Connected = false;
 					chan.ErrorCode = 0;
 
-					foreach (XGBot bot in chan.Children)
+					foreach (XGBot bot in chan.Bots)
 					{
 						bot.Connected = false;
 						bot.BotState = BotState.Idle;
 
-						foreach (XGPacket pack in bot.Children)
+						foreach (XGPacket pack in bot.Packets)
 						{
 							pack.Connected = false;
 						}
@@ -244,7 +239,7 @@ namespace XG.Server
 						bool complete = true;
 						string tmpPath = Settings.Instance.TempPath + file.TmpPath;
 
-						foreach (XGFilePart part in file.Children)
+						foreach (XGFilePart part in file.Parts)
 						{
 							part.locked = new object();
 
@@ -310,7 +305,7 @@ namespace XG.Server
 
 						// check and maybee join the files if something happend the last run
 						// for exaple the disk was full or the rights were not there
-						if (complete && file.Children.Length > 0) { this.myServerHandler.CheckFile(file); }
+						if (complete && file.Parts.Count() > 0) { this.myServerHandler.CheckFile(file); }
 					}
 				}
 			}
@@ -318,7 +313,7 @@ namespace XG.Server
 			#endregion
 
 			// connect to all servers which are enabled
-			foreach (XGServer serv in this.myRootObject.Children)
+			foreach (XGServer serv in this.myRootObject.Servers)
 			{
 				serv.Parent = null;
 				serv.Parent = this.myRootObject;
@@ -339,7 +334,7 @@ namespace XG.Server
 			this.myRootObject.ServerRemovedEvent -= new RootServerDelegate(rootObject_ServerRemovedEventHandler);
 
 			// TODO stop server plugins
-			foreach (XGServer serv in myRootObject.Children)
+			foreach (XGServer serv in myRootObject.Servers)
 			{
 				this.myServerHandler.DisconnectServer(serv);
 			}
@@ -565,204 +560,6 @@ namespace XG.Server
 
 		#region SEARCH
 
-		#region PACKET
-
-		public List<XGObject> SearchPacket(string aString)
-		{
-			return this.SearchPacket(aString, null);
-		}
-
-		public List<XGObject> SearchPacket(string aString, Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			string[] searchList = aString.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (XGServer tServ in this.myRootObject.Children)
-			{
-				foreach (XGChannel tChan in tServ.Children)
-				{
-					foreach (XGBot tBot in tChan.Children)
-					{
-						foreach (XGPacket tPack in tBot.Children)
-						{
-							if (tPack.Name != "")
-							{
-								string name = tPack.Name.ToLower();
-
-								bool add = true;
-								for (int i = 0; i < searchList.Length; i++)
-								{
-									if (!name.Contains(searchList[i]))
-									{
-										add = false;
-										break;
-									}
-								}
-								if (add)
-								{
-									tList.Add(tPack);
-								}
-							}
-						}
-					}
-				}
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		public List<XGObject> SearchPacketTime(string aString)
-		{
-			return this.SearchPacketTime(aString, null);
-		}
-
-		public List<XGObject> SearchPacketTime(string aString, Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			string[] search = aString.Split('-');
-			double start = Double.Parse(search[0]);
-			double stop = Double.Parse(search[1]);
-			DateTime init = new DateTime(1, 1, 1);
-			DateTime now = DateTime.Now;
-			foreach (XGServer tServ in this.myRootObject.Children)
-			{
-				foreach (XGChannel tChan in tServ.Children)
-				{
-					foreach (XGBot tBot in tChan.Children)
-					{
-						foreach (XGPacket tPack in tBot.Children)
-						{
-							if (tPack.LastUpdated != init)
-							{
-								double diff = (now - tPack.LastUpdated).TotalMilliseconds;
-								if (start <= diff && stop >= diff)
-								{
-									tList.Add(tPack);
-								}
-							}
-						}
-					}
-				}
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		public List<XGObject> SearchPacketActiveDownloads()
-		{
-			return this.SearchPacketActiveDownloads(null);
-		}
-
-		public List<XGObject> SearchPacketActiveDownloads(Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			foreach (XGServer tServ in this.myRootObject.Children)
-			{
-				foreach (XGChannel tChan in tServ.Children)
-				{
-					foreach (XGBot tBot in tChan.Children)
-					{
-						foreach (XGPacket tPack in tBot.Children)
-						{
-							if (tPack.Connected)
-							{
-								tList.Add(tPack);
-							}
-						}
-					}
-				}
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		public List<XGObject> SearchPacketsEnabled()
-		{
-			return this.SearchPacketsEnabled(null);
-		}
-
-		public List<XGObject> SearchPacketsEnabled(Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			foreach (XGServer tServ in this.myRootObject.Children)
-			{
-				foreach (XGChannel tChan in tServ.Children)
-				{
-					foreach (XGBot tBot in tChan.Children)
-					{
-						foreach (XGPacket tPack in tBot.Children)
-						{
-							if (tPack.Enabled)
-							{
-								tList.Add(tPack);
-							}
-						}
-					}
-				}
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		#endregion
-
-		#region BOT
-
-		public List<XGObject> SearchBot(string aString)
-		{
-			return this.SearchBot(aString, null);
-		}
-
-		public List<XGObject> SearchBot(string aString, Comparison<XGObject> aComp)
-		{
-			return this.GetBots2Packets(this.SearchPacket(aString, aComp), aComp);
-		}
-
-		public List<XGObject> SearchBotTime(string aString)
-		{
-			return this.SearchBotTime(aString, null);
-		}
-
-		public List<XGObject> SearchBotTime(string aString, Comparison<XGObject> aComp)
-		{
-			return this.GetBots2Packets(this.SearchPacketTime(aString, aComp), aComp);
-		}
-
-		public List<XGObject> SearchBotActiveDownloads()
-		{
-			return this.SearchBotActiveDownloads(null);
-		}
-
-		public List<XGObject> SearchBotActiveDownloads(Comparison<XGObject> aComp)
-		{
-			return this.GetBots2Packets(this.SearchPacketActiveDownloads(aComp), aComp);
-		}
-
-		public List<XGObject> SearchBotsEnabled()
-		{
-			return this.SearchBotsEnabled(null);
-		}
-
-		public List<XGObject> SearchBotsEnabled(Comparison<XGObject> aComp)
-		{
-			return this.GetBots2Packets(this.SearchPacketsEnabled(aComp), aComp);
-		}
-
-		private List<XGObject> GetBots2Packets(List<XGObject> aList, Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			foreach (XGPacket tPack in aList)
-			{
-				if (tList.Contains(tPack.Parent)) { continue; }
-				tList.Add(tPack.Parent);
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		#endregion
-
-		#region SPECIAL
-
 		public void AddSearch(string aSearch)
 		{
 			this.mySearches.Add(aSearch);
@@ -784,153 +581,7 @@ namespace XG.Server
 		}
 
 		#endregion
-
-		#endregion
-
-		#region GET
-
-		public List<XGObject> GetServers()
-		{
-			List<XGObject> tList = new List<XGObject>();
-			foreach (XGServer tServ in this.myRootObject.Children)
-			{
-				tList.Add(tServ);
-			}
-			return tList;
-		}
-
-		public List<XGObject> GetActivePackets()
-		{
-			List<XGObject> tList = new List<XGObject>();
-			foreach (XGServer tServ in this.myRootObject.Children)
-			{
-				foreach (XGChannel tChan in tServ.Children)
-				{
-					foreach (XGBot tBot in tChan.Children)
-					{
-						foreach (XGPacket tPack in tBot.Children)
-						{
-							if (tPack.Enabled)
-							{
-								tList.Add(tPack);
-							}
-						}
-					}
-				}
-			}
-			return tList;
-		}
-
-		public XGFilePart GetFilePart4Packet(XGPacket aPacket)
-		{
-			foreach (XGFile tFile in this.myFiles)
-			{
-				foreach (XGFilePart tPart in tFile.Children)
-				{
-					if (tPart.Packet == aPacket)
-					{
-						return tPart;
-					}
-				}
-			}
-			return null;
-		}
-
-		public XGFilePart GetFilePart4Bot(XGBot aBot)
-		{
-			XGFilePart tPart = null;
-			foreach (XGPacket tPack in aBot.Children)
-			{
-				tPart = this.GetFilePart4Packet(tPack);
-				if (tPart != null)
-				{
-					break;
-				}
-			}
-			return tPart;
-		}
-
-		public List<XGObject> GetFiles()
-		{
-			return this.GetFiles(null);
-		}
-
-		public List<string> GetSearches()
-		{
-			return this.mySearches;
-		}
-
-		public List<XGObject> GetFiles(Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			foreach (XGFile tFile in this.myFiles.ToArray())
-			{
-				tList.Add(tFile);
-				foreach (XGFilePart tPart in tFile.Children)
-				{
-					tList.Add(tPart);
-				}
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		public XGObject GetObject(Guid aGuid)
-		{
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				return tObj;
-			}
-			else
-			{
-				foreach (XGFile tFile in this.myFiles.ToArray())
-				{
-					if (tFile.Guid == aGuid)
-					{
-						return tFile;
-					}
-				}
-			}
-			return null;
-		}
-
-		public List<XGObject> GetChildrenFromObject(Guid aGuid)
-		{
-			return this.GetChildrenFromObject(aGuid, null);
-		}
-
-		public List<XGObject> GetChildrenFromObject(Guid aGuid, Comparison<XGObject> aComp)
-		{
-			List<XGObject> tList = new List<XGObject>();
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				foreach (XGObject tChild in tObj.Children)
-				{
-					tList.Add(tChild);
-				}
-			}
-			else
-			{
-				foreach (XGFile tFile in this.myFiles.ToArray())
-				{
-					if (tFile.Guid == aGuid)
-					{
-						foreach (XGFilePart tPart in tFile.Children)
-						{
-							tList.Add(tPart);
-						}
-						break;
-					}
-				}
-			}
-			if (aComp != null) { tList.Sort(aComp); }
-			return tList;
-		}
-
-		#endregion
-
+		
 		#endregion
 	}
 }

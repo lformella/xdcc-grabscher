@@ -17,17 +17,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace XG.Core
 {
 	[Serializable()]
 	public class XGObject
 	{
+		#region EVENTS
+
 		[field: NonSerialized()]
 		public event ObjectDelegate EnabledChangedEvent;
 
 		[field: NonSerialized()]
 		public object locked = new object();
+
+		#endregion
+
+		#region VARIABLES
 
 		private Guid parentGuid;
 		public Guid ParentGuid
@@ -50,10 +57,10 @@ namespace XG.Core
 			}
 		}
 
-		private Guid guid;
 		public Guid Guid
 		{
-			get { return this.guid; }
+			get;
+			set;
 		}
 
 		private bool connected;
@@ -129,21 +136,17 @@ namespace XG.Core
 			set { this.modified = value; }
 		}
 
+		#endregion
+
+		#region CHILDREN
+
 		private List<XGObject> children;
-		public XGObject[] Children
+		protected IEnumerable<XGObject> Children
 		{
-			get
-			{
-				// wtf???
-				// System.ArgumentException: Destination array was not long enough. Check destIndex and length, and the array's lower bounds
-				try { return this.children.ToArray(); }
-				catch (Exception) { return new XGObject[0]; }
-			}
+			get { return this.children.ToArray(); }
 		}
 
-		#region ALTER CHILDREN
-
-		public bool AddChild(XGObject aObject)
+		protected bool AddChild(XGObject aObject)
 		{
 			if (aObject != null)
 			{
@@ -153,12 +156,10 @@ namespace XG.Core
 					if (tObj != null)
 					{
 						XGHelper.CloneObject(aObject, tObj, true);
-						//this.children.Sort(XGHelper.CompareObjects);
 					}
 					else
 					{
 						this.children.Add(aObject);
-						//this.children.Sort(XGHelper.CompareObjects);
 						aObject.Parent = this;
 						return true;
 					}
@@ -167,7 +168,7 @@ namespace XG.Core
 			return false;
 		}
 
-		public bool RemoveChild(XGObject aObject)
+		protected bool RemoveChild(XGObject aObject)
 		{
 			if (aObject != null)
 			{
@@ -179,10 +180,6 @@ namespace XG.Core
 			}
 			return false;
 		}
-
-		#endregion
-
-		#region GET CHILDREN
 
 		public XGObject GetChildByGuid(Guid aGuid)
 		{
@@ -222,16 +219,13 @@ namespace XG.Core
 
 		#endregion
 
-		public void SetGuid(Guid aGuid)
-		{
-			this.guid = aGuid;
-		}
+		#region CONSTRUCTOR
 
 		public XGObject()
 		{
 			this.name = "";
 			this.children = new List<XGObject>();
-			this.guid = Guid.NewGuid();
+			this.Guid = Guid.NewGuid();
 			this.connected = false;
 			this.enabled = false;
 		}
@@ -239,7 +233,7 @@ namespace XG.Core
 		public void Clone(XGObject aCopy, bool aFull)
 		{
 			this.parentGuid = aCopy.parentGuid;
-			this.guid = aCopy.guid;
+			this.Guid = aCopy.Guid;
 			this.name = aCopy.name;
 			this.enabled = aCopy.enabled;
 			this.lastModified = aCopy.lastModified;
@@ -248,5 +242,7 @@ namespace XG.Core
 				this.connected = aCopy.connected;
 			}
 		}
+
+		#endregion
 	}
 }

@@ -40,19 +40,6 @@ namespace XG.Core
 	}
 
 	[Flags]
-	public enum TCPServerResponse : byte
-	{
-		None,
-
-		ObjectChanged,
-		ObjectAdded,
-		ObjectRemoved,
-
-		ObjectBlockStart,
-		ObjectBlockStop
-	}
-
-	[Flags]
 	public enum TCPClientRequest : byte
 	{
 		None = 0,
@@ -67,30 +54,23 @@ namespace XG.Core
 		DeactivateObject = 7,
 
 		SearchPacket = 8,
-		SearchPacketTime = 9,
-		SearchPacketActiveDownloads = 10,
-		SearchPacketsEnabled = 11,
-		SearchBot = 12,
-		SearchBotTime = 13,
-		SearchBotActiveDownloads = 14,
-		SearchBotsEnabled = 15,
+		SearchBot = 9,
 
-		GetServers = 16,
-		GetActivePackets = 17,
-		GetFiles = 18,
-		GetObject = 19,
-		GetChildrenFromObject = 20,
+		GetServers = 10,
+		GetChannelsFromServer = 11,
+		GetBotsFromChannel = 12,
+		GetPacketsFromBot = 13,
+		GetFiles = 14,
+		GetObject = 15,
 
-		AddSearch = 21,
-		RemoveSearch = 22,
-		GetSearches = 23,
+		AddSearch = 16,
+		RemoveSearch = 17,
+		GetSearches = 18,
 
-		GetStatistics = 24,
+		GetStatistics = 19,
+		ParseXdccLink = 20,
 
-		CloseClient = 25,
-		CloseServer = 26,
-
-		ParseXdccLink = 27
+		CloseServer = 21
 	}
 
 	[Flags]
@@ -214,175 +194,6 @@ namespace XG.Core
 				if (aBytes1[i] != aBytes2[i]) { return false; }
 			}
 			return true;
-		}
-
-		public static int CompareObjects(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					if (aObj1.GetType() == typeof(XGPacket))
-					{
-						int ret = ((XGPacket)aObj1).Id.CompareTo(((XGPacket)aObj2).Id);
-						return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
-					}
-					else if (aObj1.GetType() == typeof(XGFilePart))
-					{
-						return ((XGFilePart)aObj1).StartSize.CompareTo(((XGFilePart)aObj2).StartSize);
-					}
-					else { return aObj1.Name.CompareTo(aObj2.Name); }
-				}
-			}
-		}
-
-		#endregion
-
-		#region COMPARING EXTENDED
-
-		public static int CompareObjectName(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					return aObj1.Name.CompareTo(aObj2.Name);
-				}
-			}
-		}
-
-		public static int CompareObjectNameReverse(XGObject aObj1, XGObject aObj2)
-		{
-			return CompareObjectName(aObj2, aObj1);
-		}
-
-		public static int CompareObjectConnected(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					int ret = aObj1.Connected.CompareTo(aObj2.Connected);
-					return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
-				}
-			}
-		}
-
-		public static int CompareObjectConnectedReverse(XGObject aObj1, XGObject aObj2)
-		{
-			return CompareObjectConnected(aObj2, aObj1);
-		}
-
-		public static int CompareObjectEnabled(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					int ret = aObj1.Enabled.CompareTo(aObj2.Enabled);
-					return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
-				}
-			}
-		}
-
-		public static int CompareObjectEnabledReverse(XGObject aObj1, XGObject aObj2)
-		{
-			return CompareObjectEnabled(aObj2, aObj1);
-		}
-
-		public static int ComparePacketId(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					int ret = ((XGPacket)aObj1).Id.CompareTo(((XGPacket)aObj2).Id);
-					return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
-				}
-			}
-		}
-
-		public static int ComparePacketIdReverse(XGObject aObj1, XGObject aObj2)
-		{
-			return ComparePacketId(aObj2, aObj1);
-		}
-
-		public static int ComparePacketSize(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					XGPacket tPack1 = (XGPacket)aObj1;
-					XGPacket tPack2 = (XGPacket)aObj2;
-					int ret = (tPack1.RealSize > 0 ? tPack1.RealSize : tPack1.Size).CompareTo(tPack2.RealSize > 0 ? tPack2.RealSize : tPack2.Size);
-					return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
-				}
-			}
-		}
-
-		public static int ComparePacketSizeReverse(XGObject aObj1, XGObject aObj2)
-		{
-			return ComparePacketSize(aObj2, aObj1);
-		}
-
-		public static int ComparePacketLastUpdated(XGObject aObj1, XGObject aObj2)
-		{
-			if (aObj1 == null)
-			{
-				if (aObj2 == null) { return 0; }
-				else { return -1; }
-			}
-			else
-			{
-				if (aObj2 == null) { return 1; }
-				else
-				{
-					int ret = ((XGPacket)aObj1).LastUpdated.CompareTo(((XGPacket)aObj2).LastUpdated);
-					return ret != 0 ? ret : aObj1.Name.CompareTo(aObj2.Name);
-				}
-			}
-		}
-
-		public static int ComparePacketLastUpdatedReverse(XGObject aObj1, XGObject aObj2)
-		{
-			return ComparePacketLastUpdated(aObj2, aObj1);
 		}
 
 		#endregion

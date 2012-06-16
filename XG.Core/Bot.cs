@@ -16,6 +16,8 @@
 // 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace XG.Core
@@ -23,6 +25,8 @@ namespace XG.Core
 	[Serializable()]
 	public class XGBot : XGObject
 	{
+		#region VARIABLES
+
 		public new XGChannel Parent
 		{
 			get { return base.Parent as XGChannel; }
@@ -46,7 +50,7 @@ namespace XG.Core
 
 				if(value == BotState.Waiting)
 				{
-					this.currentQueuedPacket = this.getOldestActivePacket();
+					this.currentQueuedPacket = this.GetOldestActivePacket();
 				}
 				else
 				{
@@ -208,54 +212,58 @@ namespace XG.Core
 			}
 		}
 
+		#endregion
+
+		#region CHILDREN
+
+		public IEnumerable<XGPacket> Packets
+		{
+			get { return base.Children.Cast<XGPacket>(); }
+		}
+
 		public XGPacket this[int id]
 		{
 			get
 			{
-				foreach (XGPacket pack in base.Children)
+				try
 				{
-					if (pack.Id == id) { return pack; }
+					return this.Packets.First(pack => pack.Id == id);
 				}
+				catch {}
 				return null;
 			}
 		}
 
-		public void addPacket(XGPacket aPacket)
+		public void AddPacket(XGPacket aPacket)
 		{
-			this.AddChild(aPacket);
+			base.AddChild(aPacket);
 		}
-		public void removePacket(XGPacket aPacket)
+		
+		public void RemovePacket(XGPacket aPacket)
 		{
-			this.RemoveChild(aPacket);
+			base.RemoveChild(aPacket);
 		}
 
-		public XGPacket getOldestActivePacket()
+		public XGPacket GetOldestActivePacket()
 		{
-			XGPacket returnPacket = null;
-			if (Children.Length > 0)
+			try
 			{
-				foreach (XGPacket tPack in base.Children)
-				{
-					if (tPack.Enabled)
-					{
-						if (returnPacket == null)
-						{
-							returnPacket = tPack;
-						}
-						else if (tPack.LastModified < returnPacket.LastModified)
-						{
-							returnPacket = tPack;
-						}
-					}
-				}
+				return this.Packets.OrderBy(packet => packet.LastModified).First(pack => pack.Enabled);
 			}
-			return returnPacket;
+			catch (InvalidOperationException)
+			{
+				return null;
+			}
 		}
 
 		public XGPacket GetCurrentQueuedPacket()
 		{
 			return this.currentQueuedPacket;
 		}
+
+		#endregion
+
+		#region CONSTRUCTOR
 
 		public XGBot() : base()
 		{
@@ -285,5 +293,7 @@ namespace XG.Core
 				this.queueTime = aCopy.queueTime;
 			}
 		}
+
+		#endregion
 	}
 }

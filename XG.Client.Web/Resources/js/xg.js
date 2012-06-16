@@ -23,55 +23,48 @@ function Enum() {}
 
 Enum.TCPClientRequest =
 {
-	None : 0,
-	Version : 1,
+	None: 0,
+	Version: 1,
 
-	AddServer : 2,
-	RemoveServer : 3,
-	AddChannel : 4,
-	RemoveChannel : 5,
+	AddServer: 2,
+	RemoveServer: 3,
+	AddChannel: 4,
+	RemoveChannel: 5,
 
-	ActivateObject : 6,
-	DeactivateObject : 7,
+	ActivateObject: 6,
+	DeactivateObject: 7,
 
-	SearchPacket : 8,
-	SearchPacketTime : 9,
-	SearchPacketActiveDownloads : 10,
-	SearchPacketsEnabled : 11,
-	SearchBot : 12,
-	SearchBotTime : 13,
-	SearchBotActiveDownloads : 14,
-	SearchBotsEnabled : 15,
+	SearchPacket: 8,
+	SearchBot: 9,
 
-	GetServers : 16,
-	GetActivePackets : 17,
-	GetFiles : 18,
-	GetObject : 19,
-	GetChildrenFromObject : 20,
+	GetServers: 10,
+	GetChannelsFromServer: 11,
+	GetBotsFromChannel: 12,
+	GetPacketsFromBot: 13,
+	GetFiles: 14,
+	GetObject: 15,
 
-	AddSearch : 21,
-	RemoveSearch : 22,
-	GetSearches : 23,
+	AddSearch: 16,
+	RemoveSearch: 17,
+	GetSearches: 18,
 
-	GetStatistics : 24,
+	GetStatistics: 19,
+	ParseXdccLink: 20,
 
-	CloseClient : 25,
-	CloseServer : 26,
-
-	ParseXdccLink : 27
+	CloseServer: 21
 };
 
 Enum.TangoColor =
 {
-	Butter		: { Light : "fce94f", Middle : "edd400", Dark : "c4a000"},
-	Orange		: { Light : "fcaf3e", Middle : "f57900", Dark : "ce5c00"},
-	Chocolate	: { Light : "e9b96e", Middle : "c17d11", Dark : "8f5902"},
-	Chameleon	: { Light : "8ae234", Middle : "73d216", Dark : "4e9a06"},
-	SkyBlue		: { Light : "729fcf", Middle : "3465a4", Dark : "204a87"},
-	Plum		: { Light : "ad7fa8", Middle : "75507b", Dark : "5c3566"},
-	ScarletRed	: { Light : "ef2929", Middle : "cc0000", Dark : "a40000"},
-	Aluminium1	: { Light : "eeeeec", Middle : "d3d7cf", Dark : "babdb6"},
-	Aluminium2	: { Light : "888a85", Middle : "555753", Dark : "2e3436"}
+	Butter		: { Light: "fce94f", Middle: "edd400", Dark: "c4a000"},
+	Orange		: { Light: "fcaf3e", Middle: "f57900", Dark: "ce5c00"},
+	Chocolate	: { Light: "e9b96e", Middle: "c17d11", Dark: "8f5902"},
+	Chameleon	: { Light: "8ae234", Middle: "73d216", Dark: "4e9a06"},
+	SkyBlue		: { Light: "729fcf", Middle: "3465a4", Dark: "204a87"},
+	Plum		: { Light: "ad7fa8", Middle: "75507b", Dark: "5c3566"},
+	ScarletRed	: { Light: "ef2929", Middle: "cc0000", Dark: "a40000"},
+	Aluminium1	: { Light: "eeeeec", Middle: "d3d7cf", Dark: "babdb6"},
+	Aluminium2	: { Light: "888a85", Middle: "555753", Dark: "2e3436"}
 };
 
 /* ****************************************************************************************************************** */
@@ -130,7 +123,7 @@ $(function()
 				var serv = jQuery('#servers').getRowData(id);
 				if(serv)
 				{
-					jQuery("#channels").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
+					jQuery("#channels").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id), page:1}).trigger("reloadGrid");
 				}
 			}
 		},
@@ -294,8 +287,7 @@ $(function()
 			if(id)
 			{
 				search_active = false;
-				var bot = jQuery('#bots').getRowData(id);
-				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChildrenFromObject, id), page:1}).trigger("reloadGrid");
+				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id), page:1}).trigger("reloadGrid");
 			}
 		},
 		rowNum: 100,
@@ -375,7 +367,7 @@ $(function()
 				}				
 			}
 		},
-		afterInsertRow: function(id, rowdata)
+		afterInsertRow: function(id)
 		{
 			var pack = jQuery('#packets').getRowData(id);
 			if(search_active && pack)
@@ -420,24 +412,24 @@ $(function()
 				switch(id)
 				{
 					case "1":
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBotTime, "0-86400000");
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketTime, "0-86400000");
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, "0-86400000") + "&searchBy=time";
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, "0-86400000") + "&searchBy=time";
 						break;
 					case "2":
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBotTime, "0-604800000");
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketTime, "0-604800000");
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, "0-604800000") + "&searchBy=time";
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, "0-604800000") + "&searchBy=time";
 						break;
 					case "3":
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBotActiveDownloads, data.Name);
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketActiveDownloads, data.Name);
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=connected";
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=connected";
 						break;
 					case "4":
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBotsEnabled, data.Name);
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacketsEnabled, data.Name);
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=enabled";
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=enabled";
 						break;
 					default:
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name);
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name);
+						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=name";
+						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=name";
 						break;
 				}
 

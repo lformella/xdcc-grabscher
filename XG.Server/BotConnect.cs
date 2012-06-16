@@ -17,6 +17,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using log4net;
 using XG.Core;
@@ -316,7 +317,7 @@ namespace XG.Server
 						this.Part.PartState = FilePartState.Broken;
 						myLog.Error("con_Disconnected() size is bigger than excepted: " + this.CurrrentSize + " > " + this.StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
-						if (this.File.Children.Length == 1 || this.Part.StopSize == this.File.Size)
+						if (this.File.Parts.Count() == 1 || this.Part.StopSize == this.File.Size)
 						{
 							this.myParent.RemoveFile(this.File);
 							myLog.Error("con_Disconnected() removing corupted file " + this.File.Name);

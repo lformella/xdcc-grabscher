@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -542,7 +543,7 @@ namespace XG.Server
 
 			// check if this file is currently downloaded
 			bool skip = false;
-			foreach (XGFilePart part in aFile.Children)
+			foreach (XGFilePart part in aFile.Parts)
 			{
 				// disable the packet if it is active
 				if (part.PartState == FilePartState.Open)
@@ -575,8 +576,8 @@ namespace XG.Server
 		{
 			XGFilePart returnPart = null;
 
-			XGObject[] parts = aFile.Children;
-			if (parts.Length == 0 && aSize == 0)
+			IEnumerable<XGFilePart> parts = aFile.Parts;
+			if (parts.Count() == 0 && aSize == 0)
 			{
 				returnPart = new XGFilePart();
 				returnPart.StartSize = aSize;
@@ -637,7 +638,7 @@ namespace XG.Server
 		{
 			myLog.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
 
-			XGObject[] parts = aFile.Children;
+			IEnumerable<XGFilePart> parts = aFile.Parts;
 			foreach (XGFilePart part in parts)
 			{
 				if (part.StopSize == aPart.StartSize)
@@ -654,7 +655,7 @@ namespace XG.Server
 			}
 
 			aFile.RemovePart(aPart);
-			if (aFile.Children.Length == 0) { this.RemoveFile(aFile); }
+			if (aFile.Parts.Count() == 0) { this.RemoveFile(aFile); }
 			else
 			{
 				this.FileDelete(this.GetCompletePath(aPart));
@@ -678,8 +679,8 @@ namespace XG.Server
 			if (tFile == null) { return 0; }
 
 			Int64 nextSize = -1;
-			XGObject[] parts = tFile.Children;
-			if (parts.Length == 0) { nextSize = 0; }
+			IEnumerable<XGFilePart> parts = tFile.Parts;
+			if (parts.Count() == 0) { nextSize = 0; }
 			else
 			{
 				// first search incomplete parts not in use
@@ -756,8 +757,8 @@ namespace XG.Server
 		private Int64 CheckNextReferenceBytes(XGFilePart aPart, byte[] aBytes, bool aThreaded)
 		{
 			XGFile tFile = aPart.Parent;
-			XGObject[] parts = tFile.Children;
-			myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Length + " parts called");
+			IEnumerable<XGFilePart> parts = tFile.Parts;
+			myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() + " parts called");
 
 			foreach (XGFilePart part in parts)
 			{
@@ -882,10 +883,10 @@ namespace XG.Server
 			lock (aFile.locked)
 			{
 				myLog.Info("CheckFile(" + aFile.Name + ")");
-				if (aFile.Children.Length == 0) { return; }
+				if (aFile.Parts.Count() == 0) { return; }
 
 				bool complete = true;
-				XGObject[] parts = aFile.Children;
+				IEnumerable<XGFilePart> parts = aFile.Parts;
 				foreach (XGFilePart part in parts)
 				{
 					if (part.PartState != FilePartState.Ready)
@@ -924,13 +925,13 @@ namespace XG.Server
 				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
 				{
 					XGServer tServ = kvp.Key;
-					foreach (XGChannel tChan in tServ.Children)
+					foreach (XGChannel tChan in tServ.Channels)
 					{
 						if (tChan.Connected)
 						{
-							foreach (XGBot tBot in tChan.Children)
+							foreach (XGBot tBot in tChan.Bots)
 							{
-								foreach (XGPacket tPack in tBot.Children)
+								foreach (XGPacket tPack in tBot.Packets)
 								{
 									if (tPack.Enabled && (
 										XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) ||
@@ -949,14 +950,14 @@ namespace XG.Server
 
 				#endregion
 
-				if (tFile.Children.Length == 0)
+				if (tFile.Parts.Count() == 0)
 				{
 					return;
 				}
 
 				bool error = true;
 				bool deleteOnError = true;
-				XGObject[] parts = tFile.Children;
+				IEnumerable<XGFilePart> parts = tFile.Parts;
 				string fileReady = Settings.Instance.ReadyPath + tFile.Name;
 
 				try
@@ -1109,13 +1110,13 @@ namespace XG.Server
 				{
 					if (kvp.Value.IsRunning)
 					{
-						foreach (XGChannel tChan in kvp.Key.Children)
+						foreach (XGChannel tChan in kvp.Key.Channels)
 						{
 							if (tChan.Connected)
 							{
-								foreach (XGBot tBot in tChan.Children)
+								foreach (XGBot tBot in tChan.Bots)
 								{
-									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.getOldestActivePacket() == null)
+									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.GetOldestActivePacket() == null)
 									{
 										a++;
 										tChan.RemoveBot(tBot);
