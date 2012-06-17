@@ -75,9 +75,9 @@ var Password = "";
 
 var id_server;
 var id_search;
-var last_search;
 
 var search_active = false;
+var search_mode = 0;
 
 function JsonUrl(password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
@@ -428,8 +428,17 @@ $(function()
 						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=enabled";
 						break;
 					default:
-						url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=name";
-						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=name";
+						switch(search_mode)
+						{
+							case 0:
+								url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=name";
+								url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=name";
+								break;
+							case 1:
+								jQuery("#search-xg-bitpir-at").clearGridData();
+								jQuery("#search-xg-bitpir-at").setGridParam({url:"http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + data.Name}).trigger("reloadGrid");
+								break;
+						}
 						break;
 				}
 
@@ -528,8 +537,8 @@ $(function()
 					$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
 				}
 			},
-			rowNum:20,
-			rowList:[20, 40, 80, 160],
+			rowNum: 100,
+			rowList: [100, 200, 400, 800],
 			pager:jQuery('#search-pager-xg-bitpir-at'),
 			sortname:'Id',
 			viewrecords:true,
@@ -539,14 +548,6 @@ $(function()
 			sortorder:"asc",
 			caption: "Search via xg.bitpir.at"
 		}).navGrid('#search-pager-xg-bitpir-at', {edit:false, add:false, del:false, search:false});
-
-	$("#search-input").keyup(function (e)
-	{
-		if (e.which == 13)
-		{
-			DoSearch($(this).val());
-		}
-	});
 
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
@@ -588,8 +589,21 @@ $(function()
 	{
 		$("#dialog_server_channels").dialog("open");
 	});
-
 	$("#dialog_server_channels").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		width: 505,
+		modal: true,
+		resizable: false
+	});
+
+	jQuery("#statistics-button").button({icons: { primary: "ui-icon-comment" }});
+	jQuery("#statistics-button").click( function()
+	{
+		RefreshStatistic();
+		$("#dialog_statistics").dialog("open");
+	});
+	$("#dialog_statistics").dialog({
 		bgiframe: true,
 		autoOpen: false,
 		width: 505,
@@ -612,6 +626,12 @@ $(function()
 	/* ************************************************************************************************************** */
 
 	jQuery("#tabs").tabs();
+	$("#tabs").tabs({
+		select: function(event, ui)
+		{
+			search_mode = ui.index;
+		}
+	});
 
 	jQuery("#offbots").button();
 });
@@ -717,7 +737,6 @@ function ButtonConnectClicked(dialog)
 
 		// start the refresh
 		RefreshGrid(0);
-		RefreshStatistic();
 	}
 	else
 	{
@@ -846,8 +865,6 @@ function RefreshStatistic()
 			$("#SpeedAvg").html(Helper.speed2Human(result.SpeedAvg));
 		}
 	);
-
-	setTimeout("RefreshStatistic()", 10000);
 }
 
 /* ****************************************************************************************************************** */
@@ -856,57 +873,46 @@ function RefreshStatistic()
 
 function Resize()
 {
-	var max_height = $(window).height() - 175;
-	var max_width = $(window).width() - 25;
+	var max_height = $(document).height();
+	var max_width = $(window).width();
+
+	max_height -= 85;
 
 	jQuery("#searches").setGridHeight(max_height);
+
+	max_height -= 38;
+	max_width -= 310;
 
 	jQuery("#search-xg-bitpir-at").setGridHeight(max_height);
 	jQuery("#search-xg-bitpir-at").setGridWidth(max_width);
 
-	var width = max_width - 305;
-	var height = max_height / 2 - 32;
+	max_height = (max_height - 108) / 2;
 
 	if(jQuery("#packets").getGridParam("gridstate") == "hidden")
 	{
 		if(jQuery("#bots").getGridParam("gridstate") != "hidden")
 		{
-			jQuery("#bots").setGridHeight((height + 20) * 2);
+			jQuery("#bots").setGridHeight((max_height + 20) * 2);
 		}
 	}
 	else if(jQuery("#bots").getGridParam("gridstate") != "hidden")
 	{
-		jQuery("#bots").setGridHeight(height);
+		jQuery("#bots").setGridHeight(max_height);
 	}
-	jQuery("#bots").setGridWidth(width);
-	jQuery("#bots").jqGrid('gridResize', {minWidth: width, maxWidth: width});
+	jQuery("#bots").setGridWidth(max_width);
+	jQuery("#bots").jqGrid('gridResize', {minWidth: max_width, maxWidth: max_width});
 
 	if(jQuery("#bots").getGridParam("gridstate") == "hidden")
 	{
 		if(jQuery("#packets").getGridParam("gridstate") != "hidden")
 		{
-			jQuery("#packets").setGridHeight((height + 20) * 2);
+			jQuery("#packets").setGridHeight((max_height + 20) * 2);
 		}
 	}
 	else if(jQuery("#packets").getGridParam("gridstate") != "hidden")
 	{
-		jQuery("#packets").setGridHeight(height);
+		jQuery("#packets").setGridHeight(max_height);
 	}
-	jQuery("#packets").setGridWidth(width);
-	jQuery("#packets").jqGrid('gridResize', {minWidth: width, maxWidth: width});
-}
-
-/**********************************************************************************************************************/
-/* DO SOMETHING                                                                                                       */
-/**********************************************************************************************************************/
-
-function DoSearch (value)
-{
-	if (last_search != value)
-	{
-		last_search = value;
-
-		jQuery("#search-xg-bitpir-at").clearGridData();
-		jQuery("#search-xg-bitpir-at").setGridParam({url:"http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + value}).trigger("reloadGrid");
-	}
+	jQuery("#packets").setGridWidth(max_width);
+	jQuery("#packets").jqGrid('gridResize', {minWidth: max_width, maxWidth: max_width});
 }

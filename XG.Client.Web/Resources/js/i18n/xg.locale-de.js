@@ -64,5 +64,5 @@ $(function()
 
 	$("#offline_bots").text("inaktive Bots ausblenden");
 	$("#tab-1").html("IRC &Uuml;bersicht");
-	$("#tab-2").html("Statistiken");
+	$("#tab-2").html("Externe Suche via xg.bitpir.at");
 });

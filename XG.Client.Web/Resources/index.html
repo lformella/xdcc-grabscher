@@ -43,13 +43,15 @@
 		<script type="text/javascript" src="js/i18n/xg.locale-#LANGUAGE_SHORT#.js"></script>
 
 		<style type="text/css">
-			body { font-size: 11px; padding: 0px; }
+			body { font-size: 11px; padding: 0; margin: 4px; }
 			.ui-widget { font-size: 1.0em; }
 		</style>
 	</head>
 
 	<body>
+
 		<div id="dialog_password" title="Password required" style="display: none;">
+
 			<p id="password_tip">Please enter the password for this webfrontend.</p>
 			<form onsubmit="return false;">
 				<fieldset>
@@ -57,6 +59,7 @@
 					<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
+
 		</div>
 
 		<div id="dialog_server_channels" title="View Servers and Channels" style="display: none;">
@@ -76,85 +79,83 @@
 
 		</div>
 
-		<div id="tabs" style="display: none;">
-			<ul>
-				<li><a id="tab-1" href="#tabs-1">IRC View</a></li>
-				<li><a id="tab-2" href="#tabs-2">Statistics</a></li>
-				<li><a id="tab-3" href="#tabs-3">external Search via xg.bitpir.at</a></li>
-			</ul>
+		<div id="dialog_statistics" title="View Statistics" style="display: none;">
 
-			<div id="tabs-1" style="padding: 0px;">
+			BytesLoaded: <span id="BytesLoaded"></span><br /><br />
 
-				<table width="100%">
-					<tr>
-						<td width="300" valign="top">
-							<div style="margin: 0 0 4px 0;">
-								<button id="change-server-channels">Server / Channels</button>
-								<input type="checkbox" id="offbots" /><label for="offbots"><span id="offline_bots">Hide offline Bots</span></label>
-							</div>
+			PacketsCompleted: <span id="PacketsCompleted"></span><br />
+			PacketsIncompleted: <span id="PacketsIncompleted"></span><br />
+			PacketsBroken: <span id="PacketsBroken"></span><br /><br />
 
-							<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="searches-pager" class="scroll" style="text-align:center;"></div>
-						</td>
-						<td valign="top">
-							<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+			PacketsRequested: <span id="PacketsRequested"></span><br />
+			PacketsRemoved: <span id="PacketsRemoved"></span><br /><br />
 
-							<br />
+			FilesCompleted: <span id="FilesCompleted"></span><br />
+			FilesBroken: <span id="FilesBroken"></span><br /><br />
 
-							<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="packet-pager" class="scroll" style="text-align:center;"></div>
-						</td>
-					</tr>
-				</table>
+			ServerConnectsOk: <span id="ServerConnectsOk"></span><br />
+			ServerConnectsFailed: <span id="ServerConnectsFailed"></span><br />
 
-			</div>
-			<div id="tabs-2">
+			ChannelConnectsOk: <span id="ChannelConnectsOk"></span><br />
+			ChannelConnectsFailed: <span id="ChannelConnectsFailed"></span><br />
+			ChannelsJoined: <span id="ChannelsJoined"></span><br />
+			ChannelsParted: <span id="ChannelsParted"></span><br />
+			ChannelsKicked: <span id="ChannelsKicked"></span><br /><br />
 
-				BytesLoaded: <span id="BytesLoaded"></span><br /><br />
+			BotConnectsOk: <span id="BotConnectsOk"></span><br />
+			BotConnectsFailed: <span id="BotConnectsFailed"></span><br /><br />
 
-				PacketsCompleted: <span id="PacketsCompleted"></span><br />
-				PacketsIncompleted: <span id="PacketsIncompleted"></span><br />
-				PacketsBroken: <span id="PacketsBroken"></span><br /><br />
-
-				PacketsRequested: <span id="PacketsRequested"></span><br />
-				PacketsRemoved: <span id="PacketsRemoved"></span><br /><br />
-
-				FilesCompleted: <span id="FilesCompleted"></span><br />
-				FilesBroken: <span id="FilesBroken"></span><br /><br />
-
-				ServerConnectsOk: <span id="ServerConnectsOk"></span><br />
-				ServerConnectsFailed: <span id="ServerConnectsFailed"></span><br />
-
-				ChannelConnectsOk: <span id="ChannelConnectsOk"></span><br />
-				ChannelConnectsFailed: <span id="ChannelConnectsFailed"></span><br />
-				ChannelsJoined: <span id="ChannelsJoined"></span><br />
-				ChannelsParted: <span id="ChannelsParted"></span><br />
-				ChannelsKicked: <span id="ChannelsKicked"></span><br /><br />
-
-				BotConnectsOk: <span id="BotConnectsOk"></span><br />
-				BotConnectsFailed: <span id="BotConnectsFailed"></span><br /><br />
-
-				SpeedMax: <span id="SpeedMax"></span><br />
-				SpeedMin: <span id="SpeedMin"></span><br />
-				SpeedAvg: <span id="SpeedAvg"></span><br /><br />
-
-			</div>
-			<div id="tabs-3" style="padding: 0px;">
-
-				<div style="margin: 0 0 4px 0;">
-					<label for="search-input"><img class="icon left" src="image&Search"/> Search for: </label>
-					<input type="text" name="search" id="search-input" class="input form-field" value="" size="100" tabindex="10"/>
-				</div>
-
-				<table width="100%" id="search-xg-bitpir-at"></table>
-				<div id="search-pager-xg-bitpir-at"></div>
-
-			</div>
+			SpeedMax: <span id="SpeedMax"></span><br />
+			SpeedMin: <span id="SpeedMin"></span><br />
+			SpeedAvg: <span id="SpeedAvg"></span><br /><br />
 
 		</div>
 
+		<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top">
+
+					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="searches-pager" class="scroll" style="text-align:center;"></div>
+
+				</td>
+				<td valign="top">
+
+					<div id="tabs" style="display: none; border: none;">
+						<ul style="margin-bottom: 4px;">
+							<li><a id="tab-1" href="#tabs-1">IRC View</a></li>
+							<li><a id="tab-2" href="#tabs-2">external Search via xg.bitpir.at</a></li>
+						</ul>
+
+						<div id="tabs-1" style="padding: 0px;">
+
+							<div id="toolbar" style="margin-bottom: 4px;">
+								<button id="change-server-channels">Server / Channels</button>
+								<input type="checkbox" id="offbots" /><label for="offbots"><span id="offline_bots">Hide offline Bots</span></label>
+								<button id="statistics-button">Statistics</button>
+							</div>
+
+							<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+
+							<div style="margin: 4px;"></div>
+
+							<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="packet-pager" class="scroll" style="text-align:center;"></div>
+
+						</div>
+
+						<div id="tabs-2" style="padding: 0px;">
+
+							<table width="100%" id="search-xg-bitpir-at"></table>
+							<div id="search-pager-xg-bitpir-at"></div>
+
+						</div>
+
+					</div>
+				</td>
+			</tr>
+		</table>
+
 	</body>
 </html>
-
-
