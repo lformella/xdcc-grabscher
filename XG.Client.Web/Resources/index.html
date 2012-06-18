@@ -68,11 +68,11 @@
 				<tr>
 					<td valign="top">
 						<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="server-pager" class="scroll" style="text-align:center;"></div>
+						<div id="server_pager" class="scroll" style="text-align:center;"></div>
 					</td>
 					<td valign="top">
 						<table id="channels" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="channel-pager" class="scroll" style="text-align:center;"></div>
+						<div id="channel_pager" class="scroll" style="text-align:center;"></div>
 					</td>
 				</tr>
 			</table>
@@ -111,44 +111,44 @@
 
 		</div>
 
-		<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+		<table id="table_main" width="100%" height="100%" cellpadding="0" cellspacing="0" style="display: none;">
 			<tr>
 				<td valign="top">
 
 					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="searches-pager" class="scroll" style="text-align:center;"></div>
+					<div id="searches_pager" class="scroll" style="text-align:center;"></div>
 
 				</td>
 				<td valign="top">
 
-					<div id="tabs" style="display: none; border: none;">
+					<div id="tabs" style="border: none;">
 						<ul style="margin-bottom: 4px;">
-							<li><a id="tab-1" href="#tabs-1">IRC View</a></li>
-							<li><a id="tab-2" href="#tabs-2">external Search via xg.bitpir.at</a></li>
+							<li><a id="tab_1" href="#tabs_1">IRC View</a></li>
+							<li><a id="tab_2" href="#tabs_2">external Search via xg.bitpir.at</a></li>
 						</ul>
 
-						<div id="tabs-1" style="padding: 0px;">
+						<div id="tabs_1" style="padding: 0px;">
 
 							<div id="toolbar" style="margin-bottom: 4px;">
-								<button id="change-server-channels">Server / Channels</button>
-								<input type="checkbox" id="offbots" /><label for="offbots"><span id="offline_bots">Hide offline Bots</span></label>
-								<button id="statistics-button">Statistics</button>
+								<button id="server_channel_button">Server / Channels</button>
+								<input type="checkbox" id="show_offline_bots" /><label for="show_offline_bots">Hide offline Bots</label>
+								<button id="statistics_button">Statistics</button>
 							</div>
 
 							<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="bot-pager" class="scroll" style="text-align:center;"></div>
+							<div id="bot_pager" class="scroll" style="text-align:center;"></div>
 
 							<div style="margin: 4px;"></div>
 
 							<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="packet-pager" class="scroll" style="text-align:center;"></div>
+							<div id="packet_pager" class="scroll" style="text-align:center;"></div>
 
 						</div>
 
-						<div id="tabs-2" style="padding: 0px;">
+						<div id="tabs_2" style="padding: 0px;">
 
-							<table width="100%" id="search-xg-bitpir-at"></table>
-							<div id="search-pager-xg-bitpir-at"></div>
+							<table width="100%" id="searches_xg_bitpir_at"></table>
+							<div id="searches_pager_xg_bitpir_at"></div>
 
 						</div>
 

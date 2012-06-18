@@ -165,6 +165,11 @@ var XGFormatter = Class.create(
 
 	formatPacketName: function (packet)
 	{
+		if(packet.Name == undefined)
+		{
+			return "";
+		}
+
 		var ext = packet.Name.toLowerCase().substr(-3);
 		var ret = "";
 		if(ext == "avi" || ext == "wmv" || ext == "mkv")

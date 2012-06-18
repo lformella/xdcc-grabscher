@@ -79,7 +79,7 @@ var id_search;
 var search_active = false;
 var search_mode = 0;
 
-function JsonUrl(password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#offbots").attr('checked') ? "1" : "0" ) + "&request="; }
+function JsonUrl(password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#show_offline_bots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
 function NameUrl(id, name) { return JsonUrl() + id + "&name=" + encodeURIComponent(name); }
 
@@ -110,7 +110,7 @@ $(function()
 		colNames: ['', 'Name', '', '', ''],
 		colModel: [
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r); }, width:24},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:200, editable:true},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
 			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
 			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
@@ -123,7 +123,7 @@ $(function()
 				var serv = jQuery('#servers').getRowData(id);
 				if(serv)
 				{
-					jQuery("#channels").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id), page:1}).trigger("reloadGrid");
+					ReloadGrid("channels", GuidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id));
 				}
 			}
 		},
@@ -147,8 +147,8 @@ $(function()
 				ReloadGrid("servers");
 			}
 		},
-		pager: jQuery('#server-pager'),
-		rowNum: 100,
+		pager: jQuery('#server_pager'),
+		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
 		recordtext: '',
@@ -161,92 +161,90 @@ $(function()
 		height: 300,
 		sortorder: "asc",
 		caption: "Servers"
-	}).navGrid('#server-pager', {edit:false, search:false}, {},
+	}).navGrid('#server_pager', {edit:false, search:false}, {},
+	{
+		mtype: "GET",
+		url: "/",
+		serializeEditData: function (postdata)
 		{
-			mtype: "GET",
-			url: "/",
-			serializeEditData: function (postdata)
-			{
-				return { password: escape(Password), request: Enum.TCPClientRequest.AddServer, name: postdata.Name };
-			}
-		},
+			return { password: escape(Password), request: Enum.TCPClientRequest.AddServer, name: postdata.Name };
+		}
+	},
+	{
+		mtype: "GET",
+		url: "/",
+		serializeDelData: function (postdata)
 		{
-			mtype: "GET",
-			url: "/",
-			serializeDelData: function (postdata)
-			{
-				return { password: escape(Password), request: Enum.TCPClientRequest.RemoveServer, guid: postdata.id };
-			}
-		});
-	jQuery("#servers").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
+			return { password: escape(Password), request: Enum.TCPClientRequest.RemoveServer, guid: postdata.id };
+		}
+	});
 
 	/* ************************************************************************************************************** */
 	/* CHANNEL GRID                                                                                                   */
 	/* ************************************************************************************************************** */
 
 	jQuery("#channels").jqGrid(
+	{
+		datatype: "json",
+		colNames: ['', 'Name', '', '', ''],
+		colModel: [
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r); }, width:24},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
+			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
+			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
+		],
+		ondblClickRow: function(id)
 		{
-			datatype: "json",
-			colNames: ['', 'Name', '', '', ''],
-			colModel: [
-				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r); }, width:24},
-				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:200, editable:true},
-				{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
-				{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-				{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
-			],
-			ondblClickRow: function(id)
+			if(id)
 			{
-				if(id)
+				var chan = jQuery('#channels').getRowData(id);
+				if(chan)
 				{
-					var chan = jQuery('#channels').getRowData(id);
-					if(chan)
+					if(chan.Enabled == "false")
 					{
-						if(chan.Enabled == "false")
-						{
-							$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
-						}
-						else
-						{
-							$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
-						}
-						setTimeout("ReloadGrid('channels')", 1000);
+						$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
 					}
-					ReloadGrid("channels");
+					else
+					{
+						$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
+					}
+					setTimeout("ReloadGrid('channels')", 1000);
 				}
-			},
-			pager: jQuery('#channel-pager'),
-			rowNum: 100,
-			pgbuttons: false,
-			pginput: false,
-			recordtext: '',
-			pgtext: '',
-			sortname: 'Name',
-			ExpandColumn: 'Name',
-			viewrecords: true,
-			autowidth: true,
-			scrollrows: true,
-			height: 300,
-			sortorder: "asc",
-			caption: "channels"
-		}).navGrid('#channel-pager', {edit:false, search:false}, {},
-		{
-			mtype: "GET",
-			url: "/",
-			serializeEditData: function (postdata)
-			{
-				return { password: escape(Password), request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: id_server };
+				ReloadGrid("channels");
 			}
 		},
+		pager: jQuery('#channel_pager'),
+		rowNum: 1000,
+		pgbuttons: false,
+		pginput: false,
+		recordtext: '',
+		pgtext: '',
+		sortname: 'Name',
+		ExpandColumn: 'Name',
+		viewrecords: true,
+		autowidth: true,
+		scrollrows: true,
+		height: 300,
+		sortorder: "asc",
+		caption: "channels"
+	}).navGrid('#channel_pager', {edit:false, search:false}, {},
+	{
+		mtype: "GET",
+		url: "/",
+		serializeEditData: function (postdata)
 		{
-			mtype: "GET",
-			url: "/",
-			serializeDelData: function (postdata)
-			{
-				return { password: escape(Password), request: Enum.TCPClientRequest.RemoveChannel, guid: postdata.id };
-			}
-		});
-	jQuery("#channels").jqGrid('gridResize', {minWidth: 300, maxWidth: 300});
+			return { password: escape(Password), request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: id_server };
+		}
+	},
+	{
+		mtype: "GET",
+		url: "/",
+		serializeDelData: function (postdata)
+		{
+			return { password: escape(Password), request: Enum.TCPClientRequest.RemoveChannel, guid: postdata.id };
+		}
+	});
 
 	/* ************************************************************************************************************** */
 	/* BOT GRID                                                                                                       */
@@ -287,12 +285,12 @@ $(function()
 			if(id)
 			{
 				search_active = false;
-				jQuery("#packets").setGridParam({url:GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id), page:1}).trigger("reloadGrid");
+				ReloadGrid("packets", GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id));
 			}
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#bot-pager'),
+		pager: jQuery('#bot_pager'),
 		sortname: 'Name',
 		ExpandColumn: 'Name',
 		viewrecords: true,
@@ -301,7 +299,7 @@ $(function()
 		height: 300,
 		sortorder: "asc",
 		caption: "Bots"
-	}).navGrid('#bot-pager', {edit:false, add:false, del:false, search:false});
+	}).navGrid('#bot_pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#bots").setGridState($.cookie('xg.bots'));
 
 	/* ************************************************************************************************************** */
@@ -378,7 +376,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#packet-pager'),
+		pager: jQuery('#packet_pager'),
 		sortname: 'Id',
 		ExpandColumn: 'Name',
 		viewrecords: true,
@@ -386,7 +384,7 @@ $(function()
 		height: 300,
 		sortorder: "asc",
 		caption: "Packets"
-	}).navGrid('#packet-pager', {edit:false, add:false, del:false, search:false});
+	}).navGrid('#packet_pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#packets").setGridState($.cookie('xg.packets'));
 
 	/* ************************************************************************************************************** */
@@ -435,8 +433,7 @@ $(function()
 								url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=name";
 								break;
 							case 1:
-								jQuery("#search-xg-bitpir-at").clearGridData();
-								jQuery("#search-xg-bitpir-at").setGridParam({url:"http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + data.Name}).trigger("reloadGrid");
+								ReloadGrid("searches_xg_bitpir_at", "http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + data.Name);
 								break;
 						}
 						break;
@@ -466,7 +463,7 @@ $(function()
 				jQuery('#searches').delRowData(id);
 			}
 		},
-		pager: jQuery('#searches-pager'),
+		pager: jQuery('#searches_pager'),
 		pgbuttons: false,
 		pginput: false,
 		recordtext: '',
@@ -477,11 +474,9 @@ $(function()
 		height: 300,
 		sortorder: "desc",
 		caption: "Search"
-	}).navGrid('#searches-pager', {edit:false, add:false, del:false, search:false, refresh:false});
-	jQuery("#searches").jqGrid('gridResize', {minWidth: 200, maxWidth: 200});
-	jQuery("#searches").setGridState($.cookie('xg.searches'));
+	}).navGrid('#searches_pager', {edit:false, add:false, del:false, search:false, refresh:false});
 
-	jQuery("#searches-pager_left").html("<input type=\"text\" id=\"search-text\" />");
+	jQuery("#searches_pager_left").html("<input type=\"text\" id=\"search-text\" />");
 
 	var mydata = [
 		{Id:"1", Name:"ODay Packets"},
@@ -513,7 +508,7 @@ $(function()
 	/* SEARCH GRID                                                                                                    */
 	/******************************************************************************************************************/
 
-	jQuery("#search-xg-bitpir-at").jqGrid(
+	jQuery("#searches_xg_bitpir_at").jqGrid(
 		{
 			datatype:'jsonp',
 			cmTemplate:{fixed:true},
@@ -533,13 +528,13 @@ $(function()
 			{
 				if(id)
 				{
-					var data = jQuery("#search-xg-bitpir-at").getRowData(id);
+					var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
 					$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
 				}
 			},
 			rowNum: 100,
 			rowList: [100, 200, 400, 800],
-			pager:jQuery('#search-pager-xg-bitpir-at'),
+			pager:jQuery('#searches_pager_xg_bitpir_at'),
 			sortname:'Id',
 			viewrecords:true,
 			ExpandColumn:'Name',
@@ -547,7 +542,7 @@ $(function()
 			autowidth:true,
 			sortorder:"asc",
 			caption: "Search via xg.bitpir.at"
-		}).navGrid('#search-pager-xg-bitpir-at', {edit:false, add:false, del:false, search:false});
+		}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
 
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
@@ -575,8 +570,9 @@ $(function()
 	});
 
 	$("#password").keyup(function (e) {
-		if (e.which == 13) {
-			//$('[aria-labelledby$=dialog_password]').find(":button:contains('Connect')").click();
+		if (e.which == 13)
+		{
+			ButtonConnectClicked($("#dialog_password"));
 		}
 	});
 
@@ -584,29 +580,39 @@ $(function()
 	/* SERVER / CHANNEL DIALOG                                                                                        */
 	/* ************************************************************************************************************** */
 
-	jQuery("#change-server-channels").button({icons: { primary: "ui-icon-gear" }});
-	jQuery("#change-server-channels").click( function()
+	jQuery("#server_channel_button").button({icons: { primary: "ui-icon-gear" }});
+
+	jQuery("#server_channel_button").click( function()
 	{
+		ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
+		ReloadGrid("channels");
 		$("#dialog_server_channels").dialog("open");
 	});
+
 	$("#dialog_server_channels").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		width: 505,
+		width: 545,
 		modal: true,
 		resizable: false
 	});
 
-	jQuery("#statistics-button").button({icons: { primary: "ui-icon-comment" }});
-	jQuery("#statistics-button").click( function()
+	/* ************************************************************************************************************** */
+	/* STATISTICS DIALOG                                                                                              */
+	/* ************************************************************************************************************** */
+
+	jQuery("#statistics_button").button({icons: { primary: "ui-icon-comment" }});
+
+	jQuery("#statistics_button").click( function()
 	{
 		RefreshStatistic();
 		$("#dialog_statistics").dialog("open");
 	});
+
 	$("#dialog_statistics").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		width: 505,
+		width: 545,
 		modal: true,
 		resizable: false
 	});
@@ -619,7 +625,6 @@ $(function()
 	{
 		Resize();
 	});
-	Resize();
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
@@ -633,7 +638,7 @@ $(function()
 		}
 	});
 
-	jQuery("#offbots").button();
+	jQuery("#show_offline_bots").button();
 });
 
 /* ****************************************************************************************************************** */
@@ -733,7 +738,10 @@ function ButtonConnectClicked(dialog)
 			}
 		);
 
-		$("#tabs").show();
+		$("#table_main").show();
+
+		// resize after all is visible
+		Resize();
 
 		// start the refresh
 		RefreshGrid(0);
@@ -751,7 +759,6 @@ function ButtonConnectClicked(dialog)
 function SetPassword(password)
 {
 	Password = password;
-	ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
 }
 
 function CheckPassword(password)
@@ -774,6 +781,7 @@ function CheckPassword(password)
 
 function ReloadGrid(grid, url)
 {
+	jQuery("#" + grid).clearGridData();
 	if(url != undefined)
 	{
 		jQuery("#" + grid).setGridParam({url: url, page: 1});
@@ -873,7 +881,7 @@ function RefreshStatistic()
 
 function Resize()
 {
-	var max_height = $(document).height();
+	var max_height = $(window).height();
 	var max_width = $(window).width();
 
 	max_height -= 85;
@@ -883,8 +891,8 @@ function Resize()
 	max_height -= 38;
 	max_width -= 310;
 
-	jQuery("#search-xg-bitpir-at").setGridHeight(max_height);
-	jQuery("#search-xg-bitpir-at").setGridWidth(max_width);
+	jQuery("#searches_xg_bitpir_at").setGridHeight(max_height);
+	jQuery("#searches_xg_bitpir_at").setGridWidth(max_width);
 
 	max_height = (max_height - 108) / 2;
 

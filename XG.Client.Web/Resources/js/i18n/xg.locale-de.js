@@ -30,39 +30,52 @@ $(function()
 	/* BOT GRID                                                                                                       */
 	/* ************************************************************************************************************** */
 
-	jQuery("#bots").setLabel(7, 'Geschwindigkeit');
-	jQuery("#bots").setLabel(8, 'S-Pos');
-	jQuery("#bots").setLabel(9, 'S-Zeit');
-	jQuery("#bots").setLabel(10, 'Geschwindigkeit');
-	jQuery("#bots").setLabel(12, 'Pl&auml;tze');
-	jQuery("#bots").setLabel(14, 'Schlange');
+	jQuery("#bots").setLabel("Name", "Name");
+	jQuery("#bots").setLabel("Speed", "Geschwindigkeit");
+	jQuery("#bots").setLabel("QueuePosition", "S-Pos");
+	jQuery("#bots").setLabel("QueueTime", "S-Zeit");
+	jQuery("#bots").setLabel("SpeedMax", "max. Geschwindigkeit");
+	jQuery("#bots").setLabel("SlotTotal", "Pl&auml;tze");
+	jQuery("#bots").setLabel("QueueTotal", "Schlange");
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
 	jQuery("#packets").setCaption("Pakete");
-	jQuery("#packets").setLabel(8, 'Gr&ouml;&szlig;e');
-	jQuery("#packets").setLabel(9, 'Geschwindigkeit');
-	jQuery("#packets").setLabel(10, 'Zeit');
-	jQuery("#packets").setLabel(16, 'Aktualisiert');
+	jQuery("#packets").setLabel("Name", "Name");
+	jQuery("#packets").setLabel("Size", "Gr&ouml;&szlig;e");
+	jQuery("#packets").setLabel("Speed", "Geschwindigkeit");
+	jQuery("#packets").setLabel("TimeMissing", "Zeit");
+	jQuery("#packets").setLabel("LastUpdated", "Aktualisiert");
 
 	/* ************************************************************************************************************** */
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
 	jQuery("#searches").setCaption("Suche");
-	jQuery("#searches").setLabel(1, "Suche");
+	jQuery("#searches").setLabel("Name", "Suche");
 	jQuery("#searches").setRowData(1, {name:"ODay Pakete"});
 	jQuery("#searches").setRowData(2, {name:"OWeek Pakete"});
 	jQuery("#searches").setRowData(3, {name:"Downloads"});
 	jQuery("#searches").setRowData(4, {name:"Aktivierte Pakete"});
 
 	/* ************************************************************************************************************** */
+	/* SEARCH GRID                                                                                                    */
+	/* ************************************************************************************************************** */
+
+	jQuery("#searches_xg_bitpir_at").setCaption("Suche via xg.bitpir.at");
+	jQuery("#searches_xg_bitpir_at").setLabel("Name", "Name");
+	jQuery("#searches_xg_bitpir_at").setLabel("LastMentioned", "Aktualisiert");
+	jQuery("#searches_xg_bitpir_at").setLabel("Size", "Gr&ouml;&szlig;e");
+	jQuery("#searches_xg_bitpir_at").setLabel("Speed", "Geschwindigkeit");
+
+	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
-	$("#offline_bots").text("inaktive Bots ausblenden");
-	$("#tab-1").html("IRC &Uuml;bersicht");
-	$("#tab-2").html("Externe Suche via xg.bitpir.at");
+	$( "#statistics_button" ).button( "option", {label: "Statistiken"});
+	$("#show_offline_bots").button( "option", {label: "inaktive Bots ausblenden"});
+	$("#tab_1").html("IRC &Uuml;bersicht");
+	$("#tab_2").html("Externe Suche via xg.bitpir.at");
 });
