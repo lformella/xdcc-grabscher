@@ -588,7 +588,7 @@ namespace XG.Server
 					}
 					if(Settings.Instance.IrcRegisterPasswort != "")
 					{
-						this.SendData("nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+						this.SendData("nickserv identify " + Settings.Instance.IrcRegisterPasswort);
 					}
 
 					// statistics
@@ -601,9 +601,12 @@ namespace XG.Server
 
 				case 477: // ERR_NOCHANMODES
 					tChan = myServer[tCommandList[3]];
-					// TODO register myself and login and so on
-					myLog.Info("con_DataReceived() registering myself DOES NOT WORK AT THE MOMENT!!!");
-					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					// TODO should we nickserv register here?
+					/*if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
+					{
+						this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					}*/
+
 					if(tChan != null)
 					{
 						tChan.ErrorCode = t_ComCode;
@@ -1457,60 +1460,75 @@ namespace XG.Server
 
 					myLog.Error("con_DataReceived(" + aData + ") - nickserv password wrong");
 				}
-				else if(	tData.Contains("The given email address has reached it's usage limit of 1 user") ||
-							tData.Contains("This nick is being held for a registered user"))
+				else if(tData.Contains("The given email address has reached it's usage limit of 1 user") ||
+						tData.Contains("This nick is being held for a registered user"))
 				{
 					this.myRegistered = false;
 
-					myLog.Error("con_DataReceived(" + aData + ") - nickserv nick already registered");
-				}
-				else if(tData.Contains("The given email address has reached it's usage limit of 1 user"))
-				{
-					this.myRegistered = false;
-
-					myLog.Error("con_DataReceived(" + aData + ") - nickserv email already used");
+					myLog.Error("con_DataReceived(" + aData + ") - nickserv nick or email already used");
 				}
 				else if(tData.Contains("Your nick isn't registered"))
 				{
 					this.myRegistered = false;
 
 					myLog.Warn("con_DataReceived(" + aData + ") - nickserv registering nick");
-					if(Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
+					if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
-						//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+						this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 					}
 				}
-				else if(	tData.Contains("Nickname is already in use") ||
-							tData.Contains("Nickname is currently in use"))
+				else if(tData.Contains("Nickname is already in use") ||
+						tData.Contains("Nickname is currently in use"))
 				{
 					this.myRegistered = false;
 
-					this.SendData("nickserv ghost " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
-					this.SendData("nickserv recover " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendData("nickserv ghost " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendData("nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendData("nick " + Settings.Instance.IRCName);
 				}
-				else if(	tData.Contains("This nickname is registered and protected") ||
-							tData.Contains("This nick is being held for a registered user"))
+				else if(tData.Contains("Services Enforcer"))
+				{
+					this.myRegistered = false;
+
+					this.SendData("nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendData("nickserv release " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendData("nick " + Settings.Instance.IRCName);
+				}
+				else if(tData.Contains("This nickname is registered and protected") ||
+						tData.Contains("This nick is being held for a registered user"))
 				{
 					this.myRegistered = false;
 					if(Settings.Instance.IrcRegisterPasswort != "")
 					{
-						this.SendData("/nickserv identify " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+						this.SendData("/nickserv identify " + Settings.Instance.IrcRegisterPasswort);
 					}
 				}
 				else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
 				{
 					this.myRegistered = false;
 
-					// sleep the given time and reregister
-					//this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					//TODO sleep the given time and reregister
+					this.SendData("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
 				else if(tData.Contains("Please try again with a more obscure password"))
 				{
 					myLog.Error("con_DataReceived(" + aData + ") - nickserv password is unsecure");
 				}
-				else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail + ", please type /msg NickServ confirm <passcode> to complete registration"))
+				else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail))
 				{
 					myLog.Error("con_DataReceived(" + aData + ") - nickserv confirm email");
+				}
+				else if(tData.Contains("Nickname " + Settings.Instance.IRCName + " registered under your account"))
+				{
+					this.myRegistered = true;
+
+					myLog.Info("con_DataReceived(" + aData + ") - nickserv nick registered succesfully");
+				}
+				else if(tData.Contains("Password accepted"))
+				{
+					this.myRegistered = true;
+
+					myLog.Info("con_DataReceived(" + aData + ") - nickserv password accepted");
 				}
 			}
 

@@ -126,6 +126,7 @@ namespace XG.Server
 			this.xgVersion = "9";
 			this.ircRegisterEmail = "anon@ymous.org";
 			this.ircRegisterPasswort = "password123";
+			this.autoRegisterNickserv = true;
 			this.botOfflineCheckTime = 1200000;
 			this.downloadTimeout = 30000;
 			this.botOfflineTime = 7200000;
@@ -496,6 +497,13 @@ namespace XG.Server
 		{
 			get { return this.autoJoinOnInvite; }
 			set { this.autoJoinOnInvite = value; }
+		}
+
+		private bool autoRegisterNickserv;
+		public bool AutoRegisterNickserv
+		{
+			get { return this.autoRegisterNickserv; }
+			set { this.autoRegisterNickserv = value; }
 		}
 
 		#endregion
