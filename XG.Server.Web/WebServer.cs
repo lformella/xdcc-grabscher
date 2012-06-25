@@ -418,7 +418,7 @@ namespace XG.Server.Web
 					string[] searches = aSearchString.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 					foreach (string search in searches)
 					{
-						tPackets = from packet in tPackets where packet.Name.ToLower().Contains(search.ToLower()) select packet;
+						tPackets = (from packet in tPackets where packet.Name.ToLower().Contains(search.ToLower()) select packet).ToArray();
 					}
 					break;
 
