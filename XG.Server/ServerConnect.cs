@@ -50,6 +50,8 @@ namespace XG.Server
 		private Dictionary<XGObject, DateTime> myTimedObjects;
 		private Dictionary<string, DateTime> myLatestPacketRequests;
 
+		private const string messageMagicString = "((\\*|:){2,3}|->|<-|)";
+
 		//private Dictionary<Guid, List<string>> myOnlineUsers;
 		//public Dictionary<Guid, List<string>> OnlineUsers { get { return this.myOnlineUsers; } }
 
@@ -836,7 +838,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} ([0-9]*) (pack(s|)|Pa(c|)ket(e|)) (\\*){2,3}\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_total>[0-9]*),|).*(Record: (?<record>[0-9.]*)(K|)B\\/s|)|)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " ([0-9]*) (pack(s|)|Pa(c|)ket(e|)|Fil[e]+s) " + messageMagicString + "\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|opened|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_total>[0-9]*),|).*(Record( [a-zA-Z]+|): (?<record>[0-9.]*)(K|)B\\/s|)|)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -872,7 +874,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "((\\*){2,3}|) ((Bandwidth Usage|Bandbreite) ((\\*){2,3}|)|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(?<speed_cur_end>(K|)(i|)B)(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(?<speed_max_end>(K|)(i|))B(\\/s|s)|)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " ((Bandwidth Usage|Bandbreite) " + messageMagicString + "|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(?<speed_cur_end>(K|)(i|)B)(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(?<speed_max_end>(K|)(i|))B(\\/s|s)|)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -903,7 +905,7 @@ namespace XG.Server
 				XGPacket newPacket = null;
 				if (!isParsed)
 				{ // what is this damn char \240 and how to rip it off ???
-					tMatch = Regex.Match(tData, "#(?<pack_id>\\d+)(\u0240|�|)\\s+(\\d*)x\\s+\\[\\s*(�|)(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, "#(?<pack_id>\\d+)(\u0240|�|)\\s+(\\d*)x\\s+\\[\\s*(�|)\\s*(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -986,17 +988,17 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} To request .* type .*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " To request .* type .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success) { return; }
 					tMatch = Regex.Match(tData, ".*\\/(msg|ctcp) .* xdcc (info|send) .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success) { return; }
-					tMatch = Regex.Match(tData, "(\\*){2,3} To list a group, type .*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " To list a group, type .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success) { return; }
 					tMatch = Regex.Match(tData, "Total offered(\\!|): (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)\\s*Total transfer(r|)ed: (\\[|)[0-9.]*\\s*[BeGgiKMsTty]+(\\]|)", RegexOptions.IgnoreCase);
 					if (tMatch.Success) { return; }
 					tMatch = Regex.Match(tData, ".* (brought to you|powered|sp(o|0)ns(o|0)red) by .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success) { return; }
-					tMatch = Regex.Match(tData, "(\\*){2,3} .*" + tChan.Name + " (\\*){2,3}", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " .*" + tChan.Name + " " + messageMagicString , RegexOptions.IgnoreCase);
 					if (tMatch.Success) { return; }
 				}
 
@@ -1044,9 +1046,9 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "((\\*){2,3} All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, "(" + messageMagicString + " All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*", RegexOptions.IgnoreCase);
 					tMatch2 = Regex.Match(tData, "Queueing you for pack [0-9]+ \\(.*\\) in slot (?<queue_cur>[0-9]+)/(?<queue_total>[0-9]+)\\. To remove you(r|)self from the queue, type: .*\\. To check your position in the queue, type: .*\\. Estimated time remaining in queue: (?<queue_d>[0-9]+) days, (?<queue_h>[0-9]+) hours, (?<queue_m>[0-9]+) minutes", RegexOptions.IgnoreCase);
-					tMatch3 = Regex.Match(tData, "[(\\*){2,3} |]Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
+					tMatch3 = Regex.Match(tData, "(" + messageMagicString + " |)Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
@@ -1081,7 +1083,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} Removed From Queue: .*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " Removed From Queue: .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -1099,8 +1101,8 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "(\\*){2,3} Die Nummer der Datei ist ung.ltig", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} Invalid Pack Number, Try Again", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, messageMagicString + " Die Nummer der Datei ist ung.ltig", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " Invalid Pack Number, Try Again", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
@@ -1122,8 +1124,8 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "(\\*){2,3} You already requested that pack(.*|)", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast diese Datei bereits angefordert(.*|)", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, messageMagicString + " You already requested that pack(.*|)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " Du hast diese Datei bereits angefordert(.*|)", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
@@ -1141,7 +1143,7 @@ namespace XG.Server
 				if (!isParsed)
 				{
 					tMatch1 = Regex.Match(tData, "Denied, You already have ([0-9]+) item(s|) queued, Try Again Later", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Denied, You already have that item queued\\.", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " All Slots Full, Denied, You already have that item queued\\.", RegexOptions.IgnoreCase);
 					tMatch3 = Regex.Match(tData, "You are already receiving or are queued for the maximum number of packs .*", RegexOptions.IgnoreCase);
 					tMatch4 = Regex.Match(tData, "Du hast max\\. ([0-9]+) transfer auf einmal, Du bist jetzt in der Warteschlange f.r Datei .*", RegexOptions.IgnoreCase);
 					tMatch5 = Regex.Match(tData, "Es laufen bereits genug .bertragungen, abgewiesen, Du hast diese Datei bereits in der Warteschlange\\.", RegexOptions.IgnoreCase);
@@ -1166,8 +1168,8 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "(\\*){2,3} You have a DCC pending, Set your client to receive the transfer\\. ((Type .*|Send XDCC CANCEL) to abort the transfer\\. |)\\((?<time>[0-9]+) seconds remaining until timeout\\)", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL)            an den Bot um die .bertragung abzubrechen\\. |)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, messageMagicString + " You have a DCC pending, Set your client to receive the transfer\\. ((Type .*|Send XDCC CANCEL) to abort the transfer\\. |)\\((?<time>[0-9]+) seconds remaining until timeout\\)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL)            an den Bot um die .bertragung abzubrechen\\. |)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
@@ -1189,8 +1191,8 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "(\\*){2,3} All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} Es laufen bereits genug .bertragungen, abgewiesen, die Warteschlange ist voll, max\\. (?<queue_total>[0-9]+) Dateien, Versuche es sp.ter nochmal", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, messageMagicString + " All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " Es laufen bereits genug .bertragungen, abgewiesen, die Warteschlange ist voll, max\\. (?<queue_total>[0-9]+) Dateien, Versuche es sp.ter nochmal", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
@@ -1213,7 +1215,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} You can only have ([0-9]+) transfer(s|) at a time,.*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " You can only have ([0-9]+) transfer(s|) at a time,.*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -1230,7 +1232,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} The Owner Has Requested That No New Connections Are Made In The Next (?<time>[0-9]+) Minute(s|)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData, messageMagicString + " The Owner Has Requested That No New Connections Are Made In The Next (?<time>[0-9]+) Minute(s|)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -1270,7 +1272,7 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(tData, "(\\*){2,3} XDCC SEND denied, (?<info>.*)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(tData,messageMagicString + " XDCC SEND denied, (?<info>.*)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -1308,8 +1310,8 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "(\\*){2,3} Sending You (Your Queued |)Pack .*", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} Sende dir jetzt die Datei .*", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, messageMagicString + " Sending You (Your Queued |)Pack .*", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " Sende dir jetzt die Datei .*", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
@@ -1355,8 +1357,8 @@ namespace XG.Server
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(tData, "(\\*){2,3} (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, "(\\*){2,3} (Schlie.e Verbindung:).*", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, messageMagicString + " (Closing Connection:|Transfer Completed).*", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, messageMagicString + " (Schlie.e Verbindung:).*", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
