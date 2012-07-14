@@ -1,4 +1,4 @@
-<Project name="XG.Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="4.0" ctype="DotNetProject">
+<Project name="XG.Server.Cmd" fileversion="2.0" releaseVersion="0.9" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="4.0" ctype="DotNetProject">
   <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" SyncReferences="True">
     <BuildFilesVar Sync="True" Name="FILES" />
     <DeployFilesVar />

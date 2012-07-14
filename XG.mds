@@ -49,7 +49,7 @@
       <Entry build="True" name="XG.Server.Cmd" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Jabber" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Backend.MySql" configuration="Unsafe" />
-      <Entry build="True" name="XG.Server.Backend.File" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Backend.File" configuration="Unsafe" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="XG.Server.Cmd" single="True">
