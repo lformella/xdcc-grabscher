@@ -26,9 +26,12 @@
 
 		<link rel="stylesheet" type="text/css" href="css/style/jquery-ui.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="css/layout-default.css" />
 
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+		<script type="text/javascript" src="js/jquery.layout.min.js"></script>
 
 		<script type="text/javascript" src="js/jquery.cookie.min.js"></script>
 
@@ -43,8 +46,16 @@
 		<script type="text/javascript" src="js/i18n/xg.locale-#LANGUAGE_SHORT#.js"></script>
 
 		<style type="text/css">
-			body { font-size: 11px; padding: 0; margin: 4px; }
-			.ui-widget { font-size: 1.0em; }
+			html, body {
+				width:		100%;
+				height:		100%;
+				padding:	0;
+				margin:		0;
+				overflow:	auto;
+				font-size:	11px;
+			}
+			.ui-tabs { padding: 0; }
+			.ui-layout-pane { border: none; }
 		</style>
 	</head>
 
@@ -111,51 +122,48 @@
 
 		</div>
 
-		<table id="table_main" width="100%" height="100%" cellpadding="0" cellspacing="0" style="display: none;">
-			<tr>
-				<td valign="top">
+		<div id="layout_search" class="ui-layout-west" style="display: none;">
+			<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="searches_pager" class="scroll" style="text-align:center;"></div>
+		</div>
 
-					<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="searches_pager" class="scroll" style="text-align:center;"></div>
+		<div id="layout_objects" class="ui-layout-center" style="display: none;">
+			<div id="tabs" style="border: none;">
+				<ul style="margin-bottom: 4px;">
+					<li><a id="tab_1" href="#tabs_1">IRC View</a></li>
+					<li><a id="tab_2" href="#tabs_2">external Search via xg.bitpir.at</a></li>
+				</ul>
 
-				</td>
-				<td valign="top">
+				<div id="tabs_1" style="padding: 0px;">
 
-					<div id="tabs" style="border: none;">
-						<ul style="margin-bottom: 4px;">
-							<li><a id="tab_1" href="#tabs_1">IRC View</a></li>
-							<li><a id="tab_2" href="#tabs_2">external Search via xg.bitpir.at</a></li>
-						</ul>
+					<div id="toolbar" style="margin-bottom: 4px;">
+						<button id="server_channel_button">Server / Channels</button>
+						<input type="checkbox" id="show_offline_bots" /><label for="show_offline_bots">Hide offline Bots</label>
+						<button id="statistics_button">Statistics</button>
+					</div>
 
-						<div id="tabs_1" style="padding: 0px;">
-
-							<div id="toolbar" style="margin-bottom: 4px;">
-								<button id="server_channel_button">Server / Channels</button>
-								<input type="checkbox" id="show_offline_bots" /><label for="show_offline_bots">Hide offline Bots</label>
-								<button id="statistics_button">Statistics</button>
-							</div>
-
+					<div id="layout_objects_container">
+						<div id="layout_bots" class="ui-layout-north">
 							<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
 							<div id="bot_pager" class="scroll" style="text-align:center;"></div>
-
-							<div style="margin: 4px;"></div>
-
+						</div>
+						<div id="layout_packets" class="ui-layout-center">
 							<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
 							<div id="packet_pager" class="scroll" style="text-align:center;"></div>
-
 						</div>
-
-						<div id="tabs_2" style="padding: 0px;">
-
-							<table width="100%" id="searches_xg_bitpir_at"></table>
-							<div id="searches_pager_xg_bitpir_at"></div>
-
-						</div>
-
 					</div>
-				</td>
-			</tr>
-		</table>
+
+				</div>
+
+				<div id="tabs_2" style="padding: 0px;">
+
+					<table width="100%" id="searches_xg_bitpir_at"></table>
+					<div id="searches_pager_xg_bitpir_at"></div>
+
+				</div>
+
+			</div>
+		</div>
 
 	</body>
 </html>

@@ -91,6 +91,8 @@ var LANG_WEEKDAY = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 var Formatter;
 var Helper = new XGHelper();
 
+var outerLayout, innerLayout;
+
 
 /* ****************************************************************************************************************** */
 /* GRID / FORM LOADER                                                                                                 */
@@ -160,7 +162,8 @@ $(function()
 		scrollrows: true,
 		height: 300,
 		sortorder: "asc",
-		caption: "Servers"
+		caption: "Servers",
+		hidegrid: false
 	}).navGrid('#server_pager', {edit:false, search:false}, {},
 	{
 		mtype: "GET",
@@ -227,7 +230,8 @@ $(function()
 		scrollrows: true,
 		height: 300,
 		sortorder: "asc",
-		caption: "channels"
+		caption: "Channels",
+		hidegrid: false
 	}).navGrid('#channel_pager', {edit:false, search:false}, {},
 	{
 		mtype: "GET",
@@ -275,11 +279,6 @@ $(function()
 			{name:'LastMessage',	index:'LastMessage',	formatter: function(c, o, r) { return r.LastMessage; }, hidden:true},
 			{name:'LastContact',	index:'LastContact',	formatter: function(c, o, r) { return r.LastContact; }, hidden:true}
 		],
-		onHeaderClick: function(gridstate)
-		{
-			$.cookie('xg.bots', gridstate);
-			Resize();
-		},
 		onSelectRow: function(id)
 		{
 			if(id)
@@ -298,7 +297,8 @@ $(function()
 		scrollrows: true,
 		height: 300,
 		sortorder: "asc",
-		caption: "Bots"
+		caption: "Bots",
+		hidegrid: false
 	}).navGrid('#bot_pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#bots").setGridState($.cookie('xg.bots'));
 
@@ -309,7 +309,7 @@ $(function()
 	jQuery("#packets").jqGrid(
 	{
 		datatype: "json",
-		cmTemplate:{fixed:true},
+		cmTemplate: {fixed:true},
 		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', ''],
 		colModel: [
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r) }, width:24},
@@ -329,11 +329,6 @@ $(function()
 			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
 			{name:'LastModified',	index:'LastModified',	formatter: function(c, o, r) { return r.LastModified; }, hidden:true}
 		],
-		onHeaderClick: function(gridstate)
-		{
-			$.cookie('xg.packets', gridstate);
-			Resize();
-		},
 		onSelectRow: function(id)
 		{
 			if(id)
@@ -383,7 +378,8 @@ $(function()
 		autowidth: true,
 		height: 300,
 		sortorder: "asc",
-		caption: "Packets"
+		caption: "Packets",
+		hidegrid: false
 	}).navGrid('#packet_pager', {edit:false, add:false, del:false, search:false});
 	jQuery("#packets").setGridState($.cookie('xg.packets'));
 
@@ -394,10 +390,11 @@ $(function()
 	jQuery("#searches").jqGrid(
 	{
 		datatype: "local",
+		cmTemplate: {fixed:true},
 		colNames: ['', 'Search'],
 		colModel: [
 			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:24},
-			{name:'Name',	index:'Name',	width:259}
+			{name:'Name',	index:'Name',	width:226, fixed:false}
 		],
 		onSelectRow: function(id)
 		{
@@ -468,12 +465,13 @@ $(function()
 		pginput: false,
 		recordtext: '',
 		pgtext: '',
-		sortname: 'name',
-		ExpandColumn : 'name',
+		sortname: 'Name',
+		ExpandColumn : 'Name',
 		viewrecords: true,
-		height: 300,
+		autowidth: true,
 		sortorder: "desc",
-		caption: "Search"
+		caption: "Search",
+		hidegrid: false
 	}).navGrid('#searches_pager', {edit:false, add:false, del:false, search:false, refresh:false});
 
 	jQuery("#searches_pager_left").html("<input type=\"text\" id=\"search-text\" />");
@@ -502,47 +500,46 @@ $(function()
 		}
 	});
 
-	$("#search-text").width($("#gbox_searches").width() - 9);
-
 	/******************************************************************************************************************/
 	/* SEARCH GRID                                                                                                    */
 	/******************************************************************************************************************/
 
 	jQuery("#searches_xg_bitpir_at").jqGrid(
-		{
-			datatype:'jsonp',
-			cmTemplate:{fixed:true},
-			colNames:['', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
-			colModel:[
-				{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r); }, width:26},
-				{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
-				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
-				{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return Helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},
-				{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:60, align:"right"},
-				{name:'BotName',		index:'BotName',		formatter: function(c, o, r) { return r.BotName; }, width:160},
-				{name:'BotSpeed',		index:'BotSpeed',		formatter: function(c, o, r) { return Helper.speed2Human(r.BotSpeed); }, width:80, align:"right"},
+	{
+		datatype:'jsonp',
+		cmTemplate:{fixed:true},
+		colNames:['', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
+		colModel:[
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r); }, width:26},
+			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
+			{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return Helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},
+			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:60, align:"right"},
+			{name:'BotName',		index:'BotName',		formatter: function(c, o, r) { return r.BotName; }, width:160},
+			{name:'BotSpeed',		index:'BotSpeed',		formatter: function(c, o, r) { return Helper.speed2Human(r.BotSpeed); }, width:80, align:"right"},
 
-				{name:'IrcLink',		index:'IrcLink',		formatter: function(c, o, r) { return r.IrcLink; }, hidden:true}
-			],
-			ondblClickRow: function(id)
+			{name:'IrcLink',		index:'IrcLink',		formatter: function(c, o, r) { return r.IrcLink; }, hidden:true}
+		],
+		ondblClickRow: function(id)
+		{
+			if(id)
 			{
-				if(id)
-				{
-					var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
-					$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
-				}
-			},
-			rowNum: 100,
-			rowList: [100, 200, 400, 800],
-			pager:jQuery('#searches_pager_xg_bitpir_at'),
-			sortname:'Id',
-			viewrecords:true,
-			ExpandColumn:'Name',
-			height:'100%',
-			autowidth:true,
-			sortorder:"asc",
-			caption: "Search via xg.bitpir.at"
-		}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
+				var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
+				$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
+			}
+		},
+		rowNum: 100,
+		rowList: [100, 200, 400, 800],
+		pager:jQuery('#searches_pager_xg_bitpir_at'),
+		sortname:'Id',
+		viewrecords:true,
+		ExpandColumn:'Name',
+		height:'100%',
+		autowidth:true,
+		sortorder:"asc",
+		caption: "Search via xg.bitpir.at",
+		hidegrid: false
+	}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
 
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
@@ -615,15 +612,6 @@ $(function()
 		width: 545,
 		modal: true,
 		resizable: false
-	});
-
-	/* ************************************************************************************************************** */
-	/* RESIZE HELPER                                                                                                  */
-	/* ************************************************************************************************************** */
-	
-	$(window).resize(function()
-	{
-		Resize();
 	});
 
 	/* ************************************************************************************************************** */
@@ -738,10 +726,21 @@ function ButtonConnectClicked(dialog)
 			}
 		);
 
-		$("#table_main").show();
+		outerLayout = $("body").layout({
+			onresize: function () {
+				ResizeMain();
+			}
+		});
+
+		innerLayout = $("#layout_objects_container").layout({
+			resizeWithWindow: false,
+			onresize: function () {
+				ResizeContainer();
+			}
+		});
 
 		// resize after all is visible
-		Resize();
+		ResizeMain();
 
 		// start the refresh
 		RefreshGrid(0);
@@ -879,48 +878,26 @@ function RefreshStatistic()
 /* HELPER                                                                                                             */
 /* ****************************************************************************************************************** */
 
-function Resize()
+function ResizeMain()
 {
-	var max_height = $(window).height();
-	var max_width = $(window).width();
+	jQuery("#searches").setGridWidth($('#layout_search').width() - 2);
+	jQuery("#searches").setGridHeight($('#layout_search').height() - 55 - 20);
 
-	max_height -= 85;
+	$("#search-text").width($("#layout_search").width() - 10);
 
-	jQuery("#searches").setGridHeight(max_height);
+	$("#layout_objects_container").height($('#layout_search').height() - 55 - 11);
 
-	max_height -= 38;
-	max_width -= 310;
+	jQuery("#bots").setGridWidth($('#layout_objects').width() - 2);
+	jQuery("#packets").setGridWidth($('#layout_objects').width() - 2);
 
-	jQuery("#searches_xg_bitpir_at").setGridHeight(max_height);
-	jQuery("#searches_xg_bitpir_at").setGridWidth(max_width);
+	jQuery("#searches_xg_bitpir_at").setGridWidth($('#layout_objects').width() - 2);
+	jQuery("#searches_xg_bitpir_at").setGridHeight($('#layout_search').height() - 55 - 20 - 35);
 
-	max_height = (max_height - 108) / 2;
+	innerLayout.resizeAll();
+}
 
-	if(jQuery("#packets").getGridParam("gridstate") == "hidden")
-	{
-		if(jQuery("#bots").getGridParam("gridstate") != "hidden")
-		{
-			jQuery("#bots").setGridHeight((max_height + 20) * 2);
-		}
-	}
-	else if(jQuery("#bots").getGridParam("gridstate") != "hidden")
-	{
-		jQuery("#bots").setGridHeight(max_height);
-	}
-	jQuery("#bots").setGridWidth(max_width);
-	jQuery("#bots").jqGrid('gridResize', {minWidth: max_width, maxWidth: max_width});
-
-	if(jQuery("#bots").getGridParam("gridstate") == "hidden")
-	{
-		if(jQuery("#packets").getGridParam("gridstate") != "hidden")
-		{
-			jQuery("#packets").setGridHeight((max_height + 20) * 2);
-		}
-	}
-	else if(jQuery("#packets").getGridParam("gridstate") != "hidden")
-	{
-		jQuery("#packets").setGridHeight(max_height);
-	}
-	jQuery("#packets").setGridWidth(max_width);
-	jQuery("#packets").jqGrid('gridResize', {minWidth: max_width, maxWidth: max_width});
+function ResizeContainer()
+{
+	jQuery("#bots").setGridHeight($('#layout_bots').height() - 55 - 20);
+	jQuery("#packets").setGridHeight($('#layout_packets').height() - 55 - 20);
 }
