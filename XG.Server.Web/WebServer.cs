@@ -326,22 +326,22 @@ namespace XG.Server.Web
 							chan.Enabled = true;
 
 							// checking bot
-							XGBot bot = chan[botName];
-							if(bot == null)
+							XGBot tBot = chan[botName];
+                            if (tBot == null)
 							{
-								bot = new XGBot();
-								bot.Name = botName;
-								chan.AddBot(bot);
+                                tBot = new XGBot();
+                                tBot.Name = botName;
+                                chan.AddBot(tBot);
 							}
 
 							// checking packet
-							XGPacket pack = bot[packetId];
+                            XGPacket pack = tBot[packetId];
 							if(pack == null)
 							{
 								pack = new XGPacket();
 								pack.Id = packetId;
 								pack.Name = link[5];
-								bot.AddPacket(pack);
+                                tBot.AddPacket(pack);
 							}
 							pack.Enabled = true;
 							break;
@@ -416,9 +416,9 @@ namespace XG.Server.Web
 			{
 				case "name":
 					string[] searches = aSearchString.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-					foreach (string search in searches)
+					foreach (string currentSearch in searches)
 					{
-						tPackets = (from packet in tPackets where packet.Name.ToLower().Contains(search.ToLower()) select packet).ToArray();
+                        tPackets = (from packet in tPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToArray();
 					}
 					break;
 

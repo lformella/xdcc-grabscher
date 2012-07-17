@@ -43,7 +43,7 @@ namespace XG.Server.Backend.MySql
 			{
 				return;
 			}
-			
+#if !WINDOWS			
 			// import routine
 			StreamReader reader = new StreamReader(aFile);
 
@@ -82,6 +82,7 @@ namespace XG.Server.Backend.MySql
 					//Thread.Sleep(500);
 				}
 			}
+#endif
 		}
 
 		private XGServer GetServer(string aServerName)

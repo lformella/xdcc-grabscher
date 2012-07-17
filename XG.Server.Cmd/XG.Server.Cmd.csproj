@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XG.Server.Cmd</RootNamespace>
     <AssemblyName>XG.Server.Cmd</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <StartupObject>XG.Server.Cmd.MainClass</StartupObject>
@@ -32,6 +32,7 @@
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,13 +63,21 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\XG.Lib\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\XG.Server.Backend.File\XG.Server.Backend.File.csproj">
+      <Project>{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}</Project>
+      <Name>XG.Server.Backend.File</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XG.Server.Backend.MySql\XG.Server.Backend.MySql.csproj">
       <Project>{6B448EF6-8B68-4902-AD92-81CAADD93EFC}</Project>
       <Name>XG.Server.Backend.MySql</Name>
@@ -76,10 +85,6 @@
     <ProjectReference Include="..\XG.Server.Jabber\XG.Server.Jabber.csproj">
       <Project>{4F03468E-E62B-43C2-84D9-98CB23704E0B}</Project>
       <Name>XG.Server.Jabber</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Server.TCP\XG.Server.TCP.csproj">
-      <Project>{E7FD0DBB-344C-4CE6-9363-01F5D792A085}</Project>
-      <Name>XG.Server.TCP</Name>
     </ProjectReference>
     <ProjectReference Include="..\XG.Server.Web\XG.Server.Web.csproj">
       <Project>{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}</Project>
@@ -121,6 +126,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
