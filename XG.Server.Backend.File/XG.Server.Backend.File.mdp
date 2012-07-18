@@ -1,4 +1,4 @@
-<Project name="XG.Server.Backend.File" fileversion="2.0" releaseVersion="0.9" DefaultNamespace="XG.Server.Backend.File" language="C#" targetFramework="4.0" ctype="DotNetProject">
+<Project name="XG.Server.Backend.File" fileversion="2.0" DefaultNamespace="XG.Server.Backend.File" language="C#" targetFramework="4.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Server.Backend.File" />
@@ -21,6 +21,8 @@
   </Configurations>
   <Contents>
     <File subtype="Code" buildaction="Compile" name="FileBackend.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Properties" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Server" />
