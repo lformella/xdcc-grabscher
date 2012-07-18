@@ -147,7 +147,6 @@ namespace XG.Server
 
 			this.startWebServer = true;
 			this.webServerPort = 5556;
-			this.styleWebServer = "blitzer";
 			this.autoJoinOnInvite = true;
 
 			this.startJabberClient = false;
@@ -420,13 +419,6 @@ namespace XG.Server
 		{
 			get { return this.startWebServer; }
 			set { this.startWebServer = value; }
-		}
-
-		private string styleWebServer;
-		public string StyleWebServer
-		{
-			get { return this.styleWebServer; }
-			set { this.styleWebServer = value; }
 		}
 
 		private bool startJabberClient;

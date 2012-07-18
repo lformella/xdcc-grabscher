@@ -16,7 +16,6 @@
   <TcpServerPort>5555</TcpServerPort>
   <StartWebServer>true</StartWebServer>
   <WebServerPort>5556</WebServerPort>
-  <StyleWebServer>blitzer</StyleWebServer>
   <AutoJoinOnInvite>true</AutoJoinOnInvite>
   <LogLevel>Warning</LogLevel>
   <StartJabberClient>false</StartJabberClient>

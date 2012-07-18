@@ -371,11 +371,6 @@ namespace XG.Server.Web
 						if (str.Contains("?")) { str = str.Split('?')[0]; }
 						if (str == "/") { str = "/index.html"; }
 
-						if (str.StartsWith("/css/style/"))
-						{
-							str = str.Replace("/css/style/", "/css/" + Settings.InstanceReload.StyleWebServer + "/");
-						}
-
 						if (str.EndsWith(".png"))
 						{
 							this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str));
