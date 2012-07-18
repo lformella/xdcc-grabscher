@@ -88,34 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\css\ui.jqgrid.css" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_dots-small_65_a6a6a6_2x2.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_flat_0_333333_40x100.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_flat_65_ffffff_40x100.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_glass_55_fbf8ee_1x400.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_highlight-hard_100_eeeeee_1x100.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-bg_highlight-soft_15_cc0000_1x100.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-icons_004276_256x240.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-icons_cc0000_256x240.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\images\ui-icons_ffffff_256x240.png" />
-    <EmbeddedResource Include="Resources\css\blitzer\jquery-ui.css" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_flat_15_cd0a0a_40x100.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_glass_100_e4f1fb_1x400.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_glass_50_3baae3_1x400.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_glass_80_d7ebf9_1x400.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-hard_100_f2f5f7_1x100.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-hard_70_000000_1x100.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-soft_100_deedf7_1x100.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-bg_highlight-soft_25_ffef8f_1x100.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_2694e8_256x240.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_2e83ff_256x240.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_3d80b3_256x240.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_72a7cf_256x240.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\images\ui-icons_ffffff_256x240.png" />
-    <EmbeddedResource Include="Resources\css\cupertino\jquery-ui.css" />
     <EmbeddedResource Include="Resources\index.html" />
     <EmbeddedResource Include="Resources\js\jquery.cookie.min.js" />
     <EmbeddedResource Include="Resources\js\jquery.jqGrid.min.js" />
@@ -182,4 +154,30 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\css\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_flat_100_ffffff_40x100.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_flat_15_cd0a0a_40x100.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_flat_70_000000_40x100.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_glass_100_eeeeee_1x400.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_glass_80_eeeeee_1x400.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_highlight-soft_25_fff7cc_1x100.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-bg_inset-soft_50_999999_1x100.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-icons_777777_256x240.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-icons_888888_256x240.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-icons_949494_256x240.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-icons_969696_256x240.png" />
+    <EmbeddedResource Include="Resources\css\images\ui-icons_ffffff_256x240.png" />
+    <EmbeddedResource Include="Resources\css\jquery-ui.css" />
+    <EmbeddedResource Include="Resources\css\layout-default.css" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-hr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-hr1250.js" />
+    <EmbeddedResource Include="Resources\js\i18n\grid.locale-sr-latin.js" />
+    <EmbeddedResource Include="Resources\js\jquery.class.js" />
+    <EmbeddedResource Include="Resources\js\jquery.layout.min.js" />
+    <EmbeddedResource Include="Resources\js\xg.formatter.js" />
+    <EmbeddedResource Include="Resources\js\xg.helper.js" />
+  </ItemGroup>
+  <ItemGroup />
 </Project>
