@@ -211,13 +211,13 @@ namespace XG.Server.Web
 						case TCPClientRequest.SearchPacket:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"]),
+								this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
 						case TCPClientRequest.SearchBot:
 							client.Response.ContentType = "text/json";
-							IEnumerable<XGPacket> tPacketList = this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"]);
+							IEnumerable<XGPacket> tPacketList = this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]);
 							response = this.Objects2Json(
 								(from s in this.myRunner.RootObject.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct(),
 								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
@@ -327,21 +327,21 @@ namespace XG.Server.Web
 
 							// checking bot
 							XGBot tBot = chan[botName];
-                            if (tBot == null)
+							if (tBot == null)
 							{
-                                tBot = new XGBot();
-                                tBot.Name = botName;
-                                chan.AddBot(tBot);
+								tBot = new XGBot();
+								tBot.Name = botName;
+								chan.AddBot(tBot);
 							}
 
 							// checking packet
-                            XGPacket pack = tBot[packetId];
+							XGPacket pack = tBot[packetId];
 							if(pack == null)
 							{
 								pack = new XGPacket();
 								pack.Id = packetId;
 								pack.Name = link[5];
-                                tBot.AddPacket(pack);
+								tBot.AddPacket(pack);
 							}
 							pack.Enabled = true;
 							break;
@@ -398,7 +398,7 @@ namespace XG.Server.Web
 
 		#endregion
 
-		private IEnumerable<XGPacket> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy)
+		private IEnumerable<XGPacket> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
 			IEnumerable<XGBot> bots = from server in this.myRunner.RootObject.Servers from channel in server.Channels from bot in channel.Bots select bot;
 			if(aShowOffBots)
@@ -413,7 +413,7 @@ namespace XG.Server.Web
 					string[] searches = aSearchString.ToLower().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 					foreach (string currentSearch in searches)
 					{
-                        tPackets = (from packet in tPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToArray();
+						tPackets = (from packet in tPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToArray();
 					}
 					break;
 
@@ -443,29 +443,34 @@ namespace XG.Server.Web
 
 			switch (aSortBy)
 			{
-				case "name":
+				case "Name":
 					tPackets = from packet in tPackets orderby packet.Name select packet;
 					break;
 
-				case "connected":
+				case "Connected":
 					tPackets = from packet in tPackets orderby packet.Connected select packet;
 					break;
 
-				case "enabled":
+				case "Enabled":
 					tPackets = from packet in tPackets orderby packet.Enabled select packet;
 					break;
 
-				case "id":
+				case "Id":
 					tPackets = from packet in tPackets orderby packet.Id select packet;
 					break;
 
-				case "size":
+				case "Size":
 					tPackets = from packet in tPackets orderby packet.Size select packet;
 					break;
 
-				case "lastupdated":
+				case "Lastupdated":
 					tPackets = from packet in tPackets orderby packet.LastUpdated select packet;
 					break;
+			}
+
+			if (aSortMode == "desc")
+			{
+				tPackets = tPackets.Reverse();
 			}
 
 			return tPackets;
