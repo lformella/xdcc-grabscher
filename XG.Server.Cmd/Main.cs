@@ -18,18 +18,22 @@
 #if !WINDOWS
 using Mono.Unix;
 #endif
+
 using System;
 using System.IO;
 using System.Threading;
+
 using log4net;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Repository.Hierarchy;
+
 using XG.Server;
-using XG.Server.Backend.File;
-using XG.Server.Backend.MySql;
-using XG.Server.Jabber;
-using XG.Server.Web;
+using XG.Server.Plugin.Backend;
+using XG.Server.Plugin.Backend.File;
+using XG.Server.Plugin.Backend.MySql;
+using XG.Server.Plugin.General.Jabber;
+using XG.Server.Plugin.General.Webserver;
 
 namespace XG.Server.Cmd
 {
@@ -68,29 +72,29 @@ namespace XG.Server.Cmd
 			}
 #endif
 
-			ServerRunner runner = new ServerRunner();
+			MainInstance instance = new MainInstance();
 
-			IServerBackendPlugin backend = null;
+			AServerBackendPlugin backend = null;
 			if (Settings.Instance.StartMySqlBackend)
 			{
-				backend = new MySqlBackend();
+				backend = new XG.Server.Plugin.Backend.MySql.BackendPlugin();
 			}
 			else
 			{
-				backend = new FileBackend();
+				backend = new XG.Server.Plugin.Backend.File.BackendPlugin();
 			}
-			runner.AddServerBackendPlugin(backend);
+			instance.AddServerBackendPlugin(backend);
 
 			if (Settings.Instance.StartWebServer)
 			{
-				runner.AddServerPlugin(new WebServer());
+				instance.AddServerPlugin(new XG.Server.Plugin.General.Webserver.Plugin());
 			}
 			if (Settings.Instance.StartJabberClient)
 			{
-				runner.AddServerPlugin(new JabberClient());
+				instance.AddServerPlugin(new XG.Server.Plugin.General.Jabber.Plugin());
 			}
 
-			runner.Start();
+			instance.Start();
 		}
 	}
 }

@@ -19,8 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using log4net;
+
 using XG.Core;
+using XG.Server.Helper;
+using XG.Server.Plugin.Backend;
+using XG.Server.Plugin.General;
 
 namespace XG.Server
 {
@@ -31,49 +36,46 @@ namespace XG.Server
 	/// - calling the ServerHandler to connect to or disconnect from an irc server
 	/// - communicate with XG.Server.* plugins, meaning the client
 	/// </summary>
-	public class ServerRunner
+	public class MainInstance
 	{
 		#region VARIABLES
 
-		private static readonly ILog myLog = LogManager.GetLogger(typeof(ServerRunner));
+		private static readonly ILog myLog = LogManager.GetLogger(typeof(MainInstance));
 
-		private ServerHandler myServerHandler;
+		private IrcParser ircParser;
+		private ServerHandler serverHandler;
 
-		private RootObject myRootObject = null;
-		public RootObject RootObject
+		private XG.Core.Repository.Object objectRepository;
+		public XG.Core.Repository.Object ObjectRepository
 		{
-			get { return this.myRootObject; }
+			get { return this.objectRepository; }
 		}
 
-		private List<XGFile> myFiles;
-		public List<XGFile> Files
+		private XG.Core.Repository.File fileRepository;
+		public XG.Core.Repository.File FileRepository
 		{
-			get { return this.myFiles; }
+			get { return this.fileRepository; }
 		}
 
-		private List<string> mySearches;
+		private List<string> searches;
 		public List<string> Searches
 		{
-			get { return this.mySearches; }
+			get { return this.searches; }
 		}
 
 		#endregion
 
 		#region EVENTS
 
-		public event ObjectDelegate ObjectChangedEvent;
-		public event ObjectObjectDelegate ObjectAddedEvent;
-		public event ObjectObjectDelegate ObjectRemovedEvent;
-
 		public event DataTextDelegate SearchAddedEvent;
 		public event DataTextDelegate SearchRemovedEvent;
 
 		#endregion
 
-		public ServerRunner()
+		public MainInstance()
 		{
 			// the one and only root object
-			this.myRootObject = new RootObject();
+			this.objectRepository = new XG.Core.Repository.Object();
 		}
 
 		#region RUN STOP
@@ -83,37 +85,28 @@ namespace XG.Server
 		/// </summary>
 		public void Start()
 		{
-			this.myRootObject.ServerAddedEvent += new RootServerDelegate(rootObject_ServerAddedEventHandler);
-			this.myRootObject.ServerRemovedEvent += new RootServerDelegate(rootObject_ServerRemovedEventHandler);
+			this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(RootObject_ServerAddedEventHandler);
+			this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(RootObject_ServerRemovedEventHandler);
+			this.objectRepository.ObjectChangedEvent += new ObjectDelegate(RootObject_ObjectChangedEventHandler);
 
-			#region SERVERHANDLER INIT
+			this.ircParser = new IrcParser();
+			this.ircParser.ParsingErrorEvent += new DataTextDelegate(IrcParser_ParsingErrorEventHandler);
 
-			this.myServerHandler = new ServerHandler(this.myFiles);
-			this.myServerHandler.ParsingErrorEvent += new DataTextDelegate(myServerHandler_ParsingErrorEventHandler);
-
-			this.myServerHandler.ObjectAddedEvent += new ObjectObjectDelegate(myServerHandler_ObjectAddedEventHandler);
-			this.myServerHandler.ObjectChangedEvent += new ObjectDelegate(myServerHandler_ObjectChangedEventHandler);
-			this.myServerHandler.ObjectRemovedEvent += new ObjectObjectDelegate(myServerHandler_ObjectRemovedEventHandler);
-
-			#endregion
+			this.serverHandler = new ServerHandler();
+			this.serverHandler.FileRepository = this.fileRepository;
+			this.serverHandler.IrcParser = this.ircParser;
 
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database
-			foreach (XGServer serv in this.myRootObject.Servers)
+			foreach (XGServer serv in this.objectRepository.Servers)
 			{
-				foreach (XGServer s in this.myRootObject.Servers)
+				foreach (XGServer s in this.objectRepository.Servers)
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
 						myLog.Error("Run() removing dupe server " + s.Name);
-						this.myRootObject.RemoveServer(s);
-
-						// dispatch this info to the clients to!
-						if (this.ObjectRemovedEvent != null)
-						{
-							this.ObjectRemovedEvent(myRootObject, s);
-						}
+						this.objectRepository.RemoveServer(s);
 					}
 				}
 
@@ -125,12 +118,6 @@ namespace XG.Server
 						{
 							myLog.Error("Run() removing dupe channel " + c.Name);
 							serv.RemoveChannel(c);
-
-							// dispatch this info to the clients to!
-							if (this.ObjectRemovedEvent != null)
-							{
-								this.ObjectRemovedEvent(serv, c);
-							}
 						}
 					}
 
@@ -142,12 +129,6 @@ namespace XG.Server
 							{
 								myLog.Error("Run() removing dupe bot " + b.Name);
 								chan.RemoveBot(b);
-
-								// dispatch this info to the clients to!
-								if (this.ObjectRemovedEvent != null)
-								{
-									this.ObjectRemovedEvent(chan, b);
-								}
 							}
 						}
 
@@ -159,12 +140,6 @@ namespace XG.Server
 								{
 									myLog.Error("Run() removing dupe Packet " + p.Name);
 									bot.RemovePacket(p);
-
-									// dispatch this info to the clients to!
-									if (this.ObjectRemovedEvent != null)
-									{
-										this.ObjectRemovedEvent(bot, p);
-									}
 								}
 							}
 						}
@@ -177,7 +152,7 @@ namespace XG.Server
 			#region RESET
 
 			// reset all objects if the server crashed
-			foreach (XGServer serv in this.myRootObject.Servers)
+			foreach (XGServer serv in this.objectRepository.Servers)
 			{
 				serv.Connected = false;
 				serv.ErrorCode = SocketErrorCode.None;
@@ -204,13 +179,13 @@ namespace XG.Server
 
 			#region CLEAR OLD DL
 
-			if (this.myFiles.Count > 0 && Settings.Instance.ClearReadyDownloads)
+			if (this.fileRepository.Files.Count() > 0 && Settings.Instance.ClearReadyDownloads)
 			{
-				foreach (XGFile file in this.myFiles.ToArray())
+				foreach (XGFile file in this.fileRepository.Files)
 				{
 					if (file.Enabled)
 					{
-						this.myFiles.Remove(file);
+						this.fileRepository.RemoveFile(file);
 						myLog.Info("Run() removing ready file " + file.Name);
 					}
 				}
@@ -220,19 +195,19 @@ namespace XG.Server
 
 			#region CRASH RECOVERY
 
-			if (this.myFiles.Count > 0)
+			if (this.fileRepository.Files.Count() > 0)
 			{
-				foreach (XGFile file in this.myFiles.ToArray())
+				foreach (XGFile file in this.fileRepository.Files)
 				{
 					// lets check if the directory is still on the harddisk
 					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
 						myLog.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
-						this.myServerHandler.RemoveFile(file);
+						this.serverHandler.RemoveFile(file);
 						continue;
 					}
 
-					file.locked = new object();
+					file.Locked = new object();
 
 					if (!file.Enabled)
 					{
@@ -241,8 +216,6 @@ namespace XG.Server
 
 						foreach (XGFilePart part in file.Parts)
 						{
-							part.locked = new object();
-
 							// check if the real file and the part is actual the same
 							FileInfo info = new FileInfo(tmpPath + part.StartSize);
 							if (info.Exists)
@@ -258,7 +231,7 @@ namespace XG.Server
 							else
 							{
 								myLog.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
-								this.myServerHandler.RemovePart(file, part);
+								this.serverHandler.RemovePart(file, part);
 								complete = false;
 							}
 
@@ -281,14 +254,14 @@ namespace XG.Server
 										try
 										{
 											myLog.Fatal("Run() crash recovery checking " + next.Name);
-											FileStream fileStream = File.Open(this.myServerHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
+											FileStream fileStream = File.Open(this.serverHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
 											BinaryReader fileReader = new BinaryReader(fileStream);
 											// extract the needed refernce bytes
 											fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
 											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 											fileReader.Close();
 
-											this.myServerHandler.CheckNextReferenceBytes(part, bytes);
+											this.serverHandler.CheckNextReferenceBytes(part, bytes);
 										}
 										catch (Exception ex)
 										{
@@ -305,7 +278,7 @@ namespace XG.Server
 
 						// check and maybee join the files if something happend the last run
 						// for exaple the disk was full or the rights were not there
-						if (complete && file.Parts.Count() > 0) { this.myServerHandler.CheckFile(file); }
+						if (complete && file.Parts.Count() > 0) { this.serverHandler.CheckFile(file); }
 					}
 				}
 			}
@@ -313,14 +286,15 @@ namespace XG.Server
 			#endregion
 
 			// connect to all servers which are enabled
-			foreach (XGServer serv in this.myRootObject.Servers)
+			foreach (XGServer serv in this.objectRepository.Servers)
 			{
+				// TODO check this
 				serv.Parent = null;
-				serv.Parent = this.myRootObject;
-				serv.EnabledChangedEvent += new ObjectDelegate(serv_ObjectStateChangedEventHandler);
+				serv.Parent = this.objectRepository;
+
 				if (serv.Enabled)
 				{
-					this.myServerHandler.ConnectServer(serv);
+					this.serverHandler.ConnectServer(serv);
 				}
 			}
 		}
@@ -330,13 +304,14 @@ namespace XG.Server
 		/// </summary>
 		public void Stop()
 		{
-			this.myRootObject.ServerAddedEvent -= new RootServerDelegate(rootObject_ServerAddedEventHandler);
-			this.myRootObject.ServerRemovedEvent -= new RootServerDelegate(rootObject_ServerRemovedEventHandler);
+			this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(RootObject_ServerAddedEventHandler);
+			this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(RootObject_ServerRemovedEventHandler);
+			this.objectRepository.ObjectChangedEvent -= new ObjectDelegate(RootObject_ObjectChangedEventHandler);
 
 			// TODO stop server plugins
-			foreach (XGServer serv in myRootObject.Servers)
+			foreach (XGServer serv in objectRepository.Servers)
 			{
-				this.myServerHandler.DisconnectServer(serv);
+				this.serverHandler.DisconnectServer(serv);
 			}
 		}
 
@@ -344,56 +319,46 @@ namespace XG.Server
 
 		#region SERVER BACKEND PLUGIN
 
-		public void AddServerBackendPlugin(IServerBackendPlugin aPlugin)
+		public void AddServerBackendPlugin(AServerBackendPlugin aPlugin)
 		{
-			this.myRootObject = aPlugin.GetRootObject();
-			this.myFiles = aPlugin.GetFiles();
-			this.mySearches = aPlugin.GetSearches();
+			this.objectRepository = aPlugin.GetObjectRepository();
+			this.fileRepository = aPlugin.GetFileRepository();
+			this.searches = aPlugin.GetSearchRepository();
 
-			this.AddServerPlugin(aPlugin);
+			aPlugin.Parent = this;
+
+			aPlugin.Start();
 		}
 
 		#endregion
 
 		#region SERVER PLUGIN
 
-		public void AddServerPlugin(IServerPlugin aPlugin)
+		public void AddServerPlugin(AServerGeneralPlugin aPlugin)
 		{
-			aPlugin.Start(this);
+			aPlugin.Parent = this;
+			aPlugin.ObjectRepository = this.ObjectRepository;
+
+			aPlugin.Start();
 		}
 
 		#endregion
 
-		#region EVENTS
-
-		/// <summary>
-		/// Is called if the object state of a server is changed
-		/// </summary>
-		/// <param name="aObj"></param>
-		private void serv_ObjectStateChangedEventHandler(XGObject aObj)
-		{
-			if (aObj.Enabled)
-			{
-				this.myServerHandler.ConnectServer(aObj as XGServer);
-			}
-		}
-
-		#region ROOT OBJECT
+		#region EVENTHANDLER
 
 		/// <summary>
 		/// Is called if the root object added a server
 		/// </summary>
 		/// <param name="aObj"></param>
 		/// <param name="aServer"></param>
-		private void rootObject_ServerAddedEventHandler(RootObject aObj, XGServer aServer)
+		private void RootObject_ServerAddedEventHandler(XGObject aParent, XGObject aObj)
 		{
-			myLog.Info("rootObject_ServerAdded(" + aServer.Name + ")");
-			this.myServerHandler.ConnectServer(aServer);
-
-			// dispatch this info to the clients to!
-			if (this.ObjectAddedEvent != null)
+			if(aObj.GetType() == typeof(XGServer))
 			{
-				this.ObjectAddedEvent(aObj, aServer);
+				XGServer aServer = aObj as XGServer;
+
+				myLog.Info("rootObject_ServerAdded(" + aServer.Name + ")");
+				this.serverHandler.ConnectServer(aServer);
 			}
 		}
 
@@ -402,33 +367,17 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aObj"></param>
 		/// <param name="aServer"></param>
-		private void rootObject_ServerRemovedEventHandler(RootObject aObj, XGServer aServer)
+		private void RootObject_ServerRemovedEventHandler(XGObject aParent, XGObject aObj)
 		{
-			myLog.Info("rootObject_ServerRemoved(" + aServer.Name + ")");
-			aServer.Enabled = false;
-			this.myServerHandler.DisconnectServer(aServer);
-
-			// dispatch this info to the clients to!
-			if (this.ObjectRemovedEvent != null)
+			if(aObj.GetType() == typeof(XGServer))
 			{
-				this.ObjectRemovedEvent(aObj, aServer);
-			}
-		}
+				XGServer aServer = aObj as XGServer;
 
-		#endregion
+				aServer.Enabled = false;
+				aServer.Commit();
 
-		#region SERVER
-
-		/// <summary>
-		/// Is called if the server object added an object
-		/// </summary>
-		/// <param name="aParentObj"></param>
-		/// <param name="aObj"></param>
-		private void myServerHandler_ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
-		{
-			if (this.ObjectAddedEvent != null)
-			{
-				this.ObjectAddedEvent(aParentObj, aObj);
+				myLog.Info("rootObject_ServerRemoved(" + aServer.Name + ")");
+				this.serverHandler.DisconnectServer(aServer);
 			}
 		}
 
@@ -436,24 +385,18 @@ namespace XG.Server
 		/// Is called if the server object changed an object
 		/// </summary>
 		/// <param name="aObj"></param>
-		private void myServerHandler_ObjectChangedEventHandler(XGObject aObj)
+		private void RootObject_ObjectChangedEventHandler(XGObject aObj)
 		{
-			if (this.ObjectChangedEvent != null)
+			if (aObj.GetType() == typeof(XGServer))
 			{
-				this.ObjectChangedEvent(aObj);
-			}
-		}
-
-		/// <summary>
-		/// Is called if the server object removed an object
-		/// </summary>
-		/// <param name="aParentObj"></param>
-		/// <param name="aObj"></param>
-		private void myServerHandler_ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
-		{
-			if (this.ObjectRemovedEvent != null)
-			{
-				this.ObjectRemovedEvent(aParentObj, aObj);
+				if(aObj.Enabled)
+				{
+					this.serverHandler.ConnectServer(aObj as XGServer);
+				}
+				else
+				{
+					this.serverHandler.DisconnectServer(aObj as XGServer);
+				}
 			}
 		}
 
@@ -461,7 +404,7 @@ namespace XG.Server
 		/// Is called if the server object found a parse error
 		/// </summary>
 		/// <param name="aData"></param>
-		private void myServerHandler_ParsingErrorEventHandler(string aData)
+		private void IrcParser_ParsingErrorEventHandler(string aData)
 		{
 			lock (this)
 			{
@@ -478,23 +421,21 @@ namespace XG.Server
 
 		#endregion
 
-		#endregion
-
 		#region CLIENT REQUEST HANDLER
 
 		#region SERVER
 
 		public void AddServer(string aString)
 		{
-			this.myRootObject.AddServer(aString);
+			this.objectRepository.AddServer(aString);
 		}
 
 		public void RemoveServer(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
+			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
-				this.myRootObject.RemoveServer(tObj as XGServer);
+				this.objectRepository.RemoveServer(tObj as XGServer);
 			}
 		}
 
@@ -504,7 +445,7 @@ namespace XG.Server
 
 		public void AddChannel(Guid aGuid, string aString)
 		{
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
+			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				(tObj as XGServer).AddChannel(aString);
@@ -513,7 +454,7 @@ namespace XG.Server
 
 		public void RemoveChannel(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
+			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				XGChannel tChan = tObj as XGChannel;
@@ -527,29 +468,29 @@ namespace XG.Server
 
 		public void ActivateObject(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
+			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = true;
-				myServerHandler_ObjectChangedEventHandler(tObj);
+				tObj.Commit();
 			}
 		}
 
 		public void DeactivateObject(Guid aGuid)
 		{
-			XGObject tObj = this.myRootObject.GetChildByGuid(aGuid);
+			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = false;
-				myServerHandler_ObjectChangedEventHandler(tObj);
+				tObj.Commit();
 			}
 			else
 			{
-				foreach (XGFile tFile in this.myFiles.ToArray())
+				foreach (XGFile tFile in this.fileRepository.Files)
 				{
 					if (tFile.Guid == aGuid)
 					{
-						this.myServerHandler.RemoveFile(tFile);
+						this.serverHandler.RemoveFile(tFile);
 						break;
 					}
 				}
@@ -562,7 +503,7 @@ namespace XG.Server
 
 		public void AddSearch(string aSearch)
 		{
-			this.mySearches.Add(aSearch);
+			this.searches.Add(aSearch);
 
 			if (this.SearchAddedEvent != null)
 			{
@@ -572,7 +513,7 @@ namespace XG.Server
 
 		public void RemoveSearch(string aSearch)
 		{
-			this.mySearches.Remove(aSearch);
+			this.searches.Remove(aSearch);
 
 			if (this.SearchRemovedEvent != null)
 			{

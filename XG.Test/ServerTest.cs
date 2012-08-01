@@ -1,4 +1,4 @@
-//
+//  
 //  Copyright (C) 2012 Lars Formella <ich@larsformella.de>
 // 
 //  This program is free software: you can redistribute it and/or modify
@@ -13,19 +13,26 @@
 // 
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
+// 
 
-using System.Collections.Generic;
+using System;
+using NUnit.Framework;
 using XG.Core;
 
-namespace XG.Server
+namespace XG.Test
 {
-	public interface IServerBackendPlugin : IServerPlugin
+	[TestFixture()]
+	public class Helper
 	{
-		RootObject GetRootObject ();
+		[Test()]
+		public void ShrinkFileName ()
+		{
+			string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
+			Int64 fileSize = 440044;
+			string result = XGHelper.ShrinkFileName(fileName, fileSize);
 
-		List<XGFile> GetFiles ();
-
-		List<string> GetSearches ();
+			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);
+		}
 	}
 }
+

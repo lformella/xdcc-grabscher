@@ -23,13 +23,17 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
+
 using log4net;
+
 using XG.Core;
+using XG.Server.Connection;
+using XG.Server.Helper;
 
 namespace XG.Server
 {
 	public delegate void DownloadDelegate(XGPacket aPack, Int64 aChunk, IPAddress aIp, int aPort);
-	public delegate void PacketBotConnectDelegate(XGPacket aPack, BotConnect aCon);
+	public delegate void PacketBotConnectDelegate(XGPacket aPack, BotConnection aCon);
 
 	/// <summary>
 	/// This class describes a irc server connection handler
@@ -46,29 +50,53 @@ namespace XG.Server
 
 		private static readonly ILog myLog = LogManager.GetLogger(typeof(ServerHandler));
 
-		private Dictionary<XGServer, ServerConnect> myServers;
-		private Dictionary<XGPacket, BotConnect> myDownloads;
-		private List<XGFile> myFiles;
+		private IrcParser ircParser;
+		public IrcParser IrcParser
+		{
+			set
+			{
+				if(this.ircParser != null)
+				{
+					this.ircParser.Parent = null;
+					this.ircParser.AddDownloadEvent -= new DownloadDelegate (IrcParser_AddDownloadEventHandler);
+					this.ircParser.RemoveDownloadEvent -= new BotDelegate (IrcParser_RemoveDownloadEventHandler);
+				}
+				this.ircParser = value;
+				if(this.ircParser != null)
+				{
+					this.ircParser.Parent = this;
+					this.ircParser.AddDownloadEvent += new DownloadDelegate (IrcParser_AddDownloadEventHandler);
+					this.ircParser.RemoveDownloadEvent += new BotDelegate (IrcParser_RemoveDownloadEventHandler);
+				}
+			}
+		}
 
-		#endregion
+		private XG.Core.Repository.File fileRepository;
+		public XG.Core.Repository.File FileRepository
+		{
+			set
+			{
+				if(this.fileRepository != null)
+				{
+				}
+				this.fileRepository = value;
+				if(this.fileRepository != null)
+				{
+				}
+			}
+		}
 
-		#region EVENTS
-
-		public event DataTextDelegate ParsingErrorEvent;
-
-		public event ObjectDelegate ObjectChangedEvent;
-		public event ObjectObjectDelegate ObjectAddedEvent;
-		public event ObjectObjectDelegate ObjectRemovedEvent;
+		private Dictionary<XGServer, ServerConnection> servers;
+		private Dictionary<XGPacket, BotConnection> downloads;
 
 		#endregion
 
 		#region INIT
 
-		public ServerHandler(List<XGFile> aFiles)
+		public ServerHandler()
 		{
-			this.myServers = new Dictionary<XGServer, ServerConnect>();
-			this.myDownloads = new Dictionary<XGPacket, BotConnect>();
-			this.myFiles = aFiles;
+			this.servers = new Dictionary<XGServer, ServerConnection>();
+			this.downloads = new Dictionary<XGPacket, BotConnection>();
 
 			// create my stuff if its not there
 			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
@@ -91,30 +119,32 @@ namespace XG.Server
 		{
 			XGServer tServer = aServer as XGServer;
 
-			if (!this.myServers.ContainsKey (tServer))
+			if (!this.servers.ContainsKey (tServer))
 			{
-				ServerConnect con = new ServerConnect (this);
-				this.myServers.Add (tServer, con);
+				ServerConnection con = new ServerConnection ();
+				con.Parent = this;
+				con.Server = tServer;
+				con.IrcParser = this.ircParser;
 
-				con.NewDownloadEvent += new DownloadDelegate (server_NewDownloadEventHandler);
-				con.KillDownloadEvent += new BotDelegate (server_KillDownloadEventHandler);
-				con.DisconnectedEvent += new ServerSocketErrorDelegate(server_DisconnectedEventHandler);
-				con.ConnectedEvent += new ServerDelegate(server_ConnectedEventHandler);
-				con.ParsingErrorEvent += new DataTextDelegate(server_ParsingErrorEventHandler);
+				con.Connection = new XG.Server.Connection.Connection();
+				con.Connection.Hostname = tServer.Name;
+				con.Connection.Port = tServer.Port;
+				con.Connection.MaxData = 0;
 
-				con.ObjectAddedEvent += new ObjectObjectDelegate(_ObjectAddedEventHandler);
-				con.ObjectChangedEvent += new ObjectDelegate(_ObjectChangedEventHandler);
-				con.ObjectRemovedEvent += new ObjectObjectDelegate(_ObjectRemovedEventHandler);
+				this.servers.Add (tServer, con);
+
+				con.ConnectedEvent += new ServerDelegate(ServerConnection_ConnectedEventHandler);
+				con.DisconnectedEvent += new ServerSocketErrorDelegate(ServerConnection_DisconnectedEventHandler);
 
 				// start a new thread wich connects to the given server
-				new Thread(delegate() { con.Connect(tServer); }).Start();
+				new Thread(delegate() { con.Connection.Connect(); }).Start();
 			}
 			else
 			{
 				myLog.Error("ConnectServer(" + tServer.Name + ") server is already in the dictionary");
 			}
 		}
-		private void server_ConnectedEventHandler(XGServer aServer)
+		private void ServerConnection_ConnectedEventHandler(XGServer aServer)
 		{
 			// nom nom nom ...
 		}
@@ -125,21 +155,21 @@ namespace XG.Server
 		/// <param name="aServer"></param>
 		public void DisconnectServer(XGServer aServer)
 		{
-			if (this.myServers.ContainsKey(aServer))
+			if (this.servers.ContainsKey(aServer))
 			{
-				ServerConnect con = myServers[aServer];
-				con.Disconnect();
+				ServerConnection con = servers[aServer];
+				con.Connection.Disconnect();
 			}
 			else
 			{
 				myLog.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
-		private void server_DisconnectedEventHandler(XGServer aServer, SocketErrorCode aValue)
+		private void ServerConnection_DisconnectedEventHandler(XGServer aServer, SocketErrorCode aValue)
 		{
-			if (this.myServers.ContainsKey (aServer))
+			if (this.servers.ContainsKey (aServer))
 			{
-				ServerConnect con = this.myServers[aServer];
+				ServerConnection con = this.servers[aServer];
 
 				if (aServer.Enabled)
 				{
@@ -169,21 +199,18 @@ namespace XG.Server
 						new Timer(new TimerCallback(this.ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
 					}
 				}
-
-				if (!aServer.Enabled)
+				else
 				{
-					con.NewDownloadEvent -= new DownloadDelegate (server_NewDownloadEventHandler);
-					con.KillDownloadEvent -= new BotDelegate (server_KillDownloadEventHandler);
-					con.DisconnectedEvent -= new ServerSocketErrorDelegate(server_DisconnectedEventHandler);
-					con.ConnectedEvent -= new ServerDelegate(server_ConnectedEventHandler);
-					con.ParsingErrorEvent -= new DataTextDelegate(server_ParsingErrorEventHandler);
+					con.ConnectedEvent -= new ServerDelegate(ServerConnection_ConnectedEventHandler);
+					con.DisconnectedEvent -= new ServerSocketErrorDelegate(ServerConnection_DisconnectedEventHandler);
 
-					con.ObjectAddedEvent -= new ObjectObjectDelegate(_ObjectAddedEventHandler);
-					con.ObjectChangedEvent -= new ObjectDelegate(_ObjectChangedEventHandler);
-					con.ObjectRemovedEvent -= new ObjectObjectDelegate(_ObjectRemovedEventHandler);
+					con.Server = null;
+					con.IrcParser = null;
 
-					this.myServers.Remove(aServer);
+					this.servers.Remove(aServer);
 				}
+
+				con.Connection = null;
 			}
 			else
 			{
@@ -195,69 +222,26 @@ namespace XG.Server
 		{
 			XGServer tServer = aServer as XGServer;
 
-			if (this.myServers.ContainsKey(tServer))
+			if (this.servers.ContainsKey(tServer))
 			{
-				ServerConnect con = this.myServers[tServer];
+				ServerConnection con = this.servers[tServer];
 
 				if (tServer.Enabled)
 				{
 					myLog.Error("ReconnectServer(" + tServer.Name + ")");
-					con.Connect(tServer);
+
+					// TODO do we need a new connection here?
+					con.Connection = new XG.Server.Connection.Connection();
+					con.Connection.Hostname = tServer.Name;
+					con.Connection.Port = tServer.Port;
+					con.Connection.MaxData = 0;
+
+					con.Connection.Connect();
 				}
 			}
 			else
 			{
 				myLog.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
-			}
-		}
-
-		/// <summary>
-		/// Just throws the event on step ahead
-		/// </summary>
-		/// <param name="aData"></param>
-		void server_ParsingErrorEventHandler(string aData)
-		{
-			if (this.ParsingErrorEvent != null)
-			{
-				this.ParsingErrorEvent(aData);
-			}
-		}
-
-		/// <summary>
-		/// Just throws the event on step ahead
-		/// </summary>
-		/// <param name="aParentObj"></param>
-		/// <param name="aObj"></param>
-		void _ObjectRemovedEventHandler(XGObject aParentObj, XGObject aObj)
-		{
-			if (this.ObjectRemovedEvent != null)
-			{
-				this.ObjectRemovedEvent(aParentObj, aObj);
-			}
-		}
-
-		/// <summary>
-		/// Just throws the event on step ahead
-		/// </summary>
-		/// <param name="aObj"></param>
-		void _ObjectChangedEventHandler(XGObject aObj)
-		{
-			if (this.ObjectChangedEvent != null)
-			{
-				this.ObjectChangedEvent(aObj);
-			}
-		}
-
-		/// <summary>
-		/// Just throws the event on step ahead
-		/// </summary>
-		/// <param name="aParentObj"></param>
-		/// <param name="aObj"></param>
-		void _ObjectAddedEventHandler(XGObject aParentObj, XGObject aObj)
-		{
-			if (this.ObjectAddedEvent != null)
-			{
-				this.ObjectAddedEvent(aParentObj, aObj);
 			}
 		}
 
@@ -272,19 +256,27 @@ namespace XG.Server
 		/// <param name="aChunk"></param>
 		/// <param name="aIp"></param>
 		/// <param name="aPort"></param>
-		private void server_NewDownloadEventHandler(XGPacket aPack, Int64 aChunk, IPAddress aIp, int aPort)
+		private void IrcParser_AddDownloadEventHandler(XGPacket aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
 			new Thread(delegate()
 			{
-				if (!this.myDownloads.ContainsKey(aPack))
+				if (!this.downloads.ContainsKey(aPack))
 				{
-					BotConnect con = new BotConnect(this);
-					con.DisconnectedEvent += new PacketBotConnectDelegate(bot_Disconnected);
-					con.ConnectedEvent += new PacketBotConnectDelegate(bot_Connected);
-					con.ObjectChangedEvent += new ObjectDelegate(_ObjectChangedEventHandler);
+					BotConnection con = new BotConnection();
+					con.Parent = this;
+					con.Packet = aPack;
+					con.StartSize = aChunk;
 
-					this.myDownloads.Add(aPack, con);
-					con.Connect(aPack, aChunk, aIp, aPort);
+					con.Connection = new XG.Server.Connection.Connection();
+					con.Connection.Hostname = aIp.ToString();
+					con.Connection.Port = aPort;
+					con.Connection.MaxData = aPack.RealSize - aChunk;
+
+					con.DisconnectedEvent += new PacketBotConnectDelegate(Bot_Disconnected);
+					con.ConnectedEvent += new PacketBotConnectDelegate(Bot_Connected);
+
+					this.downloads.Add(aPack, con);
+					con.Connection.Connect();
 				}
 				else
 				{
@@ -293,29 +285,31 @@ namespace XG.Server
 				}
 			}).Start();
 		}
-		private void bot_Connected (XGPacket aPack, BotConnect aCon)
+		private void Bot_Connected (XGPacket aPack, BotConnection aCon)
 		{
 		}
 
-		private void server_KillDownloadEventHandler (XGBot aBot)
+		private void IrcParser_RemoveDownloadEventHandler (XGBot aBot)
 		{
-			foreach (KeyValuePair<XGPacket, BotConnect> kvp in this.myDownloads)
+			foreach (KeyValuePair<XGPacket, BotConnection> kvp in this.downloads)
 			{
 				if (kvp.Key.Parent == aBot)
 				{
-					kvp.Value.Disconnect();
+					kvp.Value.Connection.Disconnect();
 					break;
 				}
 			}
 		}
-		private void bot_Disconnected(XGPacket aPacket, BotConnect aCon)
+		private void Bot_Disconnected(XGPacket aPacket, BotConnection aCon)
 		{
-			if (myDownloads.ContainsKey(aPacket))
+			aCon.Packet = null;
+			aCon.Connection = null;
+
+			if (downloads.ContainsKey(aPacket))
 			{
-				aCon.DisconnectedEvent -= new PacketBotConnectDelegate(bot_Disconnected);
-				aCon.ConnectedEvent -= new PacketBotConnectDelegate(bot_Connected);
-				aCon.ObjectChangedEvent -= new ObjectDelegate(_ObjectChangedEventHandler);
-				this.myDownloads.Remove(aPacket);
+				aCon.DisconnectedEvent -= new PacketBotConnectDelegate(Bot_Disconnected);
+				aCon.ConnectedEvent -= new PacketBotConnectDelegate(Bot_Connected);
+				this.downloads.Remove(aPacket);
 
 				try
 				{
@@ -333,8 +327,8 @@ namespace XG.Server
 
 				try
 				{
-					ServerConnect sc = this.myServers[aPacket.Parent.Parent.Parent];
-					sc.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime);
+					ServerConnection sc = this.servers[aPacket.Parent.Parent.Parent];
+					sc.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime, false);
 				}
 				catch (Exception ex)
 				{
@@ -371,111 +365,6 @@ namespace XG.Server
 
 		#endregion
 
-		#region PHYSICAL FUNCTIONS
-
-		/// <summary>
-		/// Moves a file
-		/// </summary>
-		/// <param name="aNameOld">old filename</param>
-		/// <param name="aNameNew">new filename</param>
-		/// <returns>true if operation succeeded, false if it failed</returns>
-		public bool FileMove(string aNameOld, string aNameNew)
-		{
-			if (File.Exists(aNameOld))
-			{
-				try
-				{
-					File.Move(aNameOld, aNameNew);
-					return true;
-				}
-				catch (Exception ex)
-				{
-					myLog.Fatal("FileMove(" + aNameOld + ", " + aNameNew + ") ", ex);
-					return false;
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Deletes a file
-		/// </summary>
-		/// <param name="aName">file to delete</param>
-		/// <returns>true if operation succeeded, false if it failed</returns>
-		public bool FileDelete(string aName)
-		{
-			if (File.Exists(aName))
-			{
-				try
-				{
-					File.Delete(aName);
-					return true;
-				}
-				catch (Exception ex)
-				{
-					myLog.Fatal("FileDlete(" + aName + ") ", ex);
-					return false;
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Deletes a directory
-		/// </summary>
-		/// <param name="aName">directory to delete</param>
-		/// <returns>true if operation succeeded, false if it failed</returns>
-		public bool DirectoryDelete(string aName)
-		{
-			if (Directory.Exists(aName))
-			{
-				try
-				{
-					Directory.Delete(aName, true);
-					return true;
-				}
-				catch (Exception ex)
-				{
-					myLog.Fatal("DirectoryDlete(" + aName + ") ", ex);
-					return false;
-				}
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Lists a directory
-		/// </summary>
-		/// <param name="aDir">directory to list</param>
-		/// <returns>file list</returns>
-		public string[] ListDirectory(string aDir)
-		{
-			return this.ListDirectory(aDir, null);
-		}
-
-		/// <summary>
-		/// Lists a directory with search pattern
-		/// </summary>
-		/// <param name="aDir">directory to list</param>
-		/// <param name="aSearch">search pattern can be null to disable this</param>
-		/// <returns>file list</returns>
-		public string[] ListDirectory(string aDir, string aSearch)
-		{
-			string[] files = new string[] { };
-			try
-			{
-				files = aSearch == null ? Directory.GetFiles(aDir) : Directory.GetFiles(aDir, aSearch);
-				Array.Sort(files);
-			}
-			catch (Exception ex)
-			{
-				myLog.Fatal("ListDirectory(" + aDir + ") ", ex);
-			}
-			return files;
-		}
-
-		#endregion
-
 		#region FILE
 
 		/// <summary>
@@ -487,7 +376,7 @@ namespace XG.Server
 		private XGFile GetFile(string aName, Int64 aSize)
 		{
 			string name = XGHelper.ShrinkFileName(aName, aSize);
-			foreach (XGFile file in this.myFiles.ToArray())
+			foreach (XGFile file in this.fileRepository.Files)
 			{
 				//Console.WriteLine(file.TmpPath + " - " + name);
 				if (file.TmpPath == name)
@@ -517,8 +406,7 @@ namespace XG.Server
 			if (tFile == null)
 			{
 				tFile = new XGFile(aName, aSize);
-				this.myFiles.Add(tFile);
-				this.ObjectAddedEvent(null, tFile);
+				this.fileRepository.AddFile(tFile);
 				try
 				{
 					Directory.CreateDirectory(Settings.Instance.TempPath + tFile.TmpPath);
@@ -557,9 +445,8 @@ namespace XG.Server
 			}
 			if (skip) { return; }
 
-			this.DirectoryDelete(this.GetCompletePath(aFile));
-			this.myFiles.Remove(aFile);
-			this.ObjectRemovedEvent(null, aFile);
+			Helper.Filesystem.DeleteDirectory(this.GetCompletePath(aFile));
+			this.fileRepository.RemoveFile(aFile);
 		}
 
 		#endregion
@@ -585,7 +472,6 @@ namespace XG.Server
 				returnPart.StopSize = aFile.Size;
 				returnPart.IsChecked = true;
 				aFile.AddPart(returnPart);
-				this.ObjectAddedEvent(aFile, returnPart);
 			}
 			else
 			{
@@ -617,9 +503,8 @@ namespace XG.Server
 
 								// update previous part
 								part.StopSize = aSize;
-								this.ObjectChangedEvent(part);
+								part.Commit();
 								aFile.AddPart(returnPart);
-								this.ObjectAddedEvent(aFile, returnPart);
 								break;
 							}
 						}
@@ -648,7 +533,7 @@ namespace XG.Server
 					{
 						myLog.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize);
 						part.PartState = FilePartState.Closed;
-						this.ObjectChangedEvent(part);
+						part.Commit();
 						break;
 					}
 				}
@@ -658,8 +543,7 @@ namespace XG.Server
 			if (aFile.Parts.Count() == 0) { this.RemoveFile(aFile); }
 			else
 			{
-				this.FileDelete(this.GetCompletePath(aPart));
-				this.ObjectRemovedEvent(aFile, aPart);
+				Helper.Filesystem.DeleteFile(this.GetCompletePath(aPart));
 			}
 		}
 
@@ -770,9 +654,9 @@ namespace XG.Server
 					// the file is open
 					if (part.PartState == FilePartState.Open)
 					{
-						BotConnect bc = null;
+						BotConnection bc = null;
 						XGPacket pack = null;
-						foreach (KeyValuePair<XGPacket, BotConnect> kvp in this.myDownloads)
+						foreach (KeyValuePair<XGPacket, BotConnection> kvp in this.downloads)
 						{
 							if (kvp.Value.Part == part)
 							{
@@ -786,7 +670,8 @@ namespace XG.Server
 							if (!XGHelper.IsEqual(bc.ReferenceBytes, aBytes))
 							{
 								myLog.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
-								bc.Remove();
+								bc.RemovePart = true;
+								bc.Connection.Disconnect();
 								pack.Enabled = false;
 								this.RemovePart(tFile, part);
 								return part.StopSize;
@@ -795,7 +680,7 @@ namespace XG.Server
 							{
 								myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked");
 								part.IsChecked = true;
-								this.ObjectChangedEvent(part);
+								part.Commit();
 								return 0;
 							}
 						}
@@ -824,7 +709,7 @@ namespace XG.Server
 							else
 							{
 								part.IsChecked = true;
-								this.ObjectChangedEvent(part);
+								part.Commit();
 
 								if (part.PartState == FilePartState.Ready)
 								{
@@ -880,7 +765,7 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		public void CheckFile(XGFile aFile)
 		{
-			lock (aFile.locked)
+			lock (aFile.Locked)
 			{
 				myLog.Info("CheckFile(" + aFile.Name + ")");
 				if (aFile.Parts.Count() == 0) { return; }
@@ -912,7 +797,7 @@ namespace XG.Server
 		public void JoinCompleteParts(object aObject)
 		{
 			XGFile tFile = aObject as XGFile;
-			lock (tFile.locked)
+			lock (tFile.Locked)
 			{
 				myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting");
 
@@ -922,7 +807,7 @@ namespace XG.Server
 
 				string fileName = XGHelper.ShrinkFileName(tFile.Name, 0);
 
-				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
+				foreach (KeyValuePair<XGServer, ServerConnection> kvp in this.servers)
 				{
 					XGServer tServ = kvp.Key;
 					foreach (XGChannel tChan in tServ.Channels)
@@ -940,7 +825,7 @@ namespace XG.Server
 									{
 										myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name);
 										tPack.Enabled = false;
-										this.ObjectChangedEvent(tPack);
+										tPack.Commit();
 									}
 								}
 							}
@@ -995,7 +880,7 @@ namespace XG.Server
 					Int64 size = new FileInfo(fileReady).Length;
 					if (size == tFile.Size)
 					{
-						this.DirectoryDelete(Settings.Instance.TempPath + tFile.TmpPath);
+						Helper.Filesystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
 						myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build");
 
 						// statistics
@@ -1033,7 +918,7 @@ namespace XG.Server
 				if (error && deleteOnError)
 				{
 					// the creation was not successfull, so delete the files and parts
-					this.FileDelete(fileReady);
+					Helper.Filesystem.DeleteFile(fileReady);
 					this.RemoveFile(tFile);
 				}
 			}
@@ -1097,8 +982,6 @@ namespace XG.Server
 
 		#region TIMER TASKS
 
-		#region BOT WATCHDOG
-
 		private void RunBotWatchdog()
 		{
 			while (true)
@@ -1106,7 +989,7 @@ namespace XG.Server
 				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
 
 				int a = 0;
-				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
+				foreach (KeyValuePair<XGServer, ServerConnection> kvp in this.servers)
 				{
 					if (kvp.Value.IsRunning)
 					{
@@ -1120,7 +1003,6 @@ namespace XG.Server
 									{
 										a++;
 										tChan.RemoveBot(tBot);
-										this.ObjectRemovedEvent(tChan, tBot);
 									}
 								}
 							}
@@ -1134,17 +1016,13 @@ namespace XG.Server
 			}
 		}
 
-		#endregion
-
-		#region TIMER
-
 		private void RunTimer()
 		{
 			while (true)
 			{
-				foreach (KeyValuePair<XGServer, ServerConnect> kvp in this.myServers)
+				foreach (KeyValuePair<XGServer, ServerConnection> kvp in this.servers)
 				{
-					ServerConnect sc = kvp.Value;
+					ServerConnection sc = kvp.Value;
 					if (sc.IsRunning)
 					{
 						sc.TriggerTimerRun();
@@ -1156,83 +1034,5 @@ namespace XG.Server
 		}
 
 		#endregion
-
-		#endregion
 	}
-
-	#region DOWNLOAD OBJECT
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public class DownloadObject
-	{
-		private XGPacket packet = null;
-		public XGPacket Packet
-		{
-			get { return this.packet; }
-			set { this.packet = value; }
-		}
-
-		private Int64 startSize = 0;
-		public Int64 StartSize
-		{
-			get { return this.startSize; }
-			set { this.startSize = value; }
-		}
-
-		private IPAddress ip = IPAddress.Loopback;
-		public IPAddress Ip
-		{
-			get { return this.ip; }
-			set { this.ip = value; }
-		}
-
-		private int port = 0;
-		public int Port
-		{
-			get { return this.port; }
-			set { this.port = value; }
-		}
-
-		public DownloadObject(XGPacket aPacket, Int64 aStartSize, IPAddress aIp, int aPort)
-		{
-			this.packet = aPacket;
-			this.startSize = aStartSize;
-			this.ip = aIp;
-			this.port = aPort;
-		}
-	}
-
-	#endregion
-
-	#region PARTYBYTES OBJECT
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public class PartBytesObject
-	{
-		private XGFilePart part;
-		public XGFilePart Part
-		{
-			get { return part; }
-			set { part = value; }
-		}
-
-		private byte[] bytes;
-		public byte[] Bytes
-		{
-			get { return bytes; }
-			set { bytes = value; }
-		}
-
-		public PartBytesObject(XGFilePart aPart, byte[] aBytes)
-		{
-			this.part = aPart;
-			this.bytes = aBytes;
-		}
-	}
-
-	#endregion
 }

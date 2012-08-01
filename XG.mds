@@ -22,56 +22,73 @@
       <Entry build="True" name="XG.Core" configuration="Debug" />
       <Entry build="True" name="XG.Server" configuration="Debug" />
       <Entry build="True" name="XG.Client" configuration="Debug" />
-      <Entry build="True" name="XG.Server.Web" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Plugin.General.Webserver" configuration="Debug" />
       <Entry build="True" name="XG.Client.Web" configuration="Debug" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Debug" />
-      <Entry build="True" name="XG.Server.Jabber" configuration="Debug" />
-      <Entry build="True" name="XG.Server.Backend.MySql" configuration="Debug" />
-      <Entry build="True" name="XG.Server.Backend.File" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Debug" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Debug" />
+      <Entry build="True" name="XG.Test" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Release" />
       <Entry build="True" name="XG.Server" configuration="Release" />
       <Entry build="True" name="XG.Client" configuration="Release" />
-      <Entry build="True" name="XG.Server.Web" configuration="Release" />
+      <Entry build="True" name="XG.Server.Plugin.General.Webserver" configuration="Release" />
       <Entry build="True" name="XG.Client.Web" configuration="Release" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Release" />
-      <Entry build="True" name="XG.Server.Jabber" configuration="Release" />
-      <Entry build="True" name="XG.Server.Backend.MySql" configuration="Release" />
-      <Entry build="True" name="XG.Server.Backend.File" configuration="Release" />
+      <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Release" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Release" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Release" />
+      <Entry build="True" name="XG.Test" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Unsafe" />
       <Entry build="True" name="XG.Server" configuration="Unsafe" />
       <Entry build="True" name="XG.Client" configuration="Unsafe" />
-      <Entry build="True" name="XG.Server.Web" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Plugin.General.Webserver" configuration="Unsafe" />
       <Entry build="True" name="XG.Client.Web" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Cmd" configuration="Unsafe" />
-      <Entry build="True" name="XG.Server.Jabber" configuration="Unsafe" />
-      <Entry build="True" name="XG.Server.Backend.MySql" configuration="Unsafe" />
-      <Entry build="True" name="XG.Server.Backend.File" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Unsafe" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Unsafe" />
+      <Entry build="True" name="XG.Test" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Default" ctype="CombineConfiguration">
+      <Entry build="True" name="XG.Core" configuration="Default" />
+      <Entry build="True" name="XG.Server" configuration="Default" />
+      <Entry build="True" name="XG.Client" configuration="Default" />
+      <Entry build="True" name="XG.Server.Plugin.General.Webserver" configuration="Default" />
+      <Entry build="True" name="XG.Client.Web" configuration="Default" />
+      <Entry build="True" name="XG.Server.Cmd" configuration="Default" />
+      <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Default" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Default" />
+      <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Default" />
+      <Entry build="True" name="XG.Test" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="XG.Server.Cmd" single="True">
     <Execute type="None" entry="XG.Core" />
     <Execute type="None" entry="XG.Server" />
     <Execute type="None" entry="XG.Client" />
-    <Execute type="None" entry="XG.Server.Web" />
+    <Execute type="None" entry="XG.Server.Plugin.General.Webserver" />
     <Execute type="None" entry="XG.Client.Web" />
     <Execute type="None" entry="XG.Server.Cmd" />
-    <Execute type="None" entry="XG.Server.Jabber" />
-    <Execute type="None" entry="XG.Server.Backend.MySql" />
-    <Execute type="None" entry="XG.Server.Backend.File" />
+    <Execute type="None" entry="XG.Server.Plugin.General.Jabber" />
+    <Execute type="None" entry="XG.Server.Plugin.Backend.MySql" />
+    <Execute type="None" entry="XG.Server.Plugin.Backend.File" />
+    <Execute type="None" entry="XG.Test" />
   </StartMode>
   <Entries>
     <Entry filename="XG.Core/XG.Core.mdp" />
     <Entry filename="XG.Server/XG.Server.mdp" />
     <Entry filename="XG.Client/XG.Client.mdp" />
-    <Entry filename="XG.Server.Web/XG.Server.Web.mdp" />
+    <Entry filename="XG.Server.Plugin.General.Webserver/XG.Server.Plugin.General.Webserver.mdp" />
     <Entry filename="XG.Client.Web/XG.Client.Web.mdp" />
     <Entry filename="XG.Server.Cmd/XG.Server.Cmd.mdp" />
-    <Entry filename="XG.Server.Jabber/XG.Server.Jabber.mdp" />
-    <Entry filename="XG.Server.Backend.MySql/XG.Server.Backend.MySql.mdp" />
-    <Entry filename="XG.Server.Backend.File/XG.Server.Backend.File.mdp" />
+    <Entry filename="XG.Server.Plugin.General.Jabber/XG.Server.Plugin.General.Jabber.mdp" />
+    <Entry filename="XG.Server.Plugin.Backend.MySql/XG.Server.Plugin.Backend.MySql.mdp" />
+    <Entry filename="XG.Server.Plugin.Backend.File/XG.Server.Plugin.Backend.File.mdp" />
+    <Entry filename="XG.Test/XG.Test.mdp" />
   </Entries>
 </Combine>

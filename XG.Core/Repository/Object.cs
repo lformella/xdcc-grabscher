@@ -19,21 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XG.Core
+namespace XG.Core.Repository
 {
 	[Serializable()]
-	public class RootObject : XGObject
+	public class Object : XGObject
 	{
-		#region EVENTS
-
-		[field: NonSerialized()]
-		public event RootServerDelegate ServerAddedEvent;
-
-		[field: NonSerialized()]
-		public event RootServerDelegate ServerRemovedEvent;
-
-		#endregion
-
 		#region CHILDREN
 
 		public IEnumerable<XGServer> Servers
@@ -56,13 +46,7 @@ namespace XG.Core
 
 		public void AddServer(XGServer aServer)
 		{
-			if (base.AddChild(aServer))
-			{
-				if (this.ServerAddedEvent != null)
-				{
-					this.ServerAddedEvent(this, aServer);
-				}
-			}
+			base.AddChild(aServer);
 		}
 		public void AddServer(string aServer)
 		{
@@ -79,24 +63,18 @@ namespace XG.Core
 
 		public void RemoveServer(XGServer aServer)
 		{
-			if (base.RemoveChild(aServer))
-			{
-				if (this.ServerRemovedEvent != null)
-				{
-					this.ServerRemovedEvent(this, aServer);
-				}
-			}
+			base.RemoveChild(aServer);
 		}
 
 		#endregion
 
 		#region CONSTRUCTOR
 
-		public RootObject() : base()
+		public Object() : base()
 		{
 		}
 
-		public void Clone(RootObject aCopy, bool aFull)
+		public void Clone(Object aCopy, bool aFull)
 		{
 			base.Clone(aCopy, aFull);
 		}

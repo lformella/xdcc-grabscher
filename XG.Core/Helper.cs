@@ -131,15 +131,17 @@ namespace XG.Core
 	public delegate void DataTextDelegate(string aData);
 	public delegate void DataBinaryDelegate(byte[] aData);
 
-	public delegate void RootServerDelegate(RootObject aObj, XGServer aServer);
+	public delegate void RootServerDelegate(XG.Core.Repository.Object aObj, XGServer aServer);
 	public delegate void ServerChannelDelegate(XGServer aServer, XGChannel aChan);
 	public delegate void StringPacketDelegate(string aData, XGPacket aPack);
 	public delegate void StringGuidDelegate(string aData, Guid aGuid);
 
 	public delegate void GuidDelegate(Guid aGuid);
 	public delegate void ObjectDelegate(XGObject aObj);
+	public delegate void ObjectIntBoolDelegate(XGObject aObj, Int64 aInt, bool aBool);
 	public delegate void ObjectObjectDelegate(XGObject aObj1, XGObject aObj2);
 	public delegate void ServerDelegate(XGServer aServer);
+	public delegate void ChannelDelegate(XGChannel aChannel);
 	public delegate void ServerSocketErrorDelegate(XGServer aServer, SocketErrorCode aValue);
 	public delegate void BotDelegate (XGBot aBot);
 	public delegate void PacketDelegate(XGPacket aPack);

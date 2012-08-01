@@ -21,123 +21,76 @@ using System.Net.Sockets;
 using log4net;
 using XG.Core;
 
-namespace XG.Server
+namespace XG.Server.Connection
 {
-	public class Connection
+	public class Connection : AConnection
 	{
 		#region VARIABLES
 
-		private ILog myLog;
+		private ILog log;
 
-		private TcpClient myTcpClient;
+		private TcpClient tcpClient;
 
-		private Int64 myMaxData;
-		private StreamWriter myWriter;
+		private StreamWriter writer;
 
-		private string myHost;
-		public string Host
-		{
-			get { return myHost; }
-		}
-
-		private int myPort;
-		public int Port
-		{
-			get { return myPort; }
-		}
-
-		bool myIsConnected;
-		public bool IsConnected
-		{
-			get { return myIsConnected; }
-		}
+		bool isConnected;
 
 		private SocketErrorCode errorCode = 0;
-		public SocketErrorCode ErrorCode
-		{
-			get { return this.errorCode; }
-		}
-
-		#endregion
-
-		#region EVENTS
-
-		public event EmptyDelegate ConnectedEvent;
-		public event SocketErrorDelegate DisconnectedEvent;
-		public event DataTextDelegate DataTextReceivedEvent;
-		public event DataBinaryDelegate DataBinaryReceivedEvent;
 
 		#endregion
 
 		#region CONNECT / RECEIVE DATA
 
-		/// <summary>
-		/// Connect to Hostname:Port an read in text mode
-		/// </summary>
-		public void Connect(string aHostname, int aPort)
+		public override void Connect()
 		{
-			this.Connect(aHostname, aPort, 0);
-		}
-		/// <summary>
-		/// Connect to Hostname:Port an read in binary mode if MaxData > 0
-		/// </summary>
-		public void Connect(string aHostname, int aPort, Int64 aMaxData)
-		{
-			this.myLog = LogManager.GetLogger("Connection(" + aHostname + ")");
+			this.log = LogManager.GetLogger("Connection(" + this.Hostname + ":" + this.Port + ")");
 
-			this.myHost = aHostname;
-			this.myPort = aPort;
-
-			this.myMaxData = aMaxData;
-			this.myIsConnected = false;
-			using(this.myTcpClient = new TcpClient())
+			this.isConnected = false;
+			using(this.tcpClient = new TcpClient())
 			{
-				this.myTcpClient.ReceiveTimeout = this.myMaxData > 0 ? Settings.Instance.DownloadTimeout : Settings.Instance.ServerTimeout;
+				this.tcpClient.ReceiveTimeout = this.MaxData > 0 ? Settings.Instance.DownloadTimeout : Settings.Instance.ServerTimeout;
 
 				try
 				{
-					myLog.Info("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") start");
-					this.myTcpClient.Connect(aHostname, aPort);
-					this.myIsConnected = true;
+					log.Info("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") start");
+					this.tcpClient.Connect(this.Hostname, this.Port);
+					this.isConnected = true;
 				}
 				catch (SocketException ex)
 				{
 					this.errorCode = (SocketErrorCode)ex.ErrorCode;
-					myLog.Error("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") : " + ((SocketErrorCode)ex.ErrorCode), ex);
+					log.Error("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") : " + ((SocketErrorCode)ex.ErrorCode), ex);
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ")", ex);
+					log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ")", ex);
 				}
 
-				if (this.myIsConnected)
+				if (this.isConnected)
 				{
-					myLog.Info("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") connected");
+					log.Info("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") connected");
 
-					using(NetworkStream stream = this.myTcpClient.GetStream())
+					using(NetworkStream stream = this.tcpClient.GetStream())
 					{
 						// we just need a writer if reading in text mode
-						if (this.myMaxData == 0)
+						if (this.MaxData == 0)
 						{
-							this.myWriter = new StreamWriter(stream);
-							this.myWriter.NewLine = "\r\n";
-							this.myWriter.AutoFlush = true;
+							this.writer = new StreamWriter(stream);
+							this.writer.NewLine = "\r\n";
+							this.writer.AutoFlush = true;
 						}
 
-						if (this.ConnectedEvent != null)
-						{
-							this.ConnectedEvent();
-						}
+						this.FireConnectedEvent();
 
 						try
 						{
 							#region BINARY READING
 
-							if (this.myMaxData > 0)
+							if (this.MaxData > 0)
 							{
 								using(BinaryReader reader = new BinaryReader(stream))
 								{
-									Int64 missing = this.myMaxData;
+									Int64 missing = this.MaxData;
 									Int64 max = Settings.Instance.DownloadPerRead;
 									byte[] data = null;
 									do
@@ -147,7 +100,7 @@ namespace XG.Server
 										catch (SocketException ex)
 										{
 											this.errorCode = (SocketErrorCode)ex.ErrorCode;
-											myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), ex);
+											log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), ex);
 										}
 										catch (IOException ex)
 										{
@@ -155,32 +108,29 @@ namespace XG.Server
 											{
 												SocketException exi = (SocketException)ex.InnerException;
 												this.errorCode = (SocketErrorCode)exi.ErrorCode;
-												myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), ex);
+												log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), ex);
 												break;
 											}
 											else
 											{
-												myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading", ex);
+												log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading", ex);
 											}
 											break;
 										}
 										catch (Exception ex)
 										{
-											myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading", ex);
+											log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading", ex);
 											break;
 										}
 
 										if (data != null && data.Length != 0)
 										{
-											if (this.DataBinaryReceivedEvent != null)
-											{
-												this.DataBinaryReceivedEvent(data);
-											}
+											this.FireDataBinaryReceivedEvent(data);
 											missing -= data.Length;
 										}
 										else
 										{
-											myLog.Warn("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received");
+											log.Warn("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") no data received");
 											break;
 										}
 									}
@@ -206,7 +156,7 @@ namespace XG.Server
 										{
 											this.errorCode = (SocketErrorCode)ex.ErrorCode;
 											// we dont need to log this kind of exception, because it is just normal
-											//this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
+											//this.Log("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading: " + ((SocketErrorCode)ex.ErrorCode), LogLevel.Exception);
 										}
 										catch (IOException ex)
 										{
@@ -215,18 +165,18 @@ namespace XG.Server
 												SocketException exi = (SocketException)ex.InnerException;
 												this.errorCode = (SocketErrorCode)exi.ErrorCode;
 												// we dont need to log this kind of exception, because it is just normal
-												//this.Log("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
+												//this.Log("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
 												break;
 											}
 											else
 											{
-												myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading", ex);
+												log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading", ex);
 											}
 											break;
 										}
 										catch (Exception ex)
 										{
-											myLog.Fatal("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") reading", ex);
+											log.Fatal("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") reading", ex);
 											break;
 										}
 
@@ -235,10 +185,7 @@ namespace XG.Server
 											if(data != "")
 											{
 												failCounter = 0;
-												if (this.DataTextReceivedEvent != null)
-												{
-													this.DataTextReceivedEvent(data);
-												}
+												this.FireDataTextReceivedEvent(data);
 											}
 										}
 										else
@@ -246,7 +193,7 @@ namespace XG.Server
 											failCounter++;
 											if (failCounter > Settings.Instance.MaxNoDataReceived)
 											{
-												myLog.Warn("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") no data received");
+												log.Warn("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") no data received");
 												break;
 											}
 											else
@@ -268,46 +215,43 @@ namespace XG.Server
 							// this is ok...
 						}
 
-						myLog.Info("Connect(" + (aMaxData > 0 ? "" + aMaxData : "") + ") end");
+						log.Info("Connect(" + (this.MaxData > 0 ? "" + this.MaxData : "") + ") end");
 					}
 				}
 	
-				if (this.DisconnectedEvent != null)
-				{
-					this.DisconnectedEvent(this.errorCode);
-				}
+				this.FireDisconnectedEvent(this.errorCode);
 			}
 
-			this.myTcpClient = null;
-			this.myWriter = null;
+			this.tcpClient = null;
+			this.writer = null;
 		}
 
 		#endregion
 
 		#region DISCONNECT
 
-		public void Disconnect()
+		public override void Disconnect()
 		{
-			if (this.myWriter != null) { this.myWriter.Close(); }
-			if (this.myTcpClient != null) { this.myTcpClient.Close(); }
+			if (this.writer != null) { this.writer.Close(); }
+			if (this.tcpClient != null) { this.tcpClient.Close(); }
 
-			this.myIsConnected = false;
+			this.isConnected = false;
 		}
 
 		#endregion
 
 		#region SEND DATA
 
-		public void SendData(string aData)
+		public override void SendData(string aData)
 		{
 			// we have to wait, until the connection is initialized - otherwise ther is nor logger
-			if(this.myLog != null)
+			if(this.log != null)
 			{
-				myLog.Debug("SendData(" + aData + ")");
+				log.Debug("SendData(" + aData + ")");
 			}
-			if (this.myWriter != null)
+			if (this.writer != null)
 			{
-				try { this.myWriter.WriteLine(aData); }
+				try { this.writer.WriteLine(aData); }
 				catch (ObjectDisposedException)
 				{
 					// this is ok...
@@ -329,12 +273,12 @@ namespace XG.Server
 					}
 					else
 					{
-						myLog.Fatal("SendData(" + aData + ") ", ex);
+						log.Fatal("SendData(" + aData + ") ", ex);
 					}
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("SendData(" + aData + ") ", ex);
+					log.Fatal("SendData(" + aData + ") ", ex);
 				}
 			}
 		}

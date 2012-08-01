@@ -19,71 +19,60 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XG.Core
+namespace XG.Core.Repository
 {
 	[Serializable()]
-	public class XGFile : XGObject
+	public class File : XGObject
 	{
-		#region VARIABLES
-
-		[field: NonSerialized()]
-		public object Locked = new object();
-
-		public new string Name
-		{
-			get { return base.Name; }
-		}
-
-		private string tmpPath;
-		public string TmpPath
-		{
-			get { return this.tmpPath; }
-		}
-
-		private Int64 size;
-		public Int64 Size
-		{
-			get { return this.size; }
-		}
-
-		#endregion
-
 		#region CHILDREN
 
-		public IEnumerable<XGFilePart> Parts
+		public IEnumerable<XGFile> Files
 		{
-			get { return base.Children.Cast<XGFilePart>(); }
+			get { return base.Children.Cast<XGFile>(); }
 		}
 
-		public bool AddPart(XGFilePart aPart)
+		public XGFile this[string tmpPath]
 		{
-			return base.AddChild(aPart);
+			get
+			{
+				try
+				{
+					return this.Files.First(file => file.TmpPath == tmpPath);
+				}
+				catch {}
+				return null;
+			}
 		}
 
-		public bool RemovePart(XGFilePart aPart)
+		public void AddFile(XGFile aFile)
 		{
-			return base.RemoveChild(aPart);
+			base.AddChild(aFile);
+		}
+		public void AddFile(string aName, Int64 aSize)
+		{
+			XGFile tFile = new XGFile(aName, aSize);
+			if (this[tFile.TmpPath] == null)
+			{
+				this.AddFile(tFile);
+			}
+		}
+
+		public void RemoveFile(XGFile aFile)
+		{
+			base.RemoveChild(aFile);
 		}
 
 		#endregion
 
 		#region CONSTRUCTOR
 
-		public XGFile() : base()
+		public File() : base()
 		{
-		}
-		public XGFile(string aName, Int64 aSize) : this()
-		{
-			base.Name = aName;
-			this.size = aSize;
-			this.tmpPath = XGHelper.ShrinkFileName(aName, aSize);
 		}
 
-		public void Clone(XGFile aCopy, bool aFull)
+		public void Clone(Object aCopy, bool aFull)
 		{
 			base.Clone(aCopy, aFull);
-			this.size = aCopy.size;
-			this.tmpPath = aCopy.tmpPath;
 		}
 
 		#endregion

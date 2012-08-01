@@ -30,7 +30,13 @@ namespace XG.Core
 		public event ObjectDelegate EnabledChangedEvent;
 
 		[field: NonSerialized()]
-		public object locked = new object();
+		public event ObjectDelegate ObjectChangedEvent;
+
+		[field: NonSerialized()]
+		public event ObjectObjectDelegate ChildAddedEvent;
+
+		[field: NonSerialized()]
+		public event ObjectObjectDelegate ChildRemovedEvent;
 
 		#endregion
 
@@ -136,6 +142,18 @@ namespace XG.Core
 			set { this.modified = value; }
 		}
 
+		public void Commit ()
+		{
+			if (this.modified)
+			{
+				if(this.ObjectChangedEvent != null)
+				{
+					this.ObjectChangedEvent(this);
+				}
+				this.modified = false;
+			}
+		}
+
 		#endregion
 
 		#region CHILDREN
@@ -161,6 +179,20 @@ namespace XG.Core
 					{
 						this.children.Add(aObject);
 						aObject.Parent = this;
+
+						// attach to child events
+						aObject.EnabledChangedEvent += new ObjectDelegate(this.EnabledChangedEvent);
+						aObject.ObjectChangedEvent += new ObjectDelegate(this.ObjectChangedEvent);
+						aObject.ChildAddedEvent += new ObjectObjectDelegate(this.ChildAddedEvent);
+						aObject.ChildRemovedEvent += new ObjectObjectDelegate(this.ChildRemovedEvent);
+
+						// and fire our own
+						if(this.ChildAddedEvent != null)
+						{
+							this.ChildAddedEvent(this, aObject);
+							aObject.Modified = false;
+						}
+
 						return true;
 					}
 				}
@@ -175,6 +207,20 @@ namespace XG.Core
 				if (this.children.Contains(aObject))
 				{
 					this.children.Remove(aObject);
+					
+					// detach to child events
+					aObject.EnabledChangedEvent -= new ObjectDelegate(this.EnabledChangedEvent);
+					aObject.ObjectChangedEvent -= new ObjectDelegate(this.ObjectChangedEvent);
+					aObject.ChildAddedEvent -= new ObjectObjectDelegate(this.ChildAddedEvent);
+					aObject.ChildRemovedEvent -= new ObjectObjectDelegate(this.ChildRemovedEvent);
+
+					// and fire our own
+					if(this.ChildRemovedEvent != null)
+					{
+						this.ChildRemovedEvent(this, aObject);
+							aObject.Modified = false;
+					}
+
 					return true;
 				}
 			}

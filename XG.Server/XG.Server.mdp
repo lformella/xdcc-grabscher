@@ -20,16 +20,24 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File subtype="Code" buildaction="Compile" name="ServerConnect.cs" />
-    <File subtype="Code" buildaction="Compile" name="BotConnect.cs" />
+    <File subtype="Code" buildaction="Compile" name="ServerConnection.cs" />
+    <File subtype="Code" buildaction="Compile" name="BotConnection.cs" />
     <File subtype="Code" buildaction="Compile" name="ServerHandler.cs" />
-    <File subtype="Code" buildaction="Compile" name="Connection.cs" />
-    <File subtype="Code" buildaction="Compile" name="ServerRunner.cs" />
-    <File subtype="Code" buildaction="Compile" name="IServerPlugin.cs" />
+    <File subtype="Code" buildaction="Compile" name="MainInstance.cs" />
     <File subtype="Code" buildaction="Compile" name="Settings.cs" />
     <File subtype="Code" buildaction="Compile" name="Statistic.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
-    <File subtype="Code" buildaction="Compile" name="IServerBackendPlugin.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Connection" />
+    <File subtype="Code" buildaction="Compile" name="Connection/Connection.cs" />
+    <File subtype="Code" buildaction="Compile" name="Connection/AConnection.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Plugin" />
+    <File subtype="Code" buildaction="Compile" name="Plugin/AServerGeneralPlugin.cs" />
+    <File subtype="Code" buildaction="Compile" name="Plugin/AServerBackendPlugin.cs" />
+    <File subtype="Code" buildaction="Compile" name="Connection/AIrcConnection.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Helper" />
+    <File subtype="Code" buildaction="Compile" name="Helper/Filesystem.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper/PartBytesObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper/IrcParser.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />

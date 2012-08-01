@@ -24,21 +24,11 @@ namespace XG.Core
 	[Serializable()]
 	public class XGServer : XGObject
 	{
-		#region EVENTS
-
-		[field: NonSerialized()]
-		public event ServerChannelDelegate ChannelAddedEvent;
-
-		[field: NonSerialized()]
-		public event ServerChannelDelegate ChannelRemovedEvent;
-
-		#endregion
-
 		#region VARIABLES
 
-		public new RootObject Parent
+		public new XG.Core.Repository.Object Parent
 		{
-			get { return base.Parent as RootObject; }
+			get { return base.Parent as XG.Core.Repository.Object; }
 			set { base.Parent = value; }
 		}
 
@@ -123,13 +113,7 @@ namespace XG.Core
 
 		public void AddChannel(XGChannel aChannel)
 		{
-			if (base.AddChild(aChannel))
-			{
-				if (this.ChannelAddedEvent != null)
-				{
-					this.ChannelAddedEvent(this, aChannel);
-				}
-			}
+			base.AddChild(aChannel);
 		}
 
 		public void AddChannel(string aChannel)
@@ -147,13 +131,7 @@ namespace XG.Core
 
 		public void RemoveChannel(XGChannel aChannel)
 		{
-			if (base.RemoveChild(aChannel))
-			{
-				if (this.ChannelRemovedEvent != null)
-				{
-					this.ChannelRemovedEvent(this, aChannel);
-				}
-			}
+			base.RemoveChild(aChannel);
 		}
 
 		#endregion
@@ -164,7 +142,7 @@ namespace XG.Core
 		{
 		}
 
-		public XGServer(RootObject parent) : this()
+		public XGServer(XG.Core.Repository.Object parent) : this()
 		{
 			this.Parent = parent;
 			this.Parent.AddServer(this);

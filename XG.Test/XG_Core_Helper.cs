@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2009 Lars Formella <ich@larsformella.de>
+//  Copyright (C) 2012 Lars Formella <ich@larsformella.de>
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -15,12 +15,24 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-namespace XG.Server
-{
-	public interface IServerPlugin
-	{
-		void Start(ServerRunner aParent);
+using System;
+using NUnit.Framework;
+using XG.Core;
 
-		void Stop();
+namespace XG.Test
+{
+	[TestFixture()]
+	public class XG_Core_Helper
+	{
+		[Test()]
+		public void ShrinkFileName ()
+		{
+			string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
+			Int64 fileSize = 440044;
+			string result = XGHelper.ShrinkFileName(fileName, fileSize);
+
+			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);
+		}
 	}
 }
+

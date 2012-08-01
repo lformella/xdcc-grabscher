@@ -25,11 +25,13 @@
     <File subtype="Code" buildaction="Compile" name="Bot.cs" />
     <File subtype="Code" buildaction="Compile" name="Channel.cs" />
     <File subtype="Code" buildaction="Compile" name="Server.cs" />
-    <File subtype="Code" buildaction="Compile" name="RootObject.cs" />
     <File subtype="Code" buildaction="Compile" name="Helper.cs" />
     <File subtype="Code" buildaction="Compile" name="File.cs" />
     <File subtype="Code" buildaction="Compile" name="FilePart.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Repository" />
+    <File subtype="Code" buildaction="Compile" name="Repository/File.cs" />
+    <File subtype="Code" buildaction="Compile" name="Repository/Object.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
