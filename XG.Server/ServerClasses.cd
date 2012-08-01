@@ -1,89 +1,116 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="XG.Server.ServerRunner">
-    <Position X="3.5" Y="0.5" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAgAwIATQSgZIkAEOBnEEAQAIAiGBgEgIBISSCmYgAU=</HashCode>
-      <FileName>ServerRunner.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="myServerHandler" />
-      <Field Name="myRootObject" />
-    </ShowAsAssociation>
-    <ShowAsCollectionAssociation>
-      <Field Name="myFiles" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="XG.Server.ServerHandler">
-    <Position X="3.5" Y="3" Width="1.75" />
+  <Class Name="XG.Server.ServerHandler" Collapsed="true">
+    <Position X="3.5" Y="2.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>DABCQIAABEAMEAEkUAgUAKAQAQgOgCEBAoAEBCAIAAA=</HashCode>
+      <HashCode>jABDRIAAJUAAAAQgAAEAQKAAAAAAkCABAAAEAIBJAAA=</HashCode>
       <FileName>ServerHandler.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="myServers" />
-      <Field Name="myDownloads" />
-    </ShowAsCollectionAssociation>
-  </Class>
-  <Class Name="XG.Server.ServerConnect">
-    <Position X="6.25" Y="2.5" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AEQAQAIBAIAoEEABlAUEwogAkIpKFAhAAIAAAAAABEA=</HashCode>
-      <FileName>ServerConnect.cs</FileName>
-    </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="myServer" />
+      <Property Name="FileRepository" />
+      <Property Name="IrcParser" />
     </ShowAsAssociation>
-  </Class>
-  <Class Name="XG.Server.BotConnect">
-    <Position X="0.5" Y="2.5" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <AssociationLine Name="myPacket" Type="XG.Core.XGPacket" FixedFromPoint="true">
-      <Path>
-        <Point X="1.5" Y="4.462" />
-        <Point X="1.5" Y="5.75" />
-      </Path>
-    </AssociationLine>
-    <TypeIdentifier>
-      <HashCode>AIQAIAADKMCIQCCBAIQAhIQAkIwEAAhIAAAAIABAQCA=</HashCode>
-      <FileName>BotConnect.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="myPacket" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="XG.Core.RootObject" Collapsed="true">
-    <Position X="0.5" Y="1.25" Width="1.5" />
-    <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.XGFile" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="6.75" Y="2.25" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.XGServer" Collapsed="true">
-    <Position X="6.25" Y="5.75" Width="1.5" />
+    <Position X="5.75" Y="3.25" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.XGPacket" Collapsed="true">
-    <Position X="0.5" Y="5.75" Width="1.5" />
+    <Position X="7.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="XG.Server.ServerConnection" Collapsed="true">
+    <Position X="3.5" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAgAAAIAFIAAACRBEAGAyAAAASAAAABAAAAAAgAABgI=</HashCode>
+      <FileName>ServerConnection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="IrcParser" />
+      <Property Name="Server" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XG.Server.Helper.IrcParser" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAABAAAQAAEAAAAAWggAIEAIhAAAAIAAAAAACBA=</HashCode>
+      <FileName>Helper\IrcParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XG.Server.Connection.AIrcConnection" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAACEAAAABQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Connection\AIrcConnection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Parent" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XG.Server.BotConnection" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AggAAAAAIIAAACCBAIAAyAABAAAEgABAAQIAKMBQACQ=</HashCode>
+      <FileName>BotConnection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="File" />
+      <Property Name="Packet" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XG.Server.MainInstance" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gAAAAEACByAAAEIEQoHBAAQAAAAAAAIAIQCCAIBIAAE=</HashCode>
+      <FileName>MainInstance.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="serverHandler" />
+      <Property Name="FileRepository" />
+      <Property Name="ObjectRepository" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XG.Core.Repository.File" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="XG.Core.Repository.Object" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier />
   </Class>
   <Font Name="Tahoma" Size="8.25" />

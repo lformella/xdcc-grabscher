@@ -80,7 +80,8 @@
     <Compile Include="Helper.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RootObject.cs" />
+    <Compile Include="Repository\File.cs" />
+    <Compile Include="Repository\Object.cs" />
     <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,4 +107,5 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -1,67 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="XG.Core.XGBot">
-    <Position X="7.75" Y="4.75" Width="2.75" />
+    <Position X="6.75" Y="4.5" Width="2.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true">
-      <Path>
-        <Point X="2.25" Y="4.438" />
-        <Point X="9.125" Y="4.438" />
-        <Point X="9.125" Y="4.75" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>ACAAEgCAAIAAAgABCAAQcACAMBAFAgBDAwAgAAIgABI=</HashCode>
+      <HashCode>ACAAMgLAAAEAAgAACAAQUACAMBAFAgBDAwAgAAIgABI=</HashCode>
       <FileName>Bot.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="XG.Core.XGServer">
-    <Position X="2.75" Y="4.75" Width="2.5" />
+    <Position X="1.75" Y="4.5" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true">
-      <Path>
-        <Point X="2.25" Y="4.438" />
-        <Point X="4" Y="4.438" />
-        <Point X="4" Y="4.75" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAACAAAAQIAACAEAQBAAKAgAAAgIAAAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAACAAAAQAAACAEAQAAAKAgAAAgIAAAAAAAAEBA=</HashCode>
       <FileName>Server.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="XG.Core.XGChannel">
-    <Position X="5.5" Y="4.75" Width="2" />
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true">
-      <Path>
-        <Point X="2.25" Y="4.438" />
-        <Point X="6.5" Y="4.438" />
-        <Point X="6.5" Y="4.75" />
-      </Path>
-    </InheritanceLine>
+    <Position X="4.5" Y="4.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAQAAACAAAQAAAAAAAAAAAAACQAAAAABA=</HashCode>
+      <HashCode>AAAAAAAAAAAAQAAASAAAQAAAAAgAAAAIAACQAAAAABA=</HashCode>
       <FileName>Channel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="XG.Core.XGFile">
-    <Position X="6.5" Y="0.5" Width="2" />
+    <Position X="2.75" Y="0.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true">
-      <Path>
-        <Point X="2.25" Y="3.75" />
-        <Point X="7.5" Y="3.75" />
-        <Point X="7.5" Y="3.022" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAgEAAAIAAAAQAAAAAgEAAAQAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAAgAAAAgEAAAJAAAAQAAAAAgEAAAQAAAAAAABA=</HashCode>
       <FileName>File.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -69,22 +47,25 @@
     <Position X="0.5" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAEAAABAAAAAcIRAABCEQARGgAIEBgAAAAAAQAAAADA=</HashCode>
+      <HashCode>ACEAAEBAAAAIUIRAABCEQAZCgAIEBgAAAAAAAAAAADA=</HashCode>
       <FileName>Object.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="XG.Core.XGPacket">
-    <Position X="10.75" Y="4.75" Width="2" />
+    <Position X="7.5" Y="1.25" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true">
+    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="2.25" Y="4.438" />
-        <Point X="11.75" Y="4.438" />
-        <Point X="11.75" Y="4.75" />
+        <Point X="1.375" Y="4.106" />
+        <Point X="1.375" Y="4.25" />
+        <Point X="8.125" Y="4.25" />
+        <Point X="8.125" Y="3.937" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -92,27 +73,35 @@
       <FileName>Packet.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.RootObject">
-    <Position X="3" Y="0.5" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAECAAAAAAACAAAAAAAAAAARAAIABA=</HashCode>
-      <FileName>RootObject.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="XG.Core.XGFilePart">
-    <Position X="8.75" Y="0.5" Width="2" />
+    <Position X="5" Y="0.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="2.25" Y="3.75" />
-        <Point X="8.75" Y="3.75" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AIAAoAEAAKAAQAABAAAAQSEBAIAAAwAAAAIAIACAALA=</HashCode>
       <FileName>FilePart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XG.Core.Repository.File">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAIACAAAAAAAAAAAAAAAAAAAAAAAAJA=</HashCode>
+      <FileName>Repository\File.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XG.Core.Repository.Object">
+    <Position X="2.25" Y="7.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAECAAAAAAAAAAAAAAAABAAAAAIABA=</HashCode>
+      <FileName>Repository\Object.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Tahoma" Size="8.25" />

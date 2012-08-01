@@ -26,6 +26,9 @@ using System.Threading;
 
 namespace XG.Server.Helper
 {
+    /// <summary>
+    /// this class parses all messages comming from the server, channel and bot
+    /// </summary>
 	public class IrcParser
 	{
 		#region VARIABLES
@@ -35,6 +38,10 @@ namespace XG.Server.Helper
 		public ServerHandler Parent { get; set; }
 
 		private const string messageMagicString = "((\\*|:){2,3}|->|<-|)";
+
+        #endregion
+
+        #region EVENTS
 		
 		public event DownloadDelegate AddDownloadEvent;
 		public event BotDelegate RemoveDownloadEvent;

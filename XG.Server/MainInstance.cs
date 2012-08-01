@@ -40,7 +40,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		private static readonly ILog myLog = LogManager.GetLogger(typeof(MainInstance));
+		private static readonly ILog log = LogManager.GetLogger(typeof(MainInstance));
 
 		private IrcParser ircParser;
 		private ServerHandler serverHandler;
@@ -72,12 +72,6 @@ namespace XG.Server
 
 		#endregion
 
-		public MainInstance()
-		{
-			// the one and only root object
-			this.objectRepository = new XG.Core.Repository.Object();
-		}
-
 		#region RUN STOP
 
 		/// <summary>
@@ -105,7 +99,7 @@ namespace XG.Server
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
-						myLog.Error("Run() removing dupe server " + s.Name);
+						log.Error("Run() removing dupe server " + s.Name);
 						this.objectRepository.RemoveServer(s);
 					}
 				}
@@ -116,7 +110,7 @@ namespace XG.Server
 					{
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
-							myLog.Error("Run() removing dupe channel " + c.Name);
+							log.Error("Run() removing dupe channel " + c.Name);
 							serv.RemoveChannel(c);
 						}
 					}
@@ -127,7 +121,7 @@ namespace XG.Server
 						{
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
-								myLog.Error("Run() removing dupe bot " + b.Name);
+								log.Error("Run() removing dupe bot " + b.Name);
 								chan.RemoveBot(b);
 							}
 						}
@@ -138,7 +132,7 @@ namespace XG.Server
 							{
 								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
-									myLog.Error("Run() removing dupe Packet " + p.Name);
+									log.Error("Run() removing dupe Packet " + p.Name);
 									bot.RemovePacket(p);
 								}
 							}
@@ -186,7 +180,7 @@ namespace XG.Server
 					if (file.Enabled)
 					{
 						this.fileRepository.RemoveFile(file);
-						myLog.Info("Run() removing ready file " + file.Name);
+						log.Info("Run() removing ready file " + file.Name);
 					}
 				}
 			}
@@ -202,7 +196,7 @@ namespace XG.Server
 					// lets check if the directory is still on the harddisk
 					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						myLog.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
+						log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
 						this.serverHandler.RemoveFile(file);
 						continue;
 					}
@@ -223,14 +217,14 @@ namespace XG.Server
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
 								if (part.CurrentSize != part.StartSize + info.Length)
 								{
-									myLog.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length);
+									log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length);
 									part.CurrentSize = part.StartSize + info.Length;
 									complete = false;
 								}
 							}
 							else
 							{
-								myLog.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
+								log.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
 								this.serverHandler.RemovePart(file, part);
 								complete = false;
 							}
@@ -253,7 +247,7 @@ namespace XG.Server
 										complete = false;
 										try
 										{
-											myLog.Fatal("Run() crash recovery checking " + next.Name);
+											log.Fatal("Run() crash recovery checking " + next.Name);
 											FileStream fileStream = File.Open(this.serverHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
 											BinaryReader fileReader = new BinaryReader(fileStream);
 											// extract the needed refernce bytes
@@ -265,7 +259,7 @@ namespace XG.Server
 										}
 										catch (Exception ex)
 										{
-											myLog.Fatal("Run() crash recovery", ex);
+											log.Fatal("Run() crash recovery", ex);
 										}
 									}
 								}
@@ -357,7 +351,7 @@ namespace XG.Server
 			{
 				XGServer aServer = aObj as XGServer;
 
-				myLog.Info("rootObject_ServerAdded(" + aServer.Name + ")");
+				log.Info("rootObject_ServerAdded(" + aServer.Name + ")");
 				this.serverHandler.ConnectServer(aServer);
 			}
 		}
@@ -376,7 +370,7 @@ namespace XG.Server
 				aServer.Enabled = false;
 				aServer.Commit();
 
-				myLog.Info("rootObject_ServerRemoved(" + aServer.Name + ")");
+				log.Info("rootObject_ServerRemoved(" + aServer.Name + ")");
 				this.serverHandler.DisconnectServer(aServer);
 			}
 		}

@@ -29,7 +29,6 @@ namespace XG.Server
 	/// <summary>
 	/// This class describes the connection to a single irc server
 	/// it does the following things
-	/// - parsing all messages comming from the server, channel and bot
 	/// - creating and removing bots on the fly
 	/// - creating and removing packets on the fly (if the bot posts them into the channel)
 	/// - communicate with the bot to handle downloads

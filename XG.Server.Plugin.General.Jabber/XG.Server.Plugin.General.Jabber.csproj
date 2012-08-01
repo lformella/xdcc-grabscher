@@ -8,8 +8,8 @@
     <ProjectGuid>{4F03468E-E62B-43C2-84D9-98CB23704E0B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XG.Server.Jabber</RootNamespace>
-    <AssemblyName>XG.Server.Jabber</AssemblyName>
+    <RootNamespace>XG.Server.Plugin.General.Jabber</RootNamespace>
+    <AssemblyName>XG.Server.Plugin.General.Jabber</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -72,7 +72,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JabberServerClient.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

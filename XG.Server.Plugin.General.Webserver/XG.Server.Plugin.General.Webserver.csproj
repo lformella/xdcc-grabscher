@@ -8,8 +8,8 @@
     <ProjectGuid>{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XG.Server.Web</RootNamespace>
-    <AssemblyName>XG.Server.Web</AssemblyName>
+    <RootNamespace>XG.Server.Plugin.General.Webserver</RootNamespace>
+    <AssemblyName>XG.Server.Plugin.General.Webserver</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -72,8 +72,8 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Client.Web\XG.Client.Web.csproj">

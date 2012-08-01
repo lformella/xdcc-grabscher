@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Core", "XG.Core\XG.Core.csproj", "{3080DF73-101A-4ACB-9FC2-6FEAEB90DE08}"
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Client", "XG.Client\XG.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Client.Web", "XG.Client.Web\XG.Client.Web.csproj", "{F73E6212-0D0D-4C25-9835-0975DB772740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Server.Plugin.General.Webserver", "XG.Server.Web\XG.Server.Plugin.General.Webserver.csproj", "{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Server.Plugin.General.Webserver", "XG.Server.Plugin.General.Webserver\XG.Server.Plugin.General.Webserver.csproj", "{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Server.Cmd", "XG.Server.Cmd\XG.Server.Cmd.csproj", "{B6ACFEB4-C001-44AB-8F59-8ABBF134C7C2}"
 EndProject

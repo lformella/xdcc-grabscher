@@ -8,8 +8,8 @@
     <ProjectGuid>{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XG.Server.Backend.File</RootNamespace>
-    <AssemblyName>XG.Server.Backend.File</AssemblyName>
+    <RootNamespace>XG.Server.Plugin.Backend.File</RootNamespace>
+    <AssemblyName>XG.Server.Plugin.Backend.File</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="FileBackend.cs" />
+    <Compile Include="BackendPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

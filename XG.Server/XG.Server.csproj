@@ -70,14 +70,19 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BotConnect.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="IServerBackendPlugin.cs" />
-    <Compile Include="IServerPlugin.cs" />
+    <Compile Include="BotConnection.cs" />
+    <Compile Include="Connection\AConnection.cs" />
+    <Compile Include="Connection\AIrcConnection.cs" />
+    <Compile Include="Connection\Connection.cs" />
+    <Compile Include="Helper\Filesystem.cs" />
+    <Compile Include="Helper\IrcParser.cs" />
+    <Compile Include="Helper\PartBytesObject.cs" />
+    <Compile Include="MainInstance.cs" />
+    <Compile Include="Plugin\AServerBackendPlugin.cs" />
+    <Compile Include="Plugin\AServerGeneralPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerConnect.cs" />
+    <Compile Include="ServerConnection.cs" />
     <Compile Include="ServerHandler.cs" />
-    <Compile Include="ServerRunner.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Statistic.cs" />
   </ItemGroup>
@@ -122,6 +127,7 @@
   <ItemGroup>
     <None Include="ServerClasses.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
