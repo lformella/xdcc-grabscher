@@ -46,7 +46,11 @@ namespace XG.Server.Plugin.Backend.File
 
 		public override XG.Core.Repository.Object GetObjectRepository ()
 		{
-			this.ObjectRepository = (XG.Core.Repository.Object)this.Load(Settings.Instance.DataBinary);
+			try
+			{
+				this.ObjectRepository = (XG.Core.Repository.Object)this.Load(Settings.Instance.DataBinary);
+			}
+			catch {}
 			if (this.ObjectRepository == null)
 			{
 				this.ObjectRepository = new XG.Core.Repository.Object();
@@ -56,12 +60,16 @@ namespace XG.Server.Plugin.Backend.File
 
 		public override XG.Core.Repository.File GetFileRepository ()
 		{
-			XG.Core.Repository.File files = (XG.Core.Repository.File)this.Load(Settings.Instance.FilesBinary);
-			if (files == null)
+			try
 			{
-				files = new XG.Core.Repository.File();
+				this.FileRepository = (XG.Core.Repository.File)this.Load(Settings.Instance.FilesBinary);
 			}
-			return files;
+			catch {}
+			if (this.FileRepository == null)
+			{
+				this.FileRepository = new XG.Core.Repository.File();
+			}
+			return this.FileRepository;
 		}
 
 		public override List<string> GetSearchRepository ()

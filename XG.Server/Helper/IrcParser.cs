@@ -47,12 +47,12 @@ namespace XG.Server.Helper
 		public event BotDelegate RemoveDownloadEvent;
 		public event DataTextDelegate ParsingErrorEvent;
 
-		public event DataTextDelegate SendDataEvent;
-		public event ChannelDelegate JoinChannelEvent;
-		public event ObjectIntBoolDelegate CreateTimerEvent;
+		public event ServerDataTextDelegate SendDataEvent;
+		public event ServerChannelDelegate JoinChannelEvent;
+		public event ServerObjectIntBoolDelegate CreateTimerEvent;
 
-		public event BotDelegate RequestFromBotEvent;
-		public event BotDelegate UnRequestFromBotEvent;
+		public event ServerBotDelegate RequestFromBotEvent;
+		public event ServerBotDelegate UnRequestFromBotEvent;
 
 		#endregion
 
@@ -139,7 +139,7 @@ namespace XG.Server.Helper
 								tChan.Connected = false;
 								log.Warn("con_DataReceived() kicked from " + tChan.Name + (tCommandList.Length >= 5 ? " (" + tCommandList[4] + ")" : "") + " - rejoining");
 								log.Warn("con_DataReceived() " + aData);
-								this.JoinChannelEvent(tChan);
+								this.JoinChannelEvent(aServer, tChan);
 
 								// statistics
 								Statistic.Instance.Increase(StatisticType.ChannelsKicked);
@@ -197,7 +197,7 @@ namespace XG.Server.Helper
 									tBot.BotState = BotState.Idle;
 								}
 								log.Info("con_DataReceived() bot " + tUserName + " is online");
-								this.RequestFromBotEvent(tBot);
+								this.RequestFromBotEvent(aServer, tBot);
 							}
 						}
 					}
@@ -256,7 +256,7 @@ namespace XG.Server.Helper
 						if (Settings.Instance.AutoJoinOnInvite)
 						{
 							log.Info("con_DataReceived() auto joining " + tData);
-							this.SendDataEvent("JOIN " + tData);
+							this.SendDataEvent(aServer, "JOIN " + tData);
 						}
 					}
 
@@ -289,8 +289,14 @@ namespace XG.Server.Helper
 
 					#endregion
 
-					tBot.Commit();
-					tChan.Commit();
+					if(tBot != null)
+					{
+						tBot.Commit();
+					}
+					if(tChan != null)
+					{
+						tChan.Commit();
+					}
 				}
 			}
 
@@ -299,7 +305,7 @@ namespace XG.Server.Helper
 			else if (aData.StartsWith("PING"))
 			{
 				log.Info("con_DataReceived() PING");
-				this.SendDataEvent("PONG " + aData.Split(':')[1]);
+				this.SendDataEvent(aServer, "PONG " + aData.Split(':')[1]);
 			}
 
 			#endregion
@@ -345,7 +351,7 @@ namespace XG.Server.Helper
 							if (aServer[chanName] != null)
 							{
 								addChan = false;
-								this.RequestFromBotEvent(tBot);
+								this.RequestFromBotEvent(aServer, tBot);
 								break;
 							}
 						}
@@ -380,7 +386,7 @@ namespace XG.Server.Helper
 								}
 								log.Info("con_DataReceived() bot " + tBot.Name + " is online");
 								tBot.Commit();
-								this.RequestFromBotEvent(tBot);
+								this.RequestFromBotEvent(aServer, tBot);
 							}
 						}
 					}
@@ -414,11 +420,11 @@ namespace XG.Server.Helper
 					aServer.Commit();
 					foreach (XGChannel chan in aServer.Channels)
 					{
-						if (chan.Enabled) { this.JoinChannelEvent(chan); }
+						if (chan.Enabled) { this.JoinChannelEvent(aServer, chan); }
 					}
 					if(Settings.Instance.IrcRegisterPasswort != "")
 					{
-						this.SendDataEvent("nickserv identify " + Settings.Instance.IrcRegisterPasswort);
+						this.SendDataEvent(aServer, "nickserv identify " + Settings.Instance.IrcRegisterPasswort);
 					}
 
 					// statistics
@@ -434,18 +440,18 @@ namespace XG.Server.Helper
 					// TODO should we nickserv register here?
 					/*if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
-						this.SendDataEvent("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+						this.SendDataEvent(aServer, "nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 					}*/
 
 					if(tChan != null)
 					{
 						tChan.ErrorCode = t_ComCode;
-						//this.CreateTimerEvent(tChan, Settings.Instance.ChannelWaitTime);
+						//this.CreateTimerEvent(aServer, tChan, Settings.Instance.ChannelWaitTime);
 					}
 					else
 					{
 						//tBot = aServer.getBot(tCommandList[3]);
-						//if(tBot != null) { this.CreateTimerEvent(tBot, Settings.Instance.BotWaitTime); }
+						//if(tBot != null) { this.CreateTimerEvent(aServer, tBot, Settings.Instance.BotWaitTime); }
 					}
 					break;
 
@@ -481,7 +487,7 @@ namespace XG.Server.Helper
 						tChan.ErrorCode = t_ComCode;
 						tChan.Connected = false;
 						log.Warn("con_DataReceived() could not join channel " + tChan.Name + ": " + t_ComCode);
-						this.CreateTimerEvent(tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong, false);
+						this.CreateTimerEvent(aServer, tChan, t_ComCode == 471 || t_ComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong, false);
 					}
 
 					// statistics
@@ -491,8 +497,14 @@ namespace XG.Server.Helper
 				#endregion
 			}
 
-			tBot.Commit();
-			tChan.Commit();
+			if(tBot != null)
+			{
+				tBot.Commit();
+			}
+			if(tChan != null)
+			{
+				tChan.Commit();
+			}
 		}
 
 		private void HandelDataPrivateMessage(XGServer aServer, string tData, string[] tCommandList)
@@ -506,7 +518,7 @@ namespace XG.Server.Helper
 			if (tData == "VERSION")
 			{
 				log.Info("con_DataReceived() VERSION: " + Settings.Instance.IrcVersion);
-				this.SendDataEvent("NOTICE " + tUserName + " :\u0001VERSION " + Settings.Instance.IrcVersion + "\u0001");
+				this.SendDataEvent(aServer, "NOTICE " + tUserName + " :\u0001VERSION " + Settings.Instance.IrcVersion + "\u0001");
 				return;
 			}
 
@@ -517,7 +529,7 @@ namespace XG.Server.Helper
 			else if (tData == "XGVERSION")
 			{
 				log.Info("con_DataReceived() XGVERSION: " + Settings.Instance.XgVersion);
-				this.SendDataEvent("NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
+				this.SendDataEvent(aServer, "NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
 				return;
 			}
 
@@ -611,12 +623,12 @@ namespace XG.Server.Helper
 								log.Error("con_DataReceived() file from " + tBot.Name + " already in use");
 								tPacket.Enabled = false;
 								tPacket.Commit();
-								this.UnRequestFromBotEvent(tBot);
+								this.UnRequestFromBotEvent(aServer, tBot);
 							}
 							else if (tChunk > 0)
 							{
 								log.Info("con_DataReceived() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk);
-								this.SendDataEvent("PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+								this.SendDataEvent(aServer, "PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
 							}
 							else { isOk = true; }
 						}
@@ -691,7 +703,7 @@ namespace XG.Server.Helper
 						if (tBot.InfoSlotCurrent > 0 && tBot.BotState == BotState.Waiting)
 						{
 							tBot.BotState = BotState.Idle;
-							this.CreateTimerEvent(tBot, 0, false);
+							this.CreateTimerEvent(aServer, tBot, 0, false);
 						}
 					}
 				}
@@ -839,8 +851,14 @@ namespace XG.Server.Helper
 
 			#endregion
 
-			tBot.Commit();
-			tChan.Commit();
+			if(tBot != null)
+			{
+				tBot.Commit();
+			}
+			if(tChan != null)
+			{
+				tChan.Commit();
+			}
 		}
 
 		private void HandleDataNotice(XGServer aServer, string aData, string tData, string[] tCommandList)
@@ -913,7 +931,7 @@ namespace XG.Server.Helper
 						{
 							tBot.BotState = BotState.Idle;
 						}
-						this.CreateTimerEvent(tBot, Settings.Instance.CommandWaitTime, false);
+						this.CreateTimerEvent(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 					}
 				}
 
@@ -978,7 +996,7 @@ namespace XG.Server.Helper
 						else if(tBot.BotState == BotState.Waiting)
 						{
 							// if there is no active packets lets remove us from the queue
-							if(tBot.GetOldestActivePacket() == null) { this.UnRequestFromBotEvent(tBot); }
+							if(tBot.GetOldestActivePacket() == null) { this.UnRequestFromBotEvent(aServer, tBot); }
 						}
 					}
 				}
@@ -1001,7 +1019,7 @@ namespace XG.Server.Helper
 							{
 								tBot.BotState = BotState.Idle;
 							}
-							this.CreateTimerEvent(tBot, (valueInt + 2) * 1000, false);
+							this.CreateTimerEvent(aServer, tBot, (valueInt + 2) * 1000, false);
 						}
 					}
 				}
@@ -1026,7 +1044,7 @@ namespace XG.Server.Helper
 						tBot.InfoQueueCurrent = 0;
 						if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
 
-						this.CreateTimerEvent(tBot, Settings.Instance.BotWaitTime, false);
+						this.CreateTimerEvent(aServer, tBot, Settings.Instance.BotWaitTime, false);
 					}
 				}
 
@@ -1064,7 +1082,7 @@ namespace XG.Server.Helper
 
 						if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
 						{
-							this.CreateTimerEvent(tBot, (valueInt * 60 + 1) * 1000, false);
+							this.CreateTimerEvent(aServer, tBot, (valueInt * 60 + 1) * 1000, false);
 						}
 					}
 				}
@@ -1083,7 +1101,7 @@ namespace XG.Server.Helper
 						{
 							tBot.BotState = BotState.Idle;
 						}
-						this.CreateTimerEvent(tBot, Settings.Instance.BotWaitTime, false);
+						this.CreateTimerEvent(aServer, tBot, Settings.Instance.BotWaitTime, false);
 					}
 				}
 
@@ -1100,7 +1118,7 @@ namespace XG.Server.Helper
 						string info = tMatch.Groups["info"].ToString().ToLower();
 						if (info.StartsWith("you must be on a known channel to request a pack"))
 						{
-							this.SendDataEvent("WHOIS " + tBot.Name);
+							this.SendDataEvent(aServer, "WHOIS " + tBot.Name);
 						}
 						else if (info.StartsWith("i don't send transfers to"))
 						{
@@ -1119,7 +1137,7 @@ namespace XG.Server.Helper
 							{
 								tBot.BotState = BotState.Idle;
 							}
-							this.CreateTimerEvent(tBot, Settings.Instance.CommandWaitTime, false);
+							this.CreateTimerEvent(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 							log.Error("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info);
 						}
 					}
@@ -1194,7 +1212,7 @@ namespace XG.Server.Helper
 							// some admins do some network fu to stop my downloads (happend to me)
 							this.RemoveDownloadEvent(tBot);
 						}
-						this.CreateTimerEvent(tBot, Settings.Instance.CommandWaitTime, false);
+						this.CreateTimerEvent(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 					}
 				}
 
@@ -1213,7 +1231,7 @@ namespace XG.Server.Helper
 							tBot.BotState = BotState.Idle;
 						}
 						tBot.QueuePosition = 0;
-						this.CreateTimerEvent(tBot, Settings.Instance.CommandWaitTime, false);
+						this.CreateTimerEvent(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 					}
 				}
 
@@ -1243,7 +1261,7 @@ namespace XG.Server.Helper
 							{
 								time += valueInt;
 							}
-							this.CreateTimerEvent(tBot, time * 1000, true);
+							this.CreateTimerEvent(aServer, tBot, time * 1000, true);
 						}
 					}
 				}
@@ -1291,34 +1309,34 @@ namespace XG.Server.Helper
 					log.Warn("con_DataReceived(" + aData + ") - nickserv registering nick");
 					if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
-						this.SendDataEvent("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+						this.SendDataEvent(aServer, "nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 					}
 				}
 				else if(tData.Contains("Nickname is already in use") ||
 						tData.Contains("Nickname is currently in use"))
 				{
-					this.SendDataEvent("nickserv ghost " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					this.SendDataEvent("nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					this.SendDataEvent("nick " + Settings.Instance.IRCName);
+					this.SendDataEvent(aServer, "nickserv ghost " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendDataEvent(aServer, "nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendDataEvent(aServer, "nick " + Settings.Instance.IRCName);
 				}
 				else if(tData.Contains("Services Enforcer"))
 				{
-					this.SendDataEvent("nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					this.SendDataEvent("nickserv release " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					this.SendDataEvent("nick " + Settings.Instance.IRCName);
+					this.SendDataEvent(aServer, "nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendDataEvent(aServer, "nickserv release " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
+					this.SendDataEvent(aServer, "nick " + Settings.Instance.IRCName);
 				}
 				else if(tData.Contains("This nickname is registered and protected") ||
 						tData.Contains("This nick is being held for a registered user"))
 				{
 					if(Settings.Instance.IrcRegisterPasswort != "")
 					{
-						this.SendDataEvent("/nickserv identify " + Settings.Instance.IrcRegisterPasswort);
+						this.SendDataEvent(aServer, "/nickserv identify " + Settings.Instance.IrcRegisterPasswort);
 					}
 				}
 				else if(tData.Contains("You must have been using this nick for at least 30 seconds to register."))
 				{
 					//TODO sleep the given time and reregister
-					this.SendDataEvent("nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					this.SendDataEvent(aServer, "nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
 				else if(tData.Contains("Please try again with a more obscure password"))
 				{

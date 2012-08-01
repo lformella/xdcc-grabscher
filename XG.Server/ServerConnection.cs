@@ -67,22 +67,22 @@ namespace XG.Server
 			{
 				if(this.ircParser != null)
 				{
-					this.ircParser.SendDataEvent += new DataTextDelegate(SendData);
-					this.ircParser.JoinChannelEvent += new ChannelDelegate(JoinChannel);
-					this.ircParser.CreateTimerEvent += new ObjectIntBoolDelegate(CreateTimer);
+					this.ircParser.SendDataEvent -= new ServerDataTextDelegate(IrcParser_SendDataEventHandler);
+					this.ircParser.JoinChannelEvent -= new ServerChannelDelegate(IrcParser_JoinChannelEventHandler);
+					this.ircParser.CreateTimerEvent -= new ServerObjectIntBoolDelegate(IrcParser_CreateTimerEventHandler);
 
-					this.ircParser.RequestFromBotEvent += new BotDelegate(RequestFromBot);
-					this.ircParser.UnRequestFromBotEvent += new BotDelegate(UnRequestFromBot);
+					this.ircParser.RequestFromBotEvent -= new ServerBotDelegate(IrcParser_RequestFromBotEventHandler);
+					this.ircParser.UnRequestFromBotEvent -= new ServerBotDelegate(IrcParser_UnRequestFromBotEventHandler);
 				}
 				this.ircParser = value;
 				if(this.ircParser != null)
 				{
-					this.ircParser.SendDataEvent -= new DataTextDelegate(SendData);
-					this.ircParser.JoinChannelEvent -= new ChannelDelegate(JoinChannel);
-					this.ircParser.CreateTimerEvent -= new ObjectIntBoolDelegate(CreateTimer);
+					this.ircParser.SendDataEvent += new ServerDataTextDelegate(IrcParser_SendDataEventHandler);
+					this.ircParser.JoinChannelEvent += new ServerChannelDelegate(IrcParser_JoinChannelEventHandler);
+					this.ircParser.CreateTimerEvent += new ServerObjectIntBoolDelegate(IrcParser_CreateTimerEventHandler);
 
-					this.ircParser.RequestFromBotEvent -= new BotDelegate(RequestFromBot);
-					this.ircParser.UnRequestFromBotEvent -= new BotDelegate(UnRequestFromBot);
+					this.ircParser.RequestFromBotEvent += new ServerBotDelegate(IrcParser_RequestFromBotEventHandler);
+					this.ircParser.UnRequestFromBotEvent += new ServerBotDelegate(IrcParser_UnRequestFromBotEventHandler);
 				}
 			}
 		}
@@ -156,24 +156,23 @@ namespace XG.Server
 
 		#region BOT
 
-		private void RequestFromBot(object aBot)
+		private void RequestFromBot(XGBot aBot)
 		{
-			XGBot tBot = aBot as XGBot;
-			if (tBot != null)
+			if (aBot != null)
 			{
-				if (tBot.BotState == BotState.Idle)
+				if (aBot.BotState == BotState.Idle)
 				{
 					// check if the packet is already downloaded, or active - than disable it and get the next one
-					XGPacket tPacket = tBot.GetOldestActivePacket();
+					XGPacket tPacket = aBot.GetOldestActivePacket();
 					while (tPacket != null)
 					{
 						Int64 tChunk = this.Parent.GetNextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1 || tChunk == -2)
 						{
-							log.Warn("RequestFromBot(" + tBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
+							log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
 							tPacket.Commit();
-							tPacket = tBot.GetOldestActivePacket();
+							tPacket = aBot.GetOldestActivePacket();
 						}
 						else
 						{
@@ -183,16 +182,16 @@ namespace XG.Server
 								double time = (this.latestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
 								if (time > 0)
 								{
-									log.Warn("RequestFromBot(" + tBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
-									this.CreateTimer(tBot, (long)time + 1000, false);
+									log.Warn("RequestFromBot(" + aBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
+									this.CreateTimer(aBot, (long)time + 1000, false);
 									return;
 								}
 							}
 
 							if (this.server.Connected)
 							{
-								log.Info("RequestFromBot(" + tBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
-								this.SendData("PRIVMSG " + tBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
+								log.Info("RequestFromBot(" + aBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
+								this.SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
 								if (this.latestPacketRequests.ContainsKey(name)) { this.latestPacketRequests.Remove(name); }
 								this.latestPacketRequests.Add(name, DateTime.Now.AddMilliseconds(Settings.Instance.SamePacketRequestTime));
@@ -202,7 +201,7 @@ namespace XG.Server
 							}
 
 							// create a timer to re request if the bot didnt recognized the privmsg
-							this.CreateTimer(tBot, Settings.Instance.BotWaitTime, false);
+							this.CreateTimer(aBot, Settings.Instance.BotWaitTime, false);
 							break;
 						}
 					}
@@ -227,14 +226,13 @@ namespace XG.Server
 
 		#region CHANNEL
 
-		private void JoinChannel(object aChan)
+		private void JoinChannel(XGChannel aChan)
 		{
-			XGChannel tChan = aChan as XGChannel;
 			// only join if the channel isnt connected
-			if (tChan != null && server[tChan.Name] != null && !tChan.Connected)
+			if (aChan != null && server[aChan.Name] != null && !aChan.Connected)
 			{
-				log.Info("JoinChannel(" + tChan.Name + ")");
-				this.SendData("JOIN " + tChan.Name);
+				log.Info("JoinChannel(" + aChan.Name + ")");
+				this.SendData("JOIN " + aChan.Name);
 
 				// TODO maybe set a time to resend the command if the channel is not connected
 				// it happend to me, that some available channels werent joined because no confirm messaes appeared
@@ -328,6 +326,46 @@ namespace XG.Server
 						}
 					}
 				}
+			}
+		}
+
+		private void IrcParser_SendDataEventHandler(XGServer aServer, string aData)
+		{
+			if (this.server == aServer)
+			{
+				this.SendData(aData);
+			}
+		}
+
+		private void IrcParser_JoinChannelEventHandler(XGServer aServer, XGChannel aChannel)
+		{
+			if (this.server == aServer)
+			{
+				this.JoinChannel(aChannel);
+			}
+		}
+
+		private void IrcParser_CreateTimerEventHandler(XGServer aServer, XGObject aObject, Int64 aTime, bool aOverride)
+		{
+			if (this.server == aServer)
+			{
+				this.CreateTimer(aObject, aTime, aOverride);
+			}
+		}
+
+		private void IrcParser_RequestFromBotEventHandler(XGServer aServer, XGBot aBot)
+		{
+			if (this.server == aServer)
+			{
+				this.RequestFromBot(aBot);
+			}
+		}
+
+		private void IrcParser_UnRequestFromBotEventHandler(XGServer aServer, XGBot aBot)
+		{
+			if (this.server == aServer)
+			{
+				this.UnRequestFromBot(aBot);
 			}
 		}
 

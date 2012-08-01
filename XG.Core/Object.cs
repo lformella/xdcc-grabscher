@@ -181,10 +181,10 @@ namespace XG.Core
 						aObject.Parent = this;
 
 						// attach to child events
-						aObject.EnabledChangedEvent += new ObjectDelegate(this.EnabledChangedEvent);
-						aObject.ObjectChangedEvent += new ObjectDelegate(this.ObjectChangedEvent);
-						aObject.ChildAddedEvent += new ObjectObjectDelegate(this.ChildAddedEvent);
-						aObject.ChildRemovedEvent += new ObjectObjectDelegate(this.ChildRemovedEvent);
+						aObject.EnabledChangedEvent += new ObjectDelegate(this.FireEnabledChangedEvent);
+						aObject.ObjectChangedEvent += new ObjectDelegate(this.FireObjectChangedEvent);
+						aObject.ChildAddedEvent += new ObjectObjectDelegate(this.FireChildAddedEvent);
+						aObject.ChildRemovedEvent += new ObjectObjectDelegate(this.FireChildRemovedEvent);
 
 						// and fire our own
 						if(this.ChildAddedEvent != null)
@@ -209,16 +209,16 @@ namespace XG.Core
 					this.children.Remove(aObject);
 					
 					// detach to child events
-					aObject.EnabledChangedEvent -= new ObjectDelegate(this.EnabledChangedEvent);
-					aObject.ObjectChangedEvent -= new ObjectDelegate(this.ObjectChangedEvent);
-					aObject.ChildAddedEvent -= new ObjectObjectDelegate(this.ChildAddedEvent);
-					aObject.ChildRemovedEvent -= new ObjectObjectDelegate(this.ChildRemovedEvent);
+					aObject.EnabledChangedEvent -= new ObjectDelegate(this.FireEnabledChangedEvent);
+					aObject.ObjectChangedEvent -= new ObjectDelegate(this.FireObjectChangedEvent);
+					aObject.ChildAddedEvent -= new ObjectObjectDelegate(this.FireChildAddedEvent);
+					aObject.ChildRemovedEvent -= new ObjectObjectDelegate(this.FireChildRemovedEvent);
 
 					// and fire our own
 					if(this.ChildRemovedEvent != null)
 					{
 						this.ChildRemovedEvent(this, aObject);
-							aObject.Modified = false;
+						aObject.Modified = false;
 					}
 
 					return true;
@@ -261,6 +261,42 @@ namespace XG.Core
 				}
 			}
 			return null;
+		}
+
+		#endregion
+
+		#region EVENTHANDLER
+
+		private void FireEnabledChangedEvent(XGObject aObj)
+		{
+			if(this.EnabledChangedEvent != null)
+			{
+				this.EnabledChangedEvent(aObj);
+			}
+		}
+
+		private void FireObjectChangedEvent(XGObject aObj)
+		{
+			if(this.ObjectChangedEvent != null)
+			{
+				this.ObjectChangedEvent(aObj);
+			}
+		}
+
+		private void FireChildAddedEvent(XGObject aParent, XGObject aObj)
+		{
+			if(this.ChildAddedEvent != null)
+			{
+				this.ChildAddedEvent(aParent, aObj);
+			}
+		}
+
+		private void FireChildRemovedEvent(XGObject aParent, XGObject aObj)
+		{
+			if(this.ChildRemovedEvent != null)
+			{
+				this.ChildRemovedEvent(aParent, aObj);
+			}
 		}
 
 		#endregion
