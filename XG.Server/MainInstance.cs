@@ -79,9 +79,9 @@ namespace XG.Server
 		/// </summary>
 		public void Start()
 		{
-			this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(RootObject_ServerAddedEventHandler);
-			this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(RootObject_ServerRemovedEventHandler);
-			this.objectRepository.ObjectChangedEvent += new ObjectDelegate(RootObject_ObjectChangedEventHandler);
+			this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(RootObject_ChildAddedEventHandler);
+			this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(RootObject_ChildRemovedEventHandler);
+			this.objectRepository.EnabledChangedEvent += new ObjectDelegate(RootObject_EnabledChangedEventHandler);
 
 			this.ircParser = new IrcParser();
 			this.ircParser.ParsingErrorEvent += new DataTextDelegate(IrcParser_ParsingErrorEventHandler);
@@ -298,9 +298,9 @@ namespace XG.Server
 		/// </summary>
 		public void Stop()
 		{
-			this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(RootObject_ServerAddedEventHandler);
-			this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(RootObject_ServerRemovedEventHandler);
-			this.objectRepository.ObjectChangedEvent -= new ObjectDelegate(RootObject_ObjectChangedEventHandler);
+			this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(RootObject_ChildAddedEventHandler);
+			this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(RootObject_ChildRemovedEventHandler);
+			this.objectRepository.EnabledChangedEvent += new ObjectDelegate(RootObject_EnabledChangedEventHandler);
 
 			// TODO stop server plugins
 			foreach (XGServer serv in objectRepository.Servers)
@@ -345,7 +345,7 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aObj"></param>
 		/// <param name="aServer"></param>
-		private void RootObject_ServerAddedEventHandler(XGObject aParent, XGObject aObj)
+		private void RootObject_ChildAddedEventHandler(XGObject aParent, XGObject aObj)
 		{
 			if(aObj.GetType() == typeof(XGServer))
 			{
@@ -361,7 +361,7 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aObj"></param>
 		/// <param name="aServer"></param>
-		private void RootObject_ServerRemovedEventHandler(XGObject aParent, XGObject aObj)
+		private void RootObject_ChildRemovedEventHandler(XGObject aParent, XGObject aObj)
 		{
 			if(aObj.GetType() == typeof(XGServer))
 			{
@@ -379,7 +379,7 @@ namespace XG.Server
 		/// Is called if the server object changed an object
 		/// </summary>
 		/// <param name="aObj"></param>
-		private void RootObject_ObjectChangedEventHandler(XGObject aObj)
+		private void RootObject_EnabledChangedEventHandler(XGObject aObj)
 		{
 			if (aObj.GetType() == typeof(XGServer))
 			{
