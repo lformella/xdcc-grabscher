@@ -172,11 +172,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region SERVER
 
 						case TCPClientRequest.AddServer:
-							this.Parent.AddServer(HttpUtility.UrlDecode(tDic["name"]));
+							this.ObjectRepository.AddServer(HttpUtility.UrlDecode(tDic["name"]));
 							break;
 
 						case TCPClientRequest.RemoveServer:
-							this.Parent.RemoveServer(new Guid(tDic["guid"]));
+							this.RemoveServer(new Guid(tDic["guid"]));
 							break;
 
 						#endregion
@@ -184,11 +184,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region CHANNEL
 
 						case TCPClientRequest.AddChannel:
-							this.Parent.AddChannel(new Guid(tDic["guid"]), tDic["name"]);
+							this.AddChannel(new Guid(tDic["guid"]), tDic["name"]);
 							break;
 
 						case TCPClientRequest.RemoveChannel:
-							this.Parent.RemoveChannel(new Guid(tDic["guid"]));
+							this.RemoveChannel(new Guid(tDic["guid"]));
 							break;
 
 						#endregion
@@ -196,11 +196,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region OBJECT
 
 						case TCPClientRequest.ActivateObject:
-							this.Parent.ActivateObject(new Guid(tDic["guid"]));
+							this.ActivateObject(new Guid(tDic["guid"]));
 							break;
 
 						case TCPClientRequest.DeactivateObject:
-							this.Parent.DeactivateObject(new Guid(tDic["guid"]));
+							this.DeactivateObject(new Guid(tDic["guid"]));
 							break;
 
 						#endregion

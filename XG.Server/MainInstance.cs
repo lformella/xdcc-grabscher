@@ -351,7 +351,7 @@ namespace XG.Server
 			{
 				XGServer aServer = aObj as XGServer;
 
-				log.Info("rootObject_ServerAdded(" + aServer.Name + ")");
+				log.Info("RootObject_ChildAddedEventHandler(" + aServer.Name + ")");
 				this.serverHandler.ConnectServer(aServer);
 			}
 		}
@@ -370,7 +370,7 @@ namespace XG.Server
 				aServer.Enabled = false;
 				aServer.Commit();
 
-				log.Info("rootObject_ServerRemoved(" + aServer.Name + ")");
+				log.Info("RootObject_ChildRemovedEventHandler(" + aServer.Name + ")");
 				this.serverHandler.DisconnectServer(aServer);
 			}
 		}
@@ -415,84 +415,6 @@ namespace XG.Server
 
 		#endregion
 
-		#region CLIENT REQUEST HANDLER
-
-		#region SERVER
-
-		public void AddServer(string aString)
-		{
-			this.objectRepository.AddServer(aString);
-		}
-
-		public void RemoveServer(Guid aGuid)
-		{
-			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				this.objectRepository.RemoveServer(tObj as XGServer);
-			}
-		}
-
-		#endregion
-
-		#region CHANNEL
-
-		public void AddChannel(Guid aGuid, string aString)
-		{
-			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				(tObj as XGServer).AddChannel(aString);
-			}
-		}
-
-		public void RemoveChannel(Guid aGuid)
-		{
-			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				XGChannel tChan = tObj as XGChannel;
-				tChan.Parent.RemoveChannel(tChan);
-			}
-		}
-
-		#endregion
-
-		#region OBJECT
-
-		public void ActivateObject(Guid aGuid)
-		{
-			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				tObj.Enabled = true;
-				tObj.Commit();
-			}
-		}
-
-		public void DeactivateObject(Guid aGuid)
-		{
-			XGObject tObj = this.objectRepository.GetChildByGuid(aGuid);
-			if (tObj != null)
-			{
-				tObj.Enabled = false;
-				tObj.Commit();
-			}
-			else
-			{
-				foreach (XGFile tFile in this.fileRepository.Files)
-				{
-					if (tFile.Guid == aGuid)
-					{
-						this.serverHandler.RemoveFile(tFile);
-						break;
-					}
-				}
-			}
-		}
-
-		#endregion
-
 		#region SEARCH
 
 		public void AddSearch(string aSearch)
@@ -515,8 +437,6 @@ namespace XG.Server
 			}
 		}
 
-		#endregion
-		
 		#endregion
 	}
 }

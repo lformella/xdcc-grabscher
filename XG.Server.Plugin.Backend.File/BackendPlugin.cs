@@ -74,7 +74,12 @@ namespace XG.Server.Plugin.Backend.File
 
 		public override List<string> GetSearchRepository ()
 		{
-			List<string> searches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
+			List<string> searches = null;
+			try
+			{
+				searches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
+			}
+			catch {}
 			if (searches == null)
 			{
 				searches = new List<string>();
@@ -122,22 +127,12 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void FileRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
-			// we are just interested in files or fileparts
-			if (aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
-			{
-				// to save em now
-				this.SaveFileDataNow();
-			}
+			this.SaveFileDataNow();
 		}
 
 		protected override void FileRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
-			// we are just interested in files or fileparts
-			if (aObj.GetType() == typeof(XGFile) || aObj.GetType() == typeof(XGFilePart))
-			{
-				// to save em now
-				this.SaveFileDataNow();
-			}
+			this.SaveFileDataNow();
 		}
 
 		protected override void FileRepository_ObjectChangedEventHandler(XGObject aObj)

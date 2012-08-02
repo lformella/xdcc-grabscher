@@ -15,12 +15,16 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
+using System;
+
 using XG.Core;
 
 namespace XG.Server.Plugin.General
 {
 	public abstract class AServerGeneralPlugin
 	{
+		#region VARIABLES
+
 		private XG.Core.Repository.Object objectRepository;
 		public XG.Core.Repository.Object ObjectRepository
 		{
@@ -73,6 +77,10 @@ namespace XG.Server.Plugin.General
 
 		public MainInstance Parent { get; set; }
 
+		#endregion
+
+		#region EVENTHANDLER
+
 		protected abstract void ObjectRepository_ObjectAddedEventHandler(XGObject aParent, XGObject aObj);
 
 		protected abstract void ObjectRepository_ObjectRemovedEventHandler(XGObject aParent, XGObject aObj);
@@ -85,8 +93,79 @@ namespace XG.Server.Plugin.General
 
 		protected abstract void FileRepository_ObjectChangedEventHandler(XGObject aObj);
 
+		#endregion
+
+		#region FUNCTIONS
+
 		public abstract void Start();
 
 		public abstract void Stop();
+
+		#endregion
+		
+		#region SERVER
+
+		public void AddServer(string aString)
+		{
+			this.ObjectRepository.AddServer(aString);
+		}
+
+		public void RemoveServer(Guid aGuid)
+		{
+			XGObject tObj = this.ObjectRepository.GetChildByGuid(aGuid);
+			if (tObj != null)
+			{
+				this.ObjectRepository.RemoveServer(tObj as XGServer);
+			}
+		}
+
+		#endregion
+
+		#region CHANNEL
+
+		public void AddChannel(Guid aGuid, string aString)
+		{
+			XGObject tObj = this.ObjectRepository.GetChildByGuid(aGuid);
+			if (tObj != null)
+			{
+				(tObj as XGServer).AddChannel(aString);
+			}
+		}
+
+		public void RemoveChannel(Guid aGuid)
+		{
+			XGObject tObj = this.ObjectRepository.GetChildByGuid(aGuid);
+			if (tObj != null)
+			{
+				XGChannel tChan = tObj as XGChannel;
+				tChan.Parent.RemoveChannel(tChan);
+			}
+		}
+
+		#endregion
+
+		#region OBJECT
+
+		public void ActivateObject(Guid aGuid)
+		{
+			XGObject tObj = this.ObjectRepository.GetChildByGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = true;
+				tObj.Commit();
+			}
+		}
+
+		public void DeactivateObject(Guid aGuid)
+		{
+			XGObject tObj = this.ObjectRepository.GetChildByGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = false;
+				tObj.Commit();
+			}
+		}
+
+		#endregion
 	}
 }
