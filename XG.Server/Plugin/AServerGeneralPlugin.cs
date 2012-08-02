@@ -57,16 +57,16 @@ namespace XG.Server.Plugin.General
 			{
 				if(this.fileRepository != null)
 				{
-					this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(FileRepository_ObjectAddedEventHandler);
-					this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(FileRepository_ObjectRemovedEventHandler);
-					this.objectRepository.ObjectChangedEvent -= new ObjectDelegate(FileRepository_ObjectChangedEventHandler);
+					this.fileRepository.ChildAddedEvent -= new ObjectObjectDelegate(FileRepository_ObjectAddedEventHandler);
+					this.fileRepository.ChildRemovedEvent -= new ObjectObjectDelegate(FileRepository_ObjectRemovedEventHandler);
+					this.fileRepository.ObjectChangedEvent -= new ObjectDelegate(FileRepository_ObjectChangedEventHandler);
 				}
 				this.fileRepository = value;
 				if(this.fileRepository != null)
 				{
-					this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(FileRepository_ObjectAddedEventHandler);
-					this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(FileRepository_ObjectRemovedEventHandler);
-					this.objectRepository.ObjectChangedEvent += new ObjectDelegate(FileRepository_ObjectChangedEventHandler);
+					this.fileRepository.ChildAddedEvent += new ObjectObjectDelegate(FileRepository_ObjectAddedEventHandler);
+					this.fileRepository.ChildRemovedEvent += new ObjectObjectDelegate(FileRepository_ObjectRemovedEventHandler);
+					this.fileRepository.ObjectChangedEvent += new ObjectDelegate(FileRepository_ObjectChangedEventHandler);
 				}
 			}
 		}
