@@ -719,8 +719,8 @@ namespace XG.Server.Helper
 					{
 						isParsed = true;
 
-						string speed_cur_end = tMatch.Groups["speed_cur_end"].ToString();
-						string speed_max_end = tMatch.Groups["speed_max_end"].ToString();
+						string speed_cur_end = tMatch.Groups["speed_cur_end"].ToString().ToLower();
+						string speed_max_end = tMatch.Groups["speed_max_end"].ToString().ToLower();
 						string speed_cur = tMatch.Groups["speed_cur"].ToString();
 						string speed_max = tMatch.Groups["speed_max"].ToString();
 						if(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
@@ -728,8 +728,8 @@ namespace XG.Server.Helper
 							speed_cur = speed_cur.Replace('.', ',');
 							speed_max = speed_max.Replace('.', ',');
 						}
-						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("K") ? valueDouble * 1024 : valueDouble; }
-						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("K") ? valueDouble * 1024 : valueDouble; }
+						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("k") ? valueDouble * 1024 : valueDouble; }
+						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("k") ? valueDouble * 1024 : valueDouble; }
 
 //						if(tBot.InfoSpeedCurrent > tBot.InfoSpeedMax)
 //						{
