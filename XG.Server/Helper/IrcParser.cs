@@ -728,8 +728,8 @@ namespace XG.Server.Helper
 							speed_cur = speed_cur.Replace('.', ',');
 							speed_max = speed_max.Replace('.', ',');
 						}
-						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
-						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("K") ? valueDouble * 1000 : valueDouble; }
+						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("K") ? valueDouble * 1024 : valueDouble; }
+						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("K") ? valueDouble * 1024 : valueDouble; }
 
 //						if(tBot.InfoSpeedCurrent > tBot.InfoSpeedMax)
 //						{
@@ -1342,7 +1342,8 @@ namespace XG.Server.Helper
 				{
 					log.Error("con_DataReceived(" + aData + ") - nickserv password is unsecure");
 				}
-				else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail))
+				else if(tData.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail) ||
+						tData.Contains("This nick is awaiting an e-mail verification code"))
 				{
 					log.Error("con_DataReceived(" + aData + ") - nickserv confirm email");
 				}
@@ -1353,6 +1354,23 @@ namespace XG.Server.Helper
 				else if(tData.Contains("Password accepted"))
 				{
 					log.Info("con_DataReceived(" + aData + ") - nickserv password accepted");
+				}
+				else if(tData.Contains("Please type") && tData.Contains("to complete registration."))
+				{
+					Match tMatch = Regex.Match(tData, ".* NickServ confirm (?<code>[^\\s]+) .*", RegexOptions.IgnoreCase);
+					if (tMatch.Success)
+					{
+						this.SendDataEvent(aServer, "/msg NickServ confirm " + tMatch.Groups["code"]);
+						log.Info("con_DataReceived(" + aData + ") - confirming nickserv");
+					}
+					else
+					{
+						log.Error("con_DataReceived(" + aData + ") - cant find nickserv code");
+					}
+				}
+				else
+				{
+					log.Error("con_DataReceived(" + aData + ") - unknown nickserv command");
 				}
 			}
 
