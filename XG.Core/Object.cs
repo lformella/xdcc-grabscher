@@ -159,7 +159,18 @@ namespace XG.Core
 		#region CHILDREN
 		
 		[field: NonSerialized()]
-		private object childLock = new object();
+		private object objectLock = new object();
+		protected object ObjectLock
+		{
+			get
+			{
+				if(this.objectLock == null)
+				{
+					this.objectLock = new object();
+				}
+				return this.objectLock;
+			}
+		}
 
 		private List<XGObject> children;
 		protected IEnumerable<XGObject> Children
@@ -171,7 +182,7 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				lock(this.childLock)
+				lock(this.ObjectLock)
 				{
 					if (!this.children.Contains(aObject))
 					{
@@ -210,7 +221,7 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				lock(this.childLock)
+				lock(this.ObjectLock)
 				{
 					if (this.children.Contains(aObject))
 					{
