@@ -157,6 +157,9 @@ namespace XG.Core
 		#endregion
 
 		#region CHILDREN
+		
+		[field: NonSerialized()]
+		private object childLock = new object();
 
 		private List<XGObject> children;
 		protected IEnumerable<XGObject> Children
@@ -168,32 +171,35 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				if (!this.children.Contains(aObject))
+				lock(this.childLock)
 				{
-					XGObject tObj = this.GetChildByGuid(aObject.Guid);
-					if (tObj != null)
+					if (!this.children.Contains(aObject))
 					{
-						XGHelper.CloneObject(aObject, tObj, true);
-					}
-					else
-					{
-						this.children.Add(aObject);
-						aObject.Parent = this;
-
-						// attach to child events
-						aObject.EnabledChangedEvent += new ObjectDelegate(this.FireEnabledChangedEvent);
-						aObject.ObjectChangedEvent += new ObjectDelegate(this.FireObjectChangedEvent);
-						aObject.ChildAddedEvent += new ObjectObjectDelegate(this.FireChildAddedEvent);
-						aObject.ChildRemovedEvent += new ObjectObjectDelegate(this.FireChildRemovedEvent);
-
-						// and fire our own
-						if(this.ChildAddedEvent != null)
+						XGObject tObj = this.GetChildByGuid(aObject.Guid);
+						if (tObj != null)
 						{
-							this.ChildAddedEvent(this, aObject);
-							aObject.Modified = false;
+							XGHelper.CloneObject(aObject, tObj, true);
 						}
-
-						return true;
+						else
+						{
+							this.children.Add(aObject);
+							aObject.Parent = this;
+		
+							// attach to child events
+							aObject.EnabledChangedEvent += new ObjectDelegate(this.FireEnabledChangedEvent);
+							aObject.ObjectChangedEvent += new ObjectDelegate(this.FireObjectChangedEvent);
+							aObject.ChildAddedEvent += new ObjectObjectDelegate(this.FireChildAddedEvent);
+							aObject.ChildRemovedEvent += new ObjectObjectDelegate(this.FireChildRemovedEvent);
+	
+							// and fire our own
+							if(this.ChildAddedEvent != null)
+							{
+								this.ChildAddedEvent(this, aObject);
+								aObject.Modified = false;
+							}
+	
+							return true;
+						}
 					}
 				}
 			}
@@ -204,24 +210,28 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				if (this.children.Contains(aObject))
+				lock(this.childLock)
 				{
-					this.children.Remove(aObject);
-					
-					// detach to child events
-					aObject.EnabledChangedEvent -= new ObjectDelegate(this.FireEnabledChangedEvent);
-					aObject.ObjectChangedEvent -= new ObjectDelegate(this.FireObjectChangedEvent);
-					aObject.ChildAddedEvent -= new ObjectObjectDelegate(this.FireChildAddedEvent);
-					aObject.ChildRemovedEvent -= new ObjectObjectDelegate(this.FireChildRemovedEvent);
-
-					// and fire our own
-					if(this.ChildRemovedEvent != null)
+					if (this.children.Contains(aObject))
 					{
-						this.ChildRemovedEvent(this, aObject);
-						aObject.Modified = false;
+						this.children.Remove(aObject);
+						aObject.Parent = null;
+							
+						// detach to child events
+						aObject.EnabledChangedEvent -= new ObjectDelegate(this.FireEnabledChangedEvent);
+						aObject.ObjectChangedEvent -= new ObjectDelegate(this.FireObjectChangedEvent);
+						aObject.ChildAddedEvent -= new ObjectObjectDelegate(this.FireChildAddedEvent);
+						aObject.ChildRemovedEvent -= new ObjectObjectDelegate(this.FireChildRemovedEvent);
+	
+						// and fire our own
+						if(this.ChildRemovedEvent != null)
+						{
+							this.ChildRemovedEvent(this, aObject);
+							aObject.Modified = false;
+						}
+	
+						return true;
 					}
-
-					return true;
 				}
 			}
 			return false;
