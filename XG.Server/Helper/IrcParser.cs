@@ -1398,6 +1398,7 @@ namespace XG.Server.Helper
 			tData = tData.Replace("\u000F", string.Empty);
 			tData = tData.Replace("\uFFFD", string.Empty);
 			tData = tData.Replace("\u0016", string.Empty);
+			tData = tData.Replace("  ", " ");
 			return tData.Trim();
 		}
 

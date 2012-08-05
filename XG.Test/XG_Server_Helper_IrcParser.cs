@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2012  <ich@larsformella.de>
+//  Copyright (C) 2012 Lars Formella <ich@larsformella.de>
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ namespace XG.Test
 		private XGServer Server;
 		private XGChannel Channel;
 		private XGBot Bot;
-		private XGPacket Packet;
 
 		private IrcParser IrcParser;
 
@@ -61,10 +60,39 @@ namespace XG.Test
 			Assert.AreEqual(this.Bot.InfoSpeedCurrent, 0);
 			Assert.AreEqual(this.Bot.InfoSpeedMax, 231.4 * 1024);
 		}
-
-		public void ParsePackets()
+		
+		[Test()]
+		public void ParsePacketInfo ()
 		{
-			//string str = ":[Hidd3n]-DreGen!~SYSTEM@F9D7CE5B.E493CF59.D35B78B8.IP PRIVMSG #HIDD3N-XDCC :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ";
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** 9 packs **  1 of 1 slot open, Min: 5.0kB/s, Record: 59.3kB/s");
+			Assert.AreEqual(this.Bot.InfoSlotCurrent, 1);
+			Assert.AreEqual(this.Bot.InfoSlotTotal, 1);
+		}
+		
+		[Test()]
+		public void ParsePackets ()
+		{
+			XGPacket tPack = null;
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
+			tPack = this.Bot[5];
+			Assert.AreEqual(tPack.Size, 181 * 1024 * 1024);
+			Assert.AreEqual(tPack.Name, "Serie The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar");
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
+			tPack = this.Bot[3];
+			Assert.AreEqual(tPack.Size, 150 * 1024 * 1024);
+			Assert.AreEqual(tPack.Name, "[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar");
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#1� 0x [� 5M] 5meg");
+			tPack = this.Bot[1];
+			Assert.AreEqual(tPack.Size, 5 * 1024 * 1024);
+			Assert.AreEqual(tPack.Name, "5meg");
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
+			tPack = this.Bot[18];
+			Assert.AreEqual(tPack.Size, (Int64)(2.2 * 1024 * 1024 * 1024));
+			Assert.AreEqual(tPack.Name, "Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
 		}
 	}
 }
