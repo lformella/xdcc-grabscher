@@ -129,33 +129,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public XGPacket() : base()
-		{
-			this.realName = "";
-		}
-
-		public XGPacket(XGBot parent) : this()
-		{
-			this.Parent = parent;
-			this.Parent.AddPacket(this);
-		}
-
-		public void Clone(XGPacket aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-			this.id = aCopy.id;
-			this.size = aCopy.size;
-			this.lastUpdated = aCopy.lastUpdated;
-			if(aFull)
-			{
-				this.realName = aCopy.realName;
-				this.realSize = aCopy.realSize;
-			}
-		}
-
-		#endregion
 	}
 }

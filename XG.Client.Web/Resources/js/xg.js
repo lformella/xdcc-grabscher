@@ -391,10 +391,10 @@ $(function()
 	{
 		datatype: "local",
 		cmTemplate: {fixed:true},
-		colNames: ['', 'Search'],
+		colNames: ['', ''],
 		colModel: [
-			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:24},
-			{name:'Name',	index:'Name',	width:226, fixed:false}
+			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30},
+			{name:'Name',	index:'Name',	width:220, fixed:false}
 		],
 		onSelectRow: function(id)
 		{
@@ -470,7 +470,6 @@ $(function()
 		viewrecords: true,
 		autowidth: true,
 		sortorder: "desc",
-		caption: "Search",
 		hidegrid: false
 	}).navGrid('#searches_pager', {edit:false, add:false, del:false, search:false, refresh:false});
 
@@ -881,7 +880,7 @@ function RefreshStatistic()
 function ResizeMain()
 {
 	jQuery("#searches").setGridWidth($('#layout_search').width() - 2);
-	jQuery("#searches").setGridHeight($('#layout_search').height() - 55 - 20);
+	jQuery("#searches").setGridHeight($('#layout_search').height() - 8 - 20);
 
 	$("#search-text").width($("#layout_search").width() - 10);
 

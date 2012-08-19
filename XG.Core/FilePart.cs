@@ -159,35 +159,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public XGFilePart() : base()
-		{
-		}
-
-		public XGFilePart(XGFile aParent) : this()
-		{
-			this.Parent = aParent;
-			this.Parent.AddPart(this);
-			this.isChecked = false;
-			this.partState = FilePartState.Closed;
-		}
-
-		public void Clone(XGFilePart aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-			this.packetGuidOld = aCopy.packetGuidOld;
-			this.packetGuid = aCopy.packetGuid;
-			this.isChecked = aCopy.isChecked;
-			this.partState = aCopy.partState;
-			this.speed = aCopy.speed;
-			this.startSize = aCopy.startSize;
-			this.currentSize = aCopy.currentSize;
-			this.stopSize = aCopy.stopSize;
-			if(aFull) { this.Parent = aCopy.Parent; }
-		}
-
-		#endregion
 	}
 }

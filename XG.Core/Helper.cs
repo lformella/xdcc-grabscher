@@ -127,68 +127,27 @@ namespace XG.Core
 	#region DELEGATES
 
 	public delegate void EmptyDelegate();
+
 	public delegate void SocketErrorDelegate(SocketErrorCode aValue);
+	public delegate void ServerSocketErrorDelegate(XGServer aServer, SocketErrorCode aValue);
+
 	public delegate void DataTextDelegate(string aData);
 	public delegate void ServerDataTextDelegate(XGServer aServer, string aData);
 	public delegate void DataBinaryDelegate(byte[] aData);
 
-	public delegate void RootServerDelegate(XG.Core.Repository.Object aObj, XGServer aServer);
-	public delegate void ServerChannelDelegate(XGServer aServer, XGChannel aChan);
-	public delegate void StringPacketDelegate(string aData, XGPacket aPack);
-	public delegate void StringGuidDelegate(string aData, Guid aGuid);
-
-	public delegate void GuidDelegate(Guid aGuid);
 	public delegate void ObjectDelegate(XGObject aObj);
-	public delegate void ObjectIntBoolDelegate(XGObject aObj, Int64 aInt, bool aBool);
-	public delegate void ServerObjectIntBoolDelegate(XGServer aServer, XGObject aObj, Int64 aInt, bool aBool);
 	public delegate void ObjectObjectDelegate(XGObject aObj1, XGObject aObj2);
 	public delegate void ServerDelegate(XGServer aServer);
-	public delegate void ChannelDelegate(XGChannel aChannel);
-	public delegate void ServerSocketErrorDelegate(XGServer aServer, SocketErrorCode aValue);
-	public delegate void BotDelegate (XGBot aBot);
 	public delegate void ServerBotDelegate (XGServer aServer, XGBot aBot);
-	public delegate void PacketDelegate(XGPacket aPack);
+	public delegate void ServerChannelDelegate(XGServer aServer, XGChannel aChan);
+	public delegate void BotDelegate (XGBot aBot);
+
+	public delegate void ServerObjectIntBoolDelegate(XGServer aServer, XGObject aObj, Int64 aInt, bool aBool);
 
 	#endregion
 
 	public class XGHelper
 	{
-		#region CLONING
-
-		public static void CloneObject(XGObject aFromObj, XGObject aToObj, bool aFull)
-		{
-			if (aFromObj != null && aToObj != null)
-			{
-				//Console.WriteLine(aFromObj.Guid + " " + aFromObj.Name);
-				if (aFromObj.GetType() == typeof(XGServer))
-				{
-					(aToObj as XGServer).Clone(aFromObj as XGServer, aFull);
-				}
-				else if (aFromObj.GetType() == typeof(XGChannel))
-				{
-					(aToObj as XGChannel).Clone(aFromObj as XGChannel, aFull);
-				}
-				else if (aFromObj.GetType() == typeof(XGBot))
-				{
-					(aToObj as XGBot).Clone(aFromObj as XGBot, aFull);
-				}
-				else if (aFromObj.GetType() == typeof(XGPacket))
-				{
-					(aToObj as XGPacket).Clone(aFromObj as XGPacket, aFull);
-				}
-				else if (aFromObj.GetType() == typeof(XGFile))
-				{
-					(aToObj as XGFile).Clone(aFromObj as XGFile, aFull);
-				}
-				else if (aFromObj.GetType() == typeof(XGFilePart))
-				{
-					(aToObj as XGFilePart).Clone(aFromObj as XGFilePart, aFull);
-				}
-			}
-		}
-
-		#endregion
-
 		#region COMPARING
 
 		public static bool IsEqual(byte[] aBytes1, byte[] aBytes2)

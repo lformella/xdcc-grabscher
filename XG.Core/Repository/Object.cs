@@ -67,18 +67,5 @@ namespace XG.Core.Repository
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public Object() : base()
-		{
-		}
-
-		public void Clone(Object aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-		}
-
-		#endregion
 	}
 }

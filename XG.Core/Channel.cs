@@ -95,23 +95,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public XGChannel() : base()
-		{
-		}
-		public XGChannel(XGServer parent) : this()
-		{
-			this.Parent = parent;
-			this.Parent.AddChannel(this);
-		}
-
-		public void Clone(XGChannel aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-		}
-
-		#endregion
 	}
 }

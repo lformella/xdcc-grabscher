@@ -262,38 +262,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public XGBot() : base()
-		{
-			this.botState = BotState.Idle;
-		}
-		public XGBot(XGChannel parent) : this()
-		{
-			this.Parent = parent;
-			this.Parent.AddBot(this);
-		}
-
-		public void Clone(XGBot aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-			this.infoQueueCurrent = aCopy.infoQueueCurrent;
-			this.infoQueueTotal = aCopy.infoQueueTotal;
-			this.infoSlotCurrent = aCopy.infoSlotCurrent;
-			this.infoSlotTotal = aCopy.infoSlotTotal;
-			this.infoSpeedCurrent = aCopy.infoSpeedCurrent;
-			this.infoSpeedMax = aCopy.infoSpeedMax;
-			this.lastContact = aCopy.lastContact;
-			if(aFull)
-			{
-				this.botState = aCopy.botState;
-				this.lastMessage = aCopy.lastMessage;
-				this.queuePosition = aCopy.queuePosition;
-				this.queueTime = aCopy.queueTime;
-			}
-		}
-
-		#endregion
 	}
 }

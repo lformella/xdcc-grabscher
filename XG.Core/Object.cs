@@ -189,7 +189,7 @@ namespace XG.Core
 						XGObject tObj = this.GetChildByGuid(aObject.Guid);
 						if (tObj != null)
 						{
-							XGHelper.CloneObject(aObject, tObj, true);
+							//XGHelper.CloneObject(aObject, tObj, true);
 						}
 						else
 						{
@@ -331,19 +331,6 @@ namespace XG.Core
 			this.Guid = Guid.NewGuid();
 			this.connected = false;
 			this.enabled = false;
-		}
-
-		public void Clone(XGObject aCopy, bool aFull)
-		{
-			this.parentGuid = aCopy.parentGuid;
-			this.Guid = aCopy.Guid;
-			this.name = aCopy.name;
-			this.enabled = aCopy.enabled;
-			this.lastModified = aCopy.lastModified;
-			if(aFull)
-			{
-				this.connected = aCopy.connected;
-			}
 		}
 
 		#endregion

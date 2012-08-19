@@ -36,6 +36,8 @@ namespace XG.Server.Plugin.Backend.MySql
 		private Thread serverThread;
 		private object locked = new object ();
 
+		private bool ignoreEvents = true;
+
 		#endregion
 
 		public BackendPlugin ()
@@ -106,6 +108,8 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			#endregion
 
+			this.ignoreEvents = false;
+
 			return this.ObjectRepository;
 		}
 
@@ -164,6 +168,11 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
+			if(this.ignoreEvents)
+			{
+				return;
+			}
+
 			string table = this.GetTable4Object (aObj);
 			Dictionary<string, object> dic = this.Object2Dic (aObj);
 
@@ -190,6 +199,11 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRepository_ObjectChangedEventHandler (XGObject aObj)
 		{
+			if(this.ignoreEvents)
+			{
+				return;
+			}
+
 			string table = this.GetTable4Object (aObj);
 			Dictionary<string, object> dic = this.Object2Dic (aObj);
 
@@ -212,6 +226,11 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
+			if(this.ignoreEvents)
+			{
+				return;
+			}
+
 			string table = this.GetTable4Object (aObj);
 			Dictionary<string, object> dic = new Dictionary<string, object> ();
 

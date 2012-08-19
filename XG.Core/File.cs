@@ -69,21 +69,15 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public XGFile() : base()
+		private XGFile() : base()
 		{
 		}
+
 		public XGFile(string aName, Int64 aSize) : this()
 		{
 			base.Name = aName;
 			this.size = aSize;
 			this.tmpPath = XGHelper.ShrinkFileName(aName, aSize);
-		}
-
-		public void Clone(XGFile aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-			this.size = aCopy.size;
-			this.tmpPath = aCopy.tmpPath;
 		}
 
 		#endregion

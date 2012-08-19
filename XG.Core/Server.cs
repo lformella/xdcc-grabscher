@@ -135,25 +135,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public XGServer() : base()
-		{
-		}
-
-		public XGServer(XG.Core.Repository.Object parent) : this()
-		{
-			this.Parent = parent;
-			this.Parent.AddServer(this);
-		}
-
-		public void Clone(XGServer aCopy, bool aFull)
-		{
-			base.Clone(aCopy, aFull);
-			this.port = aCopy.port;
-		}
-
-		#endregion
 	}
 }

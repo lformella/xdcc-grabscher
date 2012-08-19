@@ -251,33 +251,7 @@ namespace XG.Server.Plugin.Backend.File
 				{
 					timeIrc = DateTime.Now;
 
-					XG.Core.Repository.Object tObj = new XG.Core.Repository.Object();
-					tObj.Clone(this.Parent.ObjectRepository, false);
-
-					foreach (XGServer oldServ in this.Parent.ObjectRepository.Servers)
-					{
-						XGServer newServ = new XGServer(tObj);
-						newServ.Clone(oldServ, false);
-						foreach (XGChannel oldChan in oldServ.Channels)
-						{
-							XGChannel newChan = new XGChannel(newServ);
-							newChan.Clone(oldChan, false);
-							foreach (XGBot oldBot in oldChan.Bots)
-							{
-								XGBot newBot = new XGBot(newChan);
-								newBot.Clone(oldBot, false);
-								foreach (XGPacket oldPack in oldBot.Packets)
-								{
-									XGPacket newPack = new XGPacket(newBot);
-									newPack.Clone(oldPack, false);
-								}
-							}
-						}
-					}
-
-					this.Save(tObj, Settings.Instance.DataBinary);
-
-					tObj = null;
+					this.Save(this.Parent.ObjectRepository, Settings.Instance.DataBinary);
 				}
 
 				// File Data

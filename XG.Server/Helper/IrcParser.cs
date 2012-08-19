@@ -759,9 +759,10 @@ namespace XG.Server.Helper
 							XGPacket tPack = tBot[tPacketId];
 							if (tPack == null)
 							{
-								tPack = new XGPacket(tBot);
+								tPack = new XGPacket();
 								newPacket = tPack;
 								tPack.Id = tPacketId;
+								tBot.AddPacket(tPack);
 							}
 							tPack.LastMentioned = DateTime.Now;
 
