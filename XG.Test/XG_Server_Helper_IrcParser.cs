@@ -67,6 +67,18 @@ namespace XG.Test
 			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** 9 packs **  1 of 1 slot open, Min: 5.0kB/s, Record: 59.3kB/s");
 			Assert.AreEqual(this.Bot.InfoSlotCurrent, 1);
 			Assert.AreEqual(this.Bot.InfoSlotTotal, 1);
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 1 Pack <-  10 Of 10 Slots Open Min: 15.0KB/s Record: 691.8KB/s");
+			Assert.AreEqual(this.Bot.InfoSlotCurrent, 10);
+			Assert.AreEqual(this.Bot.InfoSlotTotal, 10);
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :**[EWG]*   packs **  12 of 12 slots open, Record: 1736.8kB/s");
+			Assert.AreEqual(this.Bot.InfoSlotCurrent, 12);
+			Assert.AreEqual(this.Bot.InfoSlotTotal, 12);
+
+			this.IrcParser.ParseData(this.Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 18 PackS <-  13 Of 15 Slots Open Min: 15.0KB/s Record: 99902.4KB/s");
+			Assert.AreEqual(this.Bot.InfoSlotCurrent, 13);
+			Assert.AreEqual(this.Bot.InfoSlotTotal, 15);
 		}
 		
 		[Test()]
