@@ -728,17 +728,23 @@ function ButtonConnectClicked(dialog)
 		outerLayout = $("body").layout({
 			onresize: function () {
 				ResizeMain();
-			}
+			},
+			spacing_open: 1,
+			spacing_closed: 4
 		});
 
 		innerLayout = $("#layout_objects_container").layout({
 			resizeWithWindow: false,
 			onresize: function () {
 				ResizeContainer();
-			}
+			},
+			spacing_open: 1,
+			spacing_closed: 4
 		});
 
 		// resize after all is visible
+		ResizeMain();
+		// double resize because the first run wont change all values :|
 		ResizeMain();
 
 		// start the refresh
@@ -879,24 +885,24 @@ function RefreshStatistic()
 
 function ResizeMain()
 {
-	jQuery("#searches").setGridWidth($('#layout_search').width() - 2);
-	jQuery("#searches").setGridHeight($('#layout_search').height() - 8 - 20);
+	jQuery("#searches").setGridWidth($('#layout_search').width() - 1);
+	jQuery("#searches").setGridHeight($('#layout_search').height() - 28);
 
 	$("#search-text").width($("#layout_search").width() - 10);
 
-	$("#layout_objects_container").height($('#layout_search').height() - 55 - 11);
+	$("#layout_objects_container").height($('#layout_search').height() - 66);
 
-	jQuery("#bots").setGridWidth($('#layout_objects').width() - 2);
-	jQuery("#packets").setGridWidth($('#layout_objects').width() - 2);
+	jQuery("#bots").setGridWidth($('#layout_objects').width() - 1);
+	jQuery("#packets").setGridWidth($('#layout_objects').width() - 1);
 
-	jQuery("#searches_xg_bitpir_at").setGridWidth($('#layout_objects').width() - 2);
-	jQuery("#searches_xg_bitpir_at").setGridHeight($('#layout_search').height() - 55 - 20 - 35);
+	jQuery("#searches_xg_bitpir_at").setGridWidth($('#layout_objects').width() - 1);
+	jQuery("#searches_xg_bitpir_at").setGridHeight($('#layout_search').height() - 110);
 
 	innerLayout.resizeAll();
 }
 
 function ResizeContainer()
 {
-	jQuery("#bots").setGridHeight($('#layout_bots').height() - 55 - 20);
-	jQuery("#packets").setGridHeight($('#layout_packets').height() - 55 - 20);
+	jQuery("#bots").setGridHeight($('#layout_bots').height() - 74);
+	jQuery("#packets").setGridHeight($('#layout_packets').height() - 74);
 }

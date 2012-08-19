@@ -239,6 +239,6 @@ var XGFormatter = Class.create(
 
 	formatIcon2: function (img)
 	{
-		return "<div style='background-image:url(image&" + img + ");width:22px;height:22px;float:left;'></div>";
+		return "<div style='background-image:url(image&" + img + ");width:22px;height:22px;float:left;margin:0 2px;'></div>";
 	}
 });

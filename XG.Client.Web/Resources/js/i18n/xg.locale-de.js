@@ -53,8 +53,6 @@ $(function()
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	jQuery("#searches").setCaption("Suche");
-	jQuery("#searches").setLabel("Name", "Suche");
 	jQuery("#searches").setRowData(1, {name:"ODay Pakete"});
 	jQuery("#searches").setRowData(2, {name:"OWeek Pakete"});
 	jQuery("#searches").setRowData(3, {name:"Downloads"});

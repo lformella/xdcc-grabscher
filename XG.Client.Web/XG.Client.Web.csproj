@@ -171,6 +171,7 @@
     <EmbeddedResource Include="Resources\css\images\ui-icons_ffffff_256x240.png" />
     <EmbeddedResource Include="Resources\css\jquery-ui.css" />
     <EmbeddedResource Include="Resources\css\layout-default.css" />
+    <EmbeddedResource Include="Resources\css\xg.css" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-hr.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-hr1250.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-sr-latin.js" />
