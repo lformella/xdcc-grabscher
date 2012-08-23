@@ -460,7 +460,7 @@ $(function()
 		cmTemplate:{fixed:true},
 		colNames:['', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
 		colModel:[
-			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r); }, width:26},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, o.rowId, true); }, width:26},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
 			{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return Helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},
@@ -474,8 +474,7 @@ $(function()
 		{
 			if(id)
 			{
-				var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
-				$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
+				DowloadLink(id);
 			}
 		},
 		rowNum: 100,
@@ -908,4 +907,10 @@ function FlipObject(id, grid)
 		setTimeout("ReloadGrid('" + grid + "')", 1000);
 	}
 	ReloadGrid(grid);
+}
+
+function DowloadLink(id)
+{
+	var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
+	$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
 }

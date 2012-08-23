@@ -148,7 +148,7 @@ var XGFormatter = Class.create(
 	/* PACKET FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatPacketIcon: function (packet, id)
+	formatPacketIcon: function (packet, id, useXdccLink)
 	{	
 		var str = "Packet";
 		var overlay = "";
@@ -161,7 +161,7 @@ var XGFormatter = Class.create(
 			else { overlay = "OverActive"; }
 		}
 	
-		return this.formatIcon2(str, overlay, id != undefined && id != "" ? "FlipPacket(\"" + id + "\");" : "");
+		return this.formatIcon2(str, overlay, id != undefined && id != "" ? (useXdccLink ? "DowloadLink(\"" + id + "\");" : "FlipPacket(\"" + id + "\");") : "");
 	},
 
 	formatPacketId: function (packet)
