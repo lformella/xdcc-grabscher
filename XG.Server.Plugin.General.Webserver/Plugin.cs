@@ -554,6 +554,7 @@ namespace XG.Server.Plugin.General.Webserver
 				XGServer tServ = (XGServer)aObject;
 
 				sb.Append("\"Name\":\"" + aObject.Name + ":" + tServ.Port + "\",");
+				sb.Append("\"ErrorCode\":\"" + tServ.ErrorCode + "\",");
 				sb.Append("\"level\":0,");
 				sb.Append("\"parent\":0,");
 				sb.Append("\"isLeaf\":false,");
@@ -561,7 +562,10 @@ namespace XG.Server.Plugin.General.Webserver
 			}
 			else if (aObject.GetType() == typeof(XGChannel))
 			{
+				XGChannel tChan = (XGChannel)aObject;
+
 				sb.Append("\"Name\":\"" + aObject.Name + "\",");
+				sb.Append("\"ErrorCode\":\"" + tChan.ErrorCode + "\",");
 				sb.Append("\"level\":1,");
 				sb.Append("\"parent\":\"" + aObject.ParentGuid + "\",");
 				sb.Append("\"isLeaf\":true,");

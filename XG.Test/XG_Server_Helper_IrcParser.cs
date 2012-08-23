@@ -106,6 +106,8 @@ namespace XG.Test
 			Assert.AreEqual(tPack.Size, (Int64)(2.2 * 1024 * 1024 * 1024));
 			Assert.AreEqual(tPack.Name, "Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
 		}
+
+		// Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now
 	}
 }
 

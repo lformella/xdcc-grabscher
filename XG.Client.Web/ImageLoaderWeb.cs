@@ -37,38 +37,16 @@ namespace XG.Client.Web
 			this.pbClient = this.LoadImage(base.Client);
 
 			this.pbServer = this.LoadImage(base.Server);
-			this.pbServerConnected = this.LoadImage(base.ServerConnected);
 			this.pbServerDisabled = this.LoadImage(base.ServerDisabled);
 
 			this.pbChannel = this.LoadImage(base.Channel);
-			this.pbChannelConnected = this.LoadImage(base.ChannelConnected);
 			this.pbChannelDisabled = this.LoadImage(base.ChannelDisabled);
 
 			this.pbBot = this.LoadImage(base.Bot);
 			this.pbBotOff = this.LoadImage(base.BotOff);
-			this.pbBotQueued = this.LoadImage(base.BotQueued);
-			this.pbBotFree = this.LoadImage(base.BotFree);
-			this.pbBotFull = this.LoadImage(base.BotFull);
-			this.pbBotDL0 = this.LoadImage(base.BotDL0);
-			this.pbBotDL1 = this.LoadImage(base.BotDL1);
-			this.pbBotDL2 = this.LoadImage(base.BotDL2);
-			this.pbBotDL3 = this.LoadImage(base.BotDL3);
-			this.pbBotDL4 = this.LoadImage(base.BotDL4);
-			this.pbBotDL5 = this.LoadImage(base.BotDL5);
 
 			this.pbPacket = this.LoadImage(base.Packet);
 			this.pbPacketDisabled = this.LoadImage(base.PacketDisabled);
-			this.pbPacketQueued = this.LoadImage(base.PacketQueued);
-			this.pbPacketBroken = this.LoadImage(base.PacketBroken);
-			this.pbPacketReady0 = this.LoadImage(base.PacketReady0);
-			this.pbPacketReady1 = this.LoadImage(base.PacketReady1);
-			this.pbPacketNew = this.LoadImage(base.PacketNew);
-			this.pbPacketDL0 = this.LoadImage(base.PacketDL0);
-			this.pbPacketDL1 = this.LoadImage(base.PacketDL1);
-			this.pbPacketDL2 = this.LoadImage(base.PacketDL2);
-			this.pbPacketDL3 = this.LoadImage(base.PacketDL3);
-			this.pbPacketDL4 = this.LoadImage(base.PacketDL4);
-			this.pbPacketDL5 = this.LoadImage(base.PacketDL5);
 
 			this.pbBlind = this.LoadImage(base.Blind);
 			this.pbSearch = this.LoadImage(base.Search);
@@ -89,6 +67,19 @@ namespace XG.Client.Web
 			this.pbExtCompressed = this.LoadImage(base.ExtCompressed);
 			this.pbExtDefault = this.LoadImage(base.ExtDefault);
 			this.pbExtVideo = this.LoadImage(base.ExtVideo);
+			
+			this.pbOverActive = this.LoadImage(base.OverActive);
+			this.pbOverAttention = this.LoadImage(base.OverAttention);
+			this.pbOverChecked0 = this.LoadImage(base.OverChecked0);
+			this.pbOverChecked1 = this.LoadImage(base.OverChecked1);
+			this.pbOverDisabled = this.LoadImage(base.OverDisabled);
+			this.pbOverDL0 = this.LoadImage(base.OverDL0);
+			this.pbOverDL1 = this.LoadImage(base.OverDL1);
+			this.pbOverDL2 = this.LoadImage(base.OverDL2);
+			this.pbOverDL3 = this.LoadImage(base.OverDL3);
+			this.pbOverDL4 = this.LoadImage(base.OverDL4);
+			this.pbOverDL5 = this.LoadImage(base.OverDL5);
+			this.pbOverWaiting = this.LoadImage(base.OverWaiting);
 		}
 
 		private byte[] LoadImage(Stream aStream)
@@ -116,17 +107,11 @@ namespace XG.Client.Web
 				case "Server":
 					return this.pbServer;
 
-				case "ServerConnected":
-					return this.pbServerConnected;
-
 				case "ServerDisabled":
 					return this.pbServerDisabled;
 
 				case "Channel":
 					return this.pbChannel;
-
-				case "ChannelConnected":
-					return this.pbChannelConnected;
 
 				case "ChannelDisabled":
 					return this.pbChannelDisabled;
@@ -137,71 +122,11 @@ namespace XG.Client.Web
 				case "BotOff":
 					return this.pbBotOff;
 
-				case "BotQueued":
-					return this.pbBotQueued;
-
-				case "BotFree":
-					return this.pbBotFree;
-
-				case "BotFull":
-					return this.pbBotFull;
-
-				case "BotDL0":
-					return this.pbBotDL0;
-
-				case "BotDL1":
-					return this.pbBotDL1;
-
-				case "BotDL2":
-					return this.pbBotDL2;
-
-				case "BotDL3":
-					return this.pbBotDL3;
-
-				case "BotDL4":
-					return this.pbBotDL4;
-
-				case "BotDL5":
-					return this.pbBotDL5;
-
 				case "Packet":
 					return this.pbPacket;
 
 				case "PacketDisabled":
 					return this.pbPacketDisabled;
-
-				case "PacketQueued":
-					return this.pbPacketQueued;
-
-				case "PacketBroken":
-					return this.pbPacketBroken;
-
-				case "PacketReady0":
-					return this.pbPacketReady0;
-
-				case "PacketReady1":
-					return this.pbPacketReady1;
-
-				case "PacketNew":
-					return this.pbPacketNew;
-
-				case "PacketDL0":
-					return this.pbPacketDL0;
-
-				case "PacketDL1":
-					return this.pbPacketDL1;
-
-				case "PacketDL2":
-					return this.pbPacketDL2;
-
-				case "PacketDL3":
-					return this.pbPacketDL3;
-
-				case "PacketDL4":
-					return this.pbPacketDL4;
-
-				case "PacketDL5":
-					return this.pbPacketDL5;
 
 				case "Blind":
 					return this.pbBlind;
@@ -250,6 +175,42 @@ namespace XG.Client.Web
 
 				case "ExtVideo":
 					return this.pbExtVideo;
+
+				case "OverActive":
+					return this.pbOverActive;
+
+				case "OverAttention":
+					return this.pbOverAttention;
+
+				case "OverChecked0":
+					return this.pbOverChecked0;
+
+				case "OverChecked1":
+					return this.pbOverChecked1;
+
+				case "OverDisabled":
+					return this.pbOverDisabled;
+
+				case "OverDL0":
+					return this.pbOverDL0;
+
+				case "OverDL1":
+					return this.pbOverDL1;
+
+				case "OverDL2":
+					return this.pbOverDL2;
+
+				case "OverDL3":
+					return this.pbOverDL3;
+
+				case "OverDL4":
+					return this.pbOverDL4;
+
+				case "OverDL5":
+					return this.pbOverDL5;
+
+				case "OverWaiting":
+					return this.pbOverWaiting;
 			}
 			return null;
 		}
@@ -257,38 +218,16 @@ namespace XG.Client.Web
 		private byte[] pbClient;
 
 		private byte[] pbServer;
-		private byte[] pbServerConnected;
 		private byte[] pbServerDisabled;
 
 		private byte[] pbChannel;
-		private byte[] pbChannelConnected;
 		private byte[] pbChannelDisabled;
 
 		private byte[] pbBot;
 		private byte[] pbBotOff;
-		private byte[] pbBotQueued;
-		private byte[] pbBotFree;
-		private byte[] pbBotFull;
-		private byte[] pbBotDL0;
-		private byte[] pbBotDL1;
-		private byte[] pbBotDL2;
-		private byte[] pbBotDL3;
-		private byte[] pbBotDL4;
-		private byte[] pbBotDL5;
 
 		private byte[] pbPacket;
 		private byte[] pbPacketDisabled;
-		private byte[] pbPacketQueued;
-		private byte[] pbPacketBroken;
-		private byte[] pbPacketReady0;
-		private byte[] pbPacketReady1;
-		private byte[] pbPacketNew;
-		private byte[] pbPacketDL0;
-		private byte[] pbPacketDL1;
-		private byte[] pbPacketDL2;
-		private byte[] pbPacketDL3;
-		private byte[] pbPacketDL4;
-		private byte[] pbPacketDL5;
 
 		private byte[] pbBlind;
 		private byte[] pbSearch;
@@ -309,5 +248,18 @@ namespace XG.Client.Web
 		private byte[] pbExtCompressed;
 		private byte[] pbExtDefault;
 		private byte[] pbExtVideo;
+
+		private byte[] pbOverActive;
+		private byte[] pbOverAttention;
+		private byte[] pbOverChecked0;
+		private byte[] pbOverChecked1;
+		private byte[] pbOverDisabled;
+		private byte[] pbOverDL0;
+		private byte[] pbOverDL1;
+		private byte[] pbOverDL2;
+		private byte[] pbOverDL3;
+		private byte[] pbOverDL4;
+		private byte[] pbOverDL5;
+		private byte[] pbOverWaiting;
 	}
 }

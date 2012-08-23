@@ -109,13 +109,14 @@ $(function()
 	jQuery("#servers").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', 'Name', '', '', ''],
+		colNames: ['', 'Name', '', '', '', ''],
 		colModel: [
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r); }, width:24},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r, o.rowId); }, width:24},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
 			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
+			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
+			{name:'ErrorCode',		index:'ErrorCode',		formatter: function(c, o, r) { return r.ErrorCode; }, hidden:true}
 		],
 		onSelectRow: function(id)
 		{
@@ -133,20 +134,7 @@ $(function()
 		{
 			if(id)
 			{
-				var serv = jQuery('#servers').getRowData(id);
-				if(serv)
-				{
-					if(serv.Enabled == "false")
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
-					}
-					else
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
-					}
-					setTimeout("ReloadGrid('servers')", 1000);
-				}
-				ReloadGrid("servers");
+				FlipObject(id, "servers");
 			}
 		},
 		pager: jQuery('#server_pager'),
@@ -189,32 +177,20 @@ $(function()
 	jQuery("#channels").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', 'Name', '', '', ''],
+		colNames: ['', 'Name', '', '', '', ''],
 		colModel: [
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r); }, width:24},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, o.rowId); }, width:24},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
 			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true}
+			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
+			{name:'ErrorCode',		index:'ErrorCode',		formatter: function(c, o, r) { return r.ErrorCode; }, hidden:true}
 		],
 		ondblClickRow: function(id)
 		{
 			if(id)
 			{
-				var chan = jQuery('#channels').getRowData(id);
-				if(chan)
-				{
-					if(chan.Enabled == "false")
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
-					}
-					else
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
-					}
-					setTimeout("ReloadGrid('channels')", 1000);
-				}
-				ReloadGrid("channels");
+				FlipObject(id, "channels");
 			}
 		},
 		pager: jQuery('#channel_pager'),
@@ -312,7 +288,7 @@ $(function()
 		cmTemplate: {fixed:true},
 		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', ''],
 		colModel: [
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r) }, width:24},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, o.rowId) }, width:24},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r) }, width:40, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r) }, width:400, fixed:false},
 			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:70, align:"right"},
@@ -344,20 +320,7 @@ $(function()
 		{
 			if(id)
 			{
-				var pack = jQuery('#packets').getRowData(id);
-				if(pack)
-				{
-					if(pack.Enabled == "false")
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
-						setTimeout("RefreshPacket('" + id + "')", 1000);
-					}
-					else
-					{
-						$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
-						setTimeout("ReloadGrid('packets')", 1000);
-					}
-				}				
+				FlipPacket(id);				
 			}
 		},
 		afterInsertRow: function(id)
@@ -391,10 +354,11 @@ $(function()
 	{
 		datatype: "local",
 		cmTemplate: {fixed:true},
-		colNames: ['', ''],
+		colNames: ['', '', ''],
 		colModel: [
 			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30},
-			{name:'Name',	index:'Name',	width:220, fixed:false}
+			{name:'Name',	index:'Name',	width:203, fixed:false},
+			{name:'Action',	index:'Action',	width:17}
 		],
 		onSelectRow: function(id)
 		{
@@ -447,19 +411,6 @@ $(function()
 				id_search = id;
 			}
 		},
-		ondblClickRow: function(id)
-		{
-			if(id)
-			{
-				if(id <= 4)
-				{
-					return;
-				}
-				var data = jQuery('#searches').getRowData(id);
-				$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
-				jQuery('#searches').delRowData(id);
-			}
-		},
 		pager: jQuery('#searches_pager'),
 		pgbuttons: false,
 		pginput: false,
@@ -476,10 +427,10 @@ $(function()
 	jQuery("#searches_pager_left").html("<input type=\"text\" id=\"search-text\" />");
 
 	var mydata = [
-		{Id:"1", Name:"ODay Packets"},
-		{Id:"2", Name:"OWeek Packets"},
-		{Id:"3", Name:"Downloads"},
-		{Id:"4", Name:"Enabled Packets"}
+		{Id:"1", Name:"ODay Packets", Action: ""},
+		{Id:"2", Name:"OWeek Packets", Action: ""},
+		{Id:"3", Name:"Downloads", Action: ""},
+		{Id:"4", Name:"Enabled Packets", Action: ""}
 	];
 	for(var i=0; i<=mydata.length; i++)
 	{
@@ -645,9 +596,25 @@ function AddNewSearch()
 
 function AddSearch(search)
 {
-	var datarow = {Id:id_search_count, Name:search};
+	var datarow =
+	{
+		Id: id_search_count,
+		Name: search,
+		Action: "<div class='remove_button' onclick='RemoveSearch(" + id_search_count + ");'></div>"
+	};
 	jQuery("#searches").addRowData(id_search_count, datarow);
 	id_search_count++;
+}
+
+function RemoveSearch(id)
+{
+	if(id <= 4)
+	{
+		return;
+	}
+	var data = jQuery('#searches').getRowData(id);
+	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
+	jQuery('#searches').delRowData(id);
 }
 
 /* ****************************************************************************************************************** */
@@ -905,4 +872,40 @@ function ResizeContainer()
 {
 	jQuery("#bots").setGridHeight($('#layout_bots').height() - 74);
 	jQuery("#packets").setGridHeight($('#layout_packets').height() - 74);
+}
+
+function FlipPacket(id)
+{
+	var pack = jQuery('#packets').getRowData(id);
+	if(pack)
+	{
+		if(pack.Enabled == "false")
+		{
+			$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
+			setTimeout("RefreshPacket('" + id + "')", 1000);
+		}
+		else
+		{
+			$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
+			setTimeout("ReloadGrid('packets')", 1000);
+		}
+	}				
+}
+
+function FlipObject(id, grid)
+{
+	var obj = jQuery('#' + grid).getRowData(id);
+	if(obj)
+	{
+		if(obj.Enabled == "false")
+		{
+			$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
+		}
+		else
+		{
+			$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
+		}
+		setTimeout("ReloadGrid('" + grid + "')", 1000);
+	}
+	ReloadGrid(grid);
 }

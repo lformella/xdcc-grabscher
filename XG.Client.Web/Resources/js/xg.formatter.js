@@ -21,24 +21,28 @@ var XGFormatter = Class.create(
 	/* SERVER FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatServerIcon: function (server)
+	formatServerIcon: function (server, id)
 	{
 		var str = "Server";
+		var overlay = "";
 	
-		if(server.Enabled == "false") { str += "Disabled"; }
-		else if(server.Connected == "true") { str += "Connected"; }
+		if(server.Enabled == "false"){ str += "Disabled"; }
+		else if(server.Connected == "true") { overlay = "OverActive"; }
+		else if(server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0") { overlay = "OverAttention"; }
 	
-		return this.formatIcon2(str) + " " + server.Name;
+		return this.formatIcon2(str, overlay, id != undefined && id != "" ? "FlipObject(\"" + id + "\", \"servers\");" : "") + " " + server.Name;
 	},
 
-	formatChannelIcon: function (channel)
+	formatChannelIcon: function (channel, id)
 	{
 		var str = "Channel";
+		var overlay = "";
 
 		if(channel.Enabled == "false") { str += "Disabled"; }
-		else if(channel.Connected == "true") { str += "Connected"; }
+		else if(channel.Connected == "true") { overlay = "OverActive"; }
+		else if(channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0") { overlay = "OverAttention"; }
 
-		return this.formatIcon2(str) + " " + channel.Name;
+		return this.formatIcon2(str, overlay, id != undefined && id != "" ? "FlipObject(\"" + id + "\", \"channels\");" : "") + " " + channel.Name;
 	},
 
 	/* ************************************************************************************************************** */
@@ -52,7 +56,7 @@ var XGFormatter = Class.create(
 		{
 			case "1": str = "ODay"; break;
 			case "2": str = "OWeek"; break;
-			case "3": str = "BotDL0"; break;
+			case "3": str = "Packet"; break;
 			case "4": str = "Ok"; break;
 			default: str = "Search"; break;
 		}
@@ -66,6 +70,7 @@ var XGFormatter = Class.create(
 	formatBotIcon: function (bot)
 	{
 		var str = "Bot";
+		var overlay = "";
 	
 		if(bot.Connected == "false") { str += "Off"; }
 		else
@@ -75,22 +80,22 @@ var XGFormatter = Class.create(
 				case "Idle":
 					if(bot.InfoSpeedCurrent > 0)
 					{
-						if(bot.InfoSlotCurrent > 0) str += "Free";
-						else if(bot.InfoSlotCurrent == 0) str += "Full";
+						if(bot.InfoSlotCurrent > 0) overlay = "OverActive";
+						else if(bot.InfoSlotCurrent == 0) overlay = "OverDisabled";
 					}
 					break;
 
 				case "Active":
-					str += this.speed2Image(bot.InfoSpeed);
+					overlay = "Over" + this.speed2Image(bot.InfoSpeed);
 					break;
 
 				case "Waiting":
-					str += "Queued";
+					overlay = "OverWaiting";
 					break;
 			}
 		}
 	
-		return this.formatIcon2(str);
+		return this.formatIcon2(str, overlay);
 	},
 
 	formatBotName: function (bot)
@@ -143,19 +148,20 @@ var XGFormatter = Class.create(
 	/* PACKET FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatPacketIcon: function (packet)
+	formatPacketIcon: function (packet, id)
 	{	
 		var str = "Packet";
+		var overlay = "";
 	
 		if(packet.Enabled == "false") { str += "Disabled"; }
 		else
 		{
-			if(packet.Connected == "true") { str += this.speed2Image(packet.Speed); }
-			else if (packet.Order == "true") { str += "Queued"; }
-			else { str += "New"; }
+			if(packet.Connected == "true") { overlay = "Over" + this.speed2Image(packet.Speed); }
+			else if (packet.Order == "true") { overlay = "OverWaiting"; }
+			else { overlay = "OverActive"; }
 		}
 	
-		return this.formatIcon2(str);
+		return this.formatIcon2(str, overlay, id != undefined && id != "" ? "FlipPacket(\"" + id + "\");" : "");
 	},
 
 	formatPacketId: function (packet)
@@ -237,8 +243,20 @@ var XGFormatter = Class.create(
 		return "<img src='image&" + img + "' />";
 	},
 
-	formatIcon2: function (img)
+	formatIcon2: function (img, overlay, onclick)
 	{
-		return "<div style='background-image:url(image&" + img + ");width:22px;height:22px;float:left;margin:0 2px;'></div>";
+		var str = "<div style='background-image:url(image&" + img + ");width:22px;height:22px;float:left;margin:0 2px;'";
+		if(onclick != undefined && onclick != "")
+		{
+			str += " class='button' onclick='" + onclick + "'";
+		}
+		str += ">";
+		if(overlay != undefined && overlay != "")
+		{
+			str += "<div style='background-image:url(image&" + overlay + ");' class='overlay'></div>";
+		}
+		str += "</div>";
+		
+		return str;
 	}
 });

@@ -30,38 +30,16 @@ namespace XG.Client
 			this.Client = assembly.GetManifestResourceStream(name + ".Resources.client.png");
 
 			this.Server = assembly.GetManifestResourceStream(name + ".Resources.Server.png");
-			this.ServerConnected = assembly.GetManifestResourceStream(name + ".Resources.Server_connected.png");
 			this.ServerDisabled = assembly.GetManifestResourceStream(name + ".Resources.Server_disabled.png");
 
 			this.Channel = assembly.GetManifestResourceStream(name + ".Resources.Channel.png");
-			this.ChannelConnected = assembly.GetManifestResourceStream(name + ".Resources.Channel_connected.png");
 			this.ChannelDisabled = assembly.GetManifestResourceStream(name + ".Resources.Channel_disabled.png");
 
 			this.Bot = assembly.GetManifestResourceStream(name + ".Resources.Bot.png");
 			this.BotOff = assembly.GetManifestResourceStream(name + ".Resources.Bot_offline.png");
-			this.BotQueued = assembly.GetManifestResourceStream(name + ".Resources.Bot_queued.png");
-			this.BotFree = assembly.GetManifestResourceStream(name + ".Resources.Bot_slotsfree.png");
-			this.BotFull = assembly.GetManifestResourceStream(name + ".Resources.Bot_slotsfull.png");
-			this.BotDL0 = assembly.GetManifestResourceStream(name + ".Resources.Bot_dl0.png");
-			this.BotDL1 = assembly.GetManifestResourceStream(name + ".Resources.Bot_dl1.png");
-			this.BotDL2 = assembly.GetManifestResourceStream(name + ".Resources.Bot_dl2.png");
-			this.BotDL3 = assembly.GetManifestResourceStream(name + ".Resources.Bot_dl3.png");
-			this.BotDL4 = assembly.GetManifestResourceStream(name + ".Resources.Bot_dl4.png");
-			this.BotDL5 = assembly.GetManifestResourceStream(name + ".Resources.Bot_dl5.png");
 
 			this.Packet = assembly.GetManifestResourceStream(name + ".Resources.Packet.png");
 			this.PacketDisabled = assembly.GetManifestResourceStream(name + ".Resources.Packet_disabled.png");
-			this.PacketQueued = assembly.GetManifestResourceStream(name + ".Resources.Packet_queued.png");
-			this.PacketBroken = assembly.GetManifestResourceStream(name + ".Resources.Packet_broken.png");
-			this.PacketReady0 = assembly.GetManifestResourceStream(name + ".Resources.Packet_ready_0.png");
-			this.PacketReady1 = assembly.GetManifestResourceStream(name + ".Resources.Packet_ready_1.png");
-			this.PacketNew = assembly.GetManifestResourceStream(name + ".Resources.Packet_new.png");
-			this.PacketDL0 = assembly.GetManifestResourceStream(name + ".Resources.Packet_dl0.png");
-			this.PacketDL1 = assembly.GetManifestResourceStream(name + ".Resources.Packet_dl1.png");
-			this.PacketDL2 = assembly.GetManifestResourceStream(name + ".Resources.Packet_dl2.png");
-			this.PacketDL3 = assembly.GetManifestResourceStream(name + ".Resources.Packet_dl3.png");
-			this.PacketDL4 = assembly.GetManifestResourceStream(name + ".Resources.Packet_dl4.png");
-			this.PacketDL5 = assembly.GetManifestResourceStream(name + ".Resources.Packet_dl5.png");
 
 			this.Blind = assembly.GetManifestResourceStream(name + ".Resources.Blind.png");
 			this.Search = assembly.GetManifestResourceStream(name + ".Resources.Search.png");
@@ -82,43 +60,34 @@ namespace XG.Client
 			this.ExtCompressed = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed.png");
 			this.ExtDefault = assembly.GetManifestResourceStream(name + ".Resources.extension.default.png");
 			this.ExtVideo = assembly.GetManifestResourceStream(name + ".Resources.extension.video.png");
+			
+			this.OverActive = assembly.GetManifestResourceStream(name + ".Resources.Overlay._active.png");
+			this.OverAttention = assembly.GetManifestResourceStream(name + ".Resources.Overlay._attention.png");
+			this.OverChecked0 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._checked_0.png");
+			this.OverChecked1 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._checked_1.png");
+			this.OverDisabled = assembly.GetManifestResourceStream(name + ".Resources.Overlay._disabled.png");
+			this.OverDL0 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl0.png");
+			this.OverDL1 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl1.png");
+			this.OverDL2 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl2.png");
+			this.OverDL3 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl3.png");
+			this.OverDL4 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl4.png");
+			this.OverDL5 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl5.png");
+			this.OverWaiting = assembly.GetManifestResourceStream(name + ".Resources.Overlay._waiting.png");
 		}
 
 		protected Stream Client;
 
 		protected Stream Server;
-		protected Stream ServerConnected;
 		protected Stream ServerDisabled;
 
 		protected Stream Channel;
-		protected Stream ChannelConnected;
 		protected Stream ChannelDisabled;
 
 		protected Stream Bot;
 		protected Stream BotOff;
-		protected Stream BotQueued;
-		protected Stream BotFree;
-		protected Stream BotFull;
-		protected Stream BotDL0;
-		protected Stream BotDL1;
-		protected Stream BotDL2;
-		protected Stream BotDL3;
-		protected Stream BotDL4;
-		protected Stream BotDL5;
 
 		protected Stream Packet;
 		protected Stream PacketDisabled;
-		protected Stream PacketQueued;
-		protected Stream PacketBroken;
-		protected Stream PacketReady0;
-		protected Stream PacketReady1;
-		protected Stream PacketNew;
-		protected Stream PacketDL0;
-		protected Stream PacketDL1;
-		protected Stream PacketDL2;
-		protected Stream PacketDL3;
-		protected Stream PacketDL4;
-		protected Stream PacketDL5;
 
 		protected Stream Blind;
 		protected Stream Search;
@@ -139,5 +108,18 @@ namespace XG.Client
 		protected Stream ExtCompressed;
 		protected Stream ExtDefault;
 		protected Stream ExtVideo;
+			
+		protected Stream OverActive;
+		protected Stream OverAttention;
+		protected Stream OverChecked0;
+		protected Stream OverChecked1;
+		protected Stream OverDisabled;
+		protected Stream OverDL0;
+		protected Stream OverDL1;
+		protected Stream OverDL2;
+		protected Stream OverDL3;
+		protected Stream OverDL4;
+		protected Stream OverDL5;
+		protected Stream OverWaiting;
 	}
 }

@@ -33,13 +33,13 @@ var XGHelper = Class.create(
 		}
 		else if (size < 1024 * 1024)
 		{
-			return (size / 1024).toFixed(0) + " KB";
+			return (size / 1024).toFixed(0) + " K";
 		}
 		else if (size < 1024 * 1024 * 1024)
 		{
-			return (size / (1024 * 1024)).toFixed(0) + " MB";
+			return (size / (1024 * 1024)).toFixed(0) + " M";
 		}
-		return (size / (1024 * 1024 * 1024)).toFixed(0) + " GB";
+		return (size / (1024 * 1024 * 1024)).toFixed(0) + " G";
 	},
 
 	/**
@@ -58,9 +58,9 @@ var XGHelper = Class.create(
 		}
 		else if (speed < 1024 * 1024)
 		{
-			return (speed > 100 * 1024 ? (speed / 1024).toFixed(1) : (speed / 1024).toFixed(2)) + " KB";
+			return (speed > 100 * 1024 ? (speed / 1024).toFixed(1) : (speed / 1024).toFixed(2)) + " K";
 		}
-		return (speed > 100 * 1024 * 1024 ? (speed / (1024 * 1024)).toFixed(1) : (speed / (1024 * 1024)).toFixed(2)) + " MB";
+		return (speed > 100 * 1024 * 1024 ? (speed / (1024 * 1024)).toFixed(1) : (speed / (1024 * 1024)).toFixed(2)) + " M";
 	},
 
 	/**

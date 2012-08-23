@@ -76,4 +76,7 @@ $(function()
 	$("#show_offline_bots").button( "option", {label: "inaktive Bots ausblenden"});
 	$("#tab_1").html("IRC &Uuml;bersicht");
 	$("#tab_2").html("Externe Suche via xg.bitpir.at");
+	
+	//LANG_MONTH = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+	//LANG_WEEKDAY = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
 });
