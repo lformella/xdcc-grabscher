@@ -46,10 +46,10 @@ namespace XG.Server
 		private ServerHandler serverHandler;
 
 		private XG.Core.Repository.Object objectRepository;
-		public XG.Core.Repository.Object ObjectRepository
+		private XG.Core.Repository.Object ObjectRepository
 		{
 			get { return this.objectRepository; }
-			private set
+			set
 			{
 				if(this.objectRepository != null)
 				{
@@ -68,17 +68,17 @@ namespace XG.Server
 		}
 
 		private XG.Core.Repository.File fileRepository;
-		public XG.Core.Repository.File FileRepository
+		private XG.Core.Repository.File FileRepository
 		{
 			get { return this.fileRepository; }
-			private set { this.fileRepository = value; }
+			set { this.fileRepository = value; }
 		}
 
 		private List<string> searches;
-		public List<string> Searches
+		private List<string> Searches
 		{
 			get { return this.searches; }
-			private set { this.searches = value; }
+			set { this.searches = value; }
 		}
 
 		#endregion
@@ -329,9 +329,7 @@ namespace XG.Server
 			this.FileRepository = aPlugin.GetFileRepository();
 			this.Searches = aPlugin.GetSearchRepository();
 
-			aPlugin.Parent = this;
-
-			aPlugin.Start();
+			this.AddServerPlugin(aPlugin);
 		}
 
 		#endregion
@@ -340,8 +338,11 @@ namespace XG.Server
 
 		public void AddServerPlugin(AServerGeneralPlugin aPlugin)
 		{
-			aPlugin.Parent = this;
 			aPlugin.ObjectRepository = this.ObjectRepository;
+			aPlugin.FileRepository = this.FileRepository;
+			aPlugin.Searches = this.Searches;
+
+			aPlugin.Parent = this;
 
 			aPlugin.Start();
 		}

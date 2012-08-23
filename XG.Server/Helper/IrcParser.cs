@@ -1336,7 +1336,8 @@ namespace XG.Server.Helper
 					this.SendDataEvent(aServer, "nick " + Settings.Instance.IRCName);
 				}
 				else if(tData.Contains("This nickname is registered and protected") ||
-						tData.Contains("This nick is being held for a registered user"))
+						tData.Contains("This nick is being held for a registered user") ||
+						tData.Contains("msg NickServ IDENTIFY"))
 				{
 					if(Settings.Instance.IrcRegisterPasswort != "")
 					{

@@ -16,6 +16,7 @@
 // 
 
 using System;
+using System.Collections.Generic;
 
 using XG.Core;
 
@@ -73,6 +74,13 @@ namespace XG.Server.Plugin.General
 					this.fileRepository.ObjectChangedEvent += new ObjectDelegate(FileRepository_ObjectChangedEventHandler);
 				}
 			}
+		}
+
+		private List<string> searches;
+		public List<string> Searches
+		{
+			get { return this.searches; }
+			set { this.searches = value; }
 		}
 
 		public MainInstance Parent { get; set; }

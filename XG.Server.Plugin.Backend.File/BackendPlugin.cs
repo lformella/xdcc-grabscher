@@ -46,32 +46,34 @@ namespace XG.Server.Plugin.Backend.File
 
 		public override XG.Core.Repository.Object GetObjectRepository ()
 		{
+			XG.Core.Repository.Object objectRepository = null;
 			try
 			{
-				this.ObjectRepository = (XG.Core.Repository.Object)this.Load(Settings.Instance.DataBinary);
-				this.ObjectRepository.AttachCildEvents();
+				objectRepository = (XG.Core.Repository.Object)this.Load(Settings.Instance.DataBinary);
+				objectRepository.AttachCildEvents();
 			}
 			catch {}
-			if (this.ObjectRepository == null)
+			if (objectRepository == null)
 			{
-				this.ObjectRepository = new XG.Core.Repository.Object();
+				objectRepository = new XG.Core.Repository.Object();
 			}
-			return this.ObjectRepository;
+			return objectRepository;
 		}
 
 		public override XG.Core.Repository.File GetFileRepository ()
 		{
+			XG.Core.Repository.File fileRepository = null;
 			try
 			{
-				this.FileRepository = (XG.Core.Repository.File)this.Load(Settings.Instance.FilesBinary);
-				this.FileRepository.AttachCildEvents();
+				fileRepository = (XG.Core.Repository.File)this.Load(Settings.Instance.FilesBinary);
+				fileRepository.AttachCildEvents();
 			}
 			catch {}
-			if (this.FileRepository == null)
+			if (fileRepository == null)
 			{
-				this.FileRepository = new XG.Core.Repository.File();
+				fileRepository = new XG.Core.Repository.File();
 			}
-			return this.FileRepository;
+			return fileRepository;
 		}
 
 		public override List<string> GetSearchRepository ()
@@ -163,7 +165,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (this.saveSearchLock)
 			{
-				this.Save(this.Parent.Searches, Settings.Instance.SearchesBinary);
+				this.Save(this.Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 
@@ -171,7 +173,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (this.saveSearchLock)
 			{
-				this.Save(this.Parent.Searches, Settings.Instance.SearchesBinary);
+				this.Save(this.Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 
@@ -253,7 +255,7 @@ namespace XG.Server.Plugin.Backend.File
 				{
 					timeIrc = DateTime.Now;
 
-					this.Save(this.Parent.ObjectRepository, Settings.Instance.DataBinary);
+					this.Save(this.ObjectRepository, Settings.Instance.DataBinary);
 				}
 
 				// File Data
@@ -261,7 +263,7 @@ namespace XG.Server.Plugin.Backend.File
 				{
 					lock (this.saveFileLock)
 					{
-						this.Save(this.Parent.FileRepository, Settings.Instance.FilesBinary);
+						this.Save(this.FileRepository, Settings.Instance.FilesBinary);
 						this.isSaveFile = false;
 					}
 				}
@@ -284,7 +286,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (this.saveFileLock)
 			{
-				this.Save(this.Parent.FileRepository, Settings.Instance.FilesBinary);
+				this.Save(this.FileRepository, Settings.Instance.FilesBinary);
 				this.isSaveFile = false;
 			}
 		}

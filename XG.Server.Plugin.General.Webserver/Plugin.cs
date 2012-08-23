@@ -218,7 +218,7 @@ namespace XG.Server.Plugin.General.Webserver
 							client.Response.ContentType = "text/json";
 							IEnumerable<XGPacket> tPacketList = this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]);
 							response = this.Objects2Json(
-								(from s in this.Parent.ObjectRepository.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct(),
+								(from s in this.ObjectRepository.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct(),
 								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
@@ -235,7 +235,7 @@ namespace XG.Server.Plugin.General.Webserver
 							break;
 
 						case TCPClientRequest.GetSearches:
-							response = this.Searches2Json(this.Parent.Searches);
+							response = this.Searches2Json(this.Searches);
 							break;
 
 						#endregion
@@ -244,18 +244,18 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetObject:
 							client.Response.ContentType = "text/json";
-							response = this.Object2Json(this.Parent.ObjectRepository.GetChildByGuid(new Guid(tDic["guid"])));
+							response = this.Object2Json(this.ObjectRepository.GetChildByGuid(new Guid(tDic["guid"])));
 							break;
 
 						case TCPClientRequest.GetServers:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(this.Parent.ObjectRepository.Servers, int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+							response = this.Objects2Json(this.ObjectRepository.Servers, int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
 						case TCPClientRequest.GetChannelsFromServer:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								from server in this.Parent.ObjectRepository.Servers
+								from server in this.ObjectRepository.Servers
 								from channel in server.Channels
 									where channel.ParentGuid == new Guid(tDic["guid"]) select channel,
 								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
@@ -264,7 +264,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case TCPClientRequest.GetBotsFromChannel:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								from server in this.Parent.ObjectRepository.Servers
+								from server in this.ObjectRepository.Servers
 								from channel in server.Channels
 								from bot in channel.Bots
 									where bot.ParentGuid == new Guid(tDic["guid"]) select bot,
@@ -274,7 +274,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case TCPClientRequest.GetPacketsFromBot:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								from server in this.Parent.ObjectRepository.Servers
+								from server in this.ObjectRepository.Servers
 								from channel in server.Channels
 								from bot in channel.Bots
 								from packet in bot.Packets
@@ -307,11 +307,11 @@ namespace XG.Server.Plugin.General.Webserver
 							int packetId = int.Parse(link[4].Substring(1));
 
 							// checking server
-							XGServer serv = this.Parent.ObjectRepository[serverName];
+							XGServer serv = this.ObjectRepository[serverName];
 							if(serv == null)
 							{
-								this.Parent.ObjectRepository.AddServer(serverName);
-								serv = this.Parent.ObjectRepository[serverName];
+								this.ObjectRepository.AddServer(serverName);
+								serv = this.ObjectRepository[serverName];
 							}
 							serv.Enabled = true;
 
@@ -399,7 +399,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		private IEnumerable<XGPacket> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
-			IEnumerable<XGBot> bots = from server in this.Parent.ObjectRepository.Servers from channel in server.Channels from bot in channel.Bots select bot;
+			IEnumerable<XGBot> bots = from server in this.ObjectRepository.Servers from channel in server.Channels from bot in channel.Bots select bot;
 			if(aShowOffBots)
 			{
 				bots = from bot in bots where bot.Connected select bot;
@@ -577,7 +577,7 @@ namespace XG.Server.Plugin.General.Webserver
 				double speed = 0;
 				try
 				{
-					speed = (from file in this.Parent.FileRepository.Files from part in file.Parts where part.Packet.ParentGuid == tBot.Guid select part.Speed).Sum();
+					speed = (from file in this.FileRepository.Files from part in file.Parts where part.Packet.ParentGuid == tBot.Guid select part.Speed).Sum();
 				}
 				catch {}
 
@@ -602,7 +602,7 @@ namespace XG.Server.Plugin.General.Webserver
 				XGFilePart tPart = null;
 				try
 				{
-					tPart = (from file in this.Parent.FileRepository.Files from part in file.Parts where part.Packet.Guid == tPack.Guid select part).SingleOrDefault();
+					tPart = (from file in this.FileRepository.Files from part in file.Parts where part.Packet.Guid == tPack.Guid select part).SingleOrDefault();
 				}
 				catch {}
 

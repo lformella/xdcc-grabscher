@@ -143,7 +143,7 @@ namespace XG.Server.Plugin.General.Jabber
 				double speed = 0;
 				try
 				{
-					speed = (from file in this.Parent.FileRepository.Files from part in file.Parts select part.Speed).Sum();
+					speed = (from file in this.FileRepository.Files from part in file.Parts select part.Speed).Sum();
 				}
 				catch  {}
 				this.UpdateState(speed);
