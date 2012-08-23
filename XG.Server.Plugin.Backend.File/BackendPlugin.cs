@@ -49,6 +49,7 @@ namespace XG.Server.Plugin.Backend.File
 			try
 			{
 				this.ObjectRepository = (XG.Core.Repository.Object)this.Load(Settings.Instance.DataBinary);
+				this.ObjectRepository.AttachCildEvents();
 			}
 			catch {}
 			if (this.ObjectRepository == null)
@@ -63,6 +64,7 @@ namespace XG.Server.Plugin.Backend.File
 			try
 			{
 				this.FileRepository = (XG.Core.Repository.File)this.Load(Settings.Instance.FilesBinary);
+				this.FileRepository.AttachCildEvents();
 			}
 			catch {}
 			if (this.FileRepository == null)

@@ -55,7 +55,7 @@ namespace XG.Server
 				{
 					this.server.ChildAddedEvent += new ObjectObjectDelegate(Server_ChildAddedEventHandler);
 					this.server.ChildRemovedEvent += new ObjectObjectDelegate(Server_ChildRemovedEventHandler);
-					this.server.EnabledChangedEvent -= new ObjectDelegate(Server_EnabledChangedEventHandler);
+					this.server.EnabledChangedEvent += new ObjectDelegate(Server_EnabledChangedEventHandler);
 				}
 			}
 		}

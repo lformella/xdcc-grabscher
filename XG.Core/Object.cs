@@ -107,10 +107,7 @@ namespace XG.Core
 					{
 						this.lastModified = DateTime.Now;
 					}
-					if (this.EnabledChangedEvent != null)
-					{
-						this.EnabledChangedEvent(this);
-					}
+					this.FireEnabledChangedEvent(this);
 				}
 			}
 		}
@@ -146,10 +143,7 @@ namespace XG.Core
 		{
 			if (this.modified)
 			{
-				if(this.ObjectChangedEvent != null)
-				{
-					this.ObjectChangedEvent(this);
-				}
+				this.FireObjectChangedEvent(this);
 				this.modified = false;
 			}
 		}
@@ -203,11 +197,8 @@ namespace XG.Core
 							aObject.ChildRemovedEvent += new ObjectObjectDelegate(this.FireChildRemovedEvent);
 	
 							// and fire our own
-							if(this.ChildAddedEvent != null)
-							{
-								this.ChildAddedEvent(this, aObject);
-								aObject.Modified = false;
-							}
+							this.FireChildAddedEvent(this, aObject);
+							aObject.Modified = false;
 	
 							return true;
 						}
@@ -235,17 +226,27 @@ namespace XG.Core
 						aObject.ChildRemovedEvent -= new ObjectObjectDelegate(this.FireChildRemovedEvent);
 	
 						// and fire our own
-						if(this.ChildRemovedEvent != null)
-						{
-							this.ChildRemovedEvent(this, aObject);
-							aObject.Modified = false;
-						}
+						this.FireChildRemovedEvent(this, aObject);
+						aObject.Modified = false;
 	
 						return true;
 					}
 				}
 			}
 			return false;
+		}
+
+		public void AttachCildEvents()
+		{
+			foreach (XGObject child in this.Children)
+			{
+				child.EnabledChangedEvent += new ObjectDelegate(this.FireEnabledChangedEvent);
+				child.ObjectChangedEvent += new ObjectDelegate(this.FireObjectChangedEvent);
+				child.ChildAddedEvent += new ObjectObjectDelegate(this.FireChildAddedEvent);
+				child.ChildRemovedEvent += new ObjectObjectDelegate(this.FireChildRemovedEvent);
+
+				child.AttachCildEvents();
+			}
 		}
 
 		public XGObject GetChildByGuid(Guid aGuid)

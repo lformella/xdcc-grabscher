@@ -115,23 +115,21 @@ namespace XG.Server
 		/// Connects to the given server by using a new ServerConnnect class
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void ConnectServer (object aServer)
+		public void ConnectServer (XGServer aServer)
 		{
-			XGServer tServer = aServer as XGServer;
-
-			if (!this.servers.ContainsKey (tServer))
+			if (!this.servers.ContainsKey (aServer))
 			{
 				ServerConnection con = new ServerConnection ();
 				con.Parent = this;
-				con.Server = tServer;
+				con.Server = aServer;
 				con.IrcParser = this.ircParser;
 
 				con.Connection = new XG.Server.Connection.Connection();
-				con.Connection.Hostname = tServer.Name;
-				con.Connection.Port = tServer.Port;
+				con.Connection.Hostname = aServer.Name;
+				con.Connection.Port = aServer.Port;
 				con.Connection.MaxData = 0;
 
-				this.servers.Add (tServer, con);
+				this.servers.Add (aServer, con);
 
 				con.ConnectedEvent += new ServerDelegate(ServerConnection_ConnectedEventHandler);
 				con.DisconnectedEvent += new ServerSocketErrorDelegate(ServerConnection_DisconnectedEventHandler);
@@ -141,7 +139,7 @@ namespace XG.Server
 			}
 			else
 			{
-				myLog.Error("ConnectServer(" + tServer.Name + ") server is already in the dictionary");
+				myLog.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
 			}
 		}
 		private void ServerConnection_ConnectedEventHandler(XGServer aServer)

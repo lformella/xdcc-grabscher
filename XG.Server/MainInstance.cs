@@ -49,18 +49,36 @@ namespace XG.Server
 		public XG.Core.Repository.Object ObjectRepository
 		{
 			get { return this.objectRepository; }
+			private set
+			{
+				if(this.objectRepository != null)
+				{
+					this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(ObjectRepository_ChildAddedEventHandler);
+					this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(ObjectRepository_ChildRemovedEventHandler);
+					this.objectRepository.EnabledChangedEvent -= new ObjectDelegate(ObjectRepository_EnabledChangedEventHandler);
+				}
+				this.objectRepository = value;
+				if(this.objectRepository != null)
+				{
+					this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(ObjectRepository_ChildAddedEventHandler);
+					this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(ObjectRepository_ChildRemovedEventHandler);
+					this.objectRepository.EnabledChangedEvent += new ObjectDelegate(ObjectRepository_EnabledChangedEventHandler);
+				}
+			}
 		}
 
 		private XG.Core.Repository.File fileRepository;
 		public XG.Core.Repository.File FileRepository
 		{
 			get { return this.fileRepository; }
+			private set { this.fileRepository = value; }
 		}
 
 		private List<string> searches;
 		public List<string> Searches
 		{
 			get { return this.searches; }
+			private set { this.searches = value; }
 		}
 
 		#endregion
@@ -79,10 +97,6 @@ namespace XG.Server
 		/// </summary>
 		public void Start()
 		{
-			this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(RootObject_ChildAddedEventHandler);
-			this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(RootObject_ChildRemovedEventHandler);
-			this.objectRepository.EnabledChangedEvent += new ObjectDelegate(RootObject_EnabledChangedEventHandler);
-
 			this.ircParser = new IrcParser();
 			this.ircParser.ParsingErrorEvent += new DataTextDelegate(IrcParser_ParsingErrorEventHandler);
 
@@ -298,10 +312,6 @@ namespace XG.Server
 		/// </summary>
 		public void Stop()
 		{
-			this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(RootObject_ChildAddedEventHandler);
-			this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(RootObject_ChildRemovedEventHandler);
-			this.objectRepository.EnabledChangedEvent += new ObjectDelegate(RootObject_EnabledChangedEventHandler);
-
 			// TODO stop server plugins
 			foreach (XGServer serv in objectRepository.Servers)
 			{
@@ -315,9 +325,9 @@ namespace XG.Server
 
 		public void AddServerBackendPlugin(AServerBackendPlugin aPlugin)
 		{
-			this.objectRepository = aPlugin.GetObjectRepository();
-			this.fileRepository = aPlugin.GetFileRepository();
-			this.searches = aPlugin.GetSearchRepository();
+			this.ObjectRepository = aPlugin.GetObjectRepository();
+			this.FileRepository = aPlugin.GetFileRepository();
+			this.Searches = aPlugin.GetSearchRepository();
 
 			aPlugin.Parent = this;
 
@@ -340,12 +350,7 @@ namespace XG.Server
 
 		#region EVENTHANDLER
 
-		/// <summary>
-		/// Is called if the root object added a server
-		/// </summary>
-		/// <param name="aObj"></param>
-		/// <param name="aServer"></param>
-		private void RootObject_ChildAddedEventHandler(XGObject aParent, XGObject aObj)
+		private void ObjectRepository_ChildAddedEventHandler(XGObject aParent, XGObject aObj)
 		{
 			if(aObj.GetType() == typeof(XGServer))
 			{
@@ -356,12 +361,7 @@ namespace XG.Server
 			}
 		}
 
-		/// <summary>
-		/// Is called if the root object removed a server
-		/// </summary>
-		/// <param name="aObj"></param>
-		/// <param name="aServer"></param>
-		private void RootObject_ChildRemovedEventHandler(XGObject aParent, XGObject aObj)
+		private void ObjectRepository_ChildRemovedEventHandler(XGObject aParent, XGObject aObj)
 		{
 			if(aObj.GetType() == typeof(XGServer))
 			{
@@ -375,11 +375,7 @@ namespace XG.Server
 			}
 		}
 
-		/// <summary>
-		/// Is called if the server object changed an object
-		/// </summary>
-		/// <param name="aObj"></param>
-		private void RootObject_EnabledChangedEventHandler(XGObject aObj)
+		private void ObjectRepository_EnabledChangedEventHandler(XGObject aObj)
 		{
 			if (aObj.GetType() == typeof(XGServer))
 			{
@@ -394,10 +390,6 @@ namespace XG.Server
 			}
 		}
 
-		/// <summary>
-		/// Is called if the server object found a parse error
-		/// </summary>
-		/// <param name="aData"></param>
 		private void IrcParser_ParsingErrorEventHandler(string aData)
 		{
 			lock (this)

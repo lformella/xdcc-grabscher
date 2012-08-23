@@ -36,8 +36,6 @@ namespace XG.Server.Plugin.Backend.MySql
 		private Thread serverThread;
 		private object locked = new object ();
 
-		private bool ignoreEvents = true;
-
 		#endregion
 
 		public BackendPlugin ()
@@ -65,7 +63,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		public override XG.Core.Repository.Object GetObjectRepository ()
 		{
-			this.ObjectRepository = new XG.Core.Repository.Object();
+			XG.Core.Repository.Object objectRepository = new XG.Core.Repository.Object();
 
 			#region DUMP DATABASE
 
@@ -73,7 +71,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			dic.Add ("guid", Guid.Empty);
 			foreach(XGServer serv in this.ExecuteQuery ("SELECT * FROM server;", null, typeof(XGServer)))
 			{
-				this.ObjectRepository.AddServer(serv);
+				objectRepository.AddServer(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
 				foreach(XGChannel chan in this.ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(XGChannel)))
@@ -98,7 +96,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			#region import routine
 
-			Importer importer = new Importer(this.ObjectRepository);
+			Importer importer = new Importer(objectRepository);
 
 			importer.ObjectAddedEvent += new ObjectObjectDelegate (ObjectRepository_ObjectAddedEventHandler);
 
@@ -108,8 +106,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			#endregion
 
-			this.ignoreEvents = false;
-
+			this.ObjectRepository = objectRepository;
 			return this.ObjectRepository;
 		}
 
@@ -168,11 +165,6 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
-			if(this.ignoreEvents)
-			{
-				return;
-			}
-
 			string table = this.GetTable4Object (aObj);
 			Dictionary<string, object> dic = this.Object2Dic (aObj);
 
@@ -199,11 +191,6 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRepository_ObjectChangedEventHandler (XGObject aObj)
 		{
-			if(this.ignoreEvents)
-			{
-				return;
-			}
-
 			string table = this.GetTable4Object (aObj);
 			Dictionary<string, object> dic = this.Object2Dic (aObj);
 
@@ -226,11 +213,6 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
 		{
-			if(this.ignoreEvents)
-			{
-				return;
-			}
-
 			string table = this.GetTable4Object (aObj);
 			Dictionary<string, object> dic = new Dictionary<string, object> ();
 
