@@ -462,7 +462,7 @@ namespace XG.Server.Plugin.General.Webserver
 					tPackets = from packet in tPackets orderby packet.Size select packet;
 					break;
 
-				case "Lastupdated":
+				case "LastUpdated":
 					tPackets = from packet in tPackets orderby packet.LastUpdated select packet;
 					break;
 			}
