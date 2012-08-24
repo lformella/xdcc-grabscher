@@ -21,7 +21,7 @@ var XGFormatter = Class.create(
 	/* SERVER FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatServerIcon: function (server, id)
+	formatServerIcon: function (server, onclick)
 	{
 		var str = "Server";
 		var overlay = "";
@@ -30,7 +30,7 @@ var XGFormatter = Class.create(
 		else if(server.Connected == "true") { overlay = "OverActive"; }
 		else if(server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0") { overlay = "OverAttention"; }
 	
-		return this.formatIcon2(str, overlay, id != undefined && id != "" ? "FlipObject(\"" + id + "\", \"servers\");" : "") + " " + server.Name;
+		return this.formatIcon2(str, overlay, onclick) + " " + server.Name;
 	},
 
 	formatChannelIcon: function (channel, id)
@@ -42,7 +42,7 @@ var XGFormatter = Class.create(
 		else if(channel.Connected == "true") { overlay = "OverActive"; }
 		else if(channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0") { overlay = "OverAttention"; }
 
-		return this.formatIcon2(str, overlay, id != undefined && id != "" ? "FlipObject(\"" + id + "\", \"channels\");" : "") + " " + channel.Name;
+		return this.formatIcon2(str, overlay, onclick) + " " + channel.Name;
 	},
 
 	/* ************************************************************************************************************** */
@@ -86,7 +86,7 @@ var XGFormatter = Class.create(
 					break;
 
 				case "Active":
-					overlay = "Over" + this.speed2Image(bot.InfoSpeed);
+					overlay = "Over" + this.speed2Image(bot.Speed);
 					break;
 
 				case "Waiting":
@@ -148,7 +148,7 @@ var XGFormatter = Class.create(
 	/* PACKET FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatPacketIcon: function (packet, id, useXdccLink)
+	formatPacketIcon: function (packet, onclick)
 	{	
 		var str = "Packet";
 		var overlay = "";
@@ -161,7 +161,7 @@ var XGFormatter = Class.create(
 			else { overlay = "OverActive"; }
 		}
 	
-		return this.formatIcon2(str, overlay, id != undefined && id != "" ? (useXdccLink ? "DowloadLink(\"" + id + "\");" : "FlipPacket(\"" + id + "\");") : "");
+		return this.formatIcon2(str, overlay, onclick);
 	},
 
 	formatPacketId: function (packet)
@@ -230,12 +230,16 @@ var XGFormatter = Class.create(
 
 	speed2Image: function (speed)
 	{
-		if (speed < 1024 * 125) { return "DL0"; }
-		else if (speed < 1024 * 250) { return "DL1"; }
-		else if (speed < 1024 * 500) { return "DL2"; }
-		else if (speed < 1024 * 750) { return "DL3"; }
-		else if (speed < 1024 * 1000) { return "DL4"; }
-		else { return "DL5"; }
+		if (speed < 1024 * 150) { return "DL0"; }
+		else if (speed < 1024 * 300) { return "DL1"; }
+		else if (speed < 1024 * 450) { return "DL2"; }
+		else if (speed < 1024 * 600) { return "DL3"; }
+		else if (speed < 1024 * 750) { return "DL4"; }
+		else if (speed < 1024 * 900) { return "DL5"; }
+		else if (speed < 1024 * 1050) { return "DL6"; }
+		else if (speed < 1024 * 1200) { return "DL7"; }
+		else if (speed < 1024 * 1350) { return "DL8"; }
+		else { return "DL9"; }
 	},
 
 	formatIcon: function (img)

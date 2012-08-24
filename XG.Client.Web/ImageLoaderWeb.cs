@@ -79,6 +79,10 @@ namespace XG.Client.Web
 			this.pbOverDL3 = this.LoadImage(base.OverDL3);
 			this.pbOverDL4 = this.LoadImage(base.OverDL4);
 			this.pbOverDL5 = this.LoadImage(base.OverDL5);
+			this.pbOverDL6 = this.LoadImage(base.OverDL6);
+			this.pbOverDL7 = this.LoadImage(base.OverDL7);
+			this.pbOverDL8 = this.LoadImage(base.OverDL8);
+			this.pbOverDL9 = this.LoadImage(base.OverDL9);
 			this.pbOverWaiting = this.LoadImage(base.OverWaiting);
 		}
 
@@ -209,6 +213,18 @@ namespace XG.Client.Web
 				case "OverDL5":
 					return this.pbOverDL5;
 
+				case "OverDL6":
+					return this.pbOverDL6;
+
+				case "OverDL7":
+					return this.pbOverDL7;
+
+				case "OverDL8":
+					return this.pbOverDL8;
+
+				case "OverDL9":
+					return this.pbOverDL9;
+
 				case "OverWaiting":
 					return this.pbOverWaiting;
 			}
@@ -260,6 +276,10 @@ namespace XG.Client.Web
 		private byte[] pbOverDL3;
 		private byte[] pbOverDL4;
 		private byte[] pbOverDL5;
+		private byte[] pbOverDL6;
+		private byte[] pbOverDL7;
+		private byte[] pbOverDL8;
+		private byte[] pbOverDL9;
 		private byte[] pbOverWaiting;
 	}
 }

@@ -72,6 +72,10 @@ namespace XG.Client
 			this.OverDL3 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl3.png");
 			this.OverDL4 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl4.png");
 			this.OverDL5 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl5.png");
+			this.OverDL6 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl6.png");
+			this.OverDL7 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl7.png");
+			this.OverDL8 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl8.png");
+			this.OverDL9 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl9.png");
 			this.OverWaiting = assembly.GetManifestResourceStream(name + ".Resources.Overlay._waiting.png");
 		}
 
@@ -120,6 +124,10 @@ namespace XG.Client
 		protected Stream OverDL3;
 		protected Stream OverDL4;
 		protected Stream OverDL5;
+		protected Stream OverDL6;
+		protected Stream OverDL7;
+		protected Stream OverDL8;
+		protected Stream OverDL9;
 		protected Stream OverWaiting;
 	}
 }
