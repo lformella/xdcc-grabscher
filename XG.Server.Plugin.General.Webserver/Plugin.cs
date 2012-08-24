@@ -577,7 +577,17 @@ namespace XG.Server.Plugin.General.Webserver
 				double speed = 0;
 				try
 				{
-					speed = (from file in this.FileRepository.Files from part in file.Parts where part.Packet.ParentGuid == tBot.Guid select part.Speed).Sum();
+					foreach(XGFile file in this.FileRepository.Files)
+					{
+						foreach(XGFilePart filePart in file.Parts)
+						{
+							if(filePart.Packet != null && filePart.Packet.ParentGuid == tBot.Guid)
+							{
+								speed += filePart.Speed;
+							}
+						}
+					}
+					//speed = (from file in this.FileRepository.Files from part in file.Parts where part.Packet.ParentGuid == tBot.Guid select part.Speed).Sum();
 				}
 				catch {}
 
@@ -602,7 +612,18 @@ namespace XG.Server.Plugin.General.Webserver
 				XGFilePart tPart = null;
 				try
 				{
-					tPart = (from file in this.FileRepository.Files from part in file.Parts where part.Packet.Guid == tPack.Guid select part).SingleOrDefault();
+					foreach(XGFile file in this.FileRepository.Files)
+					{
+						foreach(XGFilePart filePart in file.Parts)
+						{
+							if(filePart.Packet != null && filePart.Packet.Guid == tPack.Guid)
+							{
+								tPart = filePart;
+								break;
+							}
+						}
+					}
+					//tPart = (from file in this.FileRepository.Files from part in file.Parts where part.Packet != null && part.Packet.Guid == tPack.Guid select part).SingleOrDefault();
 				}
 				catch {}
 
