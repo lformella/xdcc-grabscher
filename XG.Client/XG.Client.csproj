@@ -101,6 +101,22 @@
     <EmbeddedResource Include="Resources\extension\default.png" />
     <EmbeddedResource Include="Resources\extension\video.png" />
     <EmbeddedResource Include="Resources\client.png" />
+    <EmbeddedResource Include="Resources\Overlay\_active.png" />
+    <EmbeddedResource Include="Resources\Overlay\_attention.png" />
+    <EmbeddedResource Include="Resources\Overlay\_checked_0.png" />
+    <EmbeddedResource Include="Resources\Overlay\_checked_1.png" />
+    <EmbeddedResource Include="Resources\Overlay\_disabled.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl0.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl1.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl2.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl3.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl4.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl5.png" />
+    <EmbeddedResource Include="Resources\Overlay\_waiting.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl6.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl7.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl8.png" />
+    <EmbeddedResource Include="Resources\Overlay\_dl9.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ImageLoader.cs" />
