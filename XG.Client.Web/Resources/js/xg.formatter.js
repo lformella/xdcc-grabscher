@@ -211,7 +211,7 @@ var XGFormatter = Class.create(
 				c = 100 - a - b;
 			}
 			// Enum.TangoColor.SkyBlue.Middle
-			ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-widget-content ui-corner-all' style='height:3px'>" +
+			ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-corner-all' style='height:2px'>" +
 				"<div style='width: " + a + "%;float:left' class='ui-progressbar-value ui-corner-left'></div>" +
 				"<div style='width: " + b + "%;float:left;background:#" + (packet.IsChecked == "true" ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
 				"<div style='width: " + c + "%;float:left;background:#" + (packet.IsChecked == "true" ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
