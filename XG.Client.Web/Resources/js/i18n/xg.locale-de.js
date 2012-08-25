@@ -31,12 +31,12 @@ $(function()
 	/* ************************************************************************************************************** */
 
 	jQuery("#bots").setLabel("Name", "Name");
-	jQuery("#bots").setLabel("Speed", "Geschwindigkeit");
+	jQuery("#bots").setLabel("Speed", "Geschw.");
 	jQuery("#bots").setLabel("QueuePosition", "S-Pos");
 	jQuery("#bots").setLabel("QueueTime", "S-Zeit");
-	jQuery("#bots").setLabel("SpeedMax", "max. Geschwindigkeit");
-	jQuery("#bots").setLabel("SlotTotal", "Pl&auml;tze");
-	jQuery("#bots").setLabel("QueueTotal", "Schlange");
+	jQuery("#bots").setLabel("InfoSpeedMax", "max. Geschw.");
+	jQuery("#bots").setLabel("InfoSlotTotal", "Pl&auml;tze");
+	jQuery("#bots").setLabel("InfoQueueTotal", "Schlange");
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
@@ -45,7 +45,7 @@ $(function()
 	jQuery("#packets").setCaption("Pakete");
 	jQuery("#packets").setLabel("Name", "Name");
 	jQuery("#packets").setLabel("Size", "Gr&ouml;&szlig;e");
-	jQuery("#packets").setLabel("Speed", "Geschwindigkeit");
+	jQuery("#packets").setLabel("Speed", "Geschw.");
 	jQuery("#packets").setLabel("TimeMissing", "Zeit");
 	jQuery("#packets").setLabel("LastUpdated", "Aktualisiert");
 
@@ -66,7 +66,7 @@ $(function()
 	jQuery("#searches_xg_bitpir_at").setLabel("Name", "Name");
 	jQuery("#searches_xg_bitpir_at").setLabel("LastMentioned", "Aktualisiert");
 	jQuery("#searches_xg_bitpir_at").setLabel("Size", "Gr&ouml;&szlig;e");
-	jQuery("#searches_xg_bitpir_at").setLabel("Speed", "Geschwindigkeit");
+	jQuery("#searches_xg_bitpir_at").setLabel("BotSpeed", "Geschw.");
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
