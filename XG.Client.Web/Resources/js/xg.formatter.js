@@ -78,11 +78,8 @@ var XGFormatter = Class.create(
 			switch(bot.BotState)
 			{
 				case "Idle":
-					if(bot.InfoSpeedCurrent > 0)
-					{
-						if(bot.InfoSlotCurrent > 0) overlay = "OverActive";
-						else if(bot.InfoSlotCurrent == 0) overlay = "OverDisabled";
-					}
+					if(bot.InfoSlotCurrent > 0) overlay = "OverActive";
+					else if(bot.InfoSlotCurrent == 0 && bot.InfoSlotCurrent) overlay = "OverDisabled";
 					break;
 
 				case "Active":
