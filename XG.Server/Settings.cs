@@ -123,7 +123,7 @@ namespace XG.Server
 			this.enableMultiDownloads = false;
 			this.clearReadyDownloads = true;
 			this.ircVersion = "mIRC v6.35 Khaled Mardam-Bey";
-			this.xgVersion = "9";
+			this.xgVersion = "0.9.2";
 			this.ircRegisterEmail = "anon@ymous.org";
 			this.ircRegisterPasswort = "password123";
 			this.autoRegisterNickserv = true;
