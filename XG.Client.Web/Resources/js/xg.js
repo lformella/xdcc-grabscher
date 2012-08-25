@@ -137,19 +137,24 @@ $(function()
 				FlipObject(id, "servers");
 			}
 		},
+		onSortCol: function(index, iCol, sortorder)
+		{
+			SetCookie('servers.sort.index', index);
+			SetCookie('servers.sort.sortorder', sortorder);
+		},
 		pager: jQuery('#server_pager'),
 		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
 		recordtext: '',
 		pgtext: '',
-		sortname: 'Name',
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
 		scrollrows: true,
 		height: 300,
-		sortorder: "asc",
+		sortname: GetCookie('servers.sort.index', 'Name'),
+		sortorder: GetCookie('servers.sort.sortorder', 'asc'),
 		caption: "Servers",
 		hidegrid: false
 	}).navGrid('#server_pager', {edit:false, search:false}, {},
@@ -193,19 +198,24 @@ $(function()
 				FlipObject(id, "channels");
 			}
 		},
+		onSortCol: function(index, iCol, sortorder)
+		{
+			SetCookie('channels.sort.index', index);
+			SetCookie('channels.sort.sortorder', sortorder);
+		},
 		pager: jQuery('#channel_pager'),
 		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
 		recordtext: '',
 		pgtext: '',
-		sortname: 'Name',
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
 		scrollrows: true,
 		height: 300,
-		sortorder: "asc",
+		sortname: GetCookie('channels.sort.index', 'Name'),
+		sortorder: GetCookie('channels.sort.sortorder', 'asc'),
 		caption: "Channels",
 		hidegrid: false
 	}).navGrid('#channel_pager', {edit:false, search:false}, {},
@@ -263,20 +273,24 @@ $(function()
 				ReloadGrid("packets", GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id));
 			}
 		},
+		onSortCol: function(index, iCol, sortorder)
+		{
+			SetCookie('bots.sort.index', index);
+			SetCookie('bots.sort.sortorder', sortorder);
+		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
 		pager: jQuery('#bot_pager'),
-		sortname: 'Name',
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
 		scrollrows: true,
 		height: 300,
-		sortorder: "asc",
+		sortname: GetCookie('bots.sort.index', 'Name'),
+		sortorder: GetCookie('bots.sort.sortorder', 'asc'),
 		caption: "Bots",
 		hidegrid: false
 	}).navGrid('#bot_pager', {edit:false, add:false, del:false, search:false});
-	jQuery("#bots").setGridState($.cookie('xg.bots'));
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
@@ -332,19 +346,23 @@ $(function()
 				jQuery('#packets').setCell(id, 'Id', '', {'background-color': '#' + color}, '');
 			}
 		},
+		onSortCol: function(index, iCol, sortorder)
+		{
+			SetCookie('packets.sort.index', index);
+			SetCookie('packets.sort.sortorder', sortorder);
+		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
 		pager: jQuery('#packet_pager'),
-		sortname: 'Id',
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
 		height: 300,
-		sortorder: "asc",
+		sortname: GetCookie('packets.sort.index', 'Id'),
+		sortorder: GetCookie('packets.sort.sortorder', 'asc'),
 		caption: "Packets",
 		hidegrid: false
 	}).navGrid('#packet_pager', {edit:false, add:false, del:false, search:false});
-	jQuery("#packets").setGridState($.cookie('xg.packets'));
 
 	/* ************************************************************************************************************** */
 	/* SEARCH GRID                                                                                                    */
@@ -477,15 +495,20 @@ $(function()
 				DowloadLink(id);
 			}
 		},
+		onSortCol: function(index, iCol, sortorder)
+		{
+			SetCookie('searches_xg_bitpir_at.sort.index', index);
+			SetCookie('searches_xg_bitpir_at.sort.sortorder', sortorder);
+		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
 		pager:jQuery('#searches_pager_xg_bitpir_at'),
-		sortname:'Id',
 		viewrecords:true,
 		ExpandColumn:'Name',
 		height:'100%',
 		autowidth:true,
-		sortorder:"asc",
+		sortname: GetCookie('searches_xg_bitpir_at.sort.index', 'Id'),
+		sortorder: GetCookie('searches_xg_bitpir_at.sort.sortorder', 'asc'),
 		caption: "Search via xg.bitpir.at",
 		hidegrid: false
 	}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
@@ -913,4 +936,15 @@ function DowloadLink(id)
 {
 	var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
 	$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
+}
+
+function SetCookie(name, value)
+{
+	$.cookie('xg.' + name, value, { expires: 365 });
+}
+
+function GetCookie(name, value)
+{
+	var val = $.cookie('xg.' + name);
+	return val != undefined && val != "" ? val : value;
 }
