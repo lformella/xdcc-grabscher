@@ -544,6 +544,8 @@ namespace XG.Server.Plugin.General.Webserver
 			sb.Append("\"id\":\"" + aObject.Guid.ToString() + "\",");
 			sb.Append("\"cell\":{");
 
+			// push out an icon row - otherwise the wont update itself correctly m(
+			sb.Append("\"Icon\":\"\",");
 			sb.Append("\"ParentGuid\":\"" + aObject.ParentGuid.ToString() + "\",");
 			sb.Append("\"Connected\":\"" + aObject.Connected.ToString().ToLower() + "\",");
 			sb.Append("\"Enabled\":\"" + aObject.Enabled.ToString().ToLower() + "\",");
