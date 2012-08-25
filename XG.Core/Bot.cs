@@ -212,6 +212,14 @@ namespace XG.Core
 			}
 		}
 
+		public double Speed
+		{
+			get
+			{
+				return (from pack in this.Packets where pack.Part != null select pack.Part.Speed).Sum();
+			}
+		}
+
 		#endregion
 
 		#region CHILDREN

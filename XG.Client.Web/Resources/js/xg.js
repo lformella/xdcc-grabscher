@@ -111,7 +111,7 @@ $(function()
 		datatype: "json",
 		colNames: ['', 'Name', '', '', '', ''],
 		colModel: [
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:24},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:24, sortable: false},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
 			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
@@ -184,7 +184,7 @@ $(function()
 		datatype: "json",
 		colNames: ['', 'Name', '', '', '', ''],
 		colModel: [
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:24},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:24, sortable: false},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
 			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
@@ -246,7 +246,7 @@ $(function()
 		cmTemplate:{fixed:true},
 		colNames: ['', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue', '', '', '', '', '', '', '', '', '', ''],
 		colModel: [
-			{name:'Icon',				index:'Icon',				formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24},
+			{name:'Icon',				index:'Icon',				formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24, sortable: false},
 			{name:'Name',				index:'Name',				formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
 			{name:'Speed',				index:'Speed',				formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
 			{name:'QueuePosition',		index:'QueuePosition',		formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : ""; }, width:70, align:"right"},
@@ -302,7 +302,7 @@ $(function()
 		cmTemplate: {fixed:true},
 		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', ''],
 		colModel: [
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");") }, width:24},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");") }, width:24, sortable: false},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r) }, width:40, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r) }, width:400, fixed:false},
 			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:70, align:"right"},
@@ -374,9 +374,9 @@ $(function()
 		cmTemplate: {fixed:true},
 		colNames: ['', '', ''],
 		colModel: [
-			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30},
-			{name:'Name',	index:'Name',	width:203, fixed:false},
-			{name:'Action',	index:'Action',	width:17}
+			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30, sortable: false},
+			{name:'Name',	index:'Name',	width:203, fixed:false, sortable: false},
+			{name:'Action',	index:'Action',	width:17, sortable: false}
 		],
 		onSelectRow: function(id)
 		{
@@ -478,7 +478,7 @@ $(function()
 		cmTemplate:{fixed:true},
 		colNames:['', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
 		colModel:[
-			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "DowloadLink(\"" + o.rowId + "\");", true); }, width:26},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "DowloadLink(\"" + o.rowId + "\");", true); }, width:26, sortable: false},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
 			{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return Helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},

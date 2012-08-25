@@ -30,6 +30,14 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
+		[field: NonSerialized()]
+		private XGFilePart part;
+		public XGFilePart Part
+		{
+			get { return this.part; }
+			set { this.part = value; }
+		}
+
 		public new string Name
 		{
 			get { return base.Name; }

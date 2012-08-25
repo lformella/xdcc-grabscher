@@ -193,6 +193,7 @@ namespace XG.Server
 					this.Part.Commit();
 
 					this.Packet.Connected = true;
+					this.Packet.Part = this.Part;
 					this.Packet.Commit();
 
 					this.Packet.Parent.BotState = BotState.Active;
@@ -231,6 +232,7 @@ namespace XG.Server
 			if (this.writer != null) { this.writer.Close(); }
 
 			this.Packet.Connected = false;
+			this.Packet.Part = null;
 			this.Packet.Commit();
 
 			this.Packet.Parent.BotState = BotState.Idle;

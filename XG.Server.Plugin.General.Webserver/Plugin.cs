@@ -216,9 +216,8 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.SearchBot:
 							client.Response.ContentType = "text/json";
-							IEnumerable<XGPacket> tPacketList = this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]);
 							response = this.Objects2Json(
-								(from s in this.ObjectRepository.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct(),
+								this.GetBots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
 							break;
 
@@ -395,8 +394,6 @@ namespace XG.Server.Plugin.General.Webserver
 			log.Info("OpenClient() disconnected");
 		}
 
-		#endregion
-
 		private IEnumerable<XGPacket> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
 			IEnumerable<XGBot> bots = from server in this.ObjectRepository.Servers from channel in server.Channels from bot in channel.Bots select bot;
@@ -465,6 +462,14 @@ namespace XG.Server.Plugin.General.Webserver
 				case "LastUpdated":
 					tPackets = from packet in tPackets orderby packet.LastUpdated select packet;
 					break;
+
+				case "Speed":
+					tPackets = from packet in tPackets orderby (packet.Part != null ? packet.Part.Speed : 0) select packet;
+					break;
+
+				case "TimeMissing":
+					tPackets = from packet in tPackets orderby (packet.Part != null ? packet.Part.TimeMissing : 0) select packet;
+					break;
 			}
 
 			if (aSortMode == "desc")
@@ -474,6 +479,60 @@ namespace XG.Server.Plugin.General.Webserver
 
 			return tPackets;
 		}
+
+		private IEnumerable<XGBot> GetBots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		{
+			IEnumerable<XGPacket> tPacketList = this.GetPackets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
+			IEnumerable<XGBot> tBots = (from s in this.ObjectRepository.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct();
+
+			switch (aSortBy)
+			{
+				case "Name":
+					tBots = from bot in tBots orderby bot.Name select bot;
+					break;
+
+				case "Connected":
+					tBots = from bot in tBots orderby bot.Connected select bot;
+					break;
+
+				case "Enabled":
+					tBots = from bot in tBots orderby bot.Enabled select bot;
+					break;
+
+				case "Speed":
+					tBots = from bot in tBots orderby bot.Speed select bot;
+					break;
+
+				case "QueuePosition":
+					tBots = from bot in tBots orderby bot.QueuePosition select bot;
+					break;
+
+				case "QueueTime":
+					tBots = from bot in tBots orderby bot.QueueTime select bot;
+					break;
+
+				case "InfoSpeedMax":
+					tBots = from bot in tBots orderby bot.InfoSpeedCurrent, bot.InfoSpeedMax select bot;
+					break;
+
+				case "InfoSlotTotal":
+					tBots = from bot in tBots orderby bot.InfoSlotCurrent, bot.InfoSlotTotal select bot;
+					break;
+
+				case "InfoQueueTotal":
+					tBots = from bot in tBots orderby bot.InfoQueueCurrent, bot.InfoQueueTotal select bot;
+					break;
+			}
+
+			if (aSortMode == "desc")
+			{
+				tBots = tBots.Reverse();
+			}
+
+			return tBots;
+		}
+
+		#endregion
 
 		#region WRITE TO STREAM
 
@@ -576,26 +635,10 @@ namespace XG.Server.Plugin.General.Webserver
 			else if (aObject.GetType() == typeof(XGBot))
 			{
 				XGBot tBot = (XGBot)aObject;
-				double speed = 0;
-				try
-				{
-					foreach(XGFile file in this.FileRepository.Files)
-					{
-						foreach(XGFilePart filePart in file.Parts)
-						{
-							if(filePart.Packet != null && filePart.Packet.ParentGuid == tBot.Guid)
-							{
-								speed += filePart.Speed;
-							}
-						}
-					}
-					//speed = (from file in this.FileRepository.Files from part in file.Parts where part.Packet.ParentGuid == tBot.Guid select part.Speed).Sum();
-				}
-				catch {}
 
 				sb.Append("\"Name\":\"" + this.ClearString(aObject.Name) + "\",");
 				sb.Append("\"BotState\":\"" + tBot.BotState + "\",");
-				sb.Append("\"Speed\":" + speed.ToString("0.00").Replace(",", ".") + ",");
+				sb.Append("\"Speed\":" + tBot.Speed.ToString("0.00").Replace(",", ".") + ",");
 				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
 				sb.Append("\"QueueTime\":" + tBot.QueueTime + ",");
 				sb.Append("\"InfoSpeedMax\":" + tBot.InfoSpeedMax.ToString().Replace(',', '.') + ",");
@@ -611,33 +654,15 @@ namespace XG.Server.Plugin.General.Webserver
 			{
 				XGPacket tPack = (XGPacket)aObject;
 
-				XGFilePart tPart = null;
-				try
-				{
-					foreach(XGFile file in this.FileRepository.Files)
-					{
-						foreach(XGFilePart filePart in file.Parts)
-						{
-							if(filePart.Packet != null && filePart.Packet.Guid == tPack.Guid)
-							{
-								tPart = filePart;
-								break;
-							}
-						}
-					}
-					//tPart = (from file in this.FileRepository.Files from part in file.Parts where part.Packet != null && part.Packet.Guid == tPack.Guid select part).SingleOrDefault();
-				}
-				catch {}
-
 				sb.Append("\"Id\":" + tPack.Id + ",");
 				sb.Append("\"Name\":\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
 				sb.Append("\"Size\":" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",");
-				sb.Append("\"Speed\":" + (tPart == null ? "0" : tPart.Speed.ToString("0.00").Replace(",", ".")) + ",");
-				sb.Append("\"TimeMissing\":" + (tPart == null ? "0" : tPart.TimeMissing.ToString()) + ",");
-				sb.Append("\"StartSize\":" + (tPart == null ? "0" : tPart.StartSize.ToString()) + ",");
-				sb.Append("\"StopSize\":" + (tPart == null ? "0" : tPart.StopSize.ToString()) + ",");
-				sb.Append("\"CurrentSize\":" + (tPart == null ? "0" : tPart.CurrentSize.ToString()) + ",");
-				sb.Append("\"IsChecked\":\"" + (tPart == null ? "false" : tPart.IsChecked ? "true" : "false") + "\",");
+				sb.Append("\"Speed\":" + (tPack.Part == null ? "0" : tPack.Part.Speed.ToString("0.00").Replace(",", ".")) + ",");
+				sb.Append("\"TimeMissing\":" + (tPack.Part == null ? "0" : tPack.Part.TimeMissing.ToString()) + ",");
+				sb.Append("\"StartSize\":" + (tPack.Part == null ? "0" : tPack.Part.StartSize.ToString()) + ",");
+				sb.Append("\"StopSize\":" + (tPack.Part == null ? "0" : tPack.Part.StopSize.ToString()) + ",");
+				sb.Append("\"CurrentSize\":" + (tPack.Part == null ? "0" : tPack.Part.CurrentSize.ToString()) + ",");
+				sb.Append("\"IsChecked\":\"" + (tPack.Part == null ? "false" : tPack.Part.IsChecked ? "true" : "false") + "\",");
 				sb.Append("\"Order\":\"" + (tPack.Parent.GetOldestActivePacket() != tPack ? "false" : "true") + "\",");
 				sb.Append("\"LastUpdated\":\"" + tPack.LastUpdated + "\"");
 			}
