@@ -149,6 +149,7 @@ namespace XG.Server.Plugin.General.Webserver
 					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != Settings.Instance.Password)
 					{
 						//throw new Exception("Password wrong!");
+						client.Response.StatusCode = 403;
 						client.Response.Close();
 						return;
 					}

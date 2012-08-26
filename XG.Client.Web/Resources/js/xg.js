@@ -761,7 +761,7 @@ function CheckPassword(password)
 		url: JsonUrl(password) + Enum.TCPClientRequest.Version,
 		success: function(result)
 		{
-			res = !!(result != "");
+			res = true;
 		},
 		async: false
 	});
