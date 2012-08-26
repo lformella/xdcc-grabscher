@@ -211,14 +211,18 @@ namespace XG.Server.Plugin.General.Webserver
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
 								this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
-								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						case TCPClientRequest.SearchBot:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
 								this.GetBots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
-								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						#endregion
@@ -243,42 +247,57 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetObject:
 							client.Response.ContentType = "text/json";
-							response = this.Object2Json(this.ObjectRepository.GetChildByGuid(new Guid(tDic["guid"])));
+							response = this.Object2Json(
+								this.ObjectRepository.GetChildByGuid(new Guid(tDic["guid"]))
+							);
 							break;
 
 						case TCPClientRequest.GetServers:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(this.ObjectRepository.Servers, int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+							response = this.Objects2Json(
+								this.GetSortedObjects(this.ObjectRepository.Servers, tDic["sidx"], tDic["sord"]),
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						case TCPClientRequest.GetChannelsFromServer:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								from server in this.ObjectRepository.Servers
-								from channel in server.Channels
-									where channel.ParentGuid == new Guid(tDic["guid"]) select channel,
-								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+								this.GetSortedObjects(
+									from server in this.ObjectRepository.Servers
+									from channel in server.Channels
+										where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]),
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						case TCPClientRequest.GetBotsFromChannel:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								from server in this.ObjectRepository.Servers
-								from channel in server.Channels
-								from bot in channel.Bots
-									where bot.ParentGuid == new Guid(tDic["guid"]) select bot,
-								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+								this.GetSortedBots(
+									from server in this.ObjectRepository.Servers
+									from channel in server.Channels
+									from bot in channel.Bots
+										where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]),
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						case TCPClientRequest.GetPacketsFromBot:
 							client.Response.ContentType = "text/json";
 							response = this.Objects2Json(
-								from server in this.ObjectRepository.Servers
-								from channel in server.Channels
-								from bot in channel.Bots
-								from packet in bot.Packets
-									where packet.ParentGuid == new Guid(tDic["guid"]) select packet,
-								int.Parse(tDic["page"]), int.Parse(tDic["rows"]));
+								this.GetSortedPackets(
+									from server in this.ObjectRepository.Servers
+									from channel in server.Channels
+									from bot in channel.Bots
+									from packet in bot.Packets
+										where packet.ParentGuid == new Guid(tDic["guid"]) select packet, tDic["sidx"], tDic["sord"]),
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						case TCPClientRequest.GetStatistics:
@@ -437,99 +456,137 @@ namespace XG.Server.Plugin.General.Webserver
 					break;
 			}
 
+			return this.GetSortedPackets(tPackets, aSortBy, aSortMode);
+		}
+
+		private IEnumerable<XGPacket> GetSortedPackets(IEnumerable<XGPacket> aPackets, string aSortBy, string aSortMode)
+		{
 			switch (aSortBy)
 			{
 				case "Name":
-					tPackets = from packet in tPackets orderby packet.Name select packet;
+					aPackets = from packet in aPackets orderby packet.Name select packet;
 					break;
 
 				case "Connected":
-					tPackets = from packet in tPackets orderby packet.Connected select packet;
+					aPackets = from packet in aPackets orderby packet.Connected select packet;
 					break;
 
 				case "Enabled":
-					tPackets = from packet in tPackets orderby packet.Enabled select packet;
+					aPackets = from packet in aPackets orderby packet.Enabled select packet;
 					break;
 
 				case "Id":
-					tPackets = from packet in tPackets orderby packet.Id select packet;
+					aPackets = from packet in aPackets orderby packet.Id select packet;
 					break;
 
 				case "Size":
-					tPackets = from packet in tPackets orderby packet.Size select packet;
+					aPackets = from packet in aPackets orderby packet.Size select packet;
 					break;
 
 				case "LastUpdated":
-					tPackets = from packet in tPackets orderby packet.LastUpdated select packet;
+					aPackets = from packet in aPackets orderby packet.LastUpdated select packet;
 					break;
 
 				case "Speed":
-					tPackets = from packet in tPackets orderby (packet.Part != null ? packet.Part.Speed : 0) select packet;
+					aPackets = from packet in aPackets orderby (packet.Part != null ? packet.Part.Speed : 0) select packet;
 					break;
 
 				case "TimeMissing":
-					tPackets = from packet in tPackets orderby (packet.Part != null ? packet.Part.TimeMissing : 0) select packet;
+					aPackets = from packet in aPackets orderby (packet.Part != null ? packet.Part.TimeMissing : 0) select packet;
 					break;
 			}
 
 			if (aSortMode == "desc")
 			{
-				tPackets = tPackets.Reverse();
+				aPackets = aPackets.Reverse();
 			}
 
-			return tPackets;
+			return aPackets;
 		}
 
 		private IEnumerable<XGBot> GetBots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
 			IEnumerable<XGPacket> tPacketList = this.GetPackets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
-			IEnumerable<XGBot> tBots = (from s in this.ObjectRepository.Servers from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b).Distinct();
+			IEnumerable<XGBot> tBots = (
+				from s in this.ObjectRepository.Servers 
+					from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b
+				).Distinct();
 
+			return this.GetSortedBots(tBots, aSortBy, aSortMode);
+		}
+
+		private IEnumerable<XGBot> GetSortedBots(IEnumerable<XGBot> aBots, string aSortBy, string aSortMode)
+		{
 			switch (aSortBy)
 			{
 				case "Name":
-					tBots = from bot in tBots orderby bot.Name select bot;
+					aBots = from bot in aBots orderby bot.Name select bot;
 					break;
 
 				case "Connected":
-					tBots = from bot in tBots orderby bot.Connected select bot;
+					aBots = from bot in aBots orderby bot.Connected select bot;
 					break;
 
 				case "Enabled":
-					tBots = from bot in tBots orderby bot.Enabled select bot;
+					aBots = from bot in aBots orderby bot.Enabled select bot;
 					break;
 
 				case "Speed":
-					tBots = from bot in tBots orderby bot.Speed select bot;
+					aBots = from bot in aBots orderby bot.Speed select bot;
 					break;
 
 				case "QueuePosition":
-					tBots = from bot in tBots orderby bot.QueuePosition select bot;
+					aBots = from bot in aBots orderby bot.QueuePosition select bot;
 					break;
 
 				case "QueueTime":
-					tBots = from bot in tBots orderby bot.QueueTime select bot;
+					aBots = from bot in aBots orderby bot.QueueTime select bot;
 					break;
 
 				case "InfoSpeedMax":
-					tBots = from bot in tBots orderby bot.InfoSpeedCurrent, bot.InfoSpeedMax select bot;
+					aBots = from bot in aBots orderby bot.InfoSpeedCurrent, bot.InfoSpeedMax select bot;
 					break;
 
 				case "InfoSlotTotal":
-					tBots = from bot in tBots orderby bot.InfoSlotCurrent, bot.InfoSlotTotal select bot;
+					aBots = from bot in aBots orderby bot.InfoSlotCurrent, bot.InfoSlotTotal select bot;
 					break;
 
 				case "InfoQueueTotal":
-					tBots = from bot in tBots orderby bot.InfoQueueCurrent, bot.InfoQueueTotal select bot;
+					aBots = from bot in aBots orderby bot.InfoQueueCurrent, bot.InfoQueueTotal select bot;
 					break;
 			}
 
 			if (aSortMode == "desc")
 			{
-				tBots = tBots.Reverse();
+				aBots = aBots.Reverse();
 			}
 
-			return tBots;
+			return aBots;
+		}
+
+		private IEnumerable<XGObject> GetSortedObjects(IEnumerable<XGObject> aObjects, string aSortBy, string aSortMode)
+		{
+			switch (aSortBy)
+			{
+				case "Name":
+					aObjects = from bot in aObjects orderby bot.Name select bot;
+					break;
+
+				case "Connected":
+					aObjects = from bot in aObjects orderby bot.Connected select bot;
+					break;
+
+				case "Enabled":
+					aObjects = from bot in aObjects orderby bot.Enabled select bot;
+					break;
+			}
+
+			if (aSortMode == "desc")
+			{
+				aObjects = aObjects.Reverse();
+			}
+
+			return aObjects;
 		}
 
 		#endregion
