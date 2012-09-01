@@ -1,5 +1,5 @@
 // 
-//  AObjects.cs
+//  AObject.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
