@@ -17,15 +17,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 using log4net;
 
 using XG.Core;
 using XG.Server.Helper;
-using XG.Server.Plugin.Backend;
-using XG.Server.Plugin.General;
+using XG.Server.Plugin;
 
 namespace XG.Server
 {
@@ -40,53 +38,46 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(MainInstance));
+		static readonly ILog _log = LogManager.GetLogger(typeof(MainInstance));
 
-		private IrcParser ircParser;
-		private ServerHandler serverHandler;
+		IrcParser _ircParser;
+		ServerHandler _serverHandler;
 
-		private XG.Core.Repository.Object objectRepository;
-		private XG.Core.Repository.Object ObjectRepository
+		Servers _server;
+		Servers ObjectRepository
 		{
-			get { return this.objectRepository; }
+			get { return _server; }
 			set
 			{
-				if(this.objectRepository != null)
+				if(_server != null)
 				{
-					this.objectRepository.ChildAddedEvent -= new ObjectObjectDelegate(ObjectRepository_ChildAddedEventHandler);
-					this.objectRepository.ChildRemovedEvent -= new ObjectObjectDelegate(ObjectRepository_ChildRemovedEventHandler);
-					this.objectRepository.EnabledChangedEvent -= new ObjectDelegate(ObjectRepository_EnabledChangedEventHandler);
+					_server.Added -= new ObjectsDelegate(ServerObjectAdded);
+					_server.Removed -= new ObjectsDelegate(ServerObjectRemoved);
+					_server.EnabledChanged -= new ObjectDelegate(ServerObjectEnabledChanged);
 				}
-				this.objectRepository = value;
-				if(this.objectRepository != null)
+				_server = value;
+				if(_server != null)
 				{
-					this.objectRepository.ChildAddedEvent += new ObjectObjectDelegate(ObjectRepository_ChildAddedEventHandler);
-					this.objectRepository.ChildRemovedEvent += new ObjectObjectDelegate(ObjectRepository_ChildRemovedEventHandler);
-					this.objectRepository.EnabledChangedEvent += new ObjectDelegate(ObjectRepository_EnabledChangedEventHandler);
+					_server.Added += new ObjectsDelegate(ServerObjectAdded);
+					_server.Removed += new ObjectsDelegate(ServerObjectRemoved);
+					_server.EnabledChanged += new ObjectDelegate(ServerObjectEnabledChanged);
 				}
 			}
 		}
 
-		private XG.Core.Repository.File fileRepository;
-		private XG.Core.Repository.File FileRepository
+		Files _files;
+		Files FileRepository
 		{
-			get { return this.fileRepository; }
-			set { this.fileRepository = value; }
+			get { return _files; }
+			set { _files = value; }
 		}
 
-		private List<string> searches;
-		private List<string> Searches
+		Objects _searches;
+		Objects Searches
 		{
-			get { return this.searches; }
-			set { this.searches = value; }
+			get { return _searches; }
+			set { _searches = value; }
 		}
-
-		#endregion
-
-		#region EVENTS
-
-		public event DataTextDelegate SearchAddedEvent;
-		public event DataTextDelegate SearchRemovedEvent;
 
 		#endregion
 
@@ -97,56 +88,56 @@ namespace XG.Server
 		/// </summary>
 		public void Start()
 		{
-			this.ircParser = new IrcParser();
-			this.ircParser.ParsingErrorEvent += new DataTextDelegate(IrcParser_ParsingErrorEventHandler);
+			_ircParser = new IrcParser();
+			_ircParser.ParsingError += new DataTextDelegate(IrcParserParsingError);
 
-			this.serverHandler = new ServerHandler();
-			this.serverHandler.FileRepository = this.fileRepository;
-			this.serverHandler.IrcParser = this.ircParser;
+			_serverHandler = new ServerHandler();
+			_serverHandler.FileRepository = _files;
+			_serverHandler.IrcParser = _ircParser;
 
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database
-			foreach (XGServer serv in this.objectRepository.Servers)
+			foreach (XG.Core.Server serv in _server.All)
 			{
-				foreach (XGServer s in this.objectRepository.Servers)
+				foreach (XG.Core.Server s in _server.All)
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
-						log.Error("Run() removing dupe server " + s.Name);
-						this.objectRepository.RemoveServer(s);
+						_log.Error("Run() removing dupe server " + s.Name);
+						_server.Remove(s);
 					}
 				}
 
-				foreach (XGChannel chan in serv.Channels)
+				foreach (Channel chan in serv.Channels)
 				{
-					foreach (XGChannel c in serv.Channels)
+					foreach (Channel c in serv.Channels)
 					{
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
-							log.Error("Run() removing dupe channel " + c.Name);
+							_log.Error("Run() removing dupe channel " + c.Name);
 							serv.RemoveChannel(c);
 						}
 					}
 
-					foreach (XGBot bot in chan.Bots)
+					foreach (Bot bot in chan.Bots)
 					{
-						foreach (XGBot b in chan.Bots)
+						foreach (Bot b in chan.Bots)
 						{
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
-								log.Error("Run() removing dupe bot " + b.Name);
+								_log.Error("Run() removing dupe bot " + b.Name);
 								chan.RemoveBot(b);
 							}
 						}
 
-						foreach (XGPacket pack in bot.Packets)
+						foreach (Packet pack in bot.Packets)
 						{
-							foreach (XGPacket p in bot.Packets)
+							foreach (Packet p in bot.Packets)
 							{
 								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
-									log.Error("Run() removing dupe Packet " + p.Name);
+									_log.Error("Run() removing dupe Packet " + p.Name);
 									bot.RemovePacket(p);
 								}
 							}
@@ -160,22 +151,22 @@ namespace XG.Server
 			#region RESET
 
 			// reset all objects if the server crashed
-			foreach (XGServer serv in this.objectRepository.Servers)
+			foreach (XG.Core.Server serv in _server.All)
 			{
 				serv.Connected = false;
 				serv.ErrorCode = SocketErrorCode.None;
 
-				foreach (XGChannel chan in serv.Channels)
+				foreach (Channel chan in serv.Channels)
 				{
 					chan.Connected = false;
 					chan.ErrorCode = 0;
 
-					foreach (XGBot bot in chan.Bots)
+					foreach (Bot bot in chan.Bots)
 					{
 						bot.Connected = false;
 						bot.BotState = BotState.Idle;
 
-						foreach (XGPacket pack in bot.Packets)
+						foreach (Packet pack in bot.Packets)
 						{
 							pack.Connected = false;
 						}
@@ -187,14 +178,14 @@ namespace XG.Server
 
 			#region CLEAR OLD DL
 
-			if (this.fileRepository.Files.Count() > 0 && Settings.Instance.ClearReadyDownloads)
+			if (_files.All.Count() > 0 && Settings.Instance.ClearReadyDownloads)
 			{
-				foreach (XGFile file in this.fileRepository.Files)
+				foreach (File file in _files.All)
 				{
 					if (file.Enabled)
 					{
-						this.fileRepository.RemoveFile(file);
-						log.Info("Run() removing ready file " + file.Name);
+						_files.Remove(file);
+						_log.Info("Run() removing ready file " + file.Name);
 					}
 				}
 			}
@@ -203,15 +194,15 @@ namespace XG.Server
 
 			#region CRASH RECOVERY
 
-			if (this.fileRepository.Files.Count() > 0)
+			if (_files.All.Count() > 0)
 			{
-				foreach (XGFile file in this.fileRepository.Files)
+				foreach (File file in _files.All)
 				{
 					// lets check if the directory is still on the harddisk
-					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+					if(!System.IO.Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
-						this.serverHandler.RemoveFile(file);
+						_log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
+						_serverHandler.RemoveFile(file);
 						continue;
 					}
 
@@ -222,24 +213,24 @@ namespace XG.Server
 						bool complete = true;
 						string tmpPath = Settings.Instance.TempPath + file.TmpPath;
 
-						foreach (XGFilePart part in file.Parts)
+						foreach (FilePart part in file.Parts)
 						{
 							// check if the real file and the part is actual the same
-							FileInfo info = new FileInfo(tmpPath + part.StartSize);
+							System.IO.FileInfo info = new System.IO.FileInfo(tmpPath + part.StartSize);
 							if (info.Exists)
 							{
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
 								if (part.CurrentSize != part.StartSize + info.Length)
 								{
-									log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length);
+									_log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length);
 									part.CurrentSize = part.StartSize + info.Length;
 									complete = false;
 								}
 							}
 							else
 							{
-								log.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
-								this.serverHandler.RemovePart(file, part);
+								_log.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
+								_serverHandler.RemovePart(file, part);
 								complete = false;
 							}
 
@@ -255,25 +246,25 @@ namespace XG.Server
 								// check the file for safety
 								if (part.IsChecked && part.PartState == FilePartState.Ready)
 								{
-									XGFilePart next = file.GetNextChild(part) as XGFilePart;
+									FilePart next = file.Next(part) as FilePart;
 									if (next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
 									{
 										complete = false;
 										try
 										{
-											log.Fatal("Run() crash recovery checking " + next.Name);
-											FileStream fileStream = File.Open(this.serverHandler.GetCompletePath(part), FileMode.Open, FileAccess.ReadWrite);
-											BinaryReader fileReader = new BinaryReader(fileStream);
+											_log.Fatal("Run() crash recovery checking " + next.Name);
+											System.IO.FileStream fileStream = System.IO.File.Open(_serverHandler.GetCompletePath(part), System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
+											System.IO.BinaryReader fileReader = new System.IO.BinaryReader(fileStream);
 											// extract the needed refernce bytes
-											fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
+											fileStream.Seek(-Settings.Instance.FileRollbackCheck, System.IO.SeekOrigin.End);
 											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 											fileReader.Close();
 
-											this.serverHandler.CheckNextReferenceBytes(part, bytes);
+											_serverHandler.CheckNextReferenceBytes(part, bytes);
 										}
 										catch (Exception ex)
 										{
-											log.Fatal("Run() crash recovery", ex);
+											_log.Fatal("Run() crash recovery", ex);
 										}
 									}
 								}
@@ -286,7 +277,7 @@ namespace XG.Server
 
 						// check and maybee join the files if something happend the last run
 						// for exaple the disk was full or the rights were not there
-						if (complete && file.Parts.Count() > 0) { this.serverHandler.CheckFile(file); }
+						if (complete && file.Parts.Count() > 0) { _serverHandler.CheckFile(file); }
 					}
 				}
 			}
@@ -294,15 +285,15 @@ namespace XG.Server
 			#endregion
 
 			// connect to all servers which are enabled
-			foreach (XGServer serv in this.objectRepository.Servers)
+			foreach (XG.Core.Server serv in _server.All)
 			{
 				// TODO check this
 				serv.Parent = null;
-				serv.Parent = this.objectRepository;
+				serv.Parent = _server;
 
 				if (serv.Enabled)
 				{
-					this.serverHandler.ConnectServer(serv);
+					_serverHandler.ConnectServer(serv);
 				}
 			}
 		}
@@ -313,9 +304,9 @@ namespace XG.Server
 		public void Stop()
 		{
 			// TODO stop server plugins
-			foreach (XGServer serv in objectRepository.Servers)
+			foreach (XG.Core.Server serv in _server.All)
 			{
-				this.serverHandler.DisconnectServer(serv);
+				_serverHandler.DisconnectServer(serv);
 			}
 		}
 
@@ -323,26 +314,24 @@ namespace XG.Server
 
 		#region SERVER BACKEND PLUGIN
 
-		public void AddServerBackendPlugin(AServerBackendPlugin aPlugin)
+		public void AddServerBackendPlugin(ABackendPlugin aPlugin)
 		{
-			this.ObjectRepository = aPlugin.GetObjectRepository();
-			this.FileRepository = aPlugin.GetFileRepository();
-			this.Searches = aPlugin.GetSearchRepository();
+			ObjectRepository = aPlugin.LoadServers();
+			FileRepository = aPlugin.LoadFiles();
+			Searches = aPlugin.LoadSearches();
 
-			this.AddServerPlugin(aPlugin);
+			AddServerPlugin(aPlugin);
 		}
 
 		#endregion
 
 		#region SERVER PLUGIN
 
-		public void AddServerPlugin(AServerGeneralPlugin aPlugin)
+		public void AddServerPlugin(APlugin aPlugin)
 		{
-			aPlugin.ObjectRepository = this.ObjectRepository;
-			aPlugin.FileRepository = this.FileRepository;
-			aPlugin.Searches = this.Searches;
-
-			aPlugin.Parent = this;
+			aPlugin.Servers = ObjectRepository;
+			aPlugin.Files = FileRepository;
+			aPlugin.Searches = Searches;
 
 			aPlugin.Start();
 		}
@@ -351,82 +340,60 @@ namespace XG.Server
 
 		#region EVENTHANDLER
 
-		private void ObjectRepository_ChildAddedEventHandler(XGObject aParent, XGObject aObj)
+		void ServerObjectAdded(AObject aParent, AObject aObj)
 		{
-			if(aObj.GetType() == typeof(XGServer))
+			if(aObj is XG.Core.Server)
 			{
-				XGServer aServer = aObj as XGServer;
+				XG.Core.Server aServer = aObj as XG.Core.Server;
 
-				log.Info("RootObject_ChildAddedEventHandler(" + aServer.Name + ")");
-				this.serverHandler.ConnectServer(aServer);
+				_log.Info("RootObject_ChildAddedEventHandler(" + aServer.Name + ")");
+				_serverHandler.ConnectServer(aServer);
 			}
 		}
 
-		private void ObjectRepository_ChildRemovedEventHandler(XGObject aParent, XGObject aObj)
+		void ServerObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if(aObj.GetType() == typeof(XGServer))
+			if(aObj is XG.Core.Server)
 			{
-				XGServer aServer = aObj as XGServer;
+				XG.Core.Server aServer = aObj as XG.Core.Server;
 
 				aServer.Enabled = false;
 				aServer.Commit();
 
-				log.Info("RootObject_ChildRemovedEventHandler(" + aServer.Name + ")");
-				this.serverHandler.DisconnectServer(aServer);
+				_log.Info("RootObject_ChildRemovedEventHandler(" + aServer.Name + ")");
+				_serverHandler.DisconnectServer(aServer);
 			}
 		}
 
-		private void ObjectRepository_EnabledChangedEventHandler(XGObject aObj)
+		void ServerObjectEnabledChanged(AObject aObj)
 		{
-			if (aObj.GetType() == typeof(XGServer))
+			if(aObj is XG.Core.Server)
 			{
+				XG.Core.Server aServer = aObj as XG.Core.Server;
+
 				if(aObj.Enabled)
 				{
-					this.serverHandler.ConnectServer(aObj as XGServer);
+					_serverHandler.ConnectServer(aServer);
 				}
 				else
 				{
-					this.serverHandler.DisconnectServer(aObj as XGServer);
+					_serverHandler.DisconnectServer(aServer);
 				}
 			}
 		}
 
-		private void IrcParser_ParsingErrorEventHandler(string aData)
+		void IrcParserParsingError(string aData)
 		{
 			lock (this)
 			{
 				try
 				{
-					StreamWriter sw = new StreamWriter(File.OpenWrite(Settings.Instance.ParsingErrorFile));
-					sw.BaseStream.Seek(0, SeekOrigin.End);
+					System.IO.StreamWriter sw = new System.IO.StreamWriter(System.IO.File.OpenWrite(Settings.Instance.ParsingErrorFile));
+					sw.BaseStream.Seek(0, System.IO.SeekOrigin.End);
 					sw.WriteLine(aData.Normalize());
 					sw.Close();
 				}
 				catch (Exception) { }
-			}
-		}
-
-		#endregion
-
-		#region SEARCH
-
-		public void AddSearch(string aSearch)
-		{
-			this.searches.Add(aSearch);
-
-			if (this.SearchAddedEvent != null)
-			{
-				this.SearchAddedEvent(aSearch);
-			}
-		}
-
-		public void RemoveSearch(string aSearch)
-		{
-			this.searches.Remove(aSearch);
-
-			if (this.SearchRemovedEvent != null)
-			{
-				this.SearchRemovedEvent(aSearch);
 			}
 		}
 

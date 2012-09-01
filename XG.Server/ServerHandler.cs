@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -27,13 +26,11 @@ using System.Threading;
 using log4net;
 
 using XG.Core;
-using XG.Server.Connection;
 using XG.Server.Helper;
 
 namespace XG.Server
 {
-	public delegate void DownloadDelegate(XGPacket aPack, Int64 aChunk, IPAddress aIp, int aPort);
-	public delegate void PacketBotConnectDelegate(XGPacket aPack, BotConnection aCon);
+	public delegate void DownloadDelegate(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort);
 
 	/// <summary>
 	/// This class describes a irc server connection handler
@@ -48,46 +45,46 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		private static readonly ILog myLog = LogManager.GetLogger(typeof(ServerHandler));
+		static readonly ILog _log = LogManager.GetLogger(typeof(ServerHandler));
 
-		private IrcParser ircParser;
+		IrcParser _ircParser;
 		public IrcParser IrcParser
 		{
 			set
 			{
-				if(this.ircParser != null)
+				if(_ircParser != null)
 				{
-					this.ircParser.Parent = null;
-					this.ircParser.AddDownloadEvent -= new DownloadDelegate (IrcParser_AddDownloadEventHandler);
-					this.ircParser.RemoveDownloadEvent -= new BotDelegate (IrcParser_RemoveDownloadEventHandler);
+					_ircParser.Parent = null;
+					_ircParser.AddDownload -= new DownloadDelegate (IrcParserAddDownload);
+					_ircParser.RemoveDownload -= new BotDelegate (IrcParserRemoveDownload);
 				}
-				this.ircParser = value;
-				if(this.ircParser != null)
+				_ircParser = value;
+				if(_ircParser != null)
 				{
-					this.ircParser.Parent = this;
-					this.ircParser.AddDownloadEvent += new DownloadDelegate (IrcParser_AddDownloadEventHandler);
-					this.ircParser.RemoveDownloadEvent += new BotDelegate (IrcParser_RemoveDownloadEventHandler);
+					_ircParser.Parent = this;
+					_ircParser.AddDownload += new DownloadDelegate (IrcParserAddDownload);
+					_ircParser.RemoveDownload += new BotDelegate (IrcParserRemoveDownload);
 				}
 			}
 		}
 
-		private XG.Core.Repository.File fileRepository;
-		public XG.Core.Repository.File FileRepository
+		Files _files;
+		public Files FileRepository
 		{
 			set
 			{
-				if(this.fileRepository != null)
+				if(_files != null)
 				{
 				}
-				this.fileRepository = value;
-				if(this.fileRepository != null)
+				_files = value;
+				if(_files != null)
 				{
 				}
 			}
 		}
 
-		private Dictionary<XGServer, ServerConnection> servers;
-		private Dictionary<XGPacket, BotConnection> downloads;
+		Dictionary<XG.Core.Server, ServerConnection> _servers;
+		Dictionary<Packet, BotConnection> _downloads;
 
 		#endregion
 
@@ -95,12 +92,12 @@ namespace XG.Server
 
 		public ServerHandler()
 		{
-			this.servers = new Dictionary<XGServer, ServerConnection>();
-			this.downloads = new Dictionary<XGPacket, BotConnection>();
+			_servers = new Dictionary<XG.Core.Server, ServerConnection>();
+			_downloads = new Dictionary<Packet, BotConnection>();
 
 			// create my stuff if its not there
-			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
-			new DirectoryInfo(Settings.Instance.TempPath).Create();
+			new System.IO.DirectoryInfo(Settings.Instance.ReadyPath).Create();
+			new System.IO.DirectoryInfo(Settings.Instance.TempPath).Create();
 
 			// start the timed tasks
 			new Thread(new ThreadStart(RunBotWatchdog)).Start();
@@ -115,34 +112,34 @@ namespace XG.Server
 		/// Connects to the given server by using a new ServerConnnect class
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void ConnectServer (XGServer aServer)
+		public void ConnectServer (XG.Core.Server aServer)
 		{
-			if (!this.servers.ContainsKey (aServer))
+			if (!_servers.ContainsKey (aServer))
 			{
 				ServerConnection con = new ServerConnection ();
 				con.Parent = this;
 				con.Server = aServer;
-				con.IrcParser = this.ircParser;
+				con.IrcParser = _ircParser;
 
 				con.Connection = new XG.Server.Connection.Connection();
 				con.Connection.Hostname = aServer.Name;
 				con.Connection.Port = aServer.Port;
 				con.Connection.MaxData = 0;
 
-				this.servers.Add (aServer, con);
+				_servers.Add (aServer, con);
 
-				con.ConnectedEvent += new ServerDelegate(ServerConnection_ConnectedEventHandler);
-				con.DisconnectedEvent += new ServerSocketErrorDelegate(ServerConnection_DisconnectedEventHandler);
+				con.Connected += new ServerDelegate(ServerConnectionConnected);
+				con.Disconnected += new ServerSocketErrorDelegate(ServerConnectionDisconnected);
 
 				// start a new thread wich connects to the given server
 				new Thread(delegate() { con.Connection.Connect(); }).Start();
 			}
 			else
 			{
-				myLog.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
+				_log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
 			}
 		}
-		private void ServerConnection_ConnectedEventHandler(XGServer aServer)
+		void ServerConnectionConnected(XG.Core.Server aServer)
 		{
 			// nom nom nom ...
 		}
@@ -151,23 +148,23 @@ namespace XG.Server
 		/// Disconnects the given server
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void DisconnectServer(XGServer aServer)
+		public void DisconnectServer(XG.Core.Server aServer)
 		{
-			if (this.servers.ContainsKey(aServer))
+			if (_servers.ContainsKey(aServer))
 			{
-				ServerConnection con = servers[aServer];
+				ServerConnection con = _servers[aServer];
 				con.Connection.Disconnect();
 			}
 			else
 			{
-				myLog.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
+				_log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
-		private void ServerConnection_DisconnectedEventHandler(XGServer aServer, SocketErrorCode aValue)
+		void ServerConnectionDisconnected(XG.Core.Server aServer, SocketErrorCode aValue)
 		{
-			if (this.servers.ContainsKey (aServer))
+			if (_servers.ContainsKey (aServer))
 			{
-				ServerConnection con = this.servers[aServer];
+				ServerConnection con = _servers[aServer];
 
 				if (aServer.Enabled)
 				{
@@ -194,39 +191,39 @@ namespace XG.Server
 //								time = Settings.Instance.ReconnectWaitTimeReallyLong;
 //								break;
 						}
-						new Timer(new TimerCallback(this.ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
+						new Timer(new TimerCallback(ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
 					}
 				}
 				else
 				{
-					con.ConnectedEvent -= new ServerDelegate(ServerConnection_ConnectedEventHandler);
-					con.DisconnectedEvent -= new ServerSocketErrorDelegate(ServerConnection_DisconnectedEventHandler);
+					con.Connected -= new ServerDelegate(ServerConnectionConnected);
+					con.Disconnected -= new ServerSocketErrorDelegate(ServerConnectionDisconnected);
 
 					con.Server = null;
 					con.IrcParser = null;
 
-					this.servers.Remove(aServer);
+					_servers.Remove(aServer);
 				}
 
 				con.Connection = null;
 			}
 			else
 			{
-				myLog.Error("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
+				_log.Error("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
 			}
 		}
 
-		private void ReconnectServer(object aServer)
+		void ReconnectServer(object aServer)
 		{
-			XGServer tServer = aServer as XGServer;
+			XG.Core.Server tServer = aServer as XG.Core.Server;
 
-			if (this.servers.ContainsKey(tServer))
+			if (_servers.ContainsKey(tServer))
 			{
-				ServerConnection con = this.servers[tServer];
+				ServerConnection con = _servers[tServer];
 
 				if (tServer.Enabled)
 				{
-					myLog.Error("ReconnectServer(" + tServer.Name + ")");
+					_log.Error("ReconnectServer(" + tServer.Name + ")");
 
 					// TODO do we need a new connection here?
 					con.Connection = new XG.Server.Connection.Connection();
@@ -239,7 +236,7 @@ namespace XG.Server
 			}
 			else
 			{
-				myLog.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
+				_log.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
 			}
 		}
 
@@ -254,11 +251,11 @@ namespace XG.Server
 		/// <param name="aChunk"></param>
 		/// <param name="aIp"></param>
 		/// <param name="aPort"></param>
-		private void IrcParser_AddDownloadEventHandler(XGPacket aPack, Int64 aChunk, IPAddress aIp, int aPort)
+		void IrcParserAddDownload(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
 			new Thread(delegate()
 			{
-				if (!this.downloads.ContainsKey(aPack))
+				if (!_downloads.ContainsKey(aPack))
 				{
 					BotConnection con = new BotConnection();
 					con.Parent = this;
@@ -270,26 +267,26 @@ namespace XG.Server
 					con.Connection.Port = aPort;
 					con.Connection.MaxData = aPack.RealSize - aChunk;
 
-					con.DisconnectedEvent += new PacketBotConnectDelegate(Bot_Disconnected);
-					con.ConnectedEvent += new PacketBotConnectDelegate(Bot_Connected);
+					con.Connected += new PacketBotConnectDelegate(BotConnected);
+					con.Disconnected += new PacketBotConnectDelegate(BotDisconnected);
 
-					this.downloads.Add(aPack, con);
+					_downloads.Add(aPack, con);
 					con.Connection.Connect();
 				}
 				else
 				{
 					// uhh - that should not happen
-					myLog.Error("StartDownload(" + aPack.Name + ") is already downloading");
+					_log.Error("StartDownload(" + aPack.Name + ") is already downloading");
 				}
 			}).Start();
 		}
-		private void Bot_Connected (XGPacket aPack, BotConnection aCon)
+		void BotConnected (Packet aPack, BotConnection aCon)
 		{
 		}
 
-		private void IrcParser_RemoveDownloadEventHandler (XGBot aBot)
+		void IrcParserRemoveDownload (Bot aBot)
 		{
-			foreach (KeyValuePair<XGPacket, BotConnection> kvp in this.downloads)
+			foreach (KeyValuePair<Packet, BotConnection> kvp in _downloads)
 			{
 				if (kvp.Key.Parent == aBot)
 				{
@@ -298,39 +295,40 @@ namespace XG.Server
 				}
 			}
 		}
-		private void Bot_Disconnected(XGPacket aPacket, BotConnection aCon)
+		void BotDisconnected(Packet aPacket, BotConnection aCon)
 		{
 			aCon.Packet = null;
 			aCon.Connection = null;
 
-			if (downloads.ContainsKey(aPacket))
+			if (_downloads.ContainsKey(aPacket))
 			{
-				aCon.DisconnectedEvent -= new PacketBotConnectDelegate(Bot_Disconnected);
-				aCon.ConnectedEvent -= new PacketBotConnectDelegate(Bot_Connected);
-				this.downloads.Remove(aPacket);
+				aCon.Connected -= new PacketBotConnectDelegate(BotConnected);
+				aCon.Disconnected -= new PacketBotConnectDelegate(BotDisconnected);
+				_downloads.Remove(aPacket);
 
 				try
 				{
 					// if the connection never connected, there will be no part!
-					if(aCon.Part != null)
+					// and if we manually killed stopped the packet there will be no parent of the part
+					if(aCon.Part != null && aCon.Part.Parent != null)
 					{
 						// do this here because the bothandler sets the part state and after this we can check the file
-						this.CheckFile(aCon.Part.Parent);
+						CheckFile(aCon.Part.Parent);
 					}
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("bot_Disconnected()", ex);
+					_log.Fatal("bot_Disconnected()", ex);
 				}
 
 				try
 				{
-					ServerConnection sc = this.servers[aPacket.Parent.Parent.Parent];
+					ServerConnection sc = _servers[aPacket.Parent.Parent.Parent];
 					sc.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime, false);
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("bot_Disconnected() request", ex);
+					_log.Fatal("bot_Disconnected() request", ex);
 				}
 			}
 		}
@@ -346,7 +344,7 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aFile"></param>
 		/// <returns></returns>
-		public string GetCompletePath(XGFile aFile)
+		public string GetCompletePath(File aFile)
 		{
 			return Settings.Instance.TempPath + aFile.TmpPath;
 		}
@@ -356,9 +354,9 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aPart"></param>
 		/// <returns></returns>
-		public string GetCompletePath(XGFilePart aPart)
+		public string GetCompletePath(FilePart aPart)
 		{
-			return this.GetCompletePath(aPart.Parent) + aPart.StartSize;
+			return GetCompletePath(aPart.Parent) + aPart.StartSize;
 		}
 
 		#endregion
@@ -371,19 +369,19 @@ namespace XG.Server
 		/// <param name="aName"></param>
 		/// <param name="aSize"></param>
 		/// <returns></returns>
-		private XGFile GetFile(string aName, Int64 aSize)
+		File GetFile(string aName, Int64 aSize)
 		{
 			string name = XGHelper.ShrinkFileName(aName, aSize);
-			foreach (XGFile file in this.fileRepository.Files)
+			foreach (File file in _files.All)
 			{
 				//Console.WriteLine(file.TmpPath + " - " + name);
 				if (file.TmpPath == name)
 				{
 					// lets check if the directory is still on the harddisk
-					if(!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+					if(!System.IO.Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						myLog.Warn("GetFile(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
-						this.RemoveFile(file);
+						_log.Warn("GetFile(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
+						RemoveFile(file);
 						break;
 					}
 					return file;
@@ -398,20 +396,20 @@ namespace XG.Server
 		/// <param name="aName"></param>
 		/// <param name="aSize"></param>
 		/// <returns></returns>
-		public XGFile GetNewFile(string aName, Int64 aSize)
+		public File GetNewFile(string aName, Int64 aSize)
 		{
-			XGFile tFile = this.GetFile(aName, aSize);
+			File tFile = GetFile(aName, aSize);
 			if (tFile == null)
 			{
-				tFile = new XGFile(aName, aSize);
-				this.fileRepository.AddFile(tFile);
+				tFile = new File(aName, aSize);
+				_files.Add(tFile);
 				try
 				{
-					Directory.CreateDirectory(Settings.Instance.TempPath + tFile.TmpPath);
+					System.IO.Directory.CreateDirectory(Settings.Instance.TempPath + tFile.TmpPath);
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("GetNewFile()", ex);
+					_log.Fatal("GetNewFile()", ex);
 					tFile = null;
 				}
 			}
@@ -419,17 +417,17 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// removes a XGFile
+		/// removes a File
 		/// stops all running part connections and removes the file
 		/// </summary>
 		/// <param name="aFile"></param>
-		public void RemoveFile(XGFile aFile)
+		public void RemoveFile(File aFile)
 		{
-			myLog.Info("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")");
+			_log.Info("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")");
 
 			// check if this file is currently downloaded
 			bool skip = false;
-			foreach (XGFilePart part in aFile.Parts)
+			foreach (FilePart part in aFile.Parts)
 			{
 				// disable the packet if it is active
 				if (part.PartState == FilePartState.Open)
@@ -443,8 +441,8 @@ namespace XG.Server
 			}
 			if (skip) { return; }
 
-			Helper.Filesystem.DeleteDirectory(this.GetCompletePath(aFile));
-			this.fileRepository.RemoveFile(aFile);
+			Helper.Filesystem.DeleteDirectory(GetCompletePath(aFile));
+			_files.Remove(aFile);
 		}
 
 		#endregion
@@ -457,24 +455,24 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		/// <param name="aSize"></param>
 		/// <returns></returns>
-		public XGFilePart GetPart(XGFile aFile, Int64 aSize)
+		public FilePart GetPart(File aFile, Int64 aSize)
 		{
-			XGFilePart returnPart = null;
+			FilePart returnPart = null;
 
-			IEnumerable<XGFilePart> parts = aFile.Parts;
+			IEnumerable<FilePart> parts = aFile.Parts;
 			if (parts.Count() == 0 && aSize == 0)
 			{
-				returnPart = new XGFilePart();
+				returnPart = new FilePart();
 				returnPart.StartSize = aSize;
 				returnPart.CurrentSize = aSize;
 				returnPart.StopSize = aFile.Size;
 				returnPart.IsChecked = true;
-				aFile.AddPart(returnPart);
+				aFile.Add(returnPart);
 			}
 			else
 			{
 				// first search incomplete parts not in use
-				foreach (XGFilePart part in parts)
+				foreach (FilePart part in parts)
 				{
 					Int64 size = part.CurrentSize - Settings.Instance.FileRollback;
 					if (part.PartState == FilePartState.Closed && (size < 0 ? 0 : size) == aSize)
@@ -487,14 +485,14 @@ namespace XG.Server
 				if (returnPart == null && Settings.Instance.EnableMultiDownloads)
 				{
 					// now search incomplete parts in use
-					foreach (XGFilePart part in parts)
+					foreach (FilePart part in parts)
 					{
 						if (part.PartState == FilePartState.Open)
 						{
 							// split the part
 							if (part.StartSize < aSize && part.StopSize > aSize)
 							{
-								returnPart = new XGFilePart();
+								returnPart = new FilePart();
 								returnPart.StartSize = aSize;
 								returnPart.CurrentSize = aSize;
 								returnPart.StopSize = part.StopSize;
@@ -502,7 +500,7 @@ namespace XG.Server
 								// update previous part
 								part.StopSize = aSize;
 								part.Commit();
-								aFile.AddPart(returnPart);
+								aFile.Add(returnPart);
 								break;
 							}
 						}
@@ -517,19 +515,19 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aFile"></param>
 		/// <param name="aPart"></param>
-		public void RemovePart(XGFile aFile, XGFilePart aPart)
+		public void RemovePart(File aFile, FilePart aPart)
 		{
-			myLog.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
+			_log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
 
-			IEnumerable<XGFilePart> parts = aFile.Parts;
-			foreach (XGFilePart part in parts)
+			IEnumerable<FilePart> parts = aFile.Parts;
+			foreach (FilePart part in parts)
 			{
 				if (part.StopSize == aPart.StartSize)
 				{
 					part.StopSize = aPart.StopSize;
 					if (part.PartState == FilePartState.Ready)
 					{
-						myLog.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize);
+						_log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize);
 						part.PartState = FilePartState.Closed;
 						part.Commit();
 						break;
@@ -537,11 +535,11 @@ namespace XG.Server
 				}
 			}
 
-			aFile.RemovePart(aPart);
-			if (aFile.Parts.Count() == 0) { this.RemoveFile(aFile); }
+			aFile.Remove(aPart);
+			if (aFile.Parts.Count() == 0) { RemoveFile(aFile); }
 			else
 			{
-				Helper.Filesystem.DeleteFile(this.GetCompletePath(aPart));
+				Helper.Filesystem.DeleteFile(GetCompletePath(aPart));
 			}
 		}
 
@@ -557,16 +555,16 @@ namespace XG.Server
 		/// <returns>-1 if there is no part, 0<= if there is a new part available</returns>
 		public Int64 GetNextAvailablePartSize(string aName, Int64 aSize)
 		{
-			XGFile tFile = this.GetFile(aName, aSize);
+			File tFile = GetFile(aName, aSize);
 			if (tFile == null) { return 0; }
 
 			Int64 nextSize = -1;
-			IEnumerable<XGFilePart> parts = tFile.Parts;
+			IEnumerable<FilePart> parts = tFile.Parts;
 			if (parts.Count() == 0) { nextSize = 0; }
 			else
 			{
 				// first search incomplete parts not in use
-				foreach (XGFilePart part in parts)
+				foreach (FilePart part in parts)
 				{
 					if (part.PartState == FilePartState.Closed)
 					{
@@ -584,7 +582,7 @@ namespace XG.Server
 					Int64 startChunk = 0;
 
 					// now search incomplete parts in use
-					foreach (XGFilePart part in parts)
+					foreach (FilePart part in parts)
 					{
 						if (part.PartState == FilePartState.Open)
 						{
@@ -615,7 +613,7 @@ namespace XG.Server
 		public void CheckNextReferenceBytes(object aObj)
 		{
 			PartBytesObject pbo = aObj as PartBytesObject;
-			this.CheckNextReferenceBytes(pbo.Part, pbo.Bytes, true);
+			CheckNextReferenceBytes(pbo.Part, pbo.Bytes, true);
 		}
 
 		/// <summary>
@@ -624,9 +622,9 @@ namespace XG.Server
 		/// <param name="aPart"></param>
 		/// <param name="aBytes"></param>
 		/// <returns></returns>
-		public Int64 CheckNextReferenceBytes(XGFilePart aPart, byte[] aBytes)
+		public Int64 CheckNextReferenceBytes(FilePart aPart, byte[] aBytes)
 		{
-			return this.CheckNextReferenceBytes(aPart, aBytes, false);
+			return CheckNextReferenceBytes(aPart, aBytes, false);
 		}
 
 		/// <summary>
@@ -636,13 +634,13 @@ namespace XG.Server
 		/// <param name="aBytes"></param>
 		/// <param name="aThreaded"></param>
 		/// <returns></returns>
-		private Int64 CheckNextReferenceBytes(XGFilePart aPart, byte[] aBytes, bool aThreaded)
+		Int64 CheckNextReferenceBytes(FilePart aPart, byte[] aBytes, bool aThreaded)
 		{
-			XGFile tFile = aPart.Parent;
-			IEnumerable<XGFilePart> parts = tFile.Parts;
-			myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() + " parts called");
+			File tFile = aPart.Parent;
+			IEnumerable<FilePart> parts = tFile.Parts;
+			_log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() + " parts called");
 
-			foreach (XGFilePart part in parts)
+			foreach (FilePart part in parts)
 			{
 				if (part.StartSize == aPart.StopSize)
 				{
@@ -653,8 +651,8 @@ namespace XG.Server
 					if (part.PartState == FilePartState.Open)
 					{
 						BotConnection bc = null;
-						XGPacket pack = null;
-						foreach (KeyValuePair<XGPacket, BotConnection> kvp in this.downloads)
+						Packet pack = null;
+						foreach (KeyValuePair<Packet, BotConnection> kvp in _downloads)
 						{
 							if (kvp.Value.Part == part)
 							{
@@ -667,16 +665,16 @@ namespace XG.Server
 						{
 							if (!XGHelper.IsEqual(bc.ReferenceBytes, aBytes))
 							{
-								myLog.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
+								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
 								bc.RemovePart = true;
 								bc.Connection.Disconnect();
 								pack.Enabled = false;
-								this.RemovePart(tFile, part);
+								RemovePart(tFile, part);
 								return part.StopSize;
 							}
 							else
 							{
-								myLog.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked");
+								_log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked");
 								part.IsChecked = true;
 								part.Commit();
 								return 0;
@@ -684,24 +682,24 @@ namespace XG.Server
 						}
 						else
 						{
-							myLog.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no bot connect");
+							_log.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no bot connect");
 							return 0;
 						}
 					}
 					// it is already ready
 					else if (part.PartState == FilePartState.Closed || part.PartState == FilePartState.Ready)
 					{
-						string fileName = this.GetCompletePath(part);
+						string fileName = GetCompletePath(part);
 						try
 						{
-							BinaryReader reader = new BinaryReader(File.Open(fileName, FileMode.Open, FileAccess.Read));
+							System.IO.BinaryReader reader = Filesystem.OpenFileReadable(fileName);
 							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 							reader.Close();
 
 							if (!XGHelper.IsEqual(bytes, aBytes))
 							{
-								myLog.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize);
-								this.RemovePart(tFile, part);
+								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize);
+								RemovePart(tFile, part);
 								return part.StopSize;
 							}
 							else
@@ -714,10 +712,10 @@ namespace XG.Server
 									// file is not the last, so check the next one
 									if (part.StopSize < tFile.Size)
 									{
-										FileStream fileStream = File.Open(fileName, FileMode.Open, FileAccess.ReadWrite);
-										BinaryReader fileReader = new BinaryReader(fileStream);
+										System.IO.FileStream fileStream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
+										System.IO.BinaryReader fileReader = new System.IO.BinaryReader(fileStream);
 										// extract the needed refernce bytes
-										fileStream.Seek(-Settings.Instance.FileRollbackCheck, SeekOrigin.End);
+										fileStream.Seek(-Settings.Instance.FileRollbackCheck, System.IO.SeekOrigin.End);
 										bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 										// and truncate the file
 										//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheck);
@@ -727,7 +725,7 @@ namespace XG.Server
 										// dont open a new thread if we are already threaded
 										if (aThreaded)
 										{
-											this.CheckNextReferenceBytes(part, bytes, false);
+											CheckNextReferenceBytes(part, bytes, false);
 										}
 										else
 										{
@@ -739,12 +737,12 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							myLog.Fatal("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " + part.StartSize + "", ex);
+							_log.Fatal("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " + part.StartSize + "", ex);
 						}
 					}
 					else
 					{
-						myLog.Error("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") do not know what to do with part " + part.StartSize);
+						_log.Error("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") do not know what to do with part " + part.StartSize);
 					}
 
 					break;
@@ -761,21 +759,21 @@ namespace XG.Server
 		/// Checks a file and if it is complete it starts a thread which join the file
 		/// </summary>
 		/// <param name="aFile"></param>
-		public void CheckFile(XGFile aFile)
+		public void CheckFile(File aFile)
 		{
 			lock (aFile.Locked)
 			{
-				myLog.Info("CheckFile(" + aFile.Name + ")");
+				_log.Info("CheckFile(" + aFile.Name + ")");
 				if (aFile.Parts.Count() == 0) { return; }
 
 				bool complete = true;
-				IEnumerable<XGFilePart> parts = aFile.Parts;
-				foreach (XGFilePart part in parts)
+				IEnumerable<FilePart> parts = aFile.Parts;
+				foreach (FilePart part in parts)
 				{
 					if (part.PartState != FilePartState.Ready)
 					{
 						complete = false;
-						myLog.Info("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete");
+						_log.Info("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete");
 						break;
 					}
 				}
@@ -787,17 +785,17 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// Joins all parts of a XGFile together by doing this
+		/// Joins all parts of a File together by doing this
 		/// - disabling all matching packets to avoid the same download again
 		/// - merging the file and checking the file size
 		/// </summary>
 		/// <param name="aObject"></param>
 		public void JoinCompleteParts(object aObject)
 		{
-			XGFile tFile = aObject as XGFile;
+			File tFile = aObject as File;
 			lock (tFile.Locked)
 			{
-				myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting");
+				_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting");
 
 				#region DISABLE ALL MATCHING PACKETS
 
@@ -805,23 +803,23 @@ namespace XG.Server
 
 				string fileName = XGHelper.ShrinkFileName(tFile.Name, 0);
 
-				foreach (KeyValuePair<XGServer, ServerConnection> kvp in this.servers)
+				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
 				{
-					XGServer tServ = kvp.Key;
-					foreach (XGChannel tChan in tServ.Channels)
+					XG.Core.Server tServ = kvp.Key;
+					foreach (Channel tChan in tServ.Channels)
 					{
 						if (tChan.Connected)
 						{
-							foreach (XGBot tBot in tChan.Bots)
+							foreach (Bot tBot in tChan.Bots)
 							{
-								foreach (XGPacket tPack in tBot.Packets)
+								foreach (Packet tPack in tBot.Packets)
 								{
 									if (tPack.Enabled && (
 										XGHelper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) ||
 										XGHelper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
 										))
 									{
-										myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name);
+										_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name);
 										tPack.Enabled = false;
 										tPack.Commit();
 									}
@@ -840,19 +838,18 @@ namespace XG.Server
 
 				bool error = true;
 				bool deleteOnError = true;
-				IEnumerable<XGFilePart> parts = tFile.Parts;
+				IEnumerable<FilePart> parts = tFile.Parts;
 				string fileReady = Settings.Instance.ReadyPath + tFile.Name;
 
 				try
 				{
-					FileStream stream = File.Open(fileReady, FileMode.Create, FileAccess.Write);
-					BinaryWriter writer = new BinaryWriter(stream);
-					foreach (XGFilePart part in parts)
+					System.IO.FileStream stream = System.IO.File.Open(fileReady, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+					System.IO.BinaryWriter writer = new System.IO.BinaryWriter(stream);
+					foreach (FilePart part in parts)
 					{
 						try
 						{
-							FileStream fs = File.Open(this.GetCompletePath(part), FileMode.Open, FileAccess.Read);
-							BinaryReader reader = new BinaryReader(fs);
+							System.IO.BinaryReader reader = Filesystem.OpenFileReadable(GetCompletePath(part));
 							byte[] data;
 							while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerRead)).Length > 0)
 							{
@@ -863,7 +860,7 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							myLog.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + "", ex);
+							_log.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + "", ex);
 							// dont delete the source if the disk is full!
 							// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
 							// TODO this doesnt work :(
@@ -875,11 +872,11 @@ namespace XG.Server
 					writer.Close();
 					stream.Close();
 
-					Int64 size = new FileInfo(fileReady).Length;
+					Int64 size = new System.IO.FileInfo(fileReady).Length;
 					if (size == tFile.Size)
 					{
 						Helper.Filesystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
-						myLog.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build");
+						_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build");
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.FilesCompleted);
@@ -891,15 +888,15 @@ namespace XG.Server
 						// maybee clear it
 						if (Settings.Instance.ClearReadyDownloads)
 						{
-							this.RemoveFile(tFile);
+							RemoveFile(tFile);
 						}
 
 						// great, all went right, so lets check what we can do with the file
-						new Thread(delegate() { this.HandleFile(fileReady); }).Start();
+						new Thread(delegate() { HandleFile(fileReady); }).Start();
 					}
 					else
 					{
-						myLog.Error("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size);
+						_log.Error("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size);
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.FilesBroken);
@@ -907,7 +904,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make", ex);
+					_log.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make", ex);
 
 					// statistics
 					Statistic.Instance.Increase(StatisticType.FilesBroken);
@@ -917,7 +914,7 @@ namespace XG.Server
 				{
 					// the creation was not successfull, so delete the files and parts
 					Helper.Filesystem.DeleteFile(fileReady);
-					this.RemoveFile(tFile);
+					RemoveFile(tFile);
 				}
 			}
 		}
@@ -928,7 +925,7 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		public void HandleFile(string aFile)
 		{
-			if (aFile != null && aFile != "")
+			if (!string.IsNullOrEmpty(aFile))
 			{
 				int pos = aFile.LastIndexOf('/');
 				string folder = aFile.Substring(0, pos);
@@ -940,7 +937,7 @@ namespace XG.Server
 
 				foreach (string line in Settings.InstanceReload.FileHandler)
 				{
-					if (line == null || line == "") { continue; }
+					if (string.IsNullOrEmpty(line)) { continue; }
 					string[] values = line.Split('#');
 
 					Match tMatch = Regex.Match(file, values[0], RegexOptions.IgnoreCase);
@@ -966,7 +963,7 @@ namespace XG.Server
 							}
 							catch (Exception ex)
 							{
-								myLog.Fatal("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ")", ex);
+								_log.Fatal("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ")", ex);
 							}
 						}
 					}
@@ -980,24 +977,24 @@ namespace XG.Server
 
 		#region TIMER TASKS
 
-		private void RunBotWatchdog()
+		void RunBotWatchdog()
 		{
 			while (true)
 			{
 				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
 
 				int a = 0;
-				foreach (KeyValuePair<XGServer, ServerConnection> kvp in this.servers)
+				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
 				{
 					if (kvp.Value.IsRunning)
 					{
-						foreach (XGChannel tChan in kvp.Key.Channels)
+						foreach (Channel tChan in kvp.Key.Channels)
 						{
 							if (tChan.Connected)
 							{
-								foreach (XGBot tBot in tChan.Bots)
+								foreach (Bot tBot in tChan.Bots)
 								{
-									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.GetOldestActivePacket() == null)
+									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.OldestActivePacket() == null)
 									{
 										a++;
 										tChan.RemoveBot(tBot);
@@ -1007,18 +1004,18 @@ namespace XG.Server
 						}
 					}
 				}
-				if (a > 0) { myLog.Info("RunBotWatchdog() removed " + a + " offline bot(s)"); }
+				if (a > 0) { _log.Info("RunBotWatchdog() removed " + a + " offline bot(s)"); }
 
 				// TODO scan for empty channels and send a "xdcc list" command to all the people in there
 				// in some channels the bots are silent and have the same (no) rights like normal users
 			}
 		}
 
-		private void RunTimer()
+		void RunTimer()
 		{
 			while (true)
 			{
-				foreach (KeyValuePair<XGServer, ServerConnection> kvp in this.servers)
+				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
 				{
 					ServerConnection sc = kvp.Value;
 					if (sc.IsRunning)

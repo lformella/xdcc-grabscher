@@ -39,8 +39,8 @@
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../XG.Lib/log4net.dll" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Plugin.Backend.File" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Plugin.Backend.MySql" />
-    <ProjectReference type="Project" localcopy="True" refto="XG.Server.Plugin.General.Jabber" />
     <ProjectReference type="Project" localcopy="True" refto="XG.Server.Plugin.General.Webserver" />
+    <ProjectReference type="Project" localcopy="True" refto="XG.Server.Plugin.General.Jabber" />
   </References>
   <LanguageParameters StartupObject="XG.Server.Cmd.MainClass" ctype="CSharpProjectParameters" />
 </Project>

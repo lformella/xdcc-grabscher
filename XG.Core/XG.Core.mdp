@@ -29,9 +29,11 @@
     <File subtype="Code" buildaction="Compile" name="File.cs" />
     <File subtype="Code" buildaction="Compile" name="FilePart.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
-    <File subtype="Directory" buildaction="Compile" name="Repository" />
-    <File subtype="Code" buildaction="Compile" name="Repository/File.cs" />
-    <File subtype="Code" buildaction="Compile" name="Repository/Object.cs" />
+    <File subtype="Code" buildaction="Compile" name="AObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="AObjects.cs" />
+    <File subtype="Code" buildaction="Compile" name="Servers.cs" />
+    <File subtype="Code" buildaction="Compile" name="Files.cs" />
+    <File subtype="Code" buildaction="Compile" name="Objects.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

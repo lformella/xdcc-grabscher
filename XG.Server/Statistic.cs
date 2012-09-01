@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using log4net;
-using XG.Core;
 
 namespace XG.Server
 {
@@ -51,9 +50,7 @@ namespace XG.Server
 		BotConnectsOk,
 		BotConnectsFailed,
 
-		SpeedMax,
-		SpeedMin,
-		SpeedAvg
+		SpeedMax
 	}
 
 	[XmlRoot("dictionary")]
@@ -87,7 +84,7 @@ namespace XG.Server
 				TValue value = (TValue)valueSerializer.Deserialize(reader);
 				reader.ReadEndElement();
  
-				this.Add(key, value);
+				Add(key, value);
  
 				reader.ReadEndElement();
 				reader.MoveToContent();
@@ -100,7 +97,7 @@ namespace XG.Server
 			XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
 			XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
  
-			foreach (TKey key in this.Keys)
+			foreach (TKey key in Keys)
 			{
 				writer.WriteStartElement("item");
  
@@ -122,24 +119,24 @@ namespace XG.Server
 	[Serializable()]
 	public class Statistic
 	{
-		private static readonly ILog myLog = LogManager.GetLogger(typeof(Statistic));
+		static readonly ILog _log = LogManager.GetLogger(typeof(Statistic));
 
-		private static object locked = new object();
-		private static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));
+		static object locked = new object();
+		static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));
 
 		[field: NonSerialized()]
-		private static Statistic instance = null;
+		static Statistic instance = null;
 		[field: NonSerialized()]
-		private static object StatisticLock = new object();
+		static object statisticLock = new object();
 
-		private SerializableDictionary<StatisticType, Int64> myValuesInt = new SerializableDictionary<StatisticType, Int64>();
+		SerializableDictionary<StatisticType, Int64> myValuesInt = new SerializableDictionary<StatisticType, Int64>();
 		public SerializableDictionary<StatisticType, Int64> ValuesInt
 		{
 			get { return myValuesInt; }
 			set { myValuesInt = value; }
 		}
 
-		private SerializableDictionary<StatisticType, double> myValuesDouble = new SerializableDictionary<StatisticType, double>();
+		SerializableDictionary<StatisticType, double> myValuesDouble = new SerializableDictionary<StatisticType, double>();
 		public SerializableDictionary<StatisticType, double> ValuesDouble
 		{
 			get { return myValuesDouble; }
@@ -159,7 +156,7 @@ namespace XG.Server
 			}
 		}
 
-		private static Statistic Deserialize()
+		static Statistic Deserialize()
 		{
 			lock(locked)
 			{
@@ -172,13 +169,13 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("Settings.Instance.Deserialize() ", ex);
+					_log.Fatal("Settings.Instance.Deserialize() ", ex);
 					return new Statistic();
 				}
 			}
 		}
 
-		private static void Serialize()
+		static void Serialize()
 		{
 			lock(locked)
 			{
@@ -198,12 +195,12 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("Statistic.Instance.Serialize() ", ex);
+					_log.Fatal("Statistic.Instance.Serialize() ", ex);
 				}
 			}
 		}
 
-		private Statistic()
+		Statistic()
 		{
 		}
 
@@ -214,43 +211,43 @@ namespace XG.Server
 
 		public void Increase(StatisticType aType)
 		{
-			this.Increase(aType, 1);
+			Increase(aType, 1);
 		}
 
 		public void Increase(StatisticType aType, Int64 aValue)
 		{
-			lock(StatisticLock)
+			lock(statisticLock)
 			{
-				if(!this.myValuesInt.ContainsKey(aType)) { this.myValuesInt.Add(aType, aValue); }
-				else { this.myValuesInt[aType] += aValue; }
+				if(!myValuesInt.ContainsKey(aType)) { myValuesInt.Add(aType, aValue); }
+				else { myValuesInt[aType] += aValue; }
 			}
 		}
 
 		public double Get(StatisticType aType)
 		{
-			if(!this.myValuesDouble.ContainsKey(aType))
+			if(!myValuesDouble.ContainsKey(aType))
 			{
-				if(!this.myValuesInt.ContainsKey(aType))
+				if(!myValuesInt.ContainsKey(aType))
 				{
 					return 0;
 				}
 				else
 				{
-					return this.myValuesInt[aType];
+					return myValuesInt[aType];
 				}
 			}
 			else
 			{
-				return this.myValuesDouble[aType];
+				return myValuesDouble[aType];
 			}
 		}
 
 		public void Set(StatisticType aType, double aValue)
 		{
-			lock(StatisticLock)
+			lock(statisticLock)
 			{
-				if(!this.myValuesDouble.ContainsKey(aType)) { this.myValuesDouble.Add(aType, aValue); }
-				else { this.myValuesDouble[aType] = aValue; }
+				if(!myValuesDouble.ContainsKey(aType)) { myValuesDouble.Add(aType, aValue); }
+				else { myValuesDouble[aType] = aValue; }
 			}
 		}
 	}

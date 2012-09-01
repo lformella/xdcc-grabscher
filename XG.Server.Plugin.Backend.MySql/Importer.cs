@@ -15,40 +15,37 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-/**/
-
-using System.IO;
 using HtmlAgilityPack;
+
 using log4net;
+
 using XG.Core;
+using XG.Server.Helper;
 
 namespace XG.Server.Plugin.Backend.MySql
 {
 	public class Importer
 	{
-		private static readonly ILog myLog = LogManager.GetLogger(typeof(Importer));
+		static readonly ILog myLog = LogManager.GetLogger(typeof(Importer));
 
-		private XG.Core.Repository.Object myRootObject;
+		Servers myRootObject;
 
-		public event ObjectObjectDelegate ObjectAddedEvent;
+		public event ObjectsDelegate ObjectAddedEvent;
 
-		public Importer (XG.Core.Repository.Object aRootObject)
+		public Importer (Servers aRootObject)
 		{
-			this.myRootObject = aRootObject;
+			myRootObject = aRootObject;
 		}
 
 		public void Import(string aFile)
 		{
-			if(!File.Exists(aFile))
+#if !WINDOWS			
+			// import routine
+			string str = Filesystem.ReadFile(aFile);
+			if(str != "")
 			{
 				return;
 			}
-#if !WINDOWS			
-			// import routine
-			StreamReader reader = new StreamReader(aFile);
-
-			string str = reader.ReadToEnd();
-			reader.Close();
 
 			HtmlDocument doc = new HtmlDocument();
 			doc.LoadHtml(str);
@@ -63,43 +60,42 @@ namespace XG.Server.Plugin.Backend.MySql
 					string server = strs[2].ToLower();
 					string channel = strs[3].ToLower();
 
-					XGServer s = this.GetServer(server);
+					XG.Core.Server s = GetServer(server);
 					if(s == null)
 					{
-						this.myRootObject.AddServer(server);
-						s = this.GetServer(server);
-						this.ObjectAddedEvent(this.myRootObject, s);
+						myRootObject.Add(server);
+						s = GetServer(server);
+						ObjectAddedEvent(myRootObject, s);
 						myLog.Debug("-> " + server);
 					}
 
-					if(this.GetChannelFromServer(s, channel) == null)
+					if(GetChannelFromServer(s, channel) == null)
 					{
 						s.AddChannel(channel);
-						XGChannel c = this.GetChannelFromServer(s, channel);
-						this.ObjectAddedEvent(s, c);
+						Channel c = GetChannelFromServer(s, channel);
+						ObjectAddedEvent(s, c);
 						myLog.Debug("-> " + server + " - " + channel);
 					}
-					//Thread.Sleep(500);
 				}
 			}
 #endif
 		}
 
-		private XGServer GetServer(string aServerName)
+		XG.Core.Server GetServer(string aServerName)
 		{
-			foreach(XGObject obj in this.myRootObject.Servers)
+			foreach(AObject obj in myRootObject.All)
 			{
 				if(obj.Name == aServerName)
 				{
-					return (XGServer)obj;
+					return (XG.Core.Server)obj;
 				}
 			}
 			return null;
 		}
 
-		private XGChannel GetChannelFromServer(XGServer aServer, string aChannelName)
+		Channel GetChannelFromServer(XG.Core.Server aServer, string aChannelName)
 		{
-			foreach(XGChannel chan in aServer.Channels)
+			foreach(Channel chan in aServer.Channels)
 			{
 				if((chan.Name == aChannelName || chan.Name == "#" + aChannelName) && chan.ParentGuid == aServer.Guid)
 				{
@@ -110,5 +106,3 @@ namespace XG.Server.Plugin.Backend.MySql
 		}
 	}
 }
-
-/**/

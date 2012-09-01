@@ -15,18 +15,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using System;
 using System.IO;
 
 using NUnit.Framework;
 
-using XG.Core;
-using System.Threading;
-
-namespace XG.Test
+namespace Test
 {
 	[TestFixture()]
-	public class XG_Server_Helper_Filesystem
+	public class ServerHelperFilesystem
 	{
 		[Test()]
 		public void MoveFile ()

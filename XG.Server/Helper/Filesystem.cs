@@ -24,7 +24,7 @@ namespace XG.Server.Helper
 {
 	public class Filesystem
 	{
-		private static readonly ILog log = LogManager.GetLogger(typeof(Filesystem));
+		static readonly ILog _log = LogManager.GetLogger(typeof(Filesystem));
 
 		/// <summary>
 		/// Moves a file
@@ -43,7 +43,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					log.Fatal("MoveFile(" + aNameOld + ", " + aNameNew + ") ", ex);
+					_log.Fatal("MoveFile(" + aNameOld + ", " + aNameNew + ") ", ex);
 					return false;
 				}
 			}
@@ -66,7 +66,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					log.Fatal("DeleteFile(" + aName + ") ", ex);
+					_log.Fatal("DeleteFile(" + aName + ") ", ex);
 					return false;
 				}
 			}
@@ -89,7 +89,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					log.Fatal("DeleteDirectory(" + aName + ") ", ex);
+					_log.Fatal("DeleteDirectory(" + aName + ") ", ex);
 					return false;
 				}
 			}
@@ -122,9 +122,40 @@ namespace XG.Server.Helper
 			}
 			catch (Exception ex)
 			{
-				log.Fatal("ListDirectory(" + aDir + ") ", ex);
+				_log.Fatal("ListDirectory(" + aDir + ") ", ex);
 			}
 			return files;
+		}
+
+		public static BinaryWriter OpenFileWritable(string aFile)
+		{
+			FileStream stream = File.Open(aFile, FileMode.Create, FileAccess.Write);
+			return new BinaryWriter(stream);
+		}
+
+		public static BinaryReader OpenFileReadable(string aFile)
+		{
+			FileStream stream = File.Open(aFile, FileMode.Open, FileAccess.Read);
+			return new BinaryReader(stream);
+		}
+
+		public static string ReadFile(string aFile)
+		{
+			string str = "";
+
+			if(File.Exists(aFile))
+			{
+				try
+				{
+					StreamReader reader = new StreamReader(aFile);
+					str = reader.ReadToEnd();
+					reader.Close();
+				}
+				catch(Exception)
+				{}
+			}
+
+			return str;
 		}
 	}
 }

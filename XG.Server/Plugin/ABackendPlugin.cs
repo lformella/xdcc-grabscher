@@ -15,19 +15,17 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System.Collections.Generic;
-
 using XG.Core;
-using XG.Server.Plugin.General;
+using XG.Server.Plugin;
 
-namespace XG.Server.Plugin.Backend
+namespace XG.Server.Plugin
 {
-	public abstract class AServerBackendPlugin : AServerGeneralPlugin
+	public abstract class ABackendPlugin : APlugin
 	{
-		public abstract XG.Core.Repository.Object GetObjectRepository ();
+		public abstract Servers LoadServers ();
 
-		public abstract XG.Core.Repository.File GetFileRepository ();
+		public abstract Files LoadFiles ();
 
-		public abstract List<string> GetSearchRepository ();
+		public abstract Objects LoadSearches ();
 	}
 }

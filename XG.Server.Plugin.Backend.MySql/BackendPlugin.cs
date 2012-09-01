@@ -22,19 +22,18 @@ using System.Threading;
 using log4net;
 using MySql.Data.MySqlClient;
 using XG.Core;
-using XG.Server.Plugin;
 
 namespace XG.Server.Plugin.Backend.MySql
 {
-	public class BackendPlugin : AServerBackendPlugin
+	public class BackendPlugin : ABackendPlugin
 	{
 		#region VARIABLES
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(BackendPlugin));
+		static readonly ILog log = LogManager.GetLogger(typeof(BackendPlugin));
 
-		private MySqlConnection dbConnection;
-		private Thread serverThread;
-		private object locked = new object ();
+		MySqlConnection dbConnection;
+		Thread serverThread;
+		object locked = new object ();
 
 		#endregion
 
@@ -43,14 +42,14 @@ namespace XG.Server.Plugin.Backend.MySql
 			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
 			try
 			{
-				this.dbConnection = new MySqlConnection (connectionString);
-				this.dbConnection.Open ();
+				dbConnection = new MySqlConnection (connectionString);
+				dbConnection.Open ();
 
 				// cleanup database
-				this.ExecuteNonQuery ("UPDATE server SET connected = 0;", null);
-				this.ExecuteNonQuery ("UPDATE channel SET connected = 0;", null);
-				this.ExecuteNonQuery ("UPDATE bot SET connected = 0;", null);
-				this.ExecuteNonQuery ("UPDATE packet SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE server SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE channel SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE bot SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE packet SET connected = 0;", null);
 			}
 			catch (Exception ex)
 			{
@@ -61,30 +60,30 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		#region IServerBackendPlugin
 
-		public override XG.Core.Repository.Object GetObjectRepository ()
+		public override Servers LoadServers ()
 		{
-			XG.Core.Repository.Object objectRepository = new XG.Core.Repository.Object();
+			Servers objectRepository = new Servers();
 
 			#region DUMP DATABASE
 
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 			dic.Add ("guid", Guid.Empty);
-			foreach(XGServer serv in this.ExecuteQuery ("SELECT * FROM server;", null, typeof(XGServer)))
+			foreach(XG.Core.Server serv in ExecuteQuery ("SELECT * FROM server;", null, typeof(XG.Core.Server)))
 			{
-				objectRepository.AddServer(serv);
+				objectRepository.Add(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
-				foreach(XGChannel chan in this.ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(XGChannel)))
+				foreach(Channel chan in ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(Channel)))
 				{
 					serv.AddChannel(chan);
 
 					dic["guid"] = chan.Guid.ToString ();
-					foreach(XGBot bot in this.ExecuteQuery ("SELECT * FROM bot WHERE ParentGuid = @guid;", dic, typeof(XGBot)))
+					foreach(Bot bot in ExecuteQuery ("SELECT * FROM bot WHERE ParentGuid = @guid;", dic, typeof(Bot)))
 					{
 						chan.AddBot(bot);
 
 						dic["guid"] = bot.Guid.ToString ();
-						foreach(XGPacket pack in this.ExecuteQuery ("SELECT * FROM packet WHERE ParentGuid = @guid;", dic, typeof(XGPacket)))
+						foreach(Packet pack in ExecuteQuery ("SELECT * FROM packet WHERE ParentGuid = @guid;", dic, typeof(Packet)))
 						{
 							bot.AddPacket(pack);
 						}
@@ -98,28 +97,26 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			Importer importer = new Importer(objectRepository);
 
-			importer.ObjectAddedEvent += new ObjectObjectDelegate (ObjectRepository_ObjectAddedEventHandler);
+			importer.ObjectAddedEvent += new ObjectsDelegate (ObjectAdded);
 
 			importer.Import("./import");
 
-			importer.ObjectAddedEvent -= new ObjectObjectDelegate (ObjectRepository_ObjectAddedEventHandler);
+			importer.ObjectAddedEvent -= new ObjectsDelegate (ObjectAdded);
 
 			#endregion
 
-			this.ObjectRepository = objectRepository;
-			return this.ObjectRepository;
+			Servers = objectRepository;
+			return Servers;
 		}
 
-		public override XG.Core.Repository.File GetFileRepository ()
+		public override Files LoadFiles ()
 		{
-			XG.Core.Repository.File files =new XG.Core.Repository.File();
-			return files;
+			return new Files();
 		}
 
-		public override List<string> GetSearchRepository ()
+		public override Objects LoadSearches ()
 		{
-			List<string> searches = new List<string>();
-			return searches;
+			return new Objects();
 		}
 
 		#endregion
@@ -129,29 +126,29 @@ namespace XG.Server.Plugin.Backend.MySql
 		public override void Start ()
 		{
 			// start the server thread
-			this.serverThread = new Thread (new ThreadStart (OpenClient));
-			this.serverThread.Start ();
+			serverThread = new Thread (new ThreadStart (OpenClient));
+			serverThread.Start ();
 		}
 		
 		public override void Stop ()
 		{
-			this.CloseClient ();
-			this.serverThread.Abort ();
+			CloseClient ();
+			serverThread.Abort ();
 		}
 		
 		#endregion
 
 		#region SERVER
 
-		private void OpenClient ()
+		void OpenClient ()
 		{
 		}
 
-		private void CloseClient ()
+		void CloseClient ()
 		{
 			try
 			{
-				this.dbConnection.Close ();
+				dbConnection.Close ();
 			}
 			catch (Exception ex)
 			{
@@ -163,10 +160,10 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		#region EVENTHANDLER
 
-		protected override void ObjectRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
+		protected override void ObjectAdded (AObject aParentObj, AObject aObj)
 		{
-			string table = this.GetTable4Object (aObj);
-			Dictionary<string, object> dic = this.Object2Dic (aObj);
+			string table = GetTable4Object (aObj);
+			Dictionary<string, object> dic = Object2Dic (aObj);
 
 			if (table != "")
 			{
@@ -185,14 +182,14 @@ namespace XG.Server.Plugin.Backend.MySql
 					values2 += "@" + kcp.Key;
 				}
 
-				this.ExecuteNonQuery ("INSERT INTO " + table + " (" + values1 + ") VALUES (" + values2 + ");", dic);
+				ExecuteNonQuery ("INSERT INTO " + table + " (" + values1 + ") VALUES (" + values2 + ");", dic);
 			}
 		}
 
-		protected override void ObjectRepository_ObjectChangedEventHandler (XGObject aObj)
+		protected override void ObjectChanged (AObject aObj)
 		{
-			string table = this.GetTable4Object (aObj);
-			Dictionary<string, object> dic = this.Object2Dic (aObj);
+			string table = GetTable4Object (aObj);
+			Dictionary<string, object> dic = Object2Dic (aObj);
 
 			if (table != "")
 			{
@@ -207,63 +204,51 @@ namespace XG.Server.Plugin.Backend.MySql
 				}
 
 				dic.Add ("guid", aObj.Guid.ToString ());
-				this.ExecuteNonQuery ("UPDATE " + table + " SET " + values1 + " WHERE Guid = @guid;", dic);
+				ExecuteNonQuery ("UPDATE " + table + " SET " + values1 + " WHERE Guid = @guid;", dic);
 			}
 		}
 
-		protected override void ObjectRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
+		protected override void ObjectRemoved (AObject aParentObj, AObject aObj)
 		{
-			string table = this.GetTable4Object (aObj);
+			string table = GetTable4Object (aObj);
 			Dictionary<string, object> dic = new Dictionary<string, object> ();
 
 			if (table != "")
 			{
 				dic.Add ("guid", aObj.Guid.ToString ());
-				this.ExecuteNonQuery ("DELETE FROM " + table + " WHERE Guid = @guid;", dic);
+				ExecuteNonQuery ("DELETE FROM " + table + " WHERE Guid = @guid;", dic);
 			}
-		}
-
-		protected override void FileRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectChangedEventHandler(XGObject aObj)
-		{
 		}
 
 		#endregion
 
 		#region HELPER
 
-		protected Dictionary<string, object> Object2Dic (XGObject aObj)
+		protected Dictionary<string, object> Object2Dic (AObject aObj)
 		{
 			Dictionary<string, object> dic = new Dictionary<string, object> ();
 			dic.Add ("Name", aObj.Name);
 			dic.Add ("Connected", aObj.Connected);
 			dic.Add ("Enabled", aObj.Enabled);
-			dic.Add ("LastModified", this.Date2Timestamp (aObj.LastModified));
+			dic.Add ("LastModified", Date2Timestamp (aObj.EnabledTime));
 
-			if (aObj.GetType () == typeof(XGServer))
+			if (aObj.GetType () == typeof(XG.Core.Server))
 			{
-				XGServer obj = (XGServer)aObj;
+				XG.Core.Server obj = (XG.Core.Server)aObj;
 				dic.Add ("Port", obj.Port);
 				dic.Add ("ErrorCode", obj.ErrorCode);
 				dic.Add ("ChannelCount", obj.Channels.Count());
 			}
-			else if (aObj.GetType () == typeof(XGChannel))
+			else if (aObj.GetType () == typeof(Channel))
 			{
-				XGChannel obj = (XGChannel)aObj;
+				Channel obj = (Channel)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
 				dic.Add ("ErrorCode", obj.ErrorCode);
 				dic.Add ("BotCount", obj.Bots.Count());
 			}
-			else if (aObj.GetType () == typeof(XGBot))
+			else if (aObj.GetType () == typeof(Bot))
 			{
-				XGBot obj = (XGBot)aObj;
+				Bot obj = (Bot)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
 				dic.Add ("BotState", obj.BotState);
 				dic.Add ("InfoQueueCurrent", obj.InfoQueueCurrent);
@@ -272,27 +257,27 @@ namespace XG.Server.Plugin.Backend.MySql
 				dic.Add ("InfoSlotTotal", obj.InfoSlotTotal);
 				dic.Add ("InfoSpeedCurrent", obj.InfoSpeedCurrent);
 				dic.Add ("InfoSpeedMax", obj.InfoSpeedMax);
-				dic.Add ("LastContact", this.Date2Timestamp (obj.LastContact));
+				dic.Add ("LastContact", Date2Timestamp (obj.LastContact));
 				dic.Add ("LastMessage", obj.LastMessage);
 			}
-			else if (aObj.GetType () == typeof(XGPacket))
+			else if (aObj.GetType () == typeof(Packet))
 			{
-				XGPacket obj = (XGPacket)aObj;
+				Packet obj = (Packet)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
 				dic.Add ("Id", obj.Id);
-				dic.Add ("LastUpdated", this.Date2Timestamp (obj.LastUpdated));
-				dic.Add ("LastMentioned", this.Date2Timestamp (obj.LastMentioned));
+				dic.Add ("LastUpdated", Date2Timestamp (obj.LastUpdated));
+				dic.Add ("LastMentioned", Date2Timestamp (obj.LastMentioned));
 				dic.Add ("Size", obj.Size);
 			}
 
 			return dic;
 		}
 
-		protected XGObject Dic2Object (Dictionary<string, object> aDic, Type aType)
+		protected AObject Dic2Object (Dictionary<string, object> aDic, Type aType)
 		{
-			if (aType == typeof(XGServer))
+			if (aType == typeof(XG.Core.Server))
 			{
-				XGServer serv = new XGServer();
+				XG.Core.Server serv = new XG.Core.Server();
 				serv.Guid = new Guid((string)aDic ["Guid"]);
 				serv.Name = (string)aDic ["Name"];
 				serv.Connected = false;
@@ -300,9 +285,9 @@ namespace XG.Server.Plugin.Backend.MySql
 				serv.Port = (int)aDic ["Port"];
 				return serv;
 			}
-			else if (aType == typeof(XGChannel))
+			else if (aType == typeof(Channel))
 			{
-				XGChannel chan = new XGChannel();
+				Channel chan = new Channel();
 				chan.Guid = new Guid((string)aDic ["Guid"]);
 				chan.Name = (string)aDic ["Name"];
 				chan.Connected = false;
@@ -310,9 +295,9 @@ namespace XG.Server.Plugin.Backend.MySql
 				chan.ErrorCode = (int)aDic ["ErrorCode"];
 				return chan;
 			}
-			else if (aType == typeof(XGBot))
+			else if (aType == typeof(Bot))
 			{
-				XGBot bot = new XGBot();
+				Bot bot = new Bot();
 				bot.Guid = new Guid((string)aDic ["Guid"]);
 				bot.Name = (string)aDic ["Name"];
 				bot.Connected = false;
@@ -325,20 +310,20 @@ namespace XG.Server.Plugin.Backend.MySql
 				bot.InfoSpeedCurrent = (double)aDic ["InfoSpeedCurrent"];
 				bot.InfoSpeedMax = (double)aDic ["InfoSpeedMax"];
 				bot.LastMessage = (string)aDic ["LastMessage"];
-				bot.LastContact = this.Timestamp2Date ((Int64)aDic ["LastContact"]);
+				bot.LastContact = Timestamp2Date ((Int64)aDic ["LastContact"]);
 				return bot;
 			}
-			else if (aType == typeof(XGPacket))
+			else if (aType == typeof(Packet))
 			{
-				XGPacket pack = new XGPacket();
+				Packet pack = new Packet();
 				pack.Guid = new Guid((string)aDic ["Guid"]);
 				pack.Name = (string)aDic ["Name"];
 				pack.Connected = false;
 				pack.Enabled = (bool)aDic ["Enabled"];
 				pack.Name = (string)aDic ["Name"];
 				pack.Id = (int)aDic ["Id"];
-				pack.LastUpdated = this.Timestamp2Date ((Int64)aDic ["LastUpdated"]);
-				pack.LastMentioned = this.Timestamp2Date ((Int64)aDic ["LastMentioned"]);
+				pack.LastUpdated = Timestamp2Date ((Int64)aDic ["LastUpdated"]);
+				pack.LastMentioned = Timestamp2Date ((Int64)aDic ["LastMentioned"]);
 				pack.Size = (Int64)aDic ["Size"];
 				return pack;
 			}
@@ -351,7 +336,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			//aSql = "START TRANSACTION;" + aSql + "COMMIT;";
 			lock (locked)
 			{
-				MySqlCommand cmd = new MySqlCommand (aSql, this.dbConnection);
+				MySqlCommand cmd = new MySqlCommand (aSql, dbConnection);
 				using (cmd)
 				{
 					if (aDic != null)
@@ -367,30 +352,30 @@ namespace XG.Server.Plugin.Backend.MySql
 					}
 					catch (MySqlException ex)
 					{
-						log.Fatal("ExecuteQuery(" + ex.Number + ") '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						log.Fatal("ExecuteQuery(" + ex.Number + ") '" + GetSqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						log.Fatal("ExecuteQuery() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						log.Fatal("ExecuteQuery() '" + GetSqlString (aSql, aDic) + "' ", ex);
 						log.Warn("ExecuteQuery() : stopping server plugin!");
-						this.Stop ();
+						Stop ();
 					}
 					catch (Exception ex)
 					{
-						log.Fatal("ExecuteQuery() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						log.Fatal("ExecuteQuery() '" + GetSqlString (aSql, aDic) + "' ", ex);
 					}
 				}
 			}
 		}
 
-		protected List<XGObject> ExecuteQuery (string aSql, Dictionary<string, object> aDic, Type aType)
+		protected List<AObject> ExecuteQuery (string aSql, Dictionary<string, object> aDic, Type aType)
 		{
-			List<XGObject> list = new List<XGObject> ();
+			List<AObject> list = new List<AObject> ();
 
 			//aSql = "START TRANSACTION;" + aSql + "COMMIT;";
 			lock (locked)
 			{
-				MySqlCommand cmd = new MySqlCommand (aSql, this.dbConnection);
+				MySqlCommand cmd = new MySqlCommand (aSql, dbConnection);
 				using (cmd)
 				{
 					if (aDic != null)
@@ -410,7 +395,7 @@ namespace XG.Server.Plugin.Backend.MySql
 							{
 								dic.Add (myReader.GetName (col), myReader.GetValue (col));
 							}
-							XGObject obj = this.Dic2Object (dic, aType);
+							AObject obj = Dic2Object (dic, aType);
 							if(obj != null)
 							list.Add (obj);
 						}
@@ -418,17 +403,17 @@ namespace XG.Server.Plugin.Backend.MySql
 					}
 					catch (MySqlException ex)
 					{
-						log.Fatal("ExecuteReader(" + ex.Number + ") '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						log.Fatal("ExecuteReader(" + ex.Number + ") '" + GetSqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						log.Fatal("ExecuteReader() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						log.Fatal("ExecuteReader() '" + GetSqlString (aSql, aDic) + "' ", ex);
 						log.Warn("ExecuteReader() : stopping server plugin!");
-						this.Stop ();
+						Stop ();
 					}
 					catch (Exception ex)
 					{
-						log.Fatal("ExecuteReader() '" + this.GetSqlString (aSql, aDic) + "' ", ex);
+						log.Fatal("ExecuteReader() '" + GetSqlString (aSql, aDic) + "' ", ex);
 					}
 				}
 			}
@@ -450,21 +435,21 @@ namespace XG.Server.Plugin.Backend.MySql
 			return date;
 		}
 
-		protected string GetTable4Object (XGObject aObj)
+		protected string GetTable4Object (AObject aObj)
 		{
-			if (aObj.GetType () == typeof(XGServer))
+			if (aObj.GetType () == typeof(XG.Core.Server))
 			{
 				return "server";
 			}
-			else if (aObj.GetType () == typeof(XGChannel))
+			else if (aObj.GetType () == typeof(Channel))
 			{
 				return "channel";
 			}
-			else if (aObj.GetType () == typeof(XGBot))
+			else if (aObj.GetType () == typeof(Bot))
 			{
 				return "bot";
 			}
-			else if (aObj.GetType () == typeof(XGPacket))
+			else if (aObj.GetType () == typeof(Packet))
 			{
 				return "packet";
 			}

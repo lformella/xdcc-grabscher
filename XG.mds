@@ -7,7 +7,7 @@
       <MessageStyle Indent="" LastFilePostfix=":&#xA;  " InterMessageLines="0" />
     </ChangeLogPolicy>
     <DotNetNamingPolicy DirectoryNamespaceAssociation="None" ResourceNamePolicy="FileFormatDefault" />
-    <StandardHeader Text=" &#xA; Copyright (C) ${Year} ${CopyrightHolder} &lt;${AuthorEmail}&gt;&#xA;&#xA; This program is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.&#xA;" IncludeInNewFiles="True" />
+    <StandardHeader Text="&#xA; ${FileName}&#xA; &#xA; Author:&#xA;      ${AuthorName} &lt;${AuthorEmail}&gt;&#xA;&#xA; Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This program is free software; you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation; either version 2 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xA; GNU General Public License for more details.&#xA; &#xA; You should have received a copy of the GNU General Public License&#xA; along with this program; if not, write to the Free Software&#xA; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA&#xA;" IncludeInNewFiles="True" />
     <TextStylePolicy FileWidth="160" TabWidth="4" NoTabsAfterNonTabs="True" inheritsSet="Mono" inheritsScope="text/plain" />
     <TextStylePolicy inheritsSet="null" scope="text/x-csharp" />
     <CSharpFormattingPolicy IndentSwitchBody="True" AlignEmbeddedUsingStatements="False" AlignEmbeddedIfStatements="False" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" IfElseBraceForcement="AddBraces" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" BeforeMethodCallParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" SpacesBeforeBrackets="False" SpacesAfterTypecast="True" BlankLinesBeforeUsings="1" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
@@ -16,6 +16,59 @@
     <TextStylePolicy inheritsSet="null" scope="application/javascript" />
     <TextStylePolicy inheritsSet="null" scope="text/css" />
     <TextStylePolicy inheritsSet="null" scope="text/x-sql" />
+    <NameConventionPolicy>
+      <Rules>
+        <NamingRule Name="Namespaces" AffectedEntity="Namespace" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Types" AffectedEntity="Class, Struct, Enum, Delegate" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Interfaces" AffectedEntity="Interface" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True">
+          <RequiredPrefixes>
+            <String>I</String>
+          </RequiredPrefixes>
+        </NamingRule>
+        <NamingRule Name="Attributes" AffectedEntity="CustomAttributes" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True">
+          <RequiredSuffixes>
+            <String>Attribute</String>
+          </RequiredSuffixes>
+        </NamingRule>
+        <NamingRule Name="Event Arguments" AffectedEntity="CustomEventArgs" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True">
+          <RequiredSuffixes>
+            <String>EventArgs</String>
+          </RequiredSuffixes>
+        </NamingRule>
+        <NamingRule Name="Exceptions" AffectedEntity="CustomExceptions" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True">
+          <RequiredSuffixes>
+            <String>Exception</String>
+          </RequiredSuffixes>
+        </NamingRule>
+        <NamingRule Name="Methods" AffectedEntity="Methods" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Static Readonly Fields" AffectedEntity="ReadonlyField" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="False" IncludeStaticEntities="True" />
+        <NamingRule Name="Fields (Non Private)" AffectedEntity="Field" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="ReadOnly Fields (Non Private)" AffectedEntity="ReadonlyField" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="False" />
+        <NamingRule Name="Fields (Private)" AffectedEntity="Field, ReadonlyField" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="False">
+          <AllowedPrefixes>
+            <String>_</String>
+            <String>m_</String>
+          </AllowedPrefixes>
+        </NamingRule>
+        <NamingRule Name="Static Fields (Private)" AffectedEntity="Field" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="False" IncludeStaticEntities="True" />
+        <NamingRule Name="ReadOnly Fields (Private)" AffectedEntity="ReadonlyField" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="False">
+          <AllowedPrefixes>
+            <String>_</String>
+            <String>m_</String>
+          </AllowedPrefixes>
+        </NamingRule>
+        <NamingRule Name="Constant Fields" AffectedEntity="ConstantField" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Properties" AffectedEntity="Property" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Events" AffectedEntity="Event" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Enum Members" AffectedEntity="EnumMember" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Parameters" AffectedEntity="Parameter" VisibilityMask="VisibilityMask" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
+        <NamingRule Name="Type Parameters" AffectedEntity="TypeParameter" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True">
+          <RequiredPrefixes>
+            <String>T</String>
+          </RequiredPrefixes>
+        </NamingRule>
+      </Rules>
+    </NameConventionPolicy>
   </Policies>
   <Configurations active="Release">
     <Configuration name="Debug" ctype="CombineConfiguration">
@@ -28,7 +81,7 @@
       <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Debug" />
       <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Debug" />
       <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Debug" />
-      <Entry build="True" name="XG.Test" configuration="Debug" />
+      <Entry build="True" name="Test" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Release" />
@@ -40,7 +93,7 @@
       <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Release" />
       <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Release" />
       <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Release" />
-      <Entry build="True" name="XG.Test" configuration="Release" />
+      <Entry build="True" name="Test" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Unsafe" />
@@ -52,7 +105,7 @@
       <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Unsafe" />
       <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Unsafe" />
-      <Entry build="True" name="XG.Test" configuration="Debug" />
+      <Entry build="True" name="Test" configuration="Debug" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="XG.Core" configuration="Default" />
@@ -64,7 +117,7 @@
       <Entry build="True" name="XG.Server.Plugin.General.Jabber" configuration="Default" />
       <Entry build="True" name="XG.Server.Plugin.Backend.MySql" configuration="Default" />
       <Entry build="True" name="XG.Server.Plugin.Backend.File" configuration="Default" />
-      <Entry build="True" name="XG.Test" configuration="Debug" />
+      <Entry build="True" name="Test" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="XG.Server.Cmd" single="True">
@@ -77,7 +130,7 @@
     <Execute type="None" entry="XG.Server.Plugin.General.Jabber" />
     <Execute type="None" entry="XG.Server.Plugin.Backend.MySql" />
     <Execute type="None" entry="XG.Server.Plugin.Backend.File" />
-    <Execute type="None" entry="XG.Test" />
+    <Execute type="None" entry="Test" />
   </StartMode>
   <Entries>
     <Entry filename="XG.Core/XG.Core.mdp" />

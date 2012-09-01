@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="XG.Core.XGBot">
+  <Class Name="XG.Core.Bot">
     <Position X="6.75" Y="4.5" Width="2.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -11,7 +11,7 @@
       <FileName>Bot.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.XGServer">
+  <Class Name="XG.Core.Server">
     <Position X="1.75" Y="4.5" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -22,7 +22,7 @@
       <FileName>Server.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.XGChannel">
+  <Class Name="XG.Core.Channel">
     <Position X="4.5" Y="4.5" Width="2" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
@@ -32,7 +32,7 @@
       <FileName>Channel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.XGFile">
+  <Class Name="XG.Core.File">
     <Position X="2.75" Y="0.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -43,7 +43,7 @@
       <FileName>File.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.XGObject">
+  <Class Name="XG.Core.AObject">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
@@ -54,13 +54,13 @@
       <FileName>Object.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.XGPacket">
+  <Class Name="XG.Core.Packet">
     <Position X="7.5" Y="1.25" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <InheritanceLine Type="XG.Core.XGObject" FixedFromPoint="true" FixedToPoint="true">
+    <InheritanceLine Type="XG.Core.AObject" FixedFromPoint="true" FixedToPoint="true">
       <Path>
         <Point X="1.375" Y="4.106" />
         <Point X="1.375" Y="4.25" />
@@ -73,7 +73,7 @@
       <FileName>Packet.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="XG.Core.XGFilePart">
+  <Class Name="XG.Core.FilePart">
     <Position X="5" Y="0.5" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />

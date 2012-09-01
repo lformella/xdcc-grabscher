@@ -19,49 +19,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XG.Core.Repository
+namespace XG.Core
 {
 	[Serializable()]
-	public class File : XGObject
+	public class Objects : AObjects
 	{
-		#region CHILDREN
-
-		public IEnumerable<XGFile> Files
+		public new IEnumerable<Object> All
 		{
-			get { return base.Children.Cast<XGFile>(); }
+			get { return base.All.Cast<Object>(); }
 		}
 
-		public XGFile this[string tmpPath]
+		public void Add(Object aObject)
 		{
-			get
-			{
-				try
-				{
-					return this.Files.First(file => file.TmpPath == tmpPath);
-				}
-				catch {}
-				return null;
-			}
+			base.Add(aObject);
 		}
 
-		public void AddFile(XGFile aFile)
+		public void Remove(Object aObject)
 		{
-			base.AddChild(aFile);
-		}
-		public void AddFile(string aName, Int64 aSize)
-		{
-			XGFile tFile = new XGFile(aName, aSize);
-			if (this[tFile.TmpPath] == null)
-			{
-				this.AddFile(tFile);
-			}
+			base.Remove(aObject);
 		}
 
-		public void RemoveFile(XGFile aFile)
+		public new Object ByName(string aName)
 		{
-			base.RemoveChild(aFile);
+			AObject tObject = base.ByName(aName);
+			return tObject != null ? (Object)tObject : null;
 		}
-
-		#endregion
 	}
 }

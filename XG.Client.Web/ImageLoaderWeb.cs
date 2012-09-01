@@ -24,69 +24,69 @@ namespace XG.Client.Web
 	{
 		public static ImageLoaderWeb Instance
 		{
-			get { return Nested.instance; }
+			get { return Nested.Instance; }
 		}
 		class Nested
 		{
 			static Nested() { }
-			internal static readonly ImageLoaderWeb instance = new ImageLoaderWeb();
+			internal static readonly ImageLoaderWeb Instance = new ImageLoaderWeb();
 		}
 
-		private ImageLoaderWeb()
+		ImageLoaderWeb()
 		{
-			this.pbClient = this.LoadImage(base.Client);
+			pbClient = LoadImage(base.Client);
 
-			this.pbServer = this.LoadImage(base.Server);
-			this.pbServerDisabled = this.LoadImage(base.ServerDisabled);
+			pbServer = LoadImage(base.Server);
+			pbServerDisabled = LoadImage(base.ServerDisabled);
 
-			this.pbChannel = this.LoadImage(base.Channel);
-			this.pbChannelDisabled = this.LoadImage(base.ChannelDisabled);
+			pbChannel = LoadImage(base.Channel);
+			pbChannelDisabled = LoadImage(base.ChannelDisabled);
 
-			this.pbBot = this.LoadImage(base.Bot);
-			this.pbBotOff = this.LoadImage(base.BotOff);
+			pbBot = LoadImage(base.Bot);
+			pbBotOff = LoadImage(base.BotOff);
 
-			this.pbPacket = this.LoadImage(base.Packet);
-			this.pbPacketDisabled = this.LoadImage(base.PacketDisabled);
+			pbPacket = LoadImage(base.Packet);
+			pbPacketDisabled = LoadImage(base.PacketDisabled);
 
-			this.pbBlind = this.LoadImage(base.Blind);
-			this.pbSearch = this.LoadImage(base.Search);
-			this.pbSearchSlots = this.LoadImage(base.SearchSlots);
-			this.pbODay = this.LoadImage(base.ODay);
-			this.pbOWeek = this.LoadImage(base.OWeek);
+			pbBlind = LoadImage(base.Blind);
+			pbSearch = LoadImage(base.Search);
+			pbSearchSlots = LoadImage(base.SearchSlots);
+			pbODay = LoadImage(base.ODay);
+			pbOWeek = LoadImage(base.OWeek);
 
-			this.pbAdd = this.LoadImage(base.Add);
-			this.pbRemove = this.LoadImage(base.Remove);
-			this.pbConnect = this.LoadImage(base.Connect);
-			this.pbDisconnect = this.LoadImage(base.Disconnect);
-			this.pbOk = this.LoadImage(base.Ok);
-			this.pbNo = this.LoadImage(base.No);
+			pbAdd = LoadImage(base.Add);
+			pbRemove = LoadImage(base.Remove);
+			pbConnect = LoadImage(base.Connect);
+			pbDisconnect = LoadImage(base.Disconnect);
+			pbOk = LoadImage(base.Ok);
+			pbNo = LoadImage(base.No);
 
-			this.pbLanguageDe = this.LoadImage(base.LanguageDe);
+			pbLanguageDe = LoadImage(base.LanguageDe);
 
-			this.pbExtAudio = this.LoadImage(base.ExtAudio);
-			this.pbExtCompressed = this.LoadImage(base.ExtCompressed);
-			this.pbExtDefault = this.LoadImage(base.ExtDefault);
-			this.pbExtVideo = this.LoadImage(base.ExtVideo);
+			pbExtAudio = LoadImage(base.ExtAudio);
+			pbExtCompressed = LoadImage(base.ExtCompressed);
+			pbExtDefault = LoadImage(base.ExtDefault);
+			pbExtVideo = LoadImage(base.ExtVideo);
 			
-			this.pbOverActive = this.LoadImage(base.OverActive);
-			this.pbOverAttention = this.LoadImage(base.OverAttention);
-			this.pbOverChecked0 = this.LoadImage(base.OverChecked0);
-			this.pbOverChecked1 = this.LoadImage(base.OverChecked1);
-			this.pbOverDisabled = this.LoadImage(base.OverDisabled);
-			this.pbOverDL0 = this.LoadImage(base.OverDL0);
-			this.pbOverDL1 = this.LoadImage(base.OverDL1);
-			this.pbOverDL2 = this.LoadImage(base.OverDL2);
-			this.pbOverDL3 = this.LoadImage(base.OverDL3);
-			this.pbOverDL4 = this.LoadImage(base.OverDL4);
-			this.pbOverDL5 = this.LoadImage(base.OverDL5);
-			this.pbOverDL6 = this.LoadImage(base.OverDL6);
-			this.pbOverDL7 = this.LoadImage(base.OverDL7);
-			this.pbOverDL8 = this.LoadImage(base.OverDL8);
-			this.pbOverDL9 = this.LoadImage(base.OverDL9);
-			this.pbOverWaiting = this.LoadImage(base.OverWaiting);
+			pbOverActive = LoadImage(base.OverActive);
+			pbOverAttention = LoadImage(base.OverAttention);
+			pbOverChecked0 = LoadImage(base.OverChecked0);
+			pbOverChecked1 = LoadImage(base.OverChecked1);
+			pbOverDisabled = LoadImage(base.OverDisabled);
+			pbOverDL0 = LoadImage(base.OverDL0);
+			pbOverDL1 = LoadImage(base.OverDL1);
+			pbOverDL2 = LoadImage(base.OverDL2);
+			pbOverDL3 = LoadImage(base.OverDL3);
+			pbOverDL4 = LoadImage(base.OverDL4);
+			pbOverDL5 = LoadImage(base.OverDL5);
+			pbOverDL6 = LoadImage(base.OverDL6);
+			pbOverDL7 = LoadImage(base.OverDL7);
+			pbOverDL8 = LoadImage(base.OverDL8);
+			pbOverDL9 = LoadImage(base.OverDL9);
+			pbOverWaiting = LoadImage(base.OverWaiting);
 		}
 
-		private byte[] LoadImage(Stream aStream)
+		byte[] LoadImage(Stream aStream)
 		{
 			byte[] data = new byte[aStream.Length];
 			int offset = 0;
@@ -106,180 +106,180 @@ namespace XG.Client.Web
 			switch (aName)
 			{
 				case "Client":
-					return this.pbClient;
+					return pbClient;
 
 				case "Server":
-					return this.pbServer;
+					return pbServer;
 
 				case "ServerDisabled":
-					return this.pbServerDisabled;
+					return pbServerDisabled;
 
 				case "Channel":
-					return this.pbChannel;
+					return pbChannel;
 
 				case "ChannelDisabled":
-					return this.pbChannelDisabled;
+					return pbChannelDisabled;
 
 				case "Bot":
-					return this.pbBot;
+					return pbBot;
 
 				case "BotOff":
-					return this.pbBotOff;
+					return pbBotOff;
 
 				case "Packet":
-					return this.pbPacket;
+					return pbPacket;
 
 				case "PacketDisabled":
-					return this.pbPacketDisabled;
+					return pbPacketDisabled;
 
 				case "Blind":
-					return this.pbBlind;
+					return pbBlind;
 
 				case "Search":
-					return this.pbSearch;
+					return pbSearch;
 
 				case "SearchSlots":
-					return this.pbSearchSlots;
+					return pbSearchSlots;
 
 				case "ODay":
-					return this.pbODay;
+					return pbODay;
 
 				case "OWeek":
-					return this.pbOWeek;
+					return pbOWeek;
 
 				case "Add":
-					return this.pbAdd;
+					return pbAdd;
 
 				case "Remove":
-					return this.pbRemove;
+					return pbRemove;
 
 				case "Connect":
-					return this.pbConnect;
+					return pbConnect;
 
 				case "Disconnect":
-					return this.pbDisconnect;
+					return pbDisconnect;
 
 				case "Ok":
-					return this.pbOk;
+					return pbOk;
 
 				case "No":
-					return this.pbNo;
+					return pbNo;
 
 				case "LanguageDe":
-					return this.pbLanguageDe;
+					return pbLanguageDe;
 
 				case "ExtAudio":
-					return this.pbExtAudio;
+					return pbExtAudio;
 
 				case "ExtCompressed":
-					return this.pbExtCompressed;
+					return pbExtCompressed;
 
 				case "ExtDefault":
-					return this.pbExtDefault;
+					return pbExtDefault;
 
 				case "ExtVideo":
-					return this.pbExtVideo;
+					return pbExtVideo;
 
 				case "OverActive":
-					return this.pbOverActive;
+					return pbOverActive;
 
 				case "OverAttention":
-					return this.pbOverAttention;
+					return pbOverAttention;
 
 				case "OverChecked0":
-					return this.pbOverChecked0;
+					return pbOverChecked0;
 
 				case "OverChecked1":
-					return this.pbOverChecked1;
+					return pbOverChecked1;
 
 				case "OverDisabled":
-					return this.pbOverDisabled;
+					return pbOverDisabled;
 
 				case "OverDL0":
-					return this.pbOverDL0;
+					return pbOverDL0;
 
 				case "OverDL1":
-					return this.pbOverDL1;
+					return pbOverDL1;
 
 				case "OverDL2":
-					return this.pbOverDL2;
+					return pbOverDL2;
 
 				case "OverDL3":
-					return this.pbOverDL3;
+					return pbOverDL3;
 
 				case "OverDL4":
-					return this.pbOverDL4;
+					return pbOverDL4;
 
 				case "OverDL5":
-					return this.pbOverDL5;
+					return pbOverDL5;
 
 				case "OverDL6":
-					return this.pbOverDL6;
+					return pbOverDL6;
 
 				case "OverDL7":
-					return this.pbOverDL7;
+					return pbOverDL7;
 
 				case "OverDL8":
-					return this.pbOverDL8;
+					return pbOverDL8;
 
 				case "OverDL9":
-					return this.pbOverDL9;
+					return pbOverDL9;
 
 				case "OverWaiting":
-					return this.pbOverWaiting;
+					return pbOverWaiting;
 			}
 			return null;
 		}
 
-		private byte[] pbClient;
+		byte[] pbClient;
 
-		private byte[] pbServer;
-		private byte[] pbServerDisabled;
+		byte[] pbServer;
+		byte[] pbServerDisabled;
 
-		private byte[] pbChannel;
-		private byte[] pbChannelDisabled;
+		byte[] pbChannel;
+		byte[] pbChannelDisabled;
 
-		private byte[] pbBot;
-		private byte[] pbBotOff;
+		byte[] pbBot;
+		byte[] pbBotOff;
 
-		private byte[] pbPacket;
-		private byte[] pbPacketDisabled;
+		byte[] pbPacket;
+		byte[] pbPacketDisabled;
 
-		private byte[] pbBlind;
-		private byte[] pbSearch;
-		private byte[] pbSearchSlots;
-		private byte[] pbODay;
-		private byte[] pbOWeek;
+		byte[] pbBlind;
+		byte[] pbSearch;
+		byte[] pbSearchSlots;
+		byte[] pbODay;
+		byte[] pbOWeek;
 
-		private byte[] pbAdd;
-		private byte[] pbRemove;
-		private byte[] pbConnect;
-		private byte[] pbDisconnect;
-		private byte[] pbOk;
-		private byte[] pbNo;
+		byte[] pbAdd;
+		byte[] pbRemove;
+		byte[] pbConnect;
+		byte[] pbDisconnect;
+		byte[] pbOk;
+		byte[] pbNo;
 
-		private byte[] pbLanguageDe;
+		byte[] pbLanguageDe;
 
-		private byte[] pbExtAudio;
-		private byte[] pbExtCompressed;
-		private byte[] pbExtDefault;
-		private byte[] pbExtVideo;
+		byte[] pbExtAudio;
+		byte[] pbExtCompressed;
+		byte[] pbExtDefault;
+		byte[] pbExtVideo;
 
-		private byte[] pbOverActive;
-		private byte[] pbOverAttention;
-		private byte[] pbOverChecked0;
-		private byte[] pbOverChecked1;
-		private byte[] pbOverDisabled;
-		private byte[] pbOverDL0;
-		private byte[] pbOverDL1;
-		private byte[] pbOverDL2;
-		private byte[] pbOverDL3;
-		private byte[] pbOverDL4;
-		private byte[] pbOverDL5;
-		private byte[] pbOverDL6;
-		private byte[] pbOverDL7;
-		private byte[] pbOverDL8;
-		private byte[] pbOverDL9;
-		private byte[] pbOverWaiting;
+		byte[] pbOverActive;
+		byte[] pbOverAttention;
+		byte[] pbOverChecked0;
+		byte[] pbOverChecked1;
+		byte[] pbOverDisabled;
+		byte[] pbOverDL0;
+		byte[] pbOverDL1;
+		byte[] pbOverDL2;
+		byte[] pbOverDL3;
+		byte[] pbOverDL4;
+		byte[] pbOverDL5;
+		byte[] pbOverDL6;
+		byte[] pbOverDL7;
+		byte[] pbOverDL8;
+		byte[] pbOverDL9;
+		byte[] pbOverWaiting;
 	}
 }

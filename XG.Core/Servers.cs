@@ -19,53 +19,49 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace XG.Core.Repository
+namespace XG.Core
 {
 	[Serializable()]
-	public class Object : XGObject
+	public class Servers : AObjects
 	{
-		#region CHILDREN
-
-		public IEnumerable<XGServer> Servers
+		public new IEnumerable<Server> All
 		{
-			get { return base.Children.Cast<XGServer>(); }
+			get { return base.All.Cast<Server>(); }
 		}
 
-		public XGServer this[string name]
+		public Server this[string name]
 		{
 			get
 			{
 				try
 				{
-					return this.Servers.First(serv => serv.Name == name.Trim().ToLower());
+					return All.First(serv => serv.Name == name.Trim().ToLower());
 				}
 				catch {}
 				return null;
 			}
 		}
 
-		public void AddServer(XGServer aServer)
+		public void Add(Server aServer)
 		{
-			base.AddChild(aServer);
+			base.Add(aServer);
 		}
-		public void AddServer(string aServer)
+		public void Add(string aServer)
 		{
 			aServer = aServer.Trim().ToLower();
 			if (this[aServer] == null)
 			{
-				XGServer tServer = new XGServer();
+				Server tServer = new Server();
 				tServer.Name = aServer;
 				tServer.Port = 6667;
 				tServer.Enabled = true;
-				this.AddServer(tServer);
+				Add(tServer);
 			}
 		}
 
-		public void RemoveServer(XGServer aServer)
+		public void Remove(Server aServer)
 		{
-			base.RemoveChild(aServer);
+			base.Remove(aServer);
 		}
-
-		#endregion
 	}
 }

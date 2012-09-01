@@ -22,56 +22,40 @@ using System.Linq;
 namespace XG.Core
 {
 	[Serializable()]
-	public class XGServer : XGObject
+	public class Server : AObjects
 	{
 		#region VARIABLES
 
-		public new XG.Core.Repository.Object Parent
+		public new Servers Parent
 		{
-			get { return base.Parent as XG.Core.Repository.Object; }
+			get { return base.Parent as Servers; }
 			set { base.Parent = value; }
 		}
 
-		public new bool Connected
-		{
-			get { return base.Connected; }
-			set
-			{
-				if (!value)
-				{
-					foreach (XGObject tObj in base.Children)
-					{
-						tObj.Connected = value;
-					}
-				}
-				base.Connected = value;
-			}
-		}
-
-		private int port = 0;
+		int _port = 0;
 		public int Port
 		{
-			get { return this.port; }
+			get { return _port; }
 			set
 			{
-				if (this.port != value)
+				if (_port != value)
 				{
-					this.port = value;
-					this.Modified = true;
+					_port = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private SocketErrorCode errorCode = SocketErrorCode.None;
+		SocketErrorCode _errorCode = SocketErrorCode.None;
 		public SocketErrorCode ErrorCode
 		{
-			get { return this.errorCode; }
+			get { return _errorCode; }
 			set
 			{
-				if (this.errorCode != value)
+				if (_errorCode != value)
 				{
-					this.errorCode = value;
-					this.Modified = true;
+					_errorCode = value;
+					Modified = true;
 				}
 			}
 		}
@@ -80,30 +64,23 @@ namespace XG.Core
 
 		#region CHILDREN
 
-		public IEnumerable<XGChannel> Channels
+		public IEnumerable<Channel> Channels
 		{
-			get { return base.Children.Cast<XGChannel>(); }
+			get { return base.All.Cast<Channel>(); }
 		}
 
-		public XGChannel this[string name]
+		public Channel this[string name]
 		{
 			get
 			{
-				name = name.Trim().ToLower();
-				if (!name.StartsWith("#")) { name = "#" + name; }
-				try
-				{
-					return this.Channels.First(chan => chan.Name.Trim().ToLower() == name.Trim().ToLower());
-				}
-				catch {}
-				return null;
+				return (Channel)base.ByName(name);
 			}
 		}
 
-		public XGBot GetBot(string aName)
+		public Bot GetBot(string aName)
 		{
-			XGBot tBot = null;
-			foreach (XGChannel chan in base.Children)
+			Bot tBot = null;
+			foreach (Channel chan in base.All)
 			{
 				tBot = chan[aName];
 				if (tBot != null){ break; }
@@ -111,9 +88,9 @@ namespace XG.Core
 			return tBot;
 		}
 
-		public void AddChannel(XGChannel aChannel)
+		public void AddChannel(Channel aChannel)
 		{
-			base.AddChild(aChannel);
+			base.Add(aChannel);
 		}
 
 		public void AddChannel(string aChannel)
@@ -122,16 +99,16 @@ namespace XG.Core
 			if (!aChannel.StartsWith("#")) { aChannel = "#" + aChannel; }
 			if (this[aChannel] == null)
 			{
-				XGChannel tChannel = new XGChannel();
+				Channel tChannel = new Channel();
 				tChannel.Name = aChannel;
-				tChannel.Enabled = this.Enabled;
-				this.AddChannel(tChannel);
+				tChannel.Enabled = Enabled;
+				AddChannel(tChannel);
 			}
 		}
 
-		public void RemoveChannel(XGChannel aChannel)
+		public void RemoveChannel(Channel aChannel)
 		{
-			base.RemoveChild(aChannel);
+			base.Remove(aChannel);
 		}
 
 		#endregion

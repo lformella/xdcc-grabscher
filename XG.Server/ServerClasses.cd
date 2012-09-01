@@ -15,15 +15,15 @@
       <Property Name="IrcParser" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="XG.Core.XGFile" Collapsed="true">
+  <Class Name="XG.Core.File" Collapsed="true">
     <Position X="6.75" Y="2.25" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="XG.Core.XGServer" Collapsed="true">
+  <Class Name="XG.Core.Server" Collapsed="true">
     <Position X="5.75" Y="3.25" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="XG.Core.XGPacket" Collapsed="true">
+  <Class Name="XG.Core.Packet" Collapsed="true">
     <Position X="7.75" Y="3.25" Width="1.5" />
     <TypeIdentifier />
   </Class>

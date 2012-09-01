@@ -20,75 +20,78 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+
 using log4net;
+
 using XG.Core;
-using XG.Server.Plugin;
+using XG.Server.Helper;
 
 namespace XG.Server.Plugin.Backend.File
 {
-	public class BackendPlugin : AServerBackendPlugin
+	public class BackendPlugin : ABackendPlugin
 	{
 		#region VARIABLES
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(BackendPlugin));
+		static readonly ILog _log = LogManager.GetLogger(typeof(BackendPlugin));
 
-		private BinaryFormatter formatter = new BinaryFormatter();
+		BinaryFormatter _formatter = new BinaryFormatter();
 
-		private Thread saveDataThread;
+		Thread _saveDataThread;
 
-		private bool isSaveFile = false;
-		private object saveFileLock = new object();
-		private object saveSearchLock = new object();
+		bool _isSaveFile = false;
+		object _saveFileLock = new object();
+		object _saveSearchLock = new object();
 
 		#endregion
 
 		#region IServerBackendPlugin
 
-		public override XG.Core.Repository.Object GetObjectRepository ()
+		public override Servers LoadServers ()
 		{
-			XG.Core.Repository.Object objectRepository = null;
+			Servers objectRepository = null;
 			try
 			{
-				objectRepository = (XG.Core.Repository.Object)this.Load(Settings.Instance.DataBinary);
-				objectRepository.AttachCildEvents();
+				objectRepository = (Servers)Load(Settings.Instance.DataBinary);
+				objectRepository.AttachChildEvents();
 			}
 			catch {}
 			if (objectRepository == null)
 			{
-				objectRepository = new XG.Core.Repository.Object();
+				objectRepository = new Servers();
 			}
 			return objectRepository;
 		}
 
-		public override XG.Core.Repository.File GetFileRepository ()
+		public override Files LoadFiles ()
 		{
-			XG.Core.Repository.File fileRepository = null;
+			Files fileRepository = null;
 			try
 			{
-				fileRepository = (XG.Core.Repository.File)this.Load(Settings.Instance.FilesBinary);
-				fileRepository.AttachCildEvents();
+				fileRepository = (Files)Load(Settings.Instance.FilesBinary);
+				fileRepository.AttachChildEvents();
 			}
 			catch {}
 			if (fileRepository == null)
 			{
-				fileRepository = new XG.Core.Repository.File();
+				fileRepository = new Files();
 			}
 			return fileRepository;
 		}
 
-		public override List<string> GetSearchRepository ()
+		public override Objects LoadSearches ()
 		{
-			List<string> searches = null;
+			Objects objectRepository = null;
 			try
 			{
-				searches = (List<string>)this.Load(Settings.Instance.SearchesBinary);
+				objectRepository = (Objects)Load(Settings.Instance.SearchesBinary);
+				objectRepository.AttachChildEvents();
 			}
 			catch {}
-			if (searches == null)
+			if (objectRepository == null)
 			{
-				searches = new List<string>();
+				objectRepository = new Objects();
 			}
-			return searches;
+			return objectRepository;
 		}
 
 		#endregion
@@ -98,82 +101,64 @@ namespace XG.Server.Plugin.Backend.File
 		public override void Start ()
 		{
 			// start data saving routine
-			this.saveDataThread = new Thread(new ThreadStart(SaveDataLoop));
-			this.saveDataThread.Start();
-
-			this.Parent.SearchAddedEvent += new DataTextDelegate (Parent_SearchAddedEvent);
-			this.Parent.SearchRemovedEvent += new DataTextDelegate (Parent_SearchRemovedEvent);
+			_saveDataThread = new Thread(new ThreadStart(SaveDataLoop));
+			_saveDataThread.Start();
 		}
 
 		public override void Stop ()
 		{
-			this.Parent.SearchAddedEvent -= new DataTextDelegate (Parent_SearchAddedEvent);
-			this.Parent.SearchRemovedEvent -= new DataTextDelegate (Parent_SearchRemovedEvent);
-
-			this.saveDataThread.Abort();
+			_saveDataThread.Abort();
 		}
 		
 		#endregion
 
 		#region EVENTS
 
-		protected override void ObjectRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
+		protected override void FileAdded (AObject aParentObj, AObject aObj)
 		{
+			SaveFileDataNow();
 		}
 
-		protected override void ObjectRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
+		protected override void FileRemoved (AObject aParentObj, AObject aObj)
 		{
+			SaveFileDataNow();
 		}
 
-		protected override void ObjectRepository_ObjectChangedEventHandler (XGObject aObj)
+		protected override void FileChanged(AObject aObj)
 		{
-		}
-
-		protected override void FileRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-			this.SaveFileDataNow();
-		}
-
-		protected override void FileRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-			this.SaveFileDataNow();
-		}
-
-		protected override void FileRepository_ObjectChangedEventHandler(XGObject aObj)
-		{
-			if (aObj.GetType() == typeof(XGFile))
+			if (aObj is XG.Core.File)
 			{
-				this.SaveFileDataNow();
+				SaveFileDataNow();
 			}
-			else if (aObj.GetType() == typeof(XGFilePart))
+			else if (aObj is FilePart)
 			{
-				XGFilePart part = aObj as XGFilePart;
+				FilePart part = aObj as FilePart;
 				// if this change is lost, the data might be corrupt, so save it NOW
 				if (part.PartState != FilePartState.Open)
 				{
-					this.SaveFileDataNow();
+					SaveFileDataNow();
 				}
 				// the data saving can be scheduled
 				else
 				{
-					this.isSaveFile = true;
+					_isSaveFile = true;
 				}
 			}
 		}
 
-		private void Parent_SearchAddedEvent(string aSearch)
+		protected override void SearchAdded(AObject aParent, AObject aObj)
 		{
-			lock (this.saveSearchLock)
+			lock (_saveSearchLock)
 			{
-				this.Save(this.Searches, Settings.Instance.SearchesBinary);
+				Save(Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 
-		private void Parent_SearchRemovedEvent(string aSearch)
+		protected override void SearchRemoved(AObject aParent, AObject aObj)
 		{
-			lock (this.saveSearchLock)
+			lock (_saveSearchLock)
 			{
-				this.Save(this.Searches, Settings.Instance.SearchesBinary);
+				Save(Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 
@@ -186,23 +171,21 @@ namespace XG.Server.Plugin.Backend.File
 		/// </summary>
 		/// <param name="aObj"></param>
 		/// <param name="aFile"></param>
-		private void Save(object aObj, string aFile)
+		void Save(object aObj, string aFile)
 		{
 			try
 			{
 				Stream streamWrite = System.IO.File.Create(aFile + ".new");
-				this.formatter.Serialize(streamWrite, aObj);
+				_formatter.Serialize(streamWrite, aObj);
 				streamWrite.Close();
-				try { System.IO.File.Delete(aFile + ".bak"); }
-				catch (Exception) { };
-				try { System.IO.File.Move(aFile, aFile + ".bak"); }
-				catch (Exception) { };
+				Filesystem.DeleteFile(aFile + ".bak");
+				Filesystem.MoveFile(aFile, aFile + ".bak");
 				System.IO.File.Move(aFile + ".new", aFile);
-				log.Debug("Save(" + aFile + ")");
+				_log.Debug("Save(" + aFile + ")");
 			}
 			catch (Exception ex)
 			{
-				log.Fatal("Save(" + aFile + ")", ex);
+				_log.Fatal("Save(" + aFile + ")", ex);
 			}
 		}
 
@@ -211,7 +194,7 @@ namespace XG.Server.Plugin.Backend.File
 		/// </summary>
 		/// <param name="aFile">Name of the File</param>
 		/// <returns>the object or null if the deserializing failed</returns>
-		private object Load(string aFile)
+		object Load(string aFile)
 		{
 			object obj = null;
 			if (System.IO.File.Exists(aFile))
@@ -219,31 +202,31 @@ namespace XG.Server.Plugin.Backend.File
 				try
 				{
 					Stream streamRead = System.IO.File.OpenRead(aFile);
-					obj = this.formatter.Deserialize(streamRead);
+					obj = _formatter.Deserialize(streamRead);
 					streamRead.Close();
-					log.Debug("Load(" + aFile + ")");
+					_log.Debug("Load(" + aFile + ")");
 				}
 				catch (Exception ex)
 				{
-					log.Fatal("Load(" + aFile + ")" , ex);
+					_log.Fatal("Load(" + aFile + ")" , ex);
 					// try to load the backup
 					try
 					{
 						Stream streamRead = System.IO.File.OpenRead(aFile + ".bak");
-						obj = this.formatter.Deserialize(streamRead);
+						obj = _formatter.Deserialize(streamRead);
 						streamRead.Close();
-						log.Debug("Load(" + aFile + ".bak)");
+						_log.Debug("Load(" + aFile + ".bak)");
 					}
 					catch (Exception)
 					{
-						log.Fatal("Load(" + aFile + ".bak)", ex);
+						_log.Fatal("Load(" + aFile + ".bak)", ex);
 					}
 				}
 			}
 			return obj;
 		}
 
-		private void SaveDataLoop()
+		void SaveDataLoop()
 		{
 			DateTime timeIrc = DateTime.Now;
 			DateTime timeStats = DateTime.Now;
@@ -255,16 +238,16 @@ namespace XG.Server.Plugin.Backend.File
 				{
 					timeIrc = DateTime.Now;
 
-					this.Save(this.ObjectRepository, Settings.Instance.DataBinary);
+					Save(Servers, Settings.Instance.DataBinary);
 				}
 
 				// File Data
-				if (this.isSaveFile)
+				if (_isSaveFile)
 				{
-					lock (this.saveFileLock)
+					lock (_saveFileLock)
 					{
-						this.Save(this.FileRepository, Settings.Instance.FilesBinary);
-						this.isSaveFile = false;
+						Save(Files, Settings.Instance.FilesBinary);
+						_isSaveFile = false;
 					}
 				}
 
@@ -282,12 +265,12 @@ namespace XG.Server.Plugin.Backend.File
 		/// <summary>
 		/// Save the FileData right now 
 		/// </summary>
-		private void SaveFileDataNow()
+		void SaveFileDataNow()
 		{
-			lock (this.saveFileLock)
+			lock (_saveFileLock)
 			{
-				this.Save(this.FileRepository, Settings.Instance.FilesBinary);
-				this.isSaveFile = false;
+				Save(Files, Settings.Instance.FilesBinary);
+				_isSaveFile = false;
 			}
 		}
 

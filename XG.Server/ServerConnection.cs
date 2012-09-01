@@ -26,6 +26,8 @@ using XG.Server.Helper;
 
 namespace XG.Server
 {
+	public delegate void ServerSocketErrorDelegate(XG.Core.Server aServer, SocketErrorCode aValue);
+
 	/// <summary>
 	/// This class describes the connection to a single irc server
 	/// it does the following things
@@ -37,171 +39,167 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(ServerConnection));
+		static readonly ILog _log = LogManager.GetLogger(typeof(ServerConnection));
 
-		private XGServer server;
-		public XGServer Server
+		XG.Core.Server _server;
+		public XG.Core.Server Server
 		{
 			set
 			{
-				if(this.server != null)
+				if(_server != null)
 				{
-					this.server.ChildAddedEvent -= new ObjectObjectDelegate(Server_ChildAddedEventHandler);
-					this.server.ChildRemovedEvent -= new ObjectObjectDelegate(Server_ChildRemovedEventHandler);
-					this.server.EnabledChangedEvent -= new ObjectDelegate(Server_EnabledChangedEventHandler);
+					_server.Added -= new ObjectsDelegate(ServerObjectAdded);
+					_server.Removed -= new ObjectsDelegate(ServerObjectRemoved);
+					_server.EnabledChanged -= new ObjectDelegate(ServerEnabledChanged);
 				}
-				this.server = value;
-				if(this.server != null)
+				_server = value;
+				if(_server != null)
 				{
-					this.server.ChildAddedEvent += new ObjectObjectDelegate(Server_ChildAddedEventHandler);
-					this.server.ChildRemovedEvent += new ObjectObjectDelegate(Server_ChildRemovedEventHandler);
-					this.server.EnabledChangedEvent += new ObjectDelegate(Server_EnabledChangedEventHandler);
+					_server.Added += new ObjectsDelegate(ServerObjectAdded);
+					_server.Removed += new ObjectsDelegate(ServerObjectRemoved);
+					_server.EnabledChanged += new ObjectDelegate(ServerEnabledChanged);
 				}
 			}
 		}
 
-		private IrcParser ircParser;
+		IrcParser _ircParser;
 		public IrcParser IrcParser
 		{
 			set
 			{
-				if(this.ircParser != null)
+				if(_ircParser != null)
 				{
-					this.ircParser.SendDataEvent -= new ServerDataTextDelegate(IrcParser_SendDataEventHandler);
-					this.ircParser.JoinChannelEvent -= new ServerChannelDelegate(IrcParser_JoinChannelEventHandler);
-					this.ircParser.CreateTimerEvent -= new ServerObjectIntBoolDelegate(IrcParser_CreateTimerEventHandler);
+					_ircParser.SendData -= new ServerDataTextDelegate(IrcParserSendData);
+					_ircParser.JoinChannel -= new ServerChannelDelegate(IrcParserJoinChannel);
+					_ircParser.CreateTimer -= new ServerObjectIntBoolDelegate(IrcParserCreateTimer);
 
-					this.ircParser.RequestFromBotEvent -= new ServerBotDelegate(IrcParser_RequestFromBotEventHandler);
-					this.ircParser.UnRequestFromBotEvent -= new ServerBotDelegate(IrcParser_UnRequestFromBotEventHandler);
+					_ircParser.RequestFromBot -= new ServerBotDelegate(IrcParserRequestFromBot);
+					_ircParser.UnRequestFromBot -= new ServerBotDelegate(IrcParserUnRequestFromBot);
 				}
-				this.ircParser = value;
-				if(this.ircParser != null)
+				_ircParser = value;
+				if(_ircParser != null)
 				{
-					this.ircParser.SendDataEvent += new ServerDataTextDelegate(IrcParser_SendDataEventHandler);
-					this.ircParser.JoinChannelEvent += new ServerChannelDelegate(IrcParser_JoinChannelEventHandler);
-					this.ircParser.CreateTimerEvent += new ServerObjectIntBoolDelegate(IrcParser_CreateTimerEventHandler);
+					_ircParser.SendData += new ServerDataTextDelegate(IrcParserSendData);
+					_ircParser.JoinChannel += new ServerChannelDelegate(IrcParserJoinChannel);
+					_ircParser.CreateTimer += new ServerObjectIntBoolDelegate(IrcParserCreateTimer);
 
-					this.ircParser.RequestFromBotEvent += new ServerBotDelegate(IrcParser_RequestFromBotEventHandler);
-					this.ircParser.UnRequestFromBotEvent += new ServerBotDelegate(IrcParser_UnRequestFromBotEventHandler);
+					_ircParser.RequestFromBot += new ServerBotDelegate(IrcParserRequestFromBot);
+					_ircParser.UnRequestFromBot += new ServerBotDelegate(IrcParserUnRequestFromBot);
 				}
 			}
 		}
 
-		private bool isRunning = false;
-		public bool IsRunning { get { return this.isRunning; } }
+		bool _isRunning = false;
+		public bool IsRunning { get { return _isRunning; } }
 
-		private Dictionary<XGObject, DateTime> timedObjects;
-		private Dictionary<string, DateTime> latestPacketRequests;
+		Dictionary<AObject, DateTime> _timedObjects = new Dictionary<AObject, DateTime>();
+		Dictionary<string, DateTime> _latestPacketRequests = new Dictionary<string, DateTime>();
 
 		#endregion
 
 		#region EVENTS
 
-		public event ServerDelegate ConnectedEvent;
-		public event ServerSocketErrorDelegate DisconnectedEvent;
+		public event ServerDelegate Connected;
+		public event ServerSocketErrorDelegate Disconnected;
 
 		#endregion
 
 		#region CONNECTION
 
-		protected override void Connection_ConnectedEventHandler()
+		protected override void ConnectionConnected()
 		{
-			this.SendData("NICK " + Settings.Instance.IRCName);
-			this.SendData("USER " + Settings.Instance.IRCName + " " + Settings.Instance.IRCName + " " + this.server.Name + " :root");
+			SendData("NICK " + Settings.Instance.IRCName);
+			SendData("USER " + Settings.Instance.IRCName + " " + Settings.Instance.IRCName + " " + _server.Name + " :root");
 
-			this.timedObjects = new Dictionary<XGObject, DateTime>();
-			this.latestPacketRequests = new Dictionary<string, DateTime>();
-			this.isRunning = true;
+			_timedObjects.Clear();
+			_latestPacketRequests.Clear();
+			_isRunning = true;
 
-			this.server.ErrorCode = SocketErrorCode.None;
-			this.server.Commit();
+			_server.ErrorCode = SocketErrorCode.None;
+			_server.Commit();
 
-			this.ConnectedEvent(this.server);
+			Connected(_server);
 		}
 
-		protected override void Connection_DisconnectedEventHandler(SocketErrorCode aValue)
+		protected override void ConnectionDisconnected(SocketErrorCode aValue)
 		{
-			this.isRunning = false;
+			_isRunning = false;
 
-			this.server.ErrorCode = aValue;
-			this.server.Connected = false;
-			this.server.Commit();
+			_server.ErrorCode = aValue;
+			_server.Connected = false;
+			_server.Commit();
 
-			if (this.timedObjects != null) { this.timedObjects.Clear(); }
-			if (this.latestPacketRequests != null) { this.latestPacketRequests.Clear(); }
+			_timedObjects.Clear();
+			_latestPacketRequests.Clear();
 
-			this.DisconnectedEvent(this.server, aValue);
+			Disconnected(_server, aValue);
 		}
 
-		private void SendData(string aData)
+		void SendData(string aData)
 		{
-			if(this.Connection != null)
+			if(Connection != null)
 			{
-				this.Connection.SendData(aData);
+				Connection.SendData(aData);
 			}
 		}
 
-		protected override void Connection_DataReceivedEventHandler(byte[] aData)
+		protected override void ConnectionDataReceived(string aData)
 		{
-		}
+			_log.Debug("con_DataReceived(" + aData + ")");
 
-		protected override void Connection_DataReceivedEventHandler(string aData)
-		{
-			log.Debug("con_DataReceived(" + aData + ")");
-
-			this.ircParser.ParseData(this.server, aData);
+			_ircParser.ParseData(_server, aData);
 		}
 
 		#endregion
 
 		#region BOT
 
-		private void RequestFromBot(XGBot aBot)
+		void RequestFromBot(Bot aBot)
 		{
 			if (aBot != null)
 			{
 				if (aBot.BotState == BotState.Idle)
 				{
 					// check if the packet is already downloaded, or active - than disable it and get the next one
-					XGPacket tPacket = aBot.GetOldestActivePacket();
+					Packet tPacket = aBot.OldestActivePacket();
 					while (tPacket != null)
 					{
-						Int64 tChunk = this.Parent.GetNextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
+						Int64 tChunk = Parent.GetNextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1 || tChunk == -2)
 						{
-							log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
+							_log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
 							tPacket.Commit();
-							tPacket = aBot.GetOldestActivePacket();
+							tPacket = aBot.OldestActivePacket();
 						}
 						else
 						{
 							string name = XGHelper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
-							if (this.latestPacketRequests.ContainsKey(name))
+							if (_latestPacketRequests.ContainsKey(name))
 							{
-								double time = (this.latestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
+								double time = (_latestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
 								if (time > 0)
 								{
-									log.Warn("RequestFromBot(" + aBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
-									this.CreateTimer(aBot, (long)time + 1000, false);
+									_log.Warn("RequestFromBot(" + aBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
+									CreateTimer(aBot, (long)time + 1000, false);
 									return;
 								}
 							}
 
-							if (this.server.Connected)
+							if (_server.Connected)
 							{
-								log.Info("RequestFromBot(" + aBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
-								this.SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
+								_log.Info("RequestFromBot(" + aBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
+								SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
-								if (this.latestPacketRequests.ContainsKey(name)) { this.latestPacketRequests.Remove(name); }
-								this.latestPacketRequests.Add(name, DateTime.Now.AddMilliseconds(Settings.Instance.SamePacketRequestTime));
+								if (_latestPacketRequests.ContainsKey(name)) { _latestPacketRequests.Remove(name); }
+								_latestPacketRequests.Add(name, DateTime.Now.AddMilliseconds(Settings.Instance.SamePacketRequestTime));
 
 								// statistics
 								Statistic.Instance.Increase(StatisticType.PacketsRequested);
 							}
 
 							// create a timer to re request if the bot didnt recognized the privmsg
-							this.CreateTimer(aBot, Settings.Instance.BotWaitTime, false);
+							CreateTimer(aBot, Settings.Instance.BotWaitTime, false);
 							break;
 						}
 					}
@@ -209,13 +207,13 @@ namespace XG.Server
 			}
 		}
 
-		private void UnRequestFromBot(XGBot aBot)
+		void UnRequestFromBot(Bot aBot)
 		{
 			if (aBot != null) // && myServer[aBot.Name] != null)
 			{
-				log.Info("UnregisterFromBot(" + aBot.Name + ")");
-				this.SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC REMOVE\u0001");
-				this.CreateTimer(aBot, Settings.Instance.CommandWaitTime, false);
+				_log.Info("UnregisterFromBot(" + aBot.Name + ")");
+				SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC REMOVE\u0001");
+				CreateTimer(aBot, Settings.Instance.CommandWaitTime, false);
 
 				// statistics
 				Statistic.Instance.Increase(StatisticType.PacketsRemoved);
@@ -226,13 +224,13 @@ namespace XG.Server
 
 		#region CHANNEL
 
-		private void JoinChannel(XGChannel aChan)
+		void JoinChannel(Channel aChan)
 		{
 			// only join if the channel isnt connected
-			if (aChan != null && server[aChan.Name] != null && !aChan.Connected)
+			if (aChan != null && _server[aChan.Name] != null && !aChan.Connected)
 			{
-				log.Info("JoinChannel(" + aChan.Name + ")");
-				this.SendData("JOIN " + aChan.Name);
+				_log.Info("JoinChannel(" + aChan.Name + ")");
+				SendData("JOIN " + aChan.Name);
 
 				// TODO maybe set a time to resend the command if the channel is not connected
 				// it happend to me, that some available channels werent joined because no confirm messaes appeared
@@ -242,12 +240,12 @@ namespace XG.Server
 			}
 		}
 
-		public void PartChannel(XGChannel aChan)
+		public void PartChannel(Channel aChan)
 		{
 			if (aChan != null)
 			{
-				log.Info("PartChannel(" + aChan.Name + ")");
-				this.SendData("PART " + aChan.Name);
+				_log.Info("PartChannel(" + aChan.Name + ")");
+				SendData("PART " + aChan.Name);
 
 				// statistics
 				Statistic.Instance.Increase(StatisticType.ChannelsParted);
@@ -258,114 +256,114 @@ namespace XG.Server
 
 		#region EVENTHANDLER
 
-		private void Server_ChildAddedEventHandler(XGObject aParent, XGObject aObj)
+		void ServerObjectAdded(AObject aParent, AObject aObj)
 		{
-			if(aObj.GetType() == typeof(XGChannel))
+			if(aObj is Channel)
 			{
-				XGChannel aChan = aObj as XGChannel;
+				Channel aChan = aObj as Channel;
 
 				if (aChan.Enabled)
 				{
-					this.JoinChannel(aChan);
+					JoinChannel(aChan);
 				}
 			}
 		}
 
-		private void Server_ChildRemovedEventHandler(XGObject aParent, XGObject aObj)
+		void ServerObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if(aObj.GetType() == typeof(XGChannel))
+			if(aObj is Channel)
 			{
-				XGChannel aChan = aObj as XGChannel;
+				Channel aChan = aObj as Channel;
 
-				foreach (XGBot tBot in aChan.Bots)
+				foreach (Bot tBot in aChan.Bots)
 				{
-					foreach (XGPacket tPack in tBot.Packets)
+					foreach (Packet tPack in tBot.Packets)
 					{
 						tPack.Enabled = false;
 						tPack.Commit();
 					}
 				}
 
-				this.PartChannel(aChan);
+				PartChannel(aChan);
 			}
 		}
 
-		private void Server_EnabledChangedEventHandler(XGObject aObj)
+		void ServerEnabledChanged(AObject aObj)
 		{
-			if(aObj.GetType() == typeof(XGChannel))
+			if(aObj is Channel)
 			{
-				XGChannel tChan = aObj as XGChannel;
+				Channel tChan = aObj as Channel;
 	
 				if (tChan.Enabled)
 				{
-					this.JoinChannel(tChan);
+					JoinChannel(tChan);
 				}
 				else
 				{
-					this.PartChannel(tChan);
+					PartChannel(tChan);
 				}
 			}
 
-			if(aObj.GetType() == typeof(XGPacket))
+			if(aObj is Packet)
 			{
-				XGPacket tPack = aObj as XGPacket;
-				XGBot tBot = tPack.Parent;
+				Packet tPack = aObj as Packet;
+				Bot tBot = tPack.Parent;
 
 				if (tPack.Enabled)
 				{
-					if (tBot.GetOldestActivePacket() == tPack) { this.RequestFromBot(tBot); }
+					if (tBot.OldestActivePacket() == tPack) { RequestFromBot(tBot); }
 				}
 				else
 				{
 					if (tBot.BotState == BotState.Waiting || tBot.BotState == BotState.Active)
 					{
-						XGPacket tmp = tBot.GetCurrentQueuedPacket();
+						Packet tmp = tBot.CurrentQueuedPacket;
 						if (tmp == tPack)
 						{
-							this.UnRequestFromBot(tBot);
+							UnRequestFromBot(tBot);
 						}
 					}
 				}
 			}
 		}
 
-		private void IrcParser_SendDataEventHandler(XGServer aServer, string aData)
+		void IrcParserSendData(XG.Core.Server aServer, string aData)
 		{
-			if (this.server == aServer)
+			if (_server == aServer)
 			{
-				this.SendData(aData);
+				SendData(aData);
 			}
 		}
 
-		private void IrcParser_JoinChannelEventHandler(XGServer aServer, XGChannel aChannel)
+		void IrcParserJoinChannel(XG.Core.Server aServer, Channel aChannel)
 		{
-			if (this.server == aServer)
+			if (_server == aServer)
 			{
-				this.JoinChannel(aChannel);
+				JoinChannel(aChannel);
 			}
 		}
 
-		private void IrcParser_CreateTimerEventHandler(XGServer aServer, XGObject aObject, Int64 aTime, bool aOverride)
+		void IrcParserCreateTimer(XG.Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
 		{
-			if (this.server == aServer)
+			if (_server == aServer)
 			{
-				this.CreateTimer(aObject, aTime, aOverride);
+				CreateTimer(aObject, aTime, aOverride);
 			}
 		}
 
-		private void IrcParser_RequestFromBotEventHandler(XGServer aServer, XGBot aBot)
+		void IrcParserRequestFromBot(XG.Core.Server aServer, Bot aBot)
 		{
-			if (this.server == aServer)
+			if (_server == aServer)
 			{
-				this.RequestFromBot(aBot);
+				RequestFromBot(aBot);
 			}
 		}
 
-		private void IrcParser_UnRequestFromBotEventHandler(XGServer aServer, XGBot aBot)
+		void IrcParserUnRequestFromBot(XG.Core.Server aServer, Bot aBot)
 		{
-			if (this.server == aServer)
+			if (_server == aServer)
 			{
-				this.UnRequestFromBot(aBot);
+				UnRequestFromBot(aBot);
 			}
 		}
 
@@ -378,38 +376,38 @@ namespace XG.Server
 		/// </summary>
 		public void TriggerTimerRun()
 		{
-			List<XGObject> remove = new List<XGObject>();
-			foreach (KeyValuePair<XGObject, DateTime> kvp in this.timedObjects)
+			List<AObject> remove = new List<AObject>();
+			foreach (KeyValuePair<AObject, DateTime> kvp in _timedObjects)
 			{
 				DateTime time = kvp.Value;
 				if ((time - DateTime.Now).TotalMilliseconds < 0) { remove.Add(kvp.Key); }
 			}
-			foreach (XGObject obj in remove)
+			foreach (AObject obj in remove)
 			{
-				this.timedObjects.Remove(obj);
+				_timedObjects.Remove(obj);
 
-				if (obj.GetType() == typeof(XGChannel)) { this.JoinChannel(obj as XGChannel); }
-				else if (obj.GetType() == typeof(XGBot)) { this.RequestFromBot(obj as XGBot); }
+				if (obj is Channel) { JoinChannel(obj as Channel); }
+				else if (obj is Bot) { RequestFromBot(obj as Bot); }
 			}
 
-			//this.SendData("PING " + this.myServer.Name);
+			//SendData("PING " + myServer.Name);
 		}
 
-		public void CreateTimer(XGObject aObject, Int64 aTime, bool aOverride)
+		public void CreateTimer(AObject aObject, Int64 aTime, bool aOverride)
 		{
 			if(aObject == null)
 			{
-				log.Fatal("CreateTimer(null, " + aTime + ", " + aOverride + ") object is null!");
+				_log.Fatal("CreateTimer(null, " + aTime + ", " + aOverride + ") object is null!");
 				return;
 			}
-			if (aOverride && this.timedObjects.ContainsKey(aObject))
+			if (aOverride && _timedObjects.ContainsKey(aObject))
 			{
-				this.timedObjects.Remove(aObject);
+				_timedObjects.Remove(aObject);
 			}
 
-			if (!this.timedObjects.ContainsKey(aObject))
+			if (!_timedObjects.ContainsKey(aObject))
 			{
-				this.timedObjects.Add(aObject, DateTime.Now.AddMilliseconds(aTime));
+				_timedObjects.Add(aObject, DateTime.Now.AddMilliseconds(aTime));
 			}
 		}
 

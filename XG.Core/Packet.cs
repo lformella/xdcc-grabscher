@@ -20,25 +20,25 @@ using System;
 namespace XG.Core
 {
 	[Serializable()]
-	public class XGPacket : XGObject
+	public class Packet : AObject
 	{
 		#region VARIABLES
 
-		public new XGBot Parent
+		public new Bot Parent
 		{
-			get { return base.Parent as XGBot; }
+			get { return base.Parent as Bot; }
 			set { base.Parent = value; }
 		}
 
 		[field: NonSerialized()]
-		private XGFilePart part;
-		public XGFilePart Part
+		FilePart part;
+		public FilePart Part
 		{
-			get { return this.part; }
-			set { this.part = value; }
+			get { return part; }
+			set { part = value; }
 		}
 
-		public new string Name
+		public override string Name
 		{
 			get { return base.Name; }
 			set
@@ -46,92 +46,92 @@ namespace XG.Core
 				// iam updated if the packet name changes
 				if (base.Name != value)
 				{
-					this.lastUpdated = DateTime.Now;
+					lastUpdated = DateTime.Now;
 				}
 				base.Name = value;
 			}
 		}
 
-		private int id = -1;
+		int id = -1;
 		public int Id
 		{
-			get { return this.id; }
+			get { return id; }
 			set
 			{
-				if (this.id != value)
+				if (id != value)
 				{
-					this.id = value;
-					this.Modified = true;
+					id = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private Int64 size = 0;
+		Int64 size = 0;
 		public Int64 Size
 		{
-			get { return this.size; }
+			get { return size; }
 			set
 			{
-				if (this.size != value)
+				if (size != value)
 				{
-					this.size = value;
-					this.Modified = true;
+					size = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private Int64 realSize = 0;
+		Int64 realSize = 0;
 		public Int64 RealSize
 		{
-			get { return this.realSize; }
+			get { return realSize; }
 			set
 			{
-				if (this.realSize != value)
+				if (realSize != value)
 				{
-					this.realSize = value;
-					this.Modified = true;
+					realSize = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private string realName = "";
+		string realName = "";
 		public string RealName
 		{
-			get { return this.realName; }
+			get { return realName; }
 			set
 			{
-				if (this.realName != value)
+				if (realName != value)
 				{
-					this.realName = value;
-					this.Modified = true;
+					realName = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private DateTime lastUpdated = new DateTime(1, 1, 1);
+		DateTime lastUpdated = new DateTime(1, 1, 1);
 		public DateTime LastUpdated
 		{
-			get { return this.lastUpdated; }
+			get { return lastUpdated; }
 			set
 			{
 				if (lastUpdated != value)
 				{
 					lastUpdated = value;
-					this.Modified = true;
+					Modified = true;
 				}
 			}
 		}
 
-		private DateTime lastMentioned = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		DateTime lastMentioned = new DateTime(1, 1, 1, 0, 0, 0, 0);
 		public DateTime LastMentioned
 		{
-			get { return this.lastMentioned; }
+			get { return lastMentioned; }
 			set
 			{
-				if (this.lastMentioned != value)
+				if (lastMentioned != value)
 				{
-					this.lastMentioned = value;
-					this.Modified = true;
+					lastMentioned = value;
+					Modified = true;
 				}
 			}
 		}

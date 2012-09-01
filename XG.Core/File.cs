@@ -22,62 +22,62 @@ using System.Linq;
 namespace XG.Core
 {
 	[Serializable()]
-	public class XGFile : XGObject
+	public class File : AObjects
 	{
 		#region VARIABLES
 
 		[field: NonSerialized()]
 		public object Locked = new object();
 
-		public new string Name
+		public override string Name
 		{
 			get { return base.Name; }
 		}
 
-		private string tmpPath;
+		string _tmpPath;
 		public string TmpPath
 		{
-			get { return this.tmpPath; }
+			get { return _tmpPath; }
 		}
 
-		private Int64 size;
+		Int64 _size;
 		public Int64 Size
 		{
-			get { return this.size; }
+			get { return _size; }
 		}
 
 		#endregion
 
 		#region CHILDREN
 
-		public IEnumerable<XGFilePart> Parts
+		public IEnumerable<FilePart> Parts
 		{
-			get { return base.Children.Cast<XGFilePart>(); }
+			get { return base.All.Cast<FilePart>(); }
 		}
 
-		public bool AddPart(XGFilePart aPart)
+		public bool Add(FilePart aPart)
 		{
-			return base.AddChild(aPart);
+			return base.Add(aPart);
 		}
 
-		public bool RemovePart(XGFilePart aPart)
+		public bool Remove(FilePart aPart)
 		{
-			return base.RemoveChild(aPart);
+			return base.Remove(aPart);
 		}
 
 		#endregion
 
 		#region CONSTRUCTOR
 
-		private XGFile() : base()
+		File() : base()
 		{
 		}
 
-		public XGFile(string aName, Int64 aSize) : this()
+		public File(string aName, Int64 aSize) : this()
 		{
 			base.Name = aName;
-			this.size = aSize;
-			this.tmpPath = XGHelper.ShrinkFileName(aName, aSize);
+			_size = aSize;
+			_tmpPath = XGHelper.ShrinkFileName(aName, aSize);
 		}
 
 		#endregion

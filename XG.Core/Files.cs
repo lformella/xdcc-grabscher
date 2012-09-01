@@ -1,5 +1,5 @@
 //  
-//  Copyright (C) 2012 Lars Formella <ich@larsformella.de>
+//  Copyright (C) 2009 Lars Formella <ich@larsformella.de>
 // 
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,23 +16,48 @@
 // 
 
 using System;
-using NUnit.Framework;
-using XG.Core;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace XG.Test
+namespace XG.Core
 {
-	[TestFixture()]
-	public class XG_Core_Helper
+	[Serializable()]
+	public class Files : AObjects
 	{
-		[Test()]
-		public void ShrinkFileName ()
+		public new IEnumerable<File> All
 		{
-			string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
-			Int64 fileSize = 440044;
-			string result = XGHelper.ShrinkFileName(fileName, fileSize);
+			get { return base.All.Cast<File>(); }
+		}
 
-			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);
+		public File this[string tmpPath]
+		{
+			get
+			{
+				try
+				{
+					return All.First(file => file.TmpPath == tmpPath);
+				}
+				catch {}
+				return null;
+			}
+		}
+
+		public void Add(File aFile)
+		{
+			base.Add(aFile);
+		}
+		public void Add(string aName, Int64 aSize)
+		{
+			File tFile = new File(aName, aSize);
+			if (this[tFile.TmpPath] == null)
+			{
+				Add(tFile);
+			}
+		}
+
+		public void Remove(File aFile)
+		{
+			base.Remove(aFile);
 		}
 	}
 }
-

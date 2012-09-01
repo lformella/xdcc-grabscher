@@ -22,192 +22,216 @@ using System.Net;
 
 namespace XG.Core
 {
+	[Flags]
+	public enum BotState : byte
+	{
+		Idle,
+		Active,
+		Waiting
+	}
+
 	[Serializable()]
-	public class XGBot : XGObject
+	public class Bot : AObjects
 	{
 		#region VARIABLES
 
-		public new XGChannel Parent
+		public new Channel Parent
 		{
-			get { return base.Parent as XGChannel; }
+			get { return base.Parent as Channel; }
 			set { base.Parent = value; }
 		}
 
-		[field: NonSerialized()]
-		private XGPacket currentQueuedPacket = null;
-
-		private BotState botState;
-		public BotState BotState
+		public override bool Connected
 		{
-			get { return botState; }
+			get { return base.Connected; }
 			set
 			{
-				if (botState != value)
+				if (base.Connected != value)
 				{
-					botState = value;
-					this.Modified = true;
+					base.Connected = value;
+				}
+			}
+		}
+
+		[field: NonSerialized()]
+		Packet _currentQueuedPacket = null;
+		public Packet CurrentQueuedPacket
+		{
+			get { return _currentQueuedPacket; }
+		}
+
+		BotState _botState;
+		public BotState BotState
+		{
+			get { return _botState; }
+			set
+			{
+				if (_botState != value)
+				{
+					_botState = value;
+					Modified = true;
 				}
 
 				if(value == BotState.Waiting)
 				{
-					this.currentQueuedPacket = this.GetOldestActivePacket();
+					_currentQueuedPacket = OldestActivePacket();
 				}
 				else
 				{
-					// this.currentQueuedPacket = null;
+					// currentQueuedPacket = null;
 				}
 			}
 		}
 
 		[field: NonSerialized()]
-		private IPAddress ip = IPAddress.None;
+		IPAddress _ip = IPAddress.None;
 		public IPAddress IP
 		{
-			get { return ip; }
+			get { return _ip; }
 			set
 			{
-				if (ip != value)
+				if (_ip != value)
 				{
-					ip = value;
-					this.Modified = true;
+					_ip = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private string lastMessage = "";
+		string _lastMessage = "";
 		public string LastMessage
 		{
-			get { return lastMessage; }
+			get { return _lastMessage; }
 			set
 			{
-				if (lastMessage != value)
+				if (_lastMessage != value)
 				{
-					lastMessage = value;
-					this.lastContact = DateTime.Now;
-					this.Modified = true;
+					_lastMessage = value;
+					_lastContact = DateTime.Now;
+					Modified = true;
 				}
 			}
 		}
 
-		private DateTime lastContact = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		DateTime _lastContact = new DateTime(1, 1, 1, 0, 0, 0, 0);
 		public DateTime LastContact
 		{
-			get { return lastContact; }
+			get { return _lastContact; }
 			set
 			{
-				if (lastContact != value)
+				if (_lastContact != value)
 				{
-					lastContact = value;
-					this.Modified = true;
+					_lastContact = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private int queuePosition = 0;
+		int _queuePosition = 0;
 		public int QueuePosition
 		{
-			get { return queuePosition; }
+			get { return _queuePosition; }
 			set
 			{
-				if (queuePosition != value)
+				if (_queuePosition != value)
 				{
-					queuePosition = value;
-					this.Modified = true;
+					_queuePosition = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private int queueTime = 0;
+		int _queueTime = 0;
 		public int QueueTime
 		{
-			get { return queueTime; }
+			get { return _queueTime; }
 			set
 			{
-				if (queueTime != value)
+				if (_queueTime != value)
 				{
-					queueTime = value;
-					this.Modified = true;
+					_queueTime = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private double infoSpeedMax = 0;
+		double _infoSpeedMax = 0;
 		public double InfoSpeedMax
 		{
-			get { return infoSpeedMax; }
+			get { return _infoSpeedMax; }
 			set
 			{
-				if (infoSpeedMax != value)
+				if (_infoSpeedMax != value)
 				{
-					infoSpeedMax = value;
-					this.Modified = true;
+					_infoSpeedMax = value;
+					Modified = true;
 				}
 			}
 		}
-		private double infoSpeedCurrent = 0;
+		double _infoSpeedCurrent = 0;
 		public double InfoSpeedCurrent
 		{
-			get { return infoSpeedCurrent; }
+			get { return _infoSpeedCurrent; }
 			set
 			{
-				if (infoSpeedCurrent != value)
+				if (_infoSpeedCurrent != value)
 				{
-					infoSpeedCurrent = value;
-					this.Modified = true;
+					_infoSpeedCurrent = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private int infoSlotTotal = 0;
+		int _infoSlotTotal = 0;
 		public int InfoSlotTotal
 		{
-			get { return infoSlotTotal; }
+			get { return _infoSlotTotal; }
 			set
 			{
-				if (infoSlotTotal != value)
+				if (_infoSlotTotal != value)
 				{
-					infoSlotTotal = value;
-					this.Modified = true;
+					_infoSlotTotal = value;
+					Modified = true;
 				}
 			}
 		}
-		private int infoSlotCurrent = 0;
+		int _infoSlotCurrent = 0;
 		public int InfoSlotCurrent
 		{
-			get { return infoSlotCurrent; }
+			get { return _infoSlotCurrent; }
 			set
 			{
-				if (infoSlotCurrent != value)
+				if (_infoSlotCurrent != value)
 				{
-					infoSlotCurrent = value;
-					this.Modified = true;
+					_infoSlotCurrent = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private int infoQueueTotal = 0;
+		int _infoQueueTotal = 0;
 		public int InfoQueueTotal
 		{
-			get { return infoQueueTotal; }
+			get { return _infoQueueTotal; }
 			set
 			{
-				if (infoQueueTotal != value)
+				if (_infoQueueTotal != value)
 				{
-					infoQueueTotal = value;
-					this.Modified = true;
+					_infoQueueTotal = value;
+					Modified = true;
 				}
 			}
 		}
-		private int infoQueueCurrent = 0;
+		int _infoQueueCurrent = 0;
 		public int InfoQueueCurrent
 		{
-			get { return infoQueueCurrent; }
+			get { return _infoQueueCurrent; }
 			set
 			{
-				if (infoQueueCurrent != value)
+				if (_infoQueueCurrent != value)
 				{
-					infoQueueCurrent = value;
-					this.Modified = true;
+					_infoQueueCurrent = value;
+					Modified = true;
 				}
 			}
 		}
@@ -216,7 +240,7 @@ namespace XG.Core
 		{
 			get
 			{
-				return (from pack in this.Packets where pack.Part != null select pack.Part.Speed).Sum();
+				return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum();
 			}
 		}
 
@@ -224,49 +248,44 @@ namespace XG.Core
 
 		#region CHILDREN
 
-		public IEnumerable<XGPacket> Packets
+		public IEnumerable<Packet> Packets
 		{
-			get { return base.Children.Cast<XGPacket>(); }
+			get { return base.All.Cast<Packet>(); }
 		}
 
-		public XGPacket this[int id]
+		public Packet this[int id]
 		{
 			get
 			{
 				try
 				{
-					return this.Packets.First(pack => pack.Id == id);
+					return Packets.First(pack => pack.Id == id);
 				}
 				catch {}
 				return null;
 			}
 		}
 
-		public void AddPacket(XGPacket aPacket)
+		public void AddPacket(Packet aPacket)
 		{
-			base.AddChild(aPacket);
+			base.Add(aPacket);
 		}
 		
-		public void RemovePacket(XGPacket aPacket)
+		public void RemovePacket(Packet aPacket)
 		{
-			base.RemoveChild(aPacket);
+			base.Remove(aPacket);
 		}
 
-		public XGPacket GetOldestActivePacket()
+		public Packet OldestActivePacket()
 		{
 			try
 			{
-				return this.Packets.OrderBy(packet => packet.LastModified).First(pack => pack.Enabled);
+				return Packets.OrderBy(packet => packet.EnabledTime).First(pack => pack.Enabled);
 			}
 			catch (InvalidOperationException)
 			{
 				return null;
 			}
-		}
-
-		public XGPacket GetCurrentQueuedPacket()
-		{
-			return this.currentQueuedPacket;
 		}
 
 		#endregion

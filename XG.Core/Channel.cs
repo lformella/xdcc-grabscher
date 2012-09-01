@@ -22,42 +22,26 @@ using System.Linq;
 namespace XG.Core
 {
 	[Serializable()]
-	public class XGChannel : XGObject
+	public class Channel : AObjects
 	{
 		#region VARIABLES
 
-		public new XGServer Parent
+		public new Server Parent
 		{
-			get { return base.Parent as XGServer; }
+			get { return base.Parent as Server; }
 			set { base.Parent = value; }
 		}
 
-		public new bool Connected
-		{
-			get { return base.Connected; }
-			set
-			{
-				if (!value)
-				{
-					foreach (XGObject tObj in base.Children)
-					{
-						tObj.Connected = value;
-					}
-				}
-				base.Connected = value;
-			}
-		}
-
-		private int errorCode = 0;
+		int errorCode = 0;
 		public int ErrorCode
 		{
-			get { return this.errorCode; }
+			get { return errorCode; }
 			set
 			{
-				if (this.errorCode != value)
+				if (errorCode != value)
 				{
-					this.errorCode = value;
-					this.Modified = true;
+					errorCode = value;
+					Modified = true;
 				}
 			}
 		}
@@ -66,32 +50,27 @@ namespace XG.Core
 
 		#region CHILDREN
 
-		public IEnumerable<XGBot> Bots
+		public IEnumerable<Bot> Bots
 		{
-			get { return base.Children.Cast<XGBot>(); }
+			get { return base.All.Cast<Bot>(); }
 		}
 
-		public XGBot this[string name]
+		public Bot this[string name]
 		{
 			get
 			{
-				try
-				{
-					return this.Bots.First(bot => bot.Name.Trim().ToLower() == name.Trim().ToLower());
-				}
-				catch {}
-				return null;
+				return (Bot)base.ByName(name);
 			}
 		}
 
-		public void AddBot(XGBot aBot)
+		public void AddBot(Bot aBot)
 		{
-			base.AddChild(aBot);
+			base.Add(aBot);
 		}
 		
-		public void RemoveBot(XGBot aBot)
+		public void RemoveBot(Bot aBot)
 		{
-			base.RemoveChild(aBot);
+			base.Remove(aBot);
 		}
 
 		#endregion

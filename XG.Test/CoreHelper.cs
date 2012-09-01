@@ -16,20 +16,22 @@
 // 
 
 using System;
-
+using NUnit.Framework;
 using XG.Core;
 
-namespace XG.Server.Helper
+namespace Test
 {
-	public class PartBytesObject
+	[TestFixture()]
+	public class CoreHelper
 	{
-		public FilePart Part { get; set; }
-		public byte[] Bytes { get; set; }
-
-		public PartBytesObject(FilePart aPart, byte[] aBytes)
+		[Test()]
+		public void ShrinkFileName ()
 		{
-			Part = aPart;
-			Bytes = aBytes;
+			string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
+			Int64 fileSize = 440044;
+			string result = XGHelper.ShrinkFileName(fileName, fileSize);
+
+			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);
 		}
 	}
 }

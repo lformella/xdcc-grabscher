@@ -21,7 +21,6 @@ using Mono.Unix;
 
 using System;
 using System.IO;
-using System.Threading;
 
 using log4net;
 using log4net.Appender;
@@ -29,11 +28,7 @@ using log4net.Config;
 using log4net.Repository.Hierarchy;
 
 using XG.Server;
-using XG.Server.Plugin.Backend;
-using XG.Server.Plugin.Backend.File;
-using XG.Server.Plugin.Backend.MySql;
-using XG.Server.Plugin.General.Jabber;
-using XG.Server.Plugin.General.Webserver;
+using XG.Server.Plugin;
 
 namespace XG.Server.Cmd
 {
@@ -41,10 +36,20 @@ namespace XG.Server.Cmd
 	{
 		public static void Main(string[] args)
 		{
+#if !WINDOWS
+			PlatformID id  = Environment.OSVersion.Platform;
+			// Don't allow running as root on Linux or Mac
+			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
+			{
+				Console.WriteLine ("Sorry, you can't run XG with these permissions. Safety first!");
+				Environment.Exit (-1);
+			}
+#endif
+
 			if(File.Exists("./log4net"))
 			{
 				// load settings from file
-				XmlConfigurator.Configure(new System.IO.FileInfo("./log4net"));
+				XmlConfigurator.Configure(new FileInfo("./log4net"));
 			}
 			else
 			{
@@ -62,19 +67,9 @@ namespace XG.Server.Cmd
 				root.Repository.Configured = true;
 			}
 
-#if !WINDOWS
-			PlatformID id  = Environment.OSVersion.Platform;
-			// Don't allow running as root on Linux or Mac
-			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
-			{
-				Console.WriteLine ("Sorry, you can't run XG with these permissions. Safety first!");
-				Environment.Exit (-1);
-			}
-#endif
-
 			MainInstance instance = new MainInstance();
 
-			AServerBackendPlugin backend = null;
+			ABackendPlugin backend = null;
 			if (Settings.Instance.StartMySqlBackend)
 			{
 				backend = new XG.Server.Plugin.Backend.MySql.BackendPlugin();

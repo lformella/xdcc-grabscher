@@ -19,141 +19,150 @@ using System;
 
 namespace XG.Core
 {
+	[Flags]
+	public enum FilePartState : byte
+	{
+		Open,
+		Closed,
+		Ready,
+		Broken
+	}
+
 	[Serializable()]
-	public class XGFilePart : XGObject
+	public class FilePart : AObject
 	{
 		#region VARIABLES
 
-		public new XGFile Parent
+		public new File Parent
 		{
-			get { return base.Parent as XGFile; }
+			get { return base.Parent as File; }
 			set { base.Parent = value; }
 		}
 
 		[field: NonSerialized()]
-		private XGPacket packet;
-		public XGPacket Packet
+		Packet _packet;
+		public Packet Packet
 		{
-			get { return this.packet; }
+			get { return _packet; }
 			set
 			{
-				if (this.packet != value)
+				if (_packet != value)
 				{
-					this.packet = value;
-					if (this.packet != null) { this.packetGuid = this.packet.Guid; }
+					_packet = value;
+					if (_packet != null) { _packetGuid = _packet.Guid; }
 					else
 					{
-						this.packetGuidOld = packetGuid;
-						this.packetGuid = Guid.Empty;
+						_packetGuidOld = _packetGuid;
+						_packetGuid = Guid.Empty;
 					}
 				}
 			}
 		}
 
-		private Guid packetGuid;
+		Guid _packetGuid;
 		public Guid PacketGuid
 		{
-			get { return this.packetGuid; }
+			get { return _packetGuid; }
 		}
 
-		private Guid packetGuidOld;
+		Guid _packetGuidOld;
 		public Guid PacketGuidOld
 		{
-			get { return this.packetGuidOld; }
+			get { return _packetGuidOld; }
 		}
 
-		private Int64 startSize = 0;
+		Int64 _startSize = 0;
 		public Int64 StartSize
 		{
-			get { return this.startSize; }
+			get { return _startSize; }
 			set
 			{
-				if (this.startSize != value)
+				if (_startSize != value)
 				{
-					this.startSize = value;
-					this.Modified = true;
+					_startSize = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private Int64 stopSize = 0;
+		Int64 _stopSize = 0;
 		public Int64 StopSize
 		{
-			get { return this.stopSize; }
+			get { return _stopSize; }
 			set
 			{
-				if (this.stopSize != value)
+				if (_stopSize != value)
 				{
-					this.stopSize = value;
-					this.Modified = true;
+					_stopSize = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private Int64 currentSize = 0;
+		Int64 _currentSize = 0;
 		public Int64 CurrentSize
 		{
-			get { return this.currentSize; }
+			get { return _currentSize; }
 			set
 			{
-				if (this.currentSize != value)
+				if (_currentSize != value)
 				{
-					this.currentSize = value;
-					this.Modified = true;
+					_currentSize = value;
+					Modified = true;
 				}
 			}
 		}
 
 		public Int64 MissingSize
 		{
-			get { return this.stopSize - this.currentSize; }
+			get { return _stopSize - _currentSize; }
 		}
 
 		public Int64 TimeMissing
 		{
-			get { return (this.speed > 0 ? (Int64)(this.MissingSize / this.Speed) : Int64.MaxValue); }
+			get { return (_speed > 0 ? (Int64)(MissingSize / Speed) : Int64.MaxValue); }
 		}
 
-		private double speed = 0;
+		double _speed = 0;
 		public double Speed
 		{
-			get { return this.speed; }
+			get { return _speed; }
 			set
 			{
-				if (this.speed != value)
+				if (_speed != value)
 				{
-					this.speed = value;
-					this.Modified = true;
+					_speed = value;
+					Modified = true;
 				}
 			}
 		}
 
-		private FilePartState partState;
+		FilePartState _partState;
 		public FilePartState PartState
 		{
-			get { return this.partState; }
+			get { return _partState; }
 			set
 			{
-				if (this.partState != value)
+				if (_partState != value)
 				{
-					this.partState = value;
-					if (this.partState != FilePartState.Open) { this.speed = 0; }
-					if (this.partState == FilePartState.Ready) { this.currentSize = this.stopSize; }
-					this.Modified = true;
+					_partState = value;
+					if (_partState != FilePartState.Open) { _speed = 0; }
+					if (_partState == FilePartState.Ready) { _currentSize = _stopSize; }
+					Modified = true;
 				}
 			}
 		}
 
-		private bool isChecked;
+		bool _isChecked;
 		public bool IsChecked
 		{
-			get { return this.isChecked; }
+			get { return _isChecked; }
 			set
 			{
-				if (this.isChecked != value)
+				if (_isChecked != value)
 				{
-					this.isChecked = value;
-					this.Modified = true;
+					_isChecked = value;
+					Modified = true;
 				}
 			}
 		}

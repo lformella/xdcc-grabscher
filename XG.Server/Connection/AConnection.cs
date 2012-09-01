@@ -28,43 +28,39 @@ namespace XG.Server.Connection
 
 		public Int64 MaxData { get; set; }
 
-		public event EmptyDelegate ConnectedEvent;
-
-		public void FireConnectedEvent ()
+		public event EmptyDelegate Connected;
+		public void FireConnected ()
 		{
-			if (this.ConnectedEvent != null)
+			if (Connected != null)
 			{
-				this.ConnectedEvent();
+				Connected();
 			}
 		}
 
-		public event SocketErrorDelegate DisconnectedEvent;
-
-		public void FireDisconnectedEvent (SocketErrorCode aValue)
+		public event SocketErrorDelegate Disconnected;
+		public void FireDisconnected (SocketErrorCode aValue)
 		{
-			if (this.DisconnectedEvent != null)
+			if (Disconnected != null)
 			{
-				this.DisconnectedEvent(aValue);
+				Disconnected(aValue);
 			}
 		}
 
-		public event DataTextDelegate DataTextReceivedEvent;
-
-		public void FireDataTextReceivedEvent (string aData)
+		public event DataTextDelegate DataTextReceived;
+		public void FireDataTextReceived (string aData)
 		{
-			if (this.DataTextReceivedEvent != null)
+			if (DataTextReceived != null)
 			{
-				this.DataTextReceivedEvent(aData);
+				DataTextReceived(aData);
 			}
 		}
 
-		public event DataBinaryDelegate DataBinaryReceivedEvent;
-
-		public void FireDataBinaryReceivedEvent (byte[] aData)
+		public event DataBinaryDelegate DataBinaryReceived;
+		public void FireDataBinaryReceived (byte[] aData)
 		{
-			if (this.DataBinaryReceivedEvent != null)
+			if (DataBinaryReceived != null)
 			{
-				this.DataBinaryReceivedEvent(aData);
+				DataBinaryReceived(aData);
 			}
 		}
 

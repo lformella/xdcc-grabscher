@@ -28,18 +28,17 @@ using log4net;
 
 using XG.Client.Web;
 using XG.Core;
-using XG.Server.Plugin;
 
 namespace XG.Server.Plugin.General.Webserver
 {
-	public class Plugin : AServerGeneralPlugin
+	public class Plugin : APlugin
 	{
 		#region VARIABLES
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
+		static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
 
-		private Thread serverThread;
-		private HttpListener listener;
+		Thread serverThread;
+		HttpListener listener;
 
 		#endregion
 
@@ -50,9 +49,8 @@ namespace XG.Server.Plugin.General.Webserver
 		/// </summary>
 		public override void Start()
 		{
-			// start the server thread
-			this.serverThread = new Thread(new ThreadStart(OpenServer));
-			this.serverThread.Start();
+			serverThread = new Thread(new ThreadStart(OpenServer));
+			serverThread.Start();
 		}
 
 		/// <summary>
@@ -60,8 +58,8 @@ namespace XG.Server.Plugin.General.Webserver
 		/// </summary>
 		public override void Stop()
 		{
-			this.CloseServer();
-			this.serverThread.Abort();
+			CloseServer();
+			serverThread.Abort();
 		}
 
 		#endregion
@@ -71,15 +69,15 @@ namespace XG.Server.Plugin.General.Webserver
 		/// <summary>
 		/// Opens the server port, waiting for clients
 		/// </summary>
-		private void OpenServer()
+		void OpenServer()
 		{
-			this.listener = new HttpListener();
+			listener = new HttpListener();
 #if !UNSAFE
 			try
 			{
 #endif
-				this.listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
-				this.listener.Start();
+				listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
+				listener.Start();
 
 				while (true)
 				{
@@ -87,7 +85,7 @@ namespace XG.Server.Plugin.General.Webserver
 					try
 					{
 #endif
-						HttpListenerContext client = this.listener.GetContext();
+						HttpListenerContext client = listener.GetContext();
 						Thread t = new Thread(new ParameterizedThreadStart(OpenClient));
 						t.IsBackground = true;
 						t.Start(client);
@@ -108,9 +106,9 @@ namespace XG.Server.Plugin.General.Webserver
 #endif
 		}
 
-		private void CloseServer()
+		void CloseServer()
 		{
-			this.listener.Close();
+			listener.Close();
 		}
 
 		#endregion
@@ -121,7 +119,7 @@ namespace XG.Server.Plugin.General.Webserver
 		/// Called if a client connects
 		/// </summary>
 		/// <param name="aObject"></param>
-		private void OpenClient(object aObject)
+		void OpenClient(object aObject)
 		{
 			HttpListenerContext client = aObject as HttpListenerContext;
 
@@ -173,11 +171,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region SERVER
 
 						case TCPClientRequest.AddServer:
-							this.ObjectRepository.AddServer(HttpUtility.UrlDecode(tDic["name"]));
+							AddServer(HttpUtility.UrlDecode(tDic["name"]));
 							break;
 
 						case TCPClientRequest.RemoveServer:
-							this.RemoveServer(new Guid(tDic["guid"]));
+							RemoveServer(new Guid(tDic["guid"]));
 							break;
 
 						#endregion
@@ -185,11 +183,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region CHANNEL
 
 						case TCPClientRequest.AddChannel:
-							this.AddChannel(new Guid(tDic["guid"]), tDic["name"]);
+							AddChannel(new Guid(tDic["guid"]), tDic["name"]);
 							break;
 
 						case TCPClientRequest.RemoveChannel:
-							this.RemoveChannel(new Guid(tDic["guid"]));
+							RemoveChannel(new Guid(tDic["guid"]));
 							break;
 
 						#endregion
@@ -197,11 +195,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region OBJECT
 
 						case TCPClientRequest.ActivateObject:
-							this.ActivateObject(new Guid(tDic["guid"]));
+							ActivateObject(new Guid(tDic["guid"]));
 							break;
 
 						case TCPClientRequest.DeactivateObject:
-							this.DeactivateObject(new Guid(tDic["guid"]));
+							DeactivateObject(new Guid(tDic["guid"]));
 							break;
 
 						#endregion
@@ -210,8 +208,8 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.SearchPacket:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(
-								this.GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
+							response = Objects2Json(
+								GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
@@ -219,8 +217,8 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.SearchBot:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(
-								this.GetBots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
+							response = Objects2Json(
+								GetBots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
@@ -231,15 +229,22 @@ namespace XG.Server.Plugin.General.Webserver
 						# region SEARCH SPECIAL
 
 						case TCPClientRequest.AddSearch:
-							this.Parent.AddSearch(HttpUtility.UrlDecode(tDic["name"]));
+							string name = HttpUtility.UrlDecode(tDic["name"]);
+							XG.Core.Object obj = Searches.ByName(name);
+							if(obj == null)
+							{
+								obj = new XG.Core.Object();
+								obj.Name = name;
+								Searches.Add(obj);
+							}
 							break;
 
 						case TCPClientRequest.RemoveSearch:
-							this.Parent.RemoveSearch(HttpUtility.UrlDecode(tDic["name"]));
+							Searches.Remove(Searches.ByName(HttpUtility.UrlDecode(tDic["name"])));
 							break;
 
 						case TCPClientRequest.GetSearches:
-							response = this.Searches2Json(this.Searches);
+							response = Searches2Json(Searches);
 							break;
 
 						#endregion
@@ -248,15 +253,15 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetObject:
 							client.Response.ContentType = "text/json";
-							response = this.Object2Json(
-								this.ObjectRepository.GetChildByGuid(new Guid(tDic["guid"]))
+							response = Object2Json(
+								Servers.ByGuid(new Guid(tDic["guid"]))
 							);
 							break;
 
 						case TCPClientRequest.GetServers:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(
-								this.GetSortedObjects(this.ObjectRepository.Servers, tDic["sidx"], tDic["sord"]),
+							response = Objects2Json(
+								GetSortedObjects(Servers.All, tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
@@ -264,9 +269,9 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetChannelsFromServer:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(
-								this.GetSortedObjects(
-									from server in this.ObjectRepository.Servers
+							response = Objects2Json(
+								GetSortedObjects(
+									from server in Servers.All
 									from channel in server.Channels
 										where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
@@ -276,9 +281,9 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetBotsFromChannel:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(
-								this.GetSortedBots(
-									from server in this.ObjectRepository.Servers
+							response = Objects2Json(
+								GetSortedBots(
+									from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
 										where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]),
@@ -289,9 +294,9 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetPacketsFromBot:
 							client.Response.ContentType = "text/json";
-							response = this.Objects2Json(
-								this.GetSortedPackets(
-									from server in this.ObjectRepository.Servers
+							response = Objects2Json(
+								GetSortedPackets(
+									from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
 									from packet in bot.Packets
@@ -303,7 +308,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.GetStatistics:
 							client.Response.ContentType = "text/json";
-							response = this.Statistic2Json();
+							response = Statistic2Json();
 							break;
 
 						#endregion
@@ -311,7 +316,7 @@ namespace XG.Server.Plugin.General.Webserver
 						# region COMMANDS
 
 						case TCPClientRequest.CloseServer:
-							this.Stop();
+							Stop();
 							break;
 
 						#endregion
@@ -326,16 +331,16 @@ namespace XG.Server.Plugin.General.Webserver
 							int packetId = int.Parse(link[4].Substring(1));
 
 							// checking server
-							XGServer serv = this.ObjectRepository[serverName];
+							XG.Core.Server serv = Servers[serverName];
 							if(serv == null)
 							{
-								this.ObjectRepository.AddServer(serverName);
-								serv = this.ObjectRepository[serverName];
+								Servers.Add(serverName);
+								serv = Servers[serverName];
 							}
 							serv.Enabled = true;
 
 							// checking channel
-							XGChannel chan = serv[channelName];
+							Channel chan = serv[channelName];
 							if(chan == null)
 							{
 								serv.AddChannel(channelName);
@@ -344,19 +349,19 @@ namespace XG.Server.Plugin.General.Webserver
 							chan.Enabled = true;
 
 							// checking bot
-							XGBot tBot = chan[botName];
+							Bot tBot = chan[botName];
 							if (tBot == null)
 							{
-								tBot = new XGBot();
+								tBot = new Bot();
 								tBot.Name = botName;
 								chan.AddBot(tBot);
 							}
 
 							// checking packet
-							XGPacket pack = tBot[packetId];
+							Packet pack = tBot[packetId];
 							if(pack == null)
 							{
-								pack = new XGPacket();
+								pack = new Packet();
 								pack.Id = packetId;
 								pack.Name = link[5];
 								tBot.AddPacket(pack);
@@ -367,7 +372,7 @@ namespace XG.Server.Plugin.General.Webserver
 						#endregion
 					}
 
-					this.WriteToStream(client.Response, response);
+					WriteToStream(client.Response, response);
 
 					#endregion
 				}
@@ -376,12 +381,12 @@ namespace XG.Server.Plugin.General.Webserver
 					// load an image
 					if (str.StartsWith("/image&"))
 					{
-						this.WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage(str.Split('&')[1]));
+						WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage(str.Split('&')[1]));
 					}
 					// serve the favicon
 					else if (str == "/favicon.ico")
 					{
-						this.WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage("Client"));
+						WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage("Client"));
 					}
 					// load a file
 					else
@@ -391,11 +396,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 						if (str.EndsWith(".png"))
 						{
-							this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str));
+							WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str));
 						}
 						else
 						{
-							this.WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
+							WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
 						}
 					}
 				}
@@ -411,17 +416,16 @@ namespace XG.Server.Plugin.General.Webserver
 				log.Fatal("OpenClient(" + str + ")", ex);
 			}
 #endif
-			log.Info("OpenClient() disconnected");
 		}
 
-		private IEnumerable<XGPacket> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		IEnumerable<Packet> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
-			IEnumerable<XGBot> bots = from server in this.ObjectRepository.Servers from channel in server.Channels from bot in channel.Bots select bot;
+			IEnumerable<Bot> bots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			if(aShowOffBots)
 			{
 				bots = from bot in bots where bot.Connected select bot;
 			}
-			IEnumerable<XGPacket> tPackets = from bot in bots from packet in bot.Packets select packet;
+			IEnumerable<Packet> tPackets = from bot in bots from packet in bot.Packets select packet;
 
 			switch(aSearchBy)
 			{
@@ -457,10 +461,10 @@ namespace XG.Server.Plugin.General.Webserver
 					break;
 			}
 
-			return this.GetSortedPackets(tPackets, aSortBy, aSortMode);
+			return GetSortedPackets(tPackets, aSortBy, aSortMode);
 		}
 
-		private IEnumerable<XGPacket> GetSortedPackets(IEnumerable<XGPacket> aPackets, string aSortBy, string aSortMode)
+		IEnumerable<Packet> GetSortedPackets(IEnumerable<Packet> aPackets, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
@@ -505,18 +509,18 @@ namespace XG.Server.Plugin.General.Webserver
 			return aPackets;
 		}
 
-		private IEnumerable<XGBot> GetBots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		IEnumerable<Bot> GetBots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
-			IEnumerable<XGPacket> tPacketList = this.GetPackets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
-			IEnumerable<XGBot> tBots = (
-				from s in this.ObjectRepository.Servers 
+			IEnumerable<Packet> tPacketList = GetPackets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
+			IEnumerable<Bot> tBots = (
+				from s in Servers.All 
 					from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b
 				).Distinct();
 
-			return this.GetSortedBots(tBots, aSortBy, aSortMode);
+			return GetSortedBots(tBots, aSortBy, aSortMode);
 		}
 
-		private IEnumerable<XGBot> GetSortedBots(IEnumerable<XGBot> aBots, string aSortBy, string aSortMode)
+		IEnumerable<Bot> GetSortedBots(IEnumerable<Bot> aBots, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
@@ -565,20 +569,20 @@ namespace XG.Server.Plugin.General.Webserver
 			return aBots;
 		}
 
-		private IEnumerable<XGObject> GetSortedObjects(IEnumerable<XGObject> aObjects, string aSortBy, string aSortMode)
+		IEnumerable<AObject> GetSortedObjects(IEnumerable<AObject> aObjects, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
 				case "Name":
-					aObjects = from bot in aObjects orderby bot.Name select bot;
+					aObjects = from obj in aObjects orderby obj.Name select obj;
 					break;
 
-				case "Connected":
-					aObjects = from bot in aObjects orderby bot.Connected select bot;
-					break;
+				/*case "Connected":
+					aObjects = from obj in aObjects orderby obj.Connected select obj;
+					break;*/
 
 				case "Enabled":
-					aObjects = from bot in aObjects orderby bot.Enabled select bot;
+					aObjects = from obj in aObjects orderby obj.Enabled select obj;
 					break;
 			}
 
@@ -594,12 +598,12 @@ namespace XG.Server.Plugin.General.Webserver
 
 		#region WRITE TO STREAM
 
-		private void WriteToStream(HttpListenerResponse aResponse, string aData)
+		void WriteToStream(HttpListenerResponse aResponse, string aData)
 		{
-			this.WriteToStream(aResponse, Encoding.UTF8.GetBytes(aData));
+			WriteToStream(aResponse, Encoding.UTF8.GetBytes(aData));
 		}
 
-		private void WriteToStream(HttpListenerResponse aResponse, byte[] aData)
+		void WriteToStream(HttpListenerResponse aResponse, byte[] aData)
 		{
 			aResponse.ContentLength64 = aData.Length;
 			aResponse.OutputStream.Write(aData, 0, aData.Length);
@@ -610,7 +614,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		#region JSON
 
-		private string Searches2Json(List<string> aData)
+		string Searches2Json(Objects aObjects)
 		{
 			StringBuilder sb = new StringBuilder();
 
@@ -618,11 +622,11 @@ namespace XG.Server.Plugin.General.Webserver
 			sb.Append("\"Searches\":[");
 
 			int count = 0;
-			foreach (string str in aData)
+			foreach (AObject obj in aObjects.All)
 			{
 				count++;
-				sb.Append("{\"Search\": \"" + this.ClearString(str) + "\"}");
-				if(count < aData.Count) { sb.Append(","); }
+				sb.Append("{\"Search\": \"" + ClearString(obj.Name) + "\"}");
+				if(count < aObjects.All.Count()) { sb.Append(","); }
 				sb.Append("");
 			}
 
@@ -631,7 +635,7 @@ namespace XG.Server.Plugin.General.Webserver
 			return sb.ToString();
 		}
 
-		private string Objects2Json(IEnumerable<XGObject> aObjects, int aPage, int aRows)
+		string Objects2Json(IEnumerable<AObject> aObjects, int aPage, int aRows)
 		{
 			StringBuilder sb = new StringBuilder();
 
@@ -642,9 +646,9 @@ namespace XG.Server.Plugin.General.Webserver
 			sb.Append("\"rows\":[");
 
 			List<string> tList = new List<string>();
-			foreach (XGObject tObj in aObjects.Skip((aPage - 1) * aRows).Take(aRows))
+			foreach (AObject tObj in aObjects.Skip((aPage - 1) * aRows).Take(aRows))
 			{
-				tList.Add(this.Object2Json(tObj));
+				tList.Add(Object2Json(tObj));
 			}
 			sb.Append(string.Join(",", tList));
 
@@ -653,8 +657,13 @@ namespace XG.Server.Plugin.General.Webserver
 			return sb.ToString();
 		}
 
-		private string Object2Json(XGObject aObject)
+		string Object2Json(AObject aObject)
 		{
+			if(aObject == null)
+			{
+				return "";
+			}
+
 			StringBuilder sb = new StringBuilder();
 
 			sb.Append("{");
@@ -666,11 +675,11 @@ namespace XG.Server.Plugin.General.Webserver
 			sb.Append("\"ParentGuid\":\"" + aObject.ParentGuid.ToString() + "\",");
 			sb.Append("\"Connected\":\"" + aObject.Connected.ToString().ToLower() + "\",");
 			sb.Append("\"Enabled\":\"" + aObject.Enabled.ToString().ToLower() + "\",");
-			sb.Append("\"LastModified\":\"" + aObject.LastModified + "\",");
+			sb.Append("\"LastModified\":\"" + aObject.EnabledTime + "\",");
 
-			if (aObject.GetType() == typeof(XGServer))
+			if (aObject is XG.Core.Server)
 			{
-				XGServer tServ = (XGServer)aObject;
+				XG.Core.Server tServ = (XG.Core.Server)aObject;
 
 				sb.Append("\"Name\":\"" + aObject.Name + ":" + tServ.Port + "\",");
 				sb.Append("\"ErrorCode\":\"" + tServ.ErrorCode + "\",");
@@ -679,9 +688,9 @@ namespace XG.Server.Plugin.General.Webserver
 				sb.Append("\"isLeaf\":false,");
 				sb.Append("\"loaded\":true");
 			}
-			else if (aObject.GetType() == typeof(XGChannel))
+			else if (aObject is Channel)
 			{
-				XGChannel tChan = (XGChannel)aObject;
+				Channel tChan = (Channel)aObject;
 
 				sb.Append("\"Name\":\"" + aObject.Name + "\",");
 				sb.Append("\"ErrorCode\":\"" + tChan.ErrorCode + "\",");
@@ -690,11 +699,11 @@ namespace XG.Server.Plugin.General.Webserver
 				sb.Append("\"isLeaf\":true,");
 				sb.Append("\"loaded\":true");
 			}
-			else if (aObject.GetType() == typeof(XGBot))
+			else if (aObject is Bot)
 			{
-				XGBot tBot = (XGBot)aObject;
+				Bot tBot = (Bot)aObject;
 
-				sb.Append("\"Name\":\"" + this.ClearString(aObject.Name) + "\",");
+				sb.Append("\"Name\":\"" + ClearString(aObject.Name) + "\",");
 				sb.Append("\"BotState\":\"" + tBot.BotState + "\",");
 				sb.Append("\"Speed\":" + tBot.Speed.ToString("0.00").Replace(",", ".") + ",");
 				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
@@ -705,15 +714,15 @@ namespace XG.Server.Plugin.General.Webserver
 				sb.Append("\"InfoSlotCurrent\":" + tBot.InfoSlotCurrent + ",");
 				sb.Append("\"InfoQueueTotal\":" + tBot.InfoQueueTotal + ",");
 				sb.Append("\"InfoQueueCurrent\":" + tBot.InfoQueueCurrent + ",");
-				sb.Append("\"LastMessage\":\"" + this.ClearString(tBot.LastMessage) + "\",");
+				sb.Append("\"LastMessage\":\"" + ClearString(tBot.LastMessage) + "\",");
 				sb.Append("\"LastContact\":\"" + tBot.LastContact + "\"");
 			}
-			else if (aObject.GetType() == typeof(XGPacket))
+			else if (aObject is Packet)
 			{
-				XGPacket tPack = (XGPacket)aObject;
+				Packet tPack = (Packet)aObject;
 
 				sb.Append("\"Id\":" + tPack.Id + ",");
-				sb.Append("\"Name\":\"" + this.ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
+				sb.Append("\"Name\":\"" + ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
 				sb.Append("\"Size\":" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",");
 				sb.Append("\"Speed\":" + (tPack.Part == null ? "0" : tPack.Part.Speed.ToString("0.00").Replace(",", ".")) + ",");
 				sb.Append("\"TimeMissing\":" + (tPack.Part == null ? "0" : tPack.Part.TimeMissing.ToString()) + ",");
@@ -721,7 +730,7 @@ namespace XG.Server.Plugin.General.Webserver
 				sb.Append("\"StopSize\":" + (tPack.Part == null ? "0" : tPack.Part.StopSize.ToString()) + ",");
 				sb.Append("\"CurrentSize\":" + (tPack.Part == null ? "0" : tPack.Part.CurrentSize.ToString()) + ",");
 				sb.Append("\"IsChecked\":\"" + (tPack.Part == null ? "false" : tPack.Part.IsChecked ? "true" : "false") + "\",");
-				sb.Append("\"Order\":\"" + (tPack.Parent.GetOldestActivePacket() != tPack ? "false" : "true") + "\",");
+				sb.Append("\"Order\":\"" + (tPack.Parent.OldestActivePacket() != tPack ? "false" : "true") + "\",");
 				sb.Append("\"LastUpdated\":\"" + tPack.LastUpdated + "\"");
 			}
 
@@ -730,14 +739,14 @@ namespace XG.Server.Plugin.General.Webserver
 			return sb.ToString();
 		}
 
-		private string Statistic2Json()
+		string Statistic2Json()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("{");
 
 			List<StatisticType> types = new List<StatisticType>();
 			// uncool, but works
-			for (int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedAvg; a++)
+			for (int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedMax; a++)
 			{
 				types.Add((StatisticType)a);
 			}
@@ -756,10 +765,10 @@ namespace XG.Server.Plugin.General.Webserver
 			return sb.ToString();
 		}
 
-		private Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß _.\[\]\{\}\(\)-]");
-		private string ClearString(string aString)
+		Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß _.\[\]\{\}\(\)-]");
+		string ClearString(string aString)
 		{
-			string str = this.myClearRegex.Replace(aString, "");
+			string str = myClearRegex.Replace(aString, "");
 			str = str.Replace("Ä", "&Auml;");
 			str = str.Replace("ä", "&auml;");
 			str = str.Replace("Ö", "&Ouml;");
@@ -771,33 +780,6 @@ namespace XG.Server.Plugin.General.Webserver
 		}
 
 		#endregion
-	
-		#region EVENTHANDLER
 
-		protected override void ObjectRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void ObjectRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void ObjectRepository_ObjectChangedEventHandler(XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectChangedEventHandler(XGObject aObj)
-		{
-		}
-
-		#endregion
 	}
 }

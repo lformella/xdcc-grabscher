@@ -27,56 +27,56 @@ namespace XG.Client
 			Assembly assembly = Assembly.GetAssembly(typeof(ImageLoader));
 			string name = assembly.GetName().Name;
 
-			this.Client = assembly.GetManifestResourceStream(name + ".Resources.client.png");
+			Client = assembly.GetManifestResourceStream(name + ".Resources.client.png");
 
-			this.Server = assembly.GetManifestResourceStream(name + ".Resources.Server.png");
-			this.ServerDisabled = assembly.GetManifestResourceStream(name + ".Resources.Server_disabled.png");
+			Server = assembly.GetManifestResourceStream(name + ".Resources.Server.png");
+			ServerDisabled = assembly.GetManifestResourceStream(name + ".Resources.Server_disabled.png");
 
-			this.Channel = assembly.GetManifestResourceStream(name + ".Resources.Channel.png");
-			this.ChannelDisabled = assembly.GetManifestResourceStream(name + ".Resources.Channel_disabled.png");
+			Channel = assembly.GetManifestResourceStream(name + ".Resources.Channel.png");
+			ChannelDisabled = assembly.GetManifestResourceStream(name + ".Resources.Channel_disabled.png");
 
-			this.Bot = assembly.GetManifestResourceStream(name + ".Resources.Bot.png");
-			this.BotOff = assembly.GetManifestResourceStream(name + ".Resources.Bot_offline.png");
+			Bot = assembly.GetManifestResourceStream(name + ".Resources.Bot.png");
+			BotOff = assembly.GetManifestResourceStream(name + ".Resources.Bot_offline.png");
 
-			this.Packet = assembly.GetManifestResourceStream(name + ".Resources.Packet.png");
-			this.PacketDisabled = assembly.GetManifestResourceStream(name + ".Resources.Packet_disabled.png");
+			Packet = assembly.GetManifestResourceStream(name + ".Resources.Packet.png");
+			PacketDisabled = assembly.GetManifestResourceStream(name + ".Resources.Packet_disabled.png");
 
-			this.Blind = assembly.GetManifestResourceStream(name + ".Resources.Blind.png");
-			this.Search = assembly.GetManifestResourceStream(name + ".Resources.Search.png");
-			this.SearchSlots = assembly.GetManifestResourceStream(name + ".Resources.Search_freeslots.png");
-			this.ODay = assembly.GetManifestResourceStream(name + ".Resources.ODay.png");
-			this.OWeek = assembly.GetManifestResourceStream(name + ".Resources.OWeek.png");
+			Blind = assembly.GetManifestResourceStream(name + ".Resources.Blind.png");
+			Search = assembly.GetManifestResourceStream(name + ".Resources.Search.png");
+			SearchSlots = assembly.GetManifestResourceStream(name + ".Resources.Search_freeslots.png");
+			ODay = assembly.GetManifestResourceStream(name + ".Resources.ODay.png");
+			OWeek = assembly.GetManifestResourceStream(name + ".Resources.OWeek.png");
 
-			this.Add = assembly.GetManifestResourceStream(name + ".Resources.Add.png");
-			this.Remove = assembly.GetManifestResourceStream(name + ".Resources.Remove.png");
-			this.Connect = assembly.GetManifestResourceStream(name + ".Resources.Connect.png");
-			this.Disconnect = assembly.GetManifestResourceStream(name + ".Resources.Disconnect.png");
-			this.Ok = assembly.GetManifestResourceStream(name + ".Resources.Ok.png");
-			this.No = assembly.GetManifestResourceStream(name + ".Resources.No.png");
+			Add = assembly.GetManifestResourceStream(name + ".Resources.Add.png");
+			Remove = assembly.GetManifestResourceStream(name + ".Resources.Remove.png");
+			Connect = assembly.GetManifestResourceStream(name + ".Resources.Connect.png");
+			Disconnect = assembly.GetManifestResourceStream(name + ".Resources.Disconnect.png");
+			Ok = assembly.GetManifestResourceStream(name + ".Resources.Ok.png");
+			No = assembly.GetManifestResourceStream(name + ".Resources.No.png");
 
-			this.LanguageDe = assembly.GetManifestResourceStream(name + ".Resources.language.de.png");
+			LanguageDe = assembly.GetManifestResourceStream(name + ".Resources.language.de.png");
 
-			this.ExtAudio = assembly.GetManifestResourceStream(name + ".Resources.extension.audio.png");
-			this.ExtCompressed = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed.png");
-			this.ExtDefault = assembly.GetManifestResourceStream(name + ".Resources.extension.default.png");
-			this.ExtVideo = assembly.GetManifestResourceStream(name + ".Resources.extension.video.png");
+			ExtAudio = assembly.GetManifestResourceStream(name + ".Resources.extension.audio.png");
+			ExtCompressed = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed.png");
+			ExtDefault = assembly.GetManifestResourceStream(name + ".Resources.extension.default.png");
+			ExtVideo = assembly.GetManifestResourceStream(name + ".Resources.extension.video.png");
 			
-			this.OverActive = assembly.GetManifestResourceStream(name + ".Resources.Overlay._active.png");
-			this.OverAttention = assembly.GetManifestResourceStream(name + ".Resources.Overlay._attention.png");
-			this.OverChecked0 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._checked_0.png");
-			this.OverChecked1 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._checked_1.png");
-			this.OverDisabled = assembly.GetManifestResourceStream(name + ".Resources.Overlay._disabled.png");
-			this.OverDL0 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl0.png");
-			this.OverDL1 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl1.png");
-			this.OverDL2 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl2.png");
-			this.OverDL3 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl3.png");
-			this.OverDL4 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl4.png");
-			this.OverDL5 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl5.png");
-			this.OverDL6 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl6.png");
-			this.OverDL7 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl7.png");
-			this.OverDL8 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl8.png");
-			this.OverDL9 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl9.png");
-			this.OverWaiting = assembly.GetManifestResourceStream(name + ".Resources.Overlay._waiting.png");
+			OverActive = assembly.GetManifestResourceStream(name + ".Resources.Overlay._active.png");
+			OverAttention = assembly.GetManifestResourceStream(name + ".Resources.Overlay._attention.png");
+			OverChecked0 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._checked_0.png");
+			OverChecked1 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._checked_1.png");
+			OverDisabled = assembly.GetManifestResourceStream(name + ".Resources.Overlay._disabled.png");
+			OverDL0 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl0.png");
+			OverDL1 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl1.png");
+			OverDL2 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl2.png");
+			OverDL3 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl3.png");
+			OverDL4 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl4.png");
+			OverDL5 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl5.png");
+			OverDL6 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl6.png");
+			OverDL7 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl7.png");
+			OverDL8 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl8.png");
+			OverDL9 = assembly.GetManifestResourceStream(name + ".Resources.Overlay._dl9.png");
+			OverWaiting = assembly.GetManifestResourceStream(name + ".Resources.Overlay._waiting.png");
 		}
 
 		protected Stream Client;

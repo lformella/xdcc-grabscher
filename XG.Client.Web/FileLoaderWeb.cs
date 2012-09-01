@@ -20,38 +20,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using log4net;
-using XG.Core;
 
 namespace XG.Client.Web
 {
 	public class FileLoaderWeb
 	{
-		private static readonly ILog myLog = LogManager.GetLogger(typeof(FileLoaderWeb));
+		static readonly ILog _log = LogManager.GetLogger(typeof(FileLoaderWeb));
 
-		private Dictionary<string, string> myDicStr;
-		private Dictionary<string, byte[]> myDicByt;
+		Dictionary<string, string> _dicStr;
+		Dictionary<string, byte[]> _dicByt;
 
 		public static FileLoaderWeb Instance
 		{
-			get { return Nested.instance; }
+			get { return Nested.Instance; }
 		}
 		class Nested
 		{
 			static Nested() { }
-			internal static readonly FileLoaderWeb instance = new FileLoaderWeb();
+			internal static readonly FileLoaderWeb Instance = new FileLoaderWeb();
 		}
 
-		private FileLoaderWeb()
+		FileLoaderWeb()
 		{
-			this.myDicStr = new Dictionary<string, string>();
-			this.myDicByt = new Dictionary<string, byte[]>();
+			_dicStr = new Dictionary<string, string>();
+			_dicByt = new Dictionary<string, byte[]>();
 		}
 
 		public string LoadFile(string aFile, string[] aLanguages)
 		{
-			if (this.myDicStr.ContainsKey(aFile))
+			if (_dicStr.ContainsKey(aFile))
 			{
-				return this.myDicStr[aFile];
+				return _dicStr[aFile];
 			}
 			else
 			{
@@ -60,25 +59,27 @@ namespace XG.Client.Web
 				{
 #endif
 #if DEBUG
-					return this.PatchLanguage(File.OpenText("./Resources" +  aFile).ReadToEnd(), aLanguages);
+					return PatchLanguage(File.OpenText("./Resources" + aFile).ReadToEnd(), aLanguages);
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
 					string name = assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					this.myDicStr.Add(aFile, this.PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
-					return this.myDicStr[aFile];
+					myDicStr.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
+					return myDicStr[aFile];
 #endif
 #if !UNSAFE
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("LoadFile(" + aFile + ")", ex);
+					_log.Fatal("LoadFile(" + aFile + ")", ex);
 				}
 #endif
 			}
+#if !UNSAFE
 			return "";
+#endif
 		}
 
-		private string PatchLanguage(string aContent, string[] aLanguages)
+		string PatchLanguage(string aContent, string[] aLanguages)
 		{
 			string lng = aLanguages[0].Substring(0, 2);
 			return aContent.Replace("#LANGUAGE_SHORT#", lng);
@@ -86,9 +87,9 @@ namespace XG.Client.Web
 
 		public byte[] LoadImage(string aFile)
 		{
-			if (this.myDicByt.ContainsKey(aFile))
+			if (_dicByt.ContainsKey(aFile))
 			{
-				return this.myDicByt[aFile];
+				return _dicByt[aFile];
 			}
 			else
 			{
@@ -109,17 +110,19 @@ namespace XG.Client.Web
 						remaining -= read;
 						offset += read;
 					}
-					this.myDicByt.Add(aFile, data);
-					return this.myDicByt[aFile];
+					_dicByt.Add(aFile, data);
+					return _dicByt[aFile];
 #if !UNSAFE
 				}
 				catch (Exception ex)
 				{
-					myLog.Fatal("LoadImage(" + aFile + ")", ex);
+					_log.Fatal("LoadImage(" + aFile + ")", ex);
 				}
 #endif
 			}
+#if !UNSAFE
 			return null;
+#endif
 		}
 	}
 }

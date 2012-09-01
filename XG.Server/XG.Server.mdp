@@ -31,8 +31,8 @@
     <File subtype="Code" buildaction="Compile" name="Connection/Connection.cs" />
     <File subtype="Code" buildaction="Compile" name="Connection/AConnection.cs" />
     <File subtype="Directory" buildaction="Compile" name="Plugin" />
-    <File subtype="Code" buildaction="Compile" name="Plugin/AServerGeneralPlugin.cs" />
-    <File subtype="Code" buildaction="Compile" name="Plugin/AServerBackendPlugin.cs" />
+    <File subtype="Code" buildaction="Compile" name="Plugin/APlugin.cs" />
+    <File subtype="Code" buildaction="Compile" name="Plugin/ABackendPlugin.cs" />
     <File subtype="Code" buildaction="Compile" name="Connection/AIrcConnection.cs" />
     <File subtype="Directory" buildaction="Compile" name="Helper" />
     <File subtype="Code" buildaction="Compile" name="Helper/Filesystem.cs" />

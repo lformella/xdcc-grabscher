@@ -15,8 +15,6 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 
-using System;
-
 using XG.Core;
 
 namespace XG.Server.Connection
@@ -25,40 +23,44 @@ namespace XG.Server.Connection
 	{
 		public ServerHandler Parent { get; set; }
 
-		private AConnection connection;
+		AConnection _connection;
 		public AConnection Connection
 		{
 			get
 			{
-				return this.connection;
+				return _connection;
 			}
 			set
 			{
-				if(this.connection != null)
+				if(_connection != null)
 				{
-					this.connection.ConnectedEvent -= new EmptyDelegate(Connection_ConnectedEventHandler);
-					this.connection.DisconnectedEvent -= new SocketErrorDelegate(Connection_DisconnectedEventHandler);
-					this.connection.DataTextReceivedEvent -= new DataTextDelegate(Connection_DataReceivedEventHandler);
-					this.connection.DataBinaryReceivedEvent -= new DataBinaryDelegate(Connection_DataReceivedEventHandler);
+					_connection.Connected -= new EmptyDelegate(ConnectionConnected);
+					_connection.Disconnected -= new SocketErrorDelegate(ConnectionDisconnected);
+					_connection.DataTextReceived -= new DataTextDelegate(ConnectionDataReceived);
+					_connection.DataBinaryReceived -= new DataBinaryDelegate(ConnectionDataReceived);
 				}
-				this.connection = value;
-				if(this.connection != null)
+				_connection = value;
+				if(_connection != null)
 				{
-					this.connection.ConnectedEvent += new EmptyDelegate(Connection_ConnectedEventHandler);
-					this.connection.DisconnectedEvent += new SocketErrorDelegate(Connection_DisconnectedEventHandler);
-					this.connection.DataTextReceivedEvent += new DataTextDelegate(Connection_DataReceivedEventHandler);
-					this.connection.DataBinaryReceivedEvent += new DataBinaryDelegate(Connection_DataReceivedEventHandler);
+					_connection.Connected += new EmptyDelegate(ConnectionConnected);
+					_connection.Disconnected += new SocketErrorDelegate(ConnectionDisconnected);
+					_connection.DataTextReceived += new DataTextDelegate(ConnectionDataReceived);
+					_connection.DataBinaryReceived += new DataBinaryDelegate(ConnectionDataReceived);
 				}
 			}
 		}
 
-		protected abstract void Connection_ConnectedEventHandler();
+		protected virtual void ConnectionConnected()
+		{}
 
-		protected abstract void Connection_DisconnectedEventHandler(SocketErrorCode aValue);
+		protected virtual void ConnectionDisconnected(SocketErrorCode aValue)
+		{}
 
-		protected abstract void Connection_DataReceivedEventHandler(string aData);
+		protected virtual void ConnectionDataReceived(string aData)
+		{}
 
-		protected abstract void Connection_DataReceivedEventHandler(byte[] aData);
+		protected virtual void ConnectionDataReceived(byte[] aData)
+		{}
 	}
 }
 

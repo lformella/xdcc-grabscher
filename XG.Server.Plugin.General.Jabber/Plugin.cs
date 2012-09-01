@@ -30,15 +30,15 @@ using XG.Server.Plugin;
 
 namespace XG.Server.Plugin.General.Jabber
 {
-	public class Plugin : AServerGeneralPlugin
+	public class Plugin : APlugin
 	{
 		#region VARIABLES
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
+		static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
 
-		private XmppClientConnection client;
+		XmppClientConnection client;
 
-		private Thread serverThread;
+		Thread serverThread;
 
 		#endregion
 
@@ -47,15 +47,15 @@ namespace XG.Server.Plugin.General.Jabber
 		public override void Start ()
 		{
 			// start the server thread
-			this.serverThread = new Thread(new ThreadStart(OpenClient));
-			this.serverThread.Start();
+			serverThread = new Thread(new ThreadStart(OpenClient));
+			serverThread.Start();
 		}
 		
 		
 		public override void Stop ()
 		{
-			this.CloseClient();
-			this.serverThread.Abort();
+			CloseClient();
+			serverThread.Abort();
 		}
 		
 		#endregion
@@ -65,32 +65,32 @@ namespace XG.Server.Plugin.General.Jabber
 		/// <summary>
 		/// Opens the server port, waiting for clients
 		/// </summary>
-		private void OpenClient()
+		void OpenClient()
 		{
-			this.client = new XmppClientConnection(Settings.Instance.JabberServer);
-			this.client.Open(Settings.Instance.JabberUser, Settings.Instance.JabberPassword);
-			this.client.OnLogin += delegate(object sender)
+			client = new XmppClientConnection(Settings.Instance.JabberServer);
+			client.Open(Settings.Instance.JabberUser, Settings.Instance.JabberPassword);
+			client.OnLogin += delegate(object sender)
 			{
-				this.UpdateState(0);
+				UpdateState(0);
 			};
-			this.client.OnError += delegate(object sender, Exception ex)
+			client.OnError += delegate(object sender, Exception ex)
 			{
 				log.Fatal("OpenServer()", ex);
 			};
-			this.client.OnAuthError += delegate(object sender, Element e)
+			client.OnAuthError += delegate(object sender, Element e)
 			{
 				log.Fatal("OpenServer() " + e.ToString());
 			};
 		}
 
-		private void CloseClient()
+		void CloseClient()
 		{
-			this.client.Close();
+			client.Close();
 		}
 
-		private void UpdateState(double aSpeed)
+		void UpdateState(double aSpeed)
 		{
-			if(this.client == null) { return; }
+			if(client == null) { return; }
 
 			Presence p = null;
 			if(aSpeed > 0)
@@ -109,44 +109,24 @@ namespace XG.Server.Plugin.General.Jabber
 				p = new Presence(ShowType.away, "Idle");
 				p.Type = PresenceType.available;
 			}
-			this.client.Send(p);
+			client.Send(p);
 		}
 
 		#endregion
 
 		#region EVENTHANDLER
 
-		protected override void ObjectRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
+		protected new void FileChanged(AObject aObj)
 		{
-		}
-
-		protected override void ObjectRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void ObjectRepository_ObjectChangedEventHandler(XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectAddedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectRemovedEventHandler (XGObject aParentObj, XGObject aObj)
-		{
-		}
-
-		protected override void FileRepository_ObjectChangedEventHandler(XGObject aObj)
-		{
-			if(aObj.GetType() == typeof(XGFilePart))
+			if(aObj is FilePart)
 			{
 				double speed = 0;
 				try
 				{
-					speed = (from file in this.FileRepository.Files from part in file.Parts select part.Speed).Sum();
+					speed = (from file in Files.All from part in file.Parts select part.Speed).Sum();
 				}
 				catch  {}
-				this.UpdateState(speed);
+				UpdateState(speed);
 			}
 		}
 
