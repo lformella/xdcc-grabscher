@@ -1,5 +1,5 @@
 // 
-//  Filesystem.cs
+//  FileSystem.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -28,9 +28,9 @@ using log4net;
 
 namespace XG.Server.Helper
 {
-	public class Filesystem
+	public class FileSystem
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(Filesystem));
+		static readonly ILog _log = LogManager.GetLogger(typeof(FileSystem));
 
 		/// <summary>
 		/// Moves a file
@@ -49,7 +49,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("MoveFile(" + aNameOld + ", " + aNameNew + ") ", ex);
+					_log.Fatal("MoveFile('" + aNameOld + "', '" + aNameNew + "') ", ex);
 					return false;
 				}
 			}
@@ -128,7 +128,7 @@ namespace XG.Server.Helper
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("ListDirectory(" + aDir + ") ", ex);
+				_log.Fatal("ListDirectory('" + aDir + "', '" + aSearch + "') ", ex);
 			}
 			return files;
 		}

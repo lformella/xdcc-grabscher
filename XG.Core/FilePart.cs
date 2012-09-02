@@ -172,6 +172,14 @@ namespace XG.Core
 				}
 			}
 		}
+		
+		[field: NonSerialized()]
+		byte[] _startReference;
+		public byte[] StartReference
+		{
+			get { return _startReference; }
+			set { _startReference = value; }
+		}
 
 		#endregion
 	}

@@ -51,52 +51,52 @@ namespace XG.Server.Plugin.Backend.File
 
 		#region IServerBackendPlugin
 
-		public override Servers LoadServers ()
+		public override XG.Core.Servers LoadServers ()
 		{
-			Servers objectRepository = null;
+			XG.Core.Servers _servers = null;
 			try
 			{
-				objectRepository = (Servers)Load(Settings.Instance.DataBinary);
-				objectRepository.AttachChildEvents();
+				_servers = (XG.Core.Servers)Load(Settings.Instance.DataBinary);
+				_servers.AttachChildEvents();
 			}
 			catch {}
-			if (objectRepository == null)
+			if (_servers == null)
 			{
-				objectRepository = new Servers();
+				_servers = new XG.Core.Servers();
 			}
-			return objectRepository;
+			return _servers;
 		}
 
 		public override Files LoadFiles ()
 		{
-			Files fileRepository = null;
+			Files _files = null;
 			try
 			{
-				fileRepository = (Files)Load(Settings.Instance.FilesBinary);
-				fileRepository.AttachChildEvents();
+				_files = (Files)Load(Settings.Instance.FilesBinary);
+				_files.AttachChildEvents();
 			}
 			catch {}
-			if (fileRepository == null)
+			if (_files == null)
 			{
-				fileRepository = new Files();
+				_files = new Files();
 			}
-			return fileRepository;
+			return _files;
 		}
 
 		public override Objects LoadSearches ()
 		{
-			Objects objectRepository = null;
+			Objects _searches = null;
 			try
 			{
-				objectRepository = (Objects)Load(Settings.Instance.SearchesBinary);
-				objectRepository.AttachChildEvents();
+				_searches = (Objects)Load(Settings.Instance.SearchesBinary);
+				_searches.AttachChildEvents();
 			}
 			catch {}
-			if (objectRepository == null)
+			if (_searches == null)
 			{
-				objectRepository = new Objects();
+				_searches = new Objects();
 			}
-			return objectRepository;
+			return _searches;
 		}
 
 		#endregion
@@ -183,8 +183,8 @@ namespace XG.Server.Plugin.Backend.File
 				Stream streamWrite = System.IO.File.Create(aFile + ".new");
 				_formatter.Serialize(streamWrite, aObj);
 				streamWrite.Close();
-				Filesystem.DeleteFile(aFile + ".bak");
-				Filesystem.MoveFile(aFile, aFile + ".bak");
+				FileSystem.DeleteFile(aFile + ".bak");
+				FileSystem.MoveFile(aFile, aFile + ".bak");
 				System.IO.File.Move(aFile + ".new", aFile);
 				_log.Debug("Save(" + aFile + ")");
 			}

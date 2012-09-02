@@ -22,20 +22,18 @@
 // 
 
 using XG.Core;
+using XG.Server.Helper;
 
 namespace XG.Server.Connection
 {
 	public abstract class AIrcConnection
 	{
-		public ServerHandler Parent { get; set; }
+		public FileActions FileActions { set; get; }
 
 		AConnection _connection;
 		public AConnection Connection
 		{
-			get
-			{
-				return _connection;
-			}
+			get { return _connection; }
 			set
 			{
 				if(_connection != null)
@@ -56,17 +54,13 @@ namespace XG.Server.Connection
 			}
 		}
 
-		protected virtual void ConnectionConnected()
-		{}
+		protected virtual void ConnectionConnected() {}
 
-		protected virtual void ConnectionDisconnected(SocketErrorCode aValue)
-		{}
+		protected virtual void ConnectionDisconnected(SocketErrorCode aValue) {}
 
-		protected virtual void ConnectionDataReceived(string aData)
-		{}
+		protected virtual void ConnectionDataReceived(string aData) {}
 
-		protected virtual void ConnectionDataReceived(byte[] aData)
-		{}
+		protected virtual void ConnectionDataReceived(byte[] aData) {}
 	}
 }
 

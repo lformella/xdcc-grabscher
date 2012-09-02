@@ -32,8 +32,8 @@ namespace XG.Server.Plugin
 	{
 		#region VARIABLES
 
-		Servers _servers;
-		public Servers Servers
+		XG.Core.Servers _servers;
+		public XG.Core.Servers Servers
 		{
 			get
 			{

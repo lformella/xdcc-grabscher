@@ -34,20 +34,20 @@ namespace XG.Server.Plugin.Backend.MySql
 	{
 		static readonly ILog myLog = LogManager.GetLogger(typeof(Importer));
 
-		Servers myRootObject;
+		XG.Core.Servers _servers;
 
 		public event ObjectsDelegate ObjectAddedEvent;
 
-		public Importer (Servers aRootObject)
+		public Importer (XG.Core.Servers aRootObject)
 		{
-			myRootObject = aRootObject;
+			_servers = aRootObject;
 		}
 
 		public void Import(string aFile)
 		{
 #if !WINDOWS			
 			// import routine
-			string str = Filesystem.ReadFile(aFile);
+			string str = FileSystem.ReadFile(aFile);
 			if(str != "")
 			{
 				return;
@@ -69,9 +69,9 @@ namespace XG.Server.Plugin.Backend.MySql
 					XG.Core.Server s = GetServer(server);
 					if(s == null)
 					{
-						myRootObject.Add(server);
+						_servers.Add(server);
 						s = GetServer(server);
-						ObjectAddedEvent(myRootObject, s);
+						ObjectAddedEvent(_servers, s);
 						myLog.Debug("-> " + server);
 					}
 
@@ -89,7 +89,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		XG.Core.Server GetServer(string aServerName)
 		{
-			foreach(AObject obj in myRootObject.All)
+			foreach(AObject obj in _servers.All)
 			{
 				if(obj.Name == aServerName)
 				{

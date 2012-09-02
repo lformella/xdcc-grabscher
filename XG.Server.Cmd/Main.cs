@@ -42,16 +42,6 @@ namespace XG.Server.Cmd
 	{
 		public static void Main(string[] args)
 		{
-#if !WINDOWS
-			PlatformID id  = Environment.OSVersion.Platform;
-			// Don't allow running as root on Linux or Mac
-			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
-			{
-				Console.WriteLine ("Sorry, you can't run XG with these permissions. Safety first!");
-				Environment.Exit (-1);
-			}
-#endif
-
 			if(File.Exists("./log4net"))
 			{
 				// load settings from file
@@ -73,7 +63,17 @@ namespace XG.Server.Cmd
 				root.Repository.Configured = true;
 			}
 
-			MainInstance instance = new MainInstance();
+#if !WINDOWS
+			PlatformID id  = Environment.OSVersion.Platform;
+			// Don't allow running as root on Linux or Mac
+			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
+			{
+				LogManager.GetLogger(typeof(Main)).Fatal("Sorry, you can't run XG with these permissions. Safety first!");
+				Environment.Exit (-1);
+			}
+#endif
+
+			Main instance = new Main();
 
 			ABackendPlugin backend = null;
 			if (Settings.Instance.StartMySqlBackend)
@@ -84,15 +84,15 @@ namespace XG.Server.Cmd
 			{
 				backend = new XG.Server.Plugin.Backend.File.BackendPlugin();
 			}
-			instance.AddServerBackendPlugin(backend);
+			instance.AddBackendPlugin(backend);
 
 			if (Settings.Instance.StartWebServer)
 			{
-				instance.AddServerPlugin(new XG.Server.Plugin.General.Webserver.Plugin());
+				instance.AddPlugin(new XG.Server.Plugin.General.Webserver.Plugin());
 			}
 			if (Settings.Instance.StartJabberClient)
 			{
-				instance.AddServerPlugin(new XG.Server.Plugin.General.Jabber.Plugin());
+				instance.AddPlugin(new XG.Server.Plugin.General.Jabber.Plugin());
 			}
 
 			instance.Start();

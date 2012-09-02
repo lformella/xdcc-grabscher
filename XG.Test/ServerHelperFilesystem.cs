@@ -41,12 +41,12 @@ namespace Test
 			File.Delete(fileNameOld);
 			File.Delete(fileNameNew);
 			
-			result = XG.Server.Helper.Filesystem.MoveFile(fileNameOld, fileNameNew);
+			result = XG.Server.Helper.FileSystem.MoveFile(fileNameOld, fileNameNew);
 			Assert.AreEqual(false, result);
 
 			File.Create(fileNameOld);
 
-			result = XG.Server.Helper.Filesystem.MoveFile(fileNameOld, fileNameNew);
+			result = XG.Server.Helper.FileSystem.MoveFile(fileNameOld, fileNameNew);
 			Assert.AreEqual(true, result);
 			Assert.AreEqual(false, File.Exists(fileNameOld));
 			Assert.AreEqual(true, File.Exists(fileNameNew));

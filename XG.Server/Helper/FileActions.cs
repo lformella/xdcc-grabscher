@@ -1,5 +1,5 @@
 // 
-//  ServerHandler.cs
+//  FileActions.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -25,323 +25,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 
 using log4net;
 
 using XG.Core;
-using XG.Server.Helper;
 
-namespace XG.Server
+namespace XG.Server.Helper
 {
-	public delegate void DownloadDelegate(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort);
-
-	/// <summary>
-	/// This class describes a irc server connection handler
-	/// it does the following things
-	/// - connect to or disconnect from an irc server
-	/// - handling of global bot downloads
-	/// - splitting and merging the files to download
-	/// - writing files to disk
-	/// - timering some clean up tasks
-	/// </summary>
-	public class ServerHandler
+	public class FileActions
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(ServerHandler));
+		static readonly ILog _log = LogManager.GetLogger(typeof(FileActions));
 
-		IrcParser _ircParser;
-		public IrcParser IrcParser
+		XG.Core.Servers _servers;
+		public XG.Core.Servers Servers
 		{
-			set
-			{
-				if(_ircParser != null)
-				{
-					_ircParser.Parent = null;
-					_ircParser.AddDownload -= new DownloadDelegate (IrcParserAddDownload);
-					_ircParser.RemoveDownload -= new BotDelegate (IrcParserRemoveDownload);
-				}
-				_ircParser = value;
-				if(_ircParser != null)
-				{
-					_ircParser.Parent = this;
-					_ircParser.AddDownload += new DownloadDelegate (IrcParserAddDownload);
-					_ircParser.RemoveDownload += new BotDelegate (IrcParserRemoveDownload);
-				}
-			}
+			set { _servers = value; }
 		}
 
 		Files _files;
-		public Files FileRepository
+		public Files Files
 		{
-			set
-			{
-				if(_files != null)
-				{
-				}
-				_files = value;
-				if(_files != null)
-				{
-				}
-			}
-		}
-
-		Dictionary<XG.Core.Server, ServerConnection> _servers;
-		Dictionary<Packet, BotConnection> _downloads;
-
-		#endregion
-
-		#region INIT
-
-		public ServerHandler()
-		{
-			_servers = new Dictionary<XG.Core.Server, ServerConnection>();
-			_downloads = new Dictionary<Packet, BotConnection>();
-
-			// create my stuff if its not there
-			new System.IO.DirectoryInfo(Settings.Instance.ReadyPath).Create();
-			new System.IO.DirectoryInfo(Settings.Instance.TempPath).Create();
-
-			// start the timed tasks
-			new Thread(new ThreadStart(RunBotWatchdog)).Start();
-			new Thread(new ThreadStart(RunTimer)).Start();
+			set { _files = value; }
 		}
 
 		#endregion
-
-		#region SERVER
-
-		/// <summary>
-		/// Connects to the given server by using a new ServerConnnect class
-		/// </summary>
-		/// <param name="aServer"></param>
-		public void ConnectServer (XG.Core.Server aServer)
-		{
-			if (!_servers.ContainsKey (aServer))
-			{
-				ServerConnection con = new ServerConnection ();
-				con.Parent = this;
-				con.Server = aServer;
-				con.IrcParser = _ircParser;
-
-				con.Connection = new XG.Server.Connection.Connection();
-				con.Connection.Hostname = aServer.Name;
-				con.Connection.Port = aServer.Port;
-				con.Connection.MaxData = 0;
-
-				_servers.Add (aServer, con);
-
-				con.Connected += new ServerDelegate(ServerConnectionConnected);
-				con.Disconnected += new ServerSocketErrorDelegate(ServerConnectionDisconnected);
-
-				// start a new thread wich connects to the given server
-				new Thread(delegate() { con.Connection.Connect(); }).Start();
-			}
-			else
-			{
-				_log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
-			}
-		}
-		void ServerConnectionConnected(XG.Core.Server aServer)
-		{
-			// nom nom nom ...
-		}
-
-		/// <summary>
-		/// Disconnects the given server
-		/// </summary>
-		/// <param name="aServer"></param>
-		public void DisconnectServer(XG.Core.Server aServer)
-		{
-			if (_servers.ContainsKey(aServer))
-			{
-				ServerConnection con = _servers[aServer];
-				con.Connection.Disconnect();
-			}
-			else
-			{
-				_log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
-			}
-		}
-		void ServerConnectionDisconnected(XG.Core.Server aServer, SocketErrorCode aValue)
-		{
-			if (_servers.ContainsKey (aServer))
-			{
-				ServerConnection con = _servers[aServer];
-
-				if (aServer.Enabled)
-				{
-					// disable the server if the host was not found
-					// this is also triggered if we have no internet connection and disables all channels
-					/*if(	aValue == SocketErrorCode.HostNotFound ||
-						aValue == SocketErrorCode.HostNotFoundTryAgain)
-					{
-						aServer.Enabled = false;
-					}
-					else*/
-					{
-						int time = Settings.Instance.ReconnectWaitTime;
-						switch(aValue)
-						{
-							case SocketErrorCode.HostIsDown:
-							case SocketErrorCode.HostUnreachable:
-							case SocketErrorCode.ConnectionTimedOut:
-							case SocketErrorCode.ConnectionRefused:
-								time = Settings.Instance.ReconnectWaitTimeLong;
-								break;
-//							case SocketErrorCode.HostNotFound:
-//							case SocketErrorCode.HostNotFoundTryAgain:
-//								time = Settings.Instance.ReconnectWaitTimeReallyLong;
-//								break;
-						}
-						new Timer(new TimerCallback(ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
-					}
-				}
-				else
-				{
-					con.Connected -= new ServerDelegate(ServerConnectionConnected);
-					con.Disconnected -= new ServerSocketErrorDelegate(ServerConnectionDisconnected);
-
-					con.Server = null;
-					con.IrcParser = null;
-
-					_servers.Remove(aServer);
-				}
-
-				con.Connection = null;
-			}
-			else
-			{
-				_log.Error("server_DisconnectedEventHandler(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
-			}
-		}
-
-		void ReconnectServer(object aServer)
-		{
-			XG.Core.Server tServer = aServer as XG.Core.Server;
-
-			if (_servers.ContainsKey(tServer))
-			{
-				ServerConnection con = _servers[tServer];
-
-				if (tServer.Enabled)
-				{
-					_log.Error("ReconnectServer(" + tServer.Name + ")");
-
-					// TODO do we need a new connection here?
-					con.Connection = new XG.Server.Connection.Connection();
-					con.Connection.Hostname = tServer.Name;
-					con.Connection.Port = tServer.Port;
-					con.Connection.MaxData = 0;
-
-					con.Connection.Connect();
-				}
-			}
-			else
-			{
-				_log.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
-			}
-		}
-
-		#endregion
-
-		#region BOT
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="aPack"></param>
-		/// <param name="aChunk"></param>
-		/// <param name="aIp"></param>
-		/// <param name="aPort"></param>
-		void IrcParserAddDownload(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
-		{
-			new Thread(delegate()
-			{
-				if (!_downloads.ContainsKey(aPack))
-				{
-					BotConnection con = new BotConnection();
-					con.Parent = this;
-					con.Packet = aPack;
-					con.StartSize = aChunk;
-
-					con.Connection = new XG.Server.Connection.Connection();
-					con.Connection.Hostname = aIp.ToString();
-					con.Connection.Port = aPort;
-					con.Connection.MaxData = aPack.RealSize - aChunk;
-
-					con.Connected += new PacketBotConnectDelegate(BotConnected);
-					con.Disconnected += new PacketBotConnectDelegate(BotDisconnected);
-
-					_downloads.Add(aPack, con);
-					con.Connection.Connect();
-				}
-				else
-				{
-					// uhh - that should not happen
-					_log.Error("StartDownload(" + aPack.Name + ") is already downloading");
-				}
-			}).Start();
-		}
-		void BotConnected (Packet aPack, BotConnection aCon)
-		{
-		}
-
-		void IrcParserRemoveDownload (Bot aBot)
-		{
-			foreach (KeyValuePair<Packet, BotConnection> kvp in _downloads)
-			{
-				if (kvp.Key.Parent == aBot)
-				{
-					kvp.Value.Connection.Disconnect();
-					break;
-				}
-			}
-		}
-		void BotDisconnected(Packet aPacket, BotConnection aCon)
-		{
-			aCon.Packet = null;
-			aCon.Connection = null;
-
-			if (_downloads.ContainsKey(aPacket))
-			{
-				aCon.Connected -= new PacketBotConnectDelegate(BotConnected);
-				aCon.Disconnected -= new PacketBotConnectDelegate(BotDisconnected);
-				_downloads.Remove(aPacket);
-
-				try
-				{
-					// if the connection never connected, there will be no part!
-					// and if we manually killed stopped the packet there will be no parent of the part
-					if(aCon.Part != null && aCon.Part.Parent != null)
-					{
-						// do this here because the bothandler sets the part state and after this we can check the file
-						CheckFile(aCon.Part.Parent);
-					}
-				}
-				catch (Exception ex)
-				{
-					_log.Fatal("bot_Disconnected()", ex);
-				}
-
-				try
-				{
-					ServerConnection sc = _servers[aPacket.Parent.Parent.Parent];
-					sc.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime, false);
-				}
-				catch (Exception ex)
-				{
-					_log.Fatal("bot_Disconnected() request", ex);
-				}
-			}
-		}
-
-		#endregion
-
-		#region FILE
 
 		#region HELPER
 
@@ -350,7 +61,7 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aFile"></param>
 		/// <returns></returns>
-		public string GetCompletePath(File aFile)
+		public string CompletePath(File aFile)
 		{
 			return Settings.Instance.TempPath + aFile.TmpPath;
 		}
@@ -360,9 +71,9 @@ namespace XG.Server
 		/// </summary>
 		/// <param name="aPart"></param>
 		/// <returns></returns>
-		public string GetCompletePath(FilePart aPart)
+		public string CompletePath(FilePart aPart)
 		{
-			return GetCompletePath(aPart.Parent) + aPart.StartSize;
+			return CompletePath(aPart.Parent) + aPart.StartSize;
 		}
 
 		#endregion
@@ -375,7 +86,7 @@ namespace XG.Server
 		/// <param name="aName"></param>
 		/// <param name="aSize"></param>
 		/// <returns></returns>
-		File GetFile(string aName, Int64 aSize)
+		File File(string aName, Int64 aSize)
 		{
 			string name = XGHelper.ShrinkFileName(aName, aSize);
 			foreach (File file in _files.All)
@@ -402,9 +113,9 @@ namespace XG.Server
 		/// <param name="aName"></param>
 		/// <param name="aSize"></param>
 		/// <returns></returns>
-		public File GetNewFile(string aName, Int64 aSize)
+		public File NewFile(string aName, Int64 aSize)
 		{
-			File tFile = GetFile(aName, aSize);
+			File tFile = File(aName, aSize);
 			if (tFile == null)
 			{
 				tFile = new File(aName, aSize);
@@ -447,7 +158,7 @@ namespace XG.Server
 			}
 			if (skip) { return; }
 
-			Helper.Filesystem.DeleteDirectory(GetCompletePath(aFile));
+			Helper.FileSystem.DeleteDirectory(CompletePath(aFile));
 			_files.Remove(aFile);
 		}
 
@@ -461,7 +172,7 @@ namespace XG.Server
 		/// <param name="aFile"></param>
 		/// <param name="aSize"></param>
 		/// <returns></returns>
-		public FilePart GetPart(File aFile, Int64 aSize)
+		public FilePart Part(File aFile, Int64 aSize)
 		{
 			FilePart returnPart = null;
 
@@ -545,7 +256,7 @@ namespace XG.Server
 			if (aFile.Parts.Count() == 0) { RemoveFile(aFile); }
 			else
 			{
-				Helper.Filesystem.DeleteFile(GetCompletePath(aPart));
+				FileSystem.DeleteFile(CompletePath(aPart));
 			}
 		}
 
@@ -559,9 +270,9 @@ namespace XG.Server
 		/// <param name="aName"></param>
 		/// <param name="aSize"></param>
 		/// <returns>-1 if there is no part, 0<= if there is a new part available</returns>
-		public Int64 GetNextAvailablePartSize(string aName, Int64 aSize)
+		public Int64 NextAvailablePartSize(string aName, Int64 aSize)
 		{
-			File tFile = GetFile(aName, aSize);
+			File tFile = File(aName, aSize);
 			if (tFile == null) { return 0; }
 
 			Int64 nextSize = -1;
@@ -616,7 +327,7 @@ namespace XG.Server
 		/// 
 		/// </summary>
 		/// <param name="aObj"></param>
-		public void CheckNextReferenceBytes(object aObj)
+		void CheckNextReferenceBytes(object aObj)
 		{
 			PartBytesObject pbo = aObj as PartBytesObject;
 			CheckNextReferenceBytes(pbo.Part, pbo.Bytes, true);
@@ -656,25 +367,13 @@ namespace XG.Server
 					// the file is open
 					if (part.PartState == FilePartState.Open)
 					{
-						BotConnection bc = null;
-						Packet pack = null;
-						foreach (KeyValuePair<Packet, BotConnection> kvp in _downloads)
+						if (part.Packet != null)
 						{
-							if (kvp.Value.Part == part)
-							{
-								bc = kvp.Value;
-								pack = kvp.Key;
-								break;
-							}
-						}
-						if (bc != null)
-						{
-							if (!XGHelper.IsEqual(bc.ReferenceBytes, aBytes))
+							if (!XGHelper.IsEqual(part.StartReference, aBytes))
 							{
 								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
-								bc.RemovePart = true;
-								bc.Connection.Disconnect();
-								pack.Enabled = false;
+								part.Packet.Enabled = false;
+								part.Packet.Commit();
 								RemovePart(tFile, part);
 								return part.StopSize;
 							}
@@ -688,17 +387,17 @@ namespace XG.Server
 						}
 						else
 						{
-							_log.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no bot connect");
+							_log.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no packet");
 							return 0;
 						}
 					}
 					// it is already ready
 					else if (part.PartState == FilePartState.Closed || part.PartState == FilePartState.Ready)
 					{
-						string fileName = GetCompletePath(part);
+						string fileName = CompletePath(part);
 						try
 						{
-							System.IO.BinaryReader reader = Filesystem.OpenFileReadable(fileName);
+							System.IO.BinaryReader reader = FileSystem.OpenFileReadable(fileName);
 							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 							reader.Close();
 
@@ -796,7 +495,7 @@ namespace XG.Server
 		/// - merging the file and checking the file size
 		/// </summary>
 		/// <param name="aObject"></param>
-		public void JoinCompleteParts(object aObject)
+		void JoinCompleteParts(object aObject)
 		{
 			File tFile = aObject as File;
 			lock (tFile.Locked)
@@ -809,9 +508,8 @@ namespace XG.Server
 
 				string fileName = XGHelper.ShrinkFileName(tFile.Name, 0);
 
-				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
+				foreach (XG.Core.Server tServ in _servers.All)
 				{
-					XG.Core.Server tServ = kvp.Key;
 					foreach (Channel tChan in tServ.Channels)
 					{
 						if (tChan.Connected)
@@ -855,7 +553,7 @@ namespace XG.Server
 					{
 						try
 						{
-							System.IO.BinaryReader reader = Filesystem.OpenFileReadable(GetCompletePath(part));
+							System.IO.BinaryReader reader = FileSystem.OpenFileReadable(CompletePath(part));
 							byte[] data;
 							while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerRead)).Length > 0)
 							{
@@ -881,7 +579,7 @@ namespace XG.Server
 					Int64 size = new System.IO.FileInfo(fileReady).Length;
 					if (size == tFile.Size)
 					{
-						Helper.Filesystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
+						FileSystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
 						_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build");
 
 						// statistics
@@ -919,7 +617,7 @@ namespace XG.Server
 				if (error && deleteOnError)
 				{
 					// the creation was not successfull, so delete the files and parts
-					Helper.Filesystem.DeleteFile(fileReady);
+					FileSystem.DeleteFile(fileReady);
 					RemoveFile(tFile);
 				}
 			}
@@ -929,7 +627,7 @@ namespace XG.Server
 		/// Handles a downloaded file by calling the FileHandler string in the settings file
 		/// </summary>
 		/// <param name="aFile"></param>
-		public void HandleFile(string aFile)
+		void HandleFile(string aFile)
 		{
 			if (!string.IsNullOrEmpty(aFile))
 			{
@@ -974,63 +672,6 @@ namespace XG.Server
 						}
 					}
 				}
-			}
-		}
-
-		#endregion
-
-		#endregion
-
-		#region TIMER TASKS
-
-		void RunBotWatchdog()
-		{
-			while (true)
-			{
-				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
-
-				int a = 0;
-				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
-				{
-					if (kvp.Value.IsRunning)
-					{
-						foreach (Channel tChan in kvp.Key.Channels)
-						{
-							if (tChan.Connected)
-							{
-								foreach (Bot tBot in tChan.Bots)
-								{
-									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.OldestActivePacket() == null)
-									{
-										a++;
-										tChan.RemoveBot(tBot);
-									}
-								}
-							}
-						}
-					}
-				}
-				if (a > 0) { _log.Info("RunBotWatchdog() removed " + a + " offline bot(s)"); }
-
-				// TODO scan for empty channels and send a "xdcc list" command to all the people in there
-				// in some channels the bots are silent and have the same (no) rights like normal users
-			}
-		}
-
-		void RunTimer()
-		{
-			while (true)
-			{
-				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
-				{
-					ServerConnection sc = kvp.Value;
-					if (sc.IsRunning)
-					{
-						sc.TriggerTimerRun();
-					}
-				}
-
-				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
 			}
 		}
 

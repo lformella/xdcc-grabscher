@@ -69,9 +69,9 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		#region IServerBackendPlugin
 
-		public override Servers LoadServers ()
+		public override XG.Core.Servers LoadServers ()
 		{
-			Servers objectRepository = new Servers();
+			XG.Core.Servers _servers = new XG.Core.Servers();
 
 			#region DUMP DATABASE
 
@@ -79,7 +79,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			dic.Add ("guid", Guid.Empty);
 			foreach(XG.Core.Server serv in ExecuteQuery ("SELECT * FROM server;", null, typeof(XG.Core.Server)))
 			{
-				objectRepository.Add(serv);
+				_servers.Add(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
 				foreach(Channel chan in ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(Channel)))
@@ -104,7 +104,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			#region import routine
 
-			Importer importer = new Importer(objectRepository);
+			Importer importer = new Importer(_servers);
 
 			importer.ObjectAddedEvent += new ObjectsDelegate (ObjectAdded);
 
@@ -114,8 +114,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			#endregion
 
-			Servers = objectRepository;
-			return Servers;
+			return _servers;
 		}
 
 		public override Files LoadFiles ()

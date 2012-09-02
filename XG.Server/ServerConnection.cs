@@ -170,7 +170,7 @@ namespace XG.Server
 					Packet tPacket = aBot.OldestActivePacket();
 					while (tPacket != null)
 					{
-						Int64 tChunk = Parent.GetNextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
+						Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1 || tChunk == -2)
 						{
 							_log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");

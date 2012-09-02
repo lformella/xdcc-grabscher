@@ -43,7 +43,8 @@ namespace XG.Server.Helper
 
 		static readonly ILog _log = LogManager.GetLogger(typeof(IrcParser));
 
-		public ServerHandler Parent { get; set; }
+		public Servers Parent { get; set; }
+		public FileActions FileActions { get; set; }
 
 		const string MAGICSTRING = "((\\*|:){2,3}|->|<-|)";
 
@@ -625,7 +626,7 @@ namespace XG.Server.Helper
 							try { tPacket.RealSize = Int64.Parse(tDataList[5]); }
 							catch (Exception ex) { _log.Fatal("con_DataReceived() " + tBot.Name + " - can not parse packet size from string: " + tData, ex); return; }
 
-							tChunk = Parent.GetNextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
+							tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 							if (tChunk < 0)
 							{
 								_log.Error("con_DataReceived() file from " + tBot.Name + " already in use");

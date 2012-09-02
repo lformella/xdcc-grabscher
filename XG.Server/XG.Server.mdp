@@ -22,8 +22,8 @@
   <Contents>
     <File subtype="Code" buildaction="Compile" name="ServerConnection.cs" />
     <File subtype="Code" buildaction="Compile" name="BotConnection.cs" />
-    <File subtype="Code" buildaction="Compile" name="ServerHandler.cs" />
-    <File subtype="Code" buildaction="Compile" name="MainInstance.cs" />
+    <File subtype="Code" buildaction="Compile" name="Servers.cs" />
+    <File subtype="Code" buildaction="Compile" name="Main.cs" />
     <File subtype="Code" buildaction="Compile" name="Settings.cs" />
     <File subtype="Code" buildaction="Compile" name="Statistic.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
@@ -35,9 +35,10 @@
     <File subtype="Code" buildaction="Compile" name="Plugin/ABackendPlugin.cs" />
     <File subtype="Code" buildaction="Compile" name="Connection/AIrcConnection.cs" />
     <File subtype="Directory" buildaction="Compile" name="Helper" />
-    <File subtype="Code" buildaction="Compile" name="Helper/Filesystem.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper/FileSystem.cs" />
     <File subtype="Code" buildaction="Compile" name="Helper/PartBytesObject.cs" />
     <File subtype="Code" buildaction="Compile" name="Helper/IrcParser.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper/FileActions.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />

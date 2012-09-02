@@ -54,7 +54,6 @@ namespace XG.Server
 		DateTime _speedCalcTime;
 		Int64 _speedCalcSize;
 
-		byte[] _startReference = null;
 		byte[] _rollbackRefernce = null;
 		byte[] _startBuffer = null;
 		byte[] _stopBuffer = null;
@@ -120,11 +119,6 @@ namespace XG.Server
 			}
 		}
 
-		public byte[] ReferenceBytes
-		{
-			get { return _startReference; }
-		}
-
 		#endregion
 
 		#region EVENTS
@@ -142,13 +136,13 @@ namespace XG.Server
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
-			Part = Parent.GetPart(Parent.GetNewFile(Packet.RealName, Packet.RealSize), StartSize);
+			Part = FileActions.Part(FileActions.NewFile(Packet.RealName, Packet.RealSize), StartSize);
 			if (Part != null)
 			{
 				// wtf?
 				if (StartSize == StopSize)
 				{
-					_log.Error("con_Connected() startSize = stopsize (" + StartSize + ")");
+					_log.Error("ConnectionConnected() startSize = stopsize (" + StartSize + ")");
 					Connection.Disconnect();
 					return;
 				}
@@ -156,7 +150,7 @@ namespace XG.Server
 				Part.PartState = FilePartState.Open;
 				Part.Packet = Packet;
 
-				_log.Info("con_Connected() startet (" + StartSize + " - " + StopSize + ")");
+				_log.Info("ConnectionConnected() startet (" + StartSize + " - " + StopSize + ")");
 
 #if !UNSAFE
 				try
@@ -178,7 +172,7 @@ namespace XG.Server
 
 							// seek to 0 and extract the startbuffer bytes need for the previous file
 							stream.Seek(0, SeekOrigin.Begin);
-							_startReference = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+							Part.StartReference = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 
 							// seek to seekPos and extract the rollbackcheck bytes
 							stream.Seek(seekPos, SeekOrigin.Begin);
@@ -188,7 +182,7 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							_log.Fatal("con_Connected() seek", ex);
+							_log.Fatal("ConnectionConnected() seek", ex);
 							Connection.Disconnect();
 							return;
 						}
@@ -215,7 +209,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("con_Connected()", ex);
+					_log.Fatal("ConnectionConnected()", ex);
 					Connection.Disconnect();
 					return;
 				}
@@ -226,7 +220,7 @@ namespace XG.Server
 			}
 			else
 			{
-				_log.Error("con_Connected() cant find a part to download");
+				_log.Error("ConnectionConnected() cant find a part to download");
 				Connection.Disconnect();
 			}
 		}
@@ -255,7 +249,7 @@ namespace XG.Server
 				if (RemovePart)
 				{
 					Part.PartState = FilePartState.Broken;
-					Parent.RemovePart(File, Part);
+					FileActions.RemovePart(File, Part);
 				}
 				else
 				{
@@ -263,7 +257,7 @@ namespace XG.Server
 					if (CurrrentSize == StopSize || (!Part.IsChecked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheck))
 					{
 						Part.PartState = FilePartState.Ready;
-						_log.Info("con_Disconnected() ready" + (Part.IsChecked ? "" : " but unchecked"));
+						_log.Info("ConnectionDisconnected() ready" + (Part.IsChecked ? "" : " but unchecked"));
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
@@ -272,12 +266,12 @@ namespace XG.Server
 					else if (CurrrentSize > StopSize)
 					{
 						Part.PartState = FilePartState.Broken;
-						_log.Error("con_Disconnected() size is bigger than excepted: " + CurrrentSize + " > " + StopSize);
+						_log.Error("ConnectionDisconnected() size is bigger than excepted: " + CurrrentSize + " > " + StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
 						if (File.Parts.Count() == 1 || Part.StopSize == File.Size)
 						{
-							Parent.RemoveFile(File);
-							_log.Error("con_Disconnected() removing corupted file " + File.Name);
+							FileActions.RemoveFile(File);
+							_log.Error("ConnectionDisconnected() removing corupted file " + File.Name);
 						}
 
 						// statistics
@@ -286,7 +280,7 @@ namespace XG.Server
 					// it did not start
 					else if (_receivedBytes == 0)
 					{
-						_log.Error("con_Disconnected() downloading did not start, disabling packet");
+						_log.Error("ConnectionDisconnected() downloading did not start, disabling packet");
 						Packet.Enabled = false;
 
 						// statistics
@@ -295,7 +289,7 @@ namespace XG.Server
 					// it is incomplete
 					else
 					{
-						_log.Error("con_Disconnected() incomplete");
+						_log.Error("ConnectionDisconnected() incomplete");
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsIncompleted);
@@ -307,7 +301,7 @@ namespace XG.Server
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
-				_log.Error("con_Disconnected() connection did not work, disabling packet");
+				_log.Error("ConnectionDisconnected() connection did not work, disabling packet");
 				Packet.Enabled = false;
 
 				// statistics
@@ -378,23 +372,25 @@ namespace XG.Server
 				else { return; }
 			}
 			// save the reference bytes if it is a new file
-			else if (_startReference == null || _startReference.Length < (int)Settings.Instance.FileRollbackCheck)
+			else if (Part.StartReference == null || Part.StartReference.Length < (int)Settings.Instance.FileRollbackCheck)
 			{
+				byte[] startReference = Part.StartReference;
 				// initial data
-				if (_startReference == null) { _startReference = aData; }
+				if (startReference == null) { startReference = aData; }
 				// resize buffer and copy data
 				else
 				{
 					int dL = aData.Length;
-					int bL = _startReference.Length;
-					Array.Resize(ref _startReference, bL + dL);
-					Array.Copy(aData, 0, _startReference, bL, dL);
+					int bL = startReference.Length;
+					Array.Resize(ref startReference, bL + dL);
+					Array.Copy(aData, 0, startReference, bL, dL);
 				}
 				// shrink the reference if it is to big
-				if (_startReference.Length > Settings.Instance.FileRollbackCheck)
+				if (startReference.Length > Settings.Instance.FileRollbackCheck)
 				{
-					Array.Resize(ref _startReference, (int)Settings.Instance.FileRollbackCheck);
+					Array.Resize(ref startReference, (int)Settings.Instance.FileRollbackCheck);
 				}
+				Part.StartReference = startReference;
 			}
 
 			#endregion
@@ -441,7 +437,7 @@ namespace XG.Server
 					// but only if we are checked
 					if (Part.IsChecked)
 					{
-						Int64 stopSize = Parent.CheckNextReferenceBytes(Part, _stopBuffer);
+						Int64 stopSize = FileActions.CheckNextReferenceBytes(Part, _stopBuffer);
 						// all ok
 						if (stopSize == 0)
 						{
