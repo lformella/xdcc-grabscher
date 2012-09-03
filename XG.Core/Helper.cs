@@ -45,18 +45,18 @@ namespace XG.Core
 		SearchPacket = 8,
 		SearchBot = 9,
 
-		GetServers = 10,
-		GetChannelsFromServer = 11,
-		GetBotsFromChannel = 12,
-		GetPacketsFromBot = 13,
-		GetFiles = 14,
-		GetObject = 15,
+		Servers = 10,
+		ChannelsFromServer = 11,
+		BotsFromChannel = 12,
+		PacketsFromBot = 13,
+		Files = 14,
+		Object = 15,
 
 		AddSearch = 16,
 		RemoveSearch = 17,
-		GetSearches = 18,
+		Searches = 18,
 
-		GetStatistics = 19,
+		Statistics = 19,
 		ParseXdccLink = 20,
 
 		CloseServer = 21

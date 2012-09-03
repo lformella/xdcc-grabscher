@@ -58,15 +58,15 @@ namespace XG.Server
 				if(_ircParser != null)
 				{
 					_ircParser.Parent = null;
-					_ircParser.AddDownload -= new DownloadDelegate (IrcParserAddDownload);
-					_ircParser.RemoveDownload -= new BotDelegate (IrcParserRemoveDownload);
+					_ircParser.AddDownload -= new DownloadDelegate (BotConnect);
+					_ircParser.RemoveDownload -= new BotDelegate (BotDisconnect);
 				}
 				_ircParser = value;
 				if(_ircParser != null)
 				{
 					_ircParser.Parent = this;
-					_ircParser.AddDownload += new DownloadDelegate (IrcParserAddDownload);
-					_ircParser.RemoveDownload += new BotDelegate (IrcParserRemoveDownload);
+					_ircParser.AddDownload += new DownloadDelegate (BotConnect);
+					_ircParser.RemoveDownload += new BotDelegate (BotDisconnect);
 				}
 			}
 		}
@@ -102,7 +102,7 @@ namespace XG.Server
 		/// Connects to the given server by using a new ServerConnnect class
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void Connect (XG.Core.Server aServer)
+		public void ServerConnect (XG.Core.Server aServer)
 		{
 			if (!_servers.ContainsKey (aServer))
 			{
@@ -117,8 +117,8 @@ namespace XG.Server
 
 				_servers.Add (aServer, con);
 
-				con.Connected += new ServerDelegate(ServerConnectionConnected);
-				con.Disconnected += new ServerSocketErrorDelegate(ServerConnectionDisconnected);
+				con.Connected += new ServerDelegate(ServerConnected);
+				con.Disconnected += new ServerSocketErrorDelegate(ServerDisconnected);
 
 				// start a new thread wich connects to the given server
 				new Thread(delegate() { con.Connection.Connect(); }).Start();
@@ -128,7 +128,7 @@ namespace XG.Server
 				_log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
 			}
 		}
-		void ServerConnectionConnected(XG.Core.Server aServer)
+		void ServerConnected(XG.Core.Server aServer)
 		{
 			// nom nom nom ...
 		}
@@ -137,7 +137,7 @@ namespace XG.Server
 		/// Disconnects the given server
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void Disconnect(XG.Core.Server aServer)
+		public void ServerDisconnect(XG.Core.Server aServer)
 		{
 			if (_servers.ContainsKey(aServer))
 			{
@@ -149,7 +149,7 @@ namespace XG.Server
 				_log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
-		void ServerConnectionDisconnected(XG.Core.Server aServer, SocketErrorCode aValue)
+		void ServerDisconnected(XG.Core.Server aServer, SocketErrorCode aValue)
 		{
 			if (_servers.ContainsKey (aServer))
 			{
@@ -180,13 +180,13 @@ namespace XG.Server
 //								time = Settings.Instance.ReconnectWaitTimeReallyLong;
 //								break;
 						}
-						new Timer(new TimerCallback(ReconnectServer), aServer, time, System.Threading.Timeout.Infinite);
+						new Timer(new TimerCallback(ServerReconnect), aServer, time, System.Threading.Timeout.Infinite);
 					}
 				}
 				else
 				{
-					con.Connected -= new ServerDelegate(ServerConnectionConnected);
-					con.Disconnected -= new ServerSocketErrorDelegate(ServerConnectionDisconnected);
+					con.Connected -= new ServerDelegate(ServerConnected);
+					con.Disconnected -= new ServerSocketErrorDelegate(ServerDisconnected);
 
 					con.Server = null;
 					con.IrcParser = null;
@@ -202,7 +202,7 @@ namespace XG.Server
 			}
 		}
 
-		void ReconnectServer(object aServer)
+		void ServerReconnect(object aServer)
 		{
 			XG.Core.Server tServer = aServer as XG.Core.Server;
 
@@ -241,7 +241,7 @@ namespace XG.Server
 		/// <param name="aChunk"></param>
 		/// <param name="aIp"></param>
 		/// <param name="aPort"></param>
-		void IrcParserAddDownload(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
+		void BotConnect(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
 			if (!_downloads.ContainsKey(aPack))
 			{
@@ -274,7 +274,7 @@ namespace XG.Server
 		{
 		}
 
-		void IrcParserRemoveDownload (Bot aBot)
+		void BotDisconnect (Bot aBot)
 		{
 			foreach (KeyValuePair<Packet, BotConnection> kvp in _downloads)
 			{

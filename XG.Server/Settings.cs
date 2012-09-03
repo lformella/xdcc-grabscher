@@ -31,9 +31,9 @@ namespace XG.Server
 	[Serializable()]
 	public class Settings
 	{
-		static readonly ILog myLog = LogManager.GetLogger(typeof(Settings));
+		static readonly ILog _log = LogManager.GetLogger(typeof(Settings));
 
-		static Settings instance = null;
+		static Settings _instance = null;
 
 		/// <value>
 		/// Returns an instance of the settings - just loaded once
@@ -42,12 +42,12 @@ namespace XG.Server
 		{
 			get
 			{
-				if (instance == null)
+				if (_instance == null)
 				{
-					instance = Deserialize();
+					_instance = Deserialize();
 					Serialize();
 				}
-				return instance;
+				return _instance;
 			}
 		}
 
@@ -58,8 +58,8 @@ namespace XG.Server
 		{
 			get
 			{
-				instance = Deserialize();
-				return instance;
+				_instance = Deserialize();
+				return _instance;
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				myLog.Fatal("Settings.Instance", ex);
+				_log.Fatal("Settings.Instance", ex);
 				return new Settings();
 			}
 		}
@@ -92,12 +92,12 @@ namespace XG.Server
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Settings));
 				StreamWriter sw = new StreamWriter("./settings.xml");
-				ser.Serialize(sw, instance);
+				ser.Serialize(sw, _instance);
 				sw.Close();
 			}
 			catch (Exception ex)
 			{
-				myLog.Fatal("Settings.Instance", ex);
+				_log.Fatal("Settings.Instance", ex);
 			}
 		}
 
@@ -107,60 +107,30 @@ namespace XG.Server
 		/// </summary>
 		Settings()
 		{
-			Random rand = new Random();
-			commandWaitTime = 15000;
-			botWaitTime = 240000;
-			channelWaitTime = 300000;
-			channelWaitTimeLong = 900000;
-			fileRollback = 512000;
-			fileRollbackCheck = 409600;
-			updateDownloadTime = 5000;
-			downloadPerRead = 102400;
-			iRCName = "Anonymous" + rand.Next(10000, 99999);
-			tempPath = "./tmp/";
-			readyPath = "./dl/";
-			mutliDownloadMinimumTime = 300;
-			timerSleepTime = 5000;
-			serverTimeout = 60000;
-			reconnectWaitTime = 45000;
-			reconnectWaitTimeLong = 900000;
-			reconnectWaitTimeReallyLong = 2700000;
-			enableMultiDownloads = false;
-			clearReadyDownloads = true;
-			ircVersion = "mIRC v6.35 Khaled Mardam-Bey";
-			xgVersion = "0.9.2";
-			ircRegisterEmail = "anon@ymous.org";
-			ircRegisterPasswort = "password123";
+			IRCName = "Anonymous" + new Random().Next(10000, 99999);
+			TempPath = "./tmp/";
+			ReadyPath = "./dl/";
+			EnableMultiDownloads = false;
+			ClearReadyDownloads = true;
+			IrcRegisterEmail = "anon@ymous.org";
+			IrcRegisterPasswort = "password123";
 			AutoRegisterNickserv = true;
-			botOfflineCheckTime = 1200000;
-			downloadTimeout = 30000;
-			botOfflineTime = 7200000;
-			samePacketRequestTime = 10000;
-			maxNoDataReceived = 50;
-			backupStatisticTime = 60000;
 
-			parsingErrorFile = "./parsing_errors.txt";
-			dataBinary = "./xg.bin";
-			filesBinary = "./Files.bin";
-			searchesBinary = "./xgsearches.bin";
-			password = "xgisgreat";
-			backupDataTime = 900000;
-			fileHandler = new string[] { "" };
+			Password = "xgisgreat";
+			BackupDataTime = 900000;
+			FileHandler = new string[] { "" };
 
-			startTCPServer = false;
-			tcpServerPort = 5555;
-
-			startWebServer = true;
-			webServerPort = 5556;
+			StartWebServer = true;
+			WebServerPort = 5556;
 			AutoJoinOnInvite = true;
 
-			startJabberClient = false;
-			jabberServer = "";
-			jabberUser = "";
-			jabberPassword = "";
+			StartJabberClient = false;
+			JabberServer = "";
+			JabberUser = "";
+			JabberPassword = "";
 
-			startMySqlBackend = false;
-			mySqlBackendServer = "127.0.0.1";
+			StartMySqlBackend = false;
+			MySqlBackendServer = "127.0.0.1";
 			MySqlBackendDatabase = "xg";
 			MySqlBackendUser = "xg";
 			MySqlBackendPassword = "xg";
@@ -168,336 +138,185 @@ namespace XG.Server
 
 		#region PRIVATE
 
-		long commandWaitTime;
 		public long CommandWaitTime
 		{
-			get { return commandWaitTime; }
+			get { return 15000; }
 		}
 
-		long botWaitTime;
 		public long BotWaitTime
 		{
-			get { return botWaitTime; }
+			get { return 240000; }
 		}
 
-		long channelWaitTime;
 		public long ChannelWaitTime
 		{
-			get { return channelWaitTime; }
+			get { return 300000; }
 		}
 
-		long channelWaitTimeLong;
 		public long ChannelWaitTimeLong
 		{
-			get { return channelWaitTimeLong; }
+			get { return 900000; }
 		}
 
-		long fileRollback;
 		public long FileRollback
 		{
-			get { return fileRollback; }
+			get { return 512000; }
 		}
 
-		long fileRollbackCheck;
 		public long FileRollbackCheck
 		{
-			get { return fileRollbackCheck; }
+			get { return 409600; }
 		}
 
-		int updateDownloadTime;
 		public int UpdateDownloadTime
 		{
-			get { return updateDownloadTime; }
+			get { return 5000; }
 		}
 
-		long downloadPerRead;
 		public long DownloadPerRead
 		{
-			get { return downloadPerRead; }
+			get { return 102400; }
 		}
 
-		long botOfflineTime;
 		public long BotOfflineTime
 		{
-			get { return botOfflineTime; }
+			get { return 7200000; }
 		}
 
-		long samePacketRequestTime;
 		public long SamePacketRequestTime
 		{
-			get { return samePacketRequestTime; }
+			get { return 10000; }
 		}
 
-		string ircVersion;
 		public string IrcVersion
 		{
-			get { return ircVersion; }
+			get { return "mIRC v6.35 Khaled Mardam-Bey"; }
 		}
 
-		string xgVersion;
 		public string XgVersion
 		{
-			get { return xgVersion; }
+			get { return "0.9.2"; }
 		}
 
-		int botOfflineCheckTime;
 		public int BotOfflineCheckTime
 		{
-			get { return botOfflineCheckTime; }
+			get { return 1200000; }
 		}
 
-		int downloadTimeout;
 		public int DownloadTimeout
 		{
-			get { return downloadTimeout; }
+			get { return 30000; }
 		}
 		
-		int serverTimeout;
 		public int ServerTimeout
 		{
-			get { return serverTimeout; }
+			get { return 60000; }
 		}
 
-		int reconnectWaitTime;
 		public int ReconnectWaitTime
 		{
-			get { return reconnectWaitTime; }
+			get { return 45000; }
 		}
 
-		int reconnectWaitTimeLong;
 		public int ReconnectWaitTimeLong
 		{
-			get { return reconnectWaitTimeLong; }
+			get { return 900000; }
 		}
 
-		int reconnectWaitTimeReallyLong;
 		public int ReconnectWaitTimeReallyLong
 		{
-			get { return reconnectWaitTimeReallyLong; }
+			get { return 2700000; }
 		}
 
-		int mutliDownloadMinimumTime;
 		public int MutliDownloadMinimumTime
 		{
-			get { return mutliDownloadMinimumTime; }
+			get { return 300; }
 		}
 
-		long timerSleepTime;
 		public long TimerSleepTime
 		{
-			get { return timerSleepTime; }
+			get { return 5000; }
 		}
 
-		string parsingErrorFile;
 		public string ParsingErrorFile
 		{
-			get { return parsingErrorFile; }
+			get { return "./parsing_errors.txt"; }
 		}
 
-		string dataBinary;
 		public string DataBinary
 		{
-			get { return dataBinary; }
+			get { return "./xg.bin"; }
 		}
 
-		string filesBinary;
 		public string FilesBinary
 		{
-			get { return filesBinary; }
+			get { return "./xgfiles.bin"; }
 		}
 
-		string searchesBinary;
 		public string SearchesBinary
 		{
-			get { return searchesBinary; }
+			get { return "./xgsearches.bin"; }
 		}
 
-		int maxNoDataReceived;
 		public int MaxNoDataReceived
 		{
-			get { return maxNoDataReceived; }
+			get { return 50; }
 		}
 
-		int backupStatisticTime;
 		public int BackupStatisticTime
 		{
-			get { return backupStatisticTime; }
+			get { return 60000; }
 		}
 
 		#endregion
 
 		#region PUBLIC
 
-		string iRCName;
-		public string IRCName
-		{
-			get { return iRCName; }
-			set { iRCName = value; }
-		}
+		public string IRCName { get; set; }
 
-		string tempPath;
-		public string TempPath
-		{
-			get { return tempPath; }
-			set { tempPath = value; }
-		}
+		public string TempPath { get; set; }
 
-		string readyPath;
-		public string ReadyPath
-		{
-			get { return readyPath; }
-			set { readyPath = value; }
-		}
+		public string ReadyPath { get; set; }
 
-		string ircRegisterPasswort;
-		public string IrcRegisterPasswort
-		{
-			get { return ircRegisterPasswort; }
-			set { ircRegisterPasswort = value; }
-		}
+		public string IrcRegisterPasswort { get; set; }
 
-		string ircRegisterEmail;
-		public string IrcRegisterEmail
-		{
-			get { return ircRegisterEmail; }
-			set { ircRegisterEmail = value; }
-		}
+		public string IrcRegisterEmail { get; set; }
 
-		bool enableMultiDownloads;
-		public bool EnableMultiDownloads
-		{
-			get { return enableMultiDownloads; }
-			set { enableMultiDownloads = value; }
-		}
+		public bool EnableMultiDownloads { get; set; }
 
-		bool clearReadyDownloads;
-		public bool ClearReadyDownloads
-		{
-			get { return clearReadyDownloads; }
-			set { clearReadyDownloads = value; }
-		}
+		public bool ClearReadyDownloads { get; set; }
 
-		int tcpServerPort;
-		public int TcpServerPort
-		{
-			get { return tcpServerPort; }
-			set { tcpServerPort = value; }
-		}
+		public int WebServerPort { get; set; }
 
-		int webServerPort;
-		public int WebServerPort
-		{
-			get { return webServerPort; }
-			set { webServerPort = value; }
-		}
+		public string Password { get; set; }
 
-		string password;
-		public string Password
-		{
-			get { return password; }
-			set { password = value; }
-		}
+		public long BackupDataTime { get; set; }
 
-		long backupDataTime;
-		public long BackupDataTime
-		{
-			get { return backupDataTime; }
-			set { backupDataTime = value; }
-		}
+		public string[] FileHandler { get; set; }
 
-		string[] fileHandler;
-		public string[] FileHandler
-		{
-			get { return fileHandler; }
-			set { fileHandler = value; }
-		}
+		public bool StartWebServer { get; set; }
 
-		bool startTCPServer;
-		public bool StartTCPServer
-		{
-			get { return startTCPServer; }
-			set { startTCPServer = value; }
-		}
+		public bool StartJabberClient { get; set; }
 
-		bool startWebServer;
-		public bool StartWebServer
-		{
-			get { return startWebServer; }
-			set { startWebServer = value; }
-		}
+		public string JabberServer { get; set; }
 
-		bool startJabberClient;
-		public bool StartJabberClient
-		{
-			get { return startJabberClient; }
-			set { startJabberClient = value; }
-		}
+		public string JabberUser { get; set; }
 
-		string jabberServer;
-		public string JabberServer
-		{
-			get { return jabberServer; }
-			set { jabberServer = value; }
-		}
+		public string JabberPassword { get; set; }
 
-		string jabberUser;
-		public string JabberUser
-		{
-			get { return jabberUser; }
-			set { jabberUser = value; }
-		}
+		public bool StartMySqlBackend { get; set; }
 
-		string jabberPassword;
-		public string JabberPassword
-		{
-			get { return jabberPassword; }
-			set { jabberPassword = value; }
-		}
+		public string MySqlBackendServer { get; set; }
 
-		bool startMySqlBackend;
-		public bool StartMySqlBackend
-		{
-			get { return startMySqlBackend; }
-			set { startMySqlBackend = value; }
-		}
+		public string MySqlBackendDatabase { get; set; }
 
-		string mySqlBackendServer;
-		public string MySqlBackendServer
-		{
-			get { return mySqlBackendServer; }
-			set { mySqlBackendServer = value; }
-		}
+		public string MySqlBackendUser { get; set; }
 
-		public string MySqlBackendDatabase
-		{
-			get;
-			set;
-		}
+		public string MySqlBackendPassword { get; set; }
 
-		public string MySqlBackendUser
-		{
-			get;
-			set;
-		}
+		public bool AutoJoinOnInvite { get; set; }
 
-		public string MySqlBackendPassword
-		{
-			get;
-			set;
-		}
-
-		public bool AutoJoinOnInvite
-		{
-			get;
-			set;
-		}
-
-
-		public bool AutoRegisterNickserv
-		{
-			get;
-			set;
-		}
+		public bool AutoRegisterNickserv { get; set; }
 
 		#endregion
 	}

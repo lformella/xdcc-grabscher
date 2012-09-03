@@ -107,7 +107,7 @@ namespace XG.Client.Web
 			return data;
 		}
 
-		public byte[] GetImage(string aName)
+		public byte[] Image(string aName)
 		{
 			switch (aName)
 			{

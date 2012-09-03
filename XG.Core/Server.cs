@@ -83,13 +83,13 @@ namespace XG.Core
 			}
 		}
 
-		public Bot GetBot(string aName)
+		public Bot BotByName(string aName)
 		{
 			Bot tBot = null;
 			foreach (Channel chan in base.All)
 			{
 				tBot = chan[aName];
-				if (tBot != null){ break; }
+				if (tBot != null) { break; }
 			}
 			return tBot;
 		}

@@ -215,7 +215,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case TCPClientRequest.SearchPacket:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
-								GetPackets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
+								Packets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
@@ -224,7 +224,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case TCPClientRequest.SearchBot:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
-								GetBots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
+								Bots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
@@ -249,7 +249,7 @@ namespace XG.Server.Plugin.General.Webserver
 							Searches.Remove(Searches.ByName(HttpUtility.UrlDecode(tDic["name"])));
 							break;
 
-						case TCPClientRequest.GetSearches:
+						case TCPClientRequest.Searches:
 							response = Searches2Json(Searches);
 							break;
 
@@ -257,26 +257,26 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region GET
 
-						case TCPClientRequest.GetObject:
+						case TCPClientRequest.Object:
 							client.Response.ContentType = "text/json";
 							response = Object2Json(
 								Servers.ByGuid(new Guid(tDic["guid"]))
 							);
 							break;
 
-						case TCPClientRequest.GetServers:
+						case TCPClientRequest.Servers:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
-								GetSortedObjects(Servers.All, tDic["sidx"], tDic["sord"]),
+								SortedObjects(Servers.All, tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
 							break;
 
-						case TCPClientRequest.GetChannelsFromServer:
+						case TCPClientRequest.ChannelsFromServer:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
-								GetSortedObjects(
+								SortedObjects(
 									from server in Servers.All
 									from channel in server.Channels
 										where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]),
@@ -285,10 +285,10 @@ namespace XG.Server.Plugin.General.Webserver
 							);
 							break;
 
-						case TCPClientRequest.GetBotsFromChannel:
+						case TCPClientRequest.BotsFromChannel:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
-								GetSortedBots(
+								SortedBots(
 									from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
@@ -298,10 +298,10 @@ namespace XG.Server.Plugin.General.Webserver
 							);
 							break;
 
-						case TCPClientRequest.GetPacketsFromBot:
+						case TCPClientRequest.PacketsFromBot:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
-								GetSortedPackets(
+								SortedPackets(
 									from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
@@ -312,7 +312,7 @@ namespace XG.Server.Plugin.General.Webserver
 							);
 							break;
 
-						case TCPClientRequest.GetStatistics:
+						case TCPClientRequest.Statistics:
 							client.Response.ContentType = "text/json";
 							response = Statistic2Json();
 							break;
@@ -387,12 +387,12 @@ namespace XG.Server.Plugin.General.Webserver
 					// load an image
 					if (str.StartsWith("/image&"))
 					{
-						WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage(str.Split('&')[1]));
+						WriteToStream(client.Response, ImageLoaderWeb.Instance.Image(str.Split('&')[1]));
 					}
 					// serve the favicon
 					else if (str == "/favicon.ico")
 					{
-						WriteToStream(client.Response, ImageLoaderWeb.Instance.GetImage("Client"));
+						WriteToStream(client.Response, ImageLoaderWeb.Instance.Image("Client"));
 					}
 					// load a file
 					else
@@ -424,7 +424,7 @@ namespace XG.Server.Plugin.General.Webserver
 #endif
 		}
 
-		IEnumerable<Packet> GetPackets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		IEnumerable<Packet> Packets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
 			IEnumerable<Bot> bots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			if(aShowOffBots)
@@ -467,10 +467,10 @@ namespace XG.Server.Plugin.General.Webserver
 					break;
 			}
 
-			return GetSortedPackets(tPackets, aSortBy, aSortMode);
+			return SortedPackets(tPackets, aSortBy, aSortMode);
 		}
 
-		IEnumerable<Packet> GetSortedPackets(IEnumerable<Packet> aPackets, string aSortBy, string aSortMode)
+		IEnumerable<Packet> SortedPackets(IEnumerable<Packet> aPackets, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
@@ -515,18 +515,18 @@ namespace XG.Server.Plugin.General.Webserver
 			return aPackets;
 		}
 
-		IEnumerable<Bot> GetBots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		IEnumerable<Bot> Bots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
-			IEnumerable<Packet> tPacketList = GetPackets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
+			IEnumerable<Packet> tPacketList = Packets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
 			IEnumerable<Bot> tBots = (
 				from s in Servers.All 
 					from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b
 				).Distinct();
 
-			return GetSortedBots(tBots, aSortBy, aSortMode);
+			return SortedBots(tBots, aSortBy, aSortMode);
 		}
 
-		IEnumerable<Bot> GetSortedBots(IEnumerable<Bot> aBots, string aSortBy, string aSortMode)
+		IEnumerable<Bot> SortedBots(IEnumerable<Bot> aBots, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
@@ -575,7 +575,7 @@ namespace XG.Server.Plugin.General.Webserver
 			return aBots;
 		}
 
-		IEnumerable<AObject> GetSortedObjects(IEnumerable<AObject> aObjects, string aSortBy, string aSortMode)
+		IEnumerable<AObject> SortedObjects(IEnumerable<AObject> aObjects, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{

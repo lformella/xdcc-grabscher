@@ -32,15 +32,15 @@ namespace XG.Server.Plugin.Backend.MySql
 {
 	public class Importer
 	{
-		static readonly ILog myLog = LogManager.GetLogger(typeof(Importer));
+		static readonly ILog _log = LogManager.GetLogger(typeof(Importer));
 
 		XG.Core.Servers _servers;
 
 		public event ObjectsDelegate ObjectAddedEvent;
 
-		public Importer (XG.Core.Servers aRootObject)
+		public Importer (XG.Core.Servers aServers)
 		{
-			_servers = aRootObject;
+			_servers = aServers;
 		}
 
 		public void Import(string aFile)
@@ -66,28 +66,28 @@ namespace XG.Server.Plugin.Backend.MySql
 					string server = strs[2].ToLower();
 					string channel = strs[3].ToLower();
 
-					XG.Core.Server s = GetServer(server);
+					XG.Core.Server s = ServerByName(server);
 					if(s == null)
 					{
 						_servers.Add(server);
-						s = GetServer(server);
+						s = ServerByName(server);
 						ObjectAddedEvent(_servers, s);
-						myLog.Debug("-> " + server);
+						_log.Debug("-> " + server);
 					}
 
-					if(GetChannelFromServer(s, channel) == null)
+					if(ChannelFromServer(s, channel) == null)
 					{
 						s.AddChannel(channel);
-						Channel c = GetChannelFromServer(s, channel);
+						Channel c = ChannelFromServer(s, channel);
 						ObjectAddedEvent(s, c);
-						myLog.Debug("-> " + server + " - " + channel);
+						_log.Debug("-> " + server + " - " + channel);
 					}
 				}
 			}
 #endif
 		}
 
-		XG.Core.Server GetServer(string aServerName)
+		XG.Core.Server ServerByName(string aServerName)
 		{
 			foreach(AObject obj in _servers.All)
 			{
@@ -99,7 +99,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			return null;
 		}
 
-		Channel GetChannelFromServer(XG.Core.Server aServer, string aChannelName)
+		Channel ChannelFromServer(XG.Core.Server aServer, string aChannelName)
 		{
 			foreach(Channel chan in aServer.Channels)
 			{

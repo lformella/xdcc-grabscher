@@ -38,11 +38,11 @@ namespace XG.Server.Plugin.Backend.MySql
 	{
 		#region VARIABLES
 
-		static readonly ILog log = LogManager.GetLogger(typeof(BackendPlugin));
+		static readonly ILog _log = LogManager.GetLogger(typeof(BackendPlugin));
 
-		MySqlConnection dbConnection;
-		Thread serverThread;
-		object locked = new object ();
+		MySqlConnection _dbConnection;
+		Thread _serverThread;
+		object _locked = new object ();
 
 		#endregion
 
@@ -51,8 +51,8 @@ namespace XG.Server.Plugin.Backend.MySql
 			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
 			try
 			{
-				dbConnection = new MySqlConnection (connectionString);
-				dbConnection.Open ();
+				_dbConnection = new MySqlConnection (connectionString);
+				_dbConnection.Open ();
 
 				// cleanup database
 				ExecuteNonQuery ("UPDATE server SET connected = 0;", null);
@@ -62,7 +62,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			}
 			catch (Exception ex)
 			{
-				log.Fatal("MySqlBackend(" + connectionString + ") ", ex);
+				_log.Fatal("MySqlBackend(" + connectionString + ") ", ex);
 				throw ex;
 			}
 		}
@@ -134,14 +134,14 @@ namespace XG.Server.Plugin.Backend.MySql
 		public override void Start ()
 		{
 			// start the server thread
-			serverThread = new Thread (new ThreadStart (OpenClient));
-			serverThread.Start ();
+			_serverThread = new Thread (new ThreadStart (OpenClient));
+			_serverThread.Start ();
 		}
 		
 		public override void Stop ()
 		{
 			CloseClient ();
-			serverThread.Abort ();
+			_serverThread.Abort ();
 		}
 		
 		#endregion
@@ -156,11 +156,11 @@ namespace XG.Server.Plugin.Backend.MySql
 		{
 			try
 			{
-				dbConnection.Close ();
+				_dbConnection.Close ();
 			}
 			catch (Exception ex)
 			{
-				log.Fatal("CloseClient() ", ex);
+				_log.Fatal("CloseClient() ", ex);
 			}
 		}
 
@@ -170,7 +170,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectAdded (AObject aParentObj, AObject aObj)
 		{
-			string table = GetTable4Object (aObj);
+			string table = Table4Object (aObj);
 			Dictionary<string, object> dic = Object2Dic (aObj);
 
 			if (table != "")
@@ -196,7 +196,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectChanged (AObject aObj)
 		{
-			string table = GetTable4Object (aObj);
+			string table = Table4Object (aObj);
 			Dictionary<string, object> dic = Object2Dic (aObj);
 
 			if (table != "")
@@ -218,7 +218,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected override void ObjectRemoved (AObject aParentObj, AObject aObj)
 		{
-			string table = GetTable4Object (aObj);
+			string table = Table4Object (aObj);
 			Dictionary<string, object> dic = new Dictionary<string, object> ();
 
 			if (table != "")
@@ -240,21 +240,21 @@ namespace XG.Server.Plugin.Backend.MySql
 			dic.Add ("Enabled", aObj.Enabled);
 			dic.Add ("LastModified", Date2Timestamp (aObj.EnabledTime));
 
-			if (aObj.GetType () == typeof(XG.Core.Server))
+			if (aObj is XG.Core.Server)
 			{
 				XG.Core.Server obj = (XG.Core.Server)aObj;
 				dic.Add ("Port", obj.Port);
 				dic.Add ("ErrorCode", obj.ErrorCode);
 				dic.Add ("ChannelCount", obj.Channels.Count());
 			}
-			else if (aObj.GetType () == typeof(Channel))
+			else if (aObj is Channel)
 			{
 				Channel obj = (Channel)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
 				dic.Add ("ErrorCode", obj.ErrorCode);
 				dic.Add ("BotCount", obj.Bots.Count());
 			}
-			else if (aObj.GetType () == typeof(Bot))
+			else if (aObj is Bot)
 			{
 				Bot obj = (Bot)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
@@ -268,7 +268,7 @@ namespace XG.Server.Plugin.Backend.MySql
 				dic.Add ("LastContact", Date2Timestamp (obj.LastContact));
 				dic.Add ("LastMessage", obj.LastMessage);
 			}
-			else if (aObj.GetType () == typeof(Packet))
+			else if (aObj is Packet)
 			{
 				Packet obj = (Packet)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
@@ -342,9 +342,9 @@ namespace XG.Server.Plugin.Backend.MySql
 		protected void ExecuteNonQuery (string aSql, Dictionary<string, object> aDic)
 		{
 			//aSql = "START TRANSACTION;" + aSql + "COMMIT;";
-			lock (locked)
+			lock (_locked)
 			{
-				MySqlCommand cmd = new MySqlCommand (aSql, dbConnection);
+				MySqlCommand cmd = new MySqlCommand (aSql, _dbConnection);
 				using (cmd)
 				{
 					if (aDic != null)
@@ -360,17 +360,17 @@ namespace XG.Server.Plugin.Backend.MySql
 					}
 					catch (MySqlException ex)
 					{
-						log.Fatal("ExecuteQuery(" + ex.Number + ") '" + GetSqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteQuery(" + ex.Number + ") '" + SqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						log.Fatal("ExecuteQuery() '" + GetSqlString (aSql, aDic) + "' ", ex);
-						log.Warn("ExecuteQuery() : stopping server plugin!");
+						_log.Fatal("ExecuteQuery() '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Warn("ExecuteQuery() : stopping server plugin!");
 						Stop ();
 					}
 					catch (Exception ex)
 					{
-						log.Fatal("ExecuteQuery() '" + GetSqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteQuery() '" + SqlString (aSql, aDic) + "' ", ex);
 					}
 				}
 			}
@@ -381,9 +381,9 @@ namespace XG.Server.Plugin.Backend.MySql
 			List<AObject> list = new List<AObject> ();
 
 			//aSql = "START TRANSACTION;" + aSql + "COMMIT;";
-			lock (locked)
+			lock (_locked)
 			{
-				MySqlCommand cmd = new MySqlCommand (aSql, dbConnection);
+				MySqlCommand cmd = new MySqlCommand (aSql, _dbConnection);
 				using (cmd)
 				{
 					if (aDic != null)
@@ -411,17 +411,17 @@ namespace XG.Server.Plugin.Backend.MySql
 					}
 					catch (MySqlException ex)
 					{
-						log.Fatal("ExecuteReader(" + ex.Number + ") '" + GetSqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteReader(" + ex.Number + ") '" + SqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						log.Fatal("ExecuteReader() '" + GetSqlString (aSql, aDic) + "' ", ex);
-						log.Warn("ExecuteReader() : stopping server plugin!");
+						_log.Fatal("ExecuteReader() '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Warn("ExecuteReader() : stopping server plugin!");
 						Stop ();
 					}
 					catch (Exception ex)
 					{
-						log.Fatal("ExecuteReader() '" + GetSqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteReader() '" + SqlString (aSql, aDic) + "' ", ex);
 					}
 				}
 			}
@@ -443,28 +443,28 @@ namespace XG.Server.Plugin.Backend.MySql
 			return date;
 		}
 
-		protected string GetTable4Object (AObject aObj)
+		protected string Table4Object (AObject aObj)
 		{
-			if (aObj.GetType () == typeof(XG.Core.Server))
+			if (aObj is XG.Core.Server)
 			{
 				return "server";
 			}
-			else if (aObj.GetType () == typeof(Channel))
+			else if (aObj is Channel)
 			{
 				return "channel";
 			}
-			else if (aObj.GetType () == typeof(Bot))
+			else if (aObj is Bot)
 			{
 				return "bot";
 			}
-			else if (aObj.GetType () == typeof(Packet))
+			else if (aObj is Packet)
 			{
 				return "packet";
 			}
 			return "";
 		}
 
-		protected string GetSqlString (string aSql, Dictionary<string, object> aDic)
+		protected string SqlString (string aSql, Dictionary<string, object> aDic)
 		{
 			if (aDic != null)
 			{

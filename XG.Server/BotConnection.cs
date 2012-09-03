@@ -72,12 +72,12 @@ namespace XG.Server
 			{
 				if(_packet != null)
 				{
-					_packet.EnabledChanged -= new ObjectDelegate(PacketEnabledChanged);
+					_packet.EnabledChanged -= new ObjectDelegate(EnabledChanged);
 				}
 				_packet = value;
 				if(_packet != null)
 				{
-					_packet.EnabledChanged += new ObjectDelegate(PacketEnabledChanged);
+					_packet.EnabledChanged += new ObjectDelegate(EnabledChanged);
 				}
 			}
 		}
@@ -311,7 +311,7 @@ namespace XG.Server
 			Disconnected(Packet, this);
 		}
 
-		void PacketEnabledChanged(AObject aObj)
+		void EnabledChanged(AObject aObj)
 		{
 			if (!aObj.Enabled)
 			{
@@ -361,7 +361,7 @@ namespace XG.Server
 
 						// unregister from the event because if this is triggered
 						// it will remove the part
-						Packet.EnabledChanged -= new ObjectDelegate(PacketEnabledChanged);
+						Packet.EnabledChanged -= new ObjectDelegate(EnabledChanged);
 						Packet.Enabled = false;
 						aData = new byte[0];
 						Connection.Disconnect();

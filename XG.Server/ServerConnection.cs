@@ -54,16 +54,16 @@ namespace XG.Server
 			{
 				if(_server != null)
 				{
-					_server.Added -= new ObjectsDelegate(ServerObjectAdded);
-					_server.Removed -= new ObjectsDelegate(ServerObjectRemoved);
-					_server.EnabledChanged -= new ObjectDelegate(ServerEnabledChanged);
+					_server.Added -= new ObjectsDelegate(ObjectAdded);
+					_server.Removed -= new ObjectsDelegate(ObjectRemoved);
+					_server.EnabledChanged -= new ObjectDelegate(EnabledChanged);
 				}
 				_server = value;
 				if(_server != null)
 				{
-					_server.Added += new ObjectsDelegate(ServerObjectAdded);
-					_server.Removed += new ObjectsDelegate(ServerObjectRemoved);
-					_server.EnabledChanged += new ObjectDelegate(ServerEnabledChanged);
+					_server.Added += new ObjectsDelegate(ObjectAdded);
+					_server.Removed += new ObjectsDelegate(ObjectRemoved);
+					_server.EnabledChanged += new ObjectDelegate(EnabledChanged);
 				}
 			}
 		}
@@ -246,7 +246,7 @@ namespace XG.Server
 			}
 		}
 
-		public void PartChannel(Channel aChan)
+		void PartChannel(Channel aChan)
 		{
 			if (aChan != null)
 			{
@@ -262,7 +262,7 @@ namespace XG.Server
 
 		#region EVENTHANDLER
 
-		void ServerObjectAdded(AObject aParent, AObject aObj)
+		void ObjectAdded(AObject aParent, AObject aObj)
 		{
 			if(aObj is Channel)
 			{
@@ -275,7 +275,7 @@ namespace XG.Server
 			}
 		}
 
-		void ServerObjectRemoved(AObject aParent, AObject aObj)
+		void ObjectRemoved(AObject aParent, AObject aObj)
 		{
 			if(aObj is Channel)
 			{
@@ -294,7 +294,7 @@ namespace XG.Server
 			}
 		}
 
-		void ServerEnabledChanged(AObject aObj)
+		void EnabledChanged(AObject aObj)
 		{
 			if(aObj is Channel)
 			{

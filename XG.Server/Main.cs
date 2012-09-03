@@ -56,16 +56,16 @@ namespace XG.Server
 			{
 				if(_serverObjects != null)
 				{
-					_serverObjects.Added -= new ObjectsDelegate(ServerObjectAdded);
-					_serverObjects.Removed -= new ObjectsDelegate(ServerObjectRemoved);
-					_serverObjects.EnabledChanged -= new ObjectDelegate(ServerObjectEnabledChanged);
+					_serverObjects.Added -= new ObjectsDelegate(ObjectAdded);
+					_serverObjects.Removed -= new ObjectsDelegate(ObjectRemoved);
+					_serverObjects.EnabledChanged -= new ObjectDelegate(EnabledChanged);
 				}
 				_serverObjects = value;
 				if(_serverObjects != null)
 				{
-					_serverObjects.Added += new ObjectsDelegate(ServerObjectAdded);
-					_serverObjects.Removed += new ObjectsDelegate(ServerObjectRemoved);
-					_serverObjects.EnabledChanged += new ObjectDelegate(ServerObjectEnabledChanged);
+					_serverObjects.Added += new ObjectsDelegate(ObjectAdded);
+					_serverObjects.Removed += new ObjectsDelegate(ObjectRemoved);
+					_serverObjects.EnabledChanged += new ObjectDelegate(EnabledChanged);
 				}
 
 				_fileActions.Servers = _serverObjects;
@@ -312,7 +312,7 @@ namespace XG.Server
 
 				if (serv.Enabled)
 				{
-					_servers.Connect(serv);
+					_servers.ServerConnect(serv);
 				}
 			}
 		}
@@ -325,7 +325,7 @@ namespace XG.Server
 			// TODO stop server plugins
 			foreach (XG.Core.Server serv in _serverObjects.All)
 			{
-				_servers.Disconnect(serv);
+				_servers.ServerDisconnect(serv);
 			}
 		}
 
@@ -355,18 +355,18 @@ namespace XG.Server
 
 		#region EVENTHANDLER
 
-		void ServerObjectAdded(AObject aParent, AObject aObj)
+		void ObjectAdded(AObject aParent, AObject aObj)
 		{
 			if(aObj is XG.Core.Server)
 			{
 				XG.Core.Server aServer = aObj as XG.Core.Server;
 
 				_log.Info("ServerObjectAdded(" + aServer.Name + ")");
-				_servers.Connect(aServer);
+				_servers.ServerConnect(aServer);
 			}
 		}
 
-		void ServerObjectRemoved(AObject aParent, AObject aObj)
+		void ObjectRemoved(AObject aParent, AObject aObj)
 		{
 			if(aObj is XG.Core.Server)
 			{
@@ -376,11 +376,11 @@ namespace XG.Server
 				aServer.Commit();
 
 				_log.Info("ServerObjectRemoved(" + aServer.Name + ")");
-				_servers.Disconnect(aServer);
+				_servers.ServerDisconnect(aServer);
 			}
 		}
 
-		void ServerObjectEnabledChanged(AObject aObj)
+		void EnabledChanged(AObject aObj)
 		{
 			if(aObj is XG.Core.Server)
 			{
@@ -388,11 +388,11 @@ namespace XG.Server
 
 				if(aObj.Enabled)
 				{
-					_servers.Connect(aServer);
+					_servers.ServerConnect(aServer);
 				}
 				else
 				{
-					_servers.Disconnect(aServer);
+					_servers.ServerDisconnect(aServer);
 				}
 			}
 		}

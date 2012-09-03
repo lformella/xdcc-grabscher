@@ -91,7 +91,7 @@ namespace XG.Server.Helper
 					string tChannelName = tCommandList[2];
 
 					Channel tChan = aServer[tChannelName];
-					Bot tBot = aServer.GetBot(tUserName);
+					Bot tBot = aServer.BotByName(tUserName);
 
 					if(tBot != null)
 					{
@@ -155,7 +155,7 @@ namespace XG.Server.Helper
 							}
 							else
 							{
-								tBot = aServer.GetBot(tUserName);
+								tBot = aServer.BotByName(tUserName);
 								if (tBot != null)
 								{
 									tBot.Connected = false;
@@ -179,7 +179,7 @@ namespace XG.Server.Helper
 						}
 						else
 						{
-							tBot = aServer.GetBot(tUserName);
+							tBot = aServer.BotByName(tUserName);
 							if (tBot != null)
 							{
 								_log.Warn("con_DataReceived() bot " + tBot.Name + " was killed from server?");
@@ -332,7 +332,7 @@ namespace XG.Server.Helper
 		void HandleDataIntValues(XG.Core.Server aServer, string aData, string tData, int t_ComCode, string[] tCommandList)
 		{
 			Channel tChan = aServer[tCommandList[2]];
-			Bot tBot = aServer.GetBot(tCommandList[0].Split('!')[0]);
+			Bot tBot = aServer.BotByName(tCommandList[0].Split('!')[0]);
 
 			switch (t_ComCode)
 			{
@@ -348,7 +348,7 @@ namespace XG.Server.Helper
 				#region RPL_WHOISCHANNELS
 
 				case 319: // RPL_WHOISCHANNELS
-					tBot = aServer.GetBot(tCommandList[3]);
+					tBot = aServer.BotByName(tCommandList[3]);
 					if (tBot != null)
 					{
 						string chanName = "";
@@ -520,7 +520,7 @@ namespace XG.Server.Helper
 		{
 			string tUserName = tCommandList[0].Split('!')[0];
 			Channel tChan = aServer[tCommandList[2]];
-			Bot tBot = aServer.GetBot(tUserName);
+			Bot tBot = aServer.BotByName(tUserName);
 
 			#region VERSION
 
@@ -874,7 +874,7 @@ namespace XG.Server.Helper
 		void HandleDataNotice(XG.Core.Server aServer, string aData, string tData, string[] tCommandList)
 		{
 			string tUserName = tCommandList[0].Split('!')[0];
-			Bot tBot = aServer.GetBot(tUserName);
+			Bot tBot = aServer.BotByName(tUserName);
 
 			#region BOT MESSAGES
 

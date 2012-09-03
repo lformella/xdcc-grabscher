@@ -97,7 +97,7 @@ namespace XG.Server.Helper
 					// lets check if the directory is still on the harddisk
 					if(!System.IO.Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						_log.Warn("GetFile(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
+						_log.Warn("File(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
 						RemoveFile(file);
 						break;
 					}
@@ -126,7 +126,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("GetNewFile()", ex);
+					_log.Fatal("NewFile()", ex);
 					tFile = null;
 				}
 			}
@@ -158,7 +158,7 @@ namespace XG.Server.Helper
 			}
 			if (skip) { return; }
 
-			Helper.FileSystem.DeleteDirectory(CompletePath(aFile));
+			FileSystem.DeleteDirectory(CompletePath(aFile));
 			_files.Remove(aFile);
 		}
 
