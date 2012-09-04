@@ -33,7 +33,7 @@ namespace XG.Core
 		#region VARIABLES
 
 		[field: NonSerialized()]
-		public object Locked = new object();
+		public object Lock = new object();
 
 		public override string Name
 		{

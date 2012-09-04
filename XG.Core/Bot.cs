@@ -66,15 +66,15 @@ namespace XG.Core
 			get { return _currentQueuedPacket; }
 		}
 
-		BotState _botState;
-		public BotState BotState
+		BotState _state;
+		public BotState State
 		{
-			get { return _botState; }
+			get { return _state; }
 			set
 			{
-				if (_botState != value)
+				if (_state != value)
 				{
-					_botState = value;
+					_state = value;
 					Modified = true;
 				}
 

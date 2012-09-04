@@ -79,7 +79,7 @@ namespace XG.Core
 		{
 			get
 			{
-				return (Channel)base.ByName(name);
+				return (Channel)base.Named(name);
 			}
 		}
 

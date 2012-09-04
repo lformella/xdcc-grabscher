@@ -183,7 +183,7 @@ namespace XG.Server
 					foreach (Bot tBot in tChannel.Bots)
 					{
 						tBot.Connected = false;
-						tBot.BotState = BotState.Idle;
+						tBot.State = BotState.Idle;
 
 						foreach (Packet pack in tBot.Packets)
 						{
@@ -225,7 +225,7 @@ namespace XG.Server
 						continue;
 					}
 
-					file.Locked = new object();
+					file.Lock = new object();
 
 					if (!file.Enabled)
 					{
@@ -254,16 +254,16 @@ namespace XG.Server
 							}
 
 							// uhh, this is bad - close it and hope it works again
-							if (part.PartState == FilePartState.Open)
+							if (part.State == FilePartState.Open)
 							{
-								part.PartState = FilePartState.Closed;
+								part.State = FilePartState.Closed;
 								complete = false;
 							}
 							// the file is closed, so do smt
 							else
 							{
 								// check the file for safety
-								if (part.IsChecked && part.PartState == FilePartState.Ready)
+								if (part.IsChecked && part.State == FilePartState.Ready)
 								{
 									FilePart next = file.Next(part) as FilePart;
 									if (next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)

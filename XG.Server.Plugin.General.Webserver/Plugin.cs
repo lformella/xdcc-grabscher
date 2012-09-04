@@ -236,7 +236,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case TCPClientRequest.AddSearch:
 							string name = HttpUtility.UrlDecode(tDic["name"]);
-							XG.Core.Object obj = Searches.ByName(name);
+							XG.Core.Object obj = Searches.Named(name);
 							if(obj == null)
 							{
 								obj = new XG.Core.Object();
@@ -246,7 +246,7 @@ namespace XG.Server.Plugin.General.Webserver
 							break;
 
 						case TCPClientRequest.RemoveSearch:
-							Searches.Remove(Searches.ByName(HttpUtility.UrlDecode(tDic["name"])));
+							Searches.Remove(Searches.Named(HttpUtility.UrlDecode(tDic["name"])));
 							break;
 
 						case TCPClientRequest.Searches:
@@ -260,7 +260,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case TCPClientRequest.Object:
 							client.Response.ContentType = "text/json";
 							response = Object2Json(
-								Servers.ByGuid(new Guid(tDic["guid"]))
+								Servers.WithGuid(new Guid(tDic["guid"]))
 							);
 							break;
 
@@ -710,7 +710,7 @@ namespace XG.Server.Plugin.General.Webserver
 				Bot tBot = (Bot)aObject;
 
 				sb.Append("\"Name\":\"" + ClearString(aObject.Name) + "\",");
-				sb.Append("\"BotState\":\"" + tBot.BotState + "\",");
+				sb.Append("\"BotState\":\"" + tBot.State + "\",");
 				sb.Append("\"Speed\":" + tBot.Speed.ToString("0.00").Replace(",", ".") + ",");
 				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
 				sb.Append("\"QueueTime\":" + tBot.QueueTime + ",");

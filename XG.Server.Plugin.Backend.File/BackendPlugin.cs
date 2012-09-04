@@ -139,7 +139,7 @@ namespace XG.Server.Plugin.Backend.File
 			{
 				FilePart part = aObj as FilePart;
 				// if this change is lost, the data might be corrupt, so save it NOW
-				if (part.PartState != FilePartState.Open)
+				if (part.State != FilePartState.Open)
 				{
 					SaveFileDataNow();
 				}

@@ -66,11 +66,11 @@ namespace XG.Server.Plugin.Backend.MySql
 					string server = strs[2].ToLower();
 					string channel = strs[3].ToLower();
 
-					XG.Core.Server s = ServerByName(server);
+					XG.Core.Server s = ServerNamed(server);
 					if(s == null)
 					{
 						_servers.Add(server);
-						s = ServerByName(server);
+						s = ServerNamed(server);
 						ObjectAddedEvent(_servers, s);
 						_log.Debug("-> " + server);
 					}
@@ -87,7 +87,7 @@ namespace XG.Server.Plugin.Backend.MySql
 #endif
 		}
 
-		XG.Core.Server ServerByName(string aServerName)
+		XG.Core.Server ServerNamed(string aServerName)
 		{
 			foreach(AObject obj in _servers.All)
 			{

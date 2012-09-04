@@ -65,7 +65,7 @@ namespace XG.Core
 		{
 			get
 			{
-				return (Bot)base.ByName(name);
+				return (Bot)base.Named(name);
 			}
 		}
 

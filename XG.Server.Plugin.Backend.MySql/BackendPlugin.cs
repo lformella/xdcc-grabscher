@@ -258,7 +258,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			{
 				Bot obj = (Bot)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
-				dic.Add ("BotState", obj.BotState);
+				dic.Add ("BotState", obj.State);
 				dic.Add ("InfoQueueCurrent", obj.InfoQueueCurrent);
 				dic.Add ("InfoQueueTotal", obj.InfoQueueTotal);
 				dic.Add ("InfoSlotCurrent", obj.InfoSlotCurrent);
@@ -310,7 +310,7 @@ namespace XG.Server.Plugin.Backend.MySql
 				bot.Name = (string)aDic ["Name"];
 				bot.Connected = false;
 				bot.Enabled = (bool)aDic ["Enabled"];
-				bot.BotState = BotState.Idle;
+				bot.State = BotState.Idle;
 				bot.InfoQueueCurrent = (int)aDic ["InfoQueueCurrent"];
 				bot.InfoQueueTotal = (int)aDic ["InfoQueueTotal"];
 				bot.InfoSlotCurrent = (int)aDic ["InfoSlotCurrent"];

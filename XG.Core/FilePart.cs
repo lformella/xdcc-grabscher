@@ -143,17 +143,17 @@ namespace XG.Core
 			}
 		}
 
-		FilePartState _partState;
-		public FilePartState PartState
+		FilePartState _state;
+		public FilePartState State
 		{
-			get { return _partState; }
+			get { return _state; }
 			set
 			{
-				if (_partState != value)
+				if (_state != value)
 				{
-					_partState = value;
-					if (_partState != FilePartState.Open) { _speed = 0; }
-					if (_partState == FilePartState.Ready) { _currentSize = _stopSize; }
+					_state = value;
+					if (_state != FilePartState.Open) { _speed = 0; }
+					if (_state == FilePartState.Ready) { _currentSize = _stopSize; }
 					Modified = true;
 				}
 			}

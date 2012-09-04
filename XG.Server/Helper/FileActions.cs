@@ -147,7 +147,7 @@ namespace XG.Server.Helper
 			foreach (FilePart part in aFile.Parts)
 			{
 				// disable the packet if it is active
-				if (part.PartState == FilePartState.Open)
+				if (part.State == FilePartState.Open)
 				{
 					if (part.Packet != null)
 					{
@@ -192,7 +192,7 @@ namespace XG.Server.Helper
 				foreach (FilePart part in parts)
 				{
 					Int64 size = part.CurrentSize - Settings.Instance.FileRollback;
-					if (part.PartState == FilePartState.Closed && (size < 0 ? 0 : size) == aSize)
+					if (part.State == FilePartState.Closed && (size < 0 ? 0 : size) == aSize)
 					{
 						returnPart = part;
 						break;
@@ -204,7 +204,7 @@ namespace XG.Server.Helper
 					// now search incomplete parts in use
 					foreach (FilePart part in parts)
 					{
-						if (part.PartState == FilePartState.Open)
+						if (part.State == FilePartState.Open)
 						{
 							// split the part
 							if (part.StartSize < aSize && part.StopSize > aSize)
@@ -242,10 +242,10 @@ namespace XG.Server.Helper
 				if (part.StopSize == aPart.StartSize)
 				{
 					part.StopSize = aPart.StopSize;
-					if (part.PartState == FilePartState.Ready)
+					if (part.State == FilePartState.Ready)
 					{
 						_log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize);
-						part.PartState = FilePartState.Closed;
+						part.State = FilePartState.Closed;
 						part.Commit();
 						break;
 					}
@@ -283,7 +283,7 @@ namespace XG.Server.Helper
 				// first search incomplete parts not in use
 				foreach (FilePart part in parts)
 				{
-					if (part.PartState == FilePartState.Closed)
+					if (part.State == FilePartState.Closed)
 					{
 						nextSize = part.CurrentSize - Settings.Instance.FileRollback;
 						// uhm, this is a bug if we have a very small downloaded file
@@ -301,7 +301,7 @@ namespace XG.Server.Helper
 					// now search incomplete parts in use
 					foreach (FilePart part in parts)
 					{
-						if (part.PartState == FilePartState.Open)
+						if (part.State == FilePartState.Open)
 						{
 							// find the file with the max time, but only if there is some space to download
 							if (timeMissing < part.TimeMissing && part.MissingSize > 4 * Settings.Instance.FileRollback)
@@ -365,7 +365,7 @@ namespace XG.Server.Helper
 					if (part.IsChecked) { break; }
 
 					// the file is open
-					if (part.PartState == FilePartState.Open)
+					if (part.State == FilePartState.Open)
 					{
 						if (part.Packet != null)
 						{
@@ -392,7 +392,7 @@ namespace XG.Server.Helper
 						}
 					}
 					// it is already ready
-					else if (part.PartState == FilePartState.Closed || part.PartState == FilePartState.Ready)
+					else if (part.State == FilePartState.Closed || part.State == FilePartState.Ready)
 					{
 						string fileName = CompletePath(part);
 						try
@@ -412,7 +412,7 @@ namespace XG.Server.Helper
 								part.IsChecked = true;
 								part.Commit();
 
-								if (part.PartState == FilePartState.Ready)
+								if (part.State == FilePartState.Ready)
 								{
 									// file is not the last, so check the next one
 									if (part.StopSize < tFile.Size)
@@ -466,7 +466,7 @@ namespace XG.Server.Helper
 		/// <param name="aFile"></param>
 		public void CheckFile(File aFile)
 		{
-			lock (aFile.Locked)
+			lock (aFile.Lock)
 			{
 				_log.Info("CheckFile(" + aFile.Name + ")");
 				if (aFile.Parts.Count() == 0) { return; }
@@ -475,7 +475,7 @@ namespace XG.Server.Helper
 				IEnumerable<FilePart> parts = aFile.Parts;
 				foreach (FilePart part in parts)
 				{
-					if (part.PartState != FilePartState.Ready)
+					if (part.State != FilePartState.Ready)
 					{
 						complete = false;
 						_log.Info("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete");
@@ -498,7 +498,7 @@ namespace XG.Server.Helper
 		void JoinCompleteParts(object aObject)
 		{
 			File tFile = aObject as File;
-			lock (tFile.Locked)
+			lock (tFile.Lock)
 			{
 				_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting");
 

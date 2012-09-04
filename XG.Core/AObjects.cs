@@ -108,7 +108,7 @@ namespace XG.Core
 				{
 					if (!_children.Contains(aObject))
 					{
-						AObject tObj = ByGuid(aObject.Guid);
+						AObject tObj = WithGuid(aObject.Guid);
 						if (tObj == null)
 						{
 							_children.Add(aObject);
@@ -185,7 +185,7 @@ namespace XG.Core
 			}
 		}
 
-		public virtual AObject ByGuid(Guid aGuid)
+		public virtual AObject WithGuid(Guid aGuid)
 		{
 			if (aGuid == Guid.Empty) { return null; }
 			if (Guid == aGuid) { return this; }
@@ -202,14 +202,14 @@ namespace XG.Core
 				{
 					AObjects tObjects = (AObjects)tObject;
 
-					tObjectReturn = tObjects.ByGuid(aGuid);
+					tObjectReturn = tObjects.WithGuid(aGuid);
 					if (tObjectReturn != null) { break; }
 				}
 			}
 			return tObjectReturn;
 		}
 
-		public virtual AObject ByName(string aName)
+		public virtual AObject Named(string aName)
 		{
 			AObject tObject = null;
 			try

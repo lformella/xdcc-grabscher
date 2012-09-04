@@ -45,9 +45,9 @@ namespace XG.Core
 			base.Remove(aObject);
 		}
 
-		public new Object ByName(string aName)
+		public new Object Named(string aName)
 		{
-			AObject tObject = base.ByName(aName);
+			AObject tObject = base.Named(aName);
 			return tObject != null ? (Object)tObject : null;
 		}
 	}

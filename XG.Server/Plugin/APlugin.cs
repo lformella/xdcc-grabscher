@@ -170,7 +170,7 @@ namespace XG.Server.Plugin
 
 		public void RemoveServer(Guid aGuid)
 		{
-			AObject tObj = Servers.ByGuid(aGuid);
+			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				Servers.Remove(tObj as XG.Core.Server);
@@ -183,7 +183,7 @@ namespace XG.Server.Plugin
 
 		public void AddChannel(Guid aGuid, string aString)
 		{
-			AObject tObj = Servers.ByGuid(aGuid);
+			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				(tObj as XG.Core.Server).AddChannel(aString);
@@ -192,7 +192,7 @@ namespace XG.Server.Plugin
 
 		public void RemoveChannel(Guid aGuid)
 		{
-			AObject tObj = Servers.ByGuid(aGuid);
+			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				Channel tChan = tObj as Channel;
@@ -206,7 +206,7 @@ namespace XG.Server.Plugin
 
 		public void ActivateObject(Guid aGuid)
 		{
-			AObject tObj = Servers.ByGuid(aGuid);
+			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = true;
@@ -216,7 +216,7 @@ namespace XG.Server.Plugin
 
 		public void DeactivateObject(Guid aGuid)
 		{
-			AObject tObj = Servers.ByGuid(aGuid);
+			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = false;
