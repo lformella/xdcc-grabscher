@@ -24,32 +24,49 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class File : AObjects
 	{
 		#region VARIABLES
 
-		[field: NonSerialized()]
+		[NonSerialized]
 		public object Lock = new object();
-
+		
+		[DataMember]
 		public override string Name
 		{
 			get { return base.Name; }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
 
 		string _tmpPath;
+		[DataMember]
 		public string TmpPath
 		{
 			get { return _tmpPath; }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
 
 		Int64 _size;
+		[DataMember]
 		public Int64 Size
 		{
 			get { return _size; }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
 
 		#endregion

@@ -1,5 +1,5 @@
 // 
-//  Channel.cs
+//  JQGridObject.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -22,66 +22,37 @@
 // 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 
-namespace XG.Core
+using XG.Core;
+
+namespace XG.Server.Plugin.General.Webserver.JQGrid
 {
-	[Serializable]
 	[DataContract]
-	public class Channel : AObjects
+	public class Object
 	{
-		#region VARIABLES
-
-		public new Server Parent
-		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
-		}
-
-		int errorCode = 0;
+		Guid _id;
 		[DataMember]
-		public int ErrorCode
+		public Guid id
 		{
-			get { return errorCode; }
+			get { return _id; }
 			set
 			{
-				if (errorCode != value)
-				{
-					errorCode = value;
-					Modified = true;
-				}
+				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 
-		#endregion
-
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
+		AObject _cell;
+		[DataMember]
+		public AObject cell
 		{
-			get { return base.All.Cast<Bot>(); }
-		}
-
-		public Bot this[string name]
-		{
-			get
+			get { return _cell; }
+			set
 			{
-				return (Bot)base.Named(name);
+				_cell = value;
+				_id = _cell.Guid;
 			}
 		}
-
-		public void AddBot(Bot aBot)
-		{
-			base.Add(aBot);
-		}
-		
-		public void RemoveBot(Bot aBot)
-		{
-			base.Remove(aBot);
-		}
-
-		#endregion
 	}
 }
+

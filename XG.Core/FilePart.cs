@@ -22,6 +22,7 @@
 // 
 
 using System;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
@@ -34,7 +35,8 @@ namespace XG.Core
 		Broken
 	}
 
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class FilePart : AObject
 	{
 		#region VARIABLES
@@ -45,7 +47,7 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
-		[field: NonSerialized()]
+		[NonSerialized]
 		Packet _packet;
 		public Packet Packet
 		{
@@ -78,6 +80,7 @@ namespace XG.Core
 		}
 
 		Int64 _startSize = 0;
+		[DataMember]
 		public Int64 StartSize
 		{
 			get { return _startSize; }
@@ -92,6 +95,7 @@ namespace XG.Core
 		}
 
 		Int64 _stopSize = 0;
+		[DataMember]
 		public Int64 StopSize
 		{
 			get { return _stopSize; }
@@ -106,6 +110,7 @@ namespace XG.Core
 		}
 
 		Int64 _currentSize = 0;
+		[DataMember]
 		public Int64 CurrentSize
 		{
 			get { return _currentSize; }
@@ -118,18 +123,29 @@ namespace XG.Core
 				}
 			}
 		}
-
+		
+		[DataMember]
 		public Int64 MissingSize
 		{
 			get { return _stopSize - _currentSize; }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
-
+		
+		[DataMember]
 		public Int64 TimeMissing
 		{
 			get { return (_speed > 0 ? (Int64)(MissingSize / Speed) : Int64.MaxValue); }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
 
 		double _speed = 0;
+		[DataMember]
 		public double Speed
 		{
 			get { return _speed; }
@@ -144,6 +160,7 @@ namespace XG.Core
 		}
 
 		FilePartState _state;
+		[DataMember]
 		public FilePartState State
 		{
 			get { return _state; }
@@ -159,21 +176,22 @@ namespace XG.Core
 			}
 		}
 
-		bool _isChecked;
-		public bool IsChecked
+		bool _checked;
+		[DataMember]
+		public bool Checked
 		{
-			get { return _isChecked; }
+			get { return _checked; }
 			set
 			{
-				if (_isChecked != value)
+				if (_checked != value)
 				{
-					_isChecked = value;
+					_checked = value;
 					Modified = true;
 				}
 			}
 		}
 		
-		[field: NonSerialized()]
+		[NonSerialized]
 		byte[] _startReference;
 		public byte[] StartReference
 		{

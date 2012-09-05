@@ -22,10 +22,11 @@
 // 
 
 using System;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	[Serializable()]
+	[Serializable]
 	public class Object : AObject
 	{
 	}

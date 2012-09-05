@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
@@ -36,7 +37,8 @@ namespace XG.Core
 		Waiting
 	}
 
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class Bot : AObjects
 	{
 		#region VARIABLES
@@ -46,7 +48,8 @@ namespace XG.Core
 			get { return base.Parent as Channel; }
 			set { base.Parent = value; }
 		}
-
+		
+		[DataMember]
 		public override bool Connected
 		{
 			get { return base.Connected; }
@@ -59,7 +62,7 @@ namespace XG.Core
 			}
 		}
 
-		[field: NonSerialized()]
+		[NonSerialized]
 		Packet _currentQueuedPacket = null;
 		public Packet CurrentQueuedPacket
 		{
@@ -67,6 +70,7 @@ namespace XG.Core
 		}
 
 		BotState _state;
+		[DataMember]
 		public BotState State
 		{
 			get { return _state; }
@@ -89,7 +93,7 @@ namespace XG.Core
 			}
 		}
 
-		[field: NonSerialized()]
+		[NonSerialized]
 		IPAddress _ip = IPAddress.None;
 		public IPAddress IP
 		{
@@ -105,6 +109,7 @@ namespace XG.Core
 		}
 
 		string _lastMessage = "";
+		[DataMember]
 		public string LastMessage
 		{
 			get { return _lastMessage; }
@@ -120,6 +125,7 @@ namespace XG.Core
 		}
 
 		DateTime _lastContact = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		[DataMember]
 		public DateTime LastContact
 		{
 			get { return _lastContact; }
@@ -134,6 +140,7 @@ namespace XG.Core
 		}
 
 		int _queuePosition = 0;
+		[DataMember]
 		public int QueuePosition
 		{
 			get { return _queuePosition; }
@@ -148,6 +155,7 @@ namespace XG.Core
 		}
 
 		int _queueTime = 0;
+		[DataMember]
 		public int QueueTime
 		{
 			get { return _queueTime; }
@@ -162,6 +170,7 @@ namespace XG.Core
 		}
 
 		double _infoSpeedMax = 0;
+		[DataMember]
 		public double InfoSpeedMax
 		{
 			get { return _infoSpeedMax; }
@@ -175,6 +184,7 @@ namespace XG.Core
 			}
 		}
 		double _infoSpeedCurrent = 0;
+		[DataMember]
 		public double InfoSpeedCurrent
 		{
 			get { return _infoSpeedCurrent; }
@@ -189,6 +199,7 @@ namespace XG.Core
 		}
 
 		int _infoSlotTotal = 0;
+		[DataMember]
 		public int InfoSlotTotal
 		{
 			get { return _infoSlotTotal; }
@@ -202,6 +213,7 @@ namespace XG.Core
 			}
 		}
 		int _infoSlotCurrent = 0;
+		[DataMember]
 		public int InfoSlotCurrent
 		{
 			get { return _infoSlotCurrent; }
@@ -216,6 +228,7 @@ namespace XG.Core
 		}
 
 		int _infoQueueTotal = 0;
+		[DataMember]
 		public int InfoQueueTotal
 		{
 			get { return _infoQueueTotal; }
@@ -229,6 +242,7 @@ namespace XG.Core
 			}
 		}
 		int _infoQueueCurrent = 0;
+		[DataMember]
 		public int InfoQueueCurrent
 		{
 			get { return _infoQueueCurrent; }
@@ -241,12 +255,17 @@ namespace XG.Core
 				}
 			}
 		}
-
+		
+		[DataMember]
 		public double Speed
 		{
 			get
 			{
 				return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum();
+			}
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 

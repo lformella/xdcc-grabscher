@@ -27,7 +27,7 @@ using System.Linq;
 
 namespace XG.Core
 {
-	[Serializable()]
+	[Serializable]
 	public class Objects : AObjects
 	{
 		public new IEnumerable<Object> All

@@ -22,10 +22,12 @@
 // 
 
 using System;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class Packet : AObject
 	{
 		#region VARIABLES
@@ -36,14 +38,16 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
-		[field: NonSerialized()]
+		[NonSerialized]
 		FilePart part;
+		[DataMember]
 		public FilePart Part
 		{
 			get { return part; }
 			set { part = value; }
 		}
 
+		[DataMember]
 		public override string Name
 		{
 			get { return base.Name; }
@@ -59,6 +63,7 @@ namespace XG.Core
 		}
 
 		int id = -1;
+		[DataMember]
 		public int Id
 		{
 			get { return id; }
@@ -73,6 +78,7 @@ namespace XG.Core
 		}
 
 		Int64 size = 0;
+		[DataMember]
 		public Int64 Size
 		{
 			get { return size; }
@@ -87,6 +93,7 @@ namespace XG.Core
 		}
 
 		Int64 realSize = 0;
+		[DataMember]
 		public Int64 RealSize
 		{
 			get { return realSize; }
@@ -101,6 +108,7 @@ namespace XG.Core
 		}
 
 		string realName = "";
+		[DataMember]
 		public string RealName
 		{
 			get { return realName; }
@@ -115,6 +123,7 @@ namespace XG.Core
 		}
 
 		DateTime lastUpdated = new DateTime(1, 1, 1);
+		[DataMember]
 		public DateTime LastUpdated
 		{
 			get { return lastUpdated; }
@@ -129,6 +138,7 @@ namespace XG.Core
 		}
 
 		DateTime lastMentioned = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		[DataMember]
 		public DateTime LastMentioned
 		{
 			get { return lastMentioned; }

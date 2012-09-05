@@ -107,6 +107,7 @@ namespace XG.Server
 			if (!_servers.ContainsKey (aServer))
 			{
 				ServerConnection con = new ServerConnection ();
+				con.FileActions = FileActions;
 				con.Server = aServer;
 				con.IrcParser = _ircParser;
 
@@ -216,7 +217,6 @@ namespace XG.Server
 
 					// TODO do we need a new connection here?
 					con.Connection = new XG.Server.Connection.Connection();
-					con.FileActions = FileActions;
 					con.Connection.Hostname = tServer.Name;
 					con.Connection.Port = tServer.Port;
 					con.Connection.MaxData = 0;

@@ -1,5 +1,5 @@
 // 
-//  Channel.cs
+//  ServerPluginGeneralWebserver.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -22,66 +22,32 @@
 // 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
 
-namespace XG.Core
+using NUnit.Framework;
+
+using XG.Core;
+using XG.Server.Plugin.General.Webserver;
+
+namespace Test
 {
-	[Serializable]
-	[DataContract]
-	public class Channel : AObjects
+	[TestFixture()]
+	public class ServerPluginGeneralWebserver
 	{
-		#region VARIABLES
-
-		public new Server Parent
+		public ServerPluginGeneralWebserver ()
 		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
 		}
 
-		int errorCode = 0;
-		[DataMember]
-		public int ErrorCode
+		[Test()]
+		public void JsonTest()
 		{
-			get { return errorCode; }
-			set
-			{
-				if (errorCode != value)
-				{
-					errorCode = value;
-					Modified = true;
-				}
-			}
+			Bot bot = new Bot();
+			bot.Name = "TestBot";
+			string jsonString = Json.Serialize<Bot>(bot);
+
+			Assert.IsNullOrEmpty(jsonString);
+			Console.WriteLine("as" + jsonString);
+
 		}
-
-		#endregion
-
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
-		{
-			get { return base.All.Cast<Bot>(); }
-		}
-
-		public Bot this[string name]
-		{
-			get
-			{
-				return (Bot)base.Named(name);
-			}
-		}
-
-		public void AddBot(Bot aBot)
-		{
-			base.Add(aBot);
-		}
-		
-		public void RemoveBot(Bot aBot)
-		{
-			base.Remove(aBot);
-		}
-
-		#endregion
 	}
 }
+

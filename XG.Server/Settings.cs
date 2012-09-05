@@ -28,7 +28,7 @@ using log4net;
 
 namespace XG.Server
 {
-	[Serializable()]
+	[Serializable]
 	public class Settings
 	{
 		static readonly ILog _log = LogManager.GetLogger(typeof(Settings));

@@ -122,7 +122,7 @@ namespace XG.Server
 		#endregion
 	}
 
-	[Serializable()]
+	[Serializable]
 	public class Statistic
 	{
 		static readonly ILog _log = LogManager.GetLogger(typeof(Statistic));
@@ -130,9 +130,9 @@ namespace XG.Server
 		static object locked = new object();
 		static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));
 
-		[field: NonSerialized()]
+		[NonSerialized]
 		static Statistic instance = null;
-		[field: NonSerialized()]
+		[NonSerialized]
 		static object statisticLock = new object();
 
 		SerializableDictionary<StatisticType, Int64> myValuesInt = new SerializableDictionary<StatisticType, Int64>();

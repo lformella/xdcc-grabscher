@@ -183,7 +183,7 @@ namespace XG.Server.Helper
 				returnPart.StartSize = aSize;
 				returnPart.CurrentSize = aSize;
 				returnPart.StopSize = aFile.Size;
-				returnPart.IsChecked = true;
+				returnPart.Checked = true;
 				aFile.Add(returnPart);
 			}
 			else
@@ -362,7 +362,7 @@ namespace XG.Server.Helper
 				if (part.StartSize == aPart.StopSize)
 				{
 					// is the part already checked?
-					if (part.IsChecked) { break; }
+					if (part.Checked) { break; }
 
 					// the file is open
 					if (part.State == FilePartState.Open)
@@ -380,7 +380,7 @@ namespace XG.Server.Helper
 							else
 							{
 								_log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked");
-								part.IsChecked = true;
+								part.Checked = true;
 								part.Commit();
 								return 0;
 							}
@@ -409,7 +409,7 @@ namespace XG.Server.Helper
 							}
 							else
 							{
-								part.IsChecked = true;
+								part.Checked = true;
 								part.Commit();
 
 								if (part.State == FilePartState.Ready)

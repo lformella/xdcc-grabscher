@@ -22,17 +22,19 @@
 // 
 
 using System;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
 	public delegate void ObjectDelegate(AObject aObj);
 	
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class AObject
 	{
 		#region EVENTS
 
-		[field: NonSerialized()]
+		[field: NonSerialized]
 		public event ObjectDelegate EnabledChanged;
 
 		protected void FireEnabledChanged(AObject aObj)
@@ -43,7 +45,7 @@ namespace XG.Core
 			}
 		}
 
-		[field: NonSerialized()]
+		[field: NonSerialized]
 		public event ObjectDelegate Changed;
 
 		protected void FireChanged(AObject aObj)
@@ -57,11 +59,16 @@ namespace XG.Core
 		#endregion
 
 		#region PROPERTIES
-		
+
 		Guid _parentGuid;
+		[DataMember]
 		public Guid ParentGuid
 		{
 			get { return _parentGuid; }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
 
 		AObject _parent;
@@ -78,7 +85,8 @@ namespace XG.Core
 				}
 			}
 		}
-
+		
+		[DataMember]
 		public Guid Guid
 		{
 			get;
@@ -86,6 +94,7 @@ namespace XG.Core
 		}
 
 		string _name;
+		[DataMember]
 		public virtual string Name
 		{
 			get { return _name; }
@@ -110,6 +119,7 @@ namespace XG.Core
 		}
 
 		bool _connected;
+		[DataMember]
 		public virtual bool Connected
 		{
 			get { return _connected; }
@@ -124,6 +134,7 @@ namespace XG.Core
 		}
 		
 		bool _enabled;
+		[DataMember]
 		public virtual bool Enabled
 		{
 			get { return _enabled; }
@@ -141,11 +152,16 @@ namespace XG.Core
 				}
 			}
 		}
-
+		
+		[DataMember]
 		DateTime _enabledTime = new DateTime(1, 1, 1);
 		public DateTime EnabledTime
 		{
 			get { return _enabledTime; }
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
 		}
 
 		#endregion

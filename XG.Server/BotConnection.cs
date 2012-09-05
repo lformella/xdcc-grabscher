@@ -254,10 +254,10 @@ namespace XG.Server
 				else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
-					if (CurrrentSize == StopSize || (!Part.IsChecked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheck))
+					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheck))
 					{
 						Part.State = FilePartState.Ready;
-						_log.Info("ConnectionDisconnected() ready" + (Part.IsChecked ? "" : " but unchecked"));
+						_log.Info("ConnectionDisconnected() ready" + (Part.Checked ? "" : " but unchecked"));
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
@@ -435,7 +435,7 @@ namespace XG.Server
 				if (Settings.Instance.FileRollbackCheck <= bufL)
 				{
 					// but only if we are checked
-					if (Part.IsChecked)
+					if (Part.Checked)
 					{
 						Int64 stopSize = FileActions.CheckNextReferenceBytes(Part, _stopBuffer);
 						// all ok

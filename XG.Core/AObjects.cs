@@ -24,17 +24,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
 	public delegate void ObjectsDelegate(AObjects aObjects, AObject aObject);
 	
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class AObjects : AObject
 	{
 		#region EVENTS
 
-		[field: NonSerialized()]
+		[field: NonSerialized]
 		public event ObjectsDelegate Added;
 
 		protected void FireAdded(AObjects aObjects, AObject aObject)
@@ -45,7 +47,7 @@ namespace XG.Core
 			}
 		}
 
-		[field: NonSerialized()]
+		[field: NonSerialized]
 		public event ObjectsDelegate Removed;
 
 		protected void FireRemoved(AObjects aObjects, AObject aObject)
@@ -60,7 +62,7 @@ namespace XG.Core
 
 		#region PROPERTIES
 		
-		[field: NonSerialized()]
+		[NonSerialized]
 		object _objectLock = new object();
 		protected object ObjectLock
 		{
@@ -79,7 +81,8 @@ namespace XG.Core
 		{
 			get { return _children.ToArray(); }
 		}
-
+		
+		[DataMember]
 		public override bool Connected
 		{
 			get { return base.Connected; }

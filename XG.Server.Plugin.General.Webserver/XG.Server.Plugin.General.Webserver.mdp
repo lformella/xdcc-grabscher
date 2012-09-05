@@ -23,6 +23,10 @@
     <File subtype="Directory" buildaction="Compile" name="." />
     <File subtype="Code" buildaction="Compile" name="Plugin.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="Json.cs" />
+    <File subtype="Directory" buildaction="Compile" name="JQGrid" />
+    <File subtype="Code" buildaction="Compile" name="JQGrid/Object.cs" />
+    <File subtype="Code" buildaction="Compile" name="JQGrid/Objects.cs" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Core" />
@@ -32,5 +36,6 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../XG.Lib/log4net.dll" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
 </Project>

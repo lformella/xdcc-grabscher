@@ -1,4 +1,4 @@
-<Project name="Test" fileversion="2.0" DefaultNamespace="XG.Test" language="C#" targetFramework="4.0" ctype="DotNetProject">
+<Project name="Test" fileversion="2.0" DefaultNamespace="Test" language="C#" targetFramework="4.0" ctype="DotNetProject">
   <Configurations active="Release">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assembly="XG.Test" />
@@ -18,6 +18,7 @@
     <File subtype="Code" buildaction="Compile" name="ServerHelperFilesystem.cs" />
     <File subtype="Code" buildaction="Compile" name="ServerHelperIrcParser.cs" />
     <File subtype="Code" buildaction="Compile" name="CoreHelper.cs" />
+    <File subtype="Code" buildaction="Compile" name="ServerPluginGeneralWebserver.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

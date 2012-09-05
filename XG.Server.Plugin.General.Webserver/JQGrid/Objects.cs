@@ -1,5 +1,5 @@
 // 
-//  Channel.cs
+//  JQGridObject.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -26,62 +26,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace XG.Core
+using XG.Core;
+
+namespace XG.Server.Plugin.General.Webserver.JQGrid
 {
-	[Serializable]
 	[DataContract]
-	public class Channel : AObjects
+	public class Objects
 	{
-		#region VARIABLES
-
-		public new Server Parent
-		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
-		}
-
-		int errorCode = 0;
 		[DataMember]
-		public int ErrorCode
+		public int page { get; set; }
+
+		[DataMember]
+		public int total { get; set; }
+
+		[DataMember]
+		public int records
 		{
-			get { return errorCode; }
+			get { return rows.Count(); }
 			set
 			{
-				if (errorCode != value)
-				{
-					errorCode = value;
-					Modified = true;
-				}
+				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 
-		#endregion
-
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
-		{
-			get { return base.All.Cast<Bot>(); }
-		}
-
-		public Bot this[string name]
+		IEnumerable<Object> _rows;
+		[DataMember]
+		public IEnumerable<Object> rows
 		{
 			get
 			{
-				return (Bot)base.Named(name);
+				return _rows.ToArray();
+			}
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 
-		public void AddBot(Bot aBot)
+		public IEnumerable<AObject> objects
 		{
-			base.Add(aBot);
+			set
+			{
+				List<Object> gridObjects = new List<Object>();
+				foreach (AObject tObject in value)
+				{
+					Object gridObject = new Object();
+					gridObject.cell = tObject;
+					gridObjects.Add(gridObject);
+				}
+				_rows = gridObjects;
+			}
 		}
-		
-		public void RemoveBot(Bot aBot)
-		{
-			base.Remove(aBot);
-		}
-
-		#endregion
 	}
 }
+

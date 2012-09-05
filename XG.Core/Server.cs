@@ -24,10 +24,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	[Serializable()]
+	[Serializable]
+	[DataContract]
 	public class Server : AObjects
 	{
 		#region VARIABLES
@@ -39,6 +41,7 @@ namespace XG.Core
 		}
 
 		int _port = 0;
+		[DataMember]
 		public int Port
 		{
 			get { return _port; }
@@ -53,6 +56,7 @@ namespace XG.Core
 		}
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
+		[DataMember]
 		public SocketErrorCode ErrorCode
 		{
 			get { return _errorCode; }

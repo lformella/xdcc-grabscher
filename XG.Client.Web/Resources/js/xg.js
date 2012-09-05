@@ -823,6 +823,7 @@ function RefreshBot(guid)
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
+			result.cell.Icon = "";
 			jQuery("#bots").setRowData(result.id, result.cell);
 		}
 	);
@@ -833,6 +834,7 @@ function RefreshPacket(guid)
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
+			result.cell.Icon = "";
 			jQuery("#packets").setRowData(result.id, result.cell);
 		}
 	);

@@ -43,9 +43,8 @@ namespace XG.Server.Plugin.General.Webserver
 
 		static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
 
-		Thread serverThread;
-		HttpListener listener;
-
+		Thread _serverThread;
+		HttpListener _listener;
 		#endregion
 
 		#region RUN STOP
@@ -55,8 +54,8 @@ namespace XG.Server.Plugin.General.Webserver
 		/// </summary>
 		public override void Start()
 		{
-			serverThread = new Thread(new ThreadStart(OpenServer));
-			serverThread.Start();
+			_serverThread = new Thread(new ThreadStart(OpenServer));
+			_serverThread.Start();
 		}
 
 		/// <summary>
@@ -65,7 +64,7 @@ namespace XG.Server.Plugin.General.Webserver
 		public override void Stop()
 		{
 			CloseServer();
-			serverThread.Abort();
+			_serverThread.Abort();
 		}
 
 		#endregion
@@ -77,13 +76,13 @@ namespace XG.Server.Plugin.General.Webserver
 		/// </summary>
 		void OpenServer()
 		{
-			listener = new HttpListener();
+			_listener = new HttpListener();
 #if !UNSAFE
 			try
 			{
 #endif
-				listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
-				listener.Start();
+				_listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
+				_listener.Start();
 
 				while (true)
 				{
@@ -91,7 +90,7 @@ namespace XG.Server.Plugin.General.Webserver
 					try
 					{
 #endif
-						HttpListenerContext client = listener.GetContext();
+						HttpListenerContext client = _listener.GetContext();
 						Thread t = new Thread(new ParameterizedThreadStart(OpenClient));
 						t.IsBackground = true;
 						t.Start(client);
@@ -114,7 +113,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		void CloseServer()
 		{
-			listener.Close();
+			_listener.Close();
 		}
 
 		#endregion
@@ -315,6 +314,11 @@ namespace XG.Server.Plugin.General.Webserver
 						case TCPClientRequest.Statistics:
 							client.Response.ContentType = "text/json";
 							response = Statistic2Json();
+							break;
+
+						case TCPClientRequest.Files:
+							client.Response.ContentType = "text/json";
+							response = Files2Json();
 							break;
 
 						#endregion
@@ -631,7 +635,7 @@ namespace XG.Server.Plugin.General.Webserver
 			foreach (AObject obj in aObjects.All)
 			{
 				count++;
-				sb.Append("{\"Search\": \"" + ClearString(obj.Name) + "\"}");
+				sb.Append("{\"Search\": \"" + obj.Name + "\"}");
 				if(count < aObjects.All.Count()) { sb.Append(","); }
 				sb.Append("");
 			}
@@ -643,24 +647,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 		string Objects2Json(IEnumerable<AObject> aObjects, int aPage, int aRows)
 		{
-			StringBuilder sb = new StringBuilder();
-
-			sb.Append("{");
-			sb.Append("\"page\":\"" + aPage + "\",");
-			sb.Append("\"total\":\"" + Math.Ceiling((double)aObjects.Count() / (double)aRows).ToString() + "\",");
-			sb.Append("\"records\":\"" + aObjects.Count() + "\",");
-			sb.Append("\"rows\":[");
-
-			List<string> tList = new List<string>();
-			foreach (AObject tObj in aObjects.Skip((aPage - 1) * aRows).Take(aRows))
-			{
-				tList.Add(Object2Json(tObj));
-			}
-			sb.Append(string.Join(",", tList));
-
-			sb.Append("]}");
-
-			return sb.ToString();
+			XG.Server.Plugin.General.Webserver.JQGrid.Objects tObjects = new XG.Server.Plugin.General.Webserver.JQGrid.Objects();
+			tObjects.page = aPage;
+			tObjects.total = (int)Math.Ceiling((double)aObjects.Count() / (double)aRows);
+			tObjects.objects = aObjects;
+			return Json.Serialize<XG.Server.Plugin.General.Webserver.JQGrid.Objects>(tObjects);
 		}
 
 		string Object2Json(AObject aObject)
@@ -670,79 +661,9 @@ namespace XG.Server.Plugin.General.Webserver
 				return "";
 			}
 
-			StringBuilder sb = new StringBuilder();
-
-			sb.Append("{");
-			sb.Append("\"id\":\"" + aObject.Guid.ToString() + "\",");
-			sb.Append("\"cell\":{");
-
-			// push out an icon row - otherwise the wont update itself correctly m(
-			sb.Append("\"Icon\":\"\",");
-			sb.Append("\"ParentGuid\":\"" + aObject.ParentGuid.ToString() + "\",");
-			sb.Append("\"Connected\":\"" + aObject.Connected.ToString().ToLower() + "\",");
-			sb.Append("\"Enabled\":\"" + aObject.Enabled.ToString().ToLower() + "\",");
-			sb.Append("\"LastModified\":\"" + aObject.EnabledTime + "\",");
-
-			if (aObject is XG.Core.Server)
-			{
-				XG.Core.Server tServ = (XG.Core.Server)aObject;
-
-				sb.Append("\"Name\":\"" + aObject.Name + ":" + tServ.Port + "\",");
-				sb.Append("\"ErrorCode\":\"" + tServ.ErrorCode + "\",");
-				sb.Append("\"level\":0,");
-				sb.Append("\"parent\":0,");
-				sb.Append("\"isLeaf\":false,");
-				sb.Append("\"loaded\":true");
-			}
-			else if (aObject is Channel)
-			{
-				Channel tChan = (Channel)aObject;
-
-				sb.Append("\"Name\":\"" + aObject.Name + "\",");
-				sb.Append("\"ErrorCode\":\"" + tChan.ErrorCode + "\",");
-				sb.Append("\"level\":1,");
-				sb.Append("\"parent\":\"" + aObject.ParentGuid + "\",");
-				sb.Append("\"isLeaf\":true,");
-				sb.Append("\"loaded\":true");
-			}
-			else if (aObject is Bot)
-			{
-				Bot tBot = (Bot)aObject;
-
-				sb.Append("\"Name\":\"" + ClearString(aObject.Name) + "\",");
-				sb.Append("\"BotState\":\"" + tBot.State + "\",");
-				sb.Append("\"Speed\":" + tBot.Speed.ToString("0.00").Replace(",", ".") + ",");
-				sb.Append("\"QueQueuePosition\":" + tBot.QueuePosition + ",");
-				sb.Append("\"QueueTime\":" + tBot.QueueTime + ",");
-				sb.Append("\"InfoSpeedMax\":" + tBot.InfoSpeedMax.ToString().Replace(',', '.') + ",");
-				sb.Append("\"InfoSpeedCurrent\":" + tBot.InfoSpeedCurrent.ToString().Replace(',', '.') + ",");
-				sb.Append("\"InfoSlotTotal\":" + tBot.InfoSlotTotal + ",");
-				sb.Append("\"InfoSlotCurrent\":" + tBot.InfoSlotCurrent + ",");
-				sb.Append("\"InfoQueueTotal\":" + tBot.InfoQueueTotal + ",");
-				sb.Append("\"InfoQueueCurrent\":" + tBot.InfoQueueCurrent + ",");
-				sb.Append("\"LastMessage\":\"" + ClearString(tBot.LastMessage) + "\",");
-				sb.Append("\"LastContact\":\"" + tBot.LastContact + "\"");
-			}
-			else if (aObject is Packet)
-			{
-				Packet tPack = (Packet)aObject;
-
-				sb.Append("\"Id\":" + tPack.Id + ",");
-				sb.Append("\"Name\":\"" + ClearString(tPack.RealName != "" ? tPack.RealName : tPack.Name) + "\",");
-				sb.Append("\"Size\":" + (tPack.RealSize > 0 ? tPack.RealSize : tPack.Size) + ",");
-				sb.Append("\"Speed\":" + (tPack.Part == null ? "0" : tPack.Part.Speed.ToString("0.00").Replace(",", ".")) + ",");
-				sb.Append("\"TimeMissing\":" + (tPack.Part == null ? "0" : tPack.Part.TimeMissing.ToString()) + ",");
-				sb.Append("\"StartSize\":" + (tPack.Part == null ? "0" : tPack.Part.StartSize.ToString()) + ",");
-				sb.Append("\"StopSize\":" + (tPack.Part == null ? "0" : tPack.Part.StopSize.ToString()) + ",");
-				sb.Append("\"CurrentSize\":" + (tPack.Part == null ? "0" : tPack.Part.CurrentSize.ToString()) + ",");
-				sb.Append("\"IsChecked\":\"" + (tPack.Part == null ? "false" : tPack.Part.IsChecked ? "true" : "false") + "\",");
-				sb.Append("\"Order\":\"" + (tPack.Parent.OldestActivePacket() != tPack ? "false" : "true") + "\",");
-				sb.Append("\"LastUpdated\":\"" + tPack.LastUpdated + "\"");
-			}
-
-			sb.Append("}}");
-
-			return sb.ToString();
+			XG.Server.Plugin.General.Webserver.JQGrid.Object tObject = new XG.Server.Plugin.General.Webserver.JQGrid.Object();
+			tObject.cell = aObject;
+			return Json.Serialize<XG.Server.Plugin.General.Webserver.JQGrid.Object>(tObject);
 		}
 
 		string Statistic2Json()
@@ -771,18 +692,30 @@ namespace XG.Server.Plugin.General.Webserver
 			return sb.ToString();
 		}
 
-		Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß _.\[\]\{\}\(\)-]");
-		string ClearString(string aString)
+		string Files2Json()
 		{
-			string str = myClearRegex.Replace(aString, "");
-			str = str.Replace("Ä", "&Auml;");
-			str = str.Replace("ä", "&auml;");
-			str = str.Replace("Ö", "&Ouml;");
-			str = str.Replace("ö", "&ouml;");
-			str = str.Replace("Ü", "&Uuml;");
-			str = str.Replace("ü", "&uuml;");
-			str = str.Replace("ß", "&szlig;");
-			return str;
+			StringBuilder sb = new StringBuilder();
+			sb.Append("{");
+
+			List<StatisticType> types = new List<StatisticType>();
+			// uncool, but works
+			for (int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedMax; a++)
+			{
+				types.Add((StatisticType)a);
+			}
+
+			int count = 0;
+			foreach (StatisticType type in types)
+			{
+				count++;
+				double val = Statistic.Instance.Get(type);
+				sb.Append ("\"" + type + "\":" + val.ToString().Replace(",", "."));
+				if (count < types.Count) { sb.Append(","); }
+				sb.Append("");
+			}
+
+			sb.Append("}");
+			return sb.ToString();
 		}
 
 		#endregion

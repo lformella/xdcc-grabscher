@@ -263,10 +263,10 @@ namespace XG.Server
 							else
 							{
 								// check the file for safety
-								if (part.IsChecked && part.State == FilePartState.Ready)
+								if (part.Checked && part.State == FilePartState.Ready)
 								{
 									FilePart next = file.Next(part) as FilePart;
-									if (next != null && !next.IsChecked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
+									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
 									{
 										complete = false;
 										try
