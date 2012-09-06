@@ -59,32 +59,32 @@ namespace Test
 		public void ParseBandwidth ()
 		{
 			ircParser.ParseData(server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s");
-			Assert.AreEqual(bot.InfoSpeedCurrent, 12.7 * 1024);
-			Assert.AreEqual(bot.InfoSpeedMax, 139.5 * 1024);
+			Assert.AreEqual(12.7 * 1024, bot.InfoSpeedCurrent);
+			Assert.AreEqual(139.5 * 1024, bot.InfoSpeedMax);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** Bandwidth Usage ** Current: 0.0KB/s, Record: 231.4KB/s");
-			Assert.AreEqual(bot.InfoSpeedCurrent, 0);
-			Assert.AreEqual(bot.InfoSpeedMax, 231.4 * 1024);
+			Assert.AreEqual(0, bot.InfoSpeedCurrent);
+			Assert.AreEqual(231.4 * 1024, bot.InfoSpeedMax);
 		}
 		
 		[Test()]
 		public void ParsePacketInfo ()
 		{
 			ircParser.ParseData(server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** 9 packs **  1 of 1 slot open, Min: 5.0kB/s, Record: 59.3kB/s");
-			Assert.AreEqual(bot.InfoSlotCurrent, 1);
-			Assert.AreEqual(bot.InfoSlotTotal, 1);
+			Assert.AreEqual(1, bot.InfoSlotCurrent);
+			Assert.AreEqual(1, bot.InfoSlotTotal);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 1 Pack <-  10 Of 10 Slots Open Min: 15.0KB/s Record: 691.8KB/s");
-			Assert.AreEqual(bot.InfoSlotCurrent, 10);
-			Assert.AreEqual(bot.InfoSlotTotal, 10);
+			Assert.AreEqual(10, bot.InfoSlotCurrent);
+			Assert.AreEqual(10, bot.InfoSlotTotal);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :**[EWG]*   packs **  12 of 12 slots open, Record: 1736.8kB/s");
-			Assert.AreEqual(bot.InfoSlotCurrent, 12);
-			Assert.AreEqual(bot.InfoSlotTotal, 12);
+			Assert.AreEqual(12, bot.InfoSlotCurrent);
+			Assert.AreEqual(12, bot.InfoSlotTotal);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 18 PackS <-  13 Of 15 Slots Open Min: 15.0KB/s Record: 99902.4KB/s");
-			Assert.AreEqual(bot.InfoSlotCurrent, 13);
-			Assert.AreEqual(bot.InfoSlotTotal, 15);
+			Assert.AreEqual(13, bot.InfoSlotCurrent);
+			Assert.AreEqual(15, bot.InfoSlotTotal);
 		}
 		
 		[Test()]
@@ -94,23 +94,23 @@ namespace Test
 
 			ircParser.ParseData(server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
 			tPack = bot[5];
-			Assert.AreEqual(tPack.Size, 181 * 1024 * 1024);
-			Assert.AreEqual(tPack.Name, "Serie The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar");
+			Assert.AreEqual(181 * 1024 * 1024, tPack.Size);
+			Assert.AreEqual("Serie The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar", tPack.Name);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
 			tPack = bot[3];
-			Assert.AreEqual(tPack.Size, 150 * 1024 * 1024);
-			Assert.AreEqual(tPack.Name, "[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar");
+			Assert.AreEqual(150 * 1024 * 1024, tPack.Size);
+			Assert.AreEqual("[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar", tPack.Name);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#1� 0x [� 5M] 5meg");
 			tPack = bot[1];
-			Assert.AreEqual(tPack.Size, 5 * 1024 * 1024);
-			Assert.AreEqual(tPack.Name, "5meg");
+			Assert.AreEqual(5 * 1024 * 1024, tPack.Size);
+			Assert.AreEqual("5meg", tPack.Name);
 
 			ircParser.ParseData(server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
 			tPack = bot[18];
-			Assert.AreEqual(tPack.Size, (Int64)(2.2 * 1024 * 1024 * 1024));
-			Assert.AreEqual(tPack.Name, "Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
+			Assert.AreEqual((Int64)(2.2 * 1024 * 1024 * 1024), tPack.Size);
+			Assert.AreEqual("Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv", tPack.Name);
 		}
 
 		// Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now

@@ -85,13 +85,13 @@ namespace Test
 		void AssertModified(AObject aObject, bool modified)
 		{
 			aObject.Commit();
-			Assert.AreEqual(modified, this.modified);
+			Assert.AreEqual(this.modified, modified);
 			this.modified = false;
 		}
 
 		void AssertChildAdded(bool childAdded)
 		{
-			Assert.AreEqual(childAdded, this.childAdded);
+			Assert.AreEqual(this.childAdded, childAdded);
 			this.childAdded = false;
 		}
 	}
