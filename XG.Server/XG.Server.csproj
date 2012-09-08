@@ -74,15 +74,16 @@
     <Compile Include="Connection\AConnection.cs" />
     <Compile Include="Connection\AIrcConnection.cs" />
     <Compile Include="Connection\Connection.cs" />
+    <Compile Include="Helper\FileActions.cs" />
     <Compile Include="Helper\Filesystem.cs" />
     <Compile Include="Helper\IrcParser.cs" />
     <Compile Include="Helper\PartBytesObject.cs" />
-    <Compile Include="MainInstance.cs" />
-    <Compile Include="Plugin\AServerBackendPlugin.cs" />
-    <Compile Include="Plugin\AServerGeneralPlugin.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Plugin\ABackendPlugin.cs" />
+    <Compile Include="Plugin\APlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerConnection.cs" />
-    <Compile Include="ServerHandler.cs" />
+    <Compile Include="Servers.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Statistic.cs" />
   </ItemGroup>

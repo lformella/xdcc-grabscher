@@ -72,20 +72,24 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="AObject.cs" />
+    <Compile Include="AObjects.cs" />
     <Compile Include="Bot.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FilePart.cs" />
+    <Compile Include="Files.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Objects.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\File.cs" />
-    <Compile Include="Repository\Object.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="Servers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CoreClasses.cd" />

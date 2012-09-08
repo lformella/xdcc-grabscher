@@ -69,8 +69,8 @@ namespace XG.Client.Web
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
 					string name = assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					myDicStr.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
-					return myDicStr[aFile];
+					_dicStr.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
+					return _dicStr[aFile];
 #endif
 #if !UNSAFE
 				}
