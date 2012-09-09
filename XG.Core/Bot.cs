@@ -124,7 +124,7 @@ namespace XG.Core
 			}
 		}
 
-		DateTime _lastContact = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		DateTime _lastContact = DateTime.MinValue;
 		[DataMember]
 		public DateTime LastContact
 		{

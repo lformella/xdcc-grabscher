@@ -55,11 +55,12 @@ namespace Test
 				Connected = true,
 				Enabled = true,
 				Guid = Guid.Empty,
+				LastMentioned = new DateTime(2012, 08, 04, 03, 45, 44),
 				LastUpdated = new DateTime(2012, 08, 05, 03, 45, 44),
 				Part = part
 			};
 
-			Assert.AreEqual("{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Id\":-1,\"LastMentioned\":\"\\/Date(-62135596800000)\\/\",\"LastUpdated\":\"\\/Date(1344138344000)\\/\",\"Name\":\"Test Packet\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Part\":{\"Checked\":false,\"Connected\":true,\"CurrentSize\":0,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"MissingSize\":0,\"Name\":\"\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Speed\":0,\"StartSize\":0,\"State\":0,\"StopSize\":0,\"TimeMissing\":9223372036854775807},\"RealName\":\"\",\"RealSize\":0,\"Size\":0}", Json.Serialize<Packet>(packet));
+			Assert.AreEqual("{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Id\":-1,\"LastMentioned\":\"" + packet.LastMentioned.ToString("yyyy-MM-dd HH:mm:ss") + "\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("yyyy-MM-dd HH:mm:ss") + "\",\"Name\":\"Test Packet\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Part\":{\"Checked\":false,\"Connected\":true,\"CurrentSize\":0,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"MissingSize\":0,\"Name\":\"\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Speed\":0,\"StartSize\":0,\"State\":0,\"StopSize\":0,\"TimeMissing\":9223372036854775807},\"RealName\":\"\",\"RealSize\":0,\"Size\":0}", Json.Serialize<Packet>(packet));
 
 			var bot = new Bot
 			{
@@ -81,7 +82,7 @@ namespace Test
 			};
 			bot.AddPacket(packet);
 
-			Assert.AreEqual("{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"InfoQueueCurrent\":16,\"InfoQueueTotal\":16,\"InfoSlotCurrent\":16,\"InfoSlotTotal\":16,\"InfoSpeedCurrent\":16,\"InfoSpeedMax\":16,\"LastContact\":\"\\/Date(1344138344000)\\/\",\"LastMessage\":\"Test Message\",\"Name\":\"Test Bot\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"QueuePosition\":16,\"QueueTime\":16,\"Speed\":0,\"State\":0}", Json.Serialize<Bot>(bot));
+			Assert.AreEqual("{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"InfoQueueCurrent\":16,\"InfoQueueTotal\":16,\"InfoSlotCurrent\":16,\"InfoSlotTotal\":16,\"InfoSpeedCurrent\":16,\"InfoSpeedMax\":16,\"LastContact\":\"" + bot.LastContact.ToString("yyyy-MM-dd HH:mm:ss") + "\",\"LastMessage\":\"Test Message\",\"Name\":\"Test Bot\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"QueuePosition\":16,\"QueueTime\":16,\"Speed\":0,\"State\":0}", Json.Serialize<Bot>(bot));
 		}
 	}
 }

@@ -154,7 +154,7 @@ namespace XG.Core
 		}
 		
 		[DataMember]
-		DateTime _enabledTime = new DateTime(1, 1, 1);
+		DateTime _enabledTime = DateTime.MinValue;
 		public DateTime EnabledTime
 		{
 			get { return _enabledTime; }

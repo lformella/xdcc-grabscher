@@ -122,7 +122,7 @@ namespace XG.Core
 			}
 		}
 
-		DateTime lastUpdated = new DateTime(1, 1, 1);
+		DateTime lastUpdated = DateTime.MinValue;
 		[DataMember]
 		public DateTime LastUpdated
 		{
@@ -137,7 +137,7 @@ namespace XG.Core
 			}
 		}
 
-		DateTime lastMentioned = new DateTime(1, 1, 1, 0, 0, 0, 0);
+		DateTime lastMentioned = DateTime.MinValue;
 		[DataMember]
 		public DateTime LastMentioned
 		{
@@ -149,6 +149,20 @@ namespace XG.Core
 					lastMentioned = value;
 					Modified = true;
 				}
+			}
+		}
+
+		[DataMember]
+		public bool Next
+		{
+			get
+			{
+				Packet oldestPacket = Parent != null ? Parent.OldestActivePacket() : null;
+				return oldestPacket != null && oldestPacket == this;
+			}
+			set
+			{
+				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 

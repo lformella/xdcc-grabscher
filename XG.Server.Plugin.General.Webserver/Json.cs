@@ -45,7 +45,7 @@ namespace XG.Server.Plugin.General.Webserver
 			string jsonString = Encoding.UTF8.GetString(ms.ToArray());
 			ms.Close();
 			//Replace Json Date String
-			string p = @"\\/Date\((\d+)\+\d+\)\\/";
+			string p = @"\\/Date\(([0-9-]+)\)\\/";
 			MatchEvaluator matchEvaluator = new MatchEvaluator(ConvertJsonDateToDateString);
 			Regex reg = new Regex(p);
 			jsonString = reg.Replace(jsonString, matchEvaluator);
@@ -76,7 +76,6 @@ namespace XG.Server.Plugin.General.Webserver
 			string result = string.Empty;
 			DateTime dt = new DateTime(1970, 1, 1);
 			dt = dt.AddMilliseconds(long.Parse(m.Groups[1].Value));
-			dt = dt.ToLocalTime();
 			result = dt.ToString("yyyy-MM-dd HH:mm:ss");
 			return result;
 		}
@@ -88,9 +87,8 @@ namespace XG.Server.Plugin.General.Webserver
 		{
 			string result = string.Empty;
 			DateTime dt = DateTime.Parse(m.Groups[0].Value);
-			dt = dt.ToUniversalTime();
 			TimeSpan ts = dt - DateTime.Parse("1970-01-01");
-			result = string.Format("\\/Date({0}+0800)\\/", ts.TotalMilliseconds);
+			result = string.Format("\\/Date({0})\\/", ts.TotalMilliseconds);
 			return result;
 		}
 

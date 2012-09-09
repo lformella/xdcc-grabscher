@@ -32,8 +32,8 @@ var XGFormatter = Class.create(
 		var str = "Server";
 		var overlay = "";
 	
-		if(server.Enabled == "false"){ str += "Disabled"; }
-		else if(server.Connected == "true") { overlay = "OverActive"; }
+		if(!server.Enabled){ str += "Disabled"; }
+		else if(server.Connected) { overlay = "OverActive"; }
 		else if(server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0") { overlay = "OverAttention"; }
 	
 		return this.formatIcon2(str, overlay, onclick) + " " + server.Name;
@@ -44,8 +44,8 @@ var XGFormatter = Class.create(
 		var str = "Channel";
 		var overlay = "";
 
-		if(channel.Enabled == "false") { str += "Disabled"; }
-		else if(channel.Connected == "true") { overlay = "OverActive"; }
+		if(!channel.Enabled) { str += "Disabled"; }
+		else if(channel.Connected) { overlay = "OverActive"; }
 		else if(channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0") { overlay = "OverAttention"; }
 
 		return this.formatIcon2(str, overlay, onclick) + " " + channel.Name;
@@ -78,21 +78,21 @@ var XGFormatter = Class.create(
 		var str = "Bot";
 		var overlay = "";
 	
-		if(bot.Connected == "false") { str += "Off"; }
+		if(!bot.Connected) { str += "Off"; }
 		else
 		{
-			switch(bot.BotState)
+			switch(bot.State)
 			{
-				case "Idle":
+				case 0:
 					if(bot.InfoSlotCurrent > 0) overlay = "OverActive";
 					else if(bot.InfoSlotCurrent == 0 && bot.InfoSlotCurrent) overlay = "OverDisabled";
 					break;
 
-				case "Active":
+				case 1:
 					overlay = "Over" + this.speed2Image(bot.Speed);
 					break;
 
-				case "Waiting":
+				case 2:
 					overlay = "OverWaiting";
 					break;
 			}
@@ -156,11 +156,11 @@ var XGFormatter = Class.create(
 		var str = "Packet";
 		var overlay = "";
 	
-		if(packet.Enabled == "false") { str += "Disabled"; }
+		if(!packet.Enabled) { str += "Disabled"; }
 		else
 		{
-			if(packet.Connected == "true") { overlay = "Over" + this.speed2Image(packet.Speed); }
-			else if (packet.Order == "true") { overlay = "OverWaiting"; }
+			if(packet.Connected) { overlay = "Over" + this.speed2Image(packet.Part != null ? packet.Part.Speed : 0); }
+			else if (packet.Next) { overlay = "OverWaiting"; }
 			else { overlay = "OverActive"; }
 		}
 	
@@ -174,12 +174,14 @@ var XGFormatter = Class.create(
 
 	formatPacketName: function (packet)
 	{
-		if(packet.Name == undefined)
+		var name = packet.RealName != undefined && packet.RealName != "" ? packet.RealName : packet.Name;
+
+		if(name == undefined)
 		{
 			return "";
 		}
 
-		var ext = packet.Name.toLowerCase().substr(-3);
+		var ext = name.toLowerCase().substr(-3);
 		var ret = "";
 		if(ext == "avi" || ext == "wmv" || ext == "mkv")
 		{
@@ -198,20 +200,20 @@ var XGFormatter = Class.create(
 			ret += this.formatIcon("ExtDefault") + "&nbsp;&nbsp;";
 		}
 	
-		if(packet.Name.toLowerCase().indexOf("german") > -1)
+		if(name.toLowerCase().indexOf("german") > -1)
 		{
 			ret += this.formatIcon("LanguageDe") + "&nbsp;&nbsp;";
 		}
 	
-		ret += packet.Name;
+		ret += name;
 	
-		if(packet.Connected == "true")
+		if(packet.Connected && packet.Part != null)
 		{
 			ret += "<br />";
 	
-			var a = ((packet.StartSize) / packet.Size).toFixed(2) * 100;
-			var b = ((packet.CurrentSize - packet.StartSize) / packet.Size).toFixed(2) * 100;
-			var c = ((packet.StopSize - packet.CurrentSize) / packet.Size).toFixed(2) * 100;
+			var a = ((packet.Part.StartSize) / packet.RealSize).toFixed(2) * 100;
+			var b = ((packet.Part.CurrentSize - packet.Part.StartSize) / packet.RealSize).toFixed(2) * 100;
+			var c = ((packet.Part.StopSize - packet.Part.CurrentSize) / packet.RealSize).toFixed(2) * 100;
 			if(a + b + c > 100)
 			{
 				c = 100 - a - b;
@@ -219,8 +221,8 @@ var XGFormatter = Class.create(
 			// Enum.TangoColor.SkyBlue.Middle
 			ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-corner-all' style='height:2px'>" +
 				"<div style='width: " + a + "%;float:left' class='ui-progressbar-value ui-corner-left'></div>" +
-				"<div style='width: " + b + "%;float:left;background:#" + (packet.IsChecked == "true" ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
-				"<div style='width: " + c + "%;float:left;background:#" + (packet.IsChecked == "true" ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
+				"<div style='width: " + b + "%;float:left;background:#" + (packet.Part.Checked ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
+				"<div style='width: " + c + "%;float:left;background:#" + (packet.Part.Checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
 				"</div><div class='clear'></div>";
 		}
 	

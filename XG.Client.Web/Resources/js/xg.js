@@ -115,21 +115,18 @@ $(function()
 	jQuery("#servers").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', 'Name', '', '', '', ''],
+		colNames: ['', '', 'Name'],
 		colModel: [
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:24, sortable: false},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
-			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
-			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
-			{name:'ErrorCode',		index:'ErrorCode',		formatter: function(c, o, r) { return r.ErrorCode; }, hidden:true}
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
 		],
 		onSelectRow: function(id)
 		{
 			if(id)
 			{
 				id_server = id;
-				var serv = jQuery('#servers').getRowData(id);
+				var serv = GetRowData('servers', id);
 				if(serv)
 				{
 					ReloadGrid("channels", GuidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id));
@@ -188,14 +185,11 @@ $(function()
 	jQuery("#channels").jqGrid(
 	{
 		datatype: "json",
-		colNames: ['', 'Name', '', '', '', ''],
+		colNames: ['', '', 'Name'],
 		colModel: [
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:24, sortable: false},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true},
-			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
-			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
-			{name:'ErrorCode',		index:'ErrorCode',		formatter: function(c, o, r) { return r.ErrorCode; }, hidden:true}
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
 		],
 		ondblClickRow: function(id)
 		{
@@ -250,8 +244,9 @@ $(function()
 	{
 		datatype: "json",
 		cmTemplate:{fixed:true},
-		colNames: ['', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue', '', '', '', '', '', '', '', '', '', ''],
+		colNames: ['', '', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue'],
 		colModel: [
+			{name:'Object',				index:'Object',				formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Icon',				index:'Icon',				formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24, sortable: false},
 			{name:'Name',				index:'Name',				formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
 			{name:'Speed',				index:'Speed',				formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
@@ -259,17 +254,7 @@ $(function()
 			{name:'QueueTime',			index:'QueueTime',			formatter: function(c, o, r) { return Helper.time2Human(r.QueueTime); }, width:70, align:"right"},
 			{name:'InfoSpeedMax',		index:'InfoSpeedMax',		formatter: function(c, o, r) { return Formatter.formatBotSpeed(r); }, width:100, align:"right"},
 			{name:'InfoSlotTotal',		index:'InfoSlotTotal',		formatter: function(c, o, r) { return Formatter.formatBotSlots(r); }, width:60, align:"right"},
-			{name:'InfoQueueTotal',		index:'InfoQueueTotal',		formatter: function(c, o, r) { return Formatter.formatBotQueue(r); }, width:60, align:"right"},
-			{name:'InfoSpeedCurrent',	index:'InfoSpeedCurrent',	formatter: function(c, o, r) { return r.InfoSpeedCurrent; }, hidden:true},
-			{name:'InfoSlotCurrent',	index:'InfoSlotCurrent',	formatter: function(c, o, r) { return r.InfoSlotCurrent; }, hidden:true},
-			{name:'InfoQueueCurrent',	index:'InfoQueueCurrent',	formatter: function(c, o, r) { return r.InfoQueueCurrent; }, hidden:true},
-			{name:'BotState',			index:'BotState',			formatter: function(c, o, r) { return r.BotState; }, hidden:true},
-			{name:'ParentGuid',			index:'ParentGuid',			formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
-			{name:'Connected',			index:'Connected',			formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-			{name:'Enabled',			index:'Enabled',			formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
-			{name:'LastModified',		index:'LastModified',		formatter: function(c, o, r) { return r.LastModified; }, hidden:true},
-			{name:'LastMessage',		index:'LastMessage',		formatter: function(c, o, r) { return r.LastMessage; }, hidden:true},
-			{name:'LastContact',		index:'LastContact',		formatter: function(c, o, r) { return r.LastContact; }, hidden:true}
+			{name:'InfoQueueTotal',		index:'InfoQueueTotal',		formatter: function(c, o, r) { return Formatter.formatBotQueue(r); }, width:60, align:"right"}
 		],
 		onSelectRow: function(id)
 		{
@@ -306,30 +291,22 @@ $(function()
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
-		colNames: ['', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated', '', '', '', '', '', '', '', '', ''],
+		colNames: ['', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated'],
 		colModel: [
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");") }, width:24, sortable: false},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r) }, width:40, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r) }, width:400, fixed:false},
-			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.Size); }, width:70, align:"right"},
-			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
+			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.RealSize > 0 ? r.RealSize : r.Size); }, width:70, align:"right"},
+			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Part != null ? r.Part.Speed : 0); }, width:70, align:"right"},
 			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Helper.time2Human(r.TimeMissing); }, width:90, align:"right"},
-			{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"},
-			{name:'StartSize',		index:'StartSize',		formatter: function(c, o, r) { return r.StartSize; }, hidden:true},
-			{name:'StopSize',		index:'StopSize',		formatter: function(c, o, r) { return r.StopSize; }, hidden:true},
-			{name:'CurrentSize',	index:'CurrentSize',	formatter: function(c, o, r) { return r.CurrentSize; }, hidden:true},
-			{name:'IsChecked',		index:'IsChecked',		formatter: function(c, o, r) { return r.IsChecked; }, hidden:true},
-			{name:'Order',			index:'Order',			formatter: function(c, o, r) { return r.Order; }, hidden:true},
-			{name:'ParentGuid',		index:'ParentGuid',		formatter: function(c, o, r) { return r.ParentGuid; }, hidden:true},
-			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return r.Connected; }, hidden:true},
-			{name:'Enabled',		index:'Enabled',		formatter: function(c, o, r) { return r.Enabled; }, hidden:true},
-			{name:'LastModified',	index:'LastModified',	formatter: function(c, o, r) { return r.LastModified; }, hidden:true}
+			{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"}
 		],
 		onSelectRow: function(id)
 		{
 			if(id)
 			{
-				var pack = jQuery('#packets').getRowData(id);
+				var pack = GetRowData('packets', id);
 				if(pack)
 				{
 					jQuery('#bots').setSelection(pack.ParentGuid, false);
@@ -345,7 +322,7 @@ $(function()
 		},
 		afterInsertRow: function(id)
 		{
-			var pack = jQuery('#packets').getRowData(id);
+			var pack = GetRowData('packets', id);
 			if(search_active && pack)
 			{
 				var color = GetColorByGuid(pack.ChannelGuid);
@@ -378,8 +355,9 @@ $(function()
 	{
 		datatype: "local",
 		cmTemplate: {fixed:true},
-		colNames: ['', '', ''],
+		colNames: ['', '', '', ''],
 		colModel: [
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30, sortable: false},
 			{name:'Name',	index:'Name',	width:203, fixed:false, sortable: false},
 			{name:'Action',	index:'Action',	width:17, sortable: false}
@@ -389,7 +367,7 @@ $(function()
 			search_active = true;
 			if(id)
 			{
-				var data = jQuery('#searches').getRowData(id);
+				var data = GetRowData('searches', id);
 				var url1 = "";
 				var url2 = "";
 				switch(id)
@@ -482,8 +460,9 @@ $(function()
 	{
 		datatype:'jsonp',
 		cmTemplate:{fixed:true},
-		colNames:['', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
+		colNames:['', '', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
 		colModel:[
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "DowloadLink(\"" + o.rowId + "\");", true); }, width:26, sortable: false},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
@@ -640,7 +619,7 @@ function RemoveSearch(id)
 	{
 		return;
 	}
-	var data = jQuery('#searches').getRowData(id);
+	var data = GetRowData('searches', id);
 	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
 	jQuery('#searches').delRowData(id);
 }
@@ -797,10 +776,10 @@ function RefreshGrid(count)
 	var ids = jQuery("#bots").getDataIDs();
 	for (var i = 0; i < ids.length; i++)
 	{
-		var bot = jQuery("#bots").getRowData(ids[i]);
-		if(bot.BotState == "Active" || (mod && bot.BotState == "Waiting"))
+		var bot = GetRowData("bots", ids[i]);
+		if(bot.State == 1 || (mod && bot.State == 2))
 		{
-			RefreshBot(ids[i]);
+			RefreshObject("bots", ids[i]);
 		}
 	}
 
@@ -808,34 +787,23 @@ function RefreshGrid(count)
 	ids = jQuery("#packets").getDataIDs();
 	for (i = 0; i < ids.length; i++)
 	{
-		var pack = jQuery("#packets").getRowData(ids[i]);
-		if(pack.Connected == "true" || (mod && pack.Enabled == "true"))
+		var pack = GetRowData("packets", ids[i]);
+		if(pack.Connected || (mod && pack.Enabled))
 		{
-			RefreshPacket(ids[i]);
+			RefreshObject("packets", ids[i]);
 		}
 	}
 
 	setTimeout("RefreshGrid(" + (count + 1) +")", 2500);
 }
 
-function RefreshBot(guid)
+function RefreshObject(grid, guid)
 {
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
 			result.cell.Icon = "";
-			jQuery("#bots").setRowData(result.id, result.cell);
-		}
-	);
-}
-
-function RefreshPacket(guid)
-{
-	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
-		function(result)
-		{
-			result.cell.Icon = "";
-			jQuery("#packets").setRowData(result.id, result.cell);
+			jQuery("#" + grid).setRowData(result.id, result.cell);
 		}
 	);
 }
@@ -870,8 +838,6 @@ function RefreshStatistic()
 			$("#BotConnectsFailed").html(result.BotConnectsFailed);
 
 			$("#SpeedMax").html(Helper.speed2Human(result.SpeedMax));
-			$("#SpeedMin").html(Helper.speed2Human(result.SpeedMin));
-			$("#SpeedAvg").html(Helper.speed2Human(result.SpeedAvg));
 		}
 	);
 }
@@ -879,6 +845,11 @@ function RefreshStatistic()
 /* ****************************************************************************************************************** */
 /* HELPER                                                                                                             */
 /* ****************************************************************************************************************** */
+
+function GetRowData(grid, id)
+{
+	return jQuery.parseJSON(jQuery("#" + grid).getRowData(id).Object);
+}
 
 function ResizeMain()
 {
@@ -906,13 +877,13 @@ function ResizeContainer()
 
 function FlipPacket(id)
 {
-	var pack = jQuery('#packets').getRowData(id);
+	var pack = GetRowData('packets', id);
 	if(pack)
 	{
-		if(pack.Enabled == "false")
+		if(!pack.Enabled)
 		{
 			$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
-			setTimeout("RefreshPacket('" + id + "')", 1000);
+			setTimeout("RefreshObject('packets', '" + id + "')", 1000);
 		}
 		else
 		{
@@ -924,10 +895,10 @@ function FlipPacket(id)
 
 function FlipObject(id, grid)
 {
-	var obj = jQuery('#' + grid).getRowData(id);
+	var obj = GetRowData(grid, id);
 	if(obj)
 	{
-		if(obj.Enabled == "false")
+		if(!obj.Enabled)
 		{
 			$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
 		}
@@ -942,7 +913,7 @@ function FlipObject(id, grid)
 
 function DowloadLink(id)
 {
-	var data = jQuery("#searches_xg_bitpir_at").getRowData(id);
+	var data = GetRowData("searches_xg_bitpir_at", id);
 	$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
 }
 

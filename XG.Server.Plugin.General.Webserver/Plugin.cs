@@ -451,7 +451,7 @@ namespace XG.Server.Plugin.General.Webserver
 					string[] search = aSearchString.Split('-');
 					double start = Double.Parse(search[0]);
 					double stop = Double.Parse(search[1]);
-					DateTime init = new DateTime(1, 1, 1);
+					DateTime init = DateTime.MinValue;
 					DateTime now = DateTime.Now;
 
 					tPackets =
