@@ -44,7 +44,7 @@ namespace Test
 			result = XG.Server.Helper.FileSystem.MoveFile(fileNameOld, fileNameNew);
 			Assert.AreEqual(false, result);
 
-			File.Create(fileNameOld);
+			File.Create(fileNameOld).Close();
 
 			result = XG.Server.Helper.FileSystem.MoveFile(fileNameOld, fileNameNew);
 			Assert.AreEqual(true, result);
