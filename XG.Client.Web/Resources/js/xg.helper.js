@@ -31,7 +31,7 @@ var XGHelper = Class.create(
 	{
 		if (size == 0)
 		{
-			return "";
+			return "&nbsp;";
 		}
 		if (size < 1024)
 		{
@@ -56,7 +56,7 @@ var XGHelper = Class.create(
 	{
 		if (speed == 0)
 		{
-			return "";
+			return "&nbsp;";
 		}
 		if (speed < 1024)
 		{
@@ -111,6 +111,7 @@ var XGHelper = Class.create(
 			str += (buff >= 10 ? "" + buff : "0" + buff);
 		}
 		else if (str != "") { str += "00"; }
+		else str = "&nbsp;";
 	
 		return str;
 	},
@@ -134,7 +135,7 @@ var XGHelper = Class.create(
 	{
 		if (timestamp <= 0)
 		{
-			return "";
+			return "&nbsp;";
 		}
 
 		var date = this.timeStampToDate(timestamp);

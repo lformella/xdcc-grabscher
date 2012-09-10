@@ -234,6 +234,12 @@ namespace XG.Server
 
 						foreach (FilePart part in file.Parts)
 						{
+							// first part is always checked!
+							if (part.StartSize == 0)
+							{
+								part.Checked = true;
+							}
+
 							// check if the real file and the part is actual the same
 							System.IO.FileInfo info = new System.IO.FileInfo(tmpPath + part.StartSize);
 							if (info.Exists)

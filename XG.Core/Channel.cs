@@ -40,16 +40,16 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
-		int errorCode = 0;
+		int _errorCode = 0;
 		[DataMember]
 		public int ErrorCode
 		{
-			get { return errorCode; }
+			get { return _errorCode; }
 			set
 			{
-				if (errorCode != value)
+				if (_errorCode != value)
 				{
-					errorCode = value;
+					_errorCode = value;
 					Modified = true;
 				}
 			}

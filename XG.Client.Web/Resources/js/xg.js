@@ -250,7 +250,7 @@ $(function()
 			{name:'Icon',				index:'Icon',				formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24, sortable: false},
 			{name:'Name',				index:'Name',				formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
 			{name:'Speed',				index:'Speed',				formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
-			{name:'QueuePosition',		index:'QueuePosition',		formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : ""; }, width:70, align:"right"},
+			{name:'QueuePosition',		index:'QueuePosition',		formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : "&nbsp;"; }, width:70, align:"right"},
 			{name:'QueueTime',			index:'QueueTime',			formatter: function(c, o, r) { return Helper.time2Human(r.QueueTime); }, width:70, align:"right"},
 			{name:'InfoSpeedMax',		index:'InfoSpeedMax',		formatter: function(c, o, r) { return Formatter.formatBotSpeed(r); }, width:100, align:"right"},
 			{name:'InfoSlotTotal',		index:'InfoSlotTotal',		formatter: function(c, o, r) { return Formatter.formatBotSlots(r); }, width:60, align:"right"},
@@ -294,12 +294,12 @@ $(function()
 		colNames: ['', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated'],
 		colModel: [
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");") }, width:24, sortable: false},
-			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r) }, width:40, align:"right"},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r) }, width:400, fixed:false},
-			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Helper.size2Human(r.RealSize > 0 ? r.RealSize : r.Size); }, width:70, align:"right"},
-			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Part != null ? r.Part.Speed : 0); }, width:70, align:"right"},
-			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Helper.time2Human(r.TimeMissing); }, width:90, align:"right"},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");"); }, width:24, sortable: false},
+			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:40, align:"right"},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, width:400, fixed:false},
+			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Formatter.formatPacketSize(r); }, width:70, align:"right"},
+			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Formatter.formatPacketSpeed(r); }, width:70, align:"right"},
+			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Formatter.formatPacketTimeMissing(r) }, width:90, align:"right"},
 			{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"}
 		],
 		onSelectRow: function(id)
@@ -803,7 +803,14 @@ function RefreshObject(grid, guid)
 		function(result)
 		{
 			result.cell.Icon = "";
-			jQuery("#" + grid).setRowData(result.id, result.cell);
+			
+			if(grid == "packets")
+			{
+				result.cell.Speed = "";
+				result.cell.TimeMissing = "";
+			}
+
+			jQuery("#" + grid).setRowData(guid, result.cell);
 		}
 	);
 }

@@ -206,7 +206,7 @@ var XGFormatter = Class.create(
 		}
 	
 		ret += name;
-	
+
 		if(packet.Connected && packet.Part != null)
 		{
 			ret += "<br />";
@@ -227,6 +227,21 @@ var XGFormatter = Class.create(
 		}
 	
 		return ret;
+	},
+
+	formatPacketSpeed: function (packet)
+	{
+		return Helper.speed2Human(packet.Part != null ? packet.Part.Speed : 0);
+	},
+
+	formatPacketSize: function (packet)
+	{
+		return Helper.size2Human(packet.RealSize > 0 ? packet.RealSize : packet.Size);
+	},
+
+	formatPacketTimeMissing: function (packet)
+	{
+		return Helper.time2Human(packet.Part != null ? packet.Part.TimeMissing : 0);
 	},
 
 	/* ************************************************************************************************************** */

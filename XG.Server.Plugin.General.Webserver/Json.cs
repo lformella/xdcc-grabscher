@@ -29,14 +29,8 @@ using System.Text.RegularExpressions;
 
 namespace XG.Server.Plugin.General.Webserver
 {
-	/// <summary>
-	/// JSON Serialization and Deserialization Assistant Class
-	/// </summary>
 	public class Json
 	{
-		/// <summary>
-		/// JSON Serialization
-		/// </summary>
 		public static string Serialize<T> (T t)
 		{
 			DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
@@ -44,7 +38,7 @@ namespace XG.Server.Plugin.General.Webserver
 			ser.WriteObject(ms, t);
 			string jsonString = Encoding.UTF8.GetString(ms.ToArray());
 			ms.Close();
-			//Replace Json Date String
+
 			string p = @"\\/Date\(([0-9-]+)\)\\/";
 			MatchEvaluator matchEvaluator = new MatchEvaluator(ConvertJsonDateToDateString);
 			Regex reg = new Regex(p);
@@ -52,43 +46,12 @@ namespace XG.Server.Plugin.General.Webserver
 			return jsonString;
 		}
 
-		/// <summary>
-		/// JSON Deserialization
-		/// </summary>
-		public static T Deserialize<T> (string jsonString)
-		{
-			//Convert "yyyy-MM-dd HH:mm:ss" String as "\/Date(1319266795390+0800)\/"
-			string p = @"\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}";
-			MatchEvaluator matchEvaluator = new MatchEvaluator(ConvertDateStringToJsonDate);
-			Regex reg = new Regex(p);
-			jsonString = reg.Replace(jsonString, matchEvaluator);
-			DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
-			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
-			T obj = (T) ser.ReadObject(ms);
-			return obj;
-		}
-  
-		/// <summary>
-		/// Convert Serialization Time /Date(1319266795390+0800) as String
-		/// </summary>
 		static string ConvertJsonDateToDateString (Match m)
 		{
 			string result = string.Empty;
 			DateTime dt = new DateTime(1970, 1, 1);
 			dt = dt.AddMilliseconds(long.Parse(m.Groups[1].Value));
-			result = dt.ToString("yyyy-MM-dd HH:mm:ss");
-			return result;
-		}
- 
-		/// <summary>
-		/// Convert Date String as Json Time
-		/// </summary>
-		static string ConvertDateStringToJsonDate (Match m)
-		{
-			string result = string.Empty;
-			DateTime dt = DateTime.Parse(m.Groups[0].Value);
-			TimeSpan ts = dt - DateTime.Parse("1970-01-01");
-			result = string.Format("\\/Date({0})\\/", ts.TotalMilliseconds);
+			result = dt.ToString("HH:mm:ss dd.MM.yyyy");
 			return result;
 		}
 
