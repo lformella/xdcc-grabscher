@@ -357,7 +357,7 @@ $(function()
 		cmTemplate: {fixed:true},
 		colNames: ['', '', '', ''],
 		colModel: [
-			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
+			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30, sortable: false},
 			{name:'Name',	index:'Name',	width:203, fixed:false, sortable: false},
 			{name:'Action',	index:'Action',	width:17, sortable: false}
@@ -367,7 +367,7 @@ $(function()
 			search_active = true;
 			if(id)
 			{
-				var data = GetRowData('searches', id);
+				var data = jQuery("#searches").getRowData(id);
 				var url1 = "";
 				var url2 = "";
 				switch(id)

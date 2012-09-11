@@ -151,13 +151,13 @@ var XGFormatter = Class.create(
 	/* PACKET FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatPacketIcon: function (packet, onclick)
+	formatPacketIcon: function (packet, onclick, skipOverlay)
 	{	
 		var str = "Packet";
 		var overlay = "";
 	
 		if(!packet.Enabled) { str += "Disabled"; }
-		else
+		else if (!skipOverlay)
 		{
 			if(packet.Connected) { overlay = "Over" + this.speed2Image(packet.Part != null ? packet.Part.Speed : 0); }
 			else if (packet.Next) { overlay = "OverWaiting"; }
