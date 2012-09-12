@@ -1,0 +1,44 @@
+<Project name="Core" fileversion="2.0" DefaultNamespace="XG.Core" language="C#" clr-version="Net_2_0" targetFramework="4.0" ctype="DotNetProject">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="Core" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="Core" assemblyKeyFile="/home/lars/Projekte/CSharp/own_projects/trunk/Core/." />
+      <Build debugmode="False" target="Library" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Unsafe" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Unsafe" assembly="Core" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG UNSAFE" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Code" buildaction="Compile" name="Packet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object.cs" />
+    <File subtype="Code" buildaction="Compile" name="Bot.cs" />
+    <File subtype="Code" buildaction="Compile" name="Channel.cs" />
+    <File subtype="Code" buildaction="Compile" name="Server.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper.cs" />
+    <File subtype="Code" buildaction="Compile" name="File.cs" />
+    <File subtype="Code" buildaction="Compile" name="FilePart.cs" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="AObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="AObjects.cs" />
+    <File subtype="Code" buildaction="Compile" name="Servers.cs" />
+    <File subtype="Code" buildaction="Compile" name="Files.cs" />
+    <File subtype="Code" buildaction="Compile" name="Objects.cs" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  </References>
+</Project>

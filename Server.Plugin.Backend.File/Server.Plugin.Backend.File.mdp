@@ -1,0 +1,32 @@
+<Project name="Server.Plugin.Backend.File" fileversion="2.0" DefaultNamespace="XG.Server.Plugin.Backend.File" language="C#" targetFramework="4.0" ctype="DotNetProject">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="Server.Plugin.Backend.File" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="Server.Plugin.Backend.File" />
+      <Build debugmode="False" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Unsafe" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Unsafe" assembly="Server.Plugin.Backend.File" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG UNSAFE" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Code" buildaction="Compile" name="BackendPlugin.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Properties" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+  </Contents>
+  <References>
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../Lib/log4net.dll" />
+    <ProjectReference type="Project" localcopy="True" refto="Core" />
+    <ProjectReference type="Project" localcopy="True" refto="Server" />
+  </References>
+</Project>

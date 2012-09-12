@@ -1,0 +1,46 @@
+<Project name="Server.Cmd" fileversion="2.0" DefaultNamespace="XG.Server.Cmd" language="C#" targetFramework="4.0" ctype="DotNetProject">
+  <MonoDevelop.Autotools.MakefileInfo RelativeMakefileName="Makefile" SyncReferences="True">
+    <BuildFilesVar Sync="True" Name="FILES" />
+    <DeployFilesVar />
+    <ResourcesVar Sync="True" Name="RESOURCES" />
+    <OthersVar />
+    <GacRefVar Sync="True" Name="REFERENCES" />
+    <AsmRefVar Sync="True" Name="REFERENCES" />
+    <ProjectRefVar Sync="True" Name="REFERENCES" />
+  </MonoDevelop.Autotools.MakefileInfo>
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="Server.Cmd" />
+      <Build debugmode="True" target="Exe" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="Server.Cmd" />
+      <Build debugmode="False" target="Exe" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Unsafe" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Unsafe" assembly="Server.Cmd" />
+      <Build debugmode="True" target="Exe" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG UNSAFE" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Code" buildaction="Compile" name="Cmd.cs" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../Lib/log4net.dll" />
+    <ProjectReference type="Project" localcopy="True" refto="Server" />
+    <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Backend.File" />
+    <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Backend.MySql" />
+    <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Jabber" />
+    <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Webserver" />
+  </References>
+  <LanguageParameters StartupObject="XG.Server.Cmd.Cmd" ctype="CSharpProjectParameters" />
+</Project>
