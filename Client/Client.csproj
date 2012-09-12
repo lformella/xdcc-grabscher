@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{68987989-8A96-455F-92C0-5F117CEF2E27}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Client</RootNamespace>
+    <RootNamespace>XG.Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

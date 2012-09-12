@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6BE1E225-A4E5-497B-8EB1-2A70D992FE4C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Server</RootNamespace>
+    <RootNamespace>XG.Server</RootNamespace>
     <AssemblyName>Server</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

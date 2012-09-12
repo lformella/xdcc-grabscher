@@ -8,7 +8,7 @@
     <ProjectGuid>{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Server.Plugin.General.Webserver</RootNamespace>
+    <RootNamespace>XG.Server.Plugin.General.Webserver</RootNamespace>
     <AssemblyName>Server.Plugin.General.Webserver</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -8,7 +8,7 @@
     <ProjectGuid>{F73E6212-0D0D-4C25-9835-0975DB772740}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Client.Web</RootNamespace>
+    <RootNamespace>XG.Client.Web</RootNamespace>
     <AssemblyName>Client.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

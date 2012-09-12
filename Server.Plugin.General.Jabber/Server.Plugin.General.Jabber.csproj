@@ -8,7 +8,7 @@
     <ProjectGuid>{4F03468E-E62B-43C2-84D9-98CB23704E0B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Server.Plugin.General.Jabber</RootNamespace>
+    <RootNamespace>XG.Server.Plugin.General.Jabber</RootNamespace>
     <AssemblyName>Server.Plugin.General.Jabber</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

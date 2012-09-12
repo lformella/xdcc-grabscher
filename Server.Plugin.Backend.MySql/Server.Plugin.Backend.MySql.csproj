@@ -8,7 +8,7 @@
     <ProjectGuid>{6B448EF6-8B68-4902-AD92-81CAADD93EFC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Server.Plugin.Backend.MySql</RootNamespace>
+    <RootNamespace>XG.Server.Plugin.Backend.MySql</RootNamespace>
     <AssemblyName>Server.Plugin.Backend.MySql</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -8,7 +8,7 @@
     <ProjectGuid>{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Server.Plugin.Backend.File</RootNamespace>
+    <RootNamespace>XG.Server.Plugin.Backend.File</RootNamespace>
     <AssemblyName>Server.Plugin.Backend.File</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
