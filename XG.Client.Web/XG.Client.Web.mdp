@@ -96,6 +96,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-hr1250.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-hr1250.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sr-latin.js" resource_id="XG.Client.Web.Resources.js.i18n.grid.locale-sr-latin.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/xg.css" resource_id="XG.Client.Web.Resources.css.xg.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/json2.min.js" resource_id="XG.Client.Web.Resources.js.json2.min.js" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="XG.Client" />

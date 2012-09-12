@@ -179,6 +179,7 @@
     <EmbeddedResource Include="Resources\js\jquery.layout.min.js" />
     <EmbeddedResource Include="Resources\js\xg.formatter.js" />
     <EmbeddedResource Include="Resources\js\xg.helper.js" />
+    <EmbeddedResource Include="Resources\js\json2.min.js" />
   </ItemGroup>
   <ItemGroup />
 </Project>
