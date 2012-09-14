@@ -33,48 +33,56 @@ namespace XG.Server.Plugin.General.Webserver.JQGrid
 	[DataContract]
 	public class Objects
 	{
-		[DataMember]
-		public int page { get; set; }
+		[DataMember (Name = "page")]
+		public int Page { get; set; }
 
-		[DataMember]
-		public int total { get; set; }
-
-		[DataMember]
-		public int records
-		{
-			get { return rows.Count(); }
-			set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
-		}
-
-		IEnumerable<Object> _rows;
-		[DataMember]
-		public IEnumerable<Object> rows
+		[DataMember (Name = "total")]
+		public int Total
 		{
 			get
 			{
-				return _rows.ToArray();
+				return (int)Math.Ceiling((double)_gridObjects.Count() / (double)Rows);
 			}
-			set
+			private set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
+		}
+		
+		public int Rows { get; set; }
+
+		[DataMember (Name = "records")]
+		public int Records
+		{
+			get { return _gridObjects.Count(); }
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 
-		public IEnumerable<AObject> objects
+		[DataMember (Name = "rows")]
+		public IEnumerable<Object> RowObjects
 		{
-			set
+			get
 			{
-				List<Object> gridObjects = new List<Object>();
-				foreach (AObject tObject in value)
-				{
-					Object gridObject = new Object();
-					gridObject.cell = tObject;
-					gridObjects.Add(gridObject);
-				}
-				_rows = gridObjects;
+				int start = (Page - 1) * Rows;
+				int count = Records < start + Rows ? Records - start : Rows;
+				return _gridObjects.GetRange(start, count);
+			}
+			private set
+			{
+				throw new NotSupportedException("You can not set this Property.");
+			}
+		}
+
+		List<Object> _gridObjects;
+		public void SetObjects(IEnumerable<AObject> aObjects)
+		{
+			_gridObjects = new List<Object>();
+			foreach (AObject tObject in aObjects)
+			{
+				_gridObjects.Add(new Object(tObject));
 			}
 		}
 	}

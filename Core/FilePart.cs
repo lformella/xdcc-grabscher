@@ -128,7 +128,7 @@ namespace XG.Core
 		public Int64 MissingSize
 		{
 			get { return _stopSize - _currentSize; }
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}
@@ -138,7 +138,7 @@ namespace XG.Core
 		public Int64 TimeMissing
 		{
 			get { return (_speed > 0 ? (Int64)(MissingSize / Speed) : Int64.MaxValue); }
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}

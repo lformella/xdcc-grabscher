@@ -65,7 +65,7 @@ namespace XG.Core
 		public Guid ParentGuid
 		{
 			get { return _parentGuid; }
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}
@@ -158,7 +158,7 @@ namespace XG.Core
 		public DateTime EnabledTime
 		{
 			get { return _enabledTime; }
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}

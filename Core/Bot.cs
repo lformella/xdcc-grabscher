@@ -86,10 +86,6 @@ namespace XG.Core
 				{
 					_currentQueuedPacket = OldestActivePacket();
 				}
-				else
-				{
-					// currentQueuedPacket = null;
-				}
 			}
 		}
 
@@ -263,7 +259,7 @@ namespace XG.Core
 			{
 				return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum();
 			}
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}

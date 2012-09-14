@@ -52,7 +52,7 @@ namespace XG.Core
 		public string TmpPath
 		{
 			get { return _tmpPath; }
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}
@@ -63,7 +63,7 @@ namespace XG.Core
 		public Int64 Size
 		{
 			get { return _size; }
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}

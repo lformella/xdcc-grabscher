@@ -160,7 +160,7 @@ namespace XG.Core
 				Packet oldestPacket = Parent != null ? Parent.OldestActivePacket() : null;
 				return oldestPacket != null && oldestPacket == this;
 			}
-			set
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}

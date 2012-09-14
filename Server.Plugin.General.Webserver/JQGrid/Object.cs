@@ -31,28 +31,25 @@ namespace XG.Server.Plugin.General.Webserver.JQGrid
 	[DataContract]
 	public class Object
 	{
-		Guid _id;
-		[DataMember]
-		public Guid id
+		public Object() {}
+
+		public Object(AObject aObject)
 		{
-			get { return _id; }
-			set
+			CellObject = aObject;
+		}
+
+		[DataMember (Name = "id")]
+		public Guid Guid
+		{
+			get { return CellObject.Guid; }
+			private set
 			{
 				throw new NotSupportedException("You can not set this Property.");
 			}
 		}
 
-		AObject _cell;
-		[DataMember]
-		public AObject cell
-		{
-			get { return _cell; }
-			set
-			{
-				_cell = value;
-				_id = _cell.Guid;
-			}
-		}
+		[DataMember (Name = "cell")]
+		public AObject CellObject { get; set; }
 	}
 }
 

@@ -647,10 +647,10 @@ namespace XG.Server.Plugin.General.Webserver
 
 		string Objects2Json(IEnumerable<AObject> aObjects, int aPage, int aRows)
 		{
-			XG.Server.Plugin.General.Webserver.JQGrid.Objects tObjects = new XG.Server.Plugin.General.Webserver.JQGrid.Objects();
-			tObjects.page = aPage;
-			tObjects.total = (int)Math.Ceiling((double)aObjects.Count() / (double)aRows);
-			tObjects.objects = aObjects;
+			var tObjects = new XG.Server.Plugin.General.Webserver.JQGrid.Objects();
+			tObjects.Page = aPage;
+			tObjects.Rows = aRows;
+			tObjects.SetObjects(aObjects);
 			return Json.Serialize<XG.Server.Plugin.General.Webserver.JQGrid.Objects>(tObjects);
 		}
 
@@ -661,8 +661,7 @@ namespace XG.Server.Plugin.General.Webserver
 				return "";
 			}
 
-			XG.Server.Plugin.General.Webserver.JQGrid.Object tObject = new XG.Server.Plugin.General.Webserver.JQGrid.Object();
-			tObject.cell = aObject;
+			var tObject = new XG.Server.Plugin.General.Webserver.JQGrid.Object(aObject);
 			return Json.Serialize<XG.Server.Plugin.General.Webserver.JQGrid.Object>(tObject);
 		}
 
