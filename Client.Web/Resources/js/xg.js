@@ -117,9 +117,9 @@ $(function()
 		datatype: "json",
 		colNames: ['', '', 'Name'],
 		colModel: [
-			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:24, sortable: false},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
+			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:24, sortable: false},
+			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
 		],
 		onSelectRow: function(id)
 		{
@@ -145,7 +145,7 @@ $(function()
 			SetCookie('servers.sort.index', index);
 			SetCookie('servers.sort.sortorder', sortorder);
 		},
-		pager: jQuery('#server_pager'),
+		pager: jQuery('#servers_pager'),
 		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
@@ -160,7 +160,7 @@ $(function()
 		sortorder: GetCookie('servers.sort.sortorder', 'asc'),
 		caption: "Servers",
 		hidegrid: false
-	}).navGrid('#server_pager', {edit:false, search:false}, {},
+	}).navGrid('#servers_pager', {edit:false, search:false}, {},
 	{
 		mtype: "GET",
 		url: "/",
@@ -187,9 +187,9 @@ $(function()
 		datatype: "json",
 		colNames: ['', '', 'Name'],
 		colModel: [
-			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:24, sortable: false},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
+			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:24, sortable: false},
+			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
 		],
 		ondblClickRow: function(id)
 		{
@@ -203,7 +203,7 @@ $(function()
 			SetCookie('channels.sort.index', index);
 			SetCookie('channels.sort.sortorder', sortorder);
 		},
-		pager: jQuery('#channel_pager'),
+		pager: jQuery('#channels_pager'),
 		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
@@ -218,7 +218,7 @@ $(function()
 		sortorder: GetCookie('channels.sort.sortorder', 'asc'),
 		caption: "Channels",
 		hidegrid: false
-	}).navGrid('#channel_pager', {edit:false, search:false}, {},
+	}).navGrid('#channels_pager', {edit:false, search:false}, {},
 	{
 		mtype: "GET",
 		url: "/",
@@ -246,15 +246,15 @@ $(function()
 		cmTemplate:{fixed:true},
 		colNames: ['', '', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue'],
 		colModel: [
-			{name:'Object',				index:'Object',				formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',				index:'Icon',				formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24, sortable: false},
-			{name:'Name',				index:'Name',				formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
-			{name:'Speed',				index:'Speed',				formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
-			{name:'QueuePosition',		index:'QueuePosition',		formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : "&nbsp;"; }, width:70, align:"right"},
-			{name:'QueueTime',			index:'QueueTime',			formatter: function(c, o, r) { return Helper.time2Human(r.QueueTime); }, width:70, align:"right"},
-			{name:'InfoSpeedMax',		index:'InfoSpeedMax',		formatter: function(c, o, r) { return Formatter.formatBotSpeed(r); }, width:100, align:"right"},
-			{name:'InfoSlotTotal',		index:'InfoSlotTotal',		formatter: function(c, o, r) { return Formatter.formatBotSlots(r); }, width:60, align:"right"},
-			{name:'InfoQueueTotal',		index:'InfoQueueTotal',		formatter: function(c, o, r) { return Formatter.formatBotQueue(r); }, width:60, align:"right"}
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24, sortable: false},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
+			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
+			{name:'QueuePosition',	index:'QueuePosition',	formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : "&nbsp;"; }, width:70, align:"right"},
+			{name:'QueueTime',		index:'QueueTime',		formatter: function(c, o, r) { return Helper.time2Human(r.QueueTime); }, width:70, align:"right"},
+			{name:'InfoSpeedMax',	index:'InfoSpeedMax',	formatter: function(c, o, r) { return Formatter.formatBotSpeed(r); }, width:100, align:"right"},
+			{name:'InfoSlotTotal',	index:'InfoSlotTotal',	formatter: function(c, o, r) { return Formatter.formatBotSlots(r); }, width:60, align:"right"},
+			{name:'InfoQueueTotal',	index:'InfoQueueTotal',	formatter: function(c, o, r) { return Formatter.formatBotQueue(r); }, width:60, align:"right"}
 		],
 		onSelectRow: function(id)
 		{
@@ -271,7 +271,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#bot_pager'),
+		pager: jQuery('#bots_pager'),
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
@@ -281,7 +281,7 @@ $(function()
 		sortorder: GetCookie('bots.sort.sortorder', 'asc'),
 		caption: "Bots",
 		hidegrid: false
-	}).navGrid('#bot_pager', {edit:false, add:false, del:false, search:false});
+	}).navGrid('#bots_pager', {edit:false, add:false, del:false, search:false});
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
@@ -320,15 +320,6 @@ $(function()
 				FlipPacket(id);				
 			}
 		},
-		afterInsertRow: function(id)
-		{
-			var pack = GetRowData('packets', id);
-			if(search_active && pack)
-			{
-				var color = GetColorByGuid(pack.ChannelGuid);
-				jQuery('#packets').setCell(id, 'Id', '', {'background-color': '#' + color}, '');
-			}
-		},
 		onSortCol: function(index, iCol, sortorder)
 		{
 			SetCookie('packets.sort.index', index);
@@ -336,7 +327,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#packet_pager'),
+		pager: jQuery('#packets_pager'),
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
@@ -345,7 +336,7 @@ $(function()
 		sortorder: GetCookie('packets.sort.sortorder', 'asc'),
 		caption: "Packets",
 		hidegrid: false
-	}).navGrid('#packet_pager', {edit:false, add:false, del:false, search:false});
+	}).navGrid('#packets_pager', {edit:false, add:false, del:false, search:false});
 
 	/* ************************************************************************************************************** */
 	/* SEARCH GRID                                                                                                    */
@@ -499,6 +490,41 @@ $(function()
 	}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
 
 	/* ************************************************************************************************************** */
+	/* FILE GRID                                                                                                      */
+	/* ************************************************************************************************************** */
+
+	jQuery("#files").jqGrid(
+	{
+		datatype: "json",
+		cmTemplate: {fixed:true},
+		colNames: ['', '', 'Name', 'Size', 'Speed', 'Time'],
+		colModel: [
+			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatFileIcon(r); }, width:24, sortable: false},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatFileName(r); }, width:400, fixed:false},
+			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Formatter.formatFileSize(r); }, width:70, align:"right"},
+			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Formatter.formatFileSpeed(r); }, width:70, align:"right"},
+			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Formatter.formatFileTimeMissing(r) }, width:90, align:"right"}
+		],
+		onSortCol: function(index, iCol, sortorder)
+		{
+			SetCookie('files.sort.index', index);
+			SetCookie('files.sort.sortorder', sortorder);
+		},
+		rowNum: 100,
+		rowList: [100, 200, 400, 800],
+		pager: jQuery('#files_pager'),
+		ExpandColumn: 'Name',
+		viewrecords: true,
+		autowidth: true,
+		height: 300,
+		sortname: GetCookie('files.sort.index', 'Id'),
+		sortorder: GetCookie('files.sort.sortorder', 'asc'),
+		caption: "Files",
+		hidegrid: false
+	}).navGrid('#files_pager', {edit:false, add:false, del:false, search:false});
+
+	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
 	/* ************************************************************************************************************** */
 
@@ -625,58 +651,6 @@ function RemoveSearch(id)
 }
 
 /* ****************************************************************************************************************** */
-/* COLOR STUFF                                                                                                        */
-/* ****************************************************************************************************************** */
-
-var colors = new Array();
-var color_count = 0;
-
-function GetColorByGuid(guid)
-{
-	if(colors[guid] == undefined)
-	{
-		colors[guid] = GetColor(color_count);
-		color_count += 3;
-	}
-	return colors[guid];
-}
-
-function GetColor(id)
-{
-	switch(id)
-	{
-		case 0: return Enum.TangoColor.Butter.Light;
-		case 1: return Enum.TangoColor.Butter.Middle;
-		case 2: return Enum.TangoColor.Butter.Dark;
-		case 3: return Enum.TangoColor.Orange.Light;
-		case 4: return Enum.TangoColor.Orange.Middle;
-		case 5: return Enum.TangoColor.Orange.Dark;
-		case 6: return Enum.TangoColor.Chocolate.Light;
-		case 7: return Enum.TangoColor.Chocolate.Middle;
-		case 8: return Enum.TangoColor.Chocolate.Dark;
-		case 9: return Enum.TangoColor.Chameleon.Light;
-		case 10: return Enum.TangoColor.Chameleon.Middle;
-		case 11: return Enum.TangoColor.Chameleon.Dark;
-		case 12: return Enum.TangoColor.SkyBlue.Light;
-		case 13: return Enum.TangoColor.SkyBlue.Middle;
-		case 14: return Enum.TangoColor.SkyBlue.Dark;
-		case 15: return Enum.TangoColor.Plum.Light;
-		case 16: return Enum.TangoColor.Plum.Middle;
-		case 17: return Enum.TangoColor.Plum.Dark;
-		case 18: return Enum.TangoColor.ScarletRed.Light;
-		case 19: return Enum.TangoColor.ScarletRed.Middle;
-		case 20: return Enum.TangoColor.ScarletRed.Dark;
-		case 21: return Enum.TangoColor.Aluminium1.Light;
-		case 22: return Enum.TangoColor.Aluminium1.Middle;
-		case 23: return Enum.TangoColor.Aluminium1.Dark;
-		case 24: return Enum.TangoColor.Aluminium2.Light;
-		case 25: return Enum.TangoColor.Aluminium2.Middle;
-		case 26: return Enum.TangoColor.Aluminium2.Dark;
-	}
-	return "";
-}
-
-/* ****************************************************************************************************************** */
 /* DIALOG BUTTON HANDLER                                                                                              */
 /* ****************************************************************************************************************** */
 
@@ -698,6 +672,8 @@ function ButtonConnectClicked(dialog)
 				});
 			}
 		);
+
+		ReloadGrid("files", JsonUrl() + Enum.TCPClientRequest.GetFiles);
 
 		outerLayout = $("body").layout({
 			onresize: function () {
@@ -867,11 +843,10 @@ function ResizeMain()
 
 	$("#layout_objects_container").height($('#layout_search').height() - 66);
 
-	jQuery("#bots").setGridWidth($('#layout_objects').width() - 1);
-	jQuery("#packets").setGridWidth($('#layout_objects').width() - 1);
+	jQuery("#bots, #packets").setGridWidth($('#layout_objects').width() - 1);
 
-	jQuery("#searches_xg_bitpir_at").setGridWidth($('#layout_objects').width() - 1);
-	jQuery("#searches_xg_bitpir_at").setGridHeight($('#layout_search').height() - 110);
+	jQuery("#searches_xg_bitpir_at, #files").setGridWidth($('#layout_objects').width() - 1);
+	jQuery("#searches_xg_bitpir_at, #files").setGridHeight($('#layout_search').height() - 110);
 
 	innerLayout.resizeAll();
 }

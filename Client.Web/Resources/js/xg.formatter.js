@@ -152,10 +152,10 @@ var XGFormatter = Class.create(
 	/* ************************************************************************************************************** */
 
 	formatPacketIcon: function (packet, onclick, skipOverlay)
-	{	
+	{
 		var str = "Packet";
 		var overlay = "";
-	
+
 		if(!packet.Enabled) { str += "Disabled"; }
 		else if (!skipOverlay)
 		{
@@ -163,7 +163,7 @@ var XGFormatter = Class.create(
 			else if (packet.Next) { overlay = "OverWaiting"; }
 			else { overlay = "OverActive"; }
 		}
-	
+
 		return this.formatIcon2(str, overlay, onclick);
 	},
 
@@ -185,32 +185,34 @@ var XGFormatter = Class.create(
 		var ret = "";
 		if(ext == "avi" || ext == "wmv" || ext == "mkv")
 		{
-			ret += this.formatIcon("ExtVideo") + "&nbsp;&nbsp;";
+			ret += this.formatIcon("ExtVideo");
 		}
 		else if(ext == "mp3")
 		{
-			ret += this.formatIcon("ExtAudio") + "&nbsp;&nbsp;";
+			ret += this.formatIcon("ExtAudio");
 		}
 		else if(ext == "rar" || ext == "tar" || ext == "zip")
 		{
-			ret += this.formatIcon("ExtCompressed") + "&nbsp;&nbsp;";
+			ret += this.formatIcon("ExtCompressed");
 		}
 		else
 		{
-			ret += this.formatIcon("ExtDefault") + "&nbsp;&nbsp;";
+			ret += this.formatIcon("ExtDefault");
 		}
-	
+
+		ret += "&nbsp;&nbsp;";
+
 		if(name.toLowerCase().indexOf("german") > -1)
 		{
-			ret += this.formatIcon("LanguageDe") + "&nbsp;&nbsp;";
+			ret += this.formatIcon("LanguageDe");
 		}
-	
-		ret += name;
+
+		ret += "&nbsp;&nbsp;" + name;
 
 		if(packet.Connected && packet.Part != null)
 		{
 			ret += "<br />";
-	
+
 			var a = ((packet.Part.StartSize) / packet.RealSize).toFixed(2) * 100;
 			var b = ((packet.Part.CurrentSize - packet.Part.StartSize) / packet.RealSize).toFixed(2) * 100;
 			var c = ((packet.Part.StopSize - packet.Part.CurrentSize) / packet.RealSize).toFixed(2) * 100;
@@ -225,7 +227,7 @@ var XGFormatter = Class.create(
 				"<div style='width: " + c + "%;float:left;background:#" + (packet.Part.Checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
 				"</div><div class='clear'></div>";
 		}
-	
+
 		return ret;
 	},
 
@@ -242,6 +244,79 @@ var XGFormatter = Class.create(
 	formatPacketTimeMissing: function (packet)
 	{
 		return Helper.time2Human(packet.Part != null ? packet.Part.TimeMissing : 0);
+	},
+
+	/* ************************************************************************************************************** */
+	/* FILE FORMATER                                                                                                  */
+	/* ************************************************************************************************************** */
+
+	formatFileIcon: function (file)
+	{
+		var ext = file.Name.toLowerCase().substr(-3);
+		var str = "";
+		if(ext == "avi" || ext == "wmv" || ext == "mkv")
+		{
+			str = "ExtVideo2";
+		}
+		else if(ext == "mp3")
+		{
+			str = "ExtAudio2";
+		}
+		else if(ext == "rar" || ext == "tar" || ext == "zip")
+		{
+			str = "ExtCompressed2";
+		}
+		else
+		{
+			str = "ExtDefault2";
+		}
+	
+		return this.formatIcon2(str);
+	},
+
+	formatFileName: function (file)
+	{
+		var ret = file.Name;
+
+		ret += "<br /><div role='progressbar' class='ui-progressbar ui-widget ui-corner-all' style='height:4px'>";
+
+		$.each(file.Parts, function(i, part)
+		{
+			var b = ((part.CurrentSize - part.StartSize) / file.Size).toFixed(2) * 100;
+			var c = ((part.StopSize - part.CurrentSize) / file.Size).toFixed(2) * 100;
+
+			ret += "<div style='width: " + b + "%;float:left;background:#" + (part.Checked ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>";
+			ret += "<div style='width: " + c + "%;float:left;background:#" + (part.Checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>";
+		});
+
+		ret += "</div><div class='clear'></div>";
+
+		return ret;
+	},
+
+	formatFileSpeed: function (file)
+	{
+		var speed = 0;
+		$.each(file.Parts, function(i, part)
+		{
+			speed += part.Speed;
+		});
+		return Helper.speed2Human(speed);
+	},
+
+	formatFileSize: function (file)
+	{
+		return Helper.size2Human(file.Size);
+	},
+
+	formatFileTimeMissing: function (file)
+	{
+		var time = 0;
+		$.each(file.Parts, function(i, part)
+		{
+			time = time == 0 ? part.TimeMissing : (time < part.TimeMissing ? time : part.TimeMissing);
+		});
+		return Helper.time2Human(time);
 	},
 
 	/* ************************************************************************************************************** */

@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 
@@ -157,7 +156,7 @@ namespace XG.Server.Plugin.General.Webserver
 						return;
 					}
 
-					TCPClientRequest tMessage = (TCPClientRequest)int.Parse(tDic["request"]);
+					ClientRequest tMessage = (ClientRequest)int.Parse(tDic["request"]);
 
 					#region DATA HANDLING
 
@@ -167,7 +166,7 @@ namespace XG.Server.Plugin.General.Webserver
 					{
 						# region VERSION
 
-						case TCPClientRequest.Version:
+						case ClientRequest.Version:
 							response = Settings.Instance.XgVersion;
 							break;
 
@@ -175,11 +174,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region SERVER
 
-						case TCPClientRequest.AddServer:
+						case ClientRequest.AddServer:
 							AddServer(HttpUtility.UrlDecode(tDic["name"]));
 							break;
 
-						case TCPClientRequest.RemoveServer:
+						case ClientRequest.RemoveServer:
 							RemoveServer(new Guid(tDic["guid"]));
 							break;
 
@@ -187,11 +186,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region CHANNEL
 
-						case TCPClientRequest.AddChannel:
+						case ClientRequest.AddChannel:
 							AddChannel(new Guid(tDic["guid"]), tDic["name"]);
 							break;
 
-						case TCPClientRequest.RemoveChannel:
+						case ClientRequest.RemoveChannel:
 							RemoveChannel(new Guid(tDic["guid"]));
 							break;
 
@@ -199,11 +198,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region OBJECT
 
-						case TCPClientRequest.ActivateObject:
+						case ClientRequest.ActivateObject:
 							ActivateObject(new Guid(tDic["guid"]));
 							break;
 
-						case TCPClientRequest.DeactivateObject:
+						case ClientRequest.DeactivateObject:
 							DeactivateObject(new Guid(tDic["guid"]));
 							break;
 
@@ -211,7 +210,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region SEARCH
 
-						case TCPClientRequest.SearchPacket:
+						case ClientRequest.SearchPacket:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
 								Packets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
@@ -220,7 +219,7 @@ namespace XG.Server.Plugin.General.Webserver
 							);
 							break;
 
-						case TCPClientRequest.SearchBot:
+						case ClientRequest.SearchBot:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
 								Bots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
@@ -233,7 +232,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region SEARCH SPECIAL
 
-						case TCPClientRequest.AddSearch:
+						case ClientRequest.AddSearch:
 							string name = HttpUtility.UrlDecode(tDic["name"]);
 							XG.Core.Object obj = Searches.Named(name);
 							if(obj == null)
@@ -244,11 +243,11 @@ namespace XG.Server.Plugin.General.Webserver
 							}
 							break;
 
-						case TCPClientRequest.RemoveSearch:
+						case ClientRequest.RemoveSearch:
 							Searches.Remove(Searches.Named(HttpUtility.UrlDecode(tDic["name"])));
 							break;
 
-						case TCPClientRequest.Searches:
+						case ClientRequest.Searches:
 							response = Searches2Json(Searches);
 							break;
 
@@ -256,14 +255,14 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region GET
 
-						case TCPClientRequest.Object:
+						case ClientRequest.Object:
 							client.Response.ContentType = "text/json";
 							response = Object2Json(
 								Servers.WithGuid(new Guid(tDic["guid"]))
 							);
 							break;
 
-						case TCPClientRequest.Servers:
+						case ClientRequest.Servers:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedObjects(Servers.All, tDic["sidx"], tDic["sord"]),
@@ -272,32 +271,34 @@ namespace XG.Server.Plugin.General.Webserver
 							);
 							break;
 
-						case TCPClientRequest.ChannelsFromServer:
+						case ClientRequest.ChannelsFromServer:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedObjects(
 									from server in Servers.All
 									from channel in server.Channels
-										where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]),
+										where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]
+								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
 							break;
 
-						case TCPClientRequest.BotsFromChannel:
+						case ClientRequest.BotsFromChannel:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedBots(
 									from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
-										where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]),
+										where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]
+								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
 							break;
 
-						case TCPClientRequest.PacketsFromBot:
+						case ClientRequest.PacketsFromBot:
 							client.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedPackets(
@@ -305,27 +306,32 @@ namespace XG.Server.Plugin.General.Webserver
 									from channel in server.Channels
 									from bot in channel.Bots
 									from packet in bot.Packets
-										where packet.ParentGuid == new Guid(tDic["guid"]) select packet, tDic["sidx"], tDic["sord"]),
+										where packet.ParentGuid == new Guid(tDic["guid"]) select packet, tDic["sidx"], tDic["sord"]
+								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 							);
 							break;
 
-						case TCPClientRequest.Statistics:
+						case ClientRequest.Statistics:
 							client.Response.ContentType = "text/json";
 							response = Statistic2Json();
 							break;
 
-						case TCPClientRequest.Files:
+						case ClientRequest.Files:
 							client.Response.ContentType = "text/json";
-							response = Files2Json();
+							response = Objects2Json(
+								SortedFiles(Files.All, tDic["sidx"], tDic["sord"]),
+								int.Parse(tDic["page"]),
+								int.Parse(tDic["rows"])
+							);
 							break;
 
 						#endregion
 
 						# region COMMANDS
 
-						case TCPClientRequest.CloseServer:
+						case ClientRequest.CloseServer:
 							Stop();
 							break;
 
@@ -333,7 +339,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 						# region XDCC Link
 
-						case TCPClientRequest.ParseXdccLink:
+						case ClientRequest.ParseXdccLink:
 							string[] link = HttpUtility.UrlDecode(tDic["name"]).Substring(7).Split('/');
 							string serverName = link[0];
 							string channelName = link[2];
@@ -428,6 +434,86 @@ namespace XG.Server.Plugin.General.Webserver
 #endif
 		}
 
+		#endregion
+
+		#region WRITE TO STREAM
+
+		void WriteToStream(HttpListenerResponse aResponse, string aData)
+		{
+			WriteToStream(aResponse, Encoding.UTF8.GetBytes(aData));
+		}
+
+		void WriteToStream(HttpListenerResponse aResponse, byte[] aData)
+		{
+			aResponse.ContentLength64 = aData.Length;
+			aResponse.OutputStream.Write(aData, 0, aData.Length);
+			aResponse.OutputStream.Close();
+		}
+
+		#endregion
+
+		#region JSON
+
+		IEnumerable<Bot> Bots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		{
+			IEnumerable<Packet> tPacketList = Packets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
+			IEnumerable<Bot> tBots = (
+				from s in Servers.All 
+					from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b
+				).Distinct();
+
+			return SortedBots(tBots, aSortBy, aSortMode);
+		}
+
+		IEnumerable<Bot> SortedBots(IEnumerable<Bot> aBots, string aSortBy, string aSortMode)
+		{
+			switch (aSortBy)
+			{
+				case "Name":
+					aBots = from bot in aBots orderby bot.Name select bot;
+					break;
+
+				case "Connected":
+					aBots = from bot in aBots orderby bot.Connected select bot;
+					break;
+
+				case "Enabled":
+					aBots = from bot in aBots orderby bot.Enabled select bot;
+					break;
+
+				case "Speed":
+					aBots = from bot in aBots orderby bot.Speed select bot;
+					break;
+
+				case "QueuePosition":
+					aBots = from bot in aBots orderby bot.QueuePosition select bot;
+					break;
+
+				case "QueueTime":
+					aBots = from bot in aBots orderby bot.QueueTime select bot;
+					break;
+
+				case "InfoSpeedMax":
+					aBots = from bot in aBots orderby bot.InfoSpeedCurrent, bot.InfoSpeedMax select bot;
+					break;
+
+				case "InfoSlotTotal":
+					aBots = from bot in aBots orderby bot.InfoSlotCurrent, bot.InfoSlotTotal select bot;
+					break;
+
+				case "InfoQueueTotal":
+					aBots = from bot in aBots orderby bot.InfoQueueCurrent, bot.InfoQueueTotal select bot;
+					break;
+			}
+
+			if (aSortMode == "desc")
+			{
+				aBots = aBots.Reverse();
+			}
+
+			return aBots;
+		}
+
 		IEnumerable<Packet> Packets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
 			IEnumerable<Bot> bots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
@@ -519,64 +605,33 @@ namespace XG.Server.Plugin.General.Webserver
 			return aPackets;
 		}
 
-		IEnumerable<Bot> Bots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
-		{
-			IEnumerable<Packet> tPacketList = Packets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
-			IEnumerable<Bot> tBots = (
-				from s in Servers.All 
-					from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b
-				).Distinct();
-
-			return SortedBots(tBots, aSortBy, aSortMode);
-		}
-
-		IEnumerable<Bot> SortedBots(IEnumerable<Bot> aBots, string aSortBy, string aSortMode)
+		IEnumerable<File> SortedFiles(IEnumerable<File> aFiles, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
 				case "Name":
-					aBots = from bot in aBots orderby bot.Name select bot;
+					aFiles = from packet in aFiles orderby packet.Name select packet;
 					break;
 
 				case "Connected":
-					aBots = from bot in aBots orderby bot.Connected select bot;
+					aFiles = from packet in aFiles orderby packet.Connected select packet;
 					break;
 
 				case "Enabled":
-					aBots = from bot in aBots orderby bot.Enabled select bot;
+					aFiles = from packet in aFiles orderby packet.Enabled select packet;
 					break;
 
-				case "Speed":
-					aBots = from bot in aBots orderby bot.Speed select bot;
-					break;
-
-				case "QueuePosition":
-					aBots = from bot in aBots orderby bot.QueuePosition select bot;
-					break;
-
-				case "QueueTime":
-					aBots = from bot in aBots orderby bot.QueueTime select bot;
-					break;
-
-				case "InfoSpeedMax":
-					aBots = from bot in aBots orderby bot.InfoSpeedCurrent, bot.InfoSpeedMax select bot;
-					break;
-
-				case "InfoSlotTotal":
-					aBots = from bot in aBots orderby bot.InfoSlotCurrent, bot.InfoSlotTotal select bot;
-					break;
-
-				case "InfoQueueTotal":
-					aBots = from bot in aBots orderby bot.InfoQueueCurrent, bot.InfoQueueTotal select bot;
+				case "Size":
+					aFiles = from packet in aFiles orderby packet.Size select packet;
 					break;
 			}
 
 			if (aSortMode == "desc")
 			{
-				aBots = aBots.Reverse();
+				aFiles = aFiles.Reverse();
 			}
 
-			return aBots;
+			return aFiles;
 		}
 
 		IEnumerable<AObject> SortedObjects(IEnumerable<AObject> aObjects, string aSortBy, string aSortMode)
@@ -603,26 +658,6 @@ namespace XG.Server.Plugin.General.Webserver
 
 			return aObjects;
 		}
-
-		#endregion
-
-		#region WRITE TO STREAM
-
-		void WriteToStream(HttpListenerResponse aResponse, string aData)
-		{
-			WriteToStream(aResponse, Encoding.UTF8.GetBytes(aData));
-		}
-
-		void WriteToStream(HttpListenerResponse aResponse, byte[] aData)
-		{
-			aResponse.ContentLength64 = aData.Length;
-			aResponse.OutputStream.Write(aData, 0, aData.Length);
-			aResponse.OutputStream.Close();
-		}
-
-		#endregion
-
-		#region JSON
 
 		string Searches2Json(Objects aObjects)
 		{
@@ -666,32 +701,6 @@ namespace XG.Server.Plugin.General.Webserver
 		}
 
 		string Statistic2Json()
-		{
-			StringBuilder sb = new StringBuilder();
-			sb.Append("{");
-
-			List<StatisticType> types = new List<StatisticType>();
-			// uncool, but works
-			for (int a = (int)StatisticType.BytesLoaded; a <= (int)StatisticType.SpeedMax; a++)
-			{
-				types.Add((StatisticType)a);
-			}
-
-			int count = 0;
-			foreach (StatisticType type in types)
-			{
-				count++;
-				double val = Statistic.Instance.Get(type);
-				sb.Append ("\"" + type + "\":" + val.ToString().Replace(",", "."));
-				if (count < types.Count) { sb.Append(","); }
-				sb.Append("");
-			}
-
-			sb.Append("}");
-			return sb.ToString();
-		}
-
-		string Files2Json()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("{");

@@ -201,9 +201,9 @@ namespace XG.Server.Helper
 							{
 								tBot.Connected = true;
 								tBot.LastMessage = "joined channel " + tChan.Name;
-								if (tBot.State != BotState.Active)
+								if (tBot.State != Bot.BotState.Active)
 								{
-									tBot.State = BotState.Idle;
+									tBot.State = Bot.BotState.Idle;
 								}
 								_log.Info("con_DataReceived() bot " + tUserName + " is online");
 								RequestFromBot(aServer, tBot);
@@ -389,9 +389,9 @@ namespace XG.Server.Helper
 							{
 								tBot.Connected = true;
 								tBot.LastMessage = "joined channel " + tChan.Name;
-								if (tBot.State != BotState.Active)
+								if (tBot.State != Bot.BotState.Active)
 								{
-									tBot.State = BotState.Idle;
+									tBot.State = Bot.BotState.Idle;
 								}
 								_log.Info("con_DataReceived() bot " + tBot.Name + " is online");
 								tBot.Commit();
@@ -709,9 +709,9 @@ namespace XG.Server.Helper
 						}
 
 						// uhm, there is a free slot and we are still waiting?
-						if (tBot.InfoSlotCurrent > 0 && tBot.State == BotState.Waiting)
+						if (tBot.InfoSlotCurrent > 0 && tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 							CreateTimer(aServer, tBot, 0, false);
 						}
 					}
@@ -904,9 +904,9 @@ namespace XG.Server.Helper
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 						tMatch = tMatch.Success ? tMatch : tMatch3;
 						isParsed = true;
-						if (tBot.State == BotState.Idle)
+						if (tBot.State == Bot.BotState.Idle)
 						{
-							tBot.State = BotState.Waiting;
+							tBot.State = Bot.BotState.Waiting;
 						}
 
 						tBot.InfoSlotCurrent = 0;
@@ -937,9 +937,9 @@ namespace XG.Server.Helper
 					if (tMatch.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 						CreateTimer(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 					}
@@ -978,9 +978,9 @@ namespace XG.Server.Helper
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Idle)
+						if (tBot.State == Bot.BotState.Idle)
 						{
-							tBot.State = BotState.Waiting;
+							tBot.State = Bot.BotState.Waiting;
 						}
 					}
 				}
@@ -999,11 +999,11 @@ namespace XG.Server.Helper
 					if (tMatch1.Success || tMatch2.Success || tMatch3.Success || tMatch4.Success || tMatch5.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Idle)
+						if (tBot.State == Bot.BotState.Idle)
 						{
-							tBot.State = BotState.Waiting;
+							tBot.State = Bot.BotState.Waiting;
 						}
-						else if(tBot.State == BotState.Waiting)
+						else if(tBot.State == Bot.BotState.Waiting)
 						{
 							// if there is no active packets lets remove us from the queue
 							if(tBot.OldestActivePacket() == null) { UnRequestFromBot(aServer, tBot); }
@@ -1025,9 +1025,9 @@ namespace XG.Server.Helper
 						isParsed = true;
 						if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
 						{
-							if (valueInt == 30 && tBot.State != BotState.Active)
+							if (valueInt == 30 && tBot.State != Bot.BotState.Active)
 							{
-								tBot.State = BotState.Idle;
+								tBot.State = Bot.BotState.Idle;
 							}
 							CreateTimer(aServer, tBot, (valueInt + 2) * 1000, false);
 						}
@@ -1046,9 +1046,9 @@ namespace XG.Server.Helper
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 						tBot.InfoSlotCurrent = 0;
 						tBot.InfoQueueCurrent = 0;
@@ -1068,9 +1068,9 @@ namespace XG.Server.Helper
 					if (tMatch.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Idle)
+						if (tBot.State == Bot.BotState.Idle)
 						{
-							tBot.State = BotState.Waiting;
+							tBot.State = Bot.BotState.Waiting;
 						}
 					}
 				}
@@ -1085,9 +1085,9 @@ namespace XG.Server.Helper
 					if (tMatch.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 
 						if (int.TryParse(tMatch.Groups["time"].ToString(), out valueInt))
@@ -1107,9 +1107,9 @@ namespace XG.Server.Helper
 					if (tMatch.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 						CreateTimer(aServer, tBot, Settings.Instance.BotWaitTime, false);
 					}
@@ -1143,9 +1143,9 @@ namespace XG.Server.Helper
 						}
 						else
 						{
-							if (tBot.State == BotState.Waiting)
+							if (tBot.State == Bot.BotState.Waiting)
 							{
-								tBot.State = BotState.Idle;
+								tBot.State = Bot.BotState.Idle;
 							}
 							CreateTimer(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 							_log.Error("con_DataReceived() XDCC denied from " + tBot.Name + ": " + info);
@@ -1164,9 +1164,9 @@ namespace XG.Server.Helper
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 					}
 				}
@@ -1183,9 +1183,9 @@ namespace XG.Server.Helper
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 						isParsed = true;
-						if (tBot.State == BotState.Idle)
+						if (tBot.State == Bot.BotState.Idle)
 						{
-							tBot.State = BotState.Waiting;
+							tBot.State = Bot.BotState.Waiting;
 						}
 						
 						tBot.InfoSlotCurrent = 0;
@@ -1212,9 +1212,9 @@ namespace XG.Server.Helper
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
-						if (tBot.State != BotState.Active)
+						if (tBot.State != Bot.BotState.Active)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 						else
 						{
@@ -1245,9 +1245,9 @@ namespace XG.Server.Helper
 					if (tMatch.Success)
 					{
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 						tBot.QueuePosition = 0;
 						CreateTimer(aServer, tBot, Settings.Instance.CommandWaitTime, false);
@@ -1268,9 +1268,9 @@ namespace XG.Server.Helper
 					{
 						tMatch = tMatch1.Success ? tMatch1 : tMatch2.Success ? tMatch2 : tMatch3;
 						isParsed = true;
-						if (tBot.State == BotState.Waiting)
+						if (tBot.State == Bot.BotState.Waiting)
 						{
-							tBot.State = BotState.Idle;
+							tBot.State = Bot.BotState.Idle;
 						}
 
 						if (int.TryParse(tMatch.Groups["time_m"].ToString(), out valueInt))

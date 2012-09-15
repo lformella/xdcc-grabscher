@@ -73,11 +73,11 @@
 				<tr>
 					<td valign="top">
 						<table id="servers" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="server_pager" class="scroll" style="text-align:center;"></div>
+						<div id="servers_pager" class="scroll" style="text-align:center;"></div>
 					</td>
 					<td valign="top">
 						<table id="channels" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="channel_pager" class="scroll" style="text-align:center;"></div>
+						<div id="channels_pager" class="scroll" style="text-align:center;"></div>
 					</td>
 				</tr>
 			</table>
@@ -124,6 +124,7 @@
 				<ul style="margin-bottom: 4px;">
 					<li><a id="tab_1" href="#tabs_1">IRC View</a></li>
 					<li><a id="tab_2" href="#tabs_2">external Search via xg.bitpir.at</a></li>
+					<li><a id="tab_3" href="#tabs_3">Files</a></li>
 				</ul>
 
 				<div id="tabs_1" style="padding: 0px;">
@@ -137,11 +138,11 @@
 					<div id="layout_objects_container">
 						<div id="layout_bots" class="ui-layout-north">
 							<table id="bots" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="bot_pager" class="scroll" style="text-align:center;"></div>
+							<div id="bots_pager" class="scroll" style="text-align:center;"></div>
 						</div>
 						<div id="layout_packets" class="ui-layout-center">
 							<table id="packets" class="scroll" cellpadding="0" cellspacing="0"></table>
-							<div id="packet_pager" class="scroll" style="text-align:center;"></div>
+							<div id="packets_pager" class="scroll" style="text-align:center;"></div>
 						</div>
 					</div>
 
@@ -151,6 +152,13 @@
 
 					<table width="100%" id="searches_xg_bitpir_at"></table>
 					<div id="searches_pager_xg_bitpir_at"></div>
+
+				</div>
+
+				<div id="tabs_3" style="padding: 0px;">
+
+					<table width="100%" id="files"></table>
+					<div id="files_pager"></div>
 
 				</div>
 

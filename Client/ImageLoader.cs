@@ -66,6 +66,10 @@ namespace XG.Client
 			ExtCompressed = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed.png");
 			ExtDefault = assembly.GetManifestResourceStream(name + ".Resources.extension.default.png");
 			ExtVideo = assembly.GetManifestResourceStream(name + ".Resources.extension.video.png");
+			ExtAudio2 = assembly.GetManifestResourceStream(name + ".Resources.extension.audio2.png");
+			ExtCompressed2 = assembly.GetManifestResourceStream(name + ".Resources.extension.compressed2.png");
+			ExtDefault2 = assembly.GetManifestResourceStream(name + ".Resources.extension.default2.png");
+			ExtVideo2 = assembly.GetManifestResourceStream(name + ".Resources.extension.video2.png");
 			
 			OverActive = assembly.GetManifestResourceStream(name + ".Resources.Overlay._active.png");
 			OverAttention = assembly.GetManifestResourceStream(name + ".Resources.Overlay._attention.png");
@@ -118,6 +122,10 @@ namespace XG.Client
 		protected Stream ExtCompressed;
 		protected Stream ExtDefault;
 		protected Stream ExtVideo;
+		protected Stream ExtAudio2;
+		protected Stream ExtCompressed2;
+		protected Stream ExtDefault2;
+		protected Stream ExtVideo2;
 			
 		protected Stream OverActive;
 		protected Stream OverAttention;

@@ -164,7 +164,7 @@ namespace XG.Server
 		{
 			if (aBot != null)
 			{
-				if (aBot.State == BotState.Idle)
+				if (aBot.State == Bot.BotState.Idle)
 				{
 					// check if the packet is already downloaded, or active - than disable it and get the next one
 					Packet tPacket = aBot.OldestActivePacket();
@@ -321,7 +321,7 @@ namespace XG.Server
 				}
 				else
 				{
-					if (tBot.State == BotState.Waiting || tBot.State == BotState.Active)
+					if (tBot.State == Bot.BotState.Waiting || tBot.State == Bot.BotState.Active)
 					{
 						Packet tmp = tBot.CurrentQueuedPacket;
 						if (tmp == tPack)

@@ -100,6 +100,10 @@
     <EmbeddedResource Include="Resources\extension\compressed.png" />
     <EmbeddedResource Include="Resources\extension\default.png" />
     <EmbeddedResource Include="Resources\extension\video.png" />
+    <EmbeddedResource Include="Resources\extension\audio2.png" />
+    <EmbeddedResource Include="Resources\extension\compressed2.png" />
+    <EmbeddedResource Include="Resources\extension\default2.png" />
+    <EmbeddedResource Include="Resources\extension\video2.png" />
     <EmbeddedResource Include="Resources\client.png" />
     <EmbeddedResource Include="Resources\Overlay\_active.png" />
     <EmbeddedResource Include="Resources\Overlay\_attention.png" />

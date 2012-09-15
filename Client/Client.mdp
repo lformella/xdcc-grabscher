@@ -67,6 +67,10 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl7.png" resource_id="Client.Resources.Overlay._dl7.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl8.png" resource_id="Client.Resources.Overlay._dl8.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl9.png" resource_id="Client.Resources.Overlay._dl9.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/audio2.png" resource_id="Client.Resources.extension.audio2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/compressed2.png" resource_id="Client.Resources.extension.compressed2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/default2.png" resource_id="Client.Resources.extension.default2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/video2.png" resource_id="Client.Resources.extension.video2.png" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

@@ -26,19 +26,23 @@ using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	[Flags]
-	public enum FilePartState : byte
-	{
-		Open,
-		Closed,
-		Ready,
-		Broken
-	}
-
 	[Serializable]
 	[DataContract]
 	public class FilePart : AObject
 	{
+		#region FLAGS
+
+		[Flags]
+		public enum FilePartState : byte
+		{
+			Open,
+			Closed,
+			Ready,
+			Broken
+		}
+
+		#endregion
+
 		#region VARIABLES
 
 		public new File Parent
@@ -159,9 +163,9 @@ namespace XG.Core
 			}
 		}
 
-		FilePartState _state;
+		FilePart.FilePartState _state;
 		[DataMember]
-		public FilePartState State
+		public FilePart.FilePartState State
 		{
 			get { return _state; }
 			set
@@ -169,8 +173,8 @@ namespace XG.Core
 				if (_state != value)
 				{
 					_state = value;
-					if (_state != FilePartState.Open) { _speed = 0; }
-					if (_state == FilePartState.Ready) { _currentSize = _stopSize; }
+					if (_state != FilePart.FilePartState.Open) { _speed = 0; }
+					if (_state == FilePart.FilePartState.Ready) { _currentSize = _stopSize; }
 					Modified = true;
 				}
 			}

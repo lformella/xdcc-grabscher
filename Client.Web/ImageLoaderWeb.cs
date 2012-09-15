@@ -73,6 +73,10 @@ namespace XG.Client.Web
 			pbExtCompressed = LoadImage(base.ExtCompressed);
 			pbExtDefault = LoadImage(base.ExtDefault);
 			pbExtVideo = LoadImage(base.ExtVideo);
+			pbExtAudio2 = LoadImage(base.ExtAudio2);
+			pbExtCompressed2 = LoadImage(base.ExtCompressed2);
+			pbExtDefault2 = LoadImage(base.ExtDefault2);
+			pbExtVideo2 = LoadImage(base.ExtVideo2);
 			
 			pbOverActive = LoadImage(base.OverActive);
 			pbOverAttention = LoadImage(base.OverAttention);
@@ -186,6 +190,18 @@ namespace XG.Client.Web
 				case "ExtVideo":
 					return pbExtVideo;
 
+				case "ExtAudio2":
+					return pbExtAudio2;
+
+				case "ExtCompressed2":
+					return pbExtCompressed2;
+
+				case "ExtDefault2":
+					return pbExtDefault2;
+
+				case "ExtVideo2":
+					return pbExtVideo2;
+
 				case "OverActive":
 					return pbOverActive;
 
@@ -270,6 +286,10 @@ namespace XG.Client.Web
 		byte[] pbExtCompressed;
 		byte[] pbExtDefault;
 		byte[] pbExtVideo;
+		byte[] pbExtAudio2;
+		byte[] pbExtCompressed2;
+		byte[] pbExtDefault2;
+		byte[] pbExtVideo2;
 
 		byte[] pbOverActive;
 		byte[] pbOverAttention;

@@ -29,18 +29,22 @@ using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	[Flags]
-	public enum BotState : byte
-	{
-		Idle,
-		Active,
-		Waiting
-	}
-
 	[Serializable]
 	[DataContract]
 	public class Bot : AObjects
 	{
+		#region FLAGS
+
+		[Flags]
+		public enum BotState : byte
+		{
+			Idle,
+			Active,
+			Waiting
+		}
+
+		#endregion
+
 		#region VARIABLES
 
 		public new Channel Parent
@@ -69,9 +73,9 @@ namespace XG.Core
 			get { return _currentQueuedPacket; }
 		}
 
-		BotState _state;
+		Bot.BotState _state;
 		[DataMember]
-		public BotState State
+		public Bot.BotState State
 		{
 			get { return _state; }
 			set
@@ -82,7 +86,7 @@ namespace XG.Core
 					Modified = true;
 				}
 
-				if(value == BotState.Waiting)
+				if(value == Bot.BotState.Waiting)
 				{
 					_currentQueuedPacket = OldestActivePacket();
 				}

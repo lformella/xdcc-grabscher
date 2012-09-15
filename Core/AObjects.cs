@@ -77,9 +77,9 @@ namespace XG.Core
 		}
 
 		List<AObject> _children;
-		protected IEnumerable<AObject> All
+		protected List<AObject> All
 		{
-			get { return _children.ToArray(); }
+			get { return _children; }
 		}
 		
 		[DataMember]

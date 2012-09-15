@@ -29,7 +29,7 @@ namespace XG.Core
 	#region FLAGS
 
 	[Flags]
-	public enum TCPClientRequest : byte
+	public enum ClientRequest : byte
 	{
 		None = 0,
 		Version = 1,

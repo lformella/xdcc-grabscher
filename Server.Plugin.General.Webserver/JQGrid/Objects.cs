@@ -1,5 +1,5 @@
 // 
-//  JQGridObject.cs
+//  Objects.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
