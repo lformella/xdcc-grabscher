@@ -147,7 +147,7 @@ namespace XG.Server
 					return;
 				}
 
-				Part.State = FilePart.FilePartState.Open;
+				Part.State = FilePart.States.Open;
 				Part.Packet = Packet;
 
 				_log.Info("ConnectionConnected() startet (" + StartSize + " - " + StopSize + ")");
@@ -199,7 +199,7 @@ namespace XG.Server
 					Packet.Part = Part;
 					Packet.Commit();
 
-					Packet.Parent.State = Bot.BotState.Active;
+					Packet.Parent.State = Bot.States.Active;
 					Packet.Parent.QueuePosition = 0;
 					Packet.Parent.QueueTime = 0;
 					Packet.Parent.Commit();
@@ -238,17 +238,17 @@ namespace XG.Server
 			Packet.Part = null;
 			Packet.Commit();
 
-			Packet.Parent.State = Bot.BotState.Idle;
+			Packet.Parent.State = Bot.States.Idle;
 			Packet.Parent.Commit();
 
 			if (Part != null)
 			{
 				Part.Packet = null;
-				Part.State = FilePart.FilePartState.Closed;
+				Part.State = FilePart.States.Closed;
 
 				if (RemovePart)
 				{
-					Part.State = FilePart.FilePartState.Broken;
+					Part.State = FilePart.States.Broken;
 					FileActions.RemovePart(File, Part);
 				}
 				else
@@ -256,7 +256,7 @@ namespace XG.Server
 					// the file is ok if the size is equal or it has an additional buffer for checking
 					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheck))
 					{
-						Part.State = FilePart.FilePartState.Ready;
+						Part.State = FilePart.States.Ready;
 						_log.Info("ConnectionDisconnected() ready" + (Part.Checked ? "" : " but unchecked"));
 
 						// statistics
@@ -265,7 +265,7 @@ namespace XG.Server
 					// that should not happen
 					else if (CurrrentSize > StopSize)
 					{
-						Part.State = FilePart.FilePartState.Broken;
+						Part.State = FilePart.States.Broken;
 						_log.Error("ConnectionDisconnected() size is bigger than excepted: " + CurrrentSize + " > " + StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
 						if (File.Parts.Count() == 1 || Part.StopSize == File.Size)

@@ -74,7 +74,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 				LastMessage = "Test Message",
 				QueuePosition = 16,
 				QueueTime = 16,
-				State = Bot.BotState.Idle,
+				State = Bot.States.Idle,
 				LastContact = new DateTime(2012, 08, 05, 03, 45, 44)
 			};
 			bot.AddPacket(packet);

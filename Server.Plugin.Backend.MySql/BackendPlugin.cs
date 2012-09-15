@@ -310,7 +310,7 @@ namespace XG.Server.Plugin.Backend.MySql
 				bot.Name = (string)aDic ["Name"];
 				bot.Connected = false;
 				bot.Enabled = (bool)aDic ["Enabled"];
-				bot.State = Bot.BotState.Idle;
+				bot.State = Bot.States.Idle;
 				bot.InfoQueueCurrent = (int)aDic ["InfoQueueCurrent"];
 				bot.InfoQueueTotal = (int)aDic ["InfoQueueTotal"];
 				bot.InfoSlotCurrent = (int)aDic ["InfoSlotCurrent"];

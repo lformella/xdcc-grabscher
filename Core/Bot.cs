@@ -36,7 +36,7 @@ namespace XG.Core
 		#region FLAGS
 
 		[Flags]
-		public enum BotState : byte
+		public enum States : byte
 		{
 			Idle,
 			Active,
@@ -73,9 +73,9 @@ namespace XG.Core
 			get { return _currentQueuedPacket; }
 		}
 
-		Bot.BotState _state;
+		Bot.States _state;
 		[DataMember]
-		public Bot.BotState State
+		public Bot.States State
 		{
 			get { return _state; }
 			set
@@ -86,7 +86,7 @@ namespace XG.Core
 					Modified = true;
 				}
 
-				if(value == Bot.BotState.Waiting)
+				if(value == Bot.States.Waiting)
 				{
 					_currentQueuedPacket = OldestActivePacket();
 				}

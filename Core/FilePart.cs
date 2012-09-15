@@ -33,7 +33,7 @@ namespace XG.Core
 		#region FLAGS
 
 		[Flags]
-		public enum FilePartState : byte
+		public enum States : byte
 		{
 			Open,
 			Closed,
@@ -163,9 +163,9 @@ namespace XG.Core
 			}
 		}
 
-		FilePart.FilePartState _state;
+		FilePart.States _state;
 		[DataMember]
-		public FilePart.FilePartState State
+		public FilePart.States State
 		{
 			get { return _state; }
 			set
@@ -173,8 +173,8 @@ namespace XG.Core
 				if (_state != value)
 				{
 					_state = value;
-					if (_state != FilePart.FilePartState.Open) { _speed = 0; }
-					if (_state == FilePart.FilePartState.Ready) { _currentSize = _stopSize; }
+					if (_state != FilePart.States.Open) { _speed = 0; }
+					if (_state == FilePart.States.Ready) { _currentSize = _stopSize; }
 					Modified = true;
 				}
 			}

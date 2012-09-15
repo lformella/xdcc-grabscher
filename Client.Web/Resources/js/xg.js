@@ -79,17 +79,17 @@ Enum.TangoColor =
 
 var Password = "";
 
-var id_server;
-var id_search;
+var idServer;
+var idSearch;
 
-var search_active = false;
-var search_mode = 0;
+var searchActive = false;
+var activeTab = 0;
 
 function JsonUrl(password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#show_offline_bots").attr('checked') ? "1" : "0" ) + "&request="; }
 function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
 function NameUrl(id, name) { return JsonUrl() + id + "&name=" + encodeURIComponent(name); }
 
-var id_search_count = 1;
+var idSearchCount = 1;
 
 var LANG_MONTH = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 var LANG_WEEKDAY = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
@@ -125,7 +125,7 @@ $(function()
 		{
 			if(id)
 			{
-				id_server = id;
+				idServer = id;
 				var serv = GetRowData('servers', id);
 				if(serv)
 				{
@@ -224,7 +224,7 @@ $(function()
 		url: "/",
 		serializeEditData: function (postdata)
 		{
-			return { password: escape(Password), request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: id_server };
+			return { password: escape(Password), request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: idServer };
 		}
 	},
 	{
@@ -260,7 +260,7 @@ $(function()
 		{
 			if(id)
 			{
-				search_active = false;
+				searchActive = false;
 				ReloadGrid("packets", GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id));
 			}
 		},
@@ -355,7 +355,7 @@ $(function()
 		],
 		onSelectRow: function(id)
 		{
-			search_active = true;
+			searchActive = true;
 			if(id)
 			{
 				var data = jQuery("#searches").getRowData(id);
@@ -380,7 +380,7 @@ $(function()
 						url2 = NameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=enabled";
 						break;
 					default:
-						switch(search_mode)
+						switch(activeTab)
 						{
 							case 0:
 								url1 = NameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=name";
@@ -401,7 +401,7 @@ $(function()
 				{
 					ReloadGrid("packets", url2);
 				}
-				id_search = id;
+				idSearch = id;
 			}
 		},
 		pager: jQuery('#searches_pager'),
@@ -428,7 +428,7 @@ $(function()
 	for(var i=0; i<=mydata.length; i++)
 	{
 		jQuery("#searches").addRowData(i + 1, mydata[i]);
-		id_search_count++;
+		idSearchCount++;
 	}
 
 	/* ************************************************************************************************************** */
@@ -605,7 +605,7 @@ $(function()
 	$("#tabs").tabs({
 		select: function(event, ui)
 		{
-			search_mode = ui.index;
+			activeTab = ui.index;
 		}
 	});
 
@@ -631,12 +631,12 @@ function AddSearch(search)
 {
 	var datarow =
 	{
-		Id: id_search_count,
+		Id: idSearchCount,
 		Name: search,
-		Action: "<div class='remove_button' onclick='RemoveSearch(" + id_search_count + ");'></div>"
+		Action: "<div class='remove_button' onclick='RemoveSearch(" + idSearchCount + ");'></div>"
 	};
-	jQuery("#searches").addRowData(id_search_count, datarow);
-	id_search_count++;
+	jQuery("#searches").addRowData(idSearchCount, datarow);
+	idSearchCount++;
 }
 
 function RemoveSearch(id)
@@ -645,7 +645,7 @@ function RemoveSearch(id)
 	{
 		return;
 	}
-	var data = GetRowData('searches', id);
+	var data = jQuery("#searches").getRowData(id);
 	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
 	jQuery('#searches').delRowData(id);
 }
@@ -748,26 +748,54 @@ function RefreshGrid(count)
 	// connected things every 2,5 seconds, waiting just every 25 seconds
 	var mod = !!(count % 10 == 0);
 
-	// refresh bot grid
-	var ids = jQuery("#bots").getDataIDs();
-	for (var i = 0; i < ids.length; i++)
+	switch(activeTab)
 	{
-		var bot = GetRowData("bots", ids[i]);
-		if(bot.State == 1 || (mod && bot.State == 2))
-		{
-			RefreshObject("bots", ids[i]);
-		}
-	}
+		case 0:
+			// refresh bot grid
+			$.each(jQuery("#bots").getDataIDs(), function(i, id)
+			{
+				var bot = GetRowData("bots", id);
+				if(bot.State == 1 || (mod && bot.State == 2))
+				{
+					RefreshObject("bots", id);
+				}
+			});
 
-	// refresh packet grid
-	ids = jQuery("#packets").getDataIDs();
-	for (i = 0; i < ids.length; i++)
-	{
-		var pack = GetRowData("packets", ids[i]);
-		if(pack.Connected || (mod && pack.Enabled))
-		{
-			RefreshObject("packets", ids[i]);
-		}
+			// refresh packet grid
+			$.each(jQuery("#packets").getDataIDs(), function(i, id)
+			{
+				var pack = GetRowData("packets", id);
+				if(pack.Connected || (mod && pack.Enabled))
+				{
+					RefreshObject("packets", id);
+				}
+			});
+			break;
+
+		case 1:
+			break;
+
+		case 2:
+			$.each(jQuery("#files").getDataIDs(), function(i, id)
+			{
+				var file = GetRowData("files", id);
+
+				var state = -1;
+				$.each(file.Parts, function(i, part)
+				{
+					state = part.State;
+					if (state == 0)
+					{
+						return false;
+					}
+				});
+
+				if(state == 0)
+				{
+					RefreshObject("files", id);
+				}
+			});
+			break;
 	}
 
 	setTimeout("RefreshGrid(" + (count + 1) +")", 2500);

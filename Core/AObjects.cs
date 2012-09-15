@@ -79,7 +79,7 @@ namespace XG.Core
 		List<AObject> _children;
 		protected List<AObject> All
 		{
-			get { return _children; }
+			get { return _children.ToList(); }
 		}
 		
 		[DataMember]
