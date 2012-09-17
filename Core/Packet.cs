@@ -39,12 +39,12 @@ namespace XG.Core
 		}
 
 		[NonSerialized]
-		FilePart part;
+		FilePart _part;
 		[DataMember]
 		public FilePart Part
 		{
-			get { return part; }
-			set { part = value; }
+			get { return _part; }
+			set { _part = value; }
 		}
 
 		[DataMember]
@@ -56,97 +56,97 @@ namespace XG.Core
 				// iam updated if the packet name changes
 				if (base.Name != value)
 				{
-					lastUpdated = DateTime.Now;
+					_lastUpdated = DateTime.Now;
 				}
 				base.Name = value;
 			}
 		}
 
-		int id = -1;
+		int _id = -1;
 		[DataMember]
 		public int Id
 		{
-			get { return id; }
+			get { return _id; }
 			set
 			{
-				if (id != value)
+				if (_id != value)
 				{
-					id = value;
+					_id = value;
 					Modified = true;
 				}
 			}
 		}
 
-		Int64 size = 0;
+		Int64 _size = 0;
 		[DataMember]
 		public Int64 Size
 		{
-			get { return size; }
+			get { return _size; }
 			set
 			{
-				if (size != value)
+				if (_size != value)
 				{
-					size = value;
+					_size = value;
 					Modified = true;
 				}
 			}
 		}
 
-		Int64 realSize = 0;
+		Int64 _realSize = 0;
 		[DataMember]
 		public Int64 RealSize
 		{
-			get { return realSize; }
+			get { return _realSize; }
 			set
 			{
-				if (realSize != value)
+				if (_realSize != value)
 				{
-					realSize = value;
+					_realSize = value;
 					Modified = true;
 				}
 			}
 		}
 
-		string realName = "";
+		string _realName = "";
 		[DataMember]
 		public string RealName
 		{
-			get { return realName; }
+			get { return _realName; }
 			set
 			{
-				if (realName != value)
+				if (_realName != value)
 				{
-					realName = value;
+					_realName = value;
 					Modified = true;
 				}
 			}
 		}
 
-		DateTime lastUpdated = DateTime.MinValue;
+		DateTime _lastUpdated = DateTime.MinValue;
 		[DataMember]
 		public DateTime LastUpdated
 		{
-			get { return lastUpdated; }
+			get { return _lastUpdated; }
 			set
 			{
-				if (lastUpdated != value)
+				if (_lastUpdated != value)
 				{
-					lastUpdated = value;
+					_lastUpdated = value;
 					Modified = true;
 				}
 			}
 		}
 
-		DateTime lastMentioned = DateTime.MinValue;
+		DateTime _lastMentioned = DateTime.MinValue;
 		[DataMember]
 		public DateTime LastMentioned
 		{
-			get { return lastMentioned; }
+			get { return _lastMentioned; }
 			set
 			{
-				if (lastMentioned != value)
+				if (_lastMentioned != value)
 				{
-					lastMentioned = value;
+					_lastMentioned = value;
 					Modified = true;
 				}
 			}

@@ -33,9 +33,8 @@ namespace XG.Core
 	[DataContract]
 	public class Bot : AObjects
 	{
-		#region FLAGS
+		#region ENUMS
 
-		[Flags]
 		public enum States : byte
 		{
 			Idle,

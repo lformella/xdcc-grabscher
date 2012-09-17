@@ -892,6 +892,8 @@ function FlipPacket(id)
 	{
 		if(!pack.Enabled)
 		{
+			$("#" + id).effect("transfer", { to: $("#4") }, 500);
+
 			$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
 			setTimeout("RefreshObject('packets', '" + id + "')", 1000);
 		}

@@ -26,9 +26,8 @@ using System.Text.RegularExpressions;
 
 namespace XG.Core
 {
-	#region FLAGS
+	#region ENUMS
 
-	[Flags]
 	public enum ClientRequest : byte
 	{
 		None = 0,
@@ -62,7 +61,6 @@ namespace XG.Core
 		CloseServer = 21
 	}
 
-	[Flags]
 	public enum SocketErrorCode : int
 	{
 		None							= 0,

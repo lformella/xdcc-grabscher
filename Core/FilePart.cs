@@ -30,9 +30,8 @@ namespace XG.Core
 	[DataContract]
 	public class FilePart : AObject
 	{
-		#region FLAGS
+		#region ENUMS
 
-		[Flags]
 		public enum States : byte
 		{
 			Open,
