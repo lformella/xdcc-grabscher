@@ -82,6 +82,7 @@ var Password = "";
 var idServer;
 var idSearch;
 
+var initialLoad = true;
 var searchActive = false;
 var activeTab = 0;
 
@@ -404,6 +405,15 @@ $(function()
 				idSearch = id;
 			}
 		},
+		afterInsertRow: function (id)
+		{
+			if (!initialLoad)
+			{
+				//$("#" + id).width($("#4").width());
+				//$("#" + id).hide().show('slide', {}, 500);
+				$("#search-text").effect("transfer", { to: $("#" + id) }, 500);
+			}
+		},
 		pager: jQuery('#searches_pager'),
 		pgbuttons: false,
 		pginput: false,
@@ -533,6 +543,7 @@ $(function()
 		height: 200,
 		modal: true,
 		resizable: false,
+		hide: 'explode',
 		buttons: {
 			'Connect': function()
 			{
@@ -647,6 +658,9 @@ function RemoveSearch(id)
 	}
 	var data = jQuery("#searches").getRowData(id);
 	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
+	//$("#" + id).width($("#4").width());
+	//$("#" + id).hide('slide', {}, 500);
+	$("#" + id).effect("transfer", { to: $("#search-text") }, 500);
 	jQuery('#searches').delRowData(id);
 }
 
@@ -699,6 +713,8 @@ function ButtonConnectClicked(dialog)
 
 		// start the refresh
 		RefreshGrid(0);
+		
+		initialLoad = false;
 	}
 	else
 	{
@@ -806,6 +822,7 @@ function RefreshObject(grid, guid)
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
 		{
+			result.cell.Object = JSON.stringify(result.cell);
 			result.cell.Icon = "";
 			
 			if(grid == "packets")
@@ -899,8 +916,18 @@ function FlipPacket(id)
 		}
 		else
 		{
+			$("#4").effect("transfer", { to: $("#" + id) }, 500);
+			
 			$.get(GuidUrl(Enum.TCPClientRequest.DeactivateObject, id));
-			setTimeout("ReloadGrid('packets')", 1000);
+			
+			if (idSearch == 3 || idSearch == 3)
+			{
+				setTimeout("ReloadGrid('packets')", 1000);
+			}
+			else
+			{
+				setTimeout("RefreshObject('packets', '" + id + "')", 1000);
+			}
 		}
 	}				
 }
