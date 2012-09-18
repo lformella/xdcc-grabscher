@@ -167,6 +167,7 @@ namespace XG.Server.Plugin.General.Webserver
 						# region VERSION
 
 						case ClientRequest.Version:
+							client.Response.ContentType = "text/plain";
 							response = Settings.Instance.XgVersion;
 							break;
 
@@ -248,6 +249,7 @@ namespace XG.Server.Plugin.General.Webserver
 							break;
 
 						case ClientRequest.Searches:
+							client.Response.ContentType = "text/json";
 							response = Searches2Json(Searches);
 							break;
 
@@ -412,10 +414,23 @@ namespace XG.Server.Plugin.General.Webserver
 
 						if (str.EndsWith(".png"))
 						{
+							client.Response.ContentType = "image/png";
 							WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str));
 						}
 						else
 						{
+							if (str.EndsWith(".css"))
+							{
+								client.Response.ContentType = "text/css";
+							}
+							else if (str.EndsWith(".js"))
+							{
+								client.Response.ContentType = "application/x-javascript";
+							}
+							else if (str.EndsWith(".html"))
+							{
+								client.Response.ContentType = "text/html;charset=UTF-8";
+							}
 							WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
 						}
 					}
@@ -727,6 +742,5 @@ namespace XG.Server.Plugin.General.Webserver
 		}
 
 		#endregion
-
 	}
 }
