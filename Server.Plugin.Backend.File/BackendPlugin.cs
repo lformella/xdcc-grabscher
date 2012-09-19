@@ -185,7 +185,7 @@ namespace XG.Server.Plugin.Backend.File
 				streamWrite.Close();
 				FileSystem.DeleteFile(aFile + ".bak");
 				FileSystem.MoveFile(aFile, aFile + ".bak");
-				System.IO.File.Move(aFile + ".new", aFile);
+				FileSystem.MoveFile(aFile + ".new", aFile);
 				_log.Debug("Save(" + aFile + ")");
 			}
 			catch (Exception ex)
