@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Web;
@@ -148,7 +149,10 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 
 					// no pass, no way
-					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != Settings.Instance.Password)
+					byte[] inputBytes = Encoding.UTF8.GetBytes(Settings.Instance.Password);
+					byte[] hashedBytes = new SHA256Managed().ComputeHash(inputBytes);
+					string passwortHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != passwortHash)
 					{
 						//throw new Exception("Password wrong!");
 						client.Response.StatusCode = 403;

@@ -97,6 +97,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sr-latin.js" resource_id="Client.Web.Resources.js.i18n.grid.locale-sr-latin.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/xg.css" resource_id="Client.Web.Resources.css.xg.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/json2.min.js" resource_id="Client.Web.Resources.js.json2.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/sha256.js" resource_id="Client.Web.Resources.js.sha256.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

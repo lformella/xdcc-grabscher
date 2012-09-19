@@ -670,12 +670,12 @@ function RemoveSearch(id)
 
 function ButtonConnectClicked(dialog)
 {
-	var bValid = CheckPassword($("#password").val());
+	var password = CryptoJS.SHA256($("#password").val());
 
-	if (bValid)
+	if (CheckPassword(password))
 	{
 		$("#password").removeClass('ui-state-error');
-		SetPassword($("#password").val());
+		SetPassword(password);
 		dialog.dialog('close');
 
 		// Get searches

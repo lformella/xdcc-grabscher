@@ -180,6 +180,7 @@
     <EmbeddedResource Include="Resources\js\xg.formatter.js" />
     <EmbeddedResource Include="Resources\js\xg.helper.js" />
     <EmbeddedResource Include="Resources\js\json2.min.js" />
+    <EmbeddedResource Include="Resources\js\sha256.js" />
   </ItemGroup>
   <ItemGroup />
 </Project>
