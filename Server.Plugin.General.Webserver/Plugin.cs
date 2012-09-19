@@ -165,6 +165,7 @@ namespace XG.Server.Plugin.General.Webserver
 					#region DATA HANDLING
 
 					string response = "";
+					client.Response.AddHeader("Cache-Control", "no-cache");
 
 					switch (tMessage)
 					{
