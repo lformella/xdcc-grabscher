@@ -42,9 +42,11 @@ namespace XG.Server.Plugin.General.Webserver
 		#region VARIABLES
 
 		static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
+		static readonly string _salt = "6v8vva4&V/B(n9/6nfND4ss786I)Mo";
 
 		Thread _serverThread;
 		HttpListener _listener;
+
 		#endregion
 
 		#region RUN STOP
@@ -149,7 +151,7 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 
 					// no pass, no way
-					byte[] inputBytes = Encoding.UTF8.GetBytes(Settings.Instance.Password);
+					byte[] inputBytes = Encoding.UTF8.GetBytes(_salt + Settings.Instance.Password + _salt);
 					byte[] hashedBytes = new SHA256Managed().ComputeHash(inputBytes);
 					string passwortHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != passwortHash)

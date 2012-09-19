@@ -670,7 +670,7 @@ function RemoveSearch(id)
 
 function ButtonConnectClicked(dialog)
 {
-	var password = CryptoJS.SHA256($("#password").val());
+	var password = CryptoJS.SHA256(salt + $("#password").val() + salt);
 
 	if (CheckPassword(password))
 	{
