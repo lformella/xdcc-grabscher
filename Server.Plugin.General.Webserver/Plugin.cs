@@ -41,7 +41,7 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 
-		static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
+		static readonly ILog _log = LogManager.GetLogger(typeof(Plugin));
 		static readonly string _salt = "6v8vva4&V/B(n9/6nfND4ss786I)Mo";
 
 		Thread _serverThread;
@@ -100,7 +100,7 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 					catch (Exception ex)
 					{
-						log.Fatal("OpenServer() client", ex);
+						_log.Fatal("OpenServer() client", ex);
 					}
 #endif
 				}
@@ -108,7 +108,7 @@ namespace XG.Server.Plugin.General.Webserver
 			}
 			catch (Exception ex)
 			{
-				log.Fatal("OpenServer() server", ex);
+				_log.Fatal("OpenServer() server", ex);
 			}
 #endif
 		}
@@ -132,7 +132,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 			Dictionary<string, string> tDic = new Dictionary<string, string>();
 			string str = client.Request.RawUrl;
-			log.Debug("OpenClient() " + str);
+			_log.Debug("OpenClient() " + str);
 
 #if !UNSAFE
 			try
@@ -451,7 +451,7 @@ namespace XG.Server.Plugin.General.Webserver
 					client.Response.Close();
 				}
 				catch {}
-				log.Fatal("OpenClient(" + str + ")", ex);
+				_log.Fatal("OpenClient(" + str + ")", ex);
 			}
 #endif
 		}
