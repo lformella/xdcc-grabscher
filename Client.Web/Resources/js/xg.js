@@ -82,7 +82,6 @@ var Password = "";
 var idServer;
 var idSearch;
 
-var initialLoad = true;
 var searchActive = false;
 var activeTab = 0;
 
@@ -405,15 +404,6 @@ $(function()
 				idSearch = id;
 			}
 		},
-		afterInsertRow: function (id)
-		{
-			if (!initialLoad)
-			{
-				//$("#" + id).width($("#4").width());
-				//$("#" + id).hide().show('slide', {}, 500);
-				$("#search-text").effect("transfer", { to: $("#" + id) }, 500);
-			}
-		},
 		pager: jQuery('#searches_pager'),
 		pgbuttons: false,
 		pginput: false,
@@ -633,8 +623,10 @@ function AddNewSearch()
 	if(tbox.val() != "")
 	{
 		$.get(NameUrl(Enum.TCPClientRequest.AddSearch, tbox.val()));
-		AddSearch(tbox.val());
+		var id = AddSearch(tbox.val());
 		tbox.val('');
+
+		$("#search-text").effect("transfer", { to: $("#" + id) }, 500);
 	}
 }
 
@@ -647,7 +639,7 @@ function AddSearch(search)
 		Action: "<div class='remove_button' onclick='RemoveSearch(" + idSearchCount + ");'></div>"
 	};
 	jQuery("#searches").addRowData(idSearchCount, datarow);
-	idSearchCount++;
+	return idSearchCount++;
 }
 
 function RemoveSearch(id)
@@ -658,8 +650,7 @@ function RemoveSearch(id)
 	}
 	var data = jQuery("#searches").getRowData(id);
 	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
-	//$("#" + id).width($("#4").width());
-	//$("#" + id).hide('slide', {}, 500);
+
 	$("#" + id).effect("transfer", { to: $("#search-text") }, 500);
 	jQuery('#searches').delRowData(id);
 }
@@ -713,8 +704,6 @@ function ButtonConnectClicked(dialog)
 
 		// start the refresh
 		RefreshGrid(0);
-		
-		initialLoad = false;
 	}
 	else
 	{
