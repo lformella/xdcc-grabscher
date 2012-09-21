@@ -74,7 +74,10 @@
     <Compile Include="Connection\AConnection.cs" />
     <Compile Include="Connection\AIrcConnection.cs" />
     <Compile Include="Connection\Connection.cs" />
+    <Compile Include="Helper\Process.cs" />
     <Compile Include="Helper\FileActions.cs" />
+    <Compile Include="Helper\FileHandler.cs" />
+    <Compile Include="Helper\FileHandlerProcess.cs" />
     <Compile Include="Helper\Filesystem.cs" />
     <Compile Include="Helper\IrcParser.cs" />
     <Compile Include="Helper\PartBytesObject.cs" />

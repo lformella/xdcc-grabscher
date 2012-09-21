@@ -9,11 +9,38 @@
   <ClearReadyDownloads>true</ClearReadyDownloads>
   <Password>xgisgreat</Password>
   <BackupDataTime>900000</BackupDataTime>
-  <FileHandler>
-    <string>.*#mv %PATH% %FOLDER%/_%FILE%</string>
-  </FileHandler>
-  <StartTCPServer>false</StartTCPServer>
-  <TcpServerPort>5555</TcpServerPort>
+  <FileHandlers>
+    <FileHandler>
+      <Regex>.*\.rar</Regex>
+      <Process>
+        <Command>mkdir</Command>
+        <Arguments>%PATH%_</Arguments>
+        <Next>
+          <Command>unrar</Command>
+          <Arguments>e -p- %PATH% %PATH%_</Arguments>
+          <Next>
+            <Command>rm</Command>
+            <Arguments>%PATH%</Arguments>
+            <Next>
+              <Command>mv</Command>
+              <Arguments>%PATH%_ %PATH%</Arguments>
+            </Next>
+          </Next>
+        </Next>
+      </Process>
+    </FileHandler>
+    <FileHandler>
+      <Regex>.*\.zip</Regex>
+      <Process>
+        <Command>unzip</Command>
+        <Arguments>%PATH%</Arguments>
+        <Next>
+          <Command>rm</Command>
+          <Arguments>%PATH%</Arguments>
+        </Next>
+      </Process>
+    </FileHandler>
+  </FileHandlers>
   <StartWebServer>true</StartWebServer>
   <WebServerPort>5556</WebServerPort>
   <AutoJoinOnInvite>true</AutoJoinOnInvite>

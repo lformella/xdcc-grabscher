@@ -118,7 +118,7 @@ namespace XG.Server
 
 			Password = "xgisgreat";
 			BackupDataTime = 900000;
-			FileHandler = new string[] { "" };
+			FileHandlers = new FileHandler[0];
 
 			StartWebServer = true;
 			WebServerPort = 5556;
@@ -292,8 +292,6 @@ namespace XG.Server
 
 		public long BackupDataTime { get; set; }
 
-		public string[] FileHandler { get; set; }
-
 		public bool StartWebServer { get; set; }
 
 		public bool StartJabberClient { get; set; }
@@ -317,6 +315,8 @@ namespace XG.Server
 		public bool AutoJoinOnInvite { get; set; }
 
 		public bool AutoRegisterNickserv { get; set; }
+
+		public FileHandler[] FileHandlers { get; set; }
 
 		#endregion
 	}

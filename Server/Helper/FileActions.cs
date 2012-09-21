@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -634,44 +633,50 @@ namespace XG.Server.Helper
 				int pos = aFile.LastIndexOf('/');
 				string folder = aFile.Substring(0, pos);
 				string file = aFile.Substring(pos + 1);
-
+	
 				pos = file.LastIndexOf('.');
-				string filename = pos != -1 ? file.Substring(0, pos) : file;
-				string fileext = pos != -1 ? file.Substring(pos + 1) : "";
+				string fileName = pos != -1 ? file.Substring(0, pos) : file;
+				string fileExtension = pos != -1 ? file.Substring(pos + 1) : "";
 
-				foreach (string line in Settings.InstanceReload.FileHandler)
+				foreach (FileHandler handler in Settings.InstanceReload.FileHandlers)
 				{
-					if (string.IsNullOrEmpty(line)) { continue; }
-					string[] values = line.Split('#');
-
-					Match tMatch = Regex.Match(file, values[0], RegexOptions.IgnoreCase);
-					if (tMatch.Success)
+					try
 					{
-						for (int a = 1; a < values.Length; a++)
+						Match tMatch = Regex.Match(aFile, handler.Regex, RegexOptions.IgnoreCase);
+						if (tMatch.Success)
 						{
-							pos = values[a].IndexOf(' ');
-							string process = values[a].Substring(0, pos);
-							string arguments = values[a].Substring(pos + 1);
-
-							arguments = arguments.Replace("%PATH%", aFile);
-							arguments = arguments.Replace("%FOLDER%", folder);
-							arguments = arguments.Replace("%FILE%", file);
-							arguments = arguments.Replace("%FILENAME%", filename);
-							arguments = arguments.Replace("%EXTENSION%", fileext);
-
-							try
-							{
-								Process p = Process.Start(process, arguments);
-								// TODO should we block all other procs?!
-								p.WaitForExit();
-							}
-							catch (Exception ex)
-							{
-								_log.Fatal("HandleFile(" + aFile + ") Process.Start(" + process + ", " + arguments + ")", ex);
-							}
+							RunFileHandlerProcess(handler.Process, aFile, folder, file, fileName, fileExtension);
 						}
 					}
+					catch (Exception ex)
+					{
+						_log.Fatal("RunFileHandler(" + aFile + ") Regex Error (" + handler.Regex + ")", ex);
+					}
 				}
+			}
+		}
+
+		void RunFileHandlerProcess (FileHandlerProcess aHandler, string aPath, string aFolder, string aFile, string aFileName, string aFileExtension)
+		{
+			if (aHandler == null || string.IsNullOrEmpty(aHandler.Command) || string.IsNullOrEmpty(aHandler.Arguments))
+			{
+				return;
+			}
+
+			string arguments = aHandler.Arguments;
+			arguments = arguments.Replace("%PATH%", aPath);
+			arguments = arguments.Replace("%FOLDER%", aFolder);
+			arguments = arguments.Replace("%FILE%", aFile);
+			arguments = arguments.Replace("%FILENAME%", aFileName);
+			arguments = arguments.Replace("%EXTENSION%", aFileExtension);
+
+			Process p = new Process();
+			p.Command = aHandler.Command;
+			p.Arguments = arguments;
+
+			if (p.Run())
+			{
+				RunFileHandlerProcess(aHandler.Next, aPath, aFolder, aFile, aFileName, aFileExtension);
 			}
 		}
 
