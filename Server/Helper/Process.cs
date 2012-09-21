@@ -36,8 +36,8 @@ namespace XG.Server.Helper
 
 		public string Command { get; set; }
 		public string Arguments { get; set; }
-		public string Output { get; set; }
-		public string Error { get; set; }
+		public string Output { get; private set; }
+		public string Error { get; private set; }
 
 		#endregion
 
