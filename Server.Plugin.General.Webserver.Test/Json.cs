@@ -23,16 +23,28 @@
 
 using System;
 
+#if !WINDOWS
 using NUnit.Framework;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 using XG.Core;
 
 namespace XG.Server.Plugin.General.Webserver.Test
 {
-	[TestFixture()]
+#if !WINDOWS
+    [TestFixture()]
+#else
+    [TestClass]
+#endif
 	public class Json
 	{
-		[Test()]
+#if !WINDOWS
+        [Test()]
+#else
+        [TestMethod]
+#endif
 		public void Serialize()
 		{
 			var part = new FilePart

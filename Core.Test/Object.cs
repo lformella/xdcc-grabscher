@@ -23,16 +23,28 @@
 
 using System;
 
+#if !WINDOWS
 using NUnit.Framework;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace XG.Core.Test
 {
+#if !WINDOWS
 	[TestFixture()]
+#else
+    [TestClass]
+#endif
 	public class Object
 	{
 		bool _modified = false;
 
-		[Test()]
+#if !WINDOWS
+        [Test()]
+#else
+        [TestMethod]
+#endif
 		public void Test ()
 		{
 			XG.Core.Object obj = new XG.Core.Object();

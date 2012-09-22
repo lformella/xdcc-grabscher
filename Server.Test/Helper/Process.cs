@@ -23,14 +23,26 @@
 
 using System.IO;
 
+#if !WINDOWS
 using NUnit.Framework;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace XG.Server.Helper.Test
 {
-	[TestFixture()]
+#if !WINDOWS
+    [TestFixture()]
+#else
+    [TestClass]
+#endif
 	public class Process
 	{
-		[Test()]
+#if !WINDOWS
+        [Test()]
+#else
+        [TestMethod]
+#endif
 		public void Run ()
 		{
 			string file = "test.txt";

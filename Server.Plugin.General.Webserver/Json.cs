@@ -39,7 +39,7 @@ namespace XG.Server.Plugin.General.Webserver
 			string jsonString = Encoding.UTF8.GetString(ms.ToArray());
 			ms.Close();
 
-			string p = @"\\/Date\(([0-9-]+)\)\\/";
+			string p = @"\\/Date\(([0-9-]+)(((\+|-)[0-9]+)|)\)\\/";
 			MatchEvaluator matchEvaluator = new MatchEvaluator(ConvertJsonDateToDateString);
 			Regex reg = new Regex(p);
 			jsonString = reg.Replace(jsonString, matchEvaluator);

@@ -1,117 +1,214 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="XG.Server.ServerHandler" Collapsed="true">
-    <Position X="3.5" Y="2.25" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>jABDRIAAJUAAAAQgAAEAQKAAAAAAkCABAAAEAIBJAAA=</HashCode>
-      <FileName>ServerHandler.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="FileRepository" />
-      <Property Name="IrcParser" />
-    </ShowAsAssociation>
-  </Class>
   <Class Name="XG.Core.File" Collapsed="true">
-    <Position X="6.75" Y="2.25" Width="1.5" />
+    <Position X="7.5" Y="5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.Server" Collapsed="true">
-    <Position X="5.75" Y="3.25" Width="1.5" />
+    <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="XG.Core.Packet" Collapsed="true">
-    <Position X="7.75" Y="3.25" Width="1.5" />
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <AssociationLine Name="Part" Type="XG.Core.FilePart" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.625" Y="2.13" />
+        <Point X="8.625" Y="3.065" />
+        <Point X="8.625" Y="3.065" />
+        <Point X="8.625" Y="4" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="Part" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="XG.Server.ServerConnection" Collapsed="true">
-    <Position X="3.5" Y="3.25" Width="1.5" />
+    <Position X="5" Y="1.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Events" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
+    <InheritanceLine Type="XG.Server.Connection.AIrcConnection" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="2.5" />
+        <Point X="5.812" Y="2.5" />
+        <Point X="5.812" Y="1.88" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="IrcParser" Type="XG.Server.Helper.IrcParser" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5" Y="1.375" />
+        <Point X="3.75" Y="1.375" />
+        <Point X="3.75" Y="1.009" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>EAgAAAIAFIAAACRBEAGAyAAAASAAAABAAAAAAgAABgI=</HashCode>
+      <HashCode>EAAAgAqAEYAEQUQAUYmAQAAAABAAAgBAAAQAAwAABAA=</HashCode>
       <FileName>ServerConnection.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="IrcParser" />
       <Property Name="Server" />
+      <Property Name="IrcParser" />
     </ShowAsAssociation>
   </Class>
   <Class Name="XG.Server.Helper.IrcParser" Collapsed="true">
-    <Position X="0.5" Y="3.25" Width="1.5" />
+    <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAACAABAAAQAAEAAAAAWggAIEAIhAAAAIAAAAAACBA=</HashCode>
+      <HashCode>AAAAAAABGIAADEEAEIEAQggAAAEIBAAAAAAAAAAABAA=</HashCode>
       <FileName>Helper\IrcParser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="XG.Server.Connection.AIrcConnection" Collapsed="true">
-    <Position X="5.75" Y="0.5" Width="1.5" />
+    <Position X="4" Y="2.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAgAAAAAAAAAACEAAAABQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>EAAAAACAAAAAAAEAAIAAAAAAAAAAAAAAAAQAAAAABAA=</HashCode>
       <FileName>Connection\AIrcConnection.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Parent" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="XG.Server.BotConnection" Collapsed="true">
-    <Position X="7.75" Y="0.5" Width="1.5" />
+    <Position X="5" Y="3" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Events" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
     </Compartments>
+    <InheritanceLine Type="XG.Server.Connection.AIrcConnection" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="2.5" />
+        <Point X="5.812" Y="2.5" />
+        <Point X="5.812" Y="3" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Packet" Type="XG.Core.Packet" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.5" Y="3.313" />
+        <Point X="6.875" Y="3.313" />
+        <Point X="6.875" Y="1.815" />
+        <Point X="7.5" Y="1.815" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="File" Type="XG.Core.File" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.812" Y="3.63" />
+        <Point X="5.812" Y="5.315" />
+        <Point X="7.5" Y="5.315" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Part" Type="XG.Core.FilePart" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.188" Y="3.63" />
+        <Point X="6.188" Y="4.315" />
+        <Point X="7.5" Y="4.315" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AggAAAAAIIAAACCBAIAAyAABAAAEgABAAQIAKMBQACQ=</HashCode>
+      <HashCode>EAEAggCAIIAAQEABAIAAAAAAAAAMgAAAgoQAAwhAIKA=</HashCode>
       <FileName>BotConnection.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
+      <Property Name="Packet" />
       <Property Name="File" />
+      <Property Name="Part" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XG.Server.Main">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="_ircParser" Type="XG.Server.Helper.IrcParser" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="2" Y="2.5" />
+        <Point X="2.659" Y="2.5" />
+        <Point X="2.659" Y="1.009" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Files" Type="XG.Core.Files" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.125" Y="3.284" />
+        <Point X="1.125" Y="4.625" />
+        <Point X="3.048" Y="4.625" />
+        <Point X="3.048" Y="5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Searches" Type="XG.Core.Objects" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.375" Y="3.284" />
+        <Point X="1.375" Y="3.659" />
+        <Point X="4.344" Y="3.659" />
+        <Point X="4.344" Y="5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Servers" Type="XG.Core.Servers" FixedFromPoint="true">
+      <Path>
+        <Point X="0.875" Y="3.284" />
+        <Point X="0.875" Y="5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAACFAAEIAAACAgAAAABCAAAAAoBAAAQAAFIA=</HashCode>
+      <FileName>Main.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_ircParser" />
+      <Field Name="_fileActions" />
+      <Property Name="Files" />
+      <Property Name="Searches" />
+      <Property Name="Servers" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XG.Server.Helper.FileActions" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABCQAAAIEAAgEAAAAAAAAAIAAAEgAABgBAAAAAEEIg=</HashCode>
+      <FileName>Helper\FileActions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XG.Core.Files" Collapsed="true">
+    <Position X="2.25" Y="5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="XG.Core.Objects" Collapsed="true">
+    <Position X="4" Y="5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="XG.Core.Servers" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="XG.Core.FilePart" Collapsed="true">
+    <Position X="7.5" Y="4" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="XG.Core.FilePart.States" Collapsed="true">
+        <TypeIdentifier />
+      </Enum>
+    </NestedTypes>
+    <AssociationLine Name="Packet" Type="XG.Core.Packet" FixedFromPoint="true">
+      <Path>
+        <Point X="7.812" Y="4" />
+        <Point X="7.812" Y="2.13" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier />
+    <ShowAsAssociation>
       <Property Name="Packet" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="XG.Server.MainInstance" Collapsed="true">
-    <Position X="3.5" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-      <Compartment Name="Events" Collapsed="true" />
-      <Compartment Name="Properties" Collapsed="true" />
-    </Compartments>
+  <Class Name="XG.Server.Servers" Collapsed="true">
+    <Position X="2.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAAAAEACByAAAEIEQoHBAAQAAAAAAAIAIQCCAIBIAAE=</HashCode>
-      <FileName>MainInstance.cs</FileName>
+      <HashCode>CAAAACACgAAQEEQiAIQAAAAAABAAAABAgAgAAAAAAAA=</HashCode>
+      <FileName>Servers.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="serverHandler" />
-      <Property Name="FileRepository" />
-      <Property Name="ObjectRepository" />
-    </ShowAsAssociation>
-  </Class>
-  <Class Name="XG.Core.Repository.File" Collapsed="true">
-    <Position X="0.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier />
-  </Class>
-  <Class Name="XG.Core.Repository.Object" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier />
   </Class>
   <Font Name="Tahoma" Size="8.25" />
 </ClassDiagram>

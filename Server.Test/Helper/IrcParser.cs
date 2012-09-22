@@ -23,13 +23,21 @@
 
 using System;
 
+#if !WINDOWS
 using NUnit.Framework;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 using XG.Core;
 
 namespace XG.Server.Helper.Test
 {
-	[TestFixture()]
+#if !WINDOWS
+    [TestFixture()]
+#else
+    [TestClass]
+#endif
 	public class IrcParser
 	{
 		XG.Core.Server _server;
@@ -54,7 +62,11 @@ namespace XG.Server.Helper.Test
 			_ircParser = new XG.Server.Helper.IrcParser();
 		}
 
-		[Test()]
+#if !WINDOWS
+        [Test()]
+#else
+        [TestMethod]
+#endif
 		public void ParseBandwidth ()
 		{
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s");
@@ -65,8 +77,12 @@ namespace XG.Server.Helper.Test
 			Assert.AreEqual(0, _bot.InfoSpeedCurrent);
 			Assert.AreEqual(231.4 * 1024, _bot.InfoSpeedMax);
 		}
-		
-		[Test()]
+
+#if !WINDOWS
+        [Test()]
+#else
+        [TestMethod]
+#endif
 		public void ParsePacketInfo ()
 		{
 			_ircParser.ParseData(_server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** 9 packs **  1 of 1 slot open, Min: 5.0kB/s, Record: 59.3kB/s");
@@ -85,8 +101,12 @@ namespace XG.Server.Helper.Test
 			Assert.AreEqual(13, _bot.InfoSlotCurrent);
 			Assert.AreEqual(15, _bot.InfoSlotTotal);
 		}
-		
-		[Test()]
+
+#if !WINDOWS
+        [Test()]
+#else
+        [TestMethod]
+#endif
 		public void ParsePackets ()
 		{
 			Packet tPack = null;

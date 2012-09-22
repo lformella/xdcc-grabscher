@@ -152,8 +152,7 @@ namespace XG.Core
 				}
 			}
 		}
-		
-		[DataMember]
+
 		DateTime _enabledTime = DateTime.MinValue;
 		public DateTime EnabledTime
 		{
