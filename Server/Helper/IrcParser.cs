@@ -46,7 +46,7 @@ namespace XG.Server.Helper
 		public Servers Parent { get; set; }
 		public FileActions FileActions { get; set; }
 
-		const string MAGICSTRING = "((\\*|:){2,3}|->|<-|)";
+		const string MAGICSTRING = @"((\*|:){2,3}|->|<-|)";
 
 		#endregion
 
@@ -1207,8 +1207,8 @@ namespace XG.Server.Helper
 				if (!isParsed)
 				{
 					// Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now
-					tMatch1 = Regex.Match(tData, MAGICSTRING + " (Closing Connection:|Transfer Completed)(?<reason>.*)", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(tData, MAGICSTRING + " (Schlie.e Verbindung:)(?<reason>.*)", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(tData, MAGICSTRING + " (Closing Connection|Transfer Completed)(?<reason>.*)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(tData, MAGICSTRING + " (Schlie.e Verbindung)(?<reason>.*)", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
@@ -1225,12 +1225,17 @@ namespace XG.Server.Helper
 						}
 						CreateTimer(aServer, tBot, Settings.Instance.CommandWaitTime, false);
 
-						tMatch3 = Regex.Match(tData, ".*\\s+JOIN (?<channel>[^\\s]+)\\s+.*", RegexOptions.IgnoreCase);
+						tMatch3 = Regex.Match(tData, @".*\s+JOIN (?<channel>[^\s]+).*", RegexOptions.IgnoreCase);
 						if(tMatch3.Success && Settings.Instance.AutoJoinOnInvite)
 						{
+							string channel = tMatch3.Groups["channel"].ToString();
+							if (!channel.StartsWith("#"))
+							{
+								channel = "#" + channel;
+							}
 							// ok, lets do a silent auto join
-							_log.Info("con_DataReceived() auto joining " + tMatch3.Groups["channel"].ToString());
-							SendData(aServer, "JOIN " + tMatch3.Groups["channel"].ToString());
+							_log.Info("con_DataReceived() auto joining " + channel);
+							SendData(aServer, "JOIN " + channel);
 						}
 					}
 				}
