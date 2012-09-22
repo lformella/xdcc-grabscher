@@ -31,7 +31,7 @@ namespace XG.Client
 		protected ImageLoader()
 		{
 			Assembly assembly = Assembly.GetAssembly(typeof(ImageLoader));
-			string name = assembly.GetName().Name;
+            string name = "XG." + assembly.GetName().Name;
 
 			Client = assembly.GetManifestResourceStream(name + ".Resources.client.png");
 

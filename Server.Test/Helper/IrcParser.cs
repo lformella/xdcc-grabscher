@@ -149,7 +149,7 @@ namespace XG.Server.Helper.Test
 			Assert.AreEqual(0, _bot.InfoSpeedCurrent);
 			Assert.AreEqual(231.4 * 1024, _bot.InfoSpeedMax);
 
-			Assert.IsNullOrEmpty(_parsingError);
+			Assert.AreEqual(true, string.IsNullOrEmpty(_parsingError));
 		}
 
 #if !WINDOWS
@@ -177,7 +177,7 @@ namespace XG.Server.Helper.Test
 			Assert.AreEqual(13, _bot.InfoSlotCurrent);
 			Assert.AreEqual(15, _bot.InfoSlotTotal);
 
-			Assert.IsNullOrEmpty(_parsingError);
+			Assert.AreEqual(true, string.IsNullOrEmpty(_parsingError));
 		}
 
 #if !WINDOWS
@@ -210,7 +210,7 @@ namespace XG.Server.Helper.Test
 			Assert.AreEqual((Int64)(2.2 * 1024 * 1024 * 1024), tPack.Size);
 			Assert.AreEqual("Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv", tPack.Name);
 
-			Assert.IsNullOrEmpty(_parsingError);
+			Assert.AreEqual(true, string.IsNullOrEmpty(_parsingError));
 		}
 
 #if !WINDOWS
@@ -227,7 +227,7 @@ namespace XG.Server.Helper.Test
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT NOTICE xg1_bitpir_at : ** Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now");
 			Assert.AreEqual("JOIN #MG-CHAT", _eventData);
 
-			Assert.IsNullOrEmpty(_parsingError);
+			Assert.AreEqual(true, string.IsNullOrEmpty(_parsingError));
 		}
 	}
 }

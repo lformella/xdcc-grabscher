@@ -68,7 +68,7 @@ namespace XG.Client.Web
 					return PatchLanguage(File.OpenText("./Resources" + aFile).ReadToEnd(), aLanguages);
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
-					string name = assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+                    string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					_dicStr.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
 					return _dicStr[aFile];
 #endif
@@ -104,7 +104,7 @@ namespace XG.Client.Web
 				{
 #endif
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
-					string name = assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+                    string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					Stream stream = assembly.GetManifestResourceStream(name);
 					byte[] data = new byte[stream.Length];
 					int offset = 0;
