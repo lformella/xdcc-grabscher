@@ -365,16 +365,16 @@ namespace XG.Server.Plugin.General.Webserver
 							serv.Enabled = true;
 
 							// checking channel
-							Channel chan = serv[channelName];
+							Channel chan = serv.Channel(channelName);
 							if(chan == null)
 							{
 								serv.AddChannel(channelName);
-								chan = serv[channelName];
+								chan = serv.Channel(channelName);
 							}
 							chan.Enabled = true;
 
 							// checking bot
-							Bot tBot = chan[botName];
+							Bot tBot = chan.Bot(botName);
 							if (tBot == null)
 							{
 								tBot = new Bot();
@@ -383,7 +383,7 @@ namespace XG.Server.Plugin.General.Webserver
 							}
 
 							// checking packet
-							Packet pack = tBot[packetId];
+							Packet pack = tBot.Packet(packetId);
 							if(pack == null)
 							{
 								pack = new Packet();

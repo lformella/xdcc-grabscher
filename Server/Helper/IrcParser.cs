@@ -90,8 +90,8 @@ namespace XG.Server.Helper
 					string tComCodeStr = tCommandList[1];
 					string tChannelName = tCommandList[2];
 
-					Channel tChan = aServer[tChannelName];
-					Bot tBot = aServer.BotByName(tUserName);
+					Channel tChan = aServer.Channel(tChannelName);
+					Bot tBot = aServer.Bot(tUserName);
 
 					if(tBot != null)
 					{
@@ -155,7 +155,7 @@ namespace XG.Server.Helper
 							}
 							else
 							{
-								tBot = aServer.BotByName(tUserName);
+								tBot = aServer.Bot(tUserName);
 								if (tBot != null)
 								{
 									tBot.Connected = false;
@@ -179,7 +179,7 @@ namespace XG.Server.Helper
 						}
 						else
 						{
-							tBot = aServer.BotByName(tUserName);
+							tBot = aServer.Bot(tUserName);
 							if (tBot != null)
 							{
 								_log.Warn("con_DataReceived() bot " + tBot.Name + " was killed from server?");
@@ -194,7 +194,7 @@ namespace XG.Server.Helper
 					else if (tComCodeStr == "JOIN")
 					{
 						tChannelName = tData;
-						tChan = aServer[tChannelName];
+						tChan = aServer.Channel(tChannelName);
 						if (tChan != null)
 						{
 							if (tBot != null)
@@ -331,8 +331,8 @@ namespace XG.Server.Helper
 
 		void HandleDataIntValues(XG.Core.Server aServer, string aData, string tData, int t_ComCode, string[] tCommandList)
 		{
-			Channel tChan = aServer[tCommandList[2]];
-			Bot tBot = aServer.BotByName(tCommandList[0].Split('!')[0]);
+			Channel tChan = aServer.Channel(tCommandList[2]);
+			Bot tBot = aServer.Bot(tCommandList[0].Split('!')[0]);
 
 			switch (t_ComCode)
 			{
@@ -348,7 +348,7 @@ namespace XG.Server.Helper
 				#region RPL_WHOISCHANNELS
 
 				case 319: // RPL_WHOISCHANNELS
-					tBot = aServer.BotByName(tCommandList[3]);
+					tBot = aServer.Bot(tCommandList[3]);
 					if (tBot != null)
 					{
 						string chanName = "";
@@ -357,7 +357,7 @@ namespace XG.Server.Helper
 						foreach (string chan in tChannelList)
 						{
 							chanName = "#" + chan.Split('#')[1];
-							if (aServer[chanName] != null)
+							if (aServer.Channel(chanName) != null)
 							{
 								addChan = false;
 								RequestFromBot(aServer, tBot);
@@ -377,14 +377,14 @@ namespace XG.Server.Helper
 				#region RPL_NAMREPLY
 
 				case 353: // RPL_NAMREPLY
-					tChan = aServer[tCommandList[4]];
+					tChan = aServer.Channel(tCommandList[4]);
 					if (tChan != null)
 					{
 						string[] tUsers = tData.Split(' ');
 						foreach (string user in tUsers)
 						{
 							string tUser = Regex.Replace(user, "^(@|!|%|\\+){1}", "");
-							tBot = tChan[tUser];
+							tBot = tChan.Bot(tUser);
 							if (tBot != null)
 							{
 								tBot.Connected = true;
@@ -406,7 +406,7 @@ namespace XG.Server.Helper
 				#region RPL_ENDOFNAMES
 
 				case 366: // RPL_ENDOFNAMES
-					tChan = aServer[tCommandList[3]];
+					tChan = aServer.Channel(tCommandList[3]);
 					if (tChan != null)
 					{
 						tChan.ErrorCode = 0;
@@ -445,7 +445,7 @@ namespace XG.Server.Helper
 				#region ERR_NOCHANMODES
 
 				case 477: // ERR_NOCHANMODES
-					tChan = aServer[tCommandList[3]];
+					tChan = aServer.Channel(tCommandList[3]);
 					// TODO should we nickserv register here?
 					/*if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
@@ -469,7 +469,7 @@ namespace XG.Server.Helper
 				#region ERR_TOOMANYCHANNELS
 
 				case 405:
-					tChan = aServer[tCommandList[3]];
+					tChan = aServer.Channel(tCommandList[3]);
 					if (tChan != null)
 					{
 						tChan.ErrorCode = t_ComCode;
@@ -490,7 +490,7 @@ namespace XG.Server.Helper
 				case 474: // ERR_BANNEDFROMCHAN
 				case 475: // ERR_BADCHANNELKEY
 				case 485: // ERR_UNIQOPPRIVSNEEDED
-					tChan = aServer[tCommandList[3]];
+					tChan = aServer.Channel(tCommandList[3]);
 					if (tChan != null)
 					{
 						tChan.ErrorCode = t_ComCode;
@@ -519,8 +519,8 @@ namespace XG.Server.Helper
 		void HandelDataPrivateMessage(XG.Core.Server aServer, string tData, string[] tCommandList)
 		{
 			string tUserName = tCommandList[0].Split('!')[0];
-			Channel tChan = aServer[tCommandList[2]];
-			Bot tBot = aServer.BotByName(tUserName);
+			Channel tChan = aServer.Channel(tCommandList[2]);
+			Bot tBot = aServer.Bot(tUserName);
 
 			#region VERSION
 
@@ -765,7 +765,7 @@ namespace XG.Server.Helper
 							try { tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString()); }
 							catch (Exception ex) { _log.Fatal("con_DataReceived() " + tBot.Name + " - can not parse packet id from string: " + tData, ex); return; }
 
-							Packet tPack = tBot[tPacketId];
+							Packet tPack = tBot.Packet(tPacketId);
 							if (tPack == null)
 							{
 								tPack = new Packet();
@@ -874,7 +874,7 @@ namespace XG.Server.Helper
 		void HandleDataNotice(XG.Core.Server aServer, string aData, string tData, string[] tCommandList)
 		{
 			string tUserName = tCommandList[0].Split('!')[0];
-			Bot tBot = aServer.BotByName(tUserName);
+			Bot tBot = aServer.Bot(tUserName);
 
 			#region BOT MESSAGES
 

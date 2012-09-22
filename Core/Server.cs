@@ -79,20 +79,17 @@ namespace XG.Core
 			get { return base.All.Cast<Channel>(); }
 		}
 
-		public Channel this[string name]
+		public Channel Channel(string aName)
 		{
-			get
-			{
-				return (Channel)base.Named(name);
-			}
+			return (Channel)base.Named(aName);
 		}
 
-		public Bot BotByName(string aName)
+		public Bot Bot(string aName)
 		{
 			Bot tBot = null;
 			foreach (Channel chan in base.All)
 			{
-				tBot = chan[aName];
+				tBot = chan.Bot(aName);
 				if (tBot != null) { break; }
 			}
 			return tBot;
@@ -107,7 +104,7 @@ namespace XG.Core
 		{
 			aChannel = aChannel.Trim().ToLower();
 			if (!aChannel.StartsWith("#")) { aChannel = "#" + aChannel; }
-			if (this[aChannel] == null)
+			if (Channel(aChannel) == null)
 			{
 				Channel tChannel = new Channel();
 				tChannel.Name = aChannel;

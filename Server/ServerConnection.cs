@@ -233,7 +233,7 @@ namespace XG.Server
 		void JoinChannel(Channel aChan)
 		{
 			// only join if the channel isnt connected
-			if (aChan != null && _server[aChan.Name] != null && !aChan.Connected)
+			if (aChan != null && _server.Channel(aChan.Name) != null && !aChan.Connected)
 			{
 				_log.Info("JoinChannel(" + aChan.Name + ")");
 				SendData("JOIN " + aChan.Name);

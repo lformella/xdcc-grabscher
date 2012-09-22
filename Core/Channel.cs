@@ -64,12 +64,9 @@ namespace XG.Core
 			get { return base.All.Cast<Bot>(); }
 		}
 
-		public Bot this[string name]
+		public Bot Bot(string aName)
 		{
-			get
-			{
-				return (Bot)base.Named(name);
-			}
+			return (Bot)base.Named(aName);
 		}
 
 		public void AddBot(Bot aBot)

@@ -112,22 +112,22 @@ namespace XG.Server.Helper.Test
 			Packet tPack = null;
 
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
-			tPack = _bot[5];
+			tPack = _bot.Packet(5);
 			Assert.AreEqual(181 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("Serie The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar", tPack.Name);
 
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
-			tPack = _bot[3];
+			tPack = _bot.Packet(3);
 			Assert.AreEqual(150 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar", tPack.Name);
 
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#1� 0x [� 5M] 5meg");
-			tPack = _bot[1];
+			tPack = _bot.Packet(1);
 			Assert.AreEqual(5 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("5meg", tPack.Name);
 
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
-			tPack = _bot[18];
+			tPack = _bot.Packet(18);
 			Assert.AreEqual((Int64)(2.2 * 1024 * 1024 * 1024), tPack.Size);
 			Assert.AreEqual("Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv", tPack.Name);
 		}

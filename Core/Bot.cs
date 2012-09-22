@@ -277,17 +277,14 @@ namespace XG.Core
 			get { return base.All.Cast<Packet>(); }
 		}
 
-		public Packet this[int id]
+		public Packet Packet(int aId)
 		{
-			get
+			try
 			{
-				try
-				{
-					return Packets.First(pack => pack.Id == id);
-				}
-				catch {}
-				return null;
+				return Packets.First(pack => pack.Id == aId);
 			}
+			catch {}
+			return null;
 		}
 
 		public void AddPacket(Packet aPacket)
