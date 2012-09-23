@@ -1,5 +1,5 @@
 // 
-//  CoreHelper.cs
+//  Helper.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>

@@ -1,5 +1,5 @@
 // 
-//  ServerPluginGeneralWebserver.cs
+//  Json.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
