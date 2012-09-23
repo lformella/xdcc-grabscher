@@ -16,8 +16,12 @@
   <Contents>
     <File subtype="Directory" buildaction="Compile" name="Helper" />
     <File subtype="Code" buildaction="Compile" name="Helper/Filesystem.cs" />
-    <File subtype="Code" buildaction="Compile" name="Helper/IrcParser.cs" />
     <File subtype="Code" buildaction="Compile" name="Helper/Process.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Irc" />
+    <File subtype="Code" buildaction="Compile" name="Irc/Parser.cs" />
+    <File subtype="Code" buildaction="Compile" name="Irc/AParser.cs" />
+    <File subtype="Code" buildaction="Compile" name="Irc/Notice.cs" />
+    <File subtype="Code" buildaction="Compile" name="Irc/PrivateMessage.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

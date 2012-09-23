@@ -28,6 +28,7 @@ using log4net;
 
 using XG.Core;
 using XG.Server.Helper;
+using XG.Server.Irc;
 using XG.Server.Plugin;
 
 namespace XG.Server
@@ -45,7 +46,7 @@ namespace XG.Server
 
 		static readonly ILog _log = LogManager.GetLogger(typeof(Main));
 
-		IrcParser _ircParser;
+		Parser _ircParser;
 		Servers _servers;
 		FileActions _fileActions;
 
@@ -100,7 +101,7 @@ namespace XG.Server
 		{
 			_fileActions = new FileActions();
 
-			_ircParser = new IrcParser();
+			_ircParser = new Parser();
 			_ircParser.FileActions = _fileActions;
 			_ircParser.ParsingError += new DataTextDelegate(IrcParserParsingError);
 

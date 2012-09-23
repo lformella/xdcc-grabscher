@@ -28,7 +28,7 @@ using log4net;
 
 using XG.Core;
 using XG.Server.Connection;
-using XG.Server.Helper;
+using XG.Server.Irc;
 
 namespace XG.Server
 {
@@ -68,8 +68,8 @@ namespace XG.Server
 			}
 		}
 
-		IrcParser _ircParser;
-		public IrcParser IrcParser
+		Parser _ircParser;
+		public Parser IrcParser
 		{
 			set
 			{
