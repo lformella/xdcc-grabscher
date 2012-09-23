@@ -21,56 +21,56 @@
   </Configurations>
   <Contents>
     <File subtype="Code" buildaction="Compile" name="ImageLoader.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Add.png" resource_id="Client.Resources.Add.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Blind.png" resource_id="Client.Resources.Blind.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Bot_offline.png" resource_id="Client.Resources.Bot_offline.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Bot.png" resource_id="Client.Resources.Bot.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Channel_disabled.png" resource_id="Client.Resources.Channel_disabled.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Channel.png" resource_id="Client.Resources.Channel.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Connect.png" resource_id="Client.Resources.Connect.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Delete.png" resource_id="Client.Resources.Delete.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Disconnect.png" resource_id="Client.Resources.Disconnect.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/No.png" resource_id="Client.Resources.No.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Ok.png" resource_id="Client.Resources.Ok.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Packet_disabled.png" resource_id="Client.Resources.Packet_disabled.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Packet.png" resource_id="Client.Resources.Packet.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Remove.png" resource_id="Client.Resources.Remove.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Search_freeslots.png" resource_id="Client.Resources.Search_freeslots.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Search.png" resource_id="Client.Resources.Search.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Server_disabled.png" resource_id="Client.Resources.Server_disabled.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Server.png" resource_id="Client.Resources.Server.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/client.png" resource_id="Client.Resources.client.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/ODay.png" resource_id="Client.Resources.ODay.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/OWeek.png" resource_id="Client.Resources.OWeek.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Add.png" resource_id="XG.Client.Resources.Add.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Blind.png" resource_id="XG.Client.Resources.Blind.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Bot_offline.png" resource_id="XG.Client.Resources.Bot_offline.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Bot.png" resource_id="XG.Client.Resources.Bot.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Channel_disabled.png" resource_id="XG.Client.Resources.Channel_disabled.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Channel.png" resource_id="XG.Client.Resources.Channel.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Connect.png" resource_id="XG.Client.Resources.Connect.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Delete.png" resource_id="XG.Client.Resources.Delete.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Disconnect.png" resource_id="XG.Client.Resources.Disconnect.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/No.png" resource_id="XG.Client.Resources.No.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Ok.png" resource_id="XG.Client.Resources.Ok.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Packet_disabled.png" resource_id="XG.Client.Resources.Packet_disabled.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Packet.png" resource_id="XG.Client.Resources.Packet.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Remove.png" resource_id="XG.Client.Resources.Remove.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Search_freeslots.png" resource_id="XG.Client.Resources.Search_freeslots.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Search.png" resource_id="XG.Client.Resources.Search.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Server_disabled.png" resource_id="XG.Client.Resources.Server_disabled.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Server.png" resource_id="XG.Client.Resources.Server.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/client.png" resource_id="XG.Client.Resources.client.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/ODay.png" resource_id="XG.Client.Resources.ODay.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/OWeek.png" resource_id="XG.Client.Resources.OWeek.png" />
     <File subtype="Directory" buildaction="Compile" name="Resources/language" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/language/de.png" resource_id="Client.Resources.language.de.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/language/de.png" resource_id="XG.Client.Resources.language.de.png" />
     <File subtype="Directory" buildaction="Compile" name="Resources/extension" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/video.png" resource_id="Client.Resources.extension.video.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/default.png" resource_id="Client.Resources.extension.default.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/compressed.png" resource_id="Client.Resources.extension.compressed.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/audio.png" resource_id="Client.Resources.extension.audio.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/video.png" resource_id="XG.Client.Resources.extension.video.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/default.png" resource_id="XG.Client.Resources.extension.default.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/compressed.png" resource_id="XG.Client.Resources.extension.compressed.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/audio.png" resource_id="XG.Client.Resources.extension.audio.png" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
     <File subtype="Directory" buildaction="Compile" name="Resources/Overlay" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_active.png" resource_id="Client.Resources.Overlay._active.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_attention.png" resource_id="Client.Resources.Overlay._attention.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_checked_0.png" resource_id="Client.Resources.Overlay._checked_0.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_checked_1.png" resource_id="Client.Resources.Overlay._checked_1.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_disabled.png" resource_id="Client.Resources.Overlay._disabled.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl0.png" resource_id="Client.Resources.Overlay._dl0.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl1.png" resource_id="Client.Resources.Overlay._dl1.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl2.png" resource_id="Client.Resources.Overlay._dl2.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl3.png" resource_id="Client.Resources.Overlay._dl3.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl4.png" resource_id="Client.Resources.Overlay._dl4.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl5.png" resource_id="Client.Resources.Overlay._dl5.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_waiting.png" resource_id="Client.Resources.Overlay._waiting.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl6.png" resource_id="Client.Resources.Overlay._dl6.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl7.png" resource_id="Client.Resources.Overlay._dl7.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl8.png" resource_id="Client.Resources.Overlay._dl8.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl9.png" resource_id="Client.Resources.Overlay._dl9.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/audio2.png" resource_id="Client.Resources.extension.audio2.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/compressed2.png" resource_id="Client.Resources.extension.compressed2.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/default2.png" resource_id="Client.Resources.extension.default2.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/video2.png" resource_id="Client.Resources.extension.video2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_active.png" resource_id="XG.Client.Resources.Overlay._active.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_attention.png" resource_id="XG.Client.Resources.Overlay._attention.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_checked_0.png" resource_id="XG.Client.Resources.Overlay._checked_0.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_checked_1.png" resource_id="XG.Client.Resources.Overlay._checked_1.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_disabled.png" resource_id="XG.Client.Resources.Overlay._disabled.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl0.png" resource_id="XG.Client.Resources.Overlay._dl0.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl1.png" resource_id="XG.Client.Resources.Overlay._dl1.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl2.png" resource_id="XG.Client.Resources.Overlay._dl2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl3.png" resource_id="XG.Client.Resources.Overlay._dl3.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl4.png" resource_id="XG.Client.Resources.Overlay._dl4.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl5.png" resource_id="XG.Client.Resources.Overlay._dl5.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_waiting.png" resource_id="XG.Client.Resources.Overlay._waiting.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl6.png" resource_id="XG.Client.Resources.Overlay._dl6.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl7.png" resource_id="XG.Client.Resources.Overlay._dl7.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl8.png" resource_id="XG.Client.Resources.Overlay._dl8.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/Overlay/_dl9.png" resource_id="XG.Client.Resources.Overlay._dl9.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/audio2.png" resource_id="XG.Client.Resources.extension.audio2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/compressed2.png" resource_id="XG.Client.Resources.extension.compressed2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/default2.png" resource_id="XG.Client.Resources.extension.default2.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/extension/video2.png" resource_id="XG.Client.Resources.extension.video2.png" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
