@@ -41,15 +41,16 @@ namespace XG.Server.Plugin.Backend.File
 
 		BinaryFormatter _formatter = new BinaryFormatter();
 
-		Thread _saveDataThread;
+		Thread _saveLoopThread;
 
 		bool _isSaveFile = false;
-		object _saveFileLock = new object();
-		object _saveSearchLock = new object();
+		object _saveObjectsLock = new object();
+		object _saveFilesLock = new object();
+		object _saveSearchesLock = new object();
 
 		#endregion
 
-		#region IServerBackendPlugin
+		#region ABackendPlugin
 
 		public override XG.Core.Servers LoadServers ()
 		{
@@ -106,42 +107,42 @@ namespace XG.Server.Plugin.Backend.File
 		public override void Start ()
 		{
 			// start data saving routine
-			_saveDataThread = new Thread(new ThreadStart(SaveDataLoop));
-			_saveDataThread.Start();
+			_saveLoopThread = new Thread(new ThreadStart(StartSaveLoop));
+			_saveLoopThread.Start();
 		}
 
 		public override void Stop ()
 		{
-			_saveDataThread.Abort();
+			_saveLoopThread.Abort();
 		}
 		
 		#endregion
 
-		#region EVENTS
+		#region EVENTHANDLER
 
 		protected override void FileAdded (AObject aParentObj, AObject aObj)
 		{
-			SaveFileDataNow();
+			SaveFiles();
 		}
 
 		protected override void FileRemoved (AObject aParentObj, AObject aObj)
 		{
-			SaveFileDataNow();
+			SaveFiles();
 		}
 
 		protected override void FileChanged(AObject aObj)
 		{
 			if (aObj is XG.Core.File)
 			{
-				SaveFileDataNow();
+				SaveFiles();
 			}
 			else if (aObj is FilePart)
 			{
 				FilePart part = aObj as FilePart;
-				// if this change is lost, the data might be corrupt, so save it NOW
+				// if this change is lost, the data might be corrupt, so save it now
 				if (part.State != FilePart.States.Open)
 				{
-					SaveFileDataNow();
+					SaveFiles();
 				}
 				// the data saving can be scheduled
 				else
@@ -153,17 +154,27 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void SearchAdded(AObject aParent, AObject aObj)
 		{
-			lock (_saveSearchLock)
-			{
-				Save(Searches, Settings.Instance.SearchesBinary);
-			}
+			SaveSearches();
 		}
 
 		protected override void SearchRemoved(AObject aParent, AObject aObj)
 		{
-			lock (_saveSearchLock)
+			SaveSearches();
+		}
+
+		protected override void ObjectAdded(AObject aParent, AObject aObj)
+		{
+			if (aObj is XG.Core.Server || aObj is Channel)
 			{
-				Save(Searches, Settings.Instance.SearchesBinary);
+				SaveObjects();
+			}
+		}
+
+		protected override void ObjectRemoved(AObject aParent, AObject aObj)
+		{
+			if (aObj is XG.Core.Server || aObj is Channel)
+			{
+				SaveObjects();
 			}
 		}
 
@@ -176,7 +187,7 @@ namespace XG.Server.Plugin.Backend.File
 		/// </summary>
 		/// <param name="aObj"></param>
 		/// <param name="aFile"></param>
-		void Save(object aObj, string aFile)
+		bool Save(object aObj, string aFile)
 		{
 			try
 			{
@@ -191,7 +202,9 @@ namespace XG.Server.Plugin.Backend.File
 			catch (Exception ex)
 			{
 				_log.Fatal("Save(" + aFile + ")", ex);
+				return false;
 			}
+			return true;
 		}
 
 		/// <summary>
@@ -231,29 +244,25 @@ namespace XG.Server.Plugin.Backend.File
 			return obj;
 		}
 
-		void SaveDataLoop()
+		void StartSaveLoop()
 		{
 			DateTime timeIrc = DateTime.Now;
 			DateTime timeStats = DateTime.Now;
 
 			while (true)
 			{
-				// IRC Data
+				// Objects
 				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
 				{
 					timeIrc = DateTime.Now;
 
-					Save(Servers, Settings.Instance.DataBinary);
+					SaveObjects();
 				}
 
-				// File Data
+				// Files
 				if (_isSaveFile)
 				{
-					lock (_saveFileLock)
-					{
-						Save(Files, Settings.Instance.FilesBinary);
-						_isSaveFile = false;
-					}
+					SaveFiles();
 				}
 
 				// Statistics
@@ -267,15 +276,28 @@ namespace XG.Server.Plugin.Backend.File
 			}
 		}
 
-		/// <summary>
-		/// Save the FileData right now 
-		/// </summary>
-		void SaveFileDataNow()
+		bool SaveFiles()
 		{
-			lock (_saveFileLock)
+			lock (_saveFilesLock)
 			{
-				Save(Files, Settings.Instance.FilesBinary);
 				_isSaveFile = false;
+				return Save(Files, Settings.Instance.FilesBinary);
+			}
+		}
+
+		bool SaveObjects()
+		{
+			lock (_saveObjectsLock)
+			{
+				return Save(Servers, Settings.Instance.DataBinary);
+			}
+		}
+
+		bool SaveSearches()
+		{
+			lock (_saveSearchesLock)
+			{
+				return Save(Searches, Settings.Instance.SearchesBinary);
 			}
 		}
 

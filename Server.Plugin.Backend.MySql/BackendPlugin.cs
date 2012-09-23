@@ -67,7 +67,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			}
 		}
 
-		#region IServerBackendPlugin
+		#region ABackendPlugin
 
 		public override XG.Core.Servers LoadServers ()
 		{
