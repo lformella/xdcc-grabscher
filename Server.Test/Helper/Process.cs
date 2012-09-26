@@ -63,7 +63,7 @@ namespace XG.Server.Helper.Test
 
 		bool Compress (string file, string archive, string password)
 		{
-			var p = new XG.Server.Helper.Process();
+			var p = new Server.Helper.Process();
 			p.Command = "rar";
 			p.Arguments = "a " + (string.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file;
 
@@ -72,7 +72,7 @@ namespace XG.Server.Helper.Test
 
 		bool DeCompress (string archive)
 		{
-			var p = new XG.Server.Helper.Process();
+			var p = new Server.Helper.Process();
 			p.Command = "unrar";
 			p.Arguments = "e -p- " + archive;
 

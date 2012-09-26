@@ -47,7 +47,7 @@ namespace XG.Core.Test
 		{
 			string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
 			Int64 fileSize = 440044;
-			string result = XG.Core.Helper.ShrinkFileName(fileName, fileSize);
+			string result = Core.Helper.ShrinkFileName(fileName, fileSize);
 
 			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);
 		}

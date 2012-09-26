@@ -52,18 +52,18 @@ namespace XG.Server.Plugin.Backend.File
 
 		#region ABackendPlugin
 
-		public override XG.Core.Servers LoadServers ()
+		public override Core.Servers LoadServers ()
 		{
-			XG.Core.Servers _servers = null;
+			Core.Servers _servers = null;
 			try
 			{
-				_servers = (XG.Core.Servers)Load(Settings.Instance.DataBinary);
+				_servers = (Core.Servers)Load(Settings.Instance.DataBinary);
 				_servers.AttachChildEvents();
 			}
 			catch {}
 			if (_servers == null)
 			{
-				_servers = new XG.Core.Servers();
+				_servers = new Core.Servers();
 			}
 			return _servers;
 		}
@@ -132,7 +132,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void FileChanged(AObject aObj)
 		{
-			if (aObj is XG.Core.File)
+			if (aObj is Core.File)
 			{
 				SaveFiles();
 			}
@@ -164,7 +164,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			if (aObj is XG.Core.Server || aObj is Channel)
+			if (aObj is Core.Server || aObj is Channel)
 			{
 				SaveObjects();
 			}
@@ -172,7 +172,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if (aObj is XG.Core.Server || aObj is Channel)
+			if (aObj is Core.Server || aObj is Channel)
 			{
 				SaveObjects();
 			}

@@ -28,7 +28,7 @@ namespace XG.Server.Plugin
 {
 	public abstract class ABackendPlugin : APlugin
 	{
-		public abstract XG.Core.Servers LoadServers ();
+		public abstract Core.Servers LoadServers ();
 
 		public abstract Files LoadFiles ();
 

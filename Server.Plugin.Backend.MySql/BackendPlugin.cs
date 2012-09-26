@@ -69,15 +69,15 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		#region ABackendPlugin
 
-		public override XG.Core.Servers LoadServers ()
+		public override Core.Servers LoadServers ()
 		{
-			XG.Core.Servers _servers = new XG.Core.Servers();
+			Core.Servers _servers = new Core.Servers();
 
 			#region DUMP DATABASE
 
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 			dic.Add ("guid", Guid.Empty);
-			foreach(XG.Core.Server serv in ExecuteQuery ("SELECT * FROM server;", null, typeof(XG.Core.Server)))
+			foreach(Core.Server serv in ExecuteQuery ("SELECT * FROM server;", null, typeof(Core.Server)))
 			{
 				_servers.Add(serv);
 
@@ -240,9 +240,9 @@ namespace XG.Server.Plugin.Backend.MySql
 			dic.Add ("Enabled", aObj.Enabled);
 			dic.Add ("LastModified", Date2Timestamp (aObj.EnabledTime));
 
-			if (aObj is XG.Core.Server)
+			if (aObj is Core.Server)
 			{
-				XG.Core.Server obj = (XG.Core.Server)aObj;
+				Core.Server obj = (Core.Server)aObj;
 				dic.Add ("Port", obj.Port);
 				dic.Add ("ErrorCode", obj.ErrorCode);
 				dic.Add ("ChannelCount", obj.Channels.Count());
@@ -283,9 +283,9 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected AObject Dic2Object (Dictionary<string, object> aDic, Type aType)
 		{
-			if (aType == typeof(XG.Core.Server))
+			if (aType == typeof(Core.Server))
 			{
-				XG.Core.Server serv = new XG.Core.Server();
+				Core.Server serv = new Core.Server();
 				serv.Guid = new Guid((string)aDic ["Guid"]);
 				serv.Name = (string)aDic ["Name"];
 				serv.Connected = false;
@@ -445,7 +445,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		protected string Table4Object (AObject aObj)
 		{
-			if (aObj is XG.Core.Server)
+			if (aObj is Core.Server)
 			{
 				return "server";
 			}

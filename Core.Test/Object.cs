@@ -47,7 +47,7 @@ namespace XG.Core.Test
 #endif
 		public void Test ()
 		{
-			XG.Core.Object obj = new XG.Core.Object();
+			Core.Object obj = new Core.Object();
 			obj.Changed += delegate {
 				_modified = true;
 			};
@@ -62,7 +62,7 @@ namespace XG.Core.Test
 			obj.Connected = true;
 			AssertModified(obj, true);
 
-			XG.Core.Object parent = new XG.Core.Object();
+			Core.Object parent = new Core.Object();
 			parent.Guid = Guid.NewGuid();
 
 			Assert.AreEqual(Guid.Empty, obj.ParentGuid);

@@ -242,10 +242,10 @@ namespace XG.Server.Plugin.General.Webserver
 
 						case ClientRequest.AddSearch:
 							string name = HttpUtility.UrlDecode(tDic["name"]);
-							XG.Core.Object obj = Searches.Named(name);
+							Core.Object obj = Searches.Named(name);
 							if(obj == null)
 							{
-								obj = new XG.Core.Object();
+								obj = new Core.Object();
 								obj.Name = name;
 								Searches.Add(obj);
 							}
@@ -356,7 +356,7 @@ namespace XG.Server.Plugin.General.Webserver
 							int packetId = int.Parse(link[4].Substring(1));
 
 							// checking server
-							XG.Core.Server serv = Servers[serverName];
+							Core.Server serv = Servers[serverName];
 							if(serv == null)
 							{
 								Servers.Add(serverName);
@@ -704,11 +704,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 		string Objects2Json(IEnumerable<AObject> aObjects, int aPage, int aRows)
 		{
-			var tObjects = new XG.Server.Plugin.General.Webserver.JQGrid.Objects();
+			var tObjects = new Server.Plugin.General.Webserver.JQGrid.Objects();
 			tObjects.Page = aPage;
 			tObjects.Rows = aRows;
 			tObjects.SetObjects(aObjects);
-			return Json.Serialize<XG.Server.Plugin.General.Webserver.JQGrid.Objects>(tObjects);
+			return Json.Serialize<Server.Plugin.General.Webserver.JQGrid.Objects>(tObjects);
 		}
 
 		string Object2Json(AObject aObject)
@@ -718,8 +718,8 @@ namespace XG.Server.Plugin.General.Webserver
 				return "";
 			}
 
-			var tObject = new XG.Server.Plugin.General.Webserver.JQGrid.Object(aObject);
-			return Json.Serialize<XG.Server.Plugin.General.Webserver.JQGrid.Object>(tObject);
+			var tObject = new Server.Plugin.General.Webserver.JQGrid.Object(aObject);
+			return Json.Serialize<Server.Plugin.General.Webserver.JQGrid.Object>(tObject);
 		}
 
 		string Statistic2Json()

@@ -42,7 +42,7 @@ namespace XG.Server.Irc.Test
 	{
 		public PrivateMessage ()
 		{
-			RegisterParser(new XG.Server.Irc.PrivateMessage());
+			RegisterParser(new Server.Irc.PrivateMessage());
 		}
 
 #if !WINDOWS

@@ -32,7 +32,7 @@ using XG.Server.Irc;
 
 namespace XG.Server
 {
-	public delegate void ServerSocketErrorDelegate(XG.Core.Server aServer, SocketErrorCode aValue);
+	public delegate void ServerSocketErrorDelegate(Core.Server aServer, SocketErrorCode aValue);
 
 	/// <summary>
 	/// This class describes the connection to a single irc server
@@ -47,8 +47,8 @@ namespace XG.Server
 
 		static readonly ILog _log = LogManager.GetLogger(typeof(ServerConnection));
 
-		XG.Core.Server _server;
-		public XG.Core.Server Server
+		Core.Server _server;
+		public Core.Server Server
 		{
 			set
 			{
@@ -180,7 +180,7 @@ namespace XG.Server
 						}
 						else
 						{
-							string name = XG.Core.Helper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
+							string name = Core.Helper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
 							if (_latestPacketRequests.ContainsKey(name))
 							{
 								double time = (_latestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
@@ -333,7 +333,7 @@ namespace XG.Server
 			}
 		}
 
-		void IrcParserSendData(XG.Core.Server aServer, string aData)
+		void IrcParserSendData(Core.Server aServer, string aData)
 		{
 			if (_server == aServer)
 			{
@@ -341,7 +341,7 @@ namespace XG.Server
 			}
 		}
 
-		void IrcParserJoinChannel(XG.Core.Server aServer, Channel aChannel)
+		void IrcParserJoinChannel(Core.Server aServer, Channel aChannel)
 		{
 			if (_server == aServer)
 			{
@@ -349,7 +349,7 @@ namespace XG.Server
 			}
 		}
 
-		void IrcParserCreateTimer(XG.Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
+		void IrcParserCreateTimer(Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
 		{
 			if (_server == aServer)
 			{
@@ -357,7 +357,7 @@ namespace XG.Server
 			}
 		}
 
-		void IrcParserRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		void IrcParserRequestFromBot(Core.Server aServer, Bot aBot)
 		{
 			if (_server == aServer)
 			{
@@ -365,7 +365,7 @@ namespace XG.Server
 			}
 		}
 
-		void IrcParserUnRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		void IrcParserUnRequestFromBot(Core.Server aServer, Bot aBot)
 		{
 			if (_server == aServer)
 			{

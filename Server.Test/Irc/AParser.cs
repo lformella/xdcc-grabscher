@@ -29,7 +29,7 @@ namespace XG.Server.Irc.Test
 {
 	public abstract class AParser
 	{
-		protected XG.Core.Server _server;
+		protected Core.Server _server;
 		protected Channel _channel;
 		protected Bot _bot;
 
@@ -46,11 +46,11 @@ namespace XG.Server.Irc.Test
 		protected Int64 _eventTime;
 		protected bool _eventOverride;
 
-		protected XG.Server.Irc.AParser _ircParser;
+		protected Server.Irc.AParser _ircParser;
 
 		public AParser()
 		{
-			_server = new XG.Core.Server();
+			_server = new Core.Server();
 			_server.Name = "test.bitpir.at";
 
 			_channel = new Channel();
@@ -62,7 +62,7 @@ namespace XG.Server.Irc.Test
 			_channel.AddBot(_bot);
 		}
 
-		public void RegisterParser(XG.Server.Irc.AParser aParser)
+		public void RegisterParser(Server.Irc.AParser aParser)
 		{
 			_ircParser =aParser;
 
@@ -97,29 +97,29 @@ namespace XG.Server.Irc.Test
 			_eventBot = aBot;
 		}
 
-		void IrcParserSendData(XG.Core.Server aServer, string aData)
+		void IrcParserSendData(Core.Server aServer, string aData)
 		{
 			_eventData = aData;
 		}
 
-		void IrcParserJoinChannel(XG.Core.Server aServer, Channel aChannel)
+		void IrcParserJoinChannel(Core.Server aServer, Channel aChannel)
 		{
 			_eventChannel = aChannel;
 		}
 
-		void IrcParserCreateTimer(XG.Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
+		void IrcParserCreateTimer(Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
 		{
 			_eventObject = aObject;
 			_eventTime = aTime;
 			_eventOverride = aOverride;
 		}
 
-		void IrcParserRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		void IrcParserRequestFromBot(Core.Server aServer, Bot aBot)
 		{
 			_eventBot = aBot;
 		}
 
-		void IrcParserUnRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		void IrcParserUnRequestFromBot(Core.Server aServer, Bot aBot)
 		{
 			_eventBot = aBot;
 		}

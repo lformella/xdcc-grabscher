@@ -34,11 +34,11 @@ namespace XG.Server.Plugin.Backend.MySql
 	{
 		static readonly ILog _log = LogManager.GetLogger(typeof(Importer));
 
-		XG.Core.Servers _servers;
+		Core.Servers _servers;
 
 		public event ObjectsDelegate ObjectAddedEvent;
 
-		public Importer (XG.Core.Servers aServers)
+		public Importer (Core.Servers aServers)
 		{
 			_servers = aServers;
 		}
@@ -66,7 +66,7 @@ namespace XG.Server.Plugin.Backend.MySql
 					string server = strs[2].ToLower();
 					string channel = strs[3].ToLower();
 
-					XG.Core.Server s = ServerNamed(server);
+					Core.Server s = ServerNamed(server);
 					if(s == null)
 					{
 						_servers.Add(server);
@@ -87,19 +87,19 @@ namespace XG.Server.Plugin.Backend.MySql
 #endif
 		}
 
-		XG.Core.Server ServerNamed(string aServerName)
+		Core.Server ServerNamed(string aServerName)
 		{
 			foreach(AObject obj in _servers.All)
 			{
 				if(obj.Name == aServerName)
 				{
-					return (XG.Core.Server)obj;
+					return (Core.Server)obj;
 				}
 			}
 			return null;
 		}
 
-		Channel ChannelFromServer(XG.Core.Server aServer, string aChannelName)
+		Channel ChannelFromServer(Core.Server aServer, string aChannelName)
 		{
 			foreach(Channel chan in aServer.Channels)
 			{

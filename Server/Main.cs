@@ -50,8 +50,8 @@ namespace XG.Server
 		Servers _servers;
 		FileActions _fileActions;
 
-		XG.Core.Servers _serverObjects;
-		XG.Core.Servers Servers
+		Core.Servers _serverObjects;
+		Core.Servers Servers
 		{
 			set
 			{
@@ -118,9 +118,9 @@ namespace XG.Server
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database
-			foreach (XG.Core.Server serv in _serverObjects.All)
+			foreach (Core.Server serv in _serverObjects.All)
 			{
-				foreach (XG.Core.Server s in _serverObjects.All)
+				foreach (Core.Server s in _serverObjects.All)
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
@@ -171,7 +171,7 @@ namespace XG.Server
 			#region RESET
 
 			// reset all objects if the server crashed
-			foreach (XG.Core.Server tServer in _serverObjects.All)
+			foreach (Core.Server tServer in _serverObjects.All)
 			{
 				tServer.Connected = false;
 				tServer.ErrorCode = SocketErrorCode.None;
@@ -311,7 +311,7 @@ namespace XG.Server
 			#endregion
 
 			// connect to all servers which are enabled
-			foreach (XG.Core.Server serv in _serverObjects.All)
+			foreach (Core.Server serv in _serverObjects.All)
 			{
 				// TODO check this
 				serv.Parent = null;
@@ -330,7 +330,7 @@ namespace XG.Server
 		public void Stop()
 		{
 			// TODO stop server plugins
-			foreach (XG.Core.Server serv in _serverObjects.All)
+			foreach (Core.Server serv in _serverObjects.All)
 			{
 				_servers.ServerDisconnect(serv);
 			}
@@ -364,9 +364,9 @@ namespace XG.Server
 
 		void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			if(aObj is XG.Core.Server)
+			if(aObj is Core.Server)
 			{
-				XG.Core.Server aServer = aObj as XG.Core.Server;
+				Core.Server aServer = aObj as Core.Server;
 
 				_log.Info("ServerObjectAdded(" + aServer.Name + ")");
 				_servers.ServerConnect(aServer);
@@ -375,9 +375,9 @@ namespace XG.Server
 
 		void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if(aObj is XG.Core.Server)
+			if(aObj is Core.Server)
 			{
-				XG.Core.Server aServer = aObj as XG.Core.Server;
+				Core.Server aServer = aObj as Core.Server;
 
 				aServer.Enabled = false;
 				aServer.Commit();
@@ -389,9 +389,9 @@ namespace XG.Server
 
 		void EnabledChanged(AObject aObj)
 		{
-			if(aObj is XG.Core.Server)
+			if(aObj is Core.Server)
 			{
-				XG.Core.Server aServer = aObj as XG.Core.Server;
+				Core.Server aServer = aObj as Core.Server;
 
 				if(aObj.Enabled)
 				{

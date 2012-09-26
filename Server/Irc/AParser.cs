@@ -77,7 +77,7 @@ namespace XG.Server.Irc
 
 		public event ServerDataTextDelegate SendData;
 
-		protected void FireSendData(XG.Core.Server aServer, string aData)
+		protected void FireSendData(Core.Server aServer, string aData)
 		{
 			if(SendData != null)
 			{
@@ -87,7 +87,7 @@ namespace XG.Server.Irc
 
 		public event ServerChannelDelegate JoinChannel;
 
-		protected void FireJoinChannel(XG.Core.Server aServer, Channel aChannel)
+		protected void FireJoinChannel(Core.Server aServer, Channel aChannel)
 		{
 			if(JoinChannel != null)
 			{
@@ -97,7 +97,7 @@ namespace XG.Server.Irc
 
 		public event ServerObjectIntBoolDelegate CreateTimer;
 
-		protected void FireCreateTimer(XG.Core.Server aServer, AObject aObj, Int64 aInt, bool aBool)
+		protected void FireCreateTimer(Core.Server aServer, AObject aObj, Int64 aInt, bool aBool)
 		{
 			if(CreateTimer != null)
 			{
@@ -107,7 +107,7 @@ namespace XG.Server.Irc
 
 		public event ServerBotDelegate RequestFromBot;
 
-		protected void FireRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		protected void FireRequestFromBot(Core.Server aServer, Bot aBot)
 		{
 			if(RequestFromBot != null)
 			{
@@ -117,7 +117,7 @@ namespace XG.Server.Irc
 
 		public event ServerBotDelegate UnRequestFromBot;
 
-		protected void FireUnRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		protected void FireUnRequestFromBot(Core.Server aServer, Bot aBot)
 		{
 			if(UnRequestFromBot != null)
 			{
@@ -131,7 +131,7 @@ namespace XG.Server.Irc
 
 		#region PARSING
 
-		public void ParseData(XG.Core.Server aServer, string aRawData)
+		public void ParseData(Core.Server aServer, string aRawData)
 		{
 			_log.Debug("ParseData(" + aRawData + ")");
 
@@ -174,7 +174,7 @@ namespace XG.Server.Irc
 			#endregion
 		}
 
-		protected abstract void Parse(XG.Core.Server aServer, string aRawData, string aMessage, string[] aCommands);
+		protected abstract void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands);
 
 		#endregion
 

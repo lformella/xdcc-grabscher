@@ -74,7 +74,7 @@ namespace XG.Server
 
 		public FileActions FileActions { get; set; }
 
-		Dictionary<XG.Core.Server, ServerConnection> _servers;
+		Dictionary<Core.Server, ServerConnection> _servers;
 		Dictionary<Packet, BotConnection> _downloads;
 
 		#endregion
@@ -83,7 +83,7 @@ namespace XG.Server
 
 		public Servers()
 		{
-			_servers = new Dictionary<XG.Core.Server, ServerConnection>();
+			_servers = new Dictionary<Core.Server, ServerConnection>();
 			_downloads = new Dictionary<Packet, BotConnection>();
 
 			// create my stuff if its not there
@@ -103,7 +103,7 @@ namespace XG.Server
 		/// Connects to the given server by using a new ServerConnnect class
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void ServerConnect (XG.Core.Server aServer)
+		public void ServerConnect (Core.Server aServer)
 		{
 			if (!_servers.ContainsKey (aServer))
 			{
@@ -112,7 +112,7 @@ namespace XG.Server
 				con.Server = aServer;
 				con.IrcParser = _ircParser;
 
-				con.Connection = new XG.Server.Connection.Connection();
+				con.Connection = new Server.Connection.Connection();
 				con.Connection.Hostname = aServer.Name;
 				con.Connection.Port = aServer.Port;
 				con.Connection.MaxData = 0;
@@ -130,7 +130,7 @@ namespace XG.Server
 				_log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
 			}
 		}
-		void ServerConnected(XG.Core.Server aServer)
+		void ServerConnected(Core.Server aServer)
 		{
 			// nom nom nom ...
 		}
@@ -139,7 +139,7 @@ namespace XG.Server
 		/// Disconnects the given server
 		/// </summary>
 		/// <param name="aServer"></param>
-		public void ServerDisconnect(XG.Core.Server aServer)
+		public void ServerDisconnect(Core.Server aServer)
 		{
 			if (_servers.ContainsKey(aServer))
 			{
@@ -151,7 +151,7 @@ namespace XG.Server
 				_log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
-		void ServerDisconnected(XG.Core.Server aServer, SocketErrorCode aValue)
+		void ServerDisconnected(Core.Server aServer, SocketErrorCode aValue)
 		{
 			if (_servers.ContainsKey (aServer))
 			{
@@ -206,7 +206,7 @@ namespace XG.Server
 
 		void ServerReconnect(object aServer)
 		{
-			XG.Core.Server tServer = aServer as XG.Core.Server;
+			Core.Server tServer = aServer as Core.Server;
 
 			if (_servers.ContainsKey(tServer))
 			{
@@ -217,7 +217,7 @@ namespace XG.Server
 					_log.Error("ReconnectServer(" + tServer.Name + ")");
 
 					// TODO do we need a new connection here?
-					con.Connection = new XG.Server.Connection.Connection();
+					con.Connection = new Server.Connection.Connection();
 					con.Connection.Hostname = tServer.Name;
 					con.Connection.Port = tServer.Port;
 					con.Connection.MaxData = 0;
@@ -253,7 +253,7 @@ namespace XG.Server
 					con.Packet = aPack;
 					con.StartSize = aChunk;
 	
-					con.Connection = new XG.Server.Connection.Connection();
+					con.Connection = new Server.Connection.Connection();
 					con.Connection.Hostname = aIp.ToString();
 					con.Connection.Port = aPort;
 					con.Connection.MaxData = aPack.RealSize - aChunk;
@@ -335,7 +335,7 @@ namespace XG.Server
 				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
 
 				int a = 0;
-				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
+				foreach (KeyValuePair<Core.Server, ServerConnection> kvp in _servers)
 				{
 					if (kvp.Value.IsRunning)
 					{
@@ -366,7 +366,7 @@ namespace XG.Server
 		{
 			while (true)
 			{
-				foreach (KeyValuePair<XG.Core.Server, ServerConnection> kvp in _servers)
+				foreach (KeyValuePair<Core.Server, ServerConnection> kvp in _servers)
 				{
 					ServerConnection sc = kvp.Value;
 					if (sc.IsRunning)

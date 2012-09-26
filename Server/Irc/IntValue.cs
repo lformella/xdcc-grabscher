@@ -40,7 +40,7 @@ namespace XG.Server.Irc
 
 		#region PARSING
 
-		protected override void Parse(XG.Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
+		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
 			Bot tBot = aServer.Bot(aCommands[0].Split('!')[0]);
 			Channel tChan = aServer.Channel(aCommands[2]);

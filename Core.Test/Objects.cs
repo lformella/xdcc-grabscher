@@ -47,7 +47,7 @@ namespace XG.Core.Test
 #endif
 		public void Test ()
 		{
-			XG.Core.Objects parent = new XG.Core.Objects();
+			Core.Objects parent = new Core.Objects();
 			parent.Added += delegate {
 				_childAdded = true;
 			};
@@ -55,7 +55,7 @@ namespace XG.Core.Test
 
 			AssertChildAdded(false);
 
-			XG.Core.Object obj = new XG.Core.Object();
+			Core.Object obj = new Core.Object();
 			Assert.AreEqual(Guid.Empty, obj.ParentGuid);
 			parent.Add(obj);
 

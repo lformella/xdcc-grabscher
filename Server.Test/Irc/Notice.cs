@@ -42,7 +42,7 @@ namespace XG.Server.Irc.Test
 	{
 		public Notice ()
 		{
-			RegisterParser(new XG.Server.Irc.Notice());
+			RegisterParser(new Server.Irc.Notice());
 		}
 
 #if !WINDOWS

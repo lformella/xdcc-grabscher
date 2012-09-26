@@ -39,7 +39,7 @@ namespace XG.Server.Irc
 
 		#region PARSING
 
-		protected override void Parse(XG.Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
+		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
 			string tUserName = aCommands[0].Split('!')[0];
 

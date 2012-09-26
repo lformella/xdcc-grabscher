@@ -78,21 +78,21 @@ namespace XG.Server.Cmd
 			ABackendPlugin backend = null;
 			if (Settings.Instance.StartMySqlBackend)
 			{
-				backend = new XG.Server.Plugin.Backend.MySql.BackendPlugin();
+				backend = new Server.Plugin.Backend.MySql.BackendPlugin();
 			}
 			else
 			{
-				backend = new XG.Server.Plugin.Backend.File.BackendPlugin();
+				backend = new Server.Plugin.Backend.File.BackendPlugin();
 			}
 			instance.AddBackendPlugin(backend);
 
 			if (Settings.Instance.StartWebServer)
 			{
-				instance.AddPlugin(new XG.Server.Plugin.General.Webserver.Plugin());
+				instance.AddPlugin(new Server.Plugin.General.Webserver.Plugin());
 			}
 			if (Settings.Instance.StartJabberClient)
 			{
-				instance.AddPlugin(new XG.Server.Plugin.General.Jabber.Plugin());
+				instance.AddPlugin(new Server.Plugin.General.Jabber.Plugin());
 			}
 
 			instance.Start();

@@ -42,7 +42,7 @@ namespace XG.Server.Irc.Test
 	{
 		public Parser ()
 		{
-			RegisterParser(new XG.Server.Irc.Parser());
+			RegisterParser(new Server.Irc.Parser());
 		}
 	}
 }

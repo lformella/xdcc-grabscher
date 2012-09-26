@@ -32,8 +32,8 @@ namespace XG.Server.Plugin
 	{
 		#region VARIABLES
 
-		XG.Core.Servers _servers;
-		public XG.Core.Servers Servers
+		Core.Servers _servers;
+		public Core.Servers Servers
 		{
 			get
 			{
@@ -173,7 +173,7 @@ namespace XG.Server.Plugin
 			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
-				Servers.Remove(tObj as XG.Core.Server);
+				Servers.Remove(tObj as Core.Server);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace XG.Server.Plugin
 			AObject tObj = Servers.WithGuid(aGuid);
 			if (tObj != null)
 			{
-				(tObj as XG.Core.Server).AddChannel(aString);
+				(tObj as Core.Server).AddChannel(aString);
 			}
 		}
 

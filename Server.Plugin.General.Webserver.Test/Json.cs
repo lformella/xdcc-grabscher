@@ -55,7 +55,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 			};
 
 			Assert.AreEqual("{\"Checked\":false,\"Connected\":true,\"CurrentSize\":0,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"MissingSize\":0,\"Name\":\"\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Speed\":0,\"StartSize\":0,\"State\":0,\"StopSize\":0,\"TimeMissing\":9223372036854775807}",
-				XG.Server.Plugin.General.Webserver.Json.Serialize<FilePart>(part));
+				Server.Plugin.General.Webserver.Json.Serialize<FilePart>(part));
 
 			var packet = new Packet
 			{
@@ -69,7 +69,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 			};
 
 			Assert.AreEqual("{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Id\":-1,\"LastMentioned\":\"" + packet.LastMentioned.ToString("HH:mm:ss dd.MM.yyyy") + "\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("HH:mm:ss dd.MM.yyyy") + "\",\"Name\":\"Test Packet\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Part\":{\"Checked\":false,\"Connected\":true,\"CurrentSize\":0,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"MissingSize\":0,\"Name\":\"\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Speed\":0,\"StartSize\":0,\"State\":0,\"StopSize\":0,\"TimeMissing\":9223372036854775807},\"RealName\":\"\",\"RealSize\":0,\"Size\":0}",
-				XG.Server.Plugin.General.Webserver.Json.Serialize<Packet>(packet));
+				Server.Plugin.General.Webserver.Json.Serialize<Packet>(packet));
 
 			var bot = new Bot
 			{
@@ -92,7 +92,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 			bot.AddPacket(packet);
 
 			Assert.AreEqual("{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"InfoQueueCurrent\":16,\"InfoQueueTotal\":16,\"InfoSlotCurrent\":16,\"InfoSlotTotal\":16,\"InfoSpeedCurrent\":16,\"InfoSpeedMax\":16,\"LastContact\":\"" + bot.LastContact.ToString("HH:mm:ss dd.MM.yyyy") + "\",\"LastMessage\":\"Test Message\",\"Name\":\"Test Bot\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"QueuePosition\":16,\"QueueTime\":16,\"Speed\":0,\"State\":0}",
-				XG.Server.Plugin.General.Webserver.Json.Serialize<Bot>(bot));
+				Server.Plugin.General.Webserver.Json.Serialize<Bot>(bot));
 		}
 	}
 }

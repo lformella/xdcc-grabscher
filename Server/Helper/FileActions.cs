@@ -39,8 +39,8 @@ namespace XG.Server.Helper
 
 		static readonly ILog _log = LogManager.GetLogger(typeof(FileActions));
 
-		XG.Core.Servers _servers;
-		public XG.Core.Servers Servers
+		Core.Servers _servers;
+		public Core.Servers Servers
 		{
 			set { _servers = value; }
 		}
@@ -87,7 +87,7 @@ namespace XG.Server.Helper
 		/// <returns></returns>
 		File File(string aName, Int64 aSize)
 		{
-			string name = XG.Core.Helper.ShrinkFileName(aName, aSize);
+			string name = Core.Helper.ShrinkFileName(aName, aSize);
 			foreach (File file in _files.All)
 			{
 				//Console.WriteLine(file.TmpPath + " - " + name);
@@ -368,7 +368,7 @@ namespace XG.Server.Helper
 					{
 						if (part.Packet != null)
 						{
-							if (!XG.Core.Helper.IsEqual(part.StartReference, aBytes))
+							if (!Core.Helper.IsEqual(part.StartReference, aBytes))
 							{
 								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
 								part.Packet.Enabled = false;
@@ -400,7 +400,7 @@ namespace XG.Server.Helper
 							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
 							reader.Close();
 
-							if (!XG.Core.Helper.IsEqual(bytes, aBytes))
+							if (!Core.Helper.IsEqual(bytes, aBytes))
 							{
 								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize);
 								RemovePart(tFile, part);
@@ -505,9 +505,9 @@ namespace XG.Server.Helper
 
 				// TODO remove all CD* packets if a multi packet was downloaded
 
-				string fileName = XG.Core.Helper.ShrinkFileName(tFile.Name, 0);
+				string fileName = Core.Helper.ShrinkFileName(tFile.Name, 0);
 
-				foreach (XG.Core.Server tServ in _servers.All)
+				foreach (Core.Server tServ in _servers.All)
 				{
 					foreach (Channel tChan in tServ.Channels)
 					{
@@ -518,8 +518,8 @@ namespace XG.Server.Helper
 								foreach (Packet tPack in tBot.Packets)
 								{
 									if (tPack.Enabled && (
-										XG.Core.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) ||
-										XG.Core.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
+										Core.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) ||
+										Core.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
 										))
 									{
 										_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name);

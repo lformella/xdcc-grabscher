@@ -101,7 +101,7 @@ namespace XG.Server
 		}
 
 		public FilePart Part { get; set; }
-		XG.Core.File File
+		Core.File File
 		{
 			get { return Part.Parent; }
 		}
@@ -355,7 +355,7 @@ namespace XG.Server
 				if (refL <= bufL)
 				{
 					// all ok
-					if (XG.Core.Helper.IsEqual(_rollbackRefernce, _startBuffer))
+					if (Core.Helper.IsEqual(_rollbackRefernce, _startBuffer))
 					{
 						_log.Info("con_DataReceived() rollback check ok");
 						aData = _startBuffer;
