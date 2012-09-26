@@ -136,7 +136,15 @@ namespace XG.Server
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
-			Part = FileActions.Part(FileActions.NewFile(Packet.RealName, Packet.RealSize), StartSize);
+			Core.File File = FileActions.NewFile(Packet.RealName, Packet.RealSize);
+			if (File == null)
+			{
+				_log.Fatal("ConnectionConnected() cant find or create a file to download");
+				Connection.Disconnect();
+				return;
+			}
+
+			Part = FileActions.Part(File, StartSize);
 			if (Part != null)
 			{
 				// wtf?

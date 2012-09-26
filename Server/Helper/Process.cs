@@ -77,6 +77,7 @@ namespace XG.Server.Helper
 			catch (Exception ex)
 			{
 				_log.Fatal("Run(" + Command + ", " + Arguments + ")", ex);
+				result = false;
 			}
 			finally
 			{
