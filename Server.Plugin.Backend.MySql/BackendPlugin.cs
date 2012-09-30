@@ -179,7 +179,7 @@ namespace XG.Server.Plugin.Backend.MySql
 
 				string values1 = "";
 				string values2 = "";
-				foreach (KeyValuePair<string, object> kcp in dic)
+				foreach (var kcp in dic)
 				{
 					if (values1 != "")
 					{
@@ -202,7 +202,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			if (table != "")
 			{
 				string values1 = "";
-				foreach (KeyValuePair<string, object> kcp in dic)
+				foreach (var kcp in dic)
 				{
 					if (values1 != "")
 					{
@@ -349,7 +349,7 @@ namespace XG.Server.Plugin.Backend.MySql
 				{
 					if (aDic != null)
 					{
-						foreach (KeyValuePair<string, object> kcp in aDic)
+						foreach (var kcp in aDic)
 						{
 							cmd.Parameters.AddWithValue ("@" + kcp.Key, kcp.Value);
 						}
@@ -388,7 +388,7 @@ namespace XG.Server.Plugin.Backend.MySql
 				{
 					if (aDic != null)
 					{
-						foreach (KeyValuePair<string, object> kcp in aDic)
+						foreach (var kcp in aDic)
 						{
 							cmd.Parameters.AddWithValue ("@" + kcp.Key, kcp.Value);
 						}
@@ -468,7 +468,7 @@ namespace XG.Server.Plugin.Backend.MySql
 		{
 			if (aDic != null)
 			{
-				foreach (KeyValuePair<string, object> kcp in aDic)
+				foreach (var kcp in aDic)
 				{
 					aSql = aSql.Replace ("@" + kcp.Key, "" + kcp.Value);
 				}

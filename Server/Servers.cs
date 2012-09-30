@@ -277,7 +277,7 @@ namespace XG.Server
 
 		void BotDisconnect (Bot aBot)
 		{
-			foreach (KeyValuePair<Packet, BotConnection> kvp in _downloads)
+			foreach (var kvp in _downloads)
 			{
 				if (kvp.Key.Parent == aBot)
 				{
@@ -335,7 +335,7 @@ namespace XG.Server
 				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
 
 				int a = 0;
-				foreach (KeyValuePair<Core.Server, ServerConnection> kvp in _servers)
+				foreach (var kvp in _servers)
 				{
 					if (kvp.Value.IsRunning)
 					{
@@ -366,7 +366,7 @@ namespace XG.Server
 		{
 			while (true)
 			{
-				foreach (KeyValuePair<Core.Server, ServerConnection> kvp in _servers)
+				foreach (var kvp in _servers)
 				{
 					ServerConnection sc = kvp.Value;
 					if (sc.IsRunning)

@@ -48,7 +48,8 @@ namespace XG.Core.Test
 		public void Test ()
 		{
 			Core.Object obj = new Core.Object();
-			obj.Changed += delegate {
+			obj.Changed += delegate
+			{
 				_modified = true;
 			};
 			AssertModified(obj, false);

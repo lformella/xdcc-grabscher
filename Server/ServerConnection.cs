@@ -383,7 +383,7 @@ namespace XG.Server
 		public void TriggerTimerRun()
 		{
 			List<AObject> remove = new List<AObject>();
-			foreach (KeyValuePair<AObject, DateTime> kvp in _timedObjects)
+			foreach (var kvp in _timedObjects)
 			{
 				DateTime time = kvp.Value;
 				if ((time - DateTime.Now).TotalMilliseconds < 0) { remove.Add(kvp.Key); }

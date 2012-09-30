@@ -87,7 +87,7 @@ namespace XG.Core
 		public Bot Bot(string aName)
 		{
 			Bot tBot = null;
-			foreach (Channel chan in base.All)
+			foreach (Channel chan in Channels)
 			{
 				tBot = chan.Bot(aName);
 				if (tBot != null) { break; }

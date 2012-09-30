@@ -23,6 +23,12 @@
 
 using System;
 
+#if !WINDOWS
+using NUnit.Framework;
+#else
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
+
 using XG.Core;
 
 namespace XG.Server.Irc.Test
@@ -66,62 +72,51 @@ namespace XG.Server.Irc.Test
 		{
 			_ircParser =aParser;
 
-			_ircParser.ParsingError += new DataTextDelegate(IrcParserParsingError);
+			_ircParser.ParsingError += delegate (string aData)
+			{
+				_eventParsingError = aData;
+			};
 
-			_ircParser.AddDownload += new DownloadDelegate (IrcParserAddDownload);
-			_ircParser.RemoveDownload += new BotDelegate (IrcParserRemoveDownload);
+			_ircParser.AddDownload += delegate (Packet aPack, long aChunk, System.Net.IPAddress aIp, int aPort)
+			{
+				_eventPacket = aPack;
+				_eventChunk = aChunk;
+				_eventIp = aIp;
+				_eventPort = aPort;
+			};
+			_ircParser.RemoveDownload += delegate (Bot aBot)
+			{
+				_eventBot = aBot;
+			};
 
-			_ircParser.SendData += new ServerDataTextDelegate(IrcParserSendData);
-			_ircParser.JoinChannel += new ServerChannelDelegate(IrcParserJoinChannel);
-			_ircParser.CreateTimer += new ServerObjectIntBoolDelegate(IrcParserCreateTimer);
+			_ircParser.SendData += delegate (Core.Server aServer, string aData)
+			{
+				Assert.AreEqual(_server, aServer);
+				_eventData = aData;
+			};
+			_ircParser.JoinChannel += delegate (Core.Server aServer, Channel aChannel)
+			{
+				Assert.AreEqual(_server, aServer);
+				_eventChannel = aChannel;
+			};
+			_ircParser.CreateTimer += delegate (Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
+			{
+				Assert.AreEqual(_server, aServer);
+				_eventObject = aObject;
+				_eventTime = aTime;
+				_eventOverride = aOverride;
+			};
 
-			_ircParser.RequestFromBot += new ServerBotDelegate(IrcParserRequestFromBot);
-			_ircParser.UnRequestFromBot += new ServerBotDelegate(IrcParserUnRequestFromBot);
-		}
-
-		void IrcParserParsingError (string aData)
-		{
-			_eventParsingError = aData;
-		}
-
-		void IrcParserAddDownload (Packet aPack, long aChunk, System.Net.IPAddress aIp, int aPort)
-		{
-			_eventPacket = aPack;
-			_eventChunk = aChunk;
-			_eventIp = aIp;
-			_eventPort = aPort;
-		}
-
-		void IrcParserRemoveDownload (Bot aBot)
-		{
-			_eventBot = aBot;
-		}
-
-		void IrcParserSendData(Core.Server aServer, string aData)
-		{
-			_eventData = aData;
-		}
-
-		void IrcParserJoinChannel(Core.Server aServer, Channel aChannel)
-		{
-			_eventChannel = aChannel;
-		}
-
-		void IrcParserCreateTimer(Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
-		{
-			_eventObject = aObject;
-			_eventTime = aTime;
-			_eventOverride = aOverride;
-		}
-
-		void IrcParserRequestFromBot(Core.Server aServer, Bot aBot)
-		{
-			_eventBot = aBot;
-		}
-
-		void IrcParserUnRequestFromBot(Core.Server aServer, Bot aBot)
-		{
-			_eventBot = aBot;
+			_ircParser.RequestFromBot += delegate (Core.Server aServer, Bot aBot)
+			{
+				Assert.AreEqual(_server, aServer);
+				_eventBot = aBot;
+			};
+			_ircParser.UnRequestFromBot += delegate (Core.Server aServer, Bot aBot)
+			{
+				Assert.AreEqual(_server, aServer);
+				_eventBot = aBot;
+			};
 		}
 	}
 }
