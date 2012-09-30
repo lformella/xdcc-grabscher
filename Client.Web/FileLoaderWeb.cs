@@ -85,6 +85,39 @@ namespace XG.Client.Web
 #endif
 		}
 
+		public byte[] LoadFile(string aFile)
+		{
+			if (_dicByt.ContainsKey(aFile))
+			{
+				return _dicByt[aFile];
+			}
+			else
+			{
+#if !UNSAFE
+				try
+				{
+#endif
+#if DEBUG
+					return File.ReadAllBytes("./Resources" + aFile);
+#else
+					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
+					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+					_dicByt.Add(aFile, new BinaryReader(assembly.GetManifestResourceStream(name)).ReadAllBytes());
+					return _dicByt[aFile];
+#endif
+#if !UNSAFE
+				}
+				catch (Exception ex)
+				{
+					_log.Fatal("LoadFile(" + aFile + ")", ex);
+				}
+#endif
+			}
+#if !UNSAFE
+			return new byte[0];
+#endif
+		}
+
 		string PatchLanguage(string aContent, string[] aLanguages)
 		{
 			string lng = aLanguages[0].Substring(0, 2);
@@ -129,6 +162,25 @@ namespace XG.Client.Web
 #if !UNSAFE
 			return null;
 #endif
+		}
+	}
+
+	public static class BinaryReaderExtension
+	{
+		public static byte[] ReadAllBytes(this BinaryReader reader)
+		{
+			const int bufferSize = 4096;
+			using (var ms = new MemoryStream())
+			{
+				byte[] buffer = new byte[bufferSize];
+				int count;
+				while ((count = reader.Read(buffer, 0, buffer.Length)) != 0)
+				{
+					ms.Write(buffer, 0, count);
+				}
+				return ms.ToArray();
+			}
+			
 		}
 	}
 }

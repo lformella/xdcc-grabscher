@@ -426,6 +426,8 @@ namespace XG.Server.Plugin.General.Webserver
 						}
 						else
 						{
+							bool binary = false;
+
 							if (str.EndsWith(".css"))
 							{
 								client.Response.ContentType = "text/css";
@@ -438,7 +440,33 @@ namespace XG.Server.Plugin.General.Webserver
 							{
 								client.Response.ContentType = "text/html;charset=UTF-8";
 							}
-							WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
+							else if (str.EndsWith(".woff"))
+							{
+								client.Response.ContentType = "application/x-font-woff";
+								binary = true;
+							}
+							else if (str.EndsWith(".ttf"))
+							{
+								client.Response.ContentType = "application/x-font-ttf";
+								binary = true;
+							}
+							else if (str.EndsWith(".eog"))
+							{
+								binary = true;
+							}
+							else if (str.EndsWith(".svg"))
+							{
+								binary = true;
+							}
+
+							if (binary)
+							{
+								WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str));
+							}
+							else
+							{
+								WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
+							}
 						}
 					}
 				}
