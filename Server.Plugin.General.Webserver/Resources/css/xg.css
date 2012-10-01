@@ -36,7 +36,7 @@ html, body
 #layout_search #searches td
 {
 	background-color: #F5F5F5;
-	padding: 2px 0;
+	padding: 0;
 	border-width: 0;
 	box-shadow: 0 1px 0 white inset;
 }
@@ -128,5 +128,63 @@ html, body
 	margin: 11px 0 0 11px;
 }
 
+.icon-big
+{
+	font-size: 22px;
+}
+
+.icon-medium
+{
+	font-size: 18px;
+}
+
+.icon-overlay
+{
+	font-size: 16px;
+	float: right;
+}
+
+.ui-jqgrid tr.jqgrow  td.icon-cell
+{
+	padding: 0;
+}
+
 .ui-effects-transfer { border: 2px dotted gray; }
 
+.ButterLight { color: #fce94f; }
+.ButterMiddle { color: #edd400; }
+.ButterDark { color: #c4a000; }
+.OrangeLight { color: #fcaf3e; }
+.OrangeMiddle { color: #f57900; }
+.OrangeDark { color: #ce5c00; }
+.ChocolateLight { color: #e9b96e; }
+.ChocolateMiddle { color: #c17d11; }
+.ChocolateDark { color: #8f5902; }
+.ChameleonLight { color: #8ae234; }
+.ChameleonMiddle { color: #73d216; }
+.ChameleonDark { color: #4e9a06; }
+.SkyBlueLight { color: #729fcf; }
+.SkyBlueMiddle { color: #3465a4; }
+.SkyBlueDark { color: #204a87; }
+.PlumLight { color: #ad7fa8; }
+.PlumMiddle { color: #75507b; }
+.PlumDark { color: #5c3566; }
+.ScarletRedLight { color: #ef2929; }
+.ScarletRedMiddle { color: #cc0000; }
+.ScarletRedDark { color: #a40000; }
+.Aluminium1Light { color: #eeeeec; }
+.Aluminium1Middle { color: #d3d7cf; }
+.Aluminium1Dark { color: #babdb6; }
+.Aluminium2Light { color: #888a85; }
+.Aluminium2Middle { color: #555753; }
+.Aluminium2Dark { color: #2e3436; }
+
+.SkyBlue1 { color: rgba(32, 74, 135, 0.6); }
+.SkyBlue2 { color: rgba(32, 74, 135, 0.65); }
+.SkyBlue3 { color: rgba(32, 74, 135, 0.7); }
+.SkyBlue4 { color: rgba(32, 74, 135, 0.75); }
+.SkyBlue5 { color: rgba(32, 74, 135, 0.8); }
+.SkyBlue6 { color: rgba(32, 74, 135, 0.85); }
+.SkyBlue7 { color: rgba(32, 74, 135, 0.9); }
+.SkyBlue8 { color: rgba(32, 74, 135, 0.95); }
+.SkyBlue9 { color: rgba(32, 74, 135, 1.0); }

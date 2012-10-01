@@ -1,5 +1,5 @@
 // 
-//  FileLoaderWeb.cs
+//  FileLoader.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -27,26 +27,26 @@ using System.IO;
 using System.Reflection;
 using log4net;
 
-namespace XG.Client.Web
+namespace XG.Server.Plugin.General.Webserver
 {
-	public class FileLoaderWeb
+	public class FileLoader
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(FileLoaderWeb));
+		static readonly ILog _log = LogManager.GetLogger(typeof(FileLoader));
 
 		Dictionary<string, string> _dicStr;
 		Dictionary<string, byte[]> _dicByt;
 
-		public static FileLoaderWeb Instance
+		public static FileLoader Instance
 		{
 			get { return Nested.Instance; }
 		}
 		class Nested
 		{
 			static Nested() { }
-			internal static readonly FileLoaderWeb Instance = new FileLoaderWeb();
+			internal static readonly FileLoader Instance = new FileLoader();
 		}
 
-		FileLoaderWeb()
+		FileLoader()
 		{
 			_dicStr = new Dictionary<string, string>();
 			_dicByt = new Dictionary<string, byte[]>();
@@ -67,8 +67,8 @@ namespace XG.Client.Web
 #if DEBUG
 					return PatchLanguage(File.OpenText("./Resources" + aFile).ReadToEnd(), aLanguages);
 #else
-					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
-                    string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
+					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					_dicStr.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
 					return _dicStr[aFile];
 #endif
@@ -100,7 +100,7 @@ namespace XG.Client.Web
 #if DEBUG
 					return File.ReadAllBytes("./Resources" + aFile);
 #else
-					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
+					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
 					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					_dicByt.Add(aFile, new BinaryReader(assembly.GetManifestResourceStream(name)).ReadAllBytes());
 					return _dicByt[aFile];
@@ -136,8 +136,8 @@ namespace XG.Client.Web
 				try
 				{
 #endif
-					Assembly assembly = Assembly.GetAssembly(typeof(FileLoaderWeb));
-                    string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
+					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					Stream stream = assembly.GetManifestResourceStream(name);
 					byte[] data = new byte[stream.Length];
 					int offset = 0;

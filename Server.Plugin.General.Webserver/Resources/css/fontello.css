@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: 'fontello';
+  src: url("../font/fontello.eot");
+  src: url("../font/fontello.eot?#iefix") format('embedded-opentype'), url("../font/fontello.woff") format('woff'), url("../font/fontello.ttf") format('truetype'), url("../font/fontello.svg#fontello") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: 'fontello';
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+/* margin-right: 0.2em; */
+  text-align: center;
+/* opacity: 0.7; */
+/* Uncomment for 3D effect */
+/* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+/* fix buttons height */
+  line-height: 1em;
+/* you can be more comfortable with increased icons size */
+/* font-size: 120%; */
+}
+
+.icon-home:before { content: '\2302'; } /* '⌂' */
+.icon-th:before { content: '\268f'; } /* '⚏' */
+.icon-attention:before { content: '\26a0'; } /* '⚠' */
+.icon-cw:before { content: '\27f3'; } /* '⟳' */
+.icon-ok-circle2:before { content: '\e702'; } /* '' */
+.icon-cancel-circle2:before { content: '\e703'; } /* '' */
+.icon-down-circle2:before { content: '\e758'; } /* '' */
+.icon-down-open:before { content: '\e75c'; } /* '' */
+.icon-left-open:before { content: '\e75d'; } /* '' */
+.icon-arrows-cw:before { content: '\e760'; } /* '' */
+.icon-globe:before { content: '𝌍'; } /* '\1d30d' */
+.icon-picture-1:before { content: '\e801'; } /* '' */
+.icon-gift:before { content: '🎁'; } /* '\1f381' */
+.icon-headphones:before { content: '🎧'; } /* '\1f3a7' */
+.icon-video-1:before { content: '\e800'; } /* '' */
+.icon-user:before { content: '👤'; } /* '\1f464' */
+.icon-folder:before { content: '📁'; } /* '\1f4c1' */
+.icon-doc:before { content: '📄'; } /* '\1f4c4' */
+.icon-chart-bar:before { content: '📊'; } /* '\1f4ca' */
+.icon-book:before { content: '📕'; } /* '\1f4d5' */
+.icon-search:before { content: '🔍'; } /* '\1f50d' */
+.icon-clock:before { content: '🕔'; } /* '\1f554' */

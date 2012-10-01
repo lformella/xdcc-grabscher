@@ -73,9 +73,7 @@
     <Configuration name="Debug" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Debug" />
       <Entry build="True" name="Server" configuration="Debug" />
-      <Entry build="True" name="Client" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Debug" />
-      <Entry build="True" name="Client.Web" configuration="Debug" />
       <Entry build="True" name="Server.Cmd" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Debug" />
@@ -87,9 +85,7 @@
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Release" />
       <Entry build="True" name="Server" configuration="Release" />
-      <Entry build="True" name="Client" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Release" />
-      <Entry build="True" name="Client.Web" configuration="Release" />
       <Entry build="True" name="Server.Cmd" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Release" />
       <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Release" />
@@ -101,9 +97,7 @@
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Unsafe" />
       <Entry build="True" name="Server" configuration="Unsafe" />
-      <Entry build="True" name="Client" configuration="Unsafe" />
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Unsafe" />
-      <Entry build="True" name="Client.Web" configuration="Unsafe" />
       <Entry build="True" name="Server.Cmd" configuration="Unsafe" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Unsafe" />
       <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Unsafe" />
@@ -115,9 +109,7 @@
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Default" />
       <Entry build="True" name="Server" configuration="Default" />
-      <Entry build="True" name="Client" configuration="Default" />
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Default" />
-      <Entry build="True" name="Client.Web" configuration="Default" />
       <Entry build="True" name="Server.Cmd" configuration="Default" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Default" />
       <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Default" />
@@ -130,9 +122,7 @@
   <StartMode startupentry="Server.Cmd" single="True">
     <Execute type="None" entry="Core" />
     <Execute type="None" entry="Server" />
-    <Execute type="None" entry="Client" />
     <Execute type="None" entry="Server.Plugin.General.Webserver" />
-    <Execute type="None" entry="Client.Web" />
     <Execute type="None" entry="Server.Cmd" />
     <Execute type="None" entry="Server.Plugin.General.Jabber" />
     <Execute type="None" entry="Server.Plugin.Backend.MySql" />
@@ -144,9 +134,7 @@
   <Entries>
     <Entry filename="Core/Core.mdp" />
     <Entry filename="Server/Server.mdp" />
-    <Entry filename="Client/Client.mdp" />
     <Entry filename="Server.Plugin.General.Webserver/Server.Plugin.General.Webserver.mdp" />
-    <Entry filename="Client.Web/Client.Web.mdp" />
     <Entry filename="Server.Cmd/Server.Cmd.mdp" />
     <Entry filename="Server.Plugin.General.Jabber/Server.Plugin.General.Jabber.mdp" />
     <Entry filename="Server.Plugin.Backend.MySql/Server.Plugin.Backend.MySql.mdp" />

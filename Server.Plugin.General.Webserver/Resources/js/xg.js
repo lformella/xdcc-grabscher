@@ -115,11 +115,12 @@ $(function()
 	jQuery("#servers").jqGrid(
 	{
 		datatype: "json",
+		cmTemplate: {fixed:true},
 		colNames: ['', '', 'Name'],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:24, sortable: false},
-			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:34, sortable: false, classes: "icon-cell"},
+			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:218, editable:true, fixed:false}
 		],
 		onSelectRow: function(id)
 		{
@@ -185,11 +186,12 @@ $(function()
 	jQuery("#channels").jqGrid(
 	{
 		datatype: "json",
+		cmTemplate: {fixed:true},
 		colNames: ['', '', 'Name'],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:24, sortable: false},
-			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:220, editable:true}
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:34, sortable: false, classes: "icon-cell"},
+			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:218, editable:true, fixed:false}
 		],
 		ondblClickRow: function(id)
 		{
@@ -247,8 +249,8 @@ $(function()
 		colNames: ['', '', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue'],
 		colModel: [
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:24, sortable: false},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatBotName(r); }, width:370, fixed:false},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:28, sortable: false, classes: "icon-cell"},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatBotName(r); }, fixed:false},
 			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
 			{name:'QueuePosition',	index:'QueuePosition',	formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : "&nbsp;"; }, width:70, align:"right"},
 			{name:'QueueTime',		index:'QueueTime',		formatter: function(c, o, r) { return Helper.time2Human(r.QueueTime); }, width:70, align:"right"},
@@ -294,9 +296,9 @@ $(function()
 		colNames: ['', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated'],
 		colModel: [
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");"); }, width:24, sortable: false},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");"); }, width:33, sortable: false, classes: "icon-cell"},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:40, align:"right"},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, width:400, fixed:false},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
 			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Formatter.formatPacketSize(r); }, width:70, align:"right"},
 			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Formatter.formatPacketSpeed(r); }, width:70, align:"right"},
 			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Formatter.formatPacketTimeMissing(r) }, width:90, align:"right"},
@@ -349,8 +351,8 @@ $(function()
 		colNames: ['', '', '', ''],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:30, sortable: false},
-			{name:'Name',	index:'Name',	width:203, fixed:false, sortable: false},
+			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:26, sortable: false},
+			{name:'Name',	index:'Name',	fixed:false, sortable: false},
 			{name:'Action',	index:'Action',	width:17, sortable: false}
 		],
 		onSelectRow: function(id)
@@ -454,7 +456,7 @@ $(function()
 		colNames:['', '', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
 		colModel:[
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "DowloadLink(\"" + o.rowId + "\");", true); }, width:26, sortable: false},
+			{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "DownloadLink(\"" + o.rowId + "\");", true); }, width:24, sortable: false},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:38, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
 			{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return Helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},
@@ -468,7 +470,7 @@ $(function()
 		{
 			if(id)
 			{
-				DowloadLink(id);
+				DownloadLink(id);
 			}
 		},
 		onSortCol: function(index, iCol, sortorder)
@@ -501,7 +503,7 @@ $(function()
 		colModel: [
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatFileIcon(r); }, width:24, sortable: false},
-			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatFileName(r); }, width:400, fixed:false},
+			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatFileName(r); }, fixed:false},
 			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Formatter.formatFileSize(r); }, width:70, align:"right"},
 			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Formatter.formatFileSpeed(r); }, width:70, align:"right"},
 			{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return Formatter.formatFileTimeMissing(r) }, width:90, align:"right"}
@@ -573,7 +575,7 @@ $(function()
 	$("#dialog_server_channels").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		width: 545,
+		width: 560,
 		modal: true,
 		resizable: false
 	});
@@ -636,7 +638,7 @@ function AddSearch(search)
 	{
 		Id: idSearchCount,
 		Name: search,
-		Action: "<div class='remove_button' onclick='RemoveSearch(" + idSearchCount + ");'></div>"
+		Action: "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='RemoveSearch(" + idSearchCount + ");'></i>"
 	};
 	jQuery("#searches").addRowData(idSearchCount, datarow);
 	return idSearchCount++;
@@ -939,7 +941,7 @@ function FlipObject(id, grid)
 	ReloadGrid(grid);
 }
 
-function DowloadLink(id)
+function DownloadLink(id)
 {
 	var data = GetRowData("searches_xg_bitpir_at", id);
 	$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));

@@ -32,7 +32,6 @@ using System.Web;
 
 using log4net;
 
-using XG.Client.Web;
 using XG.Core;
 
 namespace XG.Server.Plugin.General.Webserver
@@ -403,15 +402,10 @@ namespace XG.Server.Plugin.General.Webserver
 				}
 				else
 				{
-					// load an image
-					if (str.StartsWith("/image&"))
-					{
-						WriteToStream(client.Response, ImageLoaderWeb.Instance.Image(str.Split('&')[1]));
-					}
 					// serve the favicon
-					else if (str == "/favicon.ico")
+					if (str == "/favicon.ico")
 					{
-						WriteToStream(client.Response, ImageLoaderWeb.Instance.Image("Client"));
+						WriteToStream(client.Response, FileLoader.Instance.LoadImage(str));
 					}
 					// load a file
 					else
@@ -422,7 +416,7 @@ namespace XG.Server.Plugin.General.Webserver
 						if (str.EndsWith(".png"))
 						{
 							client.Response.ContentType = "image/png";
-							WriteToStream(client.Response, FileLoaderWeb.Instance.LoadImage(str));
+							WriteToStream(client.Response, FileLoader.Instance.LoadImage(str));
 						}
 						else
 						{
@@ -461,11 +455,11 @@ namespace XG.Server.Plugin.General.Webserver
 
 							if (binary)
 							{
-								WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str));
+								WriteToStream(client.Response, FileLoader.Instance.LoadFile(str));
 							}
 							else
 							{
-								WriteToStream(client.Response, FileLoaderWeb.Instance.LoadFile(str, client.Request.UserLanguages));
+								WriteToStream(client.Response, FileLoader.Instance.LoadFile(str, client.Request.UserLanguages));
 							}
 						}
 					}
