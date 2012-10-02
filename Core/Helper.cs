@@ -122,7 +122,7 @@ namespace XG.Core
 	public delegate void DataBinaryDelegate(byte[] aData);
 
 	public delegate void ServerDelegate(Server aServer);
-	public delegate void ServerBotDelegate (Server aServer, Bot aBot);
+	public delegate void ServerBotDelegate(Server aServer, Bot aBot);
 	public delegate void ServerChannelDelegate(Server aServer, Channel aChan);
 
 	public delegate void ServerObjectIntBoolDelegate(Server aServer, AObject aObj, Int64 aInt, bool aBool);

@@ -54,20 +54,6 @@ namespace XG.Server.Plugin.General.Webserver
 			result = dt.ToString("HH:mm:ss dd.MM.yyyy");
 			return result;
 		}
-
-		static Regex myClearRegex = new Regex(@"[^A-Za-z0-9äÄöÖüÜß _.\[\]\{\}\(\)-]");
-		static string ClearString(string aString)
-		{
-			string str = myClearRegex.Replace(aString, "");
-			str = str.Replace("Ä", "&Auml;");
-			str = str.Replace("ä", "&auml;");
-			str = str.Replace("Ö", "&Ouml;");
-			str = str.Replace("ö", "&ouml;");
-			str = str.Replace("Ü", "&Uuml;");
-			str = str.Replace("ü", "&uuml;");
-			str = str.Replace("ß", "&szlig;");
-			return str;
-		}
 	}
 }
 

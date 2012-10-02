@@ -35,17 +35,14 @@ namespace XG.Core
 			get { return base.All.Cast<File>(); }
 		}
 
-		public File this[string tmpPath]
+		public File File(string tmpPath)
 		{
-			get
+			try
 			{
-				try
-				{
-					return All.First(file => file.TmpPath == tmpPath);
-				}
-				catch {}
-				return null;
+				return All.First(file => file.TmpPath == tmpPath);
 			}
+			catch {}
+			return null;
 		}
 
 		public void Add(File aFile)
@@ -55,7 +52,7 @@ namespace XG.Core
 		public void Add(string aName, Int64 aSize)
 		{
 			File tFile = new File(aName, aSize);
-			if (this[tFile.TmpPath] == null)
+			if (File(tFile.TmpPath) == null)
 			{
 				Add(tFile);
 			}

@@ -33,8 +33,8 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		static readonly ILog _log = LogManager.GetLogger(typeof(FileLoader));
 
-		Dictionary<string, string> _dicStr;
-		Dictionary<string, byte[]> _dicByt;
+		Dictionary<string, string> _dicString;
+		Dictionary<string, byte[]> _dicByte;
 
 		public static FileLoader Instance
 		{
@@ -48,15 +48,15 @@ namespace XG.Server.Plugin.General.Webserver
 
 		FileLoader()
 		{
-			_dicStr = new Dictionary<string, string>();
-			_dicByt = new Dictionary<string, byte[]>();
+			_dicString = new Dictionary<string, string>();
+			_dicByte = new Dictionary<string, byte[]>();
 		}
 
 		public string LoadFile(string aFile, string[] aLanguages)
 		{
-			if (_dicStr.ContainsKey(aFile))
+			if (_dicString.ContainsKey(aFile))
 			{
-				return _dicStr[aFile];
+				return _dicString[aFile];
 			}
 			else
 			{
@@ -69,8 +69,8 @@ namespace XG.Server.Plugin.General.Webserver
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
 					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					_dicStr.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
-					return _dicStr[aFile];
+					_dicString.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
+					return _dicString[aFile];
 #endif
 #if !UNSAFE
 				}
@@ -87,9 +87,9 @@ namespace XG.Server.Plugin.General.Webserver
 
 		public byte[] LoadFile(string aFile)
 		{
-			if (_dicByt.ContainsKey(aFile))
+			if (_dicByte.ContainsKey(aFile))
 			{
-				return _dicByt[aFile];
+				return _dicByte[aFile];
 			}
 			else
 			{
@@ -102,8 +102,8 @@ namespace XG.Server.Plugin.General.Webserver
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
 					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					_dicByt.Add(aFile, new BinaryReader(assembly.GetManifestResourceStream(name)).ReadAllBytes());
-					return _dicByt[aFile];
+					_dicByte.Add(aFile, new BinaryReader(assembly.GetManifestResourceStream(name)).ReadAllBytes());
+					return _dicByte[aFile];
 #endif
 #if !UNSAFE
 				}
@@ -126,9 +126,9 @@ namespace XG.Server.Plugin.General.Webserver
 
 		public byte[] LoadImage(string aFile)
 		{
-			if (_dicByt.ContainsKey(aFile))
+			if (_dicByte.ContainsKey(aFile))
 			{
-				return _dicByt[aFile];
+				return _dicByte[aFile];
 			}
 			else
 			{
@@ -149,8 +149,8 @@ namespace XG.Server.Plugin.General.Webserver
 						remaining -= read;
 						offset += read;
 					}
-					_dicByt.Add(aFile, data);
-					return _dicByt[aFile];
+					_dicByte.Add(aFile, data);
+					return _dicByte[aFile];
 #if !UNSAFE
 				}
 				catch (Exception ex)

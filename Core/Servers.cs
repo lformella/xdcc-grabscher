@@ -35,17 +35,9 @@ namespace XG.Core
 			get { return base.All.Cast<Server>(); }
 		}
 
-		public Server this[string name]
+		public Server Server(string aName)
 		{
-			get
-			{
-				try
-				{
-					return All.First(serv => serv.Name == name.Trim().ToLower());
-				}
-				catch {}
-				return null;
-			}
+			return (Server)base.Named(aName);
 		}
 
 		public void Add(Server aServer)
@@ -55,7 +47,7 @@ namespace XG.Core
 		public void Add(string aServer)
 		{
 			aServer = aServer.Trim().ToLower();
-			if (this[aServer] == null)
+			if (Server(aServer) == null)
 			{
 				Server tServer = new Server();
 				tServer.Name = aServer;

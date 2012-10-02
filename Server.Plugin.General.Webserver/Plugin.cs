@@ -355,11 +355,11 @@ namespace XG.Server.Plugin.General.Webserver
 							int packetId = int.Parse(link[4].Substring(1));
 
 							// checking server
-							Core.Server serv = Servers[serverName];
+							Core.Server serv = Servers.Server(serverName);
 							if(serv == null)
 							{
 								Servers.Add(serverName);
-								serv = Servers[serverName];
+								serv = Servers.Server(serverName);
 							}
 							serv.Enabled = true;
 
