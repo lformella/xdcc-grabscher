@@ -42,9 +42,9 @@ namespace XG.Server.Plugin.General.Jabber
 
 		static readonly ILog log = LogManager.GetLogger(typeof(Plugin));
 
-		XmppClientConnection client;
+		XmppClientConnection _client;
 
-		Thread serverThread;
+		Thread _serverThread;
 
 		#endregion
 
@@ -53,15 +53,15 @@ namespace XG.Server.Plugin.General.Jabber
 		public override void Start ()
 		{
 			// start the server thread
-			serverThread = new Thread(new ThreadStart(OpenClient));
-			serverThread.Start();
+			_serverThread = new Thread(new ThreadStart(OpenClient));
+			_serverThread.Start();
 		}
 		
 		
 		public override void Stop ()
 		{
 			CloseClient();
-			serverThread.Abort();
+			_serverThread.Abort();
 		}
 		
 		#endregion
@@ -73,17 +73,17 @@ namespace XG.Server.Plugin.General.Jabber
 		/// </summary>
 		void OpenClient()
 		{
-			client = new XmppClientConnection(Settings.Instance.JabberServer);
-			client.Open(Settings.Instance.JabberUser, Settings.Instance.JabberPassword);
-			client.OnLogin += delegate(object sender)
+			_client = new XmppClientConnection(Settings.Instance.JabberServer);
+			_client.Open(Settings.Instance.JabberUser, Settings.Instance.JabberPassword);
+			_client.OnLogin += delegate(object sender)
 			{
 				UpdateState(0);
 			};
-			client.OnError += delegate(object sender, Exception ex)
+			_client.OnError += delegate(object sender, Exception ex)
 			{
 				log.Fatal("OpenServer()", ex);
 			};
-			client.OnAuthError += delegate(object sender, Element e)
+			_client.OnAuthError += delegate(object sender, Element e)
 			{
 				log.Fatal("OpenServer() " + e.ToString());
 			};
@@ -91,12 +91,12 @@ namespace XG.Server.Plugin.General.Jabber
 
 		void CloseClient()
 		{
-			client.Close();
+			_client.Close();
 		}
 
 		void UpdateState(double aSpeed)
 		{
-			if(client == null) { return; }
+			if(_client == null) { return; }
 
 			Presence p = null;
 			if(aSpeed > 0)
@@ -115,7 +115,7 @@ namespace XG.Server.Plugin.General.Jabber
 				p = new Presence(ShowType.away, "Idle");
 				p.Type = PresenceType.available;
 			}
-			client.Send(p);
+			_client.Send(p);
 		}
 
 		#endregion
