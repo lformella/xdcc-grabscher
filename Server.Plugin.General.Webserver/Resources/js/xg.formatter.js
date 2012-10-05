@@ -33,6 +33,7 @@ var XGFormatter = Class.create(
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
+		var overlayStyle = "opacity: 0.6";
 
 		if (!server.Enabled)
 		{
@@ -49,7 +50,7 @@ var XGFormatter = Class.create(
 			overlayClass = "ScarletRedMiddle";
 		}
 
-		return this.formatIcon2(icon, iconClass, overlay, overlayClass, onclick);
+		return this.formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 	},
 
 	formatChannelIcon: function (channel, id)
@@ -58,6 +59,7 @@ var XGFormatter = Class.create(
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
+		var overlayStyle = "opacity: 0.6";
 
 		if (!channel.Enabled)
 		{
@@ -74,7 +76,7 @@ var XGFormatter = Class.create(
 			overlayClass = "ScarletRedMiddle";
 		}
 
-		return this.formatIcon2(icon, iconClass, overlay, overlayClass);
+		return this.formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle);
 	},
 
 	/* ************************************************************************************************************** */
@@ -121,6 +123,7 @@ var XGFormatter = Class.create(
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
+		var overlayStyle = "";
 
 		if (!bot.Connected)
 		{
@@ -135,6 +138,7 @@ var XGFormatter = Class.create(
 					{
 						overlay = "ok-circle2";
 						overlayClass = "ChameleonMiddle";
+						overlayStyle = "opacity: 0.6";
 					}
 					else if (bot.InfoSlotCurrent == 0 && bot.InfoSlotCurrent)
 					{
@@ -146,16 +150,18 @@ var XGFormatter = Class.create(
 				case 1:
 					iconClass = "SkyBlueDark";
 					overlay = "down-circle2";
-					overlayClass = this.speed2Image(bot.Speed);
+					overlayClass = "SkyBlueMiddle";
+					overlayStyle = "opacity: " + this.speed2Overlay(bot.Speed);
 					break;
 
 				case 2:
 					overlay = "clock";
+					overlayClass = "OrangeMiddle";
 					break;
 			}
 		}
 
-		return this.formatIcon2(icon, iconClass, overlay, overlayClass);
+		return this.formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle);
 	},
 
 	formatBotName: function (bot)
@@ -214,6 +220,7 @@ var XGFormatter = Class.create(
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
+		var overlayStyle = "";
 
 		if (!packet.Enabled)
 		{
@@ -225,7 +232,8 @@ var XGFormatter = Class.create(
 			{
 				iconClass = "SkyBlueDark";
 				overlay = "down-circle2";
-				overlayClass = this.speed2Image(packet.Part != null ? packet.Part.Speed : 0);
+				overlayClass = "SkyBlueMiddle";
+				overlayStyle = "opacity: " + this.speed2Overlay(packet.Part != null ? packet.Part.Speed : 0);
 			}
 			else if (packet.Next)
 			{
@@ -239,7 +247,7 @@ var XGFormatter = Class.create(
 			}
 		}
 
-		return this.formatIcon2(icon, iconClass, overlay, overlayClass, onclick);
+		return this.formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 	},
 
 	formatPacketId: function (packet)
@@ -387,48 +395,10 @@ var XGFormatter = Class.create(
 	/* IMAGE FORMATER                                                                                                 */
 	/* ************************************************************************************************************** */
 
-	speed2Image: function (speed)
+	speed2Overlay: function (speed)
 	{
-		var overlayClass = "SkyBlue";
-
-		if (speed < 1024 * 150)
-		{
-			overlayClass += "1";
-		}
-		else if (speed < 1024 * 300)
-		{
-			overlayClass += "2";
-		}
-		else if (speed < 1024 * 450)
-		{
-			overlayClass += "3";
-		}
-		else if (speed < 1024 * 600)
-		{
-			overlayClass += "4";
-		}
-		else if (speed < 1024 * 750)
-		{
-			overlayClass += "5";
-		}
-		else if (speed < 1024 * 900)
-		{
-			overlayClass += "6";
-		}
-		else if (speed < 1024 * 1050)
-		{
-			overlayClass += "7";
-		}
-		else if (speed < 1024 * 1200)
-		{
-			overlayClass += "8";
-		}
-		else
-		{
-			overlayClass += "9";
-		}
-
-		return overlayClass;
+		var opacity = (speed / (1024 * 1500)) * 0.4;
+		return (opacity > 0.4 ? 0.4 : opacity) + 0.6;
 	},
 
 	formatIcon: function (icon, iconClass)
@@ -437,7 +407,7 @@ var XGFormatter = Class.create(
 		return "<i class='" + iconClass + "'></i>";
 	},
 
-	formatIcon2: function (icon, iconClass, overlay, overlayClass, onclick)
+	formatIcon2: function (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
 	{
 		iconClass = "icon-big icon-" + icon + " " + iconClass;
 		if (onclick != undefined && onclick != "")
@@ -449,7 +419,12 @@ var XGFormatter = Class.create(
 		var str = "";
 		if (overlay != undefined && overlay != "")
 		{
-			str += "<i class='" + overlayClass + "'></i>";
+			str += "<i class='" + overlayClass + "'";
+			if (overlayStyle != undefined && overlayStyle != "")
+			{
+				str += " style='" + overlayStyle + "'";
+			}
+			str += "></i>";
 		}
 		str += "<i class='" + iconClass + "'";
 		if (onclick != undefined && onclick != "")

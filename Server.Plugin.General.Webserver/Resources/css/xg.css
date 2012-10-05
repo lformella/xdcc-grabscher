@@ -52,12 +52,12 @@ html, body
 
 #layout_search #searches tr.ui-state-highlight
 {
-	outline: 1px solid #FFE861;
+	outline: 1px solid #fce94f;
 }
 
 #layout_search #searches tr, #layout_search #searches tr.ui-state-hover
 {
-	outline: 1px solid #CCCCCC;
+	outline: 1px solid #d3d7cf;
 }
 
 #gview_searches .ui-jqgrid-hdiv
@@ -107,15 +107,7 @@ html, body
 	outline: 0;
 }
 
-.remove_button
-{
-	background-image: url('/image&OverDisabled');
-	width: 10px;
-	height: 10px;
-	float: left;
-}
-
-.remove_button, .button
+.button
 {
 	cursor: pointer;
 }
@@ -148,7 +140,7 @@ html, body
 	padding: 0;
 }
 
-.ui-effects-transfer { border: 2px dotted gray; }
+.ui-effects-transfer { border: 2px dotted #888a85; }
 
 .ButterLight { color: #fce94f; }
 .ButterMiddle { color: #edd400; }
@@ -177,13 +169,3 @@ html, body
 .Aluminium2Light { color: #888a85; }
 .Aluminium2Middle { color: #555753; }
 .Aluminium2Dark { color: #2e3436; }
-
-.SkyBlue1 { color: rgba(32, 74, 135, 0.6); }
-.SkyBlue2 { color: rgba(32, 74, 135, 0.65); }
-.SkyBlue3 { color: rgba(32, 74, 135, 0.7); }
-.SkyBlue4 { color: rgba(32, 74, 135, 0.75); }
-.SkyBlue5 { color: rgba(32, 74, 135, 0.8); }
-.SkyBlue6 { color: rgba(32, 74, 135, 0.85); }
-.SkyBlue7 { color: rgba(32, 74, 135, 0.9); }
-.SkyBlue8 { color: rgba(32, 74, 135, 0.95); }
-.SkyBlue9 { color: rgba(32, 74, 135, 1.0); }
