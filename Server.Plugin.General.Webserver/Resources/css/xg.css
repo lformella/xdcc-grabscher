@@ -133,6 +133,7 @@ html, body
 {
 	font-size: 16px;
 	float: right;
+	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
 }
 
 .ui-jqgrid tr.jqgrow  td.icon-cell
