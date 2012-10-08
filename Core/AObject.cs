@@ -22,6 +22,7 @@
 // 
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace XG.Core
@@ -59,6 +60,17 @@ namespace XG.Core
 		#endregion
 
 		#region PROPERTIES
+		
+		protected bool SetProperty<T>(ref T field, T value)
+		{
+			if (!EqualityComparer<T>.Default.Equals(field, value))
+			{
+				field = value;
+				Modified = true;
+				return true;
+			}
+			return false;
+		}
 
 		Guid _parentGuid;
 		[DataMember]
@@ -87,25 +99,14 @@ namespace XG.Core
 		}
 		
 		[DataMember]
-		public Guid Guid
-		{
-			get;
-			set;
-		}
+		public Guid Guid { get; set; }
 
 		string _name;
 		[DataMember]
 		public virtual string Name
 		{
 			get { return _name; }
-			set
-			{
-				if (_name != value)
-				{
-					_name = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _name, value); }
 		}
 
 		internal bool Modified;
@@ -123,14 +124,7 @@ namespace XG.Core
 		public virtual bool Connected
 		{
 			get { return _connected; }
-			set
-			{
-				if (_connected != value)
-				{
-					_connected = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _connected, value); }
 		}
 		
 		bool _enabled;

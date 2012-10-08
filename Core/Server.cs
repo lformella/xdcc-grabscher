@@ -45,14 +45,7 @@ namespace XG.Core
 		public int Port
 		{
 			get { return _port; }
-			set
-			{
-				if (_port != value)
-				{
-					_port = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _port, value); }
 		}
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
@@ -60,14 +53,7 @@ namespace XG.Core
 		public SocketErrorCode ErrorCode
 		{
 			get { return _errorCode; }
-			set
-			{
-				if (_errorCode != value)
-				{
-					_errorCode = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _errorCode, value); }
 		}
 
 		#endregion

@@ -67,14 +67,7 @@ namespace XG.Core
 		public int Id
 		{
 			get { return _id; }
-			set
-			{
-				if (_id != value)
-				{
-					_id = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _id, value); }
 		}
 
 		Int64 _size = 0;
@@ -82,14 +75,7 @@ namespace XG.Core
 		public Int64 Size
 		{
 			get { return _size; }
-			set
-			{
-				if (_size != value)
-				{
-					_size = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _size, value); }
 		}
 
 		Int64 _realSize = 0;
@@ -97,14 +83,7 @@ namespace XG.Core
 		public Int64 RealSize
 		{
 			get { return _realSize; }
-			set
-			{
-				if (_realSize != value)
-				{
-					_realSize = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _realSize, value); }
 		}
 
 		string _realName = "";
@@ -112,14 +91,7 @@ namespace XG.Core
 		public string RealName
 		{
 			get { return _realName; }
-			set
-			{
-				if (_realName != value)
-				{
-					_realName = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _realName, value); }
 		}
 
 		DateTime _lastUpdated = DateTime.MinValue;
@@ -127,14 +99,7 @@ namespace XG.Core
 		public DateTime LastUpdated
 		{
 			get { return _lastUpdated; }
-			set
-			{
-				if (_lastUpdated != value)
-				{
-					_lastUpdated = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _lastUpdated, value); }
 		}
 
 		DateTime _lastMentioned = DateTime.MinValue;
@@ -142,14 +107,7 @@ namespace XG.Core
 		public DateTime LastMentioned
 		{
 			get { return _lastMentioned; }
-			set
-			{
-				if (_lastMentioned != value)
-				{
-					_lastMentioned = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _lastMentioned, value); }
 		}
 
 		[DataMember]

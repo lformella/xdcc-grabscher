@@ -97,14 +97,7 @@ namespace XG.Core
 		public IPAddress IP
 		{
 			get { return _ip; }
-			set
-			{
-				if (_ip != value)
-				{
-					_ip = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _ip, value); }
 		}
 
 		string _lastMessage = "";
@@ -114,11 +107,9 @@ namespace XG.Core
 			get { return _lastMessage; }
 			set
 			{
-				if (_lastMessage != value)
+				if (SetProperty(ref _lastMessage, value))
 				{
-					_lastMessage = value;
 					_lastContact = DateTime.Now;
-					Modified = true;
 				}
 			}
 		}
@@ -128,14 +119,7 @@ namespace XG.Core
 		public DateTime LastContact
 		{
 			get { return _lastContact; }
-			set
-			{
-				if (_lastContact != value)
-				{
-					_lastContact = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _lastContact, value); }
 		}
 
 		int _queuePosition = 0;
@@ -143,14 +127,7 @@ namespace XG.Core
 		public int QueuePosition
 		{
 			get { return _queuePosition; }
-			set
-			{
-				if (_queuePosition != value)
-				{
-					_queuePosition = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _queuePosition, value); }
 		}
 
 		int _queueTime = 0;
@@ -158,14 +135,7 @@ namespace XG.Core
 		public int QueueTime
 		{
 			get { return _queueTime; }
-			set
-			{
-				if (_queueTime != value)
-				{
-					_queueTime = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _queueTime, value); }
 		}
 
 		double _infoSpeedMax = 0;
@@ -173,28 +143,14 @@ namespace XG.Core
 		public double InfoSpeedMax
 		{
 			get { return _infoSpeedMax; }
-			set
-			{
-				if (_infoSpeedMax != value)
-				{
-					_infoSpeedMax = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _infoSpeedMax, value); }
 		}
 		double _infoSpeedCurrent = 0;
 		[DataMember]
 		public double InfoSpeedCurrent
 		{
 			get { return _infoSpeedCurrent; }
-			set
-			{
-				if (_infoSpeedCurrent != value)
-				{
-					_infoSpeedCurrent = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _infoSpeedCurrent, value); }
 		}
 
 		int _infoSlotTotal = 0;
@@ -202,28 +158,14 @@ namespace XG.Core
 		public int InfoSlotTotal
 		{
 			get { return _infoSlotTotal; }
-			set
-			{
-				if (_infoSlotTotal != value)
-				{
-					_infoSlotTotal = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _infoSlotTotal, value); }
 		}
 		int _infoSlotCurrent = 0;
 		[DataMember]
 		public int InfoSlotCurrent
 		{
 			get { return _infoSlotCurrent; }
-			set
-			{
-				if (_infoSlotCurrent != value)
-				{
-					_infoSlotCurrent = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _infoSlotCurrent, value); }
 		}
 
 		int _infoQueueTotal = 0;
@@ -231,28 +173,14 @@ namespace XG.Core
 		public int InfoQueueTotal
 		{
 			get { return _infoQueueTotal; }
-			set
-			{
-				if (_infoQueueTotal != value)
-				{
-					_infoQueueTotal = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _infoQueueTotal, value); }
 		}
 		int _infoQueueCurrent = 0;
 		[DataMember]
 		public int InfoQueueCurrent
 		{
 			get { return _infoQueueCurrent; }
-			set
-			{
-				if (_infoQueueCurrent != value)
-				{
-					_infoQueueCurrent = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _infoQueueCurrent, value); }
 		}
 		
 		[DataMember]

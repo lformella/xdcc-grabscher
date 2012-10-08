@@ -87,14 +87,7 @@ namespace XG.Core
 		public Int64 StartSize
 		{
 			get { return _startSize; }
-			set
-			{
-				if (_startSize != value)
-				{
-					_startSize = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _startSize, value); }
 		}
 
 		Int64 _stopSize = 0;
@@ -102,14 +95,7 @@ namespace XG.Core
 		public Int64 StopSize
 		{
 			get { return _stopSize; }
-			set
-			{
-				if (_stopSize != value)
-				{
-					_stopSize = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _stopSize, value); }
 		}
 
 		Int64 _currentSize = 0;
@@ -117,14 +103,7 @@ namespace XG.Core
 		public Int64 CurrentSize
 		{
 			get { return _currentSize; }
-			set
-			{
-				if (_currentSize != value)
-				{
-					_currentSize = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _currentSize, value); }
 		}
 		
 		[DataMember]
@@ -152,14 +131,7 @@ namespace XG.Core
 		public double Speed
 		{
 			get { return _speed; }
-			set
-			{
-				if (_speed != value)
-				{
-					_speed = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _speed, value); }
 		}
 
 		FilePart.States _state;
@@ -184,14 +156,7 @@ namespace XG.Core
 		public bool Checked
 		{
 			get { return _checked; }
-			set
-			{
-				if (_checked != value)
-				{
-					_checked = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _checked, value); }
 		}
 		
 		[NonSerialized]

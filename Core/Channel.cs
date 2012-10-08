@@ -45,14 +45,7 @@ namespace XG.Core
 		public int ErrorCode
 		{
 			get { return _errorCode; }
-			set
-			{
-				if (_errorCode != value)
-				{
-					_errorCode = value;
-					Modified = true;
-				}
-			}
+			set { SetProperty(ref _errorCode, value); }
 		}
 
 		#endregion
