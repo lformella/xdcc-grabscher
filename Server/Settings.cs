@@ -71,19 +71,26 @@ namespace XG.Server
 		/// </returns>
 		static Settings Deserialize()
 		{
-			try
+			if (File.Exists("./settings.xml"))
 			{
-				XmlSerializer ser = new XmlSerializer(typeof(Settings));
-				StreamReader sr = new StreamReader("./settings.xml");
-				Settings settings = (Settings)ser.Deserialize(sr);
-				sr.Close();
-				return settings;
+				try
+				{
+					XmlSerializer ser = new XmlSerializer(typeof(Settings));
+					StreamReader sr = new StreamReader("./settings.xml");
+					Settings settings = (Settings)ser.Deserialize(sr);
+					sr.Close();
+					return settings;
+				}
+				catch (Exception ex)
+				{
+					_log.Fatal("Settings.Deserialize", ex);
+				}
 			}
-			catch (Exception ex)
+			else
 			{
-				_log.Fatal("Settings.Deserialize", ex);
-				return new Settings();
+				_log.Error("Settings.Deserialize found no settings file, using default one");
 			}
+			return new Settings();
 		}
 
 		static void Serialize()
