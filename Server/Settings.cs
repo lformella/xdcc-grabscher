@@ -81,7 +81,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Settings.Instance", ex);
+				_log.Fatal("Settings.Deserialize", ex);
 				return new Settings();
 			}
 		}
@@ -97,7 +97,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Settings.Instance", ex);
+				_log.Fatal("Settings.Serialize", ex);
 			}
 		}
 

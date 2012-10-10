@@ -1,5 +1,5 @@
 // 
-//  Statistics.cs
+//  Statistic.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -175,7 +175,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Settings.Instance.Deserialize() ", ex);
+					_log.Fatal("Statistic.Deserialize() ", ex);
 					return new Statistic();
 				}
 			}
@@ -201,7 +201,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Statistic.Instance.Serialize() ", ex);
+					_log.Fatal("Statistic.Serialize() ", ex);
 				}
 			}
 		}
