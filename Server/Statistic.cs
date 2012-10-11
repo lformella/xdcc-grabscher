@@ -29,7 +29,6 @@ using log4net;
 
 namespace XG.Server
 {
-	[Flags]
 	public enum StatisticType : int
 	{
 		BytesLoaded,
