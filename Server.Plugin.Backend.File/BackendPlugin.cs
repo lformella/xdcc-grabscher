@@ -47,6 +47,7 @@ namespace XG.Server.Plugin.Backend.File
 		object _saveObjectsLock = new object();
 		object _saveFilesLock = new object();
 		object _saveSearchesLock = new object();
+		object _saveSnapshotsLock = new object();
 
 		#endregion
 
@@ -98,6 +99,21 @@ namespace XG.Server.Plugin.Backend.File
 				_searches = new Objects();
 			}
 			return _searches;
+		}
+		
+		public override Snapshots LoadStatistics ()
+		{
+			Snapshots _snapshots = null;
+			try
+			{
+				_snapshots = (Snapshots)Load(Settings.Instance.SnapshotsBinary);
+			}
+			catch {}
+			if (_snapshots == null)
+			{
+				_snapshots = new Snapshots();
+			}
+			return _snapshots;
 		}
 
 		#endregion
@@ -176,6 +192,11 @@ namespace XG.Server.Plugin.Backend.File
 			{
 				SaveObjects();
 			}
+		}
+		
+		protected override void SnapshotAdded(Snapshot aSnap)
+		{
+			SaveSnapshots();
 		}
 
 		#endregion
@@ -298,6 +319,14 @@ namespace XG.Server.Plugin.Backend.File
 			lock (_saveSearchesLock)
 			{
 				return Save(Searches, Settings.Instance.SearchesBinary);
+			}
+		}
+		
+		bool SaveSnapshots()
+		{
+			lock (_saveSnapshotsLock)
+			{
+				return Save(Snapshots, Settings.Instance.SnapshotsBinary);
 			}
 		}
 

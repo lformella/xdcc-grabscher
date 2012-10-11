@@ -244,6 +244,11 @@ namespace XG.Server
 		{
 			get { return 5000; }
 		}
+		
+		public long TimerSnapshotsSleepTime
+		{
+			get { return 600000; }
+		}
 
 		public string ParsingErrorFile
 		{
@@ -263,6 +268,11 @@ namespace XG.Server
 		public string SearchesBinary
 		{
 			get { return "./xgsearches.bin"; }
+		}
+		
+		public string SnapshotsBinary
+		{
+			get { return "./xgstatistics.bin"; }
 		}
 
 		public int MaxNoDataReceived

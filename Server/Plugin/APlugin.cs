@@ -106,6 +106,27 @@ namespace XG.Server.Plugin
 				}
 			}
 		}
+		
+		Snapshots _snapshots;
+		public Snapshots Snapshots
+		{
+			get
+			{
+				return _snapshots;
+			}
+			set
+			{
+				if(_snapshots != null)
+				{
+					_snapshots.Added -= new SnapshotDelegate(SnapshotAdded);
+				}
+				_snapshots = value;
+				if(_snapshots != null)
+				{
+					_snapshots.Added += new SnapshotDelegate(SnapshotAdded);
+				}
+			}
+		}
 
 		#endregion
 
@@ -144,6 +165,10 @@ namespace XG.Server.Plugin
 		}
 
 		protected virtual void SearchChanged(AObject aObj)
+		{
+		}
+		
+		protected virtual void SnapshotAdded(Snapshot aSnap)
 		{
 		}
 

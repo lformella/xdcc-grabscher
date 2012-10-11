@@ -55,10 +55,11 @@ namespace XG.Core
 		RemoveSearch = 17,
 		Searches = 18,
 
-		Statistics = 19,
-		ParseXdccLink = 20,
+		Statistics = 19,		
+		GetSnapshots = 20,
+		ParseXdccLink = 21,
 
-		CloseServer = 21
+		CloseServer = 22
 	}
 
 	public enum SocketErrorCode : int
@@ -160,6 +161,20 @@ namespace XG.Core
 				return Regex.Replace(aName, "(\\(|\\)|\\[|\\]|\\{|\\}|-|_|\\.)", "").ToLower() + "." + aSize + "/";
 			}
 			else { return ""; }
+		}
+
+		public static Int64 Date2Timestamp (DateTime aDate)
+		{
+			DateTime date = new DateTime (1970, 1, 1);
+			TimeSpan ts = new TimeSpan (aDate.Ticks - date.Ticks);
+			return (Convert.ToInt64 (ts.TotalSeconds));
+		}
+		
+		public static DateTime Timestamp2Date (Int64 aTimestamp)
+		{
+			DateTime date = new DateTime (1970, 1, 1);
+			date.AddSeconds (aTimestamp);
+			return date;
 		}
 
 		#endregion

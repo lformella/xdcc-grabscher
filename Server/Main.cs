@@ -22,7 +22,9 @@
 // 
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 using log4net;
 
@@ -90,6 +92,15 @@ namespace XG.Server
 			set
 			{
 				_searches = value;
+			}
+		}
+
+		Snapshots _snapshots;
+		Snapshots Snapshots
+		{
+			set
+			{
+				_snapshots = value;
 			}
 		}
 
@@ -322,6 +333,46 @@ namespace XG.Server
 					_servers.ServerConnect(serv);
 				}
 			}
+
+			#region COLLECT STATISTICS
+
+			while (true)
+			{
+				IEnumerable<Core.Server> servers = from server in _serverObjects.All select server;
+				IEnumerable<Channel> channels = from server in servers from channel in server.Channels select channel;
+				IEnumerable<Bot> bots = from channel in channels from bot in channel.Bots select bot;
+				IEnumerable<Packet> packets = from bot in bots from packet in bot.Packets select packet;
+
+				Snapshot snap = new Snapshot();
+				snap.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
+
+				snap.Set(SnapshotValue.Speed, (from file in _files.All from part in file.Parts select part.Speed).Sum());
+
+				snap.Set(SnapshotValue.ServersConnected, (from server in servers where server.Connected select server).Count());
+				snap.Set(SnapshotValue.ServersDisconnected, (from server in servers where !server.Connected select server).Count());
+
+				snap.Set(SnapshotValue.ChannelsConnected, (from channel in channels where channel.Connected select channel).Count());
+				snap.Set(SnapshotValue.ChannelsDisconnected, (from channel in channels where !channel.Connected select channel).Count());
+
+				snap.Set(SnapshotValue.Bots, (from bot in bots select bot).Count());
+				snap.Set(SnapshotValue.BotsConnected, (from bot in bots where bot.Connected select bot).Count());
+				snap.Set(SnapshotValue.BotsDisconnected, (from bot in bots where !bot.Connected select bot).Count());
+				snap.Set(SnapshotValue.BotsFreeSlots, (from bot in bots where bot.InfoSlotCurrent > 0 select bot).Count());
+				snap.Set(SnapshotValue.BotsFreeQueue, (from bot in bots where bot.InfoQueueCurrent > 0 select bot).Count());
+
+				snap.Set(SnapshotValue.Packets, (from packet in packets select packet).Count());
+				snap.Set(SnapshotValue.PacketsConnected, (from packet in packets where packet.Connected select packet).Count());
+				snap.Set(SnapshotValue.PacketsDisconnected, (from packet in packets where !packet.Connected select packet).Count());
+				snap.Set(SnapshotValue.PacketsSize, (from packet in packets select packet.Size).Sum());
+				snap.Set(SnapshotValue.PacketsSizeConnected, (from packet in packets where packet.Connected select packet.Size).Sum());
+				snap.Set(SnapshotValue.PacketsSizeDisconnected, (from packet in packets where !packet.Connected select packet.Size).Sum());
+
+				_snapshots.Add(snap);
+
+				Thread.Sleep((int)Settings.Instance.TimerSnapshotsSleepTime);
+			}
+
+			#endregion
 		}
 
 		/// <summary>
@@ -345,6 +396,7 @@ namespace XG.Server
 			Servers = aPlugin.LoadServers();
 			Files = aPlugin.LoadFiles();
 			Searches = aPlugin.LoadSearches();
+			Snapshots = aPlugin.LoadStatistics();
 
 			AddPlugin(aPlugin);
 		}
@@ -354,6 +406,7 @@ namespace XG.Server
 			aPlugin.Servers = _serverObjects;
 			aPlugin.Files = _files;
 			aPlugin.Searches = _searches;
+			aPlugin.Snapshots = _snapshots;
 
 			aPlugin.Start();
 		}

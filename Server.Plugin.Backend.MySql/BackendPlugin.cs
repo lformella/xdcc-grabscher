@@ -126,6 +126,11 @@ namespace XG.Server.Plugin.Backend.MySql
 		{
 			return new Objects();
 		}
+		
+		public override Snapshots LoadStatistics ()
+		{
+			return new Snapshots();
+		}
 
 		#endregion
 
@@ -238,7 +243,7 @@ namespace XG.Server.Plugin.Backend.MySql
 			dic.Add ("Name", aObj.Name);
 			dic.Add ("Connected", aObj.Connected);
 			dic.Add ("Enabled", aObj.Enabled);
-			dic.Add ("LastModified", Date2Timestamp (aObj.EnabledTime));
+			dic.Add ("LastModified", Core.Helper.Date2Timestamp (aObj.EnabledTime));
 
 			if (aObj is Core.Server)
 			{
@@ -258,14 +263,14 @@ namespace XG.Server.Plugin.Backend.MySql
 			{
 				Bot obj = (Bot)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
-				dic.Add ("Bot.BotState", obj.State);
+				dic.Add ("BotState", obj.State);
 				dic.Add ("InfoQueueCurrent", obj.InfoQueueCurrent);
 				dic.Add ("InfoQueueTotal", obj.InfoQueueTotal);
 				dic.Add ("InfoSlotCurrent", obj.InfoSlotCurrent);
 				dic.Add ("InfoSlotTotal", obj.InfoSlotTotal);
 				dic.Add ("InfoSpeedCurrent", obj.InfoSpeedCurrent);
 				dic.Add ("InfoSpeedMax", obj.InfoSpeedMax);
-				dic.Add ("LastContact", Date2Timestamp (obj.LastContact));
+				dic.Add ("LastContact", Core.Helper.Date2Timestamp (obj.LastContact));
 				dic.Add ("LastMessage", obj.LastMessage);
 			}
 			else if (aObj is Packet)
@@ -273,8 +278,8 @@ namespace XG.Server.Plugin.Backend.MySql
 				Packet obj = (Packet)aObj;
 				dic.Add ("ParentGuid", obj.ParentGuid);
 				dic.Add ("Id", obj.Id);
-				dic.Add ("LastUpdated", Date2Timestamp (obj.LastUpdated));
-				dic.Add ("LastMentioned", Date2Timestamp (obj.LastMentioned));
+				dic.Add ("LastUpdated", Core.Helper.Date2Timestamp (obj.LastUpdated));
+				dic.Add ("LastMentioned", Core.Helper.Date2Timestamp (obj.LastMentioned));
 				dic.Add ("Size", obj.Size);
 			}
 
@@ -318,7 +323,7 @@ namespace XG.Server.Plugin.Backend.MySql
 				bot.InfoSpeedCurrent = (double)aDic ["InfoSpeedCurrent"];
 				bot.InfoSpeedMax = (double)aDic ["InfoSpeedMax"];
 				bot.LastMessage = (string)aDic ["LastMessage"];
-				bot.LastContact = Timestamp2Date ((Int64)aDic ["LastContact"]);
+				bot.LastContact = Core.Helper.Timestamp2Date ((Int64)aDic ["LastContact"]);
 				return bot;
 			}
 			else if (aType == typeof(Packet))
@@ -330,8 +335,8 @@ namespace XG.Server.Plugin.Backend.MySql
 				pack.Enabled = (bool)aDic ["Enabled"];
 				pack.Name = (string)aDic ["Name"];
 				pack.Id = (int)aDic ["Id"];
-				pack.LastUpdated = Timestamp2Date ((Int64)aDic ["LastUpdated"]);
-				pack.LastMentioned = Timestamp2Date ((Int64)aDic ["LastMentioned"]);
+				pack.LastUpdated = Core.Helper.Timestamp2Date ((Int64)aDic ["LastUpdated"]);
+				pack.LastMentioned = Core.Helper.Timestamp2Date ((Int64)aDic ["LastMentioned"]);
 				pack.Size = (Int64)aDic ["Size"];
 				return pack;
 			}
@@ -427,20 +432,6 @@ namespace XG.Server.Plugin.Backend.MySql
 			}
 
 			return list;
-		}
-
-		protected Int64 Date2Timestamp (DateTime aDate)
-		{
-			DateTime date = new DateTime (1970, 1, 1);
-			TimeSpan ts = new TimeSpan (aDate.Ticks - date.Ticks);
-			return (Convert.ToInt64 (ts.TotalSeconds));
-		}
-
-		protected DateTime Timestamp2Date (Int64 aTimestamp)
-		{
-			DateTime date = new DateTime (1970, 1, 1);
-			date.AddSeconds (aTimestamp);
-			return date;
 		}
 
 		protected string Table4Object (AObject aObj)
