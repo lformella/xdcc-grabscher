@@ -325,6 +325,11 @@ namespace XG.Server.Plugin.General.Webserver
 							client.Response.ContentType = "text/json";
 							response = Statistic2Json();
 							break;
+							
+						case ClientRequest.GetSnapshots:
+							client.Response.ContentType = "text/json";
+							response = Snapshots2Json(Snapshots, (SnapshotValue)int.Parse(tDic["type"]));
+							break;
 
 						case ClientRequest.Files:
 							client.Response.ContentType = "text/json";
@@ -768,6 +773,20 @@ namespace XG.Server.Plugin.General.Webserver
 
 			sb.Append("}");
 			return sb.ToString();
+		}
+
+		string Snapshots2Json(Snapshots aSnapshots, SnapshotValue aValue)
+		{
+			var list = new List<Server.Plugin.General.Webserver.Morris.Object>();
+			foreach (Snapshot snapshot in aSnapshots.All)
+			{
+				var morrisObject = new Server.Plugin.General.Webserver.Morris.Object();
+				morrisObject.Time = snapshot.Get(SnapshotValue.Timestamp) * 1000;
+				morrisObject.Value = snapshot.Get(aValue);
+				list.Add(morrisObject);
+			}
+
+			return Json.Serialize<Server.Plugin.General.Webserver.Morris.Object[]>(list.ToArray());
 		}
 
 		#endregion

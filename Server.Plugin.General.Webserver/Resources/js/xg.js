@@ -55,9 +55,10 @@ Enum.TCPClientRequest =
 	GetSearches: 18,
 
 	GetStatistics: 19,
-	ParseXdccLink: 20,
+	GetSnapshots: 20,
+	ParseXdccLink: 21,
 
-	CloseServer: 21
+	CloseServer: 22
 };
 
 Enum.TangoColor =
@@ -98,6 +99,8 @@ var Formatter;
 var Helper = new XGHelper();
 
 var outerLayout, innerLayout;
+
+var snapshot = undefined;
 
 
 /* ****************************************************************************************************************** */
@@ -599,6 +602,38 @@ $(function()
 		modal: true,
 		resizable: false
 	});
+	
+	
+	jQuery("#snapshots_button").button({icons: { primary: "ui-icon-comment" }});
+
+	jQuery("#snapshots_button").click( function()
+	{
+		$("#dialog_snapshots").dialog("open");
+		
+		if (snapshot == undefined)
+		{
+			snapshot = Morris.Line({
+				element: 'snapshot',
+				hideHover: true,
+				pointSize: 4,
+				xkey: 'time',
+				ykeys: ['value'],
+				labels: ['test'],
+				data: [{"time":0,"value":0}]
+			});
+		}
+		
+		UpdateSnapshot(1);
+	});
+
+	$("#dialog_snapshots").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		width: 640,
+		height: 360,
+		modal: true,
+		resizable: false
+	});
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
@@ -614,6 +649,21 @@ $(function()
 
 	jQuery("#show_offline_bots").button();
 });
+
+function UpdateSnapshot(type)
+{
+	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSnapshots + "&type=" + type,
+		function(result)
+		{
+			switch (type)
+			{
+				case 1:
+					break;
+			}
+			snapshot.setData(result);
+		}
+	);
+}
 
 /* ****************************************************************************************************************** */
 /* SEARCH STUFF                                                                                                       */
@@ -752,6 +802,8 @@ function ReloadGrid(grid, url)
 
 function RefreshGrid(count)
 {
+	//UpdateSnapshot();
+
 	// connected things every 2,5 seconds, waiting just every 25 seconds
 	var mod = !!(count % 10 == 0);
 

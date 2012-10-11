@@ -46,6 +46,8 @@
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
+		<script type="text/javascript" src="js/raphael.min.js"></script>
+		<script type="text/javascript" src="js/morris.min.js"></script>
 		<script type="text/javascript" src="js/jquery.layout.min.js"></script>
 		<script type="text/javascript" src="js/jquery.cookie.min.js"></script>
 
@@ -121,6 +123,12 @@
 
 		</div>
 
+		<div id="dialog_snapshots" title="View Snapshots" style="display: none;">
+
+			<div id="snapshot" style="height: 320px"></div>
+
+		</div>
+
 		<div id="layout_search" class="ui-layout-west" style="display: none;">
 			<table id="searches" class="scroll" cellpadding="0" cellspacing="0"></table>
 			<div id="searches_pager" class="scroll" style="text-align:center;"></div>
@@ -140,6 +148,7 @@
 						<button id="server_channel_button">Server / Channels</button>
 						<input type="checkbox" id="show_offline_bots" /><label for="show_offline_bots">Hide offline Bots</label>
 						<button id="statistics_button">Statistics</button>
+						<button id="snapshots_button">Snapshots</button>
 					</div>
 
 					<div id="layout_objects_container">
