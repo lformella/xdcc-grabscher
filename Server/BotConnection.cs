@@ -510,7 +510,7 @@ namespace XG.Server
 			{
 				DateTime old = _speedCalcTime;
 				_speedCalcTime = DateTime.Now;
-				Part.Speed = (_speedCalcSize / (_speedCalcTime - old).TotalMilliseconds) * 1000;
+				Part.Speed = Convert.ToInt64((_speedCalcSize / (_speedCalcTime - old).TotalMilliseconds) * 1000);
 
 				Part.Commit();
 				_speedCalcSize = 0;

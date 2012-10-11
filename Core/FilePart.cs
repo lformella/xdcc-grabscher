@@ -126,9 +126,9 @@ namespace XG.Core
 			}
 		}
 
-		double _speed = 0;
+		Int64 _speed = 0;
 		[DataMember]
-		public double Speed
+		public Int64 Speed
 		{
 			get { return _speed; }
 			set { SetProperty(ref _speed, value); }
