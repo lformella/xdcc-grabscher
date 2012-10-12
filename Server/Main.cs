@@ -22,9 +22,7 @@
 // 
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 using log4net;
 
@@ -32,17 +30,11 @@ using XG.Core;
 using XG.Server.Helper;
 using XG.Server.Irc;
 using XG.Server.Plugin;
+using XG.Server.Worker;
 
 namespace XG.Server
 {
-	/// <summary>
-	/// This class holds all information about the files and the irc objects
-	/// it does the following things
-	/// - loading and saving the object to a file
-	/// - calling the ServerHandler to connect to or disconnect from an irc server
-	/// - communicate with XG.Server.* plugins, meaning the client
-	/// </summary>
-	public class Main
+	public class Main : AWorker
 	{
 		#region VARIABLES
 
@@ -51,62 +43,11 @@ namespace XG.Server
 		Parser _ircParser;
 		Servers _servers;
 		FileActions _fileActions;
-
-		Core.Servers _serverObjects;
-		Core.Servers Servers
-		{
-			set
-			{
-				if(_serverObjects != null)
-				{
-					_serverObjects.Added -= new ObjectsDelegate(ObjectAdded);
-					_serverObjects.Removed -= new ObjectsDelegate(ObjectRemoved);
-					_serverObjects.EnabledChanged -= new ObjectDelegate(EnabledChanged);
-				}
-				_serverObjects = value;
-				if(_serverObjects != null)
-				{
-					_serverObjects.Added += new ObjectsDelegate(ObjectAdded);
-					_serverObjects.Removed += new ObjectsDelegate(ObjectRemoved);
-					_serverObjects.EnabledChanged += new ObjectDelegate(EnabledChanged);
-				}
-
-				_fileActions.Servers = _serverObjects;
-			}
-		}
-
-		Files _files;
-		Files Files
-		{
-			set
-			{
-				_files = value;
-
-				_fileActions.Files = _files;
-			}
-		}
-
-		Objects _searches;
-		Objects Searches
-		{
-			set
-			{
-				_searches = value;
-			}
-		}
-
-		Snapshots _snapshots;
-		Snapshots Snapshots
-		{
-			set
-			{
-				_snapshots = value;
-			}
-		}
+		Workers _workers;
 
 		#endregion
 
-		#region INTITIALIZE, RUN, STOP
+		#region FUNCTIONS
 
 		public Main()
 		{
@@ -119,24 +60,27 @@ namespace XG.Server
 			_servers = new Servers();
 			_servers.FileActions = _fileActions;
 			_servers.IrcParser = _ircParser;
+
+			_workers = new Workers();
 		}
 
-		/// <summary>
-		/// Run method - should be called via thread
-		/// </summary>
-		public void Start()
+		#endregion
+
+		#region AWorker
+
+		protected override void StartRun()
 		{
 			#region DUPE CHECK
 
 			// check if there are some dupes in our database
-			foreach (Core.Server serv in _serverObjects.All)
+			foreach (Core.Server serv in Servers.All)
 			{
-				foreach (Core.Server s in _serverObjects.All)
+				foreach (Core.Server s in Servers.All)
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
 						_log.Error("Run() removing dupe server " + s.Name);
-						_serverObjects.Remove(s);
+						Servers.Remove(s);
 					}
 				}
 
@@ -182,7 +126,7 @@ namespace XG.Server
 			#region RESET
 
 			// reset all objects if the server crashed
-			foreach (Core.Server tServer in _serverObjects.All)
+			foreach (Core.Server tServer in Servers.All)
 			{
 				tServer.Connected = false;
 				tServer.ErrorCode = SocketErrorCode.None;
@@ -209,13 +153,13 @@ namespace XG.Server
 
 			#region CLEAR OLD DL
 
-			if (_files.All.Count() > 0 && Settings.Instance.ClearReadyDownloads)
+			if (Files.All.Count() > 0 && Settings.Instance.ClearReadyDownloads)
 			{
-				foreach (File file in _files.All)
+				foreach (File file in Files.All)
 				{
 					if (file.Enabled)
 					{
-						_files.Remove(file);
+						Files.Remove(file);
 						_log.Info("Run() removing ready file " + file.Name);
 					}
 				}
@@ -225,9 +169,9 @@ namespace XG.Server
 
 			#region CRASH RECOVERY
 
-			if (_files.All.Count() > 0)
+			if (Files.All.Count() > 0)
 			{
-				foreach (File file in _files.All)
+				foreach (File file in Files.All)
 				{
 					// lets check if the directory is still on the harddisk
 					if(!System.IO.Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
@@ -321,12 +265,13 @@ namespace XG.Server
 
 			#endregion
 
-			// connect to all servers which are enabled
-			foreach (Core.Server serv in _serverObjects.All)
+			#region CONNECT ALL ENABLED SERVERS
+
+			foreach (Core.Server serv in Servers.All)
 			{
 				// TODO check this
 				serv.Parent = null;
-				serv.Parent = _serverObjects;
+				serv.Parent = Servers;
 
 				if (serv.Enabled)
 				{
@@ -334,88 +279,61 @@ namespace XG.Server
 				}
 			}
 
-			#region COLLECT STATISTICS
+			#endregion
 
-			while (true)
-			{
-				IEnumerable<Core.Server> servers = from server in _serverObjects.All select server;
-				IEnumerable<Channel> channels = from server in servers from channel in server.Channels select channel;
-				IEnumerable<Bot> bots = from channel in channels from bot in channel.Bots select bot;
-				IEnumerable<Packet> packets = from bot in bots from packet in bot.Packets select packet;
+			#region WORKERS
 
-				Snapshot snap = new Snapshot();
-				snap.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
+			ALoopWorker worker;
 
-				snap.Set(SnapshotValue.Speed, (from file in _files.All from part in file.Parts select part.Speed).Sum());
-
-				snap.Set(SnapshotValue.ServersConnected, (from server in servers where server.Connected select server).Count());
-				snap.Set(SnapshotValue.ServersDisconnected, (from server in servers where !server.Connected select server).Count());
-
-				snap.Set(SnapshotValue.ChannelsConnected, (from channel in channels where channel.Connected select channel).Count());
-				snap.Set(SnapshotValue.ChannelsDisconnected, (from channel in channels where !channel.Connected select channel).Count());
-
-				snap.Set(SnapshotValue.Bots, (from bot in bots select bot).Count());
-				snap.Set(SnapshotValue.BotsConnected, (from bot in bots where bot.Connected select bot).Count());
-				snap.Set(SnapshotValue.BotsDisconnected, (from bot in bots where !bot.Connected select bot).Count());
-				snap.Set(SnapshotValue.BotsFreeSlots, (from bot in bots where bot.InfoSlotCurrent > 0 select bot).Count());
-				snap.Set(SnapshotValue.BotsFreeQueue, (from bot in bots where bot.InfoQueueCurrent > 0 select bot).Count());
-
-				snap.Set(SnapshotValue.Packets, (from packet in packets select packet).Count());
-				snap.Set(SnapshotValue.PacketsConnected, (from packet in packets where packet.Connected select packet).Count());
-				snap.Set(SnapshotValue.PacketsDisconnected, (from packet in packets where !packet.Connected select packet).Count());
-				snap.Set(SnapshotValue.PacketsSize, (from packet in packets select packet.Size).Sum());
-				snap.Set(SnapshotValue.PacketsSizeConnected, (from packet in packets where packet.Connected select packet.Size).Sum());
-				snap.Set(SnapshotValue.PacketsSizeDisconnected, (from packet in packets where !packet.Connected select packet.Size).Sum());
-
-				_snapshots.Add(snap);
-
-				Thread.Sleep((int)Settings.Instance.TimerSnapshotsSleepTime);
-			}
+			worker = new SnapshotWorker();
+			worker.SecondsToSleep = Settings.Instance.TimerSnapshotsSleepTime;
+			AddWorker(worker);
 
 			#endregion
 		}
 
-		/// <summary>
-		/// stop
-		/// </summary>
-		public void Stop()
+		protected override void StopRun()
 		{
-			// TODO stop server plugins
-			foreach (Core.Server serv in _serverObjects.All)
+			foreach (Core.Server serv in Servers.All)
 			{
 				_servers.ServerDisconnect(serv);
 			}
+
+			_workers.StopAll();
 		}
 
 		#endregion
 
-		#region PLUGINS
+		#region PLUGINS / WORKERS
 
 		public void AddBackendPlugin(ABackendPlugin aPlugin)
 		{
 			Servers = aPlugin.LoadServers();
+			_fileActions.Servers = Servers;
 			Files = aPlugin.LoadFiles();
+			_fileActions.Files = Files;
 			Searches = aPlugin.LoadSearches();
 			Snapshots = aPlugin.LoadStatistics();
 
-			AddPlugin(aPlugin);
+			AddWorker(aPlugin);
 		}
 
-		public void AddPlugin(APlugin aPlugin)
+		public void AddWorker(AWorker aWorker)
 		{
-			aPlugin.Servers = _serverObjects;
-			aPlugin.Files = _files;
-			aPlugin.Searches = _searches;
-			aPlugin.Snapshots = _snapshots;
+			aWorker.Servers = Servers;
+			aWorker.Files = Files;
+			aWorker.Searches = Searches;
+			aWorker.Snapshots = Snapshots;
 
-			aPlugin.Start();
+			_workers.Add(aWorker);
+			aWorker.Start();
 		}
 
 		#endregion
 
 		#region EVENTHANDLER
 
-		void ObjectAdded(AObject aParent, AObject aObj)
+		protected override void ObjectAdded(AObject aParent, AObject aObj)
 		{
 			if(aObj is Core.Server)
 			{
@@ -426,7 +344,7 @@ namespace XG.Server
 			}
 		}
 
-		void ObjectRemoved(AObject aParent, AObject aObj)
+		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
 			if(aObj is Core.Server)
 			{
@@ -440,7 +358,7 @@ namespace XG.Server
 			}
 		}
 
-		void EnabledChanged(AObject aObj)
+		protected override void ObjectEnabledChanged(AObject aObj)
 		{
 			if(aObj is Core.Server)
 			{

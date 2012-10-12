@@ -1,5 +1,5 @@
-// 
-//  Plugin.cs
+﻿// 
+//  AWorkerLoop.cs
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -22,69 +22,51 @@
 // 
 
 using System;
-using System.Net;
+using System.Threading;
 
-using log4net;
-
-namespace XG.Server.Plugin.General.Webserver
+namespace XG.Server.Worker
 {
-	public class Plugin : APlugin
+	public abstract class ALoopWorker : AWorker
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(Plugin));
-
-		HttpListener _listener;
+		public Int64 SecondsToSleep { get; set; }
+		DateTime _last;
+		bool _allowRun;
 
 		#endregion
 
-		#region AWorker
+		#region FUNCTIONS
+
+		public ALoopWorker() : base()
+		{
+			_last = DateTime.MinValue;
+			_allowRun = true;
+		}
 
 		protected override void StartRun()
 		{
-			_listener = new HttpListener();
-#if !UNSAFE
-			try
+			while (_allowRun)
 			{
-#endif
-				_listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
-				_listener.Start();
-
-				while (true)
+				if (_last.AddSeconds(SecondsToSleep) < DateTime.Now)
 				{
-#if !UNSAFE
-					try
-					{
-#endif
-						BrowserConnection connection = new BrowserConnection();
-						connection.Context = _listener.GetContext();
-						connection.Servers = Servers;
-						connection.Files = Files;
-						connection.Searches = Searches;
-						connection.Snapshots = Snapshots;
+					_last = DateTime.Now;
 
-						connection.Start();
-#if !UNSAFE
-					}
-					catch (Exception ex)
-					{
-						_log.Fatal("StartRun() client", ex);
-					}
-#endif
+					LoopRun();
 				}
-#if !UNSAFE
+
+				Thread.Sleep(1000);
 			}
-			catch (Exception ex)
-			{
-				_log.Fatal("StartRun() server", ex);
-			}
-#endif
 		}
 
 		protected override void StopRun()
 		{
-			_listener.Close();
+			_allowRun = false;
+
+			Thread.Sleep(2000);
 		}
+
+		protected abstract void LoopRun();
 
 		#endregion
 	}

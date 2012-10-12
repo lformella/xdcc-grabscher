@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 using log4net;
 
@@ -41,10 +40,11 @@ namespace XG.Server.Plugin.Backend.MySql
 		static readonly ILog _log = LogManager.GetLogger(typeof(BackendPlugin));
 
 		MySqlConnection _dbConnection;
-		Thread _serverThread;
 		object _locked = new object ();
 
 		#endregion
+
+		#region FUNCTIONS
 
 		public BackendPlugin ()
 		{
@@ -66,6 +66,8 @@ namespace XG.Server.Plugin.Backend.MySql
 				throw ex;
 			}
 		}
+
+		#endregion
 
 		#region ABackendPlugin
 
@@ -134,30 +136,9 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		#endregion
 
-		#region RUN STOP
-		
-		public override void Start ()
-		{
-			// start the server thread
-			_serverThread = new Thread (new ThreadStart (OpenClient));
-			_serverThread.Start ();
-		}
-		
-		public override void Stop ()
-		{
-			CloseClient ();
-			_serverThread.Abort ();
-		}
-		
-		#endregion
+		#region AWorker
 
-		#region SERVER
-
-		void OpenClient ()
-		{
-		}
-
-		void CloseClient ()
+		protected override void StopRun ()
 		{
 			try
 			{

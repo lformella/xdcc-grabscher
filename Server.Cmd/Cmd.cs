@@ -88,11 +88,11 @@ namespace XG.Server.Cmd
 
 			if (Settings.Instance.StartWebServer)
 			{
-				instance.AddPlugin(new Server.Plugin.General.Webserver.Plugin());
+				instance.AddWorker(new Server.Plugin.General.Webserver.Plugin());
 			}
 			if (Settings.Instance.StartJabberClient)
 			{
-				instance.AddPlugin(new Server.Plugin.General.Jabber.Plugin());
+				instance.AddWorker(new Server.Plugin.General.Jabber.Plugin());
 			}
 
 			instance.Start();

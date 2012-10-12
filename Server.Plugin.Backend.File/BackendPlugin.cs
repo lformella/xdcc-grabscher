@@ -40,9 +40,6 @@ namespace XG.Server.Plugin.Backend.File
 		static readonly ILog _log = LogManager.GetLogger(typeof(BackendPlugin));
 
 		BinaryFormatter _formatter = new BinaryFormatter();
-
-		Thread _saveLoopThread;
-
 		bool _isSaveFile = false;
 		object _saveObjectsLock = new object();
 		object _saveFilesLock = new object();
@@ -118,18 +115,38 @@ namespace XG.Server.Plugin.Backend.File
 
 		#endregion
 
-		#region RUN STOP
+		#region AWorker
 
-		public override void Start ()
+		protected override void StartRun ()
 		{
-			// start data saving routine
-			_saveLoopThread = new Thread(new ThreadStart(StartSaveLoop));
-			_saveLoopThread.Start();
-		}
-
-		public override void Stop ()
-		{
-			_saveLoopThread.Abort();
+			DateTime timeIrc = DateTime.Now;
+			DateTime timeStats = DateTime.Now;
+			
+			while (true)
+			{
+				// Objects
+				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
+				{
+					timeIrc = DateTime.Now;
+					
+					SaveObjects();
+				}
+				
+				// Files
+				if (_isSaveFile)
+				{
+					SaveFiles();
+				}
+				
+				// Statistics
+				if ((DateTime.Now - timeStats).TotalMilliseconds > Settings.Instance.BackupStatisticTime)
+				{
+					timeStats = DateTime.Now;
+					Statistic.Instance.Save();
+				}
+				
+				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
+			}
 		}
 		
 		#endregion
@@ -263,38 +280,6 @@ namespace XG.Server.Plugin.Backend.File
 				}
 			}
 			return obj;
-		}
-
-		void StartSaveLoop()
-		{
-			DateTime timeIrc = DateTime.Now;
-			DateTime timeStats = DateTime.Now;
-
-			while (true)
-			{
-				// Objects
-				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
-				{
-					timeIrc = DateTime.Now;
-
-					SaveObjects();
-				}
-
-				// Files
-				if (_isSaveFile)
-				{
-					SaveFiles();
-				}
-
-				// Statistics
-				if ((DateTime.Now - timeStats).TotalMilliseconds > Settings.Instance.BackupStatisticTime)
-				{
-					timeStats = DateTime.Now;
-					Statistic.Instance.Save();
-				}
-
-				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
-			}
 		}
 
 		bool SaveFiles()

@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 
 using agsXMPP;
 using agsXMPP.protocol.client;
@@ -44,34 +43,11 @@ namespace XG.Server.Plugin.General.Jabber
 
 		XmppClientConnection _client;
 
-		Thread _serverThread;
-
 		#endregion
 
-		#region RUN STOP
-		
-		public override void Start ()
-		{
-			// start the server thread
-			_serverThread = new Thread(new ThreadStart(OpenClient));
-			_serverThread.Start();
-		}
-		
-		
-		public override void Stop ()
-		{
-			CloseClient();
-			_serverThread.Abort();
-		}
-		
-		#endregion
+		#region AWorker
 
-		#region SERVER
-
-		/// <summary>
-		/// Opens the server port, waiting for clients
-		/// </summary>
-		void OpenClient()
+		protected override void StartRun()
 		{
 			_client = new XmppClientConnection(Settings.Instance.JabberServer);
 			_client.Open(Settings.Instance.JabberUser, Settings.Instance.JabberPassword);
@@ -81,41 +57,17 @@ namespace XG.Server.Plugin.General.Jabber
 			};
 			_client.OnError += delegate(object sender, Exception ex)
 			{
-				log.Fatal("OpenServer()", ex);
+				log.Fatal("StartRun()", ex);
 			};
 			_client.OnAuthError += delegate(object sender, Element e)
 			{
-				log.Fatal("OpenServer() " + e.ToString());
+				log.Fatal("StartRun() " + e.ToString());
 			};
 		}
 
-		void CloseClient()
+		protected override void StopRun ()
 		{
 			_client.Close();
-		}
-
-		void UpdateState(double aSpeed)
-		{
-			if(_client == null) { return; }
-
-			Presence p = null;
-			if(aSpeed > 0)
-			{
-				string str = "";
-				if (aSpeed < 1024) { str =  aSpeed + " B/s"; }
-				else if (aSpeed < 1024 * 1024) { str =  (aSpeed / 1024).ToString("0.00") + " KB/s"; }
-				else if (aSpeed < 1024 * 1024 * 1024) { str =  (aSpeed / (1024 * 1024)).ToString("0.00") + " MB/s"; }
-				else { str =  (aSpeed / (1024 * 1024 * 1024)).ToString("0.00") + " GB/s"; }
-
-				p = new Presence(ShowType.chat, str);
-				p.Type = PresenceType.available;
-			}
-			else
-			{
-				p = new Presence(ShowType.away, "Idle");
-				p.Type = PresenceType.available;
-			}
-			_client.Send(p);
 		}
 
 		#endregion
@@ -136,6 +88,34 @@ namespace XG.Server.Plugin.General.Jabber
 			}
 		}
 
+		#endregion
+		
+		#region FUNCTIONS
+		
+		void UpdateState(double aSpeed)
+		{
+			if(_client == null) { return; }
+			
+			Presence p = null;
+			if(aSpeed > 0)
+			{
+				string str = "";
+				if (aSpeed < 1024) { str =  aSpeed + " B/s"; }
+				else if (aSpeed < 1024 * 1024) { str =  (aSpeed / 1024).ToString("0.00") + " KB/s"; }
+				else if (aSpeed < 1024 * 1024 * 1024) { str =  (aSpeed / (1024 * 1024)).ToString("0.00") + " MB/s"; }
+				else { str =  (aSpeed / (1024 * 1024 * 1024)).ToString("0.00") + " GB/s"; }
+				
+				p = new Presence(ShowType.chat, str);
+				p.Type = PresenceType.available;
+			}
+			else
+			{
+				p = new Presence(ShowType.away, "Idle");
+				p.Type = PresenceType.available;
+			}
+			_client.Send(p);
+		}
+		
 		#endregion
 	}
 }
