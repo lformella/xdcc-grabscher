@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 
 using log4net;
@@ -49,7 +50,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(Servers));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Parser _ircParser;
 		public Parser IrcParser
@@ -91,7 +92,6 @@ namespace XG.Server
 			new System.IO.DirectoryInfo(Settings.Instance.TempPath).Create();
 
 			// start the timed tasks
-			new Thread(new ThreadStart(RunBotWatchdog)).Start();
 			new Thread(new ThreadStart(RunTimer)).Start();
 		}
 
@@ -327,40 +327,6 @@ namespace XG.Server
 		#endregion
 
 		#region TIMER TASKS
-
-		void RunBotWatchdog()
-		{
-			while (true)
-			{
-				Thread.Sleep(Settings.Instance.BotOfflineCheckTime);
-
-				int a = 0;
-				foreach (var kvp in _servers)
-				{
-					if (kvp.Value.IsRunning)
-					{
-						foreach (Channel tChan in kvp.Key.Channels)
-						{
-							if (tChan.Connected)
-							{
-								foreach (Bot tBot in tChan.Bots)
-								{
-									if (!tBot.Connected && (DateTime.Now - tBot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && tBot.OldestActivePacket() == null)
-									{
-										a++;
-										tChan.RemoveBot(tBot);
-									}
-								}
-							}
-						}
-					}
-				}
-				if (a > 0) { _log.Info("RunBotWatchdog() removed " + a + " offline bot(s)"); }
-
-				// TODO scan for empty channels and send a "xdcc list" command to all the people in there
-				// in some channels the bots are silent and have the same (no) rights like normal users
-			}
-		}
 
 		void RunTimer()
 		{

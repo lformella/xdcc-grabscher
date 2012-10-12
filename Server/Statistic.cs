@@ -24,7 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Xml.Serialization;
+
 using log4net;
 
 namespace XG.Server
@@ -124,7 +126,7 @@ namespace XG.Server
 	[Serializable]
 	public class Statistic
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(Statistic));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static object locked = new object();
 		static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));

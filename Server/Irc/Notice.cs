@@ -21,6 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using log4net;
@@ -33,7 +34,7 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(Notice));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#endregion
 

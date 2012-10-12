@@ -21,6 +21,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
+using System.Reflection;
+
 using HtmlAgilityPack;
 
 using log4net;
@@ -32,7 +34,7 @@ namespace XG.Server.Plugin.Backend.MySql
 {
 	public class Importer
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(Importer));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Core.Servers _servers;
 

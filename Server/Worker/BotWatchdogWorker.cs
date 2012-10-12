@@ -1,92 +1,68 @@
-// 
-//  Plugin.cs
-//  
+//
+//  BotWatchdogWorker.cs
+//
 //  Author:
 //       Lars Formella <ich@larsformella.de>
-// 
+//
 //  Copyright (c) 2012 Lars Formella
-// 
+//
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 2 of the License, or
 //  (at your option) any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//
 
 using System;
-using System.Net;
+using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 
 using log4net;
 
-namespace XG.Server.Plugin.General.Webserver
+using XG.Core;
+
+namespace XG.Server.Worker
 {
-	public class Plugin : APlugin
+	public class BotWatchdogWorker : ALoopWorker
 	{
-		#region VARIABLES
-		
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		HttpListener _listener;
-
-		#endregion
-
 		#region AWorker
-
-		protected override void StartRun()
+		
+		protected override void LoopRun()
 		{
-			_listener = new HttpListener();
-#if !UNSAFE
-			try
+			IEnumerable<Bot> tBots =
+				from server in Servers.All where server.Connected 
+				from channel in server.Channels
+				from bot in channel.Bots
+					where !bot.Connected && (DateTime.Now - bot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && bot.OldestActivePacket() == null
+					select bot;
+
+			int a = tBots.Count();
+			foreach (Bot tBot in tBots)
 			{
-#endif
-				_listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
-				_listener.Start();
-
-				while (true)
-				{
-#if !UNSAFE
-					try
-					{
-#endif
-						BrowserConnection connection = new BrowserConnection();
-						connection.Context = _listener.GetContext();
-						connection.Servers = Servers;
-						connection.Files = Files;
-						connection.Searches = Searches;
-						connection.Snapshots = Snapshots;
-
-						connection.Start();
-#if !UNSAFE
-					}
-					catch (Exception ex)
-					{
-						_log.Fatal("StartRun() client", ex);
-					}
-#endif
-				}
-#if !UNSAFE
+				tBot.Parent.RemoveBot(tBot);
 			}
-			catch (Exception ex)
+			if (a > 0)
 			{
-				_log.Fatal("StartRun() server", ex);
+				_log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
 			}
-#endif
-		}
+			_log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
 
-		protected override void StopRun()
-		{
-			_listener.Close();
+			// TODO scan for empty channels and send a "xdcc list" command to all the people in there
+			// in some channels the bots are silent and have the same (no) rights like normal users
 		}
 
 		#endregion
 	}
 }
+

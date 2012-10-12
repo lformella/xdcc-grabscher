@@ -22,6 +22,7 @@
 // 
 
 using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using log4net;
@@ -34,7 +35,7 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(IntValue));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#endregion
 

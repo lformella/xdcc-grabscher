@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -39,7 +40,7 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 		
-		static readonly ILog _log = LogManager.GetLogger(typeof(BrowserConnection));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public HttpListenerContext Context { get; set; }
 		static readonly string _salt = "6v8vva4&V/B(n9/6nfND4ss786I)Mo";
@@ -200,10 +201,10 @@ namespace XG.Server.Plugin.General.Webserver
 							Context.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedObjects(
-							from server in Servers.All
-							from channel in server.Channels
-							where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]
-							),
+									from server in Servers.All
+									from channel in server.Channels
+									where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]
+								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 								);
@@ -213,11 +214,11 @@ namespace XG.Server.Plugin.General.Webserver
 							Context.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedBots(
-							from server in Servers.All
-							from channel in server.Channels
-							from bot in channel.Bots
-							where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]
-							),
+									from server in Servers.All
+									from channel in server.Channels
+									from bot in channel.Bots
+									where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]
+								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 								);
@@ -227,12 +228,12 @@ namespace XG.Server.Plugin.General.Webserver
 							Context.Response.ContentType = "text/json";
 							response = Objects2Json(
 								SortedPackets(
-							from server in Servers.All
-							from channel in server.Channels
-							from bot in channel.Bots
-							from packet in bot.Packets
-							where packet.ParentGuid == new Guid(tDic["guid"]) select packet, tDic["sidx"], tDic["sord"]
-							),
+									from server in Servers.All
+									from channel in server.Channels
+									from bot in channel.Bots
+									from packet in bot.Packets
+									where packet.ParentGuid == new Guid(tDic["guid"]) select packet, tDic["sidx"], tDic["sord"]
+								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 								);

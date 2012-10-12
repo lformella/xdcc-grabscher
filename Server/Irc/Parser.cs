@@ -22,6 +22,7 @@
 // 
 
 using System;
+using System.Reflection;
 
 using log4net;
 
@@ -37,7 +38,7 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(Parser));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public Servers Parent { get; set; }
 

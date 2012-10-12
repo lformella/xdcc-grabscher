@@ -55,7 +55,7 @@ namespace XG.Server.Cmd
 				ConsoleAppender lAppender = new ConsoleAppender();
 				lAppender.Name = "Console";
 				lAppender.Layout = new
-				log4net.Layout.PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %message (%logger{1}:%line)%n");
+					log4net.Layout.PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n");
 				lAppender.Threshold = log4net.Core.Level.Fatal;
 				lAppender.ActivateOptions();
 

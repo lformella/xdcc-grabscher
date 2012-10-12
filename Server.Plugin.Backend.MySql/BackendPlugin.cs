@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 using log4net;
 
@@ -36,8 +37,8 @@ namespace XG.Server.Plugin.Backend.MySql
 	public class BackendPlugin : ABackendPlugin
 	{
 		#region VARIABLES
-
-		static readonly ILog _log = LogManager.GetLogger(typeof(BackendPlugin));
+		
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		MySqlConnection _dbConnection;
 		object _locked = new object ();

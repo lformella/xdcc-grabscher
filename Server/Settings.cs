@@ -23,7 +23,9 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Xml.Serialization;
+
 using log4net;
 
 namespace XG.Server
@@ -31,7 +33,7 @@ namespace XG.Server
 	[Serializable]
 	public class Settings
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(Settings));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static Settings _instance = null;
 

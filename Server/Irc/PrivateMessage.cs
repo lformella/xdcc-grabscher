@@ -23,6 +23,7 @@
 
 using System;
 using System.Net;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -37,7 +38,7 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(PrivateMessage));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public FileActions FileActions { get; set; }
 

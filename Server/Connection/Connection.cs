@@ -24,7 +24,10 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Reflection;
+
 using log4net;
+
 using XG.Core;
 
 namespace XG.Server.Connection
@@ -49,7 +52,7 @@ namespace XG.Server.Connection
 
 		public override void Connect()
 		{
-			_log = LogManager.GetLogger("Connection(" + Hostname + ":" + Port + ")");
+			_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 			_isConnected = false;
 			using(_tcpClient = new TcpClient())

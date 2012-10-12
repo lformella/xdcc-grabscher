@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using System.Reflection;
 
 using log4net;
 
@@ -34,9 +35,9 @@ namespace XG.Server.Worker
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(AWorker));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected Thread _thread;
+		Thread _thread;
 		
 		#endregion
 

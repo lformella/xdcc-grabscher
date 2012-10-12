@@ -23,6 +23,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Reflection;
 
 using log4net;
 
@@ -32,7 +33,7 @@ namespace XG.Server.Helper
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(Process));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public string Command { get; set; }
 		public string Arguments { get; set; }

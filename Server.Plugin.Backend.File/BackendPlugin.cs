@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
@@ -36,8 +37,8 @@ namespace XG.Server.Plugin.Backend.File
 	public class BackendPlugin : ABackendPlugin
 	{
 		#region VARIABLES
-
-		static readonly ILog _log = LogManager.GetLogger(typeof(BackendPlugin));
+		
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		BinaryFormatter _formatter = new BinaryFormatter();
 		bool _isSaveFile = false;

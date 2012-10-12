@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 
 using log4net;
 
@@ -38,7 +39,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(Main));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Parser _ircParser;
 		Servers _servers;
@@ -287,6 +288,10 @@ namespace XG.Server
 
 			worker = new SnapshotWorker();
 			worker.SecondsToSleep = Settings.Instance.TimerSnapshotsSleepTime;
+			AddWorker(worker);
+			
+			worker = new BotWatchdogWorker();
+			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckTime;
 			AddWorker(worker);
 
 			#endregion

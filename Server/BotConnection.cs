@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using log4net;
 
@@ -45,7 +46,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(typeof(BotConnection));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		BinaryWriter _writer;
 		BinaryReader _reader;

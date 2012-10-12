@@ -31,7 +31,7 @@ namespace XG.Server.Plugin.General.Webserver
 {
 	public class FileLoader
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(FileLoader));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Dictionary<string, string> _dicString;
 		Dictionary<string, byte[]> _dicByte;

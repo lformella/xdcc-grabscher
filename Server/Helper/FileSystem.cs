@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 
 using log4net;
 
@@ -30,7 +31,7 @@ namespace XG.Server.Helper
 {
 	public class FileSystem
 	{
-		static readonly ILog _log = LogManager.GetLogger(typeof(FileSystem));
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Moves a file
