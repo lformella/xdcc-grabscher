@@ -72,9 +72,11 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="BrowserConnection.cs" />
     <Compile Include="FileLoader.cs" />
     <Compile Include="JQGrid\Object.cs" />
     <Compile Include="JQGrid\Objects.cs" />
+    <Compile Include="Morris\Object.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -183,6 +185,8 @@
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-tr.js" />
     <EmbeddedResource Include="Resources\js\i18n\grid.locale-ua.js" />
     <EmbeddedResource Include="Resources\js\i18n\xg.locale-de.js" />
+    <EmbeddedResource Include="Resources\js\jquery-ui.min.js" />
+    <EmbeddedResource Include="Resources\js\jquery.jqGrid.min.js" />
     <EmbeddedResource Include="Resources\js\jquery.class.js" />
     <EmbeddedResource Include="Resources\js\jquery.cookie.min.js" />
     <EmbeddedResource Include="Resources\js\jquery.layout.min.js" />
@@ -191,16 +195,10 @@
     <EmbeddedResource Include="Resources\js\sha256.js" />
     <EmbeddedResource Include="Resources\js\xg.formatter.js" />
     <EmbeddedResource Include="Resources\js\xg.helper.js" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\font\fontello.eot" />
     <EmbeddedResource Include="Resources\font\fontello.svg" />
     <EmbeddedResource Include="Resources\font\fontello.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\jquery-ui.min.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\jquery.jqGrid.min.js" />
+    <EmbeddedResource Include="Resources\js\morris.min.js" />
+    <EmbeddedResource Include="Resources\js\raphael.min.js" />
   </ItemGroup>
 </Project>
