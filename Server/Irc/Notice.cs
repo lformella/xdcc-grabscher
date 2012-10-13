@@ -572,6 +572,10 @@ namespace XG.Server.Irc
 						_log.Error("Parse(" + aRawData + ") - cant find nickserv code");
 					}
 				}
+				else if(aMessage.Contains("Your password is"))
+				{
+					_log.Info("Parse(" + aRawData + ") - nickserv password accepted");
+				}
 				else
 				{
 					_log.Error("Parse(" + aRawData + ") - unknown nickserv command");
