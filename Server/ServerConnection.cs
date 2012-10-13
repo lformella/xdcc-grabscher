@@ -46,7 +46,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		ILog _log;
 
 		Core.Server _server;
 		public Core.Server Server
@@ -65,6 +65,8 @@ namespace XG.Server
 					_server.Added += new ObjectsDelegate(ObjectAdded);
 					_server.Removed += new ObjectsDelegate(ObjectRemoved);
 					_server.EnabledChanged += new ObjectDelegate(EnabledChanged);
+
+					_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + _server.Name + ")");
 				}
 			}
 		}

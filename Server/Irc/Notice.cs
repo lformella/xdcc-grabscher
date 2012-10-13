@@ -33,16 +33,12 @@ namespace XG.Server.Irc
 {
 	public class Notice : AParser
 	{
-		#region VARIABLES
-
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		#endregion
-
 		#region PARSING
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
+			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+
 			string tUserName = aCommands[0].Split('!')[0];
 
 			Bot tBot = aServer.Bot(tUserName);

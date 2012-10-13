@@ -38,8 +38,6 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public FileActions FileActions { get; set; }
 
 		#endregion
@@ -48,6 +46,8 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
+			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+
 			string tUserName = aCommands[0].Split('!')[0];
 			Channel tChan = aServer.Channel(aCommands[2]);
 

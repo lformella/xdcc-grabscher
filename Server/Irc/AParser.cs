@@ -128,14 +128,10 @@ namespace XG.Server.Irc
 
 		#endregion
 
-		
-
 		#region PARSING
 
 		public void ParseData(Core.Server aServer, string aRawData)
 		{
-			_log.Debug("ParseData(" + aRawData + ")");
-
 			if (aRawData.StartsWith(":"))
 			{
 				int tSplit = aRawData.IndexOf(':', 1);

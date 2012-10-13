@@ -38,8 +38,6 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		public Servers Parent { get; set; }
 
 		IntValue _intValue;
@@ -70,8 +68,8 @@ namespace XG.Server.Irc
 
 		void RegisterParser(AParser aParser)
 		{
-			aParser.AddDownload += new DownloadDelegate (FireAddDownload);
-			aParser.RemoveDownload += new BotDelegate (FireRemoveDownload);
+			aParser.AddDownload += new DownloadDelegate(FireAddDownload);
+			aParser.RemoveDownload += new BotDelegate(FireRemoveDownload);
 			aParser.ParsingError += new DataTextDelegate(FireParsingError);
 			aParser.SendData += new ServerDataTextDelegate(FireSendData);
 			aParser.JoinChannel += new ServerChannelDelegate(FireJoinChannel);
@@ -84,6 +82,8 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
+			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+
 			string tUserName = aCommands[0].Split('!')[0];
 			string tComCodeStr = aCommands[1];
 			string tChannelName = aCommands[2];

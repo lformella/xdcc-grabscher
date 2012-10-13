@@ -52,7 +52,7 @@ namespace XG.Server.Connection
 
 		public override void Connect()
 		{
-			_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+			_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + Hostname + ":" + Port + ")");
 
 			_isConnected = false;
 			using(_tcpClient = new TcpClient())

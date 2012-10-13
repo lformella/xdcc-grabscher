@@ -56,7 +56,6 @@ namespace XG.Server.Worker
 			{
 				_log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
 			}
-			_log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
 
 			// TODO scan for empty channels and send a "xdcc list" command to all the people in there
 			// in some channels the bots are silent and have the same (no) rights like normal users
