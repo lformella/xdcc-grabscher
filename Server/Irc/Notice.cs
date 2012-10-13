@@ -21,6 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -130,8 +131,14 @@ namespace XG.Server.Irc
 						Packet tPack = tBot.OldestActivePacket();
 						if (tPack != null)
 						{
-							tPack.Enabled = false;
-							tBot.RemovePacket(tPack);
+							// remove all packets with ids beeing greater than the current one because they MUST be missing, too
+							var tPackets = from packet in tBot.Packets where packet.Id >= tPack.Id select packet;
+							foreach (Packet pack in tPackets)
+							{
+								pack.Enabled = false;
+								pack.Commit();
+								tBot.RemovePacket(pack);
+							}
 						}
 						_log.Error("Parse() invalid packetnumber from " + tBot.Name);
 					}
@@ -481,6 +488,8 @@ namespace XG.Server.Irc
 					tBot.LastMessage = aMessage;
 					_log.Info("Parse() message from " + tBot.Name + ": " + aMessage);
 				}
+
+				tBot.Commit();
 			}
 
 			#endregion

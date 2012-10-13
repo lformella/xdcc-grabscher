@@ -188,6 +188,8 @@ namespace XG.Server.Irc
 						_log.Info("Parse() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
 						FireAddDownload(tPacket, tChunk, tBot.IP, tPort);
 					}
+
+					tPacket.Commit();
 				}
 				else { _log.Error("Parse() DCC not activated from " + tBot.Name); }
 			}
