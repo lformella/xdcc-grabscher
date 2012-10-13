@@ -76,6 +76,7 @@
     <Compile Include="FileLoader.cs" />
     <Compile Include="JQGrid\Object.cs" />
     <Compile Include="JQGrid\Objects.cs" />
+    <Compile Include="Flot\Objects.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
