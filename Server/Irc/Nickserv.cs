@@ -87,6 +87,10 @@ namespace XG.Server.Irc
 					//TODO check if we are really registered
 					FireSendData(aServer, tUserName + " identify " + Settings.Instance.IrcRegisterPasswort);
 				}
+				else
+				{
+					_log.Error("nick is already registered and i got no password");
+				}
 				return;
 			}
 
