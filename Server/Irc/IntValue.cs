@@ -143,10 +143,6 @@ namespace XG.Server.Irc
 						{
 							if (chan.Enabled) { FireJoinChannel(aServer, chan); }
 						}
-						if(Settings.Instance.IrcRegisterPasswort != "")
-						{
-							FireSendData(aServer, "nickserv identify " + Settings.Instance.IrcRegisterPasswort);
-						}
 	
 						// statistics
 						Statistic.Instance.Increase(StatisticType.ServerConnectsOk);

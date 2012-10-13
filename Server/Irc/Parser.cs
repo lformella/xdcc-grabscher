@@ -43,6 +43,7 @@ namespace XG.Server.Irc
 		IntValue _intValue;
 		PrivateMessage _privateMessage;
 		Notice _notice;
+		Nickserv _nickserv;
 
 		public FileActions FileActions
 		{
@@ -64,6 +65,9 @@ namespace XG.Server.Irc
 
 			_notice = new Notice();
 			RegisterParser(_notice);
+			
+			_nickserv = new Nickserv();
+			RegisterParser(_nickserv);
 		}
 
 		void RegisterParser(AParser aParser)
@@ -110,7 +114,14 @@ namespace XG.Server.Irc
 
 			else if (tComCodeStr == "NOTICE")
 			{
-				_notice.ParseData(aServer, aRawData);
+				if (tUserName.ToLower() == "nickserv")
+				{
+					_nickserv.ParseData(aServer, aRawData);
+				}
+				else
+				{
+					_notice.ParseData(aServer, aRawData);
+				}
 				return;
 			}
 

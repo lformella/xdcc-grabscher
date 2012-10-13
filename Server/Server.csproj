@@ -82,6 +82,7 @@
     <Compile Include="Irc\AParser.cs" />
     <Compile Include="Irc\Parser.cs" />
     <Compile Include="Irc\Notice.cs" />
+    <Compile Include="Irc\Nickserv.cs" />
     <Compile Include="Irc\PrivateMessage.cs" />
     <Compile Include="Irc\IntValue.cs" />
     <Compile Include="Helper\PartBytesObject.cs" />

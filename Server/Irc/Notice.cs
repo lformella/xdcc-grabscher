@@ -42,9 +42,6 @@ namespace XG.Server.Irc
 			string tUserName = aCommands[0].Split('!')[0];
 
 			Bot tBot = aServer.Bot(tUserName);
-
-			#region BOT MESSAGES
-
 			if (tBot != null)
 			{
 				bool isParsed = false;
@@ -487,98 +484,6 @@ namespace XG.Server.Irc
 
 				tBot.Commit();
 			}
-
-			#endregion
-
-			#region NICKSERV
-
-			else if(tUserName.ToLower() == "nickserv")
-			{
-				if(aMessage.Contains("Password incorrect"))
-				{
-					_log.Error("Parse(" + aRawData + ") - nickserv password wrong");
-				}
-				else if(aMessage.Contains("The given email address has reached it's usage limit of 1 user") ||
-						aMessage.Contains("This nick is being held for a registered user"))
-				{
-					_log.Error("Parse(" + aRawData + ") - nickserv nick or email already used");
-				}
-				else if(aMessage.Contains("Your nick isn't registered"))
-				{
-					_log.Warn("Parse(" + aRawData + ") - nickserv registering nick");
-					if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
-					{
-						FireSendData(aServer, "nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-					}
-				}
-				else if(aMessage.Contains("Nickname is already in use") ||
-						aMessage.Contains("Nickname is currently in use"))
-				{
-					FireSendData(aServer, "nickserv ghost " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					FireSendData(aServer, "nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					FireSendData(aServer, "nick " + Settings.Instance.IRCName);
-				}
-				else if(aMessage.Contains("Services Enforcer"))
-				{
-					FireSendData(aServer, "nickserv recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					FireSendData(aServer, "nickserv release " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-					FireSendData(aServer, "nick " + Settings.Instance.IRCName);
-				}
-				else if(aMessage.Contains("This nickname is registered and protected") ||
-						aMessage.Contains("This nick is being held for a registered user") ||
-						aMessage.Contains("msg NickServ IDENTIFY"))
-				{
-					if(Settings.Instance.IrcRegisterPasswort != "")
-					{
-						FireSendData(aServer, "/nickserv identify " + Settings.Instance.IrcRegisterPasswort);
-					}
-				}
-				else if(aMessage.Contains("You must have been using this nick for at least 30 seconds to register."))
-				{
-					//TODO sleep the given time and reregister
-					FireSendData(aServer, "nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
-				}
-				else if(aMessage.Contains("Please try again with a more obscure password"))
-				{
-					_log.Error("Parse(" + aRawData + ") - nickserv password is unsecure");
-				}
-				else if(aMessage.Contains("A passcode has been sent to " + Settings.Instance.IrcRegisterEmail) ||
-						aMessage.Contains("This nick is awaiting an e-mail verification code"))
-				{
-					_log.Error("Parse(" + aRawData + ") - nickserv confirm email");
-				}
-				else if(aMessage.Contains("Nickname " + Settings.Instance.IRCName + " registered under your account"))
-				{
-					_log.Info("Parse(" + aRawData + ") - nickserv nick registered succesfully");
-				}
-				else if(aMessage.Contains("Password accepted"))
-				{
-					_log.Info("Parse(" + aRawData + ") - nickserv password accepted");
-				}
-				else if(aMessage.Contains("Please type") && aMessage.Contains("to complete registration."))
-				{
-					Match tMatch = Regex.Match(aMessage, ".* NickServ confirm (?<code>[^\\s]+) .*", RegexOptions.IgnoreCase);
-					if (tMatch.Success)
-					{
-						FireSendData(aServer, "/msg NickServ confirm " + tMatch.Groups["code"]);
-						_log.Info("Parse(" + aRawData + ") - confirming nickserv");
-					}
-					else
-					{
-						_log.Error("Parse(" + aRawData + ") - cant find nickserv code");
-					}
-				}
-				else if(aMessage.Contains("Your password is"))
-				{
-					_log.Info("Parse(" + aRawData + ") - nickserv password accepted");
-				}
-				else
-				{
-					_log.Error("Parse(" + aRawData + ") - unknown nickserv command");
-				}
-			}
-
-			#endregion
 		}
 
 		#endregion
