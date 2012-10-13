@@ -612,15 +612,15 @@ $(function()
 		
 		if (snapshot == undefined)
 		{
-			snapshot = Morris.Line({
-				element: 'snapshot',
-				hideHover: true,
-				pointSize: 4,
-				xkey: 'time',
-				ykeys: ['value'],
-				labels: ['test'],
-				data: [{"time":0,"value":0}]
-			});
+			var options = {
+				xaxis: {
+					mode: "time",
+					timeformat: "%H:%M\n%d.%m.%y",
+					minTickSize: [2, "hour"]
+				}
+			};
+			
+			snapshot = $.plot($("#snapshot"), [[[0,0]]], options);
 		}
 		
 		UpdateSnapshot(1);
@@ -655,12 +655,9 @@ function UpdateSnapshot(type)
 	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSnapshots + "&type=" + type,
 		function(result)
 		{
-			switch (type)
-			{
-				case 1:
-					break;
-			}
-			snapshot.setData(result);
+			snapshot.setData([result]);
+			snapshot.setupGrid();
+			snapshot.draw();
 		}
 	);
 }

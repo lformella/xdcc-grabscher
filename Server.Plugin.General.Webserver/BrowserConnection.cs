@@ -694,16 +694,13 @@ namespace XG.Server.Plugin.General.Webserver
 		
 		string Snapshots2Json(Snapshots aSnapshots, SnapshotValue aValue)
 		{
-			var list = new List<Server.Plugin.General.Webserver.Morris.Object>();
+			var list = new List<Int64[]>();
 			foreach (Snapshot snapshot in aSnapshots.All)
 			{
-				var morrisObject = new Server.Plugin.General.Webserver.Morris.Object();
-				morrisObject.Time = snapshot.Get(SnapshotValue.Timestamp) * 1000;
-				morrisObject.Value = snapshot.Get(aValue);
-				list.Add(morrisObject);
+				Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(aValue)};
+				list.Add(data);
 			}
-			
-			return Json.Serialize<Server.Plugin.General.Webserver.Morris.Object[]>(list.ToArray());
+			return Json.Serialize<Int64[][]>(list.ToArray());
 		}
 		
 		#endregion
