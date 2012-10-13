@@ -320,6 +320,12 @@ namespace XG.Server
 			Searches = aPlugin.LoadSearches();
 			Snapshots = aPlugin.LoadStatistics();
 
+			// put a empty snapshot on top to nullify values
+			var lasttime = (from snapshot in Snapshots.All orderby snapshot.Get(SnapshotValue.Timestamp) select snapshot).Last().Get(SnapshotValue.Timestamp);
+			Snapshot lastSnapshot = new Snapshot();
+			lastSnapshot.Set(SnapshotValue.Timestamp, lasttime + 1);
+			Snapshots.Add(lastSnapshot);
+
 			AddWorker(aPlugin);
 		}
 

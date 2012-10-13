@@ -62,6 +62,12 @@ namespace XG.Core
 		public Snapshot()
 		{
 			_dic = new Dictionary<SnapshotValue, Int64>();
+
+			// fill with null values
+			for (int a = 0; a < 19; a++)
+			{
+				Set((SnapshotValue)a, 0);
+			}
 		}
 
 		public void Set(SnapshotValue aType, Int64 aValue)
