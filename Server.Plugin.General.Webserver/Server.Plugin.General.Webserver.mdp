@@ -105,6 +105,8 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
     <File subtype="Code" buildaction="Compile" name="BrowserConnection.cs" />
     <File subtype="Code" buildaction="Nothing" name="Resources/js/jquery.flot.js" />
+    <File subtype="Directory" buildaction="Compile" name="Flot" />
+    <File subtype="Code" buildaction="Compile" name="Flot/Object.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

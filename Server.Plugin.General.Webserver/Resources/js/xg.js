@@ -101,6 +101,7 @@ var Helper = new XGHelper();
 var outerLayout, innerLayout;
 
 var snapshot = undefined;
+var snapshots;
 
 
 /* ****************************************************************************************************************** */
@@ -602,35 +603,50 @@ $(function()
 		modal: true,
 		resizable: false
 	});
-	
-	
-	jQuery("#snapshots_button").button({icons: { primary: "ui-icon-comment" }});
 
+	/* ************************************************************************************************************** */
+	/* SNAPSHOTS DIALOG                                                                                               */
+	/* ************************************************************************************************************** */
+
+	function speedFormatter(v, axis) {
+		return v.toFixed(axis.tickDecimals) +"€";
+	}
+
+	var options = {
+		xaxis: {
+			mode: "time",
+			timeformat: "%H:%M\n%d.%m.%y",
+			minTickSize: [2, "hour"]
+		},
+		yaxes: [
+			{ min: 0 },
+			{
+				alignTicksWithAxis: 1,
+				position: "right",
+				tickFormatter: Helper.speed2Human
+			}
+		],
+		legend: { position: 'sw' }
+	};
+	snapshot = $.plot($("#snapshot"), [[[0,0]]], options);
+
+	//jQuery(".snapshot_checkbox").button();
+	jQuery(".snapshot_checkbox").click( function()
+	{
+		UpdateSnapshotPlot();
+	});
+
+	jQuery("#snapshots_button").button({icons: { primary: "ui-icon-comment" }});
 	jQuery("#snapshots_button").click( function()
 	{
 		$("#dialog_snapshots").dialog("open");
-		
-		if (snapshot == undefined)
-		{
-			var options = {
-				xaxis: {
-					mode: "time",
-					timeformat: "%H:%M\n%d.%m.%y",
-					minTickSize: [2, "hour"]
-				}
-			};
-			
-			snapshot = $.plot($("#snapshot"), [[[0,0]]], options);
-		}
-		
-		UpdateSnapshot(1);
 	});
 
 	$("#dialog_snapshots").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		width: 640,
-		height: 360,
+		width: 1040,
+		height: 480,
 		modal: true,
 		resizable: false
 	});
@@ -650,16 +666,39 @@ $(function()
 	jQuery("#show_offline_bots").button();
 });
 
-function UpdateSnapshot(type)
+/* ****************************************************************************************************************** */
+/* SNAPSHOT STUFF                                                                                                     */
+/* ****************************************************************************************************************** */
+
+function UpdateSnapshots()
 {
-	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSnapshots + "&type=" + type,
+	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSnapshots,
 		function(result)
 		{
-			snapshot.setData([result]);
-			snapshot.setupGrid();
-			snapshot.draw();
+			result[0].yaxis = 2;
+			$.each(result, function(index, item) {
+				item.color = index;
+			});
+
+			snapshots = result;
+			UpdateSnapshotPlot();
 		}
 	);
+}
+
+function UpdateSnapshotPlot()
+{
+	var data = [];
+	$.each(snapshots, function(index, item) {
+		if (index == 0 || $("#snapshot_checkbox_" + index).attr('checked'))
+		{
+			data.push(item);
+		}
+	});
+
+	snapshot.setData(data);
+	snapshot.setupGrid();
+	snapshot.draw();
 }
 
 /* ****************************************************************************************************************** */
@@ -799,10 +838,14 @@ function ReloadGrid(grid, url)
 
 function RefreshGrid(count)
 {
-	//UpdateSnapshot();
-
 	// connected things every 2,5 seconds, waiting just every 25 seconds
 	var mod = !!(count % 10 == 0);
+
+	// every 5 minutes
+	if (!!(count % 120 == 0))
+	{
+		UpdateSnapshots();
+	}
 
 	switch(activeTab)
 	{

@@ -246,7 +246,7 @@ namespace XG.Server.Plugin.General.Webserver
 							
 						case ClientRequest.GetSnapshots:
 							Context.Response.ContentType = "text/json";
-							response = Snapshots2Json(Snapshots, (SnapshotValue)int.Parse(tDic["type"]));
+							response = Snapshots2Json(Snapshots);
 							break;
 							
 						case ClientRequest.Files:
@@ -691,16 +691,29 @@ namespace XG.Server.Plugin.General.Webserver
 			sb.Append("}");
 			return sb.ToString();
 		}
-		
-		string Snapshots2Json(Snapshots aSnapshots, SnapshotValue aValue)
+
+		string Snapshots2Json(Snapshots aSnapshots)
 		{
-			var list = new List<Int64[]>();
-			foreach (Snapshot snapshot in aSnapshots.All)
+			var tObjects = new List<Server.Plugin.General.Webserver.Flot.Object>();
+			for (int a = 1; a < 19; a++)
 			{
-				Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(aValue)};
-				list.Add(data);
+				var value = (SnapshotValue)a;
+
+				var obj = new Server.Plugin.General.Webserver.Flot.Object();
+				
+				var list = new List<Int64[]>();
+				foreach (Snapshot snapshot in aSnapshots.All)
+				{
+					Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(value)};
+					list.Add(data);
+				}
+				obj.Data = list.ToArray();
+				obj.Label = Enum.GetName(typeof(SnapshotValue), value);
+
+				tObjects.Add(obj);
 			}
-			return Json.Serialize<Int64[][]>(list.ToArray());
+			
+			return Json.Serialize<Server.Plugin.General.Webserver.Flot.Object[]>(tObjects.ToArray());
 		}
 		
 		#endregion

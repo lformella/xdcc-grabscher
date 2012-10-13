@@ -45,9 +45,11 @@ namespace XG.Server.Worker
 			
 			snap.Set(SnapshotValue.Speed, (from file in Files.All from part in file.Parts select part.Speed).Sum());
 			
+			snap.Set(SnapshotValue.Servers, (from server in servers select server).Count());
 			snap.Set(SnapshotValue.ServersConnected, (from server in servers where server.Connected select server).Count());
 			snap.Set(SnapshotValue.ServersDisconnected, (from server in servers where !server.Connected select server).Count());
 			
+			snap.Set(SnapshotValue.Channels, (from channel in channels select channel).Count());
 			snap.Set(SnapshotValue.ChannelsConnected, (from channel in channels where channel.Connected select channel).Count());
 			snap.Set(SnapshotValue.ChannelsDisconnected, (from channel in channels where !channel.Connected select channel).Count());
 			
