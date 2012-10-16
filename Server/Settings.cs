@@ -207,9 +207,9 @@ namespace XG.Server
 			get { return "0.9.2"; }
 		}
 
-		public int BotOfflineCheckTime
+		public int BotOfflineCheckSeconds
 		{
-			get { return 1200000; }
+			get { return 1200; }
 		}
 
 		public int DownloadTimeout
@@ -247,9 +247,9 @@ namespace XG.Server
 			get { return 5000; }
 		}
 		
-		public long TimerSnapshotsSleepTime
+		public long TimerSnapshotsSleepSeconds
 		{
-			get { return 600000; }
+			get { return 600; }
 		}
 
 		public string ParsingErrorFile

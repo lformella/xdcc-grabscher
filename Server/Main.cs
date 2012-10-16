@@ -287,11 +287,11 @@ namespace XG.Server
 			ALoopWorker worker;
 
 			worker = new SnapshotWorker();
-			worker.SecondsToSleep = Settings.Instance.TimerSnapshotsSleepTime;
+			worker.SecondsToSleep = Settings.Instance.TimerSnapshotsSleepSeconds;
 			AddWorker(worker);
 			
 			worker = new BotWatchdogWorker();
-			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckTime;
+			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckSeconds;
 			AddWorker(worker);
 
 			#endregion
