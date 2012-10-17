@@ -86,9 +86,30 @@ var idSearch;
 var searchActive = false;
 var activeTab = 0;
 
-function JsonUrl(password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#show_offline_bots").attr('checked') ? "1" : "0" ) + "&request="; }
-function GuidUrl(id, guid) { return JsonUrl() + id + "&guid=" + guid; }
-function NameUrl(id, name) { return JsonUrl() + id + "&name=" + encodeURIComponent(name); }
+/**
+ * @param {String} password
+ * @return {String}
+ * @constructor
+ */
+var JsonUrl = function (password) { return "/?password=" + (password != undefined ? encodeURIComponent(password) : encodeURIComponent(Password)) + "&offbots=" + ($("#show_offline_bots").attr('checked') ? "1" : "0" ) + "&request="; };
+
+/**
+ *
+ * @param {Integer} id
+ * @param {String} guid
+ * @return {String}
+ * @constructor
+ */
+var GuidUrl = function (id, guid) { return JsonUrl() + id + "&guid=" + guid; };
+
+/**
+ *
+ * @param {Integer} id
+ * @param {String} name
+ * @return {String}
+ * @constructor
+ */
+var NameUrl = function (id, name) { return JsonUrl() + id + "&name=" + encodeURIComponent(name); };
 
 var idSearchCount = 1;
 
@@ -116,7 +137,7 @@ $(function()
 	/* SERVER GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	jQuery("#servers").jqGrid(
+	$("#servers").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
@@ -150,7 +171,7 @@ $(function()
 			SetCookie('servers.sort.index', index);
 			SetCookie('servers.sort.sortorder', sortorder);
 		},
-		pager: jQuery('#servers_pager'),
+		pager: $('#servers_pager'),
 		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
@@ -187,7 +208,7 @@ $(function()
 	/* CHANNEL GRID                                                                                                   */
 	/* ************************************************************************************************************** */
 
-	jQuery("#channels").jqGrid(
+	$("#channels").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
@@ -209,7 +230,7 @@ $(function()
 			SetCookie('channels.sort.index', index);
 			SetCookie('channels.sort.sortorder', sortorder);
 		},
-		pager: jQuery('#channels_pager'),
+		pager: $('#channels_pager'),
 		rowNum: 1000,
 		pgbuttons: false,
 		pginput: false,
@@ -246,7 +267,7 @@ $(function()
 	/* BOT GRID                                                                                                       */
 	/* ************************************************************************************************************** */
 
-	jQuery("#bots").jqGrid(
+	$("#bots").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate:{fixed:true},
@@ -277,7 +298,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#bots_pager'),
+		pager: $('#bots_pager'),
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
@@ -293,7 +314,7 @@ $(function()
 	/* PACKET GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	jQuery("#packets").jqGrid(
+	$("#packets").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
@@ -315,7 +336,7 @@ $(function()
 				var pack = GetRowData('packets', id);
 				if(pack)
 				{
-					jQuery('#bots').setSelection(pack.ParentGuid, false);
+					$('#bots').setSelection(pack.ParentGuid, false);
 				}
 			}
 		},
@@ -333,7 +354,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#packets_pager'),
+		pager: $('#packets_pager'),
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
@@ -348,7 +369,7 @@ $(function()
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	jQuery("#searches").jqGrid(
+	$("#searches").jqGrid(
 	{
 		datatype: "local",
 		cmTemplate: {fixed:true},
@@ -364,7 +385,7 @@ $(function()
 			searchActive = true;
 			if(id)
 			{
-				var data = jQuery("#searches").getRowData(id);
+				var data = $("#searches").getRowData(id);
 				var url1 = "";
 				var url2 = "";
 				switch(id)
@@ -410,7 +431,7 @@ $(function()
 				idSearch = id;
 			}
 		},
-		pager: jQuery('#searches_pager'),
+		pager: $('#searches_pager'),
 		pgbuttons: false,
 		pginput: false,
 		recordtext: '',
@@ -423,7 +444,7 @@ $(function()
 		hidegrid: false
 	}).navGrid('#searches_pager', {edit:false, add:false, del:false, search:false, refresh:false});
 
-	jQuery("#searches_pager_left").html("<input type=\"text\" id=\"search-text\" />");
+	$("#searches_pager_left").html("<input type=\"text\" id=\"search-text\" />");
 
 	var mydata = [
 		{Id:"1", Name:"ODay Packets", Action: ""},
@@ -433,7 +454,7 @@ $(function()
 	];
 	for(var i=0; i<=mydata.length; i++)
 	{
-		jQuery("#searches").addRowData(i + 1, mydata[i]);
+		$("#searches").addRowData(i + 1, mydata[i]);
 		idSearchCount++;
 	}
 
@@ -453,7 +474,7 @@ $(function()
 	/* SEARCH GRID                                                                                                    */
 	/******************************************************************************************************************/
 
-	jQuery("#searches_xg_bitpir_at").jqGrid(
+	$("#searches_xg_bitpir_at").jqGrid(
 	{
 		datatype:'jsonp',
 		cmTemplate:{fixed:true},
@@ -484,7 +505,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager:jQuery('#searches_pager_xg_bitpir_at'),
+		pager:$('#searches_pager_xg_bitpir_at'),
 		viewrecords:true,
 		ExpandColumn:'Name',
 		height:'100%',
@@ -499,7 +520,7 @@ $(function()
 	/* FILE GRID                                                                                                      */
 	/* ************************************************************************************************************** */
 
-	jQuery("#files").jqGrid(
+	$("#files").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
@@ -519,7 +540,7 @@ $(function()
 		},
 		rowNum: 100,
 		rowList: [100, 200, 400, 800],
-		pager: jQuery('#files_pager'),
+		pager: $('#files_pager'),
 		ExpandColumn: 'Name',
 		viewrecords: true,
 		autowidth: true,
@@ -567,9 +588,9 @@ $(function()
 	/* SERVER / CHANNEL DIALOG                                                                                        */
 	/* ************************************************************************************************************** */
 
-	jQuery("#server_channel_button").button({icons: { primary: "ui-icon-gear" }});
+	$("#server_channel_button").button({icons: { primary: "ui-icon-gear" }});
 
-	jQuery("#server_channel_button").click( function()
+	$("#server_channel_button").click( function()
 	{
 		ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
 		ReloadGrid("channels");
@@ -588,9 +609,9 @@ $(function()
 	/* STATISTICS DIALOG                                                                                              */
 	/* ************************************************************************************************************** */
 
-	jQuery("#statistics_button").button({icons: { primary: "ui-icon-comment" }});
+	$("#statistics_button").button({icons: { primary: "ui-icon-comment" }});
 
-	jQuery("#statistics_button").click( function()
+	$("#statistics_button").click( function()
 	{
 		RefreshStatistic();
 		$("#dialog_statistics").dialog("open");
@@ -608,28 +629,22 @@ $(function()
 	/* SNAPSHOTS DIALOG                                                                                               */
 	/* ************************************************************************************************************** */
 
-	function speedFormatter(v, axis) {
-		return v.toFixed(axis.tickDecimals) +"€";
-	}
-
-	function weekendAreas(axes) {
+	var weekendAreas = function (axes) {
 		var markings = [];
 		var d = new Date(axes.xaxis.min);
-		// go to the first Saturday
 		d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
 		d.setUTCSeconds(0);
 		d.setUTCMinutes(0);
 		d.setUTCHours(0);
 		var i = d.getTime();
-		do {
-			// when we don't set yaxis, the rectangle automatically
-			// extends to infinity upwards and downwards
+		do
+		{
 			markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
 			i += 7 * 24 * 60 * 60 * 1000;
 		} while (i < axes.xaxis.max);
 
 		return markings;
-	}
+	};
 
 	var options = {
 		xaxis: {
@@ -650,14 +665,14 @@ $(function()
 	};
 	snapshot = $.plot($("#snapshot"), [[[0,0]]], options);
 
-	//jQuery(".snapshot_checkbox").button();
-	jQuery(".snapshot_checkbox").click( function()
+	//$(".snapshot_checkbox").button();
+	$(".snapshot_checkbox").click( function()
 	{
 		UpdateSnapshotPlot();
 	});
 
-	jQuery("#snapshots_button").button({icons: { primary: "ui-icon-comment" }});
-	jQuery("#snapshots_button").click( function()
+	$("#snapshots_button").button({icons: { primary: "ui-icon-comment" }});
+	$("#snapshots_button").click( function()
 	{
 		$("#dialog_snapshots").dialog("open");
 	});
@@ -675,7 +690,7 @@ $(function()
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
-	jQuery("#tabs").tabs();
+	$("#tabs").tabs();
 	$("#tabs").tabs({
 		select: function(event, ui)
 		{
@@ -683,14 +698,14 @@ $(function()
 		}
 	});
 
-	jQuery("#show_offline_bots").button();
+	$("#show_offline_bots").button();
 });
 
 /* ****************************************************************************************************************** */
 /* SNAPSHOT STUFF                                                                                                     */
 /* ****************************************************************************************************************** */
 
-function UpdateSnapshots()
+var UpdateSnapshots = function ()
 {
 	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSnapshots,
 		function(result)
@@ -704,9 +719,9 @@ function UpdateSnapshots()
 			UpdateSnapshotPlot();
 		}
 	);
-}
+};
 
-function UpdateSnapshotPlot()
+var UpdateSnapshotPlot = function ()
 {
 	var data = [];
 	$.each(snapshots, function(index, item) {
@@ -719,15 +734,15 @@ function UpdateSnapshotPlot()
 	snapshot.setData(data);
 	snapshot.setupGrid();
 	snapshot.draw();
-}
+};
 
 /* ****************************************************************************************************************** */
 /* SEARCH STUFF                                                                                                       */
 /* ****************************************************************************************************************** */
 
-function AddNewSearch()
+var AddNewSearch = function ()
 {
-	var tbox = jQuery('#search-text');
+	var tbox = $('#search-text');
 	if(tbox.val() != "")
 	{
 		$.get(NameUrl(Enum.TCPClientRequest.AddSearch, tbox.val()));
@@ -736,9 +751,9 @@ function AddNewSearch()
 
 		$("#search-text").effect("transfer", { to: $("#" + id) }, 500);
 	}
-}
+};
 
-function AddSearch(search)
+var AddSearch = function (search)
 {
 	var datarow =
 	{
@@ -746,34 +761,35 @@ function AddSearch(search)
 		Name: search,
 		Action: "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='RemoveSearch(" + idSearchCount + ");'></i>"
 	};
-	jQuery("#searches").addRowData(idSearchCount, datarow);
+	$("#searches").addRowData(idSearchCount, datarow);
 	return idSearchCount++;
-}
+};
 
-function RemoveSearch(id)
+var RemoveSearch = function (id)
 {
 	if(id <= 4)
 	{
 		return;
 	}
-	var data = jQuery("#searches").getRowData(id);
+	var data = $("#searches").getRowData(id);
 	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
 
 	$("#" + id).effect("transfer", { to: $("#search-text") }, 500);
-	jQuery('#searches').delRowData(id);
-}
+	$('#searches').delRowData(id);
+};
 
 /* ****************************************************************************************************************** */
 /* DIALOG BUTTON HANDLER                                                                                              */
 /* ****************************************************************************************************************** */
 
-function ButtonConnectClicked(dialog)
+var ButtonConnectClicked = function (dialog)
 {
-	var password = CryptoJS.SHA256(salt + $("#password").val() + salt);
+	var passwordElement = $("#password");
+	var password = CryptoJS.SHA256(salt + passwordElement.val() + salt);
 
 	if (CheckPassword(password))
 	{
-		$("#password").removeClass('ui-state-error');
+		passwordElement.removeClass('ui-state-error');
 		SetPassword(password);
 		dialog.dialog('close');
 
@@ -815,23 +831,28 @@ function ButtonConnectClicked(dialog)
 	}
 	else
 	{
-		$("#password").addClass('ui-state-error');
+		passwordElement.addClass('ui-state-error');
 	}
-}
+};
 
 /* ****************************************************************************************************************** */
 /* PASSWORD STUFF                                                                                                     */
 /* ****************************************************************************************************************** */
 
-function SetPassword(password)
+var SetPassword = function (password)
 {
 	Password = password;
-}
+};
 
-function CheckPassword(password)
+/**
+ * @param {String} password
+ * @return {Boolean}
+ * @constructor
+ */
+var CheckPassword = function (password)
 {
 	var res = false;
-	jQuery.ajax({
+	$.ajax({
 		url: JsonUrl(password) + Enum.TCPClientRequest.Version,
 		success: function(result)
 		{
@@ -840,23 +861,24 @@ function CheckPassword(password)
 		async: false
 	});
 	return res;
-}
+};
 
 /* ****************************************************************************************************************** */
 /* RELOAD / REFRESH STUFF                                                                                             */
 /* ****************************************************************************************************************** */
 
-function ReloadGrid(grid, url)
+var ReloadGrid = function (grid, url)
 {
-	jQuery("#" + grid).clearGridData();
+	var gridElement = $("#" + grid);
+	gridElement.clearGridData();
 	if(url != undefined)
 	{
-		jQuery("#" + grid).setGridParam({url: url, page: 1});
+		gridElement.setGridParam({url: url, page: 1});
 	}
-	jQuery("#" + grid).trigger("reloadGrid");
-}
+	gridElement.trigger("reloadGrid");
+};
 
-function RefreshGrid(count)
+var RefreshGrid = function (count)
 {
 	// connected things every 2,5 seconds, waiting just every 25 seconds
 	var mod = !!(count % 10 == 0);
@@ -871,7 +893,7 @@ function RefreshGrid(count)
 	{
 		case 0:
 			// refresh bot grid
-			$.each(jQuery("#bots").getDataIDs(), function(i, id)
+			$.each($("#bots").getDataIDs(), function(i, id)
 			{
 				var bot = GetRowData("bots", id);
 				if(bot.State == 1 || (mod && bot.State == 2))
@@ -881,7 +903,7 @@ function RefreshGrid(count)
 			});
 
 			// refresh packet grid
-			$.each(jQuery("#packets").getDataIDs(), function(i, id)
+			$.each($("#packets").getDataIDs(), function(i, id)
 			{
 				var pack = GetRowData("packets", id);
 				if(pack.Connected || (mod && pack.Enabled))
@@ -895,7 +917,7 @@ function RefreshGrid(count)
 			break;
 
 		case 2:
-			$.each(jQuery("#files").getDataIDs(), function(i, id)
+			$.each($("#files").getDataIDs(), function(i, id)
 			{
 				var file = GetRowData("files", id);
 
@@ -918,9 +940,9 @@ function RefreshGrid(count)
 	}
 
 	setTimeout("RefreshGrid(" + (count + 1) +")", 2500);
-}
+};
 
-function RefreshObject(grid, guid)
+var RefreshObject = function (grid, guid)
 {
 	$.getJSON(GuidUrl(Enum.TCPClientRequest.GetObject, guid),
 		function(result)
@@ -934,12 +956,12 @@ function RefreshObject(grid, guid)
 				result.cell.TimeMissing = "";
 			}
 
-			jQuery("#" + grid).setRowData(guid, result.cell);
+			$("#" + grid).setRowData(guid, result.cell);
 		}
 	);
-}
+};
 
-function RefreshStatistic()
+var RefreshStatistic = function ()
 {
 	$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetStatistics,
 		function(result)
@@ -971,41 +993,41 @@ function RefreshStatistic()
 			$("#SpeedMax").html(Helper.speed2Human(result.SpeedMax));
 		}
 	);
-}
+};
 
 /* ****************************************************************************************************************** */
 /* HELPER                                                                                                             */
 /* ****************************************************************************************************************** */
 
-function GetRowData(grid, id)
+var GetRowData = function (grid, id)
 {
-	return jQuery.parseJSON(jQuery("#" + grid).getRowData(id).Object);
-}
+	return $.parseJSON($("#" + grid).getRowData(id).Object);
+};
 
-function ResizeMain()
+var ResizeMain = function ()
 {
-	jQuery("#searches").setGridWidth($('#layout_search').width() - 1);
-	jQuery("#searches").setGridHeight($('#layout_search').height() - 28);
+	$("#searches").setGridWidth($('#layout_search').width() - 1);
+	$("#searches").setGridHeight($('#layout_search').height() - 28);
 
 	$("#search-text").width($("#layout_search").width() - 10);
 
 	$("#layout_objects_container").height($('#layout_search').height() - 66);
 
-	jQuery("#bots, #packets").setGridWidth($('#layout_objects').width() - 1);
+	$("#bots, #packets").setGridWidth($('#layout_objects').width() - 1);
 
-	jQuery("#searches_xg_bitpir_at, #files").setGridWidth($('#layout_objects').width() - 1);
-	jQuery("#searches_xg_bitpir_at, #files").setGridHeight($('#layout_search').height() - 110);
+	$("#searches_xg_bitpir_at, #files").setGridWidth($('#layout_objects').width() - 1);
+	$("#searches_xg_bitpir_at, #files").setGridHeight($('#layout_search').height() - 110);
 
 	innerLayout.resizeAll();
-}
+};
 
-function ResizeContainer()
+var ResizeContainer = function ()
 {
-	jQuery("#bots").setGridHeight($('#layout_bots').height() - 74);
-	jQuery("#packets").setGridHeight($('#layout_packets').height() - 74);
-}
+	$("#bots").setGridHeight($('#layout_bots').height() - 74);
+	$("#packets").setGridHeight($('#layout_packets').height() - 74);
+};
 
-function FlipPacket(id)
+var FlipPacket = function (id)
 {
 	var pack = GetRowData('packets', id);
 	if(pack)
@@ -1032,10 +1054,10 @@ function FlipPacket(id)
 				setTimeout("RefreshObject('packets', '" + id + "')", 1000);
 			}
 		}
-	}				
-}
+	}
+};
 
-function FlipObject(id, grid)
+var FlipObject = function (id, grid)
 {
 	var obj = GetRowData(grid, id);
 	if(obj)
@@ -1051,21 +1073,21 @@ function FlipObject(id, grid)
 		setTimeout("ReloadGrid('" + grid + "')", 1000);
 	}
 	ReloadGrid(grid);
-}
+};
 
-function DownloadLink(id)
+var DownloadLink = function (id)
 {
 	var data = GetRowData("searches_xg_bitpir_at", id);
 	$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
-}
+};
 
-function SetCookie(name, value)
+var SetCookie = function (name, value)
 {
 	$.cookie('xg.' + name, value, { expires: 365 });
-}
+};
 
-function GetCookie(name, value)
+var GetCookie = function (name, value)
 {
 	var val = $.cookie('xg.' + name);
 	return val != undefined && val != "" ? val : value;
-}
+};
