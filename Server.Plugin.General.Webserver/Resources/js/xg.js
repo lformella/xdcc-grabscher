@@ -612,11 +612,30 @@ $(function()
 		return v.toFixed(axis.tickDecimals) +"€";
 	}
 
+	function weekendAreas(axes) {
+		var markings = [];
+		var d = new Date(axes.xaxis.min);
+		// go to the first Saturday
+		d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+		d.setUTCSeconds(0);
+		d.setUTCMinutes(0);
+		d.setUTCHours(0);
+		var i = d.getTime();
+		do {
+			// when we don't set yaxis, the rectangle automatically
+			// extends to infinity upwards and downwards
+			markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
+			i += 7 * 24 * 60 * 60 * 1000;
+		} while (i < axes.xaxis.max);
+
+		return markings;
+	}
+
 	var options = {
 		xaxis: {
 			mode: "time",
 			timeformat: "%H:%M\n%d.%m.%y",
-			minTickSize: [2, "hour"]
+			tickLength: 5
 		},
 		yaxes: [
 			{ min: 0 },
@@ -626,7 +645,8 @@ $(function()
 				tickFormatter: Helper.speed2Human
 			}
 		],
-		legend: { position: 'sw' }
+		legend: { position: "sw" },
+		grid: { markings: weekendAreas }
 	};
 	snapshot = $.plot($("#snapshot"), [[[0,0]]], options);
 
