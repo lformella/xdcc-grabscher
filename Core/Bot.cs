@@ -51,19 +51,6 @@ namespace XG.Core
 			get { return base.Parent as Channel; }
 			set { base.Parent = value; }
 		}
-		
-		[DataMember]
-		public override bool Connected
-		{
-			get { return base.Connected; }
-			set
-			{
-				if (base.Connected != value)
-				{
-					base.Connected = value;
-				}
-			}
-		}
 
 		[NonSerialized]
 		Packet _currentQueuedPacket = null;

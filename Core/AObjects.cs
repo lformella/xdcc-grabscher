@@ -81,23 +81,6 @@ namespace XG.Core
 		{
 			get { return _children.ToList(); }
 		}
-		
-		[DataMember]
-		public override bool Connected
-		{
-			get { return base.Connected; }
-			set
-			{
-				if (!value)
-				{
-					foreach (AObject obj in All)
-					{
-						obj.Connected = value;
-					}
-				}
-				base.Connected = value;
-			}
-		}
 
 		#endregion
 
