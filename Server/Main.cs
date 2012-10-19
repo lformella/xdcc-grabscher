@@ -326,6 +326,10 @@ namespace XG.Server
 			lastSnapshot.Set(SnapshotValue.Timestamp, lasttime + 1);
 			Snapshots.Add(lastSnapshot);
 
+			Snapshot firstSnapshot = new Snapshot();
+			firstSnapshot.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
+			Snapshots.Add(firstSnapshot);
+
 			AddWorker(aPlugin);
 		}
 
