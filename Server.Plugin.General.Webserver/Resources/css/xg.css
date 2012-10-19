@@ -22,6 +22,24 @@ html, body
 	padding: 0;
 }
 
+fieldset
+{
+	margin: 0 0 15px;
+	padding: 4px 0;
+}
+
+fieldset input
+{
+	margin:0 4px 3px 2px;
+	float:left;
+}
+
+fieldset label
+{
+	margin:0 0 3px 0;
+	display: block;
+}
+
 .ui-layout-pane
 {
 	border: none;

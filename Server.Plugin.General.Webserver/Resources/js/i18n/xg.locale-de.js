@@ -75,6 +75,12 @@ $(function()
 	jQuery("#searches_xg_bitpir_at").setLabel("BotSpeed", "Geschw.");
 
 	/* ************************************************************************************************************** */
+	/* SNAPSHOTS                                                                                                      */
+	/* ************************************************************************************************************** */
+
+	$("#snapshot_timespan").html("Zeitspanne");
+
+	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
@@ -83,7 +89,8 @@ $(function()
 	$("#tab_1").html("IRC &Uuml;bersicht");
 	$("#tab_2").html("Externe Suche via xg.bitpir.at");
 	$("#tab_3").html("Dateien");
-	
-	//LANG_MONTH = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-	//LANG_WEEKDAY = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+
+	LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+	LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 });

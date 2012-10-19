@@ -113,16 +113,17 @@ var NameUrl = function (id, name) { return JsonUrl() + id + "&name=" + encodeURI
 
 var idSearchCount = 1;
 
-var LANG_MONTH = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-var LANG_WEEKDAY = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+var LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 var Formatter;
 var Helper = new XGHelper();
 
 var outerLayout, innerLayout;
 
-var snapshot = undefined;
 var snapshots;
+
 
 
 /* ****************************************************************************************************************** */
@@ -588,14 +589,14 @@ $(function()
 	/* SERVER / CHANNEL DIALOG                                                                                        */
 	/* ************************************************************************************************************** */
 
-	$("#server_channel_button").button({icons: { primary: "ui-icon-gear" }});
-
-	$("#server_channel_button").click( function()
-	{
-		ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
-		ReloadGrid("channels");
-		$("#dialog_server_channels").dialog("open");
-	});
+	$("#server_channel_button")
+		.button({icons: { primary: "ui-icon-gear" }})
+		.click( function()
+		{
+			ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
+			ReloadGrid("channels");
+			$("#dialog_server_channels").dialog("open");
+		});
 
 	$("#dialog_server_channels").dialog({
 		bgiframe: true,
@@ -609,13 +610,13 @@ $(function()
 	/* STATISTICS DIALOG                                                                                              */
 	/* ************************************************************************************************************** */
 
-	$("#statistics_button").button({icons: { primary: "ui-icon-comment" }});
-
-	$("#statistics_button").click( function()
-	{
-		RefreshStatistic();
-		$("#dialog_statistics").dialog("open");
-	});
+	$("#statistics_button")
+		.button({icons: { primary: "ui-icon-comment" }})
+		.click( function()
+		{
+			RefreshStatistic();
+			$("#dialog_statistics").dialog("open");
+		});
 
 	$("#dialog_statistics").dialog({
 		bgiframe: true,
@@ -629,59 +630,24 @@ $(function()
 	/* SNAPSHOTS DIALOG                                                                                               */
 	/* ************************************************************************************************************** */
 
-	var weekendAreas = function (axes) {
-		var markings = [];
-		var d = new Date(axes.xaxis.min);
-		d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
-		d.setUTCSeconds(0);
-		d.setUTCMinutes(0);
-		d.setUTCHours(0);
-		var i = d.getTime();
-		do
-		{
-			markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
-			i += 7 * 24 * 60 * 60 * 1000;
-		} while (i < axes.xaxis.max);
-
-		return markings;
-	};
-
-	var options = {
-		xaxis: {
-			mode: "time",
-			timeformat: "%H:%M\n%d.%m.%y",
-			tickLength: 5
-		},
-		yaxes: [
-			{ min: 0 },
-			{
-				alignTicksWithAxis: 1,
-				position: "right",
-				tickFormatter: Helper.speed2Human
-			}
-		],
-		legend: { position: "sw" },
-		grid: { markings: weekendAreas }
-	};
-	snapshot = $.plot($("#snapshot"), [[[0,0]]], options);
-
 	//$(".snapshot_checkbox").button();
-	$(".snapshot_checkbox").click( function()
+	$(".snapshot_checkbox, input[name='snapshot_time']").click( function()
 	{
 		UpdateSnapshotPlot();
 	});
 
-	$("#snapshots_button").button({icons: { primary: "ui-icon-comment" }});
-	$("#snapshots_button").click( function()
-	{
-		$("#dialog_snapshots").dialog("open");
-	});
+	$("#snapshots_button")
+		.button({icons: { primary: "ui-icon-comment" }})
+		.click( function()
+		{
+			$("#dialog_snapshots").dialog("open");
+		});
 
 	$("#dialog_snapshots").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		width: 1040,
-		height: 480,
+		width: 1230,
+		height: 750,
 		modal: true,
 		resizable: false
 	});
@@ -690,7 +656,6 @@ $(function()
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
-	$("#tabs").tabs();
 	$("#tabs").tabs({
 		select: function(event, ui)
 		{
@@ -723,17 +688,164 @@ var UpdateSnapshots = function ()
 
 var UpdateSnapshotPlot = function ()
 {
+	var days = parseInt($("input[name='snapshot_time']:checked").val());
+	var snapshotsMinDate = days > 0 ? new Date().getTime() - (60 * 60 * 24 * days * 1000) : days;
+
 	var data = [];
-	$.each(snapshots, function(index, item) {
+	var currentSnapshots = $.extend(true, [], snapshots);
+	$.each(currentSnapshots, function(index, item) {
 		if (index == 0 || $("#snapshot_checkbox_" + index).attr('checked'))
 		{
+			var itemData = [];
+			$.each(item.data, function(index2, item2) {
+				if (snapshotsMinDate < item2[0])
+				{
+					itemData.push(item2);
+				}
+			});
+			item.data = itemData;
+
 			data.push(item);
 		}
 	});
 
-	snapshot.setData(data);
-	snapshot.setupGrid();
-	snapshot.draw();
+	var markerFunction;
+	var tickSize;
+	var timeFormat;
+	switch (days)
+	{
+		case 1:
+			timeFormat = "%H:%M";
+			tickSize = [2, "hour"];
+			markerFunction = function (axes) {
+				var markings = [];
+				var d = new Date(axes.xaxis.min);
+				d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+				d.setUTCSeconds(0);
+				d.setUTCMinutes(0);
+				d.setUTCHours(0);
+				var i = d.getTime();
+				do
+				{
+					markings.push({
+						xaxis: {
+							from: i,
+							to: i + 2 * 60 * 60 * 1000
+						}
+					});
+					i += 4 * 60 * 60 * 1000;
+				} while (i < axes.xaxis.max);
+
+				return markings;
+			};
+			break;
+
+		case 7:
+			timeFormat = "%d. %b";
+			tickSize = [1, "day"];
+			markerFunction = function (axes) {
+				var markings = [];
+				var d = new Date(axes.xaxis.min);
+				d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+				d.setUTCSeconds(0);
+				d.setUTCMinutes(0);
+				d.setUTCHours(0);
+				var i = d.getTime();
+				do
+				{
+					markings.push({
+						xaxis: {
+							from: i,
+							to: i + 2 * 24 * 60 * 60 * 1000
+						}
+					});
+					i += 7 * 24 * 60 * 60 * 1000;
+				} while (i < axes.xaxis.max);
+
+				return markings;
+			};
+			break;
+
+		case 31:
+			timeFormat = "%d. %b";
+			tickSize = [7, "day"];
+			markerFunction = function (axes) {
+				var markings = [];
+				var d = new Date(axes.xaxis.min);
+				d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+				d.setUTCSeconds(0);
+				d.setUTCMinutes(0);
+				d.setUTCHours(0);
+				var i = d.getTime();
+				do
+				{
+					markings.push({
+						xaxis: {
+							from: i,
+							to: i + 7 * 24 * 60 * 60 * 1000
+						}
+					});
+					i += 14 * 24 * 60 * 60 * 1000;
+				} while (i < axes.xaxis.max);
+
+				return markings;
+			};
+			break;
+
+		default:
+			timeFormat = "%b %y";
+			tickSize = [1, "month"];
+			markerFunction = function (axes) {
+				var markings = [];
+				var d = new Date(axes.xaxis.min);
+				d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+				d.setUTCSeconds(0);
+				d.setUTCMinutes(0);
+				d.setUTCHours(0);
+				var i = d.getTime();
+				do
+				{
+					markings.push({
+						xaxis: {
+							from: i,
+							to: i + 7 * 24 * 60 * 60 * 1000
+						}
+					});
+					i += 14 * 24 * 60 * 60 * 1000;
+				} while (i < axes.xaxis.max);
+
+				return markings;
+			};
+			break;
+	}
+
+	var snapshotOptions = {
+		xaxis: {
+			mode: "time",
+			timeformat: timeFormat,
+			minTickSize: tickSize,
+			monthNames: LANG_MONTH_SHORT
+		},
+		yaxes: [
+			{ min: 0 },
+			{
+				min: 0,
+				alignTicksWithAxis: 1,
+				position: "right",
+				tickFormatter: function (speed) {
+					if (speed <= 1)
+					{
+						return "";
+					}
+					return Helper.speed2Human(speed);
+				}
+			}
+		],
+		legend: { position: "sw" },
+		grid: { markings: markerFunction }
+	};
+
+	$.plot($("#snapshot"), data, snapshotOptions);
 };
 
 /* ****************************************************************************************************************** */
@@ -1006,8 +1118,9 @@ var GetRowData = function (grid, id)
 
 var ResizeMain = function ()
 {
-	$("#searches").setGridWidth($('#layout_search').width() - 1);
-	$("#searches").setGridHeight($('#layout_search').height() - 28);
+	$("#searches")
+		.setGridWidth($('#layout_search').width() - 1)
+		.setGridHeight($('#layout_search').height() - 28);
 
 	$("#search-text").width($("#layout_search").width() - 10);
 
@@ -1015,8 +1128,9 @@ var ResizeMain = function ()
 
 	$("#bots, #packets").setGridWidth($('#layout_objects').width() - 1);
 
-	$("#searches_xg_bitpir_at, #files").setGridWidth($('#layout_objects').width() - 1);
-	$("#searches_xg_bitpir_at, #files").setGridHeight($('#layout_search').height() - 110);
+	$("#searches_xg_bitpir_at, #files")
+		.setGridWidth($('#layout_objects').width() - 1)
+		.setGridHeight($('#layout_search').height() - 110);
 
 	innerLayout.resizeAll();
 };
