@@ -138,14 +138,14 @@ $(function()
 	/* SERVER GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	$("#servers").jqGrid(
+	$("#servers_table").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
 		colNames: ['', '', 'Name'],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers\");"); }, width:34, sortable: false, classes: "icon-cell"},
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers_table\");"); }, width:34, sortable: false, classes: "icon-cell"},
 			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:218, editable:true, fixed:false}
 		],
 		onSelectRow: function(id)
@@ -153,10 +153,10 @@ $(function()
 			if(id)
 			{
 				idServer = id;
-				var serv = GetRowData('servers', id);
+				var serv = GetRowData('servers_table', id);
 				if(serv)
 				{
-					ReloadGrid("channels", GuidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id));
+					ReloadGrid("channels_table", GuidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id));
 				}
 			}
 		},
@@ -164,7 +164,7 @@ $(function()
 		{
 			if(id)
 			{
-				FlipObject(id, "servers");
+				FlipObject(id, "servers_table");
 			}
 		},
 		onSortCol: function(index, iCol, sortorder)
@@ -209,21 +209,21 @@ $(function()
 	/* CHANNEL GRID                                                                                                   */
 	/* ************************************************************************************************************** */
 
-	$("#channels").jqGrid(
+	$("#channels_table").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
 		colNames: ['', '', 'Name'],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels\");"); }, width:34, sortable: false, classes: "icon-cell"},
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels_table\");"); }, width:34, sortable: false, classes: "icon-cell"},
 			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:218, editable:true, fixed:false}
 		],
 		ondblClickRow: function(id)
 		{
 			if(id)
 			{
-				FlipObject(id, "channels");
+				FlipObject(id, "channels_table");
 			}
 		},
 		onSortCol: function(index, iCol, sortorder)
@@ -268,7 +268,7 @@ $(function()
 	/* BOT GRID                                                                                                       */
 	/* ************************************************************************************************************** */
 
-	$("#bots").jqGrid(
+	$("#bots_table").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate:{fixed:true},
@@ -289,7 +289,7 @@ $(function()
 			if(id)
 			{
 				searchActive = false;
-				ReloadGrid("packets", GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id));
+				ReloadGrid("packets_table", GuidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id));
 			}
 		},
 		onSortCol: function(index, iCol, sortorder)
@@ -315,7 +315,7 @@ $(function()
 	/* PACKET GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	$("#packets").jqGrid(
+	$("#packets_table").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
@@ -334,10 +334,10 @@ $(function()
 		{
 			if(id)
 			{
-				var pack = GetRowData('packets', id);
+				var pack = GetRowData('packets_table', id);
 				if(pack)
 				{
-					$('#bots').setSelection(pack.ParentGuid, false);
+					$('#bots_table').setSelection(pack.ParentGuid, false);
 				}
 			}
 		},
@@ -370,7 +370,7 @@ $(function()
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	$("#searches").jqGrid(
+	$("#search_table").jqGrid(
 	{
 		datatype: "local",
 		cmTemplate: {fixed:true},
@@ -386,7 +386,7 @@ $(function()
 			searchActive = true;
 			if(id)
 			{
-				var data = $("#searches").getRowData(id);
+				var data = $("#search_table").getRowData(id);
 				var url1 = "";
 				var url2 = "";
 				switch(id)
@@ -423,16 +423,16 @@ $(function()
 
 				if(url1 != "")
 				{
-					ReloadGrid("bots", url1);
+					ReloadGrid("bots_table", url1);
 				}
 				if(url2 != "")
 				{
-					ReloadGrid("packets", url2);
+					ReloadGrid("packets_table", url2);
 				}
 				idSearch = id;
 			}
 		},
-		pager: $('#searches_pager'),
+		pager: $('#search_pager'),
 		pgbuttons: false,
 		pginput: false,
 		recordtext: '',
@@ -443,9 +443,9 @@ $(function()
 		autowidth: true,
 		sortorder: "desc",
 		hidegrid: false
-	}).navGrid('#searches_pager', {edit:false, add:false, del:false, search:false, refresh:false});
+	}).navGrid('#search_pager', {edit:false, add:false, del:false, search:false, refresh:false});
 
-	$("#searches_pager_left").html("<input type=\"text\" id=\"search-text\" />");
+	$("#search_pager_left").html("<input type=\"text\" id=\"search-text\" />");
 
 	var mydata = [
 		{Id:"1", Name:"ODay Packets", Action: ""},
@@ -455,7 +455,7 @@ $(function()
 	];
 	for(var i=0; i<=mydata.length; i++)
 	{
-		$("#searches").addRowData(i + 1, mydata[i]);
+		$("#search_table").addRowData(i + 1, mydata[i]);
 		idSearchCount++;
 	}
 
@@ -558,7 +558,7 @@ $(function()
 
 	$("#dialog_password").dialog({
 		bgiframe: true,
-		height: 200,
+		height: 140,
 		modal: true,
 		resizable: false,
 		hide: 'explode',
@@ -593,8 +593,8 @@ $(function()
 		.button({icons: { primary: "ui-icon-gear" }})
 		.click( function()
 		{
-			ReloadGrid("servers", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
-			ReloadGrid("channels");
+			ReloadGrid("servers_table", GuidUrl(Enum.TCPClientRequest.GetServers, ''));
+			ReloadGrid("channels_table");
 			$("#dialog_server_channels").dialog("open");
 		});
 
@@ -873,7 +873,7 @@ var AddSearch = function (search)
 		Name: search,
 		Action: "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='RemoveSearch(" + idSearchCount + ");'></i>"
 	};
-	$("#searches").addRowData(idSearchCount, datarow);
+	$("#search_table").addRowData(idSearchCount, datarow);
 	return idSearchCount++;
 };
 
@@ -883,11 +883,11 @@ var RemoveSearch = function (id)
 	{
 		return;
 	}
-	var data = $("#searches").getRowData(id);
+	var data = $("#search_table").getRowData(id);
 	$.get(NameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
 
 	$("#" + id).effect("transfer", { to: $("#search-text") }, 500);
-	$('#searches').delRowData(id);
+	$('#search_table').delRowData(id);
 };
 
 /* ****************************************************************************************************************** */
@@ -905,7 +905,7 @@ var ButtonConnectClicked = function (dialog)
 		SetPassword(password);
 		dialog.dialog('close');
 
-		// Get searches
+		// Get search_table
 		$.getJSON(JsonUrl() + Enum.TCPClientRequest.GetSearches,
 			function(result) {
 				$.each(result.Searches, function(i, item) {
@@ -920,7 +920,7 @@ var ButtonConnectClicked = function (dialog)
 			onresize: function () {
 				ResizeMain();
 			},
-			spacing_open: 1,
+			spacing_open: 4,
 			spacing_closed: 4
 		});
 
@@ -929,7 +929,7 @@ var ButtonConnectClicked = function (dialog)
 			onresize: function () {
 				ResizeContainer();
 			},
-			spacing_open: 1,
+			spacing_open: 4,
 			spacing_closed: 4
 		});
 
@@ -1005,22 +1005,22 @@ var RefreshGrid = function (count)
 	{
 		case 0:
 			// refresh bot grid
-			$.each($("#bots").getDataIDs(), function(i, id)
+			$.each($("#bots_table").getDataIDs(), function(i, id)
 			{
-				var bot = GetRowData("bots", id);
+				var bot = GetRowData("bots_table", id);
 				if(bot.State == 1 || (mod && bot.State == 2))
 				{
-					RefreshObject("bots", id);
+					RefreshObject("bots_table", id);
 				}
 			});
 
 			// refresh packet grid
-			$.each($("#packets").getDataIDs(), function(i, id)
+			$.each($("#packets_table").getDataIDs(), function(i, id)
 			{
-				var pack = GetRowData("packets", id);
+				var pack = GetRowData("packets_table", id);
 				if(pack.Connected || (mod && pack.Enabled))
 				{
-					RefreshObject("packets", id);
+					RefreshObject("packets_table", id);
 				}
 			});
 			break;
@@ -1062,7 +1062,7 @@ var RefreshObject = function (grid, guid)
 			result.cell.Object = JSON.stringify(result.cell);
 			result.cell.Icon = "";
 			
-			if(grid == "packets")
+			if(grid == "packets_table")
 			{
 				result.cell.Speed = "";
 				result.cell.TimeMissing = "";
@@ -1118,32 +1118,47 @@ var GetRowData = function (grid, id)
 
 var ResizeMain = function ()
 {
-	$("#searches")
-		.setGridWidth($('#layout_search').width() - 1)
-		.setGridHeight($('#layout_search').height() - 28);
+	/* left search tab */
+	// set table
+	$("#search_table")
+		.setGridWidth($('#search_layout').width() - 2)
+		.setGridHeight($('#search_layout').height() - 28);
+	//$("#search_table").width($("#search_table").width() - 1);
+	// patching table
+	$($("#search_table .jqgfirstrow td")[2]).width("");
+	// patch search input
+	$("#search-text").width($("#search_layout").width() - 10);
+	// patch divs
+	$("#search_layout div").width("");
 
-	$("#search-text").width($("#layout_search").width() - 10);
-
-	$("#layout_objects_container").height($('#layout_search').height() - 66);
-
-	$("#bots, #packets").setGridWidth($('#layout_objects').width() - 1);
+	/* main container */
+	$("#layout_objects_container").height($('#search_layout').height() - 68);
+	// bots + packets table
+	$("#bots_table, #packets_table").setGridWidth($('#layout_objects').width() - 1);
+	// patching table
+	$($("#bots_table .jqgfirstrow td")[2]).width("");
+	$("#bots_table_Name").width("");
+	$($("#packets_table .jqgfirstrow td")[3]).width("");
+	$("#packets_table_Name").width("");
+	// patch divs
+	$("#layout_objects_container div").width("");
 
 	$("#searches_xg_bitpir_at, #files")
 		.setGridWidth($('#layout_objects').width() - 1)
-		.setGridHeight($('#layout_search').height() - 110);
+		.setGridHeight($('#search_div').height() - 110);
 
 	innerLayout.resizeAll();
 };
 
 var ResizeContainer = function ()
 {
-	$("#bots").setGridHeight($('#layout_bots').height() - 74);
-	$("#packets").setGridHeight($('#layout_packets').height() - 74);
+	$("#bots_table").setGridHeight($('#bots_layout').height() - 74);
+	$("#packets_table").setGridHeight($('#packets_layout').height() - 74);
 };
 
 var FlipPacket = function (id)
 {
-	var pack = GetRowData('packets', id);
+	var pack = GetRowData('packets_table', id);
 	if(pack)
 	{
 		if(!pack.Enabled)
@@ -1151,7 +1166,7 @@ var FlipPacket = function (id)
 			$("#" + id).effect("transfer", { to: $("#4") }, 500);
 
 			$.get(GuidUrl(Enum.TCPClientRequest.ActivateObject, id));
-			setTimeout("RefreshObject('packets', '" + id + "')", 1000);
+			setTimeout("RefreshObject('packets_table', '" + id + "')", 1000);
 		}
 		else
 		{
@@ -1161,11 +1176,11 @@ var FlipPacket = function (id)
 			
 			if (idSearch == 3 || idSearch == 3)
 			{
-				setTimeout("ReloadGrid('packets')", 1000);
+				setTimeout("ReloadGrid('packets_table')", 1000);
 			}
 			else
 			{
-				setTimeout("RefreshObject('packets', '" + id + "')", 1000);
+				setTimeout("RefreshObject('packets_table', '" + id + "')", 1000);
 			}
 		}
 	}
