@@ -274,7 +274,7 @@ namespace XG.Server
 		
 		public string SnapshotsBinary
 		{
-			get { return "./xgstatistics.bin"; }
+			get { return "./xgsnapshots.bin"; }
 		}
 
 		public int MaxNoDataReceived
