@@ -320,15 +320,18 @@ namespace XG.Server
 			Searches = aPlugin.LoadSearches();
 			Snapshots = aPlugin.LoadStatistics();
 
-			// put a empty snapshot on top to nullify values
-			var lasttime = (from snapshot in Snapshots.All orderby snapshot.Get(SnapshotValue.Timestamp) select snapshot).Last().Get(SnapshotValue.Timestamp);
-			Snapshot lastSnapshot = new Snapshot();
-			lastSnapshot.Set(SnapshotValue.Timestamp, lasttime + 1);
-			Snapshots.Add(lastSnapshot);
+			if (Snapshots.All.Count > 0)
+			{
+				// put a empty snapshot on top to nullify values
+				var lasttime = (from snapshot in Snapshots.All orderby snapshot.Get(SnapshotValue.Timestamp) select snapshot).Last().Get(SnapshotValue.Timestamp);
+				Snapshot lastSnapshot = new Snapshot();
+				lastSnapshot.Set(SnapshotValue.Timestamp, lasttime + 1);
+				Snapshots.Add(lastSnapshot);
 
-			Snapshot firstSnapshot = new Snapshot();
-			firstSnapshot.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
-			Snapshots.Add(firstSnapshot);
+				Snapshot firstSnapshot = new Snapshot();
+				firstSnapshot.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
+				Snapshots.Add(firstSnapshot);
+			}
 
 			AddWorker(aPlugin);
 		}
