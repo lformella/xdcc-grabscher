@@ -25,7 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+
 using log4net;
+
+using XG.Server.Helper;
 
 namespace XG.Server.Plugin.General.Webserver
 {
@@ -65,14 +68,61 @@ namespace XG.Server.Plugin.General.Webserver
 				{
 #endif
 #if DEBUG
-					return PatchLanguage(File.OpenText("./Resources" + aFile).ReadToEnd(), aLanguages);
+					string content = File.OpenText("./Resources" + aFile).ReadToEnd();
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
 					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					_dicString.Add(aFile, PatchLanguage(new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd(), aLanguages));
-					return _dicString[aFile];
+					string content = new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd();
+#endif
+					if (aFile == "/index.html")
+					{
+						string css = "";
+						string[] cssFiles =
+						{
+							"reset",
+							"fontello",
+							"jquery-ui",
+							"ui.jqgrid",
+							"layout-default",
+							"xg"
+						};
+						foreach (string cssFile in cssFiles)
+						{
+							css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/" + cssFile + ".css\" />\n";
+						}
+						content = content.Replace("#CSS_FILES#", css);
+
+						string js = "";
+						string[] jsFiles =
+						{
+							"sha256",
+							"json2.min",
+							"jquery.min",
+							"jquery-ui.min",
+							"jquery.flot",
+							"jquery.layout.min",
+							"jquery.cookie.min",
+							"i18n/grid.locale-#LANGUAGE_SHORT#",
+							"jquery.jqGrid.min",
+							"jquery.class",
+							"xg.helper",
+							"xg.formatter",
+							"xg",
+							"i18n/xg.locale-#LANGUAGE_SHORT#"
+						};
+						foreach (string jsFile in jsFiles)
+						{
+							js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
+						}
+						content = content.Replace("#JS_FILES#", js);
+					}
+
+					content = PatchLanguage(content, aLanguages);
+#if !DEBUG
+					_dicString.Add(aFile, content);
 #endif
 #if !UNSAFE
+					return content;
 				}
 				catch (Exception ex)
 				{

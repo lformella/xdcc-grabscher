@@ -104,10 +104,10 @@
     <File subtype="Code" buildaction="Compile" name="FileLoader.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
     <File subtype="Code" buildaction="Compile" name="BrowserConnection.cs" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/jquery.flot.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.js" />
     <File subtype="Directory" buildaction="Compile" name="Flot" />
     <File subtype="Code" buildaction="Compile" name="Flot/Object.cs" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/css/reset.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/reset.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.reset.css" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
