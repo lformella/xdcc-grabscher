@@ -108,6 +108,13 @@
     <File subtype="Directory" buildaction="Compile" name="Flot" />
     <File subtype="Code" buildaction="Compile" name="Flot/Object.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/reset.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.reset.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg.locale-en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.locale-en.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.cookie.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.cookie.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.enum.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.enum.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.password.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.password.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.refresh.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.refresh.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.url.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.url.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

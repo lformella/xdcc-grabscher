@@ -74,9 +74,9 @@
   <ItemGroup>
     <Compile Include="BrowserConnection.cs" />
     <Compile Include="FileLoader.cs" />
+    <Compile Include="Flot\Object.cs" />
     <Compile Include="JQGrid\Object.cs" />
     <Compile Include="JQGrid\Objects.cs" />
-    <Compile Include="Flot\Objects.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,5 +199,16 @@
     <EmbeddedResource Include="Resources\font\fontello.svg" />
     <EmbeddedResource Include="Resources\font\fontello.woff" />
     <EmbeddedResource Include="Resources\js\jquery.flot.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\i18n\xg.locale-en.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\xg.cookie.js" />
+    <EmbeddedResource Include="Resources\js\xg.enum.js" />
+    <EmbeddedResource Include="Resources\js\xg.password.js" />
+    <EmbeddedResource Include="Resources\js\xg.refresh.js" />
+    <EmbeddedResource Include="Resources\js\xg.resize.js" />
+    <EmbeddedResource Include="Resources\js\xg.url.js" />
   </ItemGroup>
 </Project>
