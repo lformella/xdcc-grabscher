@@ -204,7 +204,7 @@ namespace XG.Server
 
 		public string XgVersion
 		{
-			get { return "0.9.2"; }
+			get { return "1.0.0.0"; }
 		}
 
 		public int BotOfflineCheckSeconds
