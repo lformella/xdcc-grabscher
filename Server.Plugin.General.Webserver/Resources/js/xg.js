@@ -535,13 +535,18 @@ var XGBase = Class.create(
 	initializeOthers: function()
 	{
 		var self = this;
+
 		$("#tabs").tabs({
 			select: function(event, ui)
 			{
 				self.activeTab = ui.index;
 			}
 		});
-		$("#show_offline_bots").button();
+		$("#show_offline_bots").button()
+			.click( function()
+			{
+				self.cookie.setCookie("show_offline_bots", $("#show_offline_bots").attr('checked') ? "1" : "0" );
+			});
 	},
 
 	loadInitialSearches: function()
@@ -562,7 +567,7 @@ var XGBase = Class.create(
 		}
 
 		// get searches
-		$.getJSON(this.url.jsonUrl() + Enum.TCPClientRequest.GetSearches,
+		$.getJSON(this.url.jsonUrl(Enum.TCPClientRequest.GetSearches),
 			function(result) {
 				$.each(result.Searches, function(i, item) {
 					self.addSearch(item.Search);

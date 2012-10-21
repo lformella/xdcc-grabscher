@@ -138,7 +138,7 @@ var XGPassword = Class.create(
 
 		var res = false;
 		$.ajax({
-			url: self.url.jsonUrl() + Enum.TCPClientRequest.Version + "&password=" + encodeURIComponent(password),
+			url: self.url.jsonUrl(Enum.TCPClientRequest.Version + "&password=" + encodeURIComponent(password)),
 			success: function()
 			{
 				res = true;

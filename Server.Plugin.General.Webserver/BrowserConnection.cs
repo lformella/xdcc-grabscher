@@ -80,9 +80,10 @@ namespace XG.Server.Plugin.General.Webserver
 					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != passwortHash)
 					{
 						// check for cookie
-						Cookie cookie = Context.Request.Cookies["password"];
+						Cookie cookie = Context.Request.Cookies["xg.password"];
 						if (cookie == null || cookie.Value != passwortHash)
 						{
+							Context.Response.AppendCookie(new Cookie("xg.password", ""));
 							Context.Response.StatusCode = 403;
 							Context.Response.Close();
 							return;
@@ -90,7 +91,7 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 					else
 					{
-						Context.Response.AppendCookie(new Cookie("password", HttpUtility.UrlDecode(tDic["password"])));
+						Context.Response.AppendCookie(new Cookie("xg.password", HttpUtility.UrlDecode(tDic["password"])));
 					}
 					
 					ClientRequest tMessage = (ClientRequest)int.Parse(tDic["request"]);
@@ -99,6 +100,11 @@ namespace XG.Server.Plugin.General.Webserver
 					
 					string response = "";
 					Context.Response.AddHeader("Cache-Control", "no-cache");
+
+					bool showOfflineBots = Context.Request.Cookies["xg.show_offline_bots"] == null ? true : 
+						(
+							Context.Request.Cookies["xg.show_offline_bots"].Value == "1" ? true : false
+						);
 					
 					switch (tMessage)
 					{
@@ -152,7 +158,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case ClientRequest.SearchPacket:
 							Context.Response.ContentType = "text/json";
 							response = Objects2Json(
-								Packets(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
+								Packets(showOfflineBots, tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 								);
@@ -161,7 +167,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case ClientRequest.SearchBot:
 							Context.Response.ContentType = "text/json";
 							response = Objects2Json(
-								Bots(tDic["offbots"] == "1", tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
+								Bots(showOfflineBots, tDic["searchBy"], HttpUtility.UrlDecode(tDic["name"]), tDic["sidx"], tDic["sord"]),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
 								);
@@ -456,9 +462,9 @@ namespace XG.Server.Plugin.General.Webserver
 		
 		#region JSON
 		
-		IEnumerable<Bot> Bots(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		IEnumerable<Bot> Bots(bool aShowOfflineBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
-			IEnumerable<Packet> tPacketList = Packets(aShowOffBots, aSearchBy, aSearchString, aSortBy, aSortMode);
+			IEnumerable<Packet> tPacketList = Packets(aShowOfflineBots, aSearchBy, aSearchString, aSortBy, aSortMode);
 			IEnumerable<Bot> tBots = (
 				from s in Servers.All 
 				from c in s.Channels from b in c.Bots join p in tPacketList on b.Guid equals p.ParentGuid select b
@@ -516,10 +522,10 @@ namespace XG.Server.Plugin.General.Webserver
 			return aBots;
 		}
 		
-		IEnumerable<Packet> Packets(bool aShowOffBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
+		IEnumerable<Packet> Packets(bool aShowOfflineBots, string aSearchBy, string aSearchString, string aSortBy, string aSortMode)
 		{
 			IEnumerable<Bot> bots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
-			if(aShowOffBots)
+			if(aShowOfflineBots)
 			{
 				bots = from bot in bots where bot.Connected select bot;
 			}

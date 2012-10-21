@@ -25,9 +25,9 @@ var XGUrl = Class.create(
 	/**
 	 * @return {String}
 	 */
-	jsonUrl: function ()
+	jsonUrl: function (id)
 	{
-		return "/?&offbots=" + ($("#show_offline_bots").attr('checked') ? "1" : "0" ) + "&request=";
+		return "/?request=" + id;
 	},
 
 	/**
@@ -37,7 +37,7 @@ var XGUrl = Class.create(
 	 */
 	guidUrl: function (id, guid)
 	{
-		return this.jsonUrl() + id + "&guid=" + guid;
+		return this.jsonUrl(id) + "&guid=" + guid;
 	},
 
 	/**
@@ -47,6 +47,6 @@ var XGUrl = Class.create(
 	 */
 	nameUrl: function (id, name)
 	{
-		return this.jsonUrl() + id + "&name=" + encodeURIComponent(name);
+		return this.jsonUrl(id) + "&name=" + encodeURIComponent(name);
 	}
 });
