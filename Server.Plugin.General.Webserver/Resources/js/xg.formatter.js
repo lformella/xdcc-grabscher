@@ -23,6 +23,13 @@
 
 var XGFormatter = Class.create(
 {
+	initialize: function(helper)
+	{
+		var self = this;
+
+		this.helper = helper;
+	},
+
 	/* ************************************************************************************************************** */
 	/* SERVER FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
@@ -179,7 +186,7 @@ var XGFormatter = Class.create(
 		var ret = "";
 		if (bot.InfoSpeedCurrent > 0)
 		{
-			ret += Helper.speed2Human(bot.InfoSpeedCurrent);
+			ret += this.helper.speed2Human(bot.InfoSpeedCurrent);
 		}
 		if (bot.InfoSpeedCurrent > 0 && bot.InfoSpeedMax > 0)
 		{
@@ -187,7 +194,7 @@ var XGFormatter = Class.create(
 		}
 		if (bot.InfoSpeedMax > 0)
 		{
-			ret += Helper.speed2Human(bot.InfoSpeedMax);
+			ret += this.helper.speed2Human(bot.InfoSpeedMax);
 		}
 		return ret;
 	},
@@ -307,17 +314,17 @@ var XGFormatter = Class.create(
 
 	formatPacketSpeed: function (packet)
 	{
-		return Helper.speed2Human(packet.Part != null ? packet.Part.Speed : 0);
+		return this.helper.speed2Human(packet.Part != null ? packet.Part.Speed : 0);
 	},
 
 	formatPacketSize: function (packet)
 	{
-		return Helper.size2Human(packet.RealSize > 0 ? packet.RealSize : packet.Size);
+		return this.helper.size2Human(packet.RealSize > 0 ? packet.RealSize : packet.Size);
 	},
 
 	formatPacketTimeMissing: function (packet)
 	{
-		return Helper.time2Human(packet.Part != null ? packet.Part.TimeMissing : 0);
+		return this.helper.time2Human(packet.Part != null ? packet.Part.TimeMissing : 0);
 	},
 
 	/* ************************************************************************************************************** */
@@ -373,12 +380,12 @@ var XGFormatter = Class.create(
 		{
 			speed += part.Speed;
 		});
-		return Helper.speed2Human(speed);
+		return this.helper.speed2Human(speed);
 	},
 
 	formatFileSize: function (file)
 	{
-		return Helper.size2Human(file.Size);
+		return this.helper.size2Human(file.Size);
 	},
 
 	formatFileTimeMissing: function (file)
@@ -388,7 +395,7 @@ var XGFormatter = Class.create(
 		{
 			time = time == 0 ? part.TimeMissing : (time < part.TimeMissing ? time : part.TimeMissing);
 		});
-		return Helper.time2Human(time);
+		return this.helper.time2Human(time);
 	},
 
 	/* ************************************************************************************************************** */

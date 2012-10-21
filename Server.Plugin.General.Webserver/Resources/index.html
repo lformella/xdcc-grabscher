@@ -1,43 +1,48 @@
 <!DOCTYPE html>
 <!--
-// 
+//
 //  index.html
-//  
+//
 //  Author:
 //       Lars Formella <ich@larsformella.de>
-// 
+//
 //  Copyright (c) 2012 Lars Formella
-// 
+//
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 2 of the License, or
 //  (at your option) any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//
 -->
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 
 		<title>XG Webclient</title>
-		
+
 #CSS_FILES#
-		<script type="text/javascript">
-			var salt = "6v8vva4&V/B(n9/6nfND4ss786I)Mo";
-		</script>
 
 #JS_FILES#
+
+		<script type="text/javascript">
+			$(function()
+			{
+				new XGPassword();
+			});
+		</script>
 	</head>
 
 	<body>
+		<input type="hidden" name="salt" id="salt" value="6v8vva4&V/B(n9/6nfND4ss786I)Mo" />
 
 		<div id="dialog_password" title="Password required" style="display: none;">
 
@@ -47,7 +52,7 @@
 
 		</div>
 
-		<div id="dialog_server_channels" title="View Servers and Channels" style="display: none;">
+		<div id="dialog_server_channels" title="Change Servers and Channels" style="display: none;">
 
 			<table width="100%">
 				<tr>
@@ -95,47 +100,47 @@
 		</div>
 
 		<div id="dialog_snapshots" title="View Snapshots" style="display: none;">
-		
+
 			<div style="float: left; width: 140px">
 				<fieldset>
 					<legend id="snapshot_servers">Servers</legend>
-					<input type="checkbox" id="snapshot_checkbox_1" class="snapshot_checkbox" /><label for="snapshot_checkbox_1">All</label>
-					<input type="checkbox" id="snapshot_checkbox_2" class="snapshot_checkbox" /><label for="snapshot_checkbox_2">Connected</label>
-					<input type="checkbox" id="snapshot_checkbox_3" class="snapshot_checkbox" /><label for="snapshot_checkbox_3">Disconnected</label>
+					<input type="checkbox" id="snapshot_checkbox_1" class="snapshot_checkbox" /><label for="snapshot_checkbox_1" class="translate_all">All</label>
+					<input type="checkbox" id="snapshot_checkbox_2" class="snapshot_checkbox" /><label for="snapshot_checkbox_2" class="translate_connected">Connected</label>
+					<input type="checkbox" id="snapshot_checkbox_3" class="snapshot_checkbox" /><label for="snapshot_checkbox_3" class="translate_disconnected">Disconnected</label>
 				</fieldset>
 
 				<fieldset>
 					<legend id="snapshot_channels">Channels</legend>
-					<input type="checkbox" id="snapshot_checkbox_4" class="snapshot_checkbox" /><label for="snapshot_checkbox_4">All</label>
-					<input type="checkbox" id="snapshot_checkbox_5" class="snapshot_checkbox" /><label for="snapshot_checkbox_5">Connected</label>
-					<input type="checkbox" id="snapshot_checkbox_6" class="snapshot_checkbox" /><label for="snapshot_checkbox_6">Disconnected</label>
+					<input type="checkbox" id="snapshot_checkbox_4" class="snapshot_checkbox" /><label for="snapshot_checkbox_4" class="translate_all">All</label>
+					<input type="checkbox" id="snapshot_checkbox_5" class="snapshot_checkbox" /><label for="snapshot_checkbox_5" class="translate_connected">Connected</label>
+					<input type="checkbox" id="snapshot_checkbox_6" class="snapshot_checkbox" /><label for="snapshot_checkbox_6" class="translate_disconnected">Disconnected</label>
 				</fieldset>
 
 				<fieldset>
 					<legend id="snapshot_bots">Bots</legend>
-					<input type="checkbox" id="snapshot_checkbox_7" class="snapshot_checkbox" /><label for="snapshot_checkbox_7">All</label>
-					<input type="checkbox" id="snapshot_checkbox_8" class="snapshot_checkbox" /><label for="snapshot_checkbox_8">Connected</label>
-					<input type="checkbox" id="snapshot_checkbox_9" class="snapshot_checkbox" /><label for="snapshot_checkbox_9">Disconnected</label>
-					<input type="checkbox" id="snapshot_checkbox_10" class="snapshot_checkbox" /><label for="snapshot_checkbox_10">Free Slots</label>
-					<input type="checkbox" id="snapshot_checkbox_11" class="snapshot_checkbox" /><label for="snapshot_checkbox_11">Free Queue</label>
+					<input type="checkbox" id="snapshot_checkbox_7" class="snapshot_checkbox" /><label for="snapshot_checkbox_7" class="translate_all">All</label>
+					<input type="checkbox" id="snapshot_checkbox_8" class="snapshot_checkbox" /><label for="snapshot_checkbox_8" class="translate_connected">Connected</label>
+					<input type="checkbox" id="snapshot_checkbox_9" class="snapshot_checkbox" /><label for="snapshot_checkbox_9" class="translate_disconnected">Disconnected</label>
+					<input type="checkbox" id="snapshot_checkbox_10" class="snapshot_checkbox" /><label for="snapshot_checkbox_10" class="translate_free_slots">Free Slots</label>
+					<input type="checkbox" id="snapshot_checkbox_11" class="snapshot_checkbox" /><label for="snapshot_checkbox_11" class="translate_free_queue">Free Queue</label>
 				</fieldset>
 
 				<fieldset>
 					<legend id="snapshot_packets">Packets</legend>
-					<input type="checkbox" id="snapshot_checkbox_12" class="snapshot_checkbox" /><label for="snapshot_checkbox_12">All</label>
-					<input type="checkbox" id="snapshot_checkbox_13" class="snapshot_checkbox" /><label for="snapshot_checkbox_13">Connected</label>
-					<input type="checkbox" id="snapshot_checkbox_14" class="snapshot_checkbox" /><label for="snapshot_checkbox_14">Disconnected</label>
-					<input type="checkbox" id="snapshot_checkbox_15" class="snapshot_checkbox" /><label for="snapshot_checkbox_15">Size</label>
-					<input type="checkbox" id="snapshot_checkbox_16" class="snapshot_checkbox" /><label for="snapshot_checkbox_16">Size Connected</label>
-					<input type="checkbox" id="snapshot_checkbox_17" class="snapshot_checkbox" /><label for="snapshot_checkbox_17">Size Disconnected</label>
+					<input type="checkbox" id="snapshot_checkbox_12" class="snapshot_checkbox" /><label for="snapshot_checkbox_12" class="translate_all">All</label>
+					<input type="checkbox" id="snapshot_checkbox_13" class="snapshot_checkbox" /><label for="snapshot_checkbox_13" class="translate_connected">Connected</label>
+					<input type="checkbox" id="snapshot_checkbox_14" class="snapshot_checkbox" /><label for="snapshot_checkbox_14" class="translate_disconnected">Disconnected</label>
+					<input type="checkbox" id="snapshot_checkbox_15" class="snapshot_checkbox" /><label for="snapshot_checkbox_15" class="translate_size">Size</label>
+					<input type="checkbox" id="snapshot_checkbox_16" class="snapshot_checkbox" /><label for="snapshot_checkbox_16" class="translate_size_connected">Size Connected</label>
+					<input type="checkbox" id="snapshot_checkbox_17" class="snapshot_checkbox" /><label for="snapshot_checkbox_17" class="translate_size_disconnected">Size Disconnected</label>
 				</fieldset>
 
 				<fieldset>
-					<legend id="snapshot_timespan">Timespan</legend>
+					<legend id="snapshot_timespan" class="translate_timespan">Timespan</legend>
 					<input type="radio" id="time_1" name="snapshot_time" value="1"><label id="label_1" for="time_1">1 Day</label>
 					<input type="radio" id="time_7" name="snapshot_time" value="7" checked="checked"><label id="label_7" for="time_7">1 Week</label>
 					<input type="radio" id="time_31" name="snapshot_time" value="31"><label id="label_31" for="time_31">1 Month</label>
-					<input type="radio" id="time_0" name="snapshot_time" value="0"><label id="label_0" for="time_0">All</label>
+					<input type="radio" id="time_0" name="snapshot_time" value="0"><label id="label_0" for="time_0" class="translate_all">All</label>
 				</fieldset>
 			</div>
 
@@ -164,7 +169,7 @@
 						<button id="server_channel_button">Server / Channels</button>
 						<input type="checkbox" id="show_offline_bots" /><label for="show_offline_bots">Hide offline Bots</label>
 						<button id="statistics_button">Statistics</button>
-						<button id="snapshots_button">Snapshots</button>
+						<button id="snapshots_button">Extended Statistics</button>
 					</div>
 
 					<div id="layout_objects_container">
