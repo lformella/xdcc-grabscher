@@ -105,7 +105,14 @@ namespace XG.Server.Plugin.General.Webserver
 						(
 							Context.Request.Cookies["xg.show_offline_bots"].Value == "1" ? true : false
 						);
-					
+					Guid guid = Guid.Empty;
+					try
+					{
+						guid = new Guid(tDic["guid"]);
+					}
+					catch (FormatException) {}
+					catch (KeyNotFoundException) {}
+
 					switch (tMessage)
 					{
 						# region VERSION
@@ -124,7 +131,7 @@ namespace XG.Server.Plugin.General.Webserver
 							break;
 							
 						case ClientRequest.RemoveServer:
-							RemoveServer(new Guid(tDic["guid"]));
+							RemoveServer(guid);
 							break;
 							
 						#endregion
@@ -132,11 +139,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region CHANNEL
 							
 						case ClientRequest.AddChannel:
-							AddChannel(new Guid(tDic["guid"]), tDic["name"]);
+							AddChannel(guid, tDic["name"]);
 							break;
 							
 						case ClientRequest.RemoveChannel:
-							RemoveChannel(new Guid(tDic["guid"]));
+							RemoveChannel(guid);
 							break;
 							
 						#endregion
@@ -144,11 +151,11 @@ namespace XG.Server.Plugin.General.Webserver
 						# region OBJECT
 							
 						case ClientRequest.ActivateObject:
-							ActivateObject(new Guid(tDic["guid"]));
+							ActivateObject(guid);
 							break;
 							
 						case ClientRequest.DeactivateObject:
-							DeactivateObject(new Guid(tDic["guid"]));
+							DeactivateObject(guid);
 							break;
 							
 						#endregion
@@ -200,7 +207,7 @@ namespace XG.Server.Plugin.General.Webserver
 						case ClientRequest.Object:
 							Context.Response.ContentType = "text/json";
 							response = Object2Json(
-								Servers.WithGuid(new Guid(tDic["guid"]))
+								Servers.WithGuid(guid)
 								);
 							break;
 							
@@ -219,7 +226,7 @@ namespace XG.Server.Plugin.General.Webserver
 								SortedObjects(
 									from server in Servers.All
 									from channel in server.Channels
-									where channel.ParentGuid == new Guid(tDic["guid"]) select channel, tDic["sidx"], tDic["sord"]
+									where channel.ParentGuid == guid select channel, tDic["sidx"], tDic["sord"]
 								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
@@ -233,7 +240,7 @@ namespace XG.Server.Plugin.General.Webserver
 									from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
-									where bot.ParentGuid == new Guid(tDic["guid"]) select bot, tDic["sidx"], tDic["sord"]
+									where bot.ParentGuid == guid select bot, tDic["sidx"], tDic["sord"]
 								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
@@ -248,7 +255,7 @@ namespace XG.Server.Plugin.General.Webserver
 									from channel in server.Channels
 									from bot in channel.Bots
 									from packet in bot.Packets
-									where packet.ParentGuid == new Guid(tDic["guid"]) select packet, tDic["sidx"], tDic["sord"]
+									where packet.ParentGuid == guid select packet, tDic["sidx"], tDic["sord"]
 								),
 								int.Parse(tDic["page"]),
 								int.Parse(tDic["rows"])
