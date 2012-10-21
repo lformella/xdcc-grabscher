@@ -676,9 +676,8 @@ var XGBase = Class.create(
 			{
 				$.get(this.url.guidUrl(Enum.TCPClientRequest.DeactivateObject, guid));
 			}
-			setTimeout(function() { self.refresh.reloadGrid(grid, ""); }, 1000);
+			setTimeout(function() { self.refresh.refreshObject(grid, guid); }, 1000);
 		}
-		this.refresh.reloadGrid(grid, "");
 	},
 
 	/**
