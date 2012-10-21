@@ -28,8 +28,6 @@ using System.Reflection;
 
 using log4net;
 
-using XG.Server.Helper;
-
 namespace XG.Server.Plugin.General.Webserver
 {
 	public class FileLoader
