@@ -47,7 +47,6 @@ namespace XG.Core
 			set { _part = value; }
 		}
 
-		[DataMember]
 		public override string Name
 		{
 			get { return base.Name; }
@@ -87,11 +86,17 @@ namespace XG.Core
 		}
 
 		string _realName = "";
-		[DataMember]
 		public string RealName
 		{
 			get { return _realName; }
 			set { SetProperty(ref _realName, value); }
+		}
+
+		[DataMember (Name = "RealName")]
+		public string RealNameAscii
+		{
+			get { return RealName.ToAscii(); }
+			set { RealName = value; }
 		}
 
 		DateTime _lastUpdated = DateTime.MinValue;

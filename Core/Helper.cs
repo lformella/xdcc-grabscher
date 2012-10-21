@@ -22,6 +22,7 @@
 // 
 
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace XG.Core
@@ -178,5 +179,21 @@ namespace XG.Core
 		}
 
 		#endregion
+	}
+
+	public static class StringExtension
+	{
+		public static string ToAscii(this string aString)
+		{
+			StringBuilder output = new StringBuilder(string.Empty);
+			if (!string.IsNullOrEmpty(aString))
+			{
+				for (int i = 0; i < aString.Length; i++)
+				{
+					output.AppendFormat("&#{0};", Encoding.ASCII.GetBytes(aString.Substring(i, 1))[0]);
+				}
+			}
+			return output.ToString();
+		}
 	}
 }

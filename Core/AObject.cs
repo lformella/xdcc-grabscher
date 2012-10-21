@@ -102,11 +102,17 @@ namespace XG.Core
 		public Guid Guid { get; set; }
 
 		string _name;
-		[DataMember]
 		public virtual string Name
 		{
 			get { return _name; }
 			set { SetProperty(ref _name, value); }
+		}
+
+		[DataMember (Name = "Name")]
+		public string NameAscii
+		{
+			get { return Name.ToAscii(); }
+			set { Name = value; }
 		}
 
 		internal bool Modified;
