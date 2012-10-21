@@ -114,7 +114,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeEditData: function (postdata)
 			{
-				return { password: escape(self.url.password), request: Enum.TCPClientRequest.AddServer, name: postdata.Name };
+				return { request: Enum.TCPClientRequest.AddServer, name: postdata.Name };
 			}
 		},
 		{
@@ -122,7 +122,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeDelData: function (postdata)
 			{
-				return { password: escape(self.url.password), request: Enum.TCPClientRequest.RemoveServer, guid: postdata.id };
+				return { request: Enum.TCPClientRequest.RemoveServer, guid: postdata.id };
 			}
 		});
 
@@ -174,7 +174,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeEditData: function (postdata)
 			{
-				return { password: escape(self.url.password), request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: self.idServer };
+				return { request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: self.idServer };
 			}
 		},
 		{
@@ -182,7 +182,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeDelData: function (postdata)
 			{
-				return { password: escape(self.url.password), request: Enum.TCPClientRequest.RemoveChannel, guid: postdata.id };
+				return { request: Enum.TCPClientRequest.RemoveChannel, guid: postdata.id };
 			}
 		});
 
@@ -562,7 +562,7 @@ var XGBase = Class.create(
 		}
 
 		// get searches
-		$.getJSON(this.url.jsonUrl("") + Enum.TCPClientRequest.GetSearches,
+		$.getJSON(this.url.jsonUrl() + Enum.TCPClientRequest.GetSearches,
 			function(result) {
 				$.each(result.Searches, function(i, item) {
 					self.addSearch(item.Search);

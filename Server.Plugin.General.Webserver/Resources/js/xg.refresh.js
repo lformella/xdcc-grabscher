@@ -155,7 +155,7 @@ var XGRefresh = Class.create(
 	{
 		var self = this;
 
-		$.getJSON(this.url.jsonUrl("") + Enum.TCPClientRequest.GetStatistics,
+		$.getJSON(this.url.jsonUrl() + Enum.TCPClientRequest.GetStatistics,
 			function(result)
 			{
 				$("#BytesLoaded").html(self.helper.size2Human(result.BytesLoaded));
@@ -195,7 +195,7 @@ var XGRefresh = Class.create(
 	{
 		var self = this;
 
-		$.getJSON(this.url.jsonUrl("") + Enum.TCPClientRequest.GetSnapshots,
+		$.getJSON(this.url.jsonUrl() + Enum.TCPClientRequest.GetSnapshots,
 			function(result)
 			{
 				result[0].yaxis = 2;

@@ -32,6 +32,14 @@ var XGPassword = Class.create(
 		this.url = new XGUrl();
 		this.password = "";
 
+		// check for cookies
+		if (this.checkPassword(""))
+		{
+			this.loadGrid();
+			return;
+		}
+
+		// display login
 		$("#dialog_password").dialog({
 			bgiframe: true,
 			height: 140,
@@ -72,17 +80,7 @@ var XGPassword = Class.create(
 		var saltElement = $("#salt");
 		var password = CryptoJS.SHA256(saltElement.val() + passwordElement.val() + saltElement.val());
 
-		var res = false;
-		$.ajax({
-			url: self.url.jsonUrl(password) + Enum.TCPClientRequest.Version,
-			success: function()
-			{
-				res = true;
-			},
-			async: false
-		});
-
-		if (res)
+		if (this.checkPassword(password))
 		{
 			passwordElement.removeClass('ui-state-error');
 			dialog.dialog('close');
@@ -132,5 +130,21 @@ var XGPassword = Class.create(
 
 		// start the refresh
 		refresh.refreshGrid(0);
+	},
+
+	checkPassword: function(password)
+	{
+		var self = this;
+
+		var res = false;
+		$.ajax({
+			url: self.url.jsonUrl() + Enum.TCPClientRequest.Version + "&password=" + encodeURIComponent(password),
+			success: function()
+			{
+				res = true;
+			},
+			async: false
+		});
+		return res;
 	}
 });

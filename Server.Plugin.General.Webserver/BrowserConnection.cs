@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -77,10 +79,18 @@ namespace XG.Server.Plugin.General.Webserver
 					string passwortHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != passwortHash)
 					{
-						//throw new Exception("Password wrong!");
-						Context.Response.StatusCode = 403;
-						Context.Response.Close();
-						return;
+						// check for cookie
+						Cookie cookie = Context.Request.Cookies["password"];
+						if (cookie == null || cookie.Value != passwortHash)
+						{
+							Context.Response.StatusCode = 403;
+							Context.Response.Close();
+							return;
+						}
+					}
+					else
+					{
+						Context.Response.AppendCookie(new Cookie("password", HttpUtility.UrlDecode(tDic["password"])));
 					}
 					
 					ClientRequest tMessage = (ClientRequest)int.Parse(tDic["request"]);
@@ -318,7 +328,7 @@ namespace XG.Server.Plugin.General.Webserver
 						#endregion
 					}
 					
-					WriteToStream(Context.Response, response);
+					WriteToStream(response);
 					
 					#endregion
 				}
@@ -327,7 +337,7 @@ namespace XG.Server.Plugin.General.Webserver
 					// serve the favicon
 					if (str == "/favicon.ico")
 					{
-						WriteToStream(Context.Response, FileLoader.Instance.LoadImage(str));
+						WriteToStream(FileLoader.Instance.LoadImage(str));
 					}
 					// load a file
 					else
@@ -338,7 +348,7 @@ namespace XG.Server.Plugin.General.Webserver
 						if (str.EndsWith(".png"))
 						{
 							Context.Response.ContentType = "image/png";
-							WriteToStream(Context.Response, FileLoader.Instance.LoadImage(str));
+							WriteToStream(FileLoader.Instance.LoadImage(str));
 						}
 						else
 						{
@@ -377,11 +387,11 @@ namespace XG.Server.Plugin.General.Webserver
 							
 							if (binary)
 							{
-								WriteToStream(Context.Response, FileLoader.Instance.LoadFile(str));
+								WriteToStream(FileLoader.Instance.LoadFile(str));
 							}
 							else
 							{
-								WriteToStream(Context.Response, FileLoader.Instance.LoadFile(str, Context.Request.UserLanguages));
+								WriteToStream(FileLoader.Instance.LoadFile(str, Context.Request.UserLanguages));
 							}
 						}
 					}
@@ -404,16 +414,42 @@ namespace XG.Server.Plugin.General.Webserver
 		
 		#region WRITE TO STREAM
 		
-		void WriteToStream(HttpListenerResponse aResponse, string aData)
+		void WriteToStream(string aData)
 		{
-			WriteToStream(aResponse, Encoding.UTF8.GetBytes(aData));
+			WriteToStream(Encoding.UTF8.GetBytes(aData));
 		}
 		
-		void WriteToStream(HttpListenerResponse aResponse, byte[] aData)
+		void WriteToStream(byte[] aData)
 		{
-			aResponse.ContentLength64 = aData.Length;
-			aResponse.OutputStream.Write(aData, 0, aData.Length);
-			aResponse.OutputStream.Close();
+			if (Context.Request.Headers["Accept-Encoding"] != null)
+			{
+				using(MemoryStream ms = new MemoryStream())
+				{
+					Stream compress = null;
+					if (Context.Request.Headers["Accept-Encoding"].Contains("gzip"))
+					{
+						Context.Response.AppendHeader("Content-Encoding", "gzip");
+						compress = new GZipStream(ms, CompressionMode.Compress);
+					}
+					else if (Context.Request.Headers["Accept-Encoding"].Contains("deflate"))
+					{
+						Context.Response.AppendHeader("Content-Encoding", "deflate");
+						compress = new DeflateStream(ms, CompressionMode.Compress);
+					}
+
+					if (compress != null)
+					{
+						compress.Write(aData, 0, aData.Length);
+						compress.Dispose();
+						aData = ms.ToArray();
+					}
+				}
+			}
+
+			Context.Response.AppendHeader("Server", "XG" + Settings.Instance.XgVersion);
+			Context.Response.ContentLength64 = aData.Length;
+			Context.Response.OutputStream.Write(aData, 0, aData.Length);
+			Context.Response.OutputStream.Close();
 		}
 		
 		#endregion
@@ -571,7 +607,7 @@ namespace XG.Server.Plugin.General.Webserver
 			return aPackets;
 		}
 		
-		IEnumerable<File> SortedFiles(IEnumerable<File> aFiles, string aSortBy, string aSortMode)
+		IEnumerable<Core.File> SortedFiles(IEnumerable<Core.File> aFiles, string aSortBy, string aSortMode)
 		{
 			switch (aSortBy)
 			{
