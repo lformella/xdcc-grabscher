@@ -145,8 +145,8 @@ $(function()
 		colNames: ['', '', 'Name'],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers_table\");"); }, width:34, sortable: false, classes: "icon-cell"},
-			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:218, editable:true, fixed:false}
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatServerIcon(r, "FlipObject(\"" + o.rowId + "\", \"servers_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
+			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:216, editable:true, fixed:false}
 		],
 		onSelectRow: function(id)
 		{
@@ -216,8 +216,8 @@ $(function()
 		colNames: ['', '', 'Name'],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels_table\");"); }, width:34, sortable: false, classes: "icon-cell"},
-			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:218, editable:true, fixed:false}
+			{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return Formatter.formatChannelIcon(r, "FlipObject(\"" + o.rowId + "\", \"channels_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
+			{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:216, editable:true, fixed:false}
 		],
 		ondblClickRow: function(id)
 		{
@@ -275,7 +275,7 @@ $(function()
 		colNames: ['', '', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue'],
 		colModel: [
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:28, sortable: false, classes: "icon-cell"},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatBotIcon(r); }, width:32, sortable: false, classes: "icon-cell"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatBotName(r); }, fixed:false},
 			{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return Helper.speed2Human(r.Speed); }, width:70, align:"right"},
 			{name:'QueuePosition',	index:'QueuePosition',	formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : "&nbsp;"; }, width:70, align:"right"},
@@ -322,7 +322,7 @@ $(function()
 		colNames: ['', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated'],
 		colModel: [
 			{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");"); }, width:33, sortable: false, classes: "icon-cell"},
+			{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return Formatter.formatPacketIcon(r, "FlipPacket(\"" + o.rowId + "\");"); }, width:36, sortable: false, classes: "icon-cell"},
 			{name:'Id',				index:'Id',				formatter: function(c, o, r) { return Formatter.formatPacketId(r); }, width:40, align:"right"},
 			{name:'Name',			index:'Name',			formatter: function(c, o, r) { return Formatter.formatPacketName(r); }, fixed:false},
 			{name:'Size',			index:'Size',			formatter: function(c, o, r) { return Formatter.formatPacketSize(r); }, width:70, align:"right"},
@@ -377,7 +377,7 @@ $(function()
 		colNames: ['', '', '', ''],
 		colModel: [
 			{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:26, sortable: false},
+			{name:'Id',		index:'Id',		formatter: function(c) { return Formatter.formatSearchIcon(c); }, width:26, sortable: false, classes: "icon-cell"},
 			{name:'Name',	index:'Name',	fixed:false, sortable: false},
 			{name:'Action',	index:'Action',	width:17, sortable: false}
 		],
@@ -521,7 +521,7 @@ $(function()
 	/* FILE GRID                                                                                                      */
 	/* ************************************************************************************************************** */
 
-	$("#files").jqGrid(
+	$("#files_table").jqGrid(
 	{
 		datatype: "json",
 		cmTemplate: {fixed:true},
@@ -647,7 +647,7 @@ $(function()
 		bgiframe: true,
 		autoOpen: false,
 		width: 1230,
-		height: 750,
+		height: 600,
 		modal: true,
 		resizable: false
 	});
@@ -1029,7 +1029,7 @@ var RefreshGrid = function (count)
 			break;
 
 		case 2:
-			$.each($("#files").getDataIDs(), function(i, id)
+			$.each($("#files_table").getDataIDs(), function(i, id)
 			{
 				var file = GetRowData("files", id);
 
@@ -1143,9 +1143,14 @@ var ResizeMain = function ()
 	// patch divs
 	$("#layout_objects_container div").width("");
 
-	$("#searches_xg_bitpir_at, #files")
+	/* other container */
+	$("#searches_xg_bitpir_at, #files_table")
 		.setGridWidth($('#layout_objects').width() - 1)
-		.setGridHeight($('#search_div').height() - 110);
+		.setGridHeight($('#layout_objects').height() - 110);
+	$($("#searches_xg_bitpir_at .jqgfirstrow td")[3]).width("");
+	$("#searches_xg_bitpir_at_Name").width("");
+	$($("#files_table .jqgfirstrow td")[2]).width("");
+	$("#files_table_Name").width("");
 
 	innerLayout.resizeAll();
 };
@@ -1206,6 +1211,8 @@ var FlipObject = function (id, grid)
 
 var DownloadLink = function (id)
 {
+	$("#" + id).effect("transfer", { to: $("#4") }, 500);
+
 	var data = GetRowData("searches_xg_bitpir_at", id);
 	$.get(NameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
 };
