@@ -646,6 +646,7 @@ var XGBase = Class.create(
 
 				if (this.idSearch == 3 || this.idSearch == 4)
 				{
+					setTimeout(function() { self.refresh.reloadGrid("bots_table", ""); }, 1000);
 					setTimeout(function() { self.refresh.reloadGrid("packets_table", ""); }, 1000);
 				}
 				else
