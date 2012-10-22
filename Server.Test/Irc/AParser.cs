@@ -99,7 +99,7 @@ namespace XG.Server.Irc.Test
 				Assert.AreEqual(_server, aServer);
 				_eventChannel = aChannel;
 			};
-			_ircParser.CreateTimer += delegate (Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
+			_ircParser.CreateTimer += delegate (Core.Server aServer, AObject aObject, int aTime, bool aOverride)
 			{
 				Assert.AreEqual(_server, aServer);
 				_eventObject = aObject;

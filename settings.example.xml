@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <IRCName>enter_your_nickname_here</IRCName>
-  <TempPath>./tmp/</TempPath>
-  <ReadyPath>./dl/</ReadyPath>
-  <IrcRegisterPasswort>password123</IrcRegisterPasswort>
-  <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail>
-  <EnableMultiDownloads>false</EnableMultiDownloads>
-  <ClearReadyDownloads>true</ClearReadyDownloads>
-  <Password>xgisgreat</Password>
-  <BackupDataTime>900000</BackupDataTime>
+
+  <IrcNick>anon1234</IrcNick> <!-- the nickname of the irc user -->
+  <IrcPasswort>password123</IrcPasswort> <!-- nickserv password -->
+  <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail> <!-- nickserv email -->
+  <AutoRegisterNickserv>false</AutoRegisterNickserv> <!-- register nick if he does not exist -->
+  <AutoJoinOnInvite>true</AutoJoinOnInvite> <!-- should xg join channels on invite -->
+  
+  <TempPath>./tmp/</TempPath> <!-- relative folder of the temporary download folder -->
+  <ReadyPath>./dl/</ReadyPath> <!-- relative folder for ready downloads -->
+  <EnableMultiDownloads>false</EnableMultiDownloads> <!-- enable multi bot dl feature -->
+  <ClearReadyDownloads>false</ClearReadyDownloads> <!-- remove ready files from database -->
+  
+  <Password>xgisgreat</Password> <!-- server password -->
+  
+  <UseWebServer>true</UseWebServer> <!-- start the web server -->
+  <WebServerPort>5556</WebServerPort> <!-- port of the web server -->
+  
+  <UseJabberClient>false</UseJabberClient> <!-- connect to the jabber server -->
+  <JabberServer>jabber.org</JabberServer> <!-- server of the jabber user -->
+  <JabberUser>user</JabberUser> <!-- name of the jabber user -->
+  <JabberPassword>password</JabberPassword> <!-- password of the jabber user -->
+
   <FileHandlers>
     <FileHandler>
       <Regex>.*\.rar</Regex>
@@ -41,12 +54,5 @@
       </Process>
     </FileHandler>
   </FileHandlers>
-  <StartWebServer>true</StartWebServer>
-  <WebServerPort>5556</WebServerPort>
-  <AutoJoinOnInvite>true</AutoJoinOnInvite>
-  <LogLevel>Warning</LogLevel>
-  <StartJabberClient>false</StartJabberClient>
-  <JabberServer>jabber.org</JabberServer>
-  <JabberUser>user</JabberUser>
-  <JabberPassword>password</JabberPassword>
+
 </Settings>

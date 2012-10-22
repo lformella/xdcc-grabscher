@@ -181,11 +181,11 @@ namespace XG.Server
 
 							// seek to 0 and extract the startbuffer bytes need for the previous file
 							stream.Seek(0, SeekOrigin.Begin);
-							Part.StartReference = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+							Part.StartReference = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
 
 							// seek to seekPos and extract the rollbackcheck bytes
 							stream.Seek(seekPos, SeekOrigin.Begin);
-							_rollbackRefernce = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+							_rollbackRefernce = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
 							// seek back
 							stream.Seek(seekPos, SeekOrigin.Begin);
 						}
@@ -263,7 +263,7 @@ namespace XG.Server
 				else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
-					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheck))
+					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheckBytes))
 					{
 						Part.State = FilePart.States.Ready;
 						_log.Info("ConnectionDisconnected() ready" + (Part.Checked ? "" : " but unchecked"));
@@ -381,7 +381,7 @@ namespace XG.Server
 				else { return; }
 			}
 			// save the reference bytes if it is a new file
-			else if (Part.StartReference == null || Part.StartReference.Length < (int)Settings.Instance.FileRollbackCheck)
+			else if (Part.StartReference == null || Part.StartReference.Length < (int)Settings.Instance.FileRollbackCheckBytes)
 			{
 				byte[] startReference = Part.StartReference;
 				// initial data
@@ -395,9 +395,9 @@ namespace XG.Server
 					Array.Copy(aData, 0, startReference, bL, dL);
 				}
 				// shrink the reference if it is to big
-				if (startReference.Length > Settings.Instance.FileRollbackCheck)
+				if (startReference.Length > Settings.Instance.FileRollbackCheckBytes)
 				{
-					Array.Resize(ref startReference, (int)Settings.Instance.FileRollbackCheck);
+					Array.Resize(ref startReference, (int)Settings.Instance.FileRollbackCheckBytes);
 				}
 				Part.StartReference = startReference;
 			}
@@ -441,7 +441,7 @@ namespace XG.Server
 
 				int bufL = _stopBuffer.Length;
 				// we have enough data so check them
-				if (Settings.Instance.FileRollbackCheck <= bufL)
+				if (Settings.Instance.FileRollbackCheckBytes <= bufL)
 				{
 					// but only if we are checked
 					if (Part.Checked)
@@ -467,9 +467,9 @@ namespace XG.Server
 					else
 					{
 						// shrink the buffer if it is to big
-						if (_stopBuffer.Length > Settings.Instance.FileRollbackCheck)
+						if (_stopBuffer.Length > Settings.Instance.FileRollbackCheckBytes)
 						{
-							Array.Resize(ref _stopBuffer, (int)Settings.Instance.FileRollbackCheck);
+							Array.Resize(ref _stopBuffer, (int)Settings.Instance.FileRollbackCheckBytes);
 						}
 						// and write it to file to be able to check the next file
 						_writer.Write(_stopBuffer);
@@ -507,11 +507,11 @@ namespace XG.Server
 			}
 
 			// update all listeners with new values and a calculated speed
-			if ((DateTime.Now - _speedCalcTime).TotalMilliseconds > Settings.Instance.UpdateDownloadTime)
+			if ((DateTime.Now - _speedCalcTime).TotalSeconds > Settings.Instance.UpdateDownloadTime)
 			{
 				DateTime old = _speedCalcTime;
 				_speedCalcTime = DateTime.Now;
-				Part.Speed = Convert.ToInt64((_speedCalcSize / (_speedCalcTime - old).TotalMilliseconds) * 1000);
+				Part.Speed = Convert.ToInt64(_speedCalcSize / (_speedCalcTime - old).TotalSeconds);
 
 				Part.Commit();
 				_speedCalcSize = 0;

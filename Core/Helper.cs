@@ -127,7 +127,7 @@ namespace XG.Core
 	public delegate void ServerBotDelegate(Server aServer, Bot aBot);
 	public delegate void ServerChannelDelegate(Server aServer, Channel aChan);
 
-	public delegate void ServerObjectIntBoolDelegate(Server aServer, AObject aObj, Int64 aInt, bool aBool);
+	public delegate void ServerObjectIntBoolDelegate(Server aServer, AObject aObj, int aInt, bool aBool);
 
 	#endregion
 

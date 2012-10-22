@@ -229,7 +229,7 @@ namespace XG.Server
 								if (part.Checked && part.State == FilePart.States.Ready)
 								{
 									FilePart next = file.Next(part) as FilePart;
-									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheck)
+									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
 									{
 										complete = false;
 										try
@@ -238,8 +238,8 @@ namespace XG.Server
 											System.IO.FileStream fileStream = System.IO.File.Open(_fileActions.CompletePath(part), System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
 											System.IO.BinaryReader fileReader = new System.IO.BinaryReader(fileStream);
 											// extract the needed refernce bytes
-											fileStream.Seek(-Settings.Instance.FileRollbackCheck, System.IO.SeekOrigin.End);
-											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, System.IO.SeekOrigin.End);
+											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
 											fileReader.Close();
 
 											_fileActions.CheckNextReferenceBytes(part, bytes);
@@ -287,11 +287,11 @@ namespace XG.Server
 			ALoopWorker worker;
 
 			worker = new SnapshotWorker();
-			worker.SecondsToSleep = Settings.Instance.TimerSnapshotsSleepSeconds;
+			worker.SecondsToSleep = Settings.Instance.TakeSnapshotTime;
 			AddWorker(worker);
 			
 			worker = new BotWatchdogWorker();
-			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckSeconds;
+			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckTime;
 			AddWorker(worker);
 
 			#endregion

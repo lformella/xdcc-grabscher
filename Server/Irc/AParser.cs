@@ -98,7 +98,7 @@ namespace XG.Server.Irc
 
 		public event ServerObjectIntBoolDelegate CreateTimer;
 
-		protected void FireCreateTimer(Core.Server aServer, AObject aObj, Int64 aInt, bool aBool)
+		protected void FireCreateTimer(Core.Server aServer, AObject aObj, int aInt, bool aBool)
 		{
 			if(CreateTimer != null)
 			{

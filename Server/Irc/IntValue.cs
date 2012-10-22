@@ -155,9 +155,9 @@ namespace XG.Server.Irc
 					case 477: // ERR_NOCHANMODES
 						tChan = aServer.Channel(aCommands[3]);
 						// TODO should we nickserv register here?
-						/*if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
+						/*if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 						{
-							FireSendDataEvent(aServer, "nickserv register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+							FireSendDataEvent(aServer, "nickserv register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail);
 						}*/
 	
 						if(tChan != null)

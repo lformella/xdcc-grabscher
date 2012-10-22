@@ -23,24 +23,28 @@ You should change the default settings and this explanation will help you:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <Settings xmlns: xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns: xsd="http://www.w3.org/2001/XMLSchema">
-  <IRCName>anon1234</IRCName> <!-- the nickname of the irc user -->
+  <IrcNick>anon1234</IrcNick> <!-- the nickname of the irc user -->
+  <IrcPasswort>password123</IrcPasswort> <!-- nickserv password -->
+  <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail> <!-- nickserv email -->
+  <AutoRegisterNickserv>false</AutoRegisterNickserv> <!-- register nick if he does not exist -->
+  <AutoJoinOnInvite>true</AutoJoinOnInvite> <!-- should xg join channels on invite -->
+  
   <TempPath>./tmp/</TempPath> <!-- relative folder of the temporary download folder -->
   <ReadyPath>./dl/</ReadyPath> <!-- relative folder for ready downloads -->
-  <AutoRegisterNickserv>true</AutoRegisterNickserv> <!-- register nick if he does not exist -->
-  <IrcRegisterPasswort>password123</IrcRegisterPasswort> <!-- nickserv password -->
-  <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail> <!-- nickserv email -->
-  <EnableMultiDownloads>true</EnableMultiDownloads> <!-- enable multi bot dl feature -->
+  <EnableMultiDownloads>false</EnableMultiDownloads> <!-- enable multi bot dl feature -->
   <ClearReadyDownloads>false</ClearReadyDownloads> <!-- remove ready files from database -->
+  
   <Password>xgisgreat</Password> <!-- server password -->
-  <BackupDataTime>900000</BackupDataTime> <!-- timespan in ms when to save changed irc data -->
-  <FileHandlers></FileHandlers> <!-- commands to process ready downloads - see next chapter -->
-  <StartWebServer>true</StartWebServer> <!-- start the web server -->
+  
+  <UseWebServer>true</UseWebServer> <!-- start the web server -->
   <WebServerPort>5556</WebServerPort> <!-- port of the web server -->
-  <AutoJoinOnInvite>true</AutoJoinOnInvite> <!-- should xg join channels on invite -->
-  <StartJabberClient>false</StartJabberClient> <!-- connect to the jabber server -->
+  
+  <UseJabberClient>false</UseJabberClient> <!-- connect to the jabber server -->
   <JabberServer>jabber.org</JabberServer> <!-- server of the jabber user -->
   <JabberUser>user</JabberUser> <!-- name of the jabber user -->
   <JabberPassword>password</JabberPassword> <!-- password of the jabber user -->
+  
+  <FileHandlers></FileHandlers> <!-- commands to process ready downloads - see next chapter -->
 </Settings>
 ```
 

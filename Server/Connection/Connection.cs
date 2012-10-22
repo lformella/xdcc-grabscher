@@ -57,7 +57,7 @@ namespace XG.Server.Connection
 			_isConnected = false;
 			using(_tcpClient = new TcpClient())
 			{
-				_tcpClient.ReceiveTimeout = MaxData > 0 ? Settings.Instance.DownloadTimeout : Settings.Instance.ServerTimeout;
+				_tcpClient.ReceiveTimeout = (MaxData > 0 ? Settings.Instance.DownloadTimeoutTime : Settings.Instance.ServerTimeoutTime) * 1000;
 
 				try
 				{
@@ -100,7 +100,7 @@ namespace XG.Server.Connection
 								using(BinaryReader reader = new BinaryReader(stream))
 								{
 									Int64 missing = MaxData;
-									Int64 max = Settings.Instance.DownloadPerRead;
+									Int64 max = Settings.Instance.DownloadPerReadBytes;
 									byte[] data = null;
 									do
 									{

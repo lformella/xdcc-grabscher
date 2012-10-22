@@ -47,6 +47,13 @@ namespace XG.Server.Plugin.Backend.File
 		object _saveSearchesLock = new object();
 		object _saveSnapshotsLock = new object();
 
+		string DataBinary = "./xg.bin";
+		string FilesBinary = "./xgfiles.bin";
+		string SearchesBinary = "./xgsearches.bin";
+		string SnapshotsBinary = "./xgsnapshots.bin";
+
+		int BackupDataTime = 900000;
+
 		#endregion
 
 		#region ABackendPlugin
@@ -56,7 +63,7 @@ namespace XG.Server.Plugin.Backend.File
 			Core.Servers _servers = null;
 			try
 			{
-				_servers = (Core.Servers)Load(Settings.Instance.DataBinary);
+				_servers = (Core.Servers)Load(DataBinary);
 				_servers.AttachChildEvents();
 			}
 			catch {}
@@ -72,7 +79,7 @@ namespace XG.Server.Plugin.Backend.File
 			Files _files = null;
 			try
 			{
-				_files = (Files)Load(Settings.Instance.FilesBinary);
+				_files = (Files)Load(FilesBinary);
 				_files.AttachChildEvents();
 			}
 			catch {}
@@ -88,7 +95,7 @@ namespace XG.Server.Plugin.Backend.File
 			Objects _searches = null;
 			try
 			{
-				_searches = (Objects)Load(Settings.Instance.SearchesBinary);
+				_searches = (Objects)Load(SearchesBinary);
 				_searches.AttachChildEvents();
 			}
 			catch {}
@@ -104,7 +111,7 @@ namespace XG.Server.Plugin.Backend.File
 			Snapshots _snapshots = null;
 			try
 			{
-				_snapshots = (Snapshots)Load(Settings.Instance.SnapshotsBinary);
+				_snapshots = (Snapshots)Load(SnapshotsBinary);
 			}
 			catch {}
 			if (_snapshots == null)
@@ -126,7 +133,7 @@ namespace XG.Server.Plugin.Backend.File
 			while (true)
 			{
 				// Objects
-				if ((DateTime.Now - timeIrc).TotalMilliseconds > Settings.Instance.BackupDataTime)
+				if ((DateTime.Now - timeIrc).TotalSeconds > BackupDataTime)
 				{
 					timeIrc = DateTime.Now;
 					
@@ -140,13 +147,13 @@ namespace XG.Server.Plugin.Backend.File
 				}
 				
 				// Statistics
-				if ((DateTime.Now - timeStats).TotalMilliseconds > Settings.Instance.BackupStatisticTime)
+				if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
 				{
 					timeStats = DateTime.Now;
 					Statistic.Instance.Save();
 				}
 				
-				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
+				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
 			}
 		}
 		
@@ -207,6 +214,14 @@ namespace XG.Server.Plugin.Backend.File
 		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
 			if (aObj is Core.Server || aObj is Channel)
+			{
+				SaveObjects();
+			}
+		}
+
+		protected override void ObjectEnabledChanged(AObject aObj)
+		{
+			if (aObj is Core.Server || aObj is Channel || aObj is Packet)
 			{
 				SaveObjects();
 			}
@@ -288,7 +303,7 @@ namespace XG.Server.Plugin.Backend.File
 			lock (_saveFilesLock)
 			{
 				_isSaveFile = false;
-				return Save(Files, Settings.Instance.FilesBinary);
+				return Save(Files, FilesBinary);
 			}
 		}
 
@@ -296,7 +311,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveObjectsLock)
 			{
-				return Save(Servers, Settings.Instance.DataBinary);
+				return Save(Servers, DataBinary);
 			}
 		}
 
@@ -304,7 +319,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveSearchesLock)
 			{
-				return Save(Searches, Settings.Instance.SearchesBinary);
+				return Save(Searches, SearchesBinary);
 			}
 		}
 		
@@ -312,7 +327,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveSnapshotsLock)
 			{
-				return Save(Snapshots, Settings.Instance.SnapshotsBinary);
+				return Save(Snapshots, SnapshotsBinary);
 			}
 		}
 

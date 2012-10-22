@@ -191,7 +191,7 @@ namespace XG.Server.Helper
 				// first search incomplete parts not in use
 				foreach (FilePart part in parts)
 				{
-					Int64 size = part.CurrentSize - Settings.Instance.FileRollback;
+					Int64 size = part.CurrentSize - Settings.Instance.FileRollbackBytes;
 					if (part.State == FilePart.States.Closed && (size < 0 ? 0 : size) == aSize)
 					{
 						returnPart = part;
@@ -285,7 +285,7 @@ namespace XG.Server.Helper
 				{
 					if (part.State == FilePart.States.Closed)
 					{
-						nextSize = part.CurrentSize - Settings.Instance.FileRollback;
+						nextSize = part.CurrentSize - Settings.Instance.FileRollbackBytes;
 						// uhm, this is a bug if we have a very small downloaded file
 						// so just return 0
 						if (nextSize < 0) { nextSize = 0; }
@@ -304,7 +304,7 @@ namespace XG.Server.Helper
 						if (part.State == FilePart.States.Open)
 						{
 							// find the file with the max time, but only if there is some space to download
-							if (timeMissing < part.TimeMissing && part.MissingSize > 4 * Settings.Instance.FileRollback)
+							if (timeMissing < part.TimeMissing && part.MissingSize > 4 * Settings.Instance.FileRollbackBytes)
 							{
 								timeMissing = part.TimeMissing;
 								// and divide the missing size in two parts
@@ -398,7 +398,7 @@ namespace XG.Server.Helper
 						try
 						{
 							System.IO.BinaryReader reader = FileSystem.OpenFileReadable(fileName);
-							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
 							reader.Close();
 
 							if (!Core.Helper.IsEqual(bytes, aBytes))
@@ -420,10 +420,10 @@ namespace XG.Server.Helper
 										System.IO.FileStream fileStream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
 										System.IO.BinaryReader fileReader = new System.IO.BinaryReader(fileStream);
 										// extract the needed refernce bytes
-										fileStream.Seek(-Settings.Instance.FileRollbackCheck, System.IO.SeekOrigin.End);
-										bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheck);
+										fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, System.IO.SeekOrigin.End);
+										bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
 										// and truncate the file
-										//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheck);
+										//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheckBytes);
 										fileStream.SetLength(part.StopSize - part.StartSize);
 										fileReader.Close();
 
@@ -555,7 +555,7 @@ namespace XG.Server.Helper
 						{
 							System.IO.BinaryReader reader = FileSystem.OpenFileReadable(CompletePath(part));
 							byte[] data;
-							while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerRead)).Length > 0)
+							while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerReadBytes)).Length > 0)
 							{
 								writer.Write(data);
 								writer.Flush();

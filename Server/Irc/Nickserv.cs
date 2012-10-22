@@ -56,36 +56,36 @@ namespace XG.Server.Irc
 			if (Matches(aMessage, ".*Your nick isn't registered.*"))
 			{
 				_log.Info("registering nick");
-				if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcRegisterPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
+				if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 				{
-					FireSendData(aServer, tUserName + " register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+					FireSendData(aServer, tUserName + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
 				return;
 			}
 
 			if (Matches(aMessage, ".*Nickname is .*in use.*"))
 			{
-				FireSendData(aServer, tUserName + " ghost " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-				FireSendData(aServer, tUserName + " recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-				FireSendData(aServer, "nick " + Settings.Instance.IRCName);
+				FireSendData(aServer, tUserName + " ghost " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort);
+				FireSendData(aServer, tUserName + " recover " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort);
+				FireSendData(aServer, "nick " + Settings.Instance.IrcNick);
 				return;
 			}
 
 			if (Matches(aMessage, ".*Services Enforcer.*"))
 			{
-				FireSendData(aServer, tUserName + " recover " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-				FireSendData(aServer, tUserName + " release " + Settings.Instance.IRCName + " " + Settings.Instance.IrcRegisterPasswort);
-				FireSendData(aServer, "nick " + Settings.Instance.IRCName);
+				FireSendData(aServer, tUserName + " recover " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort);
+				FireSendData(aServer, tUserName + " release " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort);
+				FireSendData(aServer, "nick " + Settings.Instance.IrcNick);
 				return;
 			}
 
 			if (Matches(aMessage, ".*(This nickname is registered and protected|This nick is being held for a registered user|msg NickServ IDENTIFY).*"))
 			{
-				if(Settings.Instance.IrcRegisterPasswort != "" && !_authenticatedServer.Contains(aServer))
+				if(Settings.Instance.IrcPasswort != "" && !_authenticatedServer.Contains(aServer))
 				{
 					_authenticatedServer.Add(aServer);
 					//TODO check if we are really registered
-					FireSendData(aServer, tUserName + " identify " + Settings.Instance.IrcRegisterPasswort);
+					FireSendData(aServer, tUserName + " identify " + Settings.Instance.IrcPasswort);
 				}
 				else
 				{
@@ -97,7 +97,7 @@ namespace XG.Server.Irc
 			if (Matches(aMessage, ".*You must have been using this nick for at least 30 seconds to register.*"))
 			{
 				//TODO sleep the given time and reregister
-				FireSendData(aServer, tUserName + " register " + Settings.Instance.IrcRegisterPasswort + " " + Settings.Instance.IrcRegisterEmail);
+				FireSendData(aServer, tUserName + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				return;
 			}
 

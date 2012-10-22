@@ -47,7 +47,11 @@ namespace XG.Server
 				if (_instance == null)
 				{
 					_instance = Deserialize();
-					Serialize();
+					if (_instance == null)
+					{
+						_instance = new Settings();
+						Serialize();
+					}
 				}
 				return _instance;
 			}
@@ -61,6 +65,11 @@ namespace XG.Server
 			get
 			{
 				_instance = Deserialize();
+				if (_instance == null)
+				{
+					_instance = new Settings();
+					Serialize();
+				}
 				return _instance;
 			}
 		}
@@ -90,9 +99,9 @@ namespace XG.Server
 			}
 			else
 			{
-				_log.Error("Settings.Deserialize found no settings file, using default one");
+				_log.Error("Settings.Deserialize found no settings file");
 			}
-			return new Settings();
+			return null;
 		}
 
 		static void Serialize()
@@ -110,91 +119,94 @@ namespace XG.Server
 			}
 		}
 
-		/// <summary>
-		/// All xg server settings are saved here
-		/// some are writeable - others just readable
-		/// </summary>
 		Settings()
 		{
-			IRCName = "Anonymous" + new Random().Next(10000, 99999);
+			IrcNick = "Anonymous" + new Random().Next(10000, 99999);
+			IrcPasswort = "password123";
+			IrcRegisterEmail = "anon@ymous.org";
+			AutoRegisterNickserv = false;
+			AutoJoinOnInvite = true;
+
 			TempPath = "./tmp/";
 			ReadyPath = "./dl/";
 			EnableMultiDownloads = false;
 			ClearReadyDownloads = true;
-			IrcRegisterEmail = "anon@ymous.org";
-			IrcRegisterPasswort = "password123";
-			AutoRegisterNickserv = true;
 
 			Password = "xgisgreat";
-			BackupDataTime = 900000;
-			FileHandlers = new FileHandler[0];
 
-			StartWebServer = true;
+			UseWebServer = true;
 			WebServerPort = 5556;
-			AutoJoinOnInvite = true;
 
-			StartJabberClient = false;
+			UseJabberClient = false;
 			JabberServer = "";
 			JabberUser = "";
 			JabberPassword = "";
 
-			StartMySqlBackend = false;
+			UseMySqlBackend = false;
 			MySqlBackendServer = "127.0.0.1";
+			MySqlBackendPort = 3306;
 			MySqlBackendDatabase = "xg";
 			MySqlBackendUser = "xg";
 			MySqlBackendPassword = "xg";
+
+			FileHandlers = new FileHandler[0];
 		}
 
 		#region PRIVATE
 
-		public long CommandWaitTime
+		public string XgVersion
 		{
-			get { return 15000; }
+			get { return "1.0.0.0"; }
 		}
 
-		public long BotWaitTime
+		public int CommandWaitTime
 		{
-			get { return 240000; }
+			get { return 15; }
 		}
 
-		public long ChannelWaitTime
+		public int BotWaitTime
 		{
-			get { return 300000; }
+			get { return 240; }
 		}
 
-		public long ChannelWaitTimeLong
+		public int ChannelWaitTime
 		{
-			get { return 900000; }
+			get { return 300; }
 		}
 
-		public long FileRollback
+		public int ChannelWaitTimeLong
+		{
+			get { return 900; }
+		}
+
+		public int FileRollbackBytes
 		{
 			get { return 512000; }
 		}
 
-		public long FileRollbackCheck
+		public int FileRollbackCheckBytes
 		{
 			get { return 409600; }
 		}
 
 		public int UpdateDownloadTime
 		{
-			get { return 5000; }
+			get { return 5; }
 		}
 
-		public long DownloadPerRead
+		public int DownloadPerReadBytes
 		{
 			get { return 102400; }
 		}
 
-		public long BotOfflineTime
+		public int BotOfflineTime
 		{
-			get { return 7200000; }
+			get { return 7200; }
 		}
 
-		public long SamePacketRequestTime
+		public int SamePacketRequestTime
 		{
-			get { return 10000; }
+			get { return 10; }
 		}
 
 		public string IrcVersion
@@ -202,39 +214,29 @@ namespace XG.Server
 			get { return "mIRC v6.35 Khaled Mardam-Bey"; }
 		}
 
-		public string XgVersion
-		{
-			get { return "1.0.0.0"; }
-		}
-
-		public int BotOfflineCheckSeconds
+		public int BotOfflineCheckTime
 		{
 			get { return 1200; }
 		}
 
-		public int DownloadTimeout
+		public int DownloadTimeoutTime
 		{
-			get { return 30000; }
+			get { return 30; }
 		}
 		
-		public int ServerTimeout
+		public int ServerTimeoutTime
 		{
-			get { return 60000; }
+			get { return 60; }
 		}
 
 		public int ReconnectWaitTime
 		{
-			get { return 45000; }
+			get { return 45; }
 		}
 
 		public int ReconnectWaitTimeLong
 		{
-			get { return 900000; }
-		}
-
-		public int ReconnectWaitTimeReallyLong
-		{
-			get { return 2700000; }
+			get { return 900; }
 		}
 
 		public int MutliDownloadMinimumTime
@@ -242,12 +244,12 @@ namespace XG.Server
 			get { return 300; }
 		}
 
-		public long TimerSleepTime
+		public int RunLoopTime
 		{
-			get { return 5000; }
+			get { return 5; }
 		}
 		
-		public long TimerSnapshotsSleepSeconds
+		public long TakeSnapshotTime
 		{
 			get { return 600; }
 		}
@@ -257,26 +259,6 @@ namespace XG.Server
 			get { return "./parsing_errors.txt"; }
 		}
 
-		public string DataBinary
-		{
-			get { return "./xg.bin"; }
-		}
-
-		public string FilesBinary
-		{
-			get { return "./xgfiles.bin"; }
-		}
-
-		public string SearchesBinary
-		{
-			get { return "./xgsearches.bin"; }
-		}
-		
-		public string SnapshotsBinary
-		{
-			get { return "./xgsnapshots.bin"; }
-		}
-
 		public int MaxNoDataReceived
 		{
 			get { return 50; }
@@ -284,57 +266,41 @@ namespace XG.Server
 
 		public int BackupStatisticTime
 		{
-			get { return 60000; }
+			get { return 60; }
 		}
 
 		#endregion
 
 		#region PUBLIC
 
-		public string IRCName { get; set; }
+		public string IrcNick { get; set; }
+		public string IrcPasswort { get; set; }
+		public string IrcRegisterEmail { get; set; }
+		public bool AutoRegisterNickserv { get; set; }
+		public bool AutoJoinOnInvite { get; set; }
 
 		public string TempPath { get; set; }
-
 		public string ReadyPath { get; set; }
-
-		public string IrcRegisterPasswort { get; set; }
-
-		public string IrcRegisterEmail { get; set; }
-
 		public bool EnableMultiDownloads { get; set; }
-
 		public bool ClearReadyDownloads { get; set; }
-
-		public int WebServerPort { get; set; }
 
 		public string Password { get; set; }
 
-		public long BackupDataTime { get; set; }
-
-		public bool StartWebServer { get; set; }
-
-		public bool StartJabberClient { get; set; }
-
+		public bool UseWebServer { get; set; }
+		public int WebServerPort { get; set; }
+		
+		public bool UseJabberClient { get; set; }
 		public string JabberServer { get; set; }
-
 		public string JabberUser { get; set; }
-
 		public string JabberPassword { get; set; }
 
-		public bool StartMySqlBackend { get; set; }
-
+		public bool UseMySqlBackend { get; set; }
 		public string MySqlBackendServer { get; set; }
-
+		public int MySqlBackendPort { get; set; }
 		public string MySqlBackendDatabase { get; set; }
-
 		public string MySqlBackendUser { get; set; }
-
 		public string MySqlBackendPassword { get; set; }
-
-		public bool AutoJoinOnInvite { get; set; }
-
-		public bool AutoRegisterNickserv { get; set; }
-
+		
 		public FileHandler[] FileHandlers { get; set; }
 
 		#endregion

@@ -44,7 +44,7 @@ namespace XG.Server.Worker
 				from server in Servers.All where server.Connected 
 				from channel in server.Channels
 				from bot in channel.Bots
-					where !bot.Connected && (DateTime.Now - bot.LastContact).TotalMilliseconds > Settings.Instance.BotOfflineTime && bot.OldestActivePacket() == null
+					where !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Instance.BotOfflineTime && bot.OldestActivePacket() == null
 					select bot;
 
 			int a = tBots.Count();

@@ -76,7 +76,7 @@ namespace XG.Server.Cmd
 			Main instance = new Main();
 
 			ABackendPlugin backend = null;
-			if (Settings.Instance.StartMySqlBackend)
+			if (Settings.Instance.UseMySqlBackend)
 			{
 				backend = new Server.Plugin.Backend.MySql.BackendPlugin();
 			}
@@ -86,11 +86,11 @@ namespace XG.Server.Cmd
 			}
 			instance.AddBackendPlugin(backend);
 
-			if (Settings.Instance.StartWebServer)
+			if (Settings.Instance.UseWebServer)
 			{
 				instance.AddWorker(new Server.Plugin.General.Webserver.Plugin());
 			}
-			if (Settings.Instance.StartJabberClient)
+			if (Settings.Instance.UseJabberClient)
 			{
 				instance.AddWorker(new Server.Plugin.General.Jabber.Plugin());
 			}

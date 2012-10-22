@@ -314,12 +314,12 @@ var XGBase = Class.create(
 					switch(id)
 					{
 						case "1":
-							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, "0-86400000") + "&searchBy=time";
-							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, "0-86400000") + "&searchBy=time";
+							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, "0-86400") + "&searchBy=time";
+							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, "0-86400") + "&searchBy=time";
 							break;
 						case "2":
-							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, "0-604800000") + "&searchBy=time";
-							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, "0-604800000") + "&searchBy=time";
+							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, "0-604800") + "&searchBy=time";
+							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, "0-604800") + "&searchBy=time";
 							break;
 						case "3":
 							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=connected";

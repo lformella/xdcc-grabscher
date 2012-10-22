@@ -136,7 +136,7 @@ namespace XG.Server.Irc
 					tBot.Name = aMessage;
 					_log.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name);
 				}
-				else if(tUserName == Settings.Instance.IRCName)
+				else if(tUserName == Settings.Instance.IrcNick)
 				{
 					// what should i do now?!
 					_log.Error("con_DataReceived() wtf? i was renamed to " + aMessage);
@@ -152,7 +152,7 @@ namespace XG.Server.Irc
 				if (tChan != null)
 				{
 					tUserName = aCommands[3];
-					if (tUserName == Settings.Instance.IRCName)
+					if (tUserName == Settings.Instance.IrcNick)
 					{
 						tChan.Connected = false;
 						_log.Warn("con_DataReceived() kicked from " + tChan.Name + (aCommands.Length >= 5 ? " (" + aCommands[4] + ")" : "") + " - rejoining");
@@ -182,7 +182,7 @@ namespace XG.Server.Irc
 			else if (tComCodeStr == "KILL")
 			{
 				tUserName = aCommands[2];
-				if (tUserName == Settings.Instance.IRCName)
+				if (tUserName == Settings.Instance.IrcNick)
 				{
 					_log.Warn("con_DataReceived() i was killed from server because of " + aMessage);
 				}

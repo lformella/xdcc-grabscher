@@ -550,16 +550,16 @@ namespace XG.Server.Plugin.General.Webserver
 					
 				case "time":
 					string[] search = aSearchString.Split('-');
-					double start = Double.Parse(search[0]);
-					double stop = Double.Parse(search[1]);
+					int start = int.Parse(search[0]);
+					int stop = int.Parse(search[1]);
 					DateTime init = DateTime.MinValue;
 					DateTime now = DateTime.Now;
 					
 					tPackets =
 						from packet in tPackets where
 							packet.LastUpdated != init &&
-							start <= (now - packet.LastUpdated).TotalMilliseconds &&
-							stop >= (now - packet.LastUpdated).TotalMilliseconds
+							start <= (now - packet.LastUpdated).TotalSeconds &&
+							stop >= (now - packet.LastUpdated).TotalSeconds
 							select packet;
 					break;
 					

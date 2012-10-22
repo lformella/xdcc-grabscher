@@ -117,8 +117,8 @@ namespace XG.Server
 
 		protected override void ConnectionConnected()
 		{
-			SendData("NICK " + Settings.Instance.IRCName);
-			SendData("USER " + Settings.Instance.IRCName + " " + Settings.Instance.IRCName + " " + _server.Name + " :root");
+			SendData("NICK " + Settings.Instance.IrcNick);
+			SendData("USER " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcNick + " " + _server.Name + " :root");
 
 			_timedObjects.Clear();
 			_latestPacketRequests.Clear();
@@ -186,11 +186,11 @@ namespace XG.Server
 							string name = Core.Helper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
 							if (_latestPacketRequests.ContainsKey(name))
 							{
-								double time = (_latestPacketRequests[name] - DateTime.Now).TotalMilliseconds;
+								double time = (_latestPacketRequests[name] - DateTime.Now).TotalSeconds;
 								if (time > 0)
 								{
 									_log.Warn("RequestFromBot(" + aBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
-									CreateTimer(aBot, (long)time + 1000, false);
+									CreateTimer(aBot, (int)time + 1, false);
 									return;
 								}
 							}
@@ -201,7 +201,7 @@ namespace XG.Server
 								SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
 								if (_latestPacketRequests.ContainsKey(name)) { _latestPacketRequests.Remove(name); }
-								_latestPacketRequests.Add(name, DateTime.Now.AddMilliseconds(Settings.Instance.SamePacketRequestTime));
+								_latestPacketRequests.Add(name, DateTime.Now.AddSeconds(Settings.Instance.SamePacketRequestTime));
 
 								// statistics
 								Statistic.Instance.Increase(StatisticType.PacketsRequested);
@@ -352,7 +352,7 @@ namespace XG.Server
 			}
 		}
 
-		void IrcParserCreateTimer(Core.Server aServer, AObject aObject, Int64 aTime, bool aOverride)
+		void IrcParserCreateTimer(Core.Server aServer, AObject aObject, int aTime, bool aOverride)
 		{
 			if (_server == aServer)
 			{
@@ -389,7 +389,7 @@ namespace XG.Server
 			foreach (var kvp in _timedObjects)
 			{
 				DateTime time = kvp.Value;
-				if ((time - DateTime.Now).TotalMilliseconds < 0) { remove.Add(kvp.Key); }
+				if ((time - DateTime.Now).TotalSeconds < 0) { remove.Add(kvp.Key); }
 			}
 			foreach (AObject obj in remove)
 			{
@@ -402,7 +402,7 @@ namespace XG.Server
 			//SendData("PING " + myServer.Name);
 		}
 
-		public void CreateTimer(AObject aObject, Int64 aTime, bool aOverride)
+		public void CreateTimer(AObject aObject, int aTime, bool aOverride)
 		{
 			if(aObject == null)
 			{
@@ -416,7 +416,7 @@ namespace XG.Server
 
 			if (!_timedObjects.ContainsKey(aObject))
 			{
-				_timedObjects.Add(aObject, DateTime.Now.AddMilliseconds(aTime));
+				_timedObjects.Add(aObject, DateTime.Now.AddSeconds(aTime));
 			}
 		}
 

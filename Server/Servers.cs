@@ -182,7 +182,7 @@ namespace XG.Server
 //								time = Settings.Instance.ReconnectWaitTimeReallyLong;
 //								break;
 						}
-						new Timer(new TimerCallback(ServerReconnect), aServer, time, System.Threading.Timeout.Infinite);
+						new Timer(new TimerCallback(ServerReconnect), aServer, time * 1000, System.Threading.Timeout.Infinite);
 					}
 				}
 				else
@@ -341,7 +341,7 @@ namespace XG.Server
 					}
 				}
 
-				Thread.Sleep((int)Settings.Instance.TimerSleepTime);
+				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
 			}
 		}
 
