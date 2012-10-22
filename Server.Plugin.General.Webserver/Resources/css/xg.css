@@ -24,7 +24,6 @@ fieldset
 
 fieldset input
 {
-	clear: left;
 	float: left;
 	margin: 0 4px 4px 0;
 }
@@ -32,8 +31,8 @@ fieldset input
 fieldset label
 {
 	display: block;
-	height: 16px;
-	margin: 3px 0 0;
+	height: 17px;
+	margin: 2px 0 0;
 }
 
 td
@@ -63,6 +62,11 @@ td
 	width: 10px;
 	height: 10px;
 	margin: 11px 0 0 11px;
+}
+
+#tabs, #tabs1, #tabs_2, #tabs_3, #packets_layout, #bots_layout
+{
+	overflow: hidden;
 }
 
 /* JQGrid Fixes */

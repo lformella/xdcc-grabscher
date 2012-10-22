@@ -43,7 +43,12 @@ var XGResize = Class.create(
 		$("#search_layout div").width("");
 
 		/* main container */
-		$("#layout_objects_container").height(searchLayout.height() - 68);
+		var subSize = 68;
+		if ($.browser.mozilla)
+		{
+			subSize -= 2;
+		}
+		$("#layout_objects_container").height(searchLayout.height() - subSize);
 		// bots + packets table
 		$("#bots_table, #packets_table").setGridWidth(objectLayout.width() - 1);
 		// patching table
@@ -55,9 +60,14 @@ var XGResize = Class.create(
 		$("#layout_objects_container div").width("");
 
 		/* other container */
+		subSize = 110;
+		if ($.browser.mozilla)
+		{
+			subSize += 1;
+		}
 		$("#searches_xg_bitpir_at, #files_table")
 			.setGridWidth(objectLayout.width() - 1)
-			.setGridHeight(objectLayout.height() - 110);
+			.setGridHeight(objectLayout.height() - subSize);
 		$($("#searches_xg_bitpir_at .jqgfirstrow td")[3]).width("");
 		$("#searches_xg_bitpir_at_Name").width("");
 		$($("#files_table .jqgfirstrow td")[2]).width("");
@@ -68,7 +78,8 @@ var XGResize = Class.create(
 
 	resizeContainer: function ()
 	{
-		$("#bots_table").setGridHeight($('#bots_layout').height() - 74);
-		$("#packets_table").setGridHeight($('#packets_layout').height() - 74);
+		var subSize = 74;
+		$("#bots_table").setGridHeight($('#bots_layout').height() - subSize);
+		$("#packets_table").setGridHeight($('#packets_layout').height() - subSize);
 	}
 });
