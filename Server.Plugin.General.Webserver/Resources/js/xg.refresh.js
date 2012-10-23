@@ -194,9 +194,24 @@ var XGRefresh = Class.create(
 		$.getJSON(this.url.jsonUrl(Enum.TCPClientRequest.GetSnapshots),
 			function(result)
 			{
-				result[0].yaxis = 2;
 				$.each(result, function(index, item) {
 					item.color = index;
+					switch (index + 1)
+					{
+						case Enum.SnapshotValue.Speed:
+							item.yaxis = 3;
+							break;
+
+						case Enum.SnapshotValue.PacketsSize:
+						case Enum.SnapshotValue.PacketsSizeConnected:
+						case Enum.SnapshotValue.PacketsSizeDisconnected:
+							item.yaxis = 2;
+							break;
+
+						default:
+							item.yaxis = 1;
+							break;
+					}
 				});
 
 				self.snapshots = result;
@@ -348,17 +363,30 @@ var XGRefresh = Class.create(
 				monthNames: LANG_MONTH_SHORT
 			},
 			yaxes: [
-				{ min: 0 },
+				{
+					min: 0
+				},
+				{
+					min: 0,
+					alignTicksWithAxis: 1,
+					tickFormatter: function (val) {
+						if (val <= 1)
+						{
+							return "";
+						}
+						return self.helper.size2Human(val);
+					}
+				},
 				{
 					min: 0,
 					alignTicksWithAxis: 1,
 					position: "right",
-					tickFormatter: function (speed) {
-						if (speed <= 1)
+					tickFormatter: function (val) {
+						if (val <= 1)
 						{
 							return "";
 						}
-						return self.helper.speed2Human(speed);
+						return self.helper.speed2Human(val);
 					}
 				}
 			],

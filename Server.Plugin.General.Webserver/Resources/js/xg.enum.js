@@ -69,3 +69,31 @@ Enum.TangoColor =
 	Aluminium1	: { Light: "eeeeec", Middle: "d3d7cf", Dark: "babdb6"},
 	Aluminium2	: { Light: "888a85", Middle: "555753", Dark: "2e3436"}
 };
+
+Enum.SnapshotValue =
+{
+	Timestamp: 0,
+
+	Speed: 1,
+
+	Servers: 2,
+	ServersConnected: 3,
+	ServersDisconnected: 4,
+
+	Channels: 5,
+	ChannelsConnected: 6,
+	ChannelsDisconnected: 7,
+
+	Bots: 8,
+	BotsConnected: 9,
+	BotsDisconnected: 10,
+	BotsFreeSlots: 11,
+	BotsFreeQueue: 12,
+
+	Packets: 13,
+	PacketsConnected: 14,
+	PacketsDisconnected: 15,
+	PacketsSize: 16,
+	PacketsSizeConnected: 17,
+	PacketsSizeDisconnected: 18
+};

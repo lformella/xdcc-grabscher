@@ -45,7 +45,11 @@ var XGHelper = Class.create(
 		{
 			return (size / (1024 * 1024)).toFixed(0) + " M";
 		}
-		return (size / (1024 * 1024 * 1024)).toFixed((size < 1024 * 1024 * 1024 * 10) ? 1 : 0) + " G";
+		else if (size < 1024 * 1024 * 1024 * 1024)
+		{
+			return (size / (1024 * 1024 * 1024)).toFixed(0) + " G";
+		}
+		return (size / (1024 * 1024 * 1024 * 1024)).toFixed((size < 1024 * 1024 * 1024 * 1024 * 10) ? 1 : 0) + " T";
 	},
 
 	/**
