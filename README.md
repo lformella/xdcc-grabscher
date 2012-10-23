@@ -1,7 +1,6 @@
-# XG
+[![XG](http://xg.bitpir.at/images/xg_gray.png)](http://www.larsformella.de/lang/en/portfolio/programme-software/xg)
 
-## What is XG?
-XG, called Xdcc Grabscher, is a XDCC download tool.
+XG, called Xdcc Grabscher, is a XDCC download manager.
 
 ## What makes it special?
 XG is a command line app which connects to an irc network an handles all communications and downloading. Via the web frontend you can search and activate downloads on the server.
