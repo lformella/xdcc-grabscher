@@ -79,6 +79,10 @@ var XGResize = Class.create(
 	resizeContainer: function ()
 	{
 		var subSize = 74;
+		if ($.browser.msie)
+		{
+			subSize -= 3;
+		}
 		$("#bots_table").setGridHeight($('#bots_layout').height() - subSize);
 		$("#packets_table").setGridHeight($('#packets_layout').height() - subSize);
 	}
