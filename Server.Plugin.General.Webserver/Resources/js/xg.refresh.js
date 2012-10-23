@@ -110,11 +110,7 @@ var XGRefresh = Class.create(
 					var state = -1;
 					$.each(file.Parts, function(i, part)
 					{
-						state = part.State;
-						if (state == 0)
-						{
-							return false;
-						}
+						return part.State != 0;
 					});
 
 					if(state == 0)

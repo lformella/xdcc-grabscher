@@ -24,11 +24,12 @@
 var Password;
 var XGPassword = Class.create(
 {
-	initialize: function()
+	initialize: function(translate)
 	{
 		var self = this;
 		Password = this;
 
+		this.translate = translate;
 		this.url = new XGUrl();
 		this.password = "";
 
@@ -69,13 +70,11 @@ var XGPassword = Class.create(
 			}
 		});
 
-		Translate(true);
+		this.translate(true);
 	},
 
 	buttonConnectClicked: function (dialog)
 	{
-		var self = this;
-
 		var passwordElement = $("#password");
 		var saltElement = $("#salt");
 		var password = CryptoJS.SHA256(saltElement.val() + passwordElement.val() + saltElement.val());
@@ -104,7 +103,7 @@ var XGPassword = Class.create(
 		// load grid
 		new XGBase(this.url, helper, refresh, cookie, formatter);
 
-		Translate(false);
+		this.translate(false);
 
 		// resize
 		var resize = new XGResize();

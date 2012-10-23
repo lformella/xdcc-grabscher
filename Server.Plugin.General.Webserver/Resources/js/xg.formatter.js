@@ -23,10 +23,8 @@
 
 var XGFormatter = Class.create(
 {
-	initialize: function(helper)
+	initialize: function (helper)
 	{
-		var self = this;
-
 		this.helper = helper;
 	},
 
