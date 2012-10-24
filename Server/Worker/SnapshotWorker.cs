@@ -58,6 +58,8 @@ namespace XG.Server.Worker
 			snap.Set(SnapshotValue.BotsDisconnected, (from bot in bots where !bot.Connected select bot).Count());
 			snap.Set(SnapshotValue.BotsFreeSlots, (from bot in bots where bot.InfoSlotCurrent > 0 select bot).Count());
 			snap.Set(SnapshotValue.BotsFreeQueue, (from bot in bots where bot.InfoQueueCurrent > 0 select bot).Count());
+			snap.Set(SnapshotValue.BotsAverageCurrentSpeed, (int)((from bot in bots select bot.InfoSpeedCurrent).Sum() / (from bot in bots where bot.InfoSpeedCurrent > 0 select bot).Count()));
+			snap.Set(SnapshotValue.BotsAverageMaxSpeed, (Int64)((from bot in bots select bot.InfoSpeedMax).Sum() / (from bot in bots where bot.InfoSpeedMax > 0 select bot).Count()));
 			
 			snap.Set(SnapshotValue.Packets, (from packet in packets select packet).Count());
 			snap.Set(SnapshotValue.PacketsConnected, (from packet in packets where packet.Connected select packet).Count());

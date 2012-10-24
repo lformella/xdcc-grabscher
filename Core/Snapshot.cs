@@ -45,6 +45,8 @@ namespace XG.Core
 		BotsDisconnected = 10,
 		BotsFreeSlots = 11,
 		BotsFreeQueue = 12,
+		BotsAverageCurrentSpeed = 19,
+		BotsAverageMaxSpeed = 20,
 		
 		Packets = 13,
 		PacketsConnected = 14,

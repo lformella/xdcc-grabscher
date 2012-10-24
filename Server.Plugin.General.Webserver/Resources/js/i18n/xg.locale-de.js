@@ -118,6 +118,8 @@ Translate = function(light)
 	$(".translate_free_queue").html("Freie Warteschlange");
 	$(".translate_free_slots").html("Frei Pl&auml;tze");
 	$(".translate_timespan").html("Zeitspanne");
+	$(".translate_average_speed_current").html("momentane Geschw.");
+	$(".translate_average_speed_max").html("maximale Geschw.");
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */

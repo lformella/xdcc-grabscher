@@ -199,6 +199,8 @@ var XGRefresh = Class.create(
 					switch (index + 1)
 					{
 						case Enum.SnapshotValue.Speed:
+						case Enum.SnapshotValue.BotsAverageCurrentSpeed:
+						case Enum.SnapshotValue.BotsAverageMaxSpeed:
 							item.yaxis = 3;
 							break;
 
