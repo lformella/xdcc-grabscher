@@ -29,23 +29,22 @@ var XGResize = Class.create(
 	{
 		var self = this;
 
-		this.refresh = refresh
+		this.refresh = refresh;
 
 		$("body").layout({
 			onresize: function () {
 				self.resizeMain(innerLayout);
-			},
-			spacing_open: 4,
-			spacing_closed: 4
+			}
 		});
 		var innerLayout = $("#layout_objects_container").layout({
 			resizeWithWindow: false,
 			onresize: function () {
 				self.resizeContainer();
-			},
-			spacing_open: 4,
-			spacing_closed: 4
+			}
 		});
+
+		// make bot and packet grid height almost equal
+		innerLayout.sizePane("north", $('#layout_objects').height() / 2 - 80);
 
 		// resize after all is visible - twice, because the first run wont change all values :|
 		this.resizeMain(innerLayout);
