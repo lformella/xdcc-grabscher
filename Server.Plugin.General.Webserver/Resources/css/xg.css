@@ -69,9 +69,15 @@ td
 	margin: 11px 0 0 11px;
 }
 
-#tabs, #tabs1, #tabs_2, #tabs_3, #packets_layout, #bots_layout
+#tabs, #tabs1, #tabs_2, #tabs_3, #packets_layout, #bots_layout, .footer
 {
 	overflow: hidden;
+}
+
+.footer
+{
+	background: #efefef;
+	padding: 0 2px 0 2px;
 }
 
 /* JQGrid Fixes */

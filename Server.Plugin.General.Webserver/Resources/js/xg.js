@@ -365,14 +365,13 @@ var XGBase = Class.create(
 			autowidth: true,
 			sortorder: "desc",
 			hidegrid: false
-		}).navGrid('#search_pager', {edit:false, add:false, del:false, search:false, refresh:false});
+		});
 
-		$("#search_pager_left").html("<input type=\"text\" id=\"search-text\" />");
 		$("#search-text").keyup( function (e)
 		{
 			if (e.which == 13)
 			{
-				this.addNewSearch();
+				self.addNewSearch();
 			}
 		});
 
@@ -596,7 +595,7 @@ var XGBase = Class.create(
 		{
 			Id: this.idSearchCount,
 			Name: search,
-			Action: "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='Grid.removeSearch(" + this.idSearchCount + ");'></i>"
+			Action: "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='XG.removeSearch(" + this.idSearchCount + ");'></i>"
 		};
 		$("#search_table").addRowData(this.idSearchCount, datarow);
 		return this.idSearchCount++;

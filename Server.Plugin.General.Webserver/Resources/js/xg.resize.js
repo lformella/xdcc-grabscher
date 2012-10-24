@@ -67,7 +67,7 @@ var XGResize = Class.create(
 		// patching table
 		$($("#search_table .jqgfirstrow td")[2]).width("");
 		// patch search input
-		$("#search-text").width(searchLayout.width() - 10);
+		$("#search-text").width(searchLayout.width() - 8);
 		// patch divs
 		$("#search_layout div").width("");
 
