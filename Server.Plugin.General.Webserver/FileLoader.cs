@@ -32,10 +32,49 @@ namespace XG.Server.Plugin.General.Webserver
 {
 	public class FileLoader
 	{
+		#region VARIABLES
+
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Dictionary<string, string> _dicString;
 		Dictionary<string, byte[]> _dicByte;
+
+		string[] _cssFiles =
+		{
+			"reset",
+			"fontello",
+			"jquery-ui",
+			"ui.jqgrid",
+			"layout-default",
+			"xg"
+		};
+
+		string[] _jsFiles =
+		{
+			"sha256",
+			"json2.min",
+			"jquery.min",
+			"jquery-ui.min",
+			"jquery.class",
+			"jquery.cookie.min",
+			"jquery.layout.min",
+			"jquery.flot",
+			"jquery.jqGrid.min",
+			"i18n/grid.locale-#LANGUAGE_SHORT#",
+			"i18n/xg.locale-en",
+			"xg.enum",
+			"xg.cookie",
+			"xg.helper",
+			"xg.formatter",
+			"xg.resize",
+			"xg.refresh",
+			"xg.password",
+			"xg.url",
+			"xg",
+			"i18n/xg.locale-#LANGUAGE_SHORT#"
+		};
+
+		#endregion
 
 		public static FileLoader Instance
 		{
@@ -65,64 +104,57 @@ namespace XG.Server.Plugin.General.Webserver
 				try
 				{
 #endif
-#if DEBUG
-					string content = File.OpenText("./Resources" + aFile).ReadToEnd();
-#else
-					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
-					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					string content = new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd();
-#endif
-					if (aFile == "/index.html")
+					string content = "";
+					if (aFile == "/js/all.js")
 					{
-						string css = "";
-						string[] cssFiles =
+						foreach(string file in _jsFiles)
 						{
-							"reset",
-							"fontello",
-							"jquery-ui",
-							"ui.jqgrid",
-							"layout-default",
-							"xg"
-						};
-						foreach (string cssFile in cssFiles)
-						{
-							css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/" + cssFile + ".css\" />\n";
+							content += LoadFile("/js/" + file + ".js", aLanguages) + "\n";
 						}
-						content = content.Replace("#CSS_FILES#", css);
-
-						string js = "";
-						string[] jsFiles =
-						{
-							"sha256",
-							"json2.min",
-							"jquery.min",
-							"jquery-ui.min",
-							"jquery.class",
-							"jquery.cookie.min",
-							"jquery.layout.min",
-							"jquery.flot",
-							"jquery.jqGrid.min",
-							"i18n/grid.locale-#LANGUAGE_SHORT#",
-							"i18n/xg.locale-en",
-							"xg.enum",
-							"xg.cookie",
-							"xg.helper",
-							"xg.formatter",
-							"xg.resize",
-							"xg.refresh",
-							"xg.password",
-							"xg.url",
-							"xg",
-							"i18n/xg.locale-#LANGUAGE_SHORT#"
-						};
-						foreach (string jsFile in jsFiles)
-						{
-							js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
-						}
-						content = content.Replace("#JS_FILES#", js);
 					}
+					else if (aFile == "/css/all.css")
+					{
+						foreach(string file in _cssFiles)
+						{
+							content += LoadFile("/css/" + file + ".css", aLanguages) + "\n";
+						}
+					}
+					else
+					{
+#if DEBUG
+						content = File.OpenText("./Resources" + aFile).ReadToEnd();
+#else
+						Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
+						string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+						content = new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd();
+#endif
+						if (aFile == "/index.html")
+						{
+#if DEBUG
+							string css = "";
+							foreach (string cssFile in _cssFiles)
+							{
+								css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/" + cssFile + ".css\" />\n";
+							}
+#else
+							string css = "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/all.css\" />\n";
+#endif
+							content = content.Replace("#CSS_FILES#", css);
+							
+//#if DEBUG
+							string js = "";
+							foreach (string jsFile in _jsFiles)
+							{
+								js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
+							}
+//#else
+//							string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
+//#endif 
+							content = content.Replace("#JS_FILES#", js);
+						}
 
-					content = PatchLanguage(content, aLanguages);
+						content = PatchLanguage(content, aLanguages);
+					}
 #if !DEBUG
 					_dicString.Add(aFile, content);
 #endif
