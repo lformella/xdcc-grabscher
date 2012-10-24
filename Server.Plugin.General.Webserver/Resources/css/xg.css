@@ -96,7 +96,7 @@ td
 {
 	border-collapse: separate;
 	border-spacing: 0 4px;
-	padding: 0 4px 4px 4px;
+	margin: 0 4px 0 4px;
 }
 
 #search_layout #search_table td

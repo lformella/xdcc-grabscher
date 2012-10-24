@@ -33,7 +33,7 @@ var XGResize = Class.create(
 		/* left search tab */
 		// set table
 		$("#search_table")
-			.setGridWidth(searchLayout.width() - 2)
+			.setGridWidth(searchLayout.width() - 10)
 			.setGridHeight(searchLayout.height() - 28);
 		// patching table
 		$($("#search_table .jqgfirstrow td")[2]).width("");
