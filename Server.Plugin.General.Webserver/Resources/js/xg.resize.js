@@ -23,6 +23,36 @@
 var XGResize = Class.create(
 {
 	/**
+	 * @param {XGRefresh} refresh
+	 */
+	initialize: function (refresh)
+	{
+		var self = this;
+
+		this.refresh = refresh
+
+		$("body").layout({
+			onresize: function () {
+				self.resizeMain(innerLayout);
+			},
+			spacing_open: 4,
+			spacing_closed: 4
+		});
+		var innerLayout = $("#layout_objects_container").layout({
+			resizeWithWindow: false,
+			onresize: function () {
+				self.resizeContainer();
+			},
+			spacing_open: 4,
+			spacing_closed: 4
+		});
+
+		// resize after all is visible - twice, because the first run wont change all values :|
+		this.resizeMain(innerLayout);
+		setTimeout(function() { self.resizeMain(innerLayout); }, 1000);
+	},
+
+	/**
 	 * @param innerLayout
 	 */
 	resizeMain: function (innerLayout)
@@ -72,6 +102,26 @@ var XGResize = Class.create(
 		$("#searches_xg_bitpir_at_Name").width("");
 		$($("#files_table .jqgfirstrow td")[2]).width("");
 		$("#files_table_Name").width("");
+
+		/* dialog */
+		var width = $(window).width() - 20;
+		var height = $(window).height() - 20;
+		// just resize if necessary
+		if (width != this.width || height != this.height)
+		{
+			this.width = width;
+			this.height = height;
+
+			$("#dialog_snapshots").dialog("option", {
+				width: width,
+				height: height
+			});
+			$("#snapshot")
+				.width(width - 230)
+				.height(height - 40);
+			// and update the snapshot plot
+			this.refresh.updateSnapshotPlot();
+		}
 
 		innerLayout.resizeAll();
 	},

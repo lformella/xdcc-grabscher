@@ -106,26 +106,7 @@ var XGPassword = Class.create(
 		this.translate(false);
 
 		// resize
-		var resize = new XGResize();
-		$("body").layout({
-			onresize: function () {
-				resize.resizeMain(innerLayout);
-			},
-			spacing_open: 4,
-			spacing_closed: 4
-		});
-		var innerLayout = $("#layout_objects_container").layout({
-			resizeWithWindow: false,
-			onresize: function () {
-				resize.resizeContainer();
-			},
-			spacing_open: 4,
-			spacing_closed: 4
-		});
-
-		// resize after all is visible - twice, because the first run wont change all values :|
-		resize.resizeMain(innerLayout);
-		setTimeout(function() { resize.resizeMain(innerLayout); }, 1000);
+		var resize = new XGResize(refresh);
 
 		// start the refresh
 		refresh.refreshGrid(0);

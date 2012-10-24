@@ -478,7 +478,6 @@ var XGBase = Class.create(
 			});
 
 		$("#dialog_server_channels").dialog({
-			bgiframe: true,
 			autoOpen: false,
 			width: 560,
 			modal: true,
@@ -498,7 +497,6 @@ var XGBase = Class.create(
 			});
 
 		$("#dialog_statistics").dialog({
-			bgiframe: true,
 			autoOpen: false,
 			width: 545,
 			modal: true,
@@ -523,10 +521,9 @@ var XGBase = Class.create(
 			});
 
 		$("#dialog_snapshots").dialog({
-			bgiframe: true,
 			autoOpen: false,
-			width: 1230,
-			height: 600,
+			width: $(window).width() - 20,
+			height: $(window).height() - 20,
 			modal: true,
 			resizable: false
 		});
