@@ -74,19 +74,11 @@ namespace XG.Server.Plugin.General.Webserver
 			"i18n/xg.locale-#LANGUAGE_SHORT#"
 		};
 
+		public string Salt;
+
 		#endregion
 
-		public static FileLoader Instance
-		{
-			get { return Nested.Instance; }
-		}
-		class Nested
-		{
-			static Nested() { }
-			internal static readonly FileLoader Instance = new FileLoader();
-		}
-
-		FileLoader()
+		public FileLoader()
 		{
 			_dicString = new Dictionary<string, string>();
 			_dicByte = new Dictionary<string, byte[]>();
@@ -109,7 +101,7 @@ namespace XG.Server.Plugin.General.Webserver
 					{
 						foreach(string file in _jsFiles)
 						{
-							content += LoadFile("/js/" + file + ".js", aLanguages) + "\n";
+							content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aLanguages) + "\n";
 						}
 					}
 					else if (aFile == "/css/all.css")
@@ -151,9 +143,10 @@ namespace XG.Server.Plugin.General.Webserver
 //							string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
 //#endif 
 							content = content.Replace("#JS_FILES#", js);
-						}
 
-						content = PatchLanguage(content, aLanguages);
+							content = content.Replace("#SALT#", Salt);
+							content = PatchLanguage(content, aLanguages);
+						}
 					}
 #if !DEBUG
 					_dicString.Add(aFile, content);

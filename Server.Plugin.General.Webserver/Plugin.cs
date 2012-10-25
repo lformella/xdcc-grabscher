@@ -24,6 +24,8 @@
 using System;
 using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 using log4net;
 
@@ -36,6 +38,8 @@ namespace XG.Server.Plugin.General.Webserver
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		HttpListener _listener;
+
+		string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes(new Guid().ToString()))).Replace("-", "");
 
 		#endregion
 
@@ -51,6 +55,9 @@ namespace XG.Server.Plugin.General.Webserver
 				_listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
 				_listener.Start();
 
+				FileLoader fileLoader = new FileLoader();
+				fileLoader.Salt = _salt;
+
 				while (true)
 				{
 #if !UNSAFE
@@ -63,6 +70,8 @@ namespace XG.Server.Plugin.General.Webserver
 						connection.Files = Files;
 						connection.Searches = Searches;
 						connection.Snapshots = Snapshots;
+						connection.FileLoader = fileLoader;
+						connection.Salt = _salt;
 
 						connection.Start();
 #if !UNSAFE

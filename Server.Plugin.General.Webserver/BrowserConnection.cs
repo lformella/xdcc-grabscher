@@ -45,7 +45,9 @@ namespace XG.Server.Plugin.General.Webserver
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public HttpListenerContext Context { get; set; }
-		static readonly string _salt = "6v8vva4&V/B(n9/6nfND4ss786I)Mo";
+
+		public FileLoader FileLoader;
+		public string Salt;
 
 		#endregion
 
@@ -74,7 +76,7 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 					
 					// no pass, no way
-					byte[] inputBytes = Encoding.UTF8.GetBytes(_salt + Settings.Instance.Password + _salt);
+					byte[] inputBytes = Encoding.UTF8.GetBytes(Salt + Settings.Instance.Password + Salt);
 					byte[] hashedBytes = new SHA256Managed().ComputeHash(inputBytes);
 					string passwortHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 					if (!tDic.ContainsKey("password") || HttpUtility.UrlDecode(tDic["password"]) != passwortHash)
@@ -350,7 +352,7 @@ namespace XG.Server.Plugin.General.Webserver
 					// serve the favicon
 					if (str == "/favicon.ico")
 					{
-						WriteToStream(FileLoader.Instance.LoadImage(str));
+						WriteToStream(FileLoader.LoadImage(str));
 					}
 					// load a file
 					else
@@ -361,7 +363,7 @@ namespace XG.Server.Plugin.General.Webserver
 						if (str.EndsWith(".png"))
 						{
 							Context.Response.ContentType = "image/png";
-							WriteToStream(FileLoader.Instance.LoadImage(str));
+							WriteToStream(FileLoader.LoadImage(str));
 						}
 						else
 						{
@@ -400,11 +402,11 @@ namespace XG.Server.Plugin.General.Webserver
 							
 							if (binary)
 							{
-								WriteToStream(FileLoader.Instance.LoadFile(str));
+								WriteToStream(FileLoader.LoadFile(str));
 							}
 							else
 							{
-								WriteToStream(FileLoader.Instance.LoadFile(str, Context.Request.UserLanguages));
+								WriteToStream(FileLoader.LoadFile(str, Context.Request.UserLanguages));
 							}
 						}
 					}
