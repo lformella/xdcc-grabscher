@@ -74,9 +74,13 @@ td
 	overflow: hidden;
 }
 
-.footer
+#search_layout
 {
 	background: #efefef;
+}
+
+.footer
+{
 	padding: 0 2px 0 2px;
 }
 
