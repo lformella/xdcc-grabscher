@@ -211,4 +211,7 @@
     <EmbeddedResource Include="Resources\js\xg.resize.js" />
     <EmbeddedResource Include="Resources\js\xg.url.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\css\reset.css" />
+  </ItemGroup>
 </Project>
