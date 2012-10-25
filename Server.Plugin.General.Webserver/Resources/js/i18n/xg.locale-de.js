@@ -21,7 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-Translate = function(light)
+TranslatePassword = function()
 {
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
@@ -32,12 +32,10 @@ Translate = function(light)
 	$("#dialog_password")
 		.dialog("option", "title", "Passwort ben&ouml;tigt")
 		.dialog("option", "buttons", [{ text: "Verbinden", click: function() { Password.buttonConnectClicked($("#dialog_password")); } }]);
+};
 
-	if (light)
-	{
-		return;
-	}
-
+TranslateAll = function()
+{
 	/* ************************************************************************************************************** */
 	/* OTHER DIALOGS                                                                                                  */
 	/* ************************************************************************************************************** */
@@ -120,6 +118,8 @@ Translate = function(light)
 	$(".translate_timespan").html("Zeitspanne");
 	$(".translate_average_speed_current").html("momentane Geschw.");
 	$(".translate_average_speed_max").html("maximale Geschw.");
+	$(".translate_enabled").html("Aktiviert");
+	$(".translate_disabled").html("Deaktiviert");
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
