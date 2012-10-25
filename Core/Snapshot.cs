@@ -33,10 +33,14 @@ namespace XG.Core
 		Speed = 1,
 		
 		Servers = 2,
+		ServersEnabled = 21,
+		ServersDisabled = 22,
 		ServersConnected = 3,
 		ServersDisconnected = 4,
 		
 		Channels = 5,
+		ChannelsEnabled = 23,
+		ChannelsDisabled = 24,
 		ChannelsConnected = 6,
 		ChannelsDisconnected = 7,
 		
