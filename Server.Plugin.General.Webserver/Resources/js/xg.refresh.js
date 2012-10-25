@@ -105,7 +105,7 @@ var XGRefresh = Class.create(
 			case 2:
 				$.each($("#files_table").getDataIDs(), function(i, id)
 				{
-					var file = self.getRowData("files", id);
+					var file = self.getRowData("files_table", id);
 
 					var state = -1;
 					$.each(file.Parts, function(i, part)
@@ -115,7 +115,7 @@ var XGRefresh = Class.create(
 
 					if(state == 0)
 					{
-						self.refreshObject("files", id);
+						self.refreshObject("files_table", id);
 					}
 				});
 				break;
