@@ -758,13 +758,40 @@ namespace XG.Server.Plugin.General.Webserver
 					Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(value)};
 					list.Add(data);
 				}
-				obj.Data = list.ToArray();
+				obj.Data = FilterDuplicateEntries(list.ToArray());
 				obj.Label = Enum.GetName(typeof(SnapshotValue), value);
 
 				tObjects.Add(obj);
 			}
 			
 			return Json.Serialize<Server.Plugin.General.Webserver.Flot.Object[]>(tObjects.ToArray());
+		}
+
+		Int64[][] FilterDuplicateEntries(Int64[][] aEntries)
+		{
+			var list = new List<Int64[]>();
+
+			Int64[] prev = {0, -1};
+			Int64[] stack = null;
+			foreach (Int64[] data in aEntries)
+			{
+				if (prev[1] != data[1])
+				{
+					if (stack != null)
+					{
+						list.Add(stack);
+						stack = null;
+					}
+					list.Add(data);
+					prev = data;
+				}
+				else
+				{
+					stack = data;
+				}
+			}
+
+			return list.ToArray();
 		}
 		
 		#endregion
