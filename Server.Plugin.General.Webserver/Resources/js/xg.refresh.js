@@ -232,7 +232,7 @@ var XGRefresh = Class.create(
 		var data = [];
 		var currentSnapshots = $.extend(true, [], this.snapshots);
 		$.each(currentSnapshots, function(index, item) {
-			if (index == 0 || $("#snapshot_checkbox_" + index).attr('checked'))
+			if (index == 0 || $("#snapshot_checkbox_" + (index + 1)).attr('checked'))
 			{
 				var itemData = [];
 				$.each(item.data, function(index2, item2) {
