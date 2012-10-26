@@ -198,16 +198,30 @@ var XGRefresh = Class.create(
 					item.color = index;
 					switch (index + 1)
 					{
-						case Enum.SnapshotValue.Speed:
-						case Enum.SnapshotValue.BotsAverageCurrentSpeed:
-						case Enum.SnapshotValue.BotsAverageMaxSpeed:
+						case Enum.SnapshotValue.Bots:
+						case Enum.SnapshotValue.BotsConnected:
+						case Enum.SnapshotValue.BotsDisconnected:
+						case Enum.SnapshotValue.BotsFreeQueue:
+						case Enum.SnapshotValue.BotsFreeSlots:
+							item.yaxis = 2;
+							break;
+
+						case Enum.SnapshotValue.Packets:
+						case Enum.SnapshotValue.PacketsConnected:
+						case Enum.SnapshotValue.PacketsDisconnected:
 							item.yaxis = 3;
 							break;
 
 						case Enum.SnapshotValue.PacketsSize:
 						case Enum.SnapshotValue.PacketsSizeConnected:
 						case Enum.SnapshotValue.PacketsSizeDisconnected:
-							item.yaxis = 2;
+							item.yaxis = 4;
+							break;
+
+						case Enum.SnapshotValue.Speed:
+						case Enum.SnapshotValue.BotsAverageCurrentSpeed:
+						case Enum.SnapshotValue.BotsAverageMaxSpeed:
+							item.yaxis = 5;
 							break;
 
 						default:
@@ -367,11 +381,19 @@ var XGRefresh = Class.create(
 			},
 			yaxes: [
 				{
-					axisLabel: _('Count'),
+					axisLabel: _('Server / Channels'),
 					min: 0
 				},
 				{
-					axisLabel: 'Size',
+					axisLabel: _('Bots'),
+					min: 0
+				},
+				{
+					axisLabel: _('Packets'),
+					min: 0
+				},
+				{
+					axisLabel: _('Size'),
 					min: 0,
 					alignTicksWithAxis: 1,
 					tickFormatter: function (val) {

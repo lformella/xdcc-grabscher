@@ -90,7 +90,7 @@ translatedArray =
 	"1 Day": "1 Tag",
 	"1 Week": "1 Woche",
 	"1 Month": "1 Monat",
-	"All": "Alle",
+	"All": "Alles",
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
@@ -114,6 +114,6 @@ translatedArray =
 	"Max Speed": "maximale Geschw.",
 	"Enabled": "Aktiviert",
 	"Disabled": "Deaktiviert",
-	Count: "Zähler",
-	Time: "Zeit"
+	"Count": "Zähler",
+	"Time": "Zeit"
 };
