@@ -165,21 +165,28 @@ namespace XG.Server
 
 		static Statistic Deserialize()
 		{
-			lock(locked)
+			if (File.Exists("./statistics.xml"))
 			{
-				try
+				lock(locked)
 				{
-					Stream streamRead = File.OpenRead("./statistics.xml");
-					Statistic statistic = (Statistic)serializer.Deserialize(streamRead);
-					streamRead.Close();
-					return statistic;
-				}
-				catch (Exception ex)
-				{
-					_log.Fatal("Statistic.Deserialize() ", ex);
-					return new Statistic();
+					try
+					{
+						Stream streamRead = File.OpenRead("./statistics.xml");
+						Statistic statistic = (Statistic)serializer.Deserialize(streamRead);
+						streamRead.Close();
+						return statistic;
+					}
+					catch (Exception ex)
+					{
+						_log.Fatal("Statistic.Deserialize", ex);
+					}
 				}
 			}
+			else
+			{
+				_log.Error("Statistic.Deserialize found no settings file");
+			}
+			return new Statistic();
 		}
 
 		static void Serialize()
@@ -202,7 +209,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Statistic.Serialize() ", ex);
+					_log.Fatal("Statistic.Serialize", ex);
 				}
 			}
 		}
