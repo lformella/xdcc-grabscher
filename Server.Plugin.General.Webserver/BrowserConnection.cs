@@ -790,6 +790,10 @@ namespace XG.Server.Plugin.General.Webserver
 					stack = data;
 				}
 			}
+			if (stack != null)
+			{
+				list.Add(stack);
+			}
 
 			return list.ToArray();
 		}
