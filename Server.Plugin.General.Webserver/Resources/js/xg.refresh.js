@@ -397,6 +397,10 @@ var XGRefresh = Class.create(
 					min: 0,
 					alignTicksWithAxis: 1,
 					tickFormatter: function (val) {
+						if (val <= 1)
+						{
+							return "";
+						}
 						return self.helper.size2Human(val);
 					}
 				},
@@ -406,6 +410,10 @@ var XGRefresh = Class.create(
 					alignTicksWithAxis: 1,
 					position: "right",
 					tickFormatter: function (val) {
+						if (val <= 1)
+						{
+							return "";
+						}
 						return self.helper.speed2Human(val);
 					}
 				}
