@@ -758,7 +758,7 @@ namespace XG.Server.Plugin.General.Webserver
 					Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(value)};
 					list.Add(data);
 				}
-				obj.Data = FilterDuplicateEntries(list.ToArray());
+				obj.Data = (list.ToArray());
 				obj.Label = Enum.GetName(typeof(SnapshotValue), value);
 
 				tObjects.Add(obj);
