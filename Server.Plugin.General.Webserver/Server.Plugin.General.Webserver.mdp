@@ -115,6 +115,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.refresh.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.refresh.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.url.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.url.js" />
+    <File subtype="Code" buildaction="Nothing" name="Resources/js/jquery.flot.axislabels.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

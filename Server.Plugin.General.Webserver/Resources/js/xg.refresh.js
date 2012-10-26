@@ -359,6 +359,7 @@ var XGRefresh = Class.create(
 
 		var snapshotOptions = {
 			xaxis: {
+				axisLabel: _('Time'),
 				mode: "time",
 				timeformat: timeFormat,
 				minTickSize: tickSize,
@@ -366,28 +367,23 @@ var XGRefresh = Class.create(
 			},
 			yaxes: [
 				{
+					axisLabel: _('Count'),
 					min: 0
 				},
 				{
+					axisLabel: 'Size',
 					min: 0,
 					alignTicksWithAxis: 1,
 					tickFormatter: function (val) {
-						if (val <= 1)
-						{
-							return "";
-						}
 						return self.helper.size2Human(val);
 					}
 				},
 				{
+					axisLabel: _('Speed'),
 					min: 0,
 					alignTicksWithAxis: 1,
 					position: "right",
 					tickFormatter: function (val) {
-						if (val <= 1)
-						{
-							return "";
-						}
 						return self.helper.speed2Human(val);
 					}
 				}

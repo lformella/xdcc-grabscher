@@ -63,7 +63,7 @@ var XGBase = Class.create(
 			url: self.url.guidUrl(Enum.TCPClientRequest.GetServers, ''),
 			datatype: "json",
 			cmTemplate: {fixed:true},
-			colNames: ['', '', 'Name'],
+			colNames: ['', '', _('Name')],
 			colModel: [
 				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatServerIcon(r, "XG.flipObject(\"" + o.rowId + "\", \"servers_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
@@ -106,7 +106,7 @@ var XGBase = Class.create(
 			height: 300,
 			sortname: self.cookie.getCookie('servers.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('servers.sort.sortorder', 'asc'),
-			caption: "Servers",
+			caption: _("Servers"),
 			hidegrid: false
 		}).navGrid('#servers_pager', {edit:false, search:false}, {},
 		{
@@ -135,7 +135,7 @@ var XGBase = Class.create(
 			url: self.url.guidUrl(Enum.TCPClientRequest.GetChannelsFromServer, ''),
 			datatype: "json",
 			cmTemplate: {fixed:true},
-			colNames: ['', '', 'Name'],
+			colNames: ['', '', _('Name')],
 			colModel: [
 				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatChannelIcon(r, "XG.flipObject(\"" + o.rowId + "\", \"channels_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
@@ -166,7 +166,7 @@ var XGBase = Class.create(
 			height: 300,
 			sortname: self.cookie.getCookie('channels.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('channels.sort.sortorder', 'asc'),
-			caption: "Channels",
+			caption: _("Channels"),
 			hidegrid: false
 		}).navGrid('#channels_pager', {edit:false, search:false}, {},
 		{
@@ -195,7 +195,7 @@ var XGBase = Class.create(
 			url: self.url.guidUrl(Enum.TCPClientRequest.GetBotsFromChannel, ''),
 			datatype: "json",
 			cmTemplate:{fixed:true},
-			colNames: ['', '', 'Name', 'Speed', 'Q-Pos', 'Q-Time', 'Speed', 'Slots', 'Queue'],
+			colNames: ['', '', _('Name'), _('Speed'), _('Q-Pos'), _('Q-Time'), _('max Speed'), _('Slots'), _('Queue')],
 			colModel: [
 				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return self.formatter.formatBotIcon(r); }, width:32, sortable: false, classes: "icon-cell"},
@@ -229,7 +229,7 @@ var XGBase = Class.create(
 			height: 300,
 			sortname: self.cookie.getCookie('bots.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('bots.sort.sortorder', 'asc'),
-			caption: "Bots",
+			caption: _("Bots"),
 			hidegrid: false
 		}).navGrid('#bots_pager', {edit:false, add:false, del:false, search:false});
 
@@ -242,7 +242,7 @@ var XGBase = Class.create(
 			url: self.url.guidUrl(Enum.TCPClientRequest.GetPacketsFromBot, ''),
 			datatype: "json",
 			cmTemplate: {fixed:true},
-			colNames: ['', '', 'Id', 'Name', 'Size', 'Speed', 'Time', 'Updated'],
+			colNames: ['', '', _('Id'), _('Name'), _('Size'), _('Speed'), _('Time'), _('Updated')],
 			colModel: [
 				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return self.formatter.formatPacketIcon(r, "XG.flipPacket(\"" + o.rowId + "\");"); }, width:36, sortable: false, classes: "icon-cell"},
@@ -285,7 +285,7 @@ var XGBase = Class.create(
 			height: 300,
 			sortname: self.cookie.getCookie('packets.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('packets.sort.sortorder', 'asc'),
-			caption: "Packets",
+			caption: _("Packets"),
 			hidegrid: false
 		}).navGrid('#packets_pager', {edit:false, add:false, del:false, search:false});
 
@@ -384,7 +384,7 @@ var XGBase = Class.create(
 			url: self.url.guidUrl(Enum.TCPClientRequest.Version, ''),
 			datatype:'jsonp',
 			cmTemplate:{fixed:true},
-			colNames:['', '', 'Id', 'Name', 'Last Mentioned', 'Size', 'Bot', 'Speed', ''],
+			colNames:['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed'), ''],
 			colModel:[
 				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 				{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return self.formatter.formatPacketIcon(r, "XG.downloadLink(\"" + o.rowId + "\");", true); }, width:24, sortable: false},
@@ -418,7 +418,7 @@ var XGBase = Class.create(
 			autowidth:true,
 			sortname: self.cookie.getCookie('searches_xg_bitpir_at.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('searches_xg_bitpir_at.sort.sortorder', 'asc'),
-			caption: "Search via xg.bitpir.at",
+			caption: _("Search via xg.bitpir.at"),
 			hidegrid: false
 		}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
 
@@ -431,7 +431,7 @@ var XGBase = Class.create(
 			url: self.url.guidUrl(Enum.TCPClientRequest.GetFiles, ''),
 			datatype: "json",
 			cmTemplate: {fixed:true},
-			colNames: ['', '', 'Name', 'Size', 'Speed', 'Time'],
+			colNames: ['', '', _('Name'), _('Size'), _('Speed'), _('Time')],
 			colModel: [
 				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
 				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return self.formatter.formatFileIcon(r); }, width:24, sortable: false},
@@ -454,7 +454,7 @@ var XGBase = Class.create(
 			height: 300,
 			sortname: self.cookie.getCookie('files.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('files.sort.sortorder', 'asc'),
-			caption: "Files",
+			caption: _("Files"),
 			hidegrid: false
 		}).navGrid('#files_pager', {edit:false, add:false, del:false, search:false});
 	},
@@ -551,10 +551,10 @@ var XGBase = Class.create(
 
 		this.idSearchCount = 1;
 		var mydata = [
-			{Id:"1", Name:"ODay Packets", Action: ""},
-			{Id:"2", Name:"OWeek Packets", Action: ""},
-			{Id:"3", Name:"Downloads", Action: ""},
-			{Id:"4", Name:"Enabled Packets", Action: ""}
+			{Id:"1", Name: _("ODay Packets"), Action: ""},
+			{Id:"2", Name: _("OWeek Packets"), Action: ""},
+			{Id:"3", Name: _("Downloads"), Action: ""},
+			{Id:"4", Name: _("Enabled Packets"), Action: ""}
 		];
 		for(var i=0; i<=mydata.length; i++)
 		{

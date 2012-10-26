@@ -24,12 +24,11 @@
 var Password;
 var XGPassword = Class.create(
 {
-	initialize: function(translatePassword, translateAll)
+	initialize: function ()
 	{
 		var self = this;
 		Password = this;
 
-		this.translateAll = translateAll;
 		this.url = new XGUrl();
 		this.password = "";
 
@@ -40,6 +39,12 @@ var XGPassword = Class.create(
 			return;
 		}
 
+		var buttonText = { text: _("Connect") };
+		var buttons = {};
+		buttons[buttonText["text"]] = function()
+		{
+			self.buttonConnectClicked($(this));
+		};
 		// display login
 		$("#dialog_password").dialog({
 			bgiframe: true,
@@ -47,12 +52,7 @@ var XGPassword = Class.create(
 			modal: true,
 			resizable: false,
 			hide: 'explode',
-			buttons: {
-				'Connect': function()
-				{
-					self.buttonConnectClicked($(this));
-				}
-			},
+			buttons: buttons,
 			close: function()
 			{
 				if(self.url.password == "")
@@ -69,8 +69,6 @@ var XGPassword = Class.create(
 				self.buttonConnectClicked($("#dialog_password"));
 			}
 		});
-
-		translatePassword();
 	},
 
 	buttonConnectClicked: function (dialog)
@@ -93,7 +91,7 @@ var XGPassword = Class.create(
 		}
 	},
 
-	loadGrid: function()
+	loadGrid: function ()
 	{
 		var helper = new XGHelper();
 		var cookie = new XGCookie();
@@ -103,8 +101,6 @@ var XGPassword = Class.create(
 		// load grid
 		new XGBase(this.url, helper, refresh, cookie, formatter);
 
-		this.translateAll();
-
 		// resize
 		var resize = new XGResize(refresh);
 
@@ -112,7 +108,7 @@ var XGPassword = Class.create(
 		refresh.refreshGrid(0);
 	},
 
-	checkPassword: function(password)
+	checkPassword: function (password)
 	{
 		var self = this;
 

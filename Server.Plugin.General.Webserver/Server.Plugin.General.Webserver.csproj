@@ -199,6 +199,7 @@
     <EmbeddedResource Include="Resources\font\fontello.svg" />
     <EmbeddedResource Include="Resources\font\fontello.woff" />
     <EmbeddedResource Include="Resources\js\jquery.flot.js" />
+    <EmbeddedResource Include="Resources\js\jquery.flot.axislabels.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\i18n\xg.locale-en.js" />
@@ -210,6 +211,7 @@
     <EmbeddedResource Include="Resources\js\xg.refresh.js" />
     <EmbeddedResource Include="Resources\js\xg.resize.js" />
     <EmbeddedResource Include="Resources\js\xg.url.js" />
+    <EmbeddedResource Include="Resources\js\xg.translate.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\css\reset.css" />

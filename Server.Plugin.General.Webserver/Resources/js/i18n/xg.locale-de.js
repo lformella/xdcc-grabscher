@@ -21,119 +21,99 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-TranslatePassword = function()
+LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+translatedArray =
 {
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
 	/* ************************************************************************************************************** */
 
-	$("#password_tip").html("Bitte gib das Passwort f&uuml;r diese Webseite ein.");
-	$("#password_label").html("Passwort");
-	$("#dialog_password")
-		.dialog("option", "title", "Passwort ben&ouml;tigt")
-		.dialog("option", "buttons", [{ text: "Verbinden", click: function() { Password.buttonConnectClicked($("#dialog_password")); } }]);
-};
+	"Please enter the password for this webfrontend.": "Bitte gib das Passwort f&uuml;r diese Webseite ein.",
+	"Password": "Passwort",
+	"Password required": "Passwort ben&ouml;tigt",
+	"Connect": "Verbinden",
 
-TranslateAll = function()
-{
 	/* ************************************************************************************************************** */
 	/* OTHER DIALOGS                                                                                                  */
 	/* ************************************************************************************************************** */
 
-	$("#dialog_server_channels")
-		.dialog("option", "title", "Server und Channels &auml;ndern");
-
-	$("#dialog_statistics")
-		.dialog("option", "title", "Statistiken anschauen");
-
-	$("#dialog_snapshots")
-		.dialog("option", "title", "Erweiterte Statistiken anschauen");
+	"Change Servers and Channels": "Server und Channels &auml;ndern",
+	"View Statistics": "Statistiken anschauen",
+	"View Snapshots": "Erweiterte Statistiken anschauen",
 
 	/* ************************************************************************************************************** */
-	/* BOT GRID                                                                                                       */
+	/* GRIDS                                                                                                          */
 	/* ************************************************************************************************************** */
 
-	$("#bots_table")
-		.setLabel("Name", "Name")
-		.setLabel("Speed", "Geschw.")
-		.setLabel("QueuePosition", "S-Pos")
-		.setLabel("QueueTime", "S-Zeit")
-		.setLabel("InfoSpeedMax", "max. Geschw.")
-		.setLabel("InfoSlotTotal", "Pl&auml;tze")
-		.setLabel("InfoQueueTotal", "Schlange");
+	"Name": "Name",
+	"Speed": "Geschw.",
+	"Q-Pos": "S-Pos",
+	"Q-Time": "S-Zeit",
+	"max Speed": "max. Geschw.",
+	"Slots": "Pl&auml;tze",
+	"Queue": "Schlange",
+	"Size": "Gr&ouml;&szlig;e",
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	$("#packets_table")
-		.setCaption("Pakete")
-		.setLabel("Name", "Name")
-		.setLabel("Size", "Gr&ouml;&szlig;e")
-		.setLabel("Speed", "Geschw.")
-		.setLabel("TimeMissing", "Zeit")
-		.setLabel("LastUpdated", "Aktualisiert");
+	"Packets": "Pakete",
+	"Time Missing": "Zeit",
+	"Last Updated": "Aktualisiert",
+	"Updated": "Aktualisiert",
 
 	/* ************************************************************************************************************** */
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	var searchTable = $("#search_table");
-	searchTable.setRowData(1, {name:"ODay Pakete"});
-	searchTable.setRowData(2, {name:"OWeek Pakete"});
-	searchTable.setRowData(3, {name:"Downloads"});
-	searchTable.setRowData(4, {name:"Aktivierte Pakete"});
+	"ODay Packets": "neue Pakete von heute",
+	"OWeek Packets": "neue Pakete dieser Woche",
+	"Downloads": "Downloads",
+	"Enabled Packets": "Aktivierte Pakete",
 
 	/* ************************************************************************************************************** */
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	$("#searches_xg_bitpir_at")
-		.setCaption("Suche via xg.bitpir.at")
-		.setLabel("Name", "Name")
-		.setLabel("LastMentioned", "Aktualisiert")
-		.setLabel("Size", "Gr&ouml;&szlig;e")
-		.setLabel("BotSpeed", "Geschw.");
+	"Search via xg.bitpir.at": "Suche via xg.bitpir.at",
+	"Last Mentioned": "Aktualisiert",
+	"Bot Speed": "Geschw.",
 
 	/* ************************************************************************************************************** */
 	/* SNAPSHOTS                                                                                                      */
 	/* ************************************************************************************************************** */
 
-	$("#label_1").html("1 Tag");
-	$("#label_7").html("1 Woche");
-	$("#label_31").html("1 Monat");
-
-	/* ************************************************************************************************************** */
-	/* GENERIC                                                                                                        */
-	/* ************************************************************************************************************** */
-
-	$(".translate_all").html("Alle");
-	$(".translate_connected").html("Verbunden");
-	$(".translate_disconnected").html("Getrennt");
-	$(".translate_size").html("Gr&ouml;&szlig;e");
-	$(".translate_size_connected").html("Gr&ouml;&szlig;e verbunden");
-	$(".translate_size_disconnected").html("Gr&ouml;&szlig;e getrennt");
-	$(".translate_free_queue").html("Freie Warteschlange");
-	$(".translate_free_slots").html("Frei Pl&auml;tze");
-	$(".translate_timespan").html("Zeitspanne");
-	$(".translate_average_speed_current").html("momentane Geschw.");
-	$(".translate_average_speed_max").html("maximale Geschw.");
-	$(".translate_enabled").html("Aktiviert");
-	$(".translate_disabled").html("Deaktiviert");
+	"1 Day": "1 Tag",
+	"1 Week": "1 Woche",
+	"1 Month": "1 Monat",
+	"All": "Alle",
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
-	$("#statistics_button").button( "option", {label: "Statistiken"});
-	$("#show_offline_bots").button( "option", {label: "inaktive Bots ausblenden"});
-	$("#snapshots_button").button( "option", {label: "Erweiterte Statistiken"});
+	"Statistics": "Statistiken",
+	"Hide offline Bots": "inaktive Bots ausblenden",
+	"Extended Statistics": "Erweiterte Statistiken",
+	"IRC View": "IRC &Uuml;bersicht",
+	"External Search via xg.bitpir.at": "Externe Suche via xg.bitpir.at",
+	"Files": "Dateien",
 
-	$("#tab_1").html("IRC &Uuml;bersicht");
-	$("#tab_2").html("Externe Suche via xg.bitpir.at");
-	$("#tab_3").html("Dateien");
-
-	LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
-	LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-	LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	"Connected": "Verbunden",
+	"Disconnected": "Getrennt",
+	"Size Connected": "Gr&ouml;&szlig;e verbunden",
+	"Size Disconnected": "Gr&ouml;&szlig;e getrennt",
+	"Free Queue": "Freie Warteschlange",
+	"Free Slots": "Frei Pl&auml;tze",
+	"Timespan": "Zeitspanne",
+	"Current Speed": "momentane Geschw.",
+	"Max Speed": "maximale Geschw.",
+	"Enabled": "Aktiviert",
+	"Disabled": "Deaktiviert",
+	Count: "Zähler",
+	Time: "Zeit"
 };

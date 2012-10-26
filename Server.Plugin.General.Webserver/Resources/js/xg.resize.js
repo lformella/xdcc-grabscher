@@ -116,7 +116,7 @@ var XGResize = Class.create(
 				height: height
 			});
 			$("#snapshot")
-				.width(width - 230)
+				.width(width - 240)
 				.height(height - 40);
 			// and update the snapshot plot
 			this.refresh.updateSnapshotPlot();

@@ -1,5 +1,5 @@
 //
-//  xg.locale-en.js
+//  xg.translate.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,6 +21,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-var LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var translatedArray = {};
+
+/**
+ * @param {String} string
+ * @return {String}
+ */
+var _ = function (string)
+{
+	var translated = translatedArray[string];
+	return translated != "" && translated != undefined ? translated : string;
+};
