@@ -39,7 +39,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		HttpListener _listener;
 
-		string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes(new Guid().ToString()))).Replace("-", "");
+		string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(BitConverter.GetBytes(new Random().Next()))).Replace("-", "");
 
 		#endregion
 
