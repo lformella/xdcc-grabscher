@@ -1,36 +1,35 @@
 [![XG](http://xg.bitpir.at/images/xg_gray.png)](http://www.larsformella.de/lang/en/portfolio/programme-software/xg)
 
-XG, called Xdcc Grabscher, is a XDCC download manager.
+XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
-## What makes it special?
-XG is a command line app which connects to an irc network an handles all communications and downloading. Via the web frontend you can search and activate downloads on the server.
-You can run the server on every machine that supports c# / mono - even root servers without x or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere you want.
-So you dont have to keep your normal pc running, but just a small download pc which handles all the irc stuff.
+## What makes it special? (I am already using and happy with xWeasel.)
+XG is just a command line app which connects to one or multiple IRC networks and handles the whole communication. The IRC servers, channels, bots and packets are presented with a nice and stylish web frontend. There you can search and download packets of course.
 
-A so called killer feature is the multiple download function. Every good xdcc client can resume and check downloads of course, but xg is able to download the same packet / file from different bots / sources.
-It can split downloads in multiple parts, download each part from a different bot and merge them back after the error free download. So you can use your bandwidth with the maximum performance.
+You can run XG on every machine that supports c# / mono - even root servers without x(org), or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere. You don't have to keep your normal PC running, but just a small download box which handles all the IRC stuff.
+
+A so called killer feature is the multiple download function. Every good XDCC client can resume and check downloads of course, but XG is able to download the same packet / file from different bots / sources. It will split downloads into multiple parts, download each part from a different bot and merge them back after error free downloading. Because of this you can use your maximum bandwidth.
 
 ## How do i use it?
-If you want to change the settings, create a file named __settings.xml__ using the example. The settings file must be located in the folder where the binary __Server.Cmd.exe__ lives. Change the xml file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__.
+If you want to change the settings, create a file named __settings.xml__ using the example. The settings file must be located in the folder where the binary __Server.Cmd.exe__ lives. Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__.
 
 ![Password Dialog](http://xg.bitpir.at/images/help/password_dialog.png)
 
-Now you have to add irc networks and channels. The bots and packets are generated and updated automatically.
+Now you have to add IRC networks and channels. The bots and packets are generated and updated automatically. If you don't know which server and channels to add, try the integrated [xg.bitpir.at](http://xg.bitpir.at) search.
 
 ![Server / Channel Dialog](http://xg.bitpir.at/images/help/server_channel_dialog.png)
 
-If you click on a packet icon, the server will try to download it and keeps you up to date with updated packet informations. If you don't know which server and channels to add, try the integrated [xg.bitpir.at](http://xg.bitpir.at) search.
+If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations.
 
 Packet icon = ![Packet Icon](http://xg.bitpir.at/images/help/packet_icon.png)
 
 ## Settings
 
-You should change the default settings and this explanation will help you:
+You should change the default settings and this explanation will help you. If you don't want to use a special feature, just disable or remove it.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <Settings xmlns: xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns: xsd="http://www.w3.org/2001/XMLSchema">
-  <IrcNick>anon1234</IrcNick> <!-- the nickname of the irc user -->
+  <IrcNick>anon1234</IrcNick> <!-- the nickname of the IRC user -->
   <IrcPasswort>password123</IrcPasswort> <!-- nickserv password -->
   <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail> <!-- nickserv email -->
   <AutoRegisterNickserv>false</AutoRegisterNickserv> <!-- register nick if he does not exist -->
@@ -57,7 +56,7 @@ You should change the default settings and this explanation will help you:
 
 ### Filehandlers
 
-If a packet is downloaded you can run several commands. If the regex of a file handler matches the file name, the process is started. A process is defined by a command, arguments and the next process. The next process only is called if the current one is successfully executed.
+If a packet is downloaded you can run several commands. If the regex of a file handler matches the file name, the process is started. A process is defined by a command, arguments and the next process. The next process can be left empty and only is called if the current one is successfully executed.
 
 The following handler matches all rar archives. It will create a separate folder, extract the archive into it, removes the archive and moves the folder onto a different partition. Every process is executed only, if the previous one was successfully. Because of this, the handler won't delete the archive if he could not extract it.
 
@@ -95,7 +94,7 @@ You can use different placeholders in your arguments:
 
 #### Examples
 
-Just look to some more examples.
+Just look at some more examples.
 
 ```xml
 <FileHandlers>
@@ -147,8 +146,10 @@ You can search for packets by entering a custom search term and just clicking en
 
 The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favourite searches.
 
-## Extended Stats
+## Extended Stats / Snapshots
 
 XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
 
 ![Extend Statistic Dialog](http://xg.bitpir.at/images/help/snapshots.png)
+
+This feature wont work in older browser like the good old IE8, see do yourself a favour and use a newer one ;-)
