@@ -133,22 +133,6 @@ namespace XG.Core
 
 	public class Helper
 	{
-		#region COMPARING
-
-		public static bool IsEqual(byte[] aBytes1, byte[] aBytes2)
-		{
-			if (aBytes1 == null || aBytes2 == null) { return false; }
-			for (int i = 0; i < aBytes1.Length; i++)
-			{
-				if (aBytes1[i] != aBytes2[i]) { return false; }
-			}
-			return true;
-		}
-
-		#endregion
-
-		#region HELPER
-
 		/// <summary>
 		/// Returns the file name ripped of the following chars ()[]{}-_.
 		/// </summary>
@@ -162,38 +146,6 @@ namespace XG.Core
 				return Regex.Replace(aName, "(\\(|\\)|\\[|\\]|\\{|\\}|-|_|\\.)", "").ToLower() + "." + aSize + "/";
 			}
 			else { return ""; }
-		}
-
-		public static Int64 Date2Timestamp (DateTime aDate)
-		{
-			DateTime date = new DateTime (1970, 1, 1);
-			TimeSpan ts = new TimeSpan (aDate.Ticks - date.Ticks);
-			return (Convert.ToInt64 (ts.TotalSeconds));
-		}
-		
-		public static DateTime Timestamp2Date (Int64 aTimestamp)
-		{
-			DateTime date = new DateTime (1970, 1, 1);
-			date.AddSeconds (aTimestamp);
-			return date;
-		}
-
-		#endregion
-	}
-
-	public static class StringExtension
-	{
-		public static string ToAscii(this string aString)
-		{
-			StringBuilder output = new StringBuilder(string.Empty);
-			if (!string.IsNullOrEmpty(aString))
-			{
-				for (int i = 0; i < aString.Length; i++)
-				{
-					output.AppendFormat("&#{0};", Encoding.ASCII.GetBytes(aString.Substring(i, 1))[0]);
-				}
-			}
-			return output.ToString();
 		}
 	}
 }

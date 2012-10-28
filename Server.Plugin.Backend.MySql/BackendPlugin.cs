@@ -49,22 +49,38 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		public BackendPlugin ()
 		{
-			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
+			string connectionString = "Server=" + Settings.Instance.MySqlBackendServer + ";Port=" + Settings.Instance.MySqlBackendPort + ";Database=" + Settings.Instance.MySqlBackendDatabase + ";User ID=" + Settings.Instance.MySqlBackendUser + ";Password=" + Settings.Instance.MySqlBackendPassword + ";Pooling=false";
 			try
 			{
 				_dbConnection = new MySqlConnection (connectionString);
 				_dbConnection.Open ();
 
 				// cleanup database
-				ExecuteNonQuery ("UPDATE server SET connected = 0;", null);
-				ExecuteNonQuery ("UPDATE channel SET connected = 0;", null);
-				ExecuteNonQuery ("UPDATE bot SET connected = 0;", null);
-				ExecuteNonQuery ("UPDATE packet SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE servers SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE channels SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE bots SET connected = 0;", null);
+				ExecuteNonQuery ("UPDATE packets SET connected = 0;", null);
 			}
 			catch (Exception ex)
 			{
 				_log.Fatal("MySqlBackend(" + connectionString + ") ", ex);
 				throw ex;
+			}
+		}
+
+		#endregion
+
+		#region AWorker
+
+		protected override void StopRun ()
+		{
+			try
+			{
+				_dbConnection.Close ();
+			}
+			catch (Exception ex)
+			{
+				_log.Fatal("CloseClient() ", ex);
 			}
 		}
 
@@ -80,23 +96,28 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 			dic.Add ("guid", Guid.Empty);
-			foreach(Core.Server serv in ExecuteQuery ("SELECT * FROM server;", null, typeof(Core.Server)))
+			foreach(Core.Server serv in ExecuteQuery<Core.Server>("SELECT * FROM servers;", null))
 			{
+				serv.Connected = false;
 				_servers.Add(serv);
 
 				dic["guid"] = serv.Guid.ToString ();
-				foreach(Channel chan in ExecuteQuery ("SELECT * FROM channel WHERE ParentGuid = @guid;", dic, typeof(Channel)))
+				foreach(Channel chan in ExecuteQuery<Channel>("SELECT * FROM channels WHERE ParentGuid = @guid;", dic))
 				{
+					chan.Connected = false;
 					serv.AddChannel(chan);
 
 					dic["guid"] = chan.Guid.ToString ();
-					foreach(Bot bot in ExecuteQuery ("SELECT * FROM bot WHERE ParentGuid = @guid;", dic, typeof(Bot)))
+					foreach(Bot bot in ExecuteQuery<Bot>("SELECT * FROM bots WHERE ParentGuid = @guid;", dic))
 					{
+						bot.Connected = false;
+						bot.State = Bot.States.Idle;
 						chan.AddBot(bot);
 
 						dic["guid"] = bot.Guid.ToString ();
-						foreach(Packet pack in ExecuteQuery ("SELECT * FROM packet WHERE ParentGuid = @guid;", dic, typeof(Packet)))
+						foreach(Packet pack in ExecuteQuery<Packet>("SELECT * FROM packets WHERE ParentGuid = @guid;", dic))
 						{
+							pack.Connected = false;
 							bot.AddPacket(pack);
 						}
 					}
@@ -122,33 +143,47 @@ namespace XG.Server.Plugin.Backend.MySql
 
 		public override Files LoadFiles ()
 		{
-			return new Files();
+			Files _files =  new Files();
+
+			/*foreach(File file in ExecuteQuery<File>("SELECT * FROM files;", null))
+			{
+				_files.Add(file);
+			}*/
+
+			return _files;
 		}
 
 		public override Objects LoadSearches ()
 		{
-			return new Objects();
+			Objects _searches =  new Objects();
+
+			/*foreach(Core.Object obj in ExecuteQuery<Core.Object>("SELECT * FROM searches;", null))
+			{
+				_searches.Add(obj);
+			}*/
+
+			return _searches;
 		}
 		
 		public override Snapshots LoadStatistics ()
 		{
-			return new Snapshots();
-		}
+			Snapshots _snapshots =  new Snapshots();
 
-		#endregion
-
-		#region AWorker
-
-		protected override void StopRun ()
-		{
-			try
+			foreach(Snapshot snapshot in ExecuteQuery<Snapshot>("SELECT * FROM snapshots;", null))
 			{
-				_dbConnection.Close ();
+				var coreSnapshot = new Core.Snapshot();
+
+				var properties = snapshot.GetType().GetProperties();
+				foreach(var prop in properties)
+				{
+					var type = (SnapshotValue)Enum.Parse(typeof(SnapshotValue), prop.Name);
+					coreSnapshot.Set(type, (Int64)prop.GetValue(snapshot, null));
+				}
+
+				_snapshots.Add(coreSnapshot);
 			}
-			catch (Exception ex)
-			{
-				_log.Fatal("CloseClient() ", ex);
-			}
+
+			return _snapshots;
 		}
 
 		#endregion
@@ -162,8 +197,6 @@ namespace XG.Server.Plugin.Backend.MySql
 
 			if (table != "")
 			{
-				dic.Add ("guid", aObj.Guid.ToString ());
-
 				string values1 = "";
 				string values2 = "";
 				foreach (var kcp in dic)
@@ -198,8 +231,7 @@ namespace XG.Server.Plugin.Backend.MySql
 					values1 += kcp.Key + " = @" + kcp.Key;
 				}
 
-				dic.Add ("guid", aObj.Guid.ToString ());
-				ExecuteNonQuery ("UPDATE " + table + " SET " + values1 + " WHERE Guid = @guid;", dic);
+				ExecuteNonQuery ("UPDATE " + table + " SET " + values1 + " WHERE Guid = @Guid;", dic);
 			}
 		}
 
@@ -211,124 +243,119 @@ namespace XG.Server.Plugin.Backend.MySql
 			if (table != "")
 			{
 				dic.Add ("guid", aObj.Guid.ToString ());
-				ExecuteNonQuery ("DELETE FROM " + table + " WHERE Guid = @guid;", dic);
+				ExecuteNonQuery ("DELETE FROM " + table + " WHERE Guid = @Guid;", dic);
 			}
+		}
+		
+		protected override void SnapshotAdded(Core.Snapshot aSnap)
+		{
+			Dictionary<string, object> dic = new Dictionary<string, object>();
+
+			for(int a = 0; a <= 24; a++)
+			{
+				string name = Enum.GetName(typeof(SnapshotValue), (SnapshotValue)a);
+				dic.Add(name, aSnap.Get((SnapshotValue)a));
+			}
+
+			string values1 = "";
+			string values2 = "";
+			foreach (var kcp in dic)
+			{
+				if (values1 != "")
+				{
+					values1 += ", ";
+					values2 += ", ";
+				}
+				values1 += kcp.Key;
+				values2 += "@" + kcp.Key;
+			}
+
+			ExecuteNonQuery ("INSERT INTO snapshots (" + values1 + ") VALUES (" + values2 + ");", dic);
 		}
 
 		#endregion
 
 		#region HELPER
 
-		protected Dictionary<string, object> Object2Dic (AObject aObj)
+		Dictionary<string, object> Object2Dic(object aObj)
 		{
 			Dictionary<string, object> dic = new Dictionary<string, object> ();
-			dic.Add ("Name", aObj.Name);
-			dic.Add ("Connected", aObj.Connected);
-			dic.Add ("Enabled", aObj.Enabled);
-			dic.Add ("LastModified", Core.Helper.Date2Timestamp (aObj.EnabledTime));
 
-			if (aObj is Core.Server)
+			var properties = aObj.GetType().GetProperties();
+			foreach(var prop in properties)
 			{
-				Core.Server obj = (Core.Server)aObj;
-				dic.Add ("Port", obj.Port);
-				dic.Add ("ErrorCode", obj.ErrorCode);
-				dic.Add ("ChannelCount", obj.Channels.Count());
-			}
-			else if (aObj is Channel)
-			{
-				Channel obj = (Channel)aObj;
-				dic.Add ("ParentGuid", obj.ParentGuid);
-				dic.Add ("ErrorCode", obj.ErrorCode);
-				dic.Add ("BotCount", obj.Bots.Count());
-			}
-			else if (aObj is Bot)
-			{
-				Bot obj = (Bot)aObj;
-				dic.Add ("ParentGuid", obj.ParentGuid);
-				dic.Add ("BotState", obj.State);
-				dic.Add ("InfoQueueCurrent", obj.InfoQueueCurrent);
-				dic.Add ("InfoQueueTotal", obj.InfoQueueTotal);
-				dic.Add ("InfoSlotCurrent", obj.InfoSlotCurrent);
-				dic.Add ("InfoSlotTotal", obj.InfoSlotTotal);
-				dic.Add ("InfoSpeedCurrent", obj.InfoSpeedCurrent);
-				dic.Add ("InfoSpeedMax", obj.InfoSpeedMax);
-				dic.Add ("LastContact", Core.Helper.Date2Timestamp (obj.LastContact));
-				dic.Add ("LastMessage", obj.LastMessage);
-			}
-			else if (aObj is Packet)
-			{
-				Packet obj = (Packet)aObj;
-				dic.Add ("ParentGuid", obj.ParentGuid);
-				dic.Add ("Id", obj.Id);
-				dic.Add ("LastUpdated", Core.Helper.Date2Timestamp (obj.LastUpdated));
-				dic.Add ("LastMentioned", Core.Helper.Date2Timestamp (obj.LastMentioned));
-				dic.Add ("Size", obj.Size);
-			}
+				if (Attribute.IsDefined(prop, typeof(MySqlAttribute)))
+				{
+					object value = prop.GetValue(aObj, null);
+					if (prop.PropertyType == typeof(Guid))
+					{
+						value = value.ToString();
+					}
+					else if (prop.PropertyType == typeof(DateTime))
+					{
+						value = ((DateTime)value).ToTimestamp();
+					}
 
+					dic[prop.Name] = value;
+				}
+			}
 			return dic;
 		}
 
-		protected AObject Dic2Object (Dictionary<string, object> aDic, Type aType)
+		T Dic2Object<T>(Dictionary<string, object> aDic)
 		{
-			if (aType == typeof(Core.Server))
+			var obj = (T)Activator.CreateInstance(typeof(T));
+			var properties = typeof(T).GetProperties();
+			foreach(var prop in properties)
 			{
-				Core.Server serv = new Core.Server();
-				serv.Guid = new Guid((string)aDic ["Guid"]);
-				serv.Name = (string)aDic ["Name"];
-				serv.Connected = false;
-				serv.Enabled = (bool)aDic ["Enabled"];
-				serv.Port = (int)aDic ["Port"];
-				return serv;
-			}
-			else if (aType == typeof(Channel))
-			{
-				Channel chan = new Channel();
-				chan.Guid = new Guid((string)aDic ["Guid"]);
-				chan.Name = (string)aDic ["Name"];
-				chan.Connected = false;
-				chan.Enabled = (bool)aDic ["Enabled"];
-				chan.ErrorCode = (int)aDic ["ErrorCode"];
-				return chan;
-			}
-			else if (aType == typeof(Bot))
-			{
-				Bot bot = new Bot();
-				bot.Guid = new Guid((string)aDic ["Guid"]);
-				bot.Name = (string)aDic ["Name"];
-				bot.Connected = false;
-				bot.Enabled = (bool)aDic ["Enabled"];
-				bot.State = Bot.States.Idle;
-				bot.InfoQueueCurrent = (int)aDic ["InfoQueueCurrent"];
-				bot.InfoQueueTotal = (int)aDic ["InfoQueueTotal"];
-				bot.InfoSlotCurrent = (int)aDic ["InfoSlotCurrent"];
-				bot.InfoSlotTotal = (int)aDic ["InfoSlotTotal"];
-				bot.InfoSpeedCurrent = (double)aDic ["InfoSpeedCurrent"];
-				bot.InfoSpeedMax = (double)aDic ["InfoSpeedMax"];
-				bot.LastMessage = (string)aDic ["LastMessage"];
-				bot.LastContact = Core.Helper.Timestamp2Date ((Int64)aDic ["LastContact"]);
-				return bot;
-			}
-			else if (aType == typeof(Packet))
-			{
-				Packet pack = new Packet();
-				pack.Guid = new Guid((string)aDic ["Guid"]);
-				pack.Name = (string)aDic ["Name"];
-				pack.Connected = false;
-				pack.Enabled = (bool)aDic ["Enabled"];
-				pack.Name = (string)aDic ["Name"];
-				pack.Id = (int)aDic ["Id"];
-				pack.LastUpdated = Core.Helper.Timestamp2Date ((Int64)aDic ["LastUpdated"]);
-				pack.LastMentioned = Core.Helper.Timestamp2Date ((Int64)aDic ["LastMentioned"]);
-				pack.Size = (Int64)aDic ["Size"];
-				return pack;
-			}
+				if (Attribute.IsDefined(prop, typeof(MySqlAttribute)) && aDic.ContainsKey(prop.Name))
+				{
+					object value = aDic[prop.Name];
+					if (prop.PropertyType == typeof(Guid))
+					{
+						if (value != "" && value.GetType() != typeof(DBNull))
+						{
+							value = new Guid(value.ToString());
+						}
+						else
+						{
+							value = Guid.Empty;
+						}
+					}
+					else if (prop.PropertyType == typeof(DateTime))
+					{
+						value = ((Int64)value).ToDate();
+					}
+					else if (prop.PropertyType == typeof(Bot.States))
+					{
+						try
+						{
+							value = (Bot.States)value;
+						}
+						catch (InvalidCastException)
+						{
+							value = Bot.States.Idle;
+						}
+					}
 
-			return null;
+					try
+					{
+						prop.SetValue(obj, value, null);
+					}
+					catch (Exception ex)
+					{
+						if (ex.InnerException == null || ex.InnerException.GetType() != typeof(NotSupportedException))
+						{
+							throw ex;
+						}
+					}
+				}
+			}
+			return obj;
 		}
 
-		protected void ExecuteNonQuery (string aSql, Dictionary<string, object> aDic)
+		void ExecuteNonQuery (string aSql, Dictionary<string, object> aDic)
 		{
-			//aSql = "START TRANSACTION;" + aSql + "COMMIT;";
 			lock (_locked)
 			{
 				MySqlCommand cmd = new MySqlCommand (aSql, _dbConnection);
@@ -341,33 +368,36 @@ namespace XG.Server.Plugin.Backend.MySql
 							cmd.Parameters.AddWithValue ("@" + kcp.Key, kcp.Value);
 						}
 					}
+#if !UNSAFE
 					try
 					{
+#endif
 						cmd.ExecuteNonQuery ();
+#if !UNSAFE
 					}
 					catch (MySqlException ex)
 					{
-						_log.Fatal("ExecuteQuery(" + ex.Number + ") '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteQuery(" + ex.Number + ") '" + BuildSqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						_log.Fatal("ExecuteQuery() '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteQuery() '" + BuildSqlString (aSql, aDic) + "' ", ex);
 						_log.Warn("ExecuteQuery() : stopping server plugin!");
 						Stop ();
 					}
 					catch (Exception ex)
 					{
-						_log.Fatal("ExecuteQuery() '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteQuery() '" + BuildSqlString (aSql, aDic) + "' ", ex);
 					}
+#endif
 				}
 			}
 		}
 
-		protected List<AObject> ExecuteQuery (string aSql, Dictionary<string, object> aDic, Type aType)
+		List<T> ExecuteQuery<T> (string aSql, Dictionary<string, object> aDic)
 		{
-			List<AObject> list = new List<AObject> ();
+			List<T> list = new List<T>();
 
-			//aSql = "START TRANSACTION;" + aSql + "COMMIT;";
 			lock (_locked)
 			{
 				MySqlCommand cmd = new MySqlCommand (aSql, _dbConnection);
@@ -380,64 +410,70 @@ namespace XG.Server.Plugin.Backend.MySql
 							cmd.Parameters.AddWithValue ("@" + kcp.Key, kcp.Value);
 						}
 					}
+#if !UNSAFE
 					try
 					{
-						MySqlDataReader myReader = cmd.ExecuteReader ();
+#endif
+						MySqlDataReader myReader = cmd.ExecuteReader();
 						while (myReader.Read())
 						{
 							Dictionary<string, object> dic = new Dictionary<string, object> ();
 							for (int col = 0; col < myReader.FieldCount; col++)
 							{
-								dic.Add (myReader.GetName (col), myReader.GetValue (col));
+								dic.Add (myReader.GetName(col), myReader.GetValue(col));
 							}
-							AObject obj = Dic2Object (dic, aType);
-							if(obj != null)
-							list.Add (obj);
+							T obj = Dic2Object<T>(dic);
+							if (obj != null)
+							{
+								list.Add(obj);
+							}
 						}
 						myReader.Close();
+#if !UNSAFE
 					}
 					catch (MySqlException ex)
 					{
-						_log.Fatal("ExecuteReader(" + ex.Number + ") '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteReader(" + ex.Number + ") '" + BuildSqlString (aSql, aDic) + "' ", ex);
 					}
 					catch (InvalidOperationException ex)
 					{
-						_log.Fatal("ExecuteReader() '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteReader() '" + BuildSqlString (aSql, aDic) + "' ", ex);
 						_log.Warn("ExecuteReader() : stopping server plugin!");
 						Stop ();
 					}
 					catch (Exception ex)
 					{
-						_log.Fatal("ExecuteReader() '" + SqlString (aSql, aDic) + "' ", ex);
+						_log.Fatal("ExecuteReader() '" + BuildSqlString (aSql, aDic) + "' ", ex);
 					}
+#endif
 				}
 			}
 
 			return list;
 		}
 
-		protected string Table4Object (AObject aObj)
+		string Table4Object(AObject aObj)
 		{
 			if (aObj is Core.Server)
 			{
-				return "server";
+				return "servers";
 			}
 			else if (aObj is Channel)
 			{
-				return "channel";
+				return "channels";
 			}
 			else if (aObj is Bot)
 			{
-				return "bot";
+				return "bots";
 			}
 			else if (aObj is Packet)
 			{
-				return "packet";
+				return "packets";
 			}
 			return "";
 		}
 
-		protected string SqlString (string aSql, Dictionary<string, object> aDic)
+		string BuildSqlString (string aSql, Dictionary<string, object> aDic)
 		{
 			if (aDic != null)
 			{

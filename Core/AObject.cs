@@ -74,6 +74,7 @@ namespace XG.Core
 
 		Guid _parentGuid;
 		[DataMember]
+		[MySqlAttribute]
 		public Guid ParentGuid
 		{
 			get { return _parentGuid; }
@@ -99,9 +100,11 @@ namespace XG.Core
 		}
 		
 		[DataMember]
+		[MySqlAttribute]
 		public Guid Guid { get; set; }
 
 		string _name;
+		[MySqlAttribute]
 		public virtual string Name
 		{
 			get { return _name; }
@@ -127,6 +130,7 @@ namespace XG.Core
 
 		bool _connected;
 		[DataMember]
+		[MySqlAttribute]
 		public virtual bool Connected
 		{
 			get { return _connected; }
@@ -135,6 +139,7 @@ namespace XG.Core
 		
 		bool _enabled;
 		[DataMember]
+		[MySqlAttribute]
 		public virtual bool Enabled
 		{
 			get { return _enabled; }

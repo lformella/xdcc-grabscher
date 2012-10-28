@@ -35,6 +35,7 @@ namespace XG.Core
 		#region VARIABLES
 		
 		[DataMember]
+		[MySqlAttribute]
 		public override bool Connected
 		{
 			get { return base.Connected; }
@@ -59,6 +60,7 @@ namespace XG.Core
 
 		int _errorCode = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public int ErrorCode
 		{
 			get { return _errorCode; }

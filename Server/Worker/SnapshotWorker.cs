@@ -41,7 +41,7 @@ namespace XG.Server.Worker
 			IEnumerable<Packet> packets = from bot in bots from packet in bot.Packets select packet;
 			
 			Snapshot snap = new Snapshot();
-			snap.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
+			snap.Set(SnapshotValue.Timestamp, DateTime.Now.ToTimestamp());
 			
 			snap.Set(SnapshotValue.Speed, (from file in Files.All from part in file.Parts select part.Speed).Sum());
 			
@@ -62,7 +62,7 @@ namespace XG.Server.Worker
 			snap.Set(SnapshotValue.BotsDisconnected, (from bot in bots where !bot.Connected select bot).Count());
 			snap.Set(SnapshotValue.BotsFreeSlots, (from bot in bots where bot.InfoSlotCurrent > 0 select bot).Count());
 			snap.Set(SnapshotValue.BotsFreeQueue, (from bot in bots where bot.InfoQueueCurrent > 0 select bot).Count());
-			snap.Set(SnapshotValue.BotsAverageCurrentSpeed, (int)((from bot in bots select bot.InfoSpeedCurrent).Sum() / (from bot in bots where bot.InfoSpeedCurrent > 0 select bot).Count()));
+			snap.Set(SnapshotValue.BotsAverageCurrentSpeed, (Int64)((from bot in bots select bot.InfoSpeedCurrent).Sum() / (from bot in bots where bot.InfoSpeedCurrent > 0 select bot).Count()));
 			snap.Set(SnapshotValue.BotsAverageMaxSpeed, (Int64)((from bot in bots select bot.InfoSpeedMax).Sum() / (from bot in bots where bot.InfoSpeedMax > 0 select bot).Count()));
 			
 			snap.Set(SnapshotValue.Packets, (from packet in packets select packet).Count());

@@ -369,7 +369,7 @@ namespace XG.Server.Helper
 					{
 						if (part.Packet != null)
 						{
-							if (!Core.Helper.IsEqual(part.StartReference, aBytes))
+							if (!part.StartReference.IsEqualWith(aBytes))
 							{
 								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
 								part.Packet.Enabled = false;
@@ -401,7 +401,7 @@ namespace XG.Server.Helper
 							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
 							reader.Close();
 
-							if (!Core.Helper.IsEqual(bytes, aBytes))
+							if (!bytes.IsEqualWith(aBytes))
 							{
 								_log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize);
 								RemovePart(tFile, part);

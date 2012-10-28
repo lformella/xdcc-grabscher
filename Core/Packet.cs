@@ -63,6 +63,7 @@ namespace XG.Core
 
 		int _id = -1;
 		[DataMember]
+		[MySqlAttribute]
 		public int Id
 		{
 			get { return _id; }
@@ -71,6 +72,7 @@ namespace XG.Core
 
 		Int64 _size = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 Size
 		{
 			get { return _size; }
@@ -101,6 +103,7 @@ namespace XG.Core
 
 		DateTime _lastUpdated = DateTime.MinValue;
 		[DataMember]
+		[MySqlAttribute]
 		public DateTime LastUpdated
 		{
 			get { return _lastUpdated; }
@@ -109,6 +112,7 @@ namespace XG.Core
 
 		DateTime _lastMentioned = DateTime.MinValue;
 		[DataMember]
+		[MySqlAttribute]
 		public DateTime LastMentioned
 		{
 			get { return _lastMentioned; }

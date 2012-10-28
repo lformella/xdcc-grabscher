@@ -38,6 +38,7 @@ namespace XG.Core
 		public object Lock = new object();
 		
 		[DataMember]
+		[MySqlAttribute]
 		public override string Name
 		{
 			get { return base.Name; }
@@ -49,6 +50,7 @@ namespace XG.Core
 
 		string _tmpPath;
 		[DataMember]
+		[MySqlAttribute]
 		public string TmpPath
 		{
 			get { return _tmpPath; }
@@ -60,6 +62,7 @@ namespace XG.Core
 
 		Int64 _size;
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 Size
 		{
 			get { return _size; }

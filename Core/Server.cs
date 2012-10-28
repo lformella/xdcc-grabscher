@@ -59,6 +59,7 @@ namespace XG.Core
 
 		int _port = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public int Port
 		{
 			get { return _port; }
@@ -67,6 +68,7 @@ namespace XG.Core
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
 		[DataMember]
+		[MySqlAttribute]
 		public SocketErrorCode ErrorCode
 		{
 			get { return _errorCode; }

@@ -153,8 +153,8 @@ namespace XG.Server.Plugin.General.Webserver
 #if !DEBUG
 					_dicString.Add(aFile, content);
 #endif
-#if !UNSAFE
 					return content;
+#if !UNSAFE
 				}
 				catch (Exception ex)
 				{

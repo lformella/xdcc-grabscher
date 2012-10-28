@@ -329,7 +329,7 @@ namespace XG.Server
 				Snapshots.Add(lastSnapshot);
 
 				Snapshot firstSnapshot = new Snapshot();
-				firstSnapshot.Set(SnapshotValue.Timestamp, Core.Helper.Date2Timestamp(DateTime.Now));
+				firstSnapshot.Set(SnapshotValue.Timestamp, DateTime.Now.ToTimestamp());
 				Snapshots.Add(firstSnapshot);
 			}
 

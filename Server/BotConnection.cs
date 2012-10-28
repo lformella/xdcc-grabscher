@@ -356,7 +356,7 @@ namespace XG.Server
 				if (refL <= bufL)
 				{
 					// all ok
-					if (Core.Helper.IsEqual(_rollbackRefernce, _startBuffer))
+					if (_rollbackRefernce.IsEqualWith(_startBuffer))
 					{
 						_log.Info("con_DataReceived() rollback check ok");
 						aData = _startBuffer;

@@ -229,8 +229,6 @@ namespace XG.Server.Irc
 						if (int.TryParse(tMatch.Groups["slot_total"].ToString(), out valueInt)) { tBot.InfoSlotTotal = valueInt; }
 						if (int.TryParse(tMatch.Groups["queue_cur"].ToString(), out valueInt)) { tBot.InfoQueueCurrent = valueInt; }
 						if (int.TryParse(tMatch.Groups["queue_total"].ToString(), out valueInt)) { tBot.InfoQueueTotal = valueInt; }
-						// this is not the all over record speed!
-						//if (double.TryParse(tMatch.Groups["record"].ToString(), out valueDouble)) { tBot.InfoSpeedMax = valueDouble; }
 
 						if(tBot.InfoSlotCurrent > tBot.InfoSlotTotal)
 						{
@@ -270,13 +268,8 @@ namespace XG.Server.Irc
 							speed_cur = speed_cur.Replace('.', ',');
 							speed_max = speed_max.Replace('.', ',');
 						}
-						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("k") ? valueDouble * 1024 : valueDouble; }
-						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("k") ? valueDouble * 1024 : valueDouble; }
-
-//						if(tBot.InfoSpeedCurrent > tBot.InfoSpeedMax)
-//						{
-//							tBot.InfoSpeedMax = tBot.InfoSpeedCurrent;
-//						}
+						if (double.TryParse(speed_cur, out valueDouble)) { tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("k") ? (Int64)(valueDouble * 1024) : (Int64)valueDouble; }
+						if (double.TryParse(speed_max, out valueDouble)) { tBot.InfoSpeedMax = speed_max_end.StartsWith("k") ? (Int64)(valueDouble * 1024) : (Int64)valueDouble; }
 					}
 				}
 

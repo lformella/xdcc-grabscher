@@ -61,6 +61,7 @@ namespace XG.Core
 
 		Bot.States _state;
 		[DataMember]
+		[MySqlAttribute]
 		public Bot.States State
 		{
 			get { return _state; }
@@ -89,6 +90,7 @@ namespace XG.Core
 
 		string _lastMessage = "";
 		[DataMember]
+		[MySqlAttribute]
 		public string LastMessage
 		{
 			get { return _lastMessage; }
@@ -103,6 +105,7 @@ namespace XG.Core
 
 		DateTime _lastContact = DateTime.MinValue;
 		[DataMember]
+		[MySqlAttribute]
 		public DateTime LastContact
 		{
 			get { return _lastContact; }
@@ -125,16 +128,19 @@ namespace XG.Core
 			set { SetProperty(ref _queueTime, value); }
 		}
 
-		double _infoSpeedMax = 0;
+		Int64 _infoSpeedMax = 0;
 		[DataMember]
-		public double InfoSpeedMax
+		[MySqlAttribute]
+		public Int64 InfoSpeedMax
 		{
 			get { return _infoSpeedMax; }
 			set { SetProperty(ref _infoSpeedMax, value); }
 		}
-		double _infoSpeedCurrent = 0;
+
+		Int64 _infoSpeedCurrent = 0;
 		[DataMember]
-		public double InfoSpeedCurrent
+		[MySqlAttribute]
+		public Int64 InfoSpeedCurrent
 		{
 			get { return _infoSpeedCurrent; }
 			set { SetProperty(ref _infoSpeedCurrent, value); }
@@ -142,13 +148,16 @@ namespace XG.Core
 
 		int _infoSlotTotal = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public int InfoSlotTotal
 		{
 			get { return _infoSlotTotal; }
 			set { SetProperty(ref _infoSlotTotal, value); }
 		}
+
 		int _infoSlotCurrent = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public int InfoSlotCurrent
 		{
 			get { return _infoSlotCurrent; }
@@ -157,13 +166,16 @@ namespace XG.Core
 
 		int _infoQueueTotal = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public int InfoQueueTotal
 		{
 			get { return _infoQueueTotal; }
 			set { SetProperty(ref _infoQueueTotal, value); }
 		}
+
 		int _infoQueueCurrent = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public int InfoQueueCurrent
 		{
 			get { return _infoQueueCurrent; }

@@ -84,6 +84,7 @@ namespace XG.Core
 
 		Int64 _startSize = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 StartSize
 		{
 			get { return _startSize; }
@@ -92,6 +93,7 @@ namespace XG.Core
 
 		Int64 _stopSize = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 StopSize
 		{
 			get { return _stopSize; }
@@ -100,6 +102,7 @@ namespace XG.Core
 
 		Int64 _currentSize = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 CurrentSize
 		{
 			get { return _currentSize; }
@@ -107,6 +110,7 @@ namespace XG.Core
 		}
 		
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 MissingSize
 		{
 			get { return _stopSize - _currentSize; }
@@ -117,6 +121,7 @@ namespace XG.Core
 		}
 		
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 TimeMissing
 		{
 			get { return (_speed > 0 ? (Int64)(MissingSize / Speed) : Int64.MaxValue); }
@@ -128,6 +133,7 @@ namespace XG.Core
 
 		Int64 _speed = 0;
 		[DataMember]
+		[MySqlAttribute]
 		public Int64 Speed
 		{
 			get { return _speed; }
@@ -136,6 +142,7 @@ namespace XG.Core
 
 		FilePart.States _state;
 		[DataMember]
+		[MySqlAttribute]
 		public FilePart.States State
 		{
 			get { return _state; }
@@ -153,6 +160,7 @@ namespace XG.Core
 
 		bool _checked;
 		[DataMember]
+		[MySqlAttribute]
 		public bool Checked
 		{
 			get { return _checked; }

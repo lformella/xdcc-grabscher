@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="BackendPlugin.cs" />
     <Compile Include="Importer.cs" />
+    <Compile Include="Snapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

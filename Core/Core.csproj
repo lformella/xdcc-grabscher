@@ -80,6 +80,8 @@
     <Compile Include="FilePart.cs" />
     <Compile Include="Files.cs" />
     <Compile Include="Object.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Attributes.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Packet.cs" />
