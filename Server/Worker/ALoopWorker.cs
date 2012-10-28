@@ -22,13 +22,18 @@
 // 
 
 using System;
+using System.Reflection;
 using System.Threading;
+
+using log4net;
 
 namespace XG.Server.Worker
 {
 	public abstract class ALoopWorker : AWorker
 	{
 		#region VARIABLES
+
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public Int64 SecondsToSleep { get; set; }
 		DateTime _last;
@@ -52,7 +57,14 @@ namespace XG.Server.Worker
 				{
 					_last = DateTime.Now;
 
-					LoopRun();
+					try
+					{
+						LoopRun();
+					}
+					catch(Exception ex)
+					{
+						_log.Fatal("LoopRun()", ex);
+					}
 				}
 
 				Thread.Sleep(1000);
