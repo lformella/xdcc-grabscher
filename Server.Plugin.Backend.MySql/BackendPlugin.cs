@@ -92,8 +92,6 @@ namespace XG.Server.Plugin.Backend.MySql
 		{
 			Core.Servers _servers = new Core.Servers();
 
-			#region DUMP DATABASE
-
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 			dic.Add ("guid", Guid.Empty);
 			foreach(Core.Server serv in ExecuteQuery<Core.Server>("SELECT * FROM servers;", null))
@@ -123,20 +121,6 @@ namespace XG.Server.Plugin.Backend.MySql
 					}
 				}
 			}
-
-			#endregion
-
-			#region import routine
-
-			Importer importer = new Importer(_servers);
-
-			importer.ObjectAddedEvent += new ObjectsDelegate (ObjectAdded);
-
-			importer.Import("./import");
-
-			importer.ObjectAddedEvent -= new ObjectsDelegate (ObjectAdded);
-
-			#endregion
 
 			return _servers;
 		}

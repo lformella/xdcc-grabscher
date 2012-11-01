@@ -81,6 +81,7 @@
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Release" />
@@ -93,6 +94,7 @@
       <Entry build="True" name="Core.Test" configuration="Release" />
       <Entry build="True" name="Server.Test" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Release" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Unsafe" />
@@ -105,6 +107,7 @@
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Default" />
@@ -117,6 +120,7 @@
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Server.Cmd" single="True">
@@ -130,6 +134,7 @@
     <Execute type="None" entry="Core.Test" />
     <Execute type="None" entry="Server.Test" />
     <Execute type="None" entry="Server.Plugin.General.Webserver.Test" />
+    <Execute type="None" entry="Server.Plugin.General.Import" />
   </StartMode>
   <Entries>
     <Entry filename="Core/Core.mdp" />
@@ -142,5 +147,6 @@
     <Entry filename="Core.Test/Core.Test.mdp" />
     <Entry filename="Server.Test/Server.Test.mdp" />
     <Entry filename="Server.Plugin.General.Webserver.Test/Server.Plugin.General.Webserver.Test.mdp" />
+    <Entry filename="Server.Plugin.General.Import/Server.Plugin.General.Import.mdp" />
   </Entries>
 </Combine>

@@ -24,13 +24,11 @@
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
     <File subtype="Code" buildaction="Nothing" name="install.sql" />
     <File subtype="Code" buildaction="Nothing" name="repair.sql" />
-    <File subtype="Code" buildaction="Compile" name="Importer.cs" />
     <File subtype="Code" buildaction="Compile" name="Snapshot.cs" />
   </Contents>
   <References>
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="lib/MySql.Data.dll" />
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="lib/HtmlAgilityPack.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../Lib/log4net.dll" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
