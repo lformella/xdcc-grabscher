@@ -75,6 +75,10 @@ namespace XG.Server.Plugin.Backend.MySql
 		[MySqlAttribute]
 		Int64 PacketsSize { get; set; }
 		[MySqlAttribute]
+		Int64 PacketsSizeDownloading { get; set; }
+		[MySqlAttribute]
+		Int64 PacketsSizeNotDownloading { get; set; }
+		[MySqlAttribute]
 		Int64 PacketsSizeConnected { get; set; }
 		[MySqlAttribute]
 		Int64 PacketsSizeDisconnected { get; set; }

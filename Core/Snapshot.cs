@@ -56,8 +56,10 @@ namespace XG.Core
 		PacketsConnected = 14,
 		PacketsDisconnected = 15,
 		PacketsSize = 16,
-		PacketsSizeConnected = 17,
-		PacketsSizeDisconnected = 18
+		PacketsSizeDownloading = 17,
+		PacketsSizeNotDownloading = 18,
+		PacketsSizeConnected = 25,
+		PacketsSizeDisconnected = 26
 	}
 
 	[Serializable]

@@ -235,7 +235,7 @@ namespace XG.Server.Plugin.Backend.MySql
 		{
 			Dictionary<string, object> dic = new Dictionary<string, object>();
 
-			for(int a = 0; a <= 24; a++)
+			for(int a = 0; a <= 26; a++)
 			{
 				string name = Enum.GetName(typeof(SnapshotValue), (SnapshotValue)a);
 				dic.Add(name, aSnap.Get((SnapshotValue)a));

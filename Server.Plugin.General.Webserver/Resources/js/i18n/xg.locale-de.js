@@ -107,6 +107,8 @@ translatedArray =
 	"Disconnected": "Getrennt",
 	"Size Connected": "Gr&ouml;&szlig;e verbunden",
 	"Size Disconnected": "Gr&ouml;&szlig;e getrennt",
+	"Size Downloading": "Gr&ouml;&szlig;e ladend",
+	"Size not Downloading": "Gr&ouml;&szlig;e n. ladend",
 	"Free Queue": "Freie Warteschlange",
 	"Free Slots": "Frei Pl&auml;tze",
 	"Timespan": "Zeitspanne",

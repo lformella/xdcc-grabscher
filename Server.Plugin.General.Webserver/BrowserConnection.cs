@@ -746,7 +746,7 @@ namespace XG.Server.Plugin.General.Webserver
 		string Snapshots2Json(Snapshots aSnapshots)
 		{
 			var tObjects = new List<Server.Plugin.General.Webserver.Flot.Object>();
-			for (int a = 1; a <= 24; a++)
+			for (int a = 1; a <= 26; a++)
 			{
 				var value = (SnapshotValue)a;
 

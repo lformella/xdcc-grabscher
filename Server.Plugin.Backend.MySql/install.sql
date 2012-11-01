@@ -110,9 +110,11 @@ CREATE  TABLE IF NOT EXISTS `xg`.`snapshots` (
   `Packets` BIGINT(15) UNSIGNED NULL DEFAULT 0 ,
   `PacketsConnected` BIGINT(15) UNSIGNED NULL DEFAULT 0 ,
   `PacketsDisconnected` BIGINT(15) UNSIGNED NULL DEFAULT 0 ,
-  `PacketsSize` BIGINT(15) UNSIGNED NULL DEFAULT 0 ,
-  `PacketsSizeConnected` BIGINT(15) UNSIGNED NULL DEFAULT 0 ,
-  `PacketsSizeDisconnected` BIGINT(15) UNSIGNED NULL DEFAULT 0 ,
+  `PacketsSize` BIGINT(20) UNSIGNED NULL DEFAULT 0 ,
+  `PacketsSizeDownloading` BIGINT(20) UNSIGNED NULL DEFAULT 0 ,
+  `PacketsSizeNotDownloading` BIGINT(20) UNSIGNED NULL DEFAULT 0 ,
+  `PacketsSizeConnected` BIGINT(20) UNSIGNED NULL DEFAULT 0 ,
+  `PacketsSizeDisconnected` BIGINT(20) UNSIGNED NULL DEFAULT 0 ,
   PRIMARY KEY (`Timestamp`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8

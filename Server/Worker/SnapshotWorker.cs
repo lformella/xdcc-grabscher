@@ -83,8 +83,10 @@ namespace XG.Server.Worker
 			snap.Set(SnapshotValue.PacketsConnected, (from packet in packets where packet.Connected select packet).Count());
 			snap.Set(SnapshotValue.PacketsDisconnected, (from packet in packets where !packet.Connected select packet).Count());
 			snap.Set(SnapshotValue.PacketsSize, (from packet in packets select packet.Size).Sum());
-			snap.Set(SnapshotValue.PacketsSizeConnected, (from packet in packets where packet.Connected select packet.Size).Sum());
-			snap.Set(SnapshotValue.PacketsSizeDisconnected, (from packet in packets where !packet.Connected select packet.Size).Sum());
+			snap.Set(SnapshotValue.PacketsSizeDownloading, (from packet in packets where packet.Connected select packet.Size).Sum());
+			snap.Set(SnapshotValue.PacketsSizeNotDownloading, (from packet in packets where !packet.Connected select packet.Size).Sum());
+			snap.Set(SnapshotValue.PacketsSizeConnected, (from packet in packets where packet.Parent.Connected select packet.Size).Sum());
+			snap.Set(SnapshotValue.PacketsSizeDisconnected, (from packet in packets where !packet.Parent.Connected select packet.Size).Sum());
 			
 			Snapshots.Add(snap);
 		}

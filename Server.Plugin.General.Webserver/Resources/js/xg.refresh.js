@@ -213,6 +213,8 @@ var XGRefresh = Class.create(
 							break;
 
 						case Enum.SnapshotValue.PacketsSize:
+						case Enum.SnapshotValue.PacketsSizeDownloading:
+						case Enum.SnapshotValue.PacketsSizeNotDownloading:
 						case Enum.SnapshotValue.PacketsSizeConnected:
 						case Enum.SnapshotValue.PacketsSizeDisconnected:
 							item.yaxis = 4;
