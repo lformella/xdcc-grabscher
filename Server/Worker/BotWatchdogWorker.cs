@@ -42,7 +42,7 @@ namespace XG.Server.Worker
 		{
 			IEnumerable<Bot> tBots =
 				from server in Servers.All where server.Connected 
-				from channel in server.Channels
+				from channel in server.Channels where channel.Connected
 				from bot in channel.Bots
 					where !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Instance.BotOfflineTime && bot.OldestActivePacket() == null
 					select bot;
