@@ -86,6 +86,7 @@ namespace XG.Core
 
 		public Channel Channel(string aName)
 		{
+			if (!aName.StartsWith("#")) { aName = "#" + aName; }
 			return (Channel)base.Named(aName);
 		}
 

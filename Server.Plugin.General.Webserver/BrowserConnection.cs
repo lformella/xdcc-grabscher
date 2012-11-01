@@ -54,7 +54,7 @@ namespace XG.Server.Plugin.General.Webserver
 		#region AWorker
 
 		protected override void StartRun()
-		{			
+		{
 			Dictionary<string, string> tDic = new Dictionary<string, string>();
 			string str = Context.Request.RawUrl;
 			_log.Debug("StartRun() " + str);
