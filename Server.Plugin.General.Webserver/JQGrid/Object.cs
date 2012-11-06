@@ -29,6 +29,13 @@ using XG.Core;
 namespace XG.Server.Plugin.General.Webserver.JQGrid
 {
 	[DataContract]
+	[KnownType(typeof(Core.Server))]
+	[KnownType(typeof(Core.Channel))]
+	[KnownType(typeof(Core.Bot))]
+	[KnownType(typeof(Core.Packet))]
+	[KnownType(typeof(Core.File))]
+	[KnownType(typeof(Core.FilePart))]
+	[KnownType(typeof(Core.Snapshot))]
 	public class Object
 	{
 		public Object() {}

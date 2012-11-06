@@ -45,7 +45,7 @@ namespace XG.Server.Worker
 
 		public ALoopWorker() : base()
 		{
-			_last = DateTime.MinValue;
+			_last = DateTime.MinValue.ToUniversalTime();
 			_allowRun = true;
 		}
 

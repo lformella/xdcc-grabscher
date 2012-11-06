@@ -103,7 +103,7 @@ namespace XG.Core
 			}
 		}
 
-		DateTime _lastContact = DateTime.MinValue;
+		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
 		[DataMember]
 		[MySqlAttribute]
 		public DateTime LastContact

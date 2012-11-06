@@ -115,7 +115,7 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 					else
 					{
-#if DEBUG
+#if DEBUG && !WINDOWS
 						content = File.OpenText("./Resources" + aFile).ReadToEnd();
 #else
 						Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
@@ -179,7 +179,7 @@ namespace XG.Server.Plugin.General.Webserver
 				try
 				{
 #endif
-#if DEBUG
+#if DEBUG && !WINDOWS
 					return File.ReadAllBytes("./Resources" + aFile);
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));

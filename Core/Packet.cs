@@ -101,7 +101,7 @@ namespace XG.Core
 			set { RealName = value; }
 		}
 
-		DateTime _lastUpdated = DateTime.MinValue;
+		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
 		[DataMember]
 		[MySqlAttribute]
 		public DateTime LastUpdated
@@ -110,7 +110,7 @@ namespace XG.Core
 			set { SetProperty(ref _lastUpdated, value); }
 		}
 
-		DateTime _lastMentioned = DateTime.MinValue;
+		DateTime _lastMentioned = DateTime.MinValue.ToUniversalTime();
 		[DataMember]
 		[MySqlAttribute]
 		public DateTime LastMentioned

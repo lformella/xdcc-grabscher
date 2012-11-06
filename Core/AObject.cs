@@ -158,7 +158,7 @@ namespace XG.Core
 			}
 		}
 
-		DateTime _enabledTime = DateTime.MinValue;
+		DateTime _enabledTime = DateTime.MinValue.ToUniversalTime();
 		public DateTime EnabledTime
 		{
 			get { return _enabledTime; }

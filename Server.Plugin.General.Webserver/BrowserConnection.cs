@@ -554,7 +554,7 @@ namespace XG.Server.Plugin.General.Webserver
 					string[] search = aSearchString.Split('-');
 					int start = int.Parse(search[0]);
 					int stop = int.Parse(search[1]);
-					DateTime init = DateTime.MinValue;
+					DateTime init = DateTime.MinValue.ToUniversalTime();
 					DateTime now = DateTime.Now;
 					
 					tPackets =
