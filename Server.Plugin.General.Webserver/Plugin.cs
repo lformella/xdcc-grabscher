@@ -25,7 +25,6 @@ using System;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text;
 
 using log4net;
 
@@ -76,17 +75,17 @@ namespace XG.Server.Plugin.General.Webserver
 						connection.Start();
 #if !UNSAFE
 					}
-					catch (Exception ex)
+					catch (HttpListenerException)
 					{
-						_log.Fatal("StartRun() client", ex);
+						// this is ok
 					}
 #endif
 				}
 #if !UNSAFE
 			}
-			catch (Exception ex)
+			catch (HttpListenerException)
 			{
-				_log.Fatal("StartRun() server", ex);
+				// this is ok
 			}
 #endif
 		}

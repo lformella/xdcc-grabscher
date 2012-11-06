@@ -97,6 +97,30 @@ namespace XG.Server.Cmd
 			}
 
 			instance.Start();
+
+			string shutdownFile = Settings.Instance.AppDataPath + "shutdown";
+			while (true)
+			{
+				if (File.Exists(shutdownFile))
+				{
+					try
+					{
+						File.Delete(shutdownFile);
+					}
+					catch (Exception ex)
+					{
+						LogManager.GetLogger(typeof(Main)).Fatal("Cant delete shutdown file", ex);
+					}
+					instance.Stop();
+					break;
+				}
+				else
+				{
+					Thread.Sleep(1000);
+				}
+			}
+
+			Environment.Exit (0);
 		}
 	}
 }

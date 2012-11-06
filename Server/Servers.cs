@@ -144,7 +144,11 @@ namespace XG.Server
 			if (_servers.ContainsKey(aServer))
 			{
 				ServerConnection con = _servers[aServer];
-				con.Connection.Disconnect();
+
+				if (con.Connection != null)
+				{
+					con.Connection.Disconnect();
+				}
 			}
 			else
 			{

@@ -195,14 +195,18 @@ namespace XG.Server.Worker
 
 		public void Start()
 		{
-			_thread = new Thread(new ThreadStart(StartRun));
 			try
 			{
+				_thread = new Thread(new ThreadStart(StartRun));
 				_thread.Start();
+			}
+			catch (ThreadAbortException)
+			{
+				// this is ok
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("cant start thread", ex);
+				_log.Fatal("Start()", ex);
 			}
 		}
 
@@ -212,14 +216,14 @@ namespace XG.Server.Worker
 
 		public void Stop()
 		{
-			StopRun();
 			try
 			{
+				StopRun();
 				_thread.Abort();
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("cant abbort thread", ex);
+				_log.Fatal("Stop()", ex);
 			}
 		}
 		
