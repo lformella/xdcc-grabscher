@@ -46,7 +46,7 @@ namespace XG.Server.Plugin.General.Import
 		protected override void StartRun()
 		{
 			// import routine
-			string str = FileSystem.ReadFile("./import");
+			string str = FileSystem.ReadFile(Settings.Instance.AppDataPath + "import");
 			if(str == "")
 			{
 				return;

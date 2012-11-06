@@ -27,6 +27,7 @@ using Mono.Unix;
 
 using System;
 using System.IO;
+using System.Threading;
 
 using log4net;
 using log4net.Appender;
@@ -42,10 +43,10 @@ namespace XG.Server.Cmd
 	{
 		public static void Main(string[] args)
 		{
-			if(File.Exists("./log4net"))
+			if(File.Exists(Settings.Instance.AppDataPath + "log4net"))
 			{
 				// load settings from file
-				XmlConfigurator.Configure(new FileInfo("./log4net"));
+				XmlConfigurator.Configure(new FileInfo(Settings.Instance.AppDataPath + "log4net"));
 			}
 			else
 			{

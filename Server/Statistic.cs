@@ -165,13 +165,13 @@ namespace XG.Server
 
 		static Statistic Deserialize()
 		{
-			if (File.Exists("./statistics.xml"))
+			if (File.Exists(Settings.Instance.AppDataPath + "statistics.xml"))
 			{
 				lock(locked)
 				{
 					try
 					{
-						Stream streamRead = File.OpenRead("./statistics.xml");
+						Stream streamRead = File.OpenRead(Settings.Instance.AppDataPath + "statistics.xml");
 						Statistic statistic = (Statistic)serializer.Deserialize(streamRead);
 						streamRead.Close();
 						return statistic;
@@ -195,7 +195,7 @@ namespace XG.Server
 			{
 				try
 				{
-					Stream streamWrite = File.Create("./statistics.xml");
+					Stream streamWrite = File.Create(Settings.Instance.AppDataPath + "statistics.xml");
 					serializer.Serialize(streamWrite, instance);
 					streamWrite.Close();
 				}

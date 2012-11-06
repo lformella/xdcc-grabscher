@@ -47,10 +47,10 @@ namespace XG.Server.Plugin.Backend.File
 		object _saveSearchesLock = new object();
 		object _saveSnapshotsLock = new object();
 
-		string DataBinary = "./xg.bin";
-		string FilesBinary = "./xgfiles.bin";
-		string SearchesBinary = "./xgsearches.bin";
-		string SnapshotsBinary = "./xgsnapshots.bin";
+		string _dataBinary = "xg.bin";
+		string _filesBinary = "xgfiles.bin";
+		string _searchesBinary = "xgsearches.bin";
+		string _snapshotsBinary = "xgsnapshots.bin";
 
 		int BackupDataTime = 900000;
 
@@ -63,7 +63,7 @@ namespace XG.Server.Plugin.Backend.File
 			Core.Servers _servers = null;
 			try
 			{
-				_servers = (Core.Servers)Load(DataBinary);
+				_servers = (Core.Servers)Load(Settings.Instance.AppDataPath + _dataBinary);
 				_servers.AttachChildEvents();
 			}
 			catch {}
@@ -79,7 +79,7 @@ namespace XG.Server.Plugin.Backend.File
 			Files _files = null;
 			try
 			{
-				_files = (Files)Load(FilesBinary);
+				_files = (Files)Load(Settings.Instance.AppDataPath + _filesBinary);
 				_files.AttachChildEvents();
 			}
 			catch {}
@@ -95,7 +95,7 @@ namespace XG.Server.Plugin.Backend.File
 			Objects _searches = null;
 			try
 			{
-				_searches = (Objects)Load(SearchesBinary);
+				_searches = (Objects)Load(Settings.Instance.AppDataPath + _searchesBinary);
 				_searches.AttachChildEvents();
 			}
 			catch {}
@@ -111,7 +111,7 @@ namespace XG.Server.Plugin.Backend.File
 			Snapshots _snapshots = null;
 			try
 			{
-				_snapshots = (Snapshots)Load(SnapshotsBinary);
+				_snapshots = (Snapshots)Load(Settings.Instance.AppDataPath + _snapshotsBinary);
 			}
 			catch {}
 			if (_snapshots == null)
@@ -155,6 +155,15 @@ namespace XG.Server.Plugin.Backend.File
 				
 				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
 			}
+		}
+
+		protected override void StopRun ()
+		{
+			// sync all to disk
+			SaveFiles();
+			SaveObjects();
+			SaveSearches();
+			SaveSnapshots();
 		}
 		
 		#endregion
@@ -303,7 +312,7 @@ namespace XG.Server.Plugin.Backend.File
 			lock (_saveFilesLock)
 			{
 				_isSaveFile = false;
-				return Save(Files, FilesBinary);
+				return Save(Files, Settings.Instance.AppDataPath + _filesBinary);
 			}
 		}
 
@@ -311,7 +320,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveObjectsLock)
 			{
-				return Save(Servers, DataBinary);
+				return Save(Servers, Settings.Instance.AppDataPath + _dataBinary);
 			}
 		}
 
@@ -319,7 +328,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveSearchesLock)
 			{
-				return Save(Searches, SearchesBinary);
+				return Save(Searches, Settings.Instance.AppDataPath + _searchesBinary);
 			}
 		}
 		
@@ -327,7 +336,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveSnapshotsLock)
 			{
-				return Save(Snapshots, SnapshotsBinary);
+				return Save(Snapshots, Settings.Instance.AppDataPath + _snapshotsBinary);
 			}
 		}
 

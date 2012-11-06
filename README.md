@@ -1,4 +1,4 @@
-[![XG](http://xg.bitpir.at/images/xg_gray.png)](http://www.larsformella.de/lang/en/portfolio/programme-software/xg)
+[![XG](http://xg.bitpir.at/images/xg_bw.png)](http://www.larsformella.de/lang/en/portfolio/programme-software/xg)
 
 XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
@@ -35,8 +35,8 @@ You should change the default settings and this explanation will help you. If yo
   <AutoRegisterNickserv>false</AutoRegisterNickserv> <!-- register nick if he does not exist -->
   <AutoJoinOnInvite>true</AutoJoinOnInvite> <!-- should xg join channels on invite -->
   
-  <TempPath>./tmp/</TempPath> <!-- relative folder of the temporary download folder -->
-  <ReadyPath>./dl/</ReadyPath> <!-- relative folder for ready downloads -->
+  <TempPath>/home/user/.config/XG/tmp/</TempPath> <!-- absolute folder of the temporary download folder -->
+  <ReadyPath>/home/user/.config/XG/dl/</ReadyPath> <!-- absolute folder for ready downloads -->
   <EnableMultiDownloads>false</EnableMultiDownloads> <!-- enable multi bot dl feature -->
   <ClearReadyDownloads>false</ClearReadyDownloads> <!-- remove ready files from database -->
   
@@ -152,4 +152,4 @@ XG will collect every 5 minutes some statistical data and generate nice graphs. 
 
 ![Extend Statistic Dialog](http://xg.bitpir.at/images/help/snapshots.png)
 
-This feature wont work in older browser like the good old IE8, see do yourself a favour and use a newer one ;-)
+This feature wont work in older browsers like the good old IE8, so do yourself a favour and use a newer one ;-)

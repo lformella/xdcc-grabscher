@@ -7,8 +7,8 @@
   <AutoRegisterNickserv>false</AutoRegisterNickserv> <!-- register nick if he does not exist -->
   <AutoJoinOnInvite>true</AutoJoinOnInvite> <!-- should xg join channels on invite -->
   
-  <TempPath>./tmp/</TempPath> <!-- relative folder of the temporary download folder -->
-  <ReadyPath>./dl/</ReadyPath> <!-- relative folder for ready downloads -->
+  <TempPath>tmp/</TempPath> <!-- relative folder of the temporary download folder -->
+  <ReadyPath>dl/</ReadyPath> <!-- relative folder for ready downloads -->
   <EnableMultiDownloads>false</EnableMultiDownloads> <!-- enable multi bot dl feature -->
   <ClearReadyDownloads>false</ClearReadyDownloads> <!-- remove ready files from database -->
   

@@ -82,12 +82,12 @@ namespace XG.Server
 		/// </returns>
 		static Settings Deserialize()
 		{
-			if (File.Exists("./settings.xml"))
+			if (File.Exists(AppDataPathStatic + "settings.xml"))
 			{
 				try
 				{
 					XmlSerializer ser = new XmlSerializer(typeof(Settings));
-					StreamReader sr = new StreamReader("./settings.xml");
+					StreamReader sr = new StreamReader(AppDataPathStatic + "settings.xml");
 					Settings settings = (Settings)ser.Deserialize(sr);
 					sr.Close();
 					return settings;
@@ -109,7 +109,7 @@ namespace XG.Server
 			try
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Settings));
-				StreamWriter sw = new StreamWriter("./settings.xml");
+				StreamWriter sw = new StreamWriter(AppDataPathStatic + "settings.xml");
 				ser.Serialize(sw, _instance);
 				sw.Close();
 			}
@@ -127,8 +127,8 @@ namespace XG.Server
 			AutoRegisterNickserv = false;
 			AutoJoinOnInvite = true;
 
-			TempPath = "./tmp/";
-			ReadyPath = "./dl/";
+			TempPath = AppDataPath + "tmp" + Path.DirectorySeparatorChar;
+			ReadyPath = AppDataPath + "dl" + Path.DirectorySeparatorChar;
 			EnableMultiDownloads = false;
 			ClearReadyDownloads = true;
 
@@ -153,6 +153,16 @@ namespace XG.Server
 		}
 
 		#region PRIVATE
+
+		public string AppDataPath
+		{
+			get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "XG" + Path.DirectorySeparatorChar; }
+		}
+
+		public static string AppDataPathStatic
+		{
+			get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "XG" + Path.DirectorySeparatorChar; }
+		}
 
 		public string XgVersion
 		{
@@ -256,7 +266,7 @@ namespace XG.Server
 
 		public string ParsingErrorFile
 		{
-			get { return "./parsing_errors.txt"; }
+			get { return AppDataPath + "parsing_errors.txt"; }
 		}
 
 		public int MaxNoDataReceived
@@ -279,7 +289,19 @@ namespace XG.Server
 		public bool AutoRegisterNickserv { get; set; }
 		public bool AutoJoinOnInvite { get; set; }
 
-		public string TempPath { get; set; }
+		string _tempPath;
+		public string TempPath
+		{
+			get { return _tempPath; }
+			set
+			{
+				_tempPath = value;
+				if (!_tempPath.EndsWith("" + Path.DirectorySeparatorChar))
+				{
+					_tempPath += Path.DirectorySeparatorChar;
+				}
+			}
+		}
 		public string ReadyPath { get; set; }
 		public bool EnableMultiDownloads { get; set; }
 		public bool ClearReadyDownloads { get; set; }
