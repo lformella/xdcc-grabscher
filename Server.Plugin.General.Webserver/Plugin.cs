@@ -52,7 +52,20 @@ namespace XG.Server.Plugin.General.Webserver
 			{
 #endif
 				_listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
-				_listener.Start();
+				try
+				{
+					_listener.Start();
+				}
+				catch (HttpListenerException ex)
+				{
+#if WINDOWS
+					if (ex.NativeErrorCode == 5)
+					{
+						_log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
+					}
+#endif
+					throw ex;
+				}
 
 				FileLoader fileLoader = new FileLoader();
 				fileLoader.Salt = _salt;
