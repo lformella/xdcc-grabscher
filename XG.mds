@@ -1,21 +1,17 @@
 <Combine fileversion="2.0" description="XG is an irc download tool which can split packages, download it from different bots and merge them back after a successfully download. Note: you need a xg server too, the client wont download anything. Take a look at the project hompage!" name="XG">
   <Policies>
-    <VersionControlPolicy inheritsSet="Mono">
-      <CommitMessageStyle LastFilePostfix=":&#xA;  " InterMessageLines="0" />
-    </VersionControlPolicy>
-    <ChangeLogPolicy UpdateMode="None" inheritsSet="Mono">
-      <MessageStyle Indent="" LastFilePostfix=":&#xA;  " InterMessageLines="0" />
-    </ChangeLogPolicy>
-    <DotNetNamingPolicy DirectoryNamespaceAssociation="None" ResourceNamePolicy="FileFormatDefault" />
+    <VersionControlPolicy inheritsSet="Mono" />
+    <ChangeLogPolicy UpdateMode="None" inheritsSet="Mono" />
+    <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedFlat" ResourceNamePolicy="FileName" />
     <StandardHeader Text="&#xA; ${FileName}&#xA; &#xA; Author:&#xA;      ${AuthorName} &lt;${AuthorEmail}&gt;&#xA;&#xA; Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This program is free software; you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation; either version 2 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xA; GNU General Public License for more details.&#xA; &#xA; You should have received a copy of the GNU General Public License&#xA; along with this program; if not, write to the Free Software&#xA; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA&#xA;" IncludeInNewFiles="True" />
     <TextStylePolicy FileWidth="160" TabWidth="4" NoTabsAfterNonTabs="True" inheritsSet="Mono" inheritsScope="text/plain" />
-    <TextStylePolicy inheritsSet="null" scope="text/x-csharp" />
-    <CSharpFormattingPolicy IndentSwitchBody="True" AlignEmbeddedUsingStatements="False" AlignEmbeddedIfStatements="False" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" IfElseBraceForcement="AddBraces" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" BeforeMethodCallParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" SpacesBeforeBrackets="False" SpacesAfterTypecast="True" BlankLinesBeforeUsings="1" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
-    <TextStylePolicy FileWidth="120" TabWidth="4" NoTabsAfterNonTabs="True" inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" />
-    <TextStylePolicy inheritsSet="null" scope="text/html" />
-    <TextStylePolicy inheritsSet="null" scope="application/javascript" />
-    <TextStylePolicy inheritsSet="null" scope="text/css" />
-    <TextStylePolicy inheritsSet="null" scope="text/x-sql" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+    <CSharpFormattingPolicy IndentSwitchBody="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" IfElseBraceForcement="AddBraces" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" ElseNewLinePlacement="NewLine" ElseIfNewLinePlacement="SameLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" ArrayInitializerWrapping="DoNotWrap" BlankLinesBeforeUsings="1" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/html" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="application/javascript" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/css" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-sql" />
     <NameConventionPolicy>
       <Rules>
         <NamingRule Name="Namespaces" AffectedEntity="Namespace" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
@@ -45,9 +41,10 @@
         <NamingRule Name="Fields (Non Private)" AffectedEntity="Field" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" />
         <NamingRule Name="ReadOnly Fields (Non Private)" AffectedEntity="ReadonlyField" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="False" />
         <NamingRule Name="Fields (Private)" AffectedEntity="Field, ReadonlyField" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="False">
-          <RequiredPrefixes>
+          <AllowedPrefixes>
             <String>_</String>
-          </RequiredPrefixes>
+            <String>m_</String>
+          </AllowedPrefixes>
         </NamingRule>
         <NamingRule Name="Static Fields (Private)" AffectedEntity="Field" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="False" IncludeStaticEntities="True" />
         <NamingRule Name="ReadOnly Fields (Private)" AffectedEntity="ReadonlyField" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="False">
@@ -68,6 +65,10 @@
         </NamingRule>
       </Rules>
     </NameConventionPolicy>
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="image/svg+xml" />
+    <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="image/svg+xml" />
+    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="application/xml" />
+    <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" />
   </Policies>
   <Configurations active="Release">
     <Configuration name="Debug" ctype="CombineConfiguration">
