@@ -156,12 +156,20 @@ namespace XG.Server
 
 		public string AppDataPath
 		{
-			get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "XG" + Path.DirectorySeparatorChar; }
+			get
+			{
+				string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				return folder + (folder.EndsWith("" + Path.DirectorySeparatorChar) ? "" : "" + Path.DirectorySeparatorChar) + "XG" + Path.DirectorySeparatorChar;
+			}
 		}
 
 		public static string AppDataPathStatic
 		{
-			get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "XG" + Path.DirectorySeparatorChar; }
+			get
+			{
+				string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+				return folder + (folder.EndsWith("" + Path.DirectorySeparatorChar) ? "" : "" + Path.DirectorySeparatorChar) + "XG" + Path.DirectorySeparatorChar;
+			}
 		}
 
 		public string XgVersion
@@ -302,7 +310,21 @@ namespace XG.Server
 				}
 			}
 		}
-		public string ReadyPath { get; set; }
+
+		string _readPath;
+		public string ReadyPath
+		{
+			get { return _readPath; }
+			set
+			{
+				_readPath = value;
+				if (!_readPath.EndsWith("" + Path.DirectorySeparatorChar))
+				{
+					_readPath += Path.DirectorySeparatorChar;
+				}
+			}
+		}
+
 		public bool EnableMultiDownloads { get; set; }
 		public bool ClearReadyDownloads { get; set; }
 

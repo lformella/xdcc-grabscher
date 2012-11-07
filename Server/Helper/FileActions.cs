@@ -631,13 +631,14 @@ namespace XG.Server.Helper
 		{
 			if (!string.IsNullOrEmpty(aFile))
 			{
-				int pos = aFile.LastIndexOf('/');
-				string folder = aFile.Substring(0, pos);
-				string file = aFile.Substring(pos + 1);
-	
-				pos = file.LastIndexOf('.');
-				string fileName = pos != -1 ? file.Substring(0, pos) : file;
-				string fileExtension = pos != -1 ? file.Substring(pos + 1) : "";
+				string folder = System.IO.Path.GetDirectoryName(aFile);
+				string file = System.IO.Path.GetFileName(aFile);
+				string fileName = System.IO.Path.GetFileNameWithoutExtension(aFile);
+				string fileExtension = System.IO.Path.GetExtension(aFile);
+				if (fileExtension.StartsWith("."))
+				{
+					fileExtension = fileExtension.Substring(1);
+				}
 
 				foreach (FileHandler handler in Settings.InstanceReload.FileHandlers)
 				{
