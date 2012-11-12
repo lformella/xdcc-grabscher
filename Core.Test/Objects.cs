@@ -1,6 +1,6 @@
 // 
 //  Objects.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,42 +15,28 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 
-#if !WINDOWS
 using NUnit.Framework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace XG.Core.Test
 {
-#if !WINDOWS
-	[TestFixture()]
-#else
-    [TestClass]
-#endif
+	[TestFixture]
 	public class Objects
 	{
-		bool _childAdded = false;
+		bool _childAdded;
 
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void Test ()
+		[Test]
+		public void Test()
 		{
 			Core.Objects parent = new Core.Objects();
-			parent.Added += delegate {
-				_childAdded = true;
-			};
+			parent.Added += delegate { _childAdded = true; };
 			parent.Guid = Guid.NewGuid();
 
 			AssertChildAdded(false);
@@ -65,9 +51,8 @@ namespace XG.Core.Test
 
 		void AssertChildAdded(bool childAdded)
 		{
-			Assert.AreEqual(this._childAdded, childAdded);
-			this._childAdded = false;
+			Assert.AreEqual(_childAdded, childAdded);
+			_childAdded = false;
 		}
 	}
 }
-

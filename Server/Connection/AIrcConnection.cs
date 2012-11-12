@@ -1,6 +1,6 @@
 // 
 //  AIrcConnection.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using XG.Core;
 using XG.Server.Helper;
@@ -31,25 +31,26 @@ namespace XG.Server.Connection
 		public FileActions FileActions { set; get; }
 
 		AConnection _connection;
+
 		public AConnection Connection
 		{
 			get { return _connection; }
 			set
 			{
-				if(_connection != null)
+				if (_connection != null)
 				{
-					_connection.Connected -= new EmptyDelegate(ConnectionConnected);
-					_connection.Disconnected -= new SocketErrorDelegate(ConnectionDisconnected);
-					_connection.DataTextReceived -= new DataTextDelegate(ConnectionDataReceived);
-					_connection.DataBinaryReceived -= new DataBinaryDelegate(ConnectionDataReceived);
+					_connection.Connected -= ConnectionConnected;
+					_connection.Disconnected -= ConnectionDisconnected;
+					_connection.DataTextReceived -= ConnectionDataReceived;
+					_connection.DataBinaryReceived -= ConnectionDataReceived;
 				}
 				_connection = value;
-				if(_connection != null)
+				if (_connection != null)
 				{
-					_connection.Connected += new EmptyDelegate(ConnectionConnected);
-					_connection.Disconnected += new SocketErrorDelegate(ConnectionDisconnected);
-					_connection.DataTextReceived += new DataTextDelegate(ConnectionDataReceived);
-					_connection.DataBinaryReceived += new DataBinaryDelegate(ConnectionDataReceived);
+					_connection.Connected += ConnectionConnected;
+					_connection.Disconnected += ConnectionDisconnected;
+					_connection.DataTextReceived += ConnectionDataReceived;
+					_connection.DataBinaryReceived += ConnectionDataReceived;
 				}
 			}
 		}
@@ -63,4 +64,3 @@ namespace XG.Server.Connection
 		protected virtual void ConnectionDataReceived(byte[] aData) {}
 	}
 }
-

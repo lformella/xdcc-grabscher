@@ -1,6 +1,6 @@
 ﻿// 
 //  AWorker.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,19 +15,19 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
-using System.Threading;
 using System.Reflection;
-
-using log4net;
+using System.Threading;
 
 using XG.Core;
+
+using log4net;
 
 namespace XG.Server.Worker
 {
@@ -38,157 +38,127 @@ namespace XG.Server.Worker
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Thread _thread;
-		
+
 		#endregion
 
 		#region REPOSITORIES
-		
+
 		Core.Servers _servers;
+
 		public Core.Servers Servers
 		{
-			get
-			{
-				return _servers;
-			}
+			get { return _servers; }
 			set
 			{
-				if(_servers != null)
+				if (_servers != null)
 				{
-					_servers.Added -= new ObjectsDelegate(ObjectAdded);
-					_servers.Removed -= new ObjectsDelegate(ObjectRemoved);
-					_servers.Changed -= new ObjectDelegate(ObjectChanged);
-					_servers.EnabledChanged -= new ObjectDelegate(ObjectEnabledChanged);
+					_servers.Added -= ObjectAdded;
+					_servers.Removed -= ObjectRemoved;
+					_servers.Changed -= ObjectChanged;
+					_servers.EnabledChanged -= ObjectEnabledChanged;
 				}
 				_servers = value;
-				if(_servers != null)
+				if (_servers != null)
 				{
-					_servers.Added += new ObjectsDelegate(ObjectAdded);
-					_servers.Removed += new ObjectsDelegate(ObjectRemoved);
-					_servers.Changed += new ObjectDelegate(ObjectChanged);
-					_servers.EnabledChanged += new ObjectDelegate(ObjectEnabledChanged);
+					_servers.Added += ObjectAdded;
+					_servers.Removed += ObjectRemoved;
+					_servers.Changed += ObjectChanged;
+					_servers.EnabledChanged += ObjectEnabledChanged;
 				}
 			}
 		}
-		
+
 		Files _files;
+
 		public Files Files
 		{
-			get
-			{
-				return _files;
-			}
+			get { return _files; }
 			set
 			{
-				if(_files != null)
+				if (_files != null)
 				{
-					_files.Added -= new ObjectsDelegate(FileAdded);
-					_files.Removed -= new ObjectsDelegate(FileRemoved);
-					_files.Changed -= new ObjectDelegate(FileChanged);
+					_files.Added -= FileAdded;
+					_files.Removed -= FileRemoved;
+					_files.Changed -= FileChanged;
 				}
 				_files = value;
-				if(_files != null)
+				if (_files != null)
 				{
-					_files.Added += new ObjectsDelegate(FileAdded);
-					_files.Removed += new ObjectsDelegate(FileRemoved);
-					_files.Changed += new ObjectDelegate(FileChanged);
+					_files.Added += FileAdded;
+					_files.Removed += FileRemoved;
+					_files.Changed += FileChanged;
 				}
 			}
 		}
-		
+
 		Objects _searches;
+
 		public Objects Searches
 		{
-			get
-			{
-				return _searches;
-			}
+			get { return _searches; }
 			set
 			{
-				if(_searches != null)
+				if (_searches != null)
 				{
-					_searches.Added -= new ObjectsDelegate(SearchAdded);
-					_searches.Removed -= new ObjectsDelegate(SearchRemoved);
-					_searches.Changed -= new ObjectDelegate(SearchChanged);
+					_searches.Added -= SearchAdded;
+					_searches.Removed -= SearchRemoved;
+					_searches.Changed -= SearchChanged;
 				}
 				_searches = value;
-				if(_searches != null)
+				if (_searches != null)
 				{
-					_searches.Added += new ObjectsDelegate(SearchAdded);
-					_searches.Removed += new ObjectsDelegate(SearchRemoved);
-					_searches.Changed += new ObjectDelegate(SearchChanged);
+					_searches.Added += SearchAdded;
+					_searches.Removed += SearchRemoved;
+					_searches.Changed += SearchChanged;
 				}
 			}
 		}
-		
+
 		Snapshots _snapshots;
+
 		public Snapshots Snapshots
 		{
-			get
-			{
-				return _snapshots;
-			}
+			get { return _snapshots; }
 			set
 			{
-				if(_snapshots != null)
+				if (_snapshots != null)
 				{
-					_snapshots.Added -= new SnapshotDelegate(SnapshotAdded);
+					_snapshots.Added -= SnapshotAdded;
 				}
 				_snapshots = value;
-				if(_snapshots != null)
+				if (_snapshots != null)
 				{
-					_snapshots.Added += new SnapshotDelegate(SnapshotAdded);
+					_snapshots.Added += SnapshotAdded;
 				}
 			}
 		}
-		
+
 		#endregion
-		
+
 		#region REPOSITORY EVENTS
-		
-		protected virtual void ObjectAdded(AObject aParent, AObject aObj)
-		{
-		}
-		
-		protected virtual void ObjectRemoved(AObject aParent, AObject aObj)
-		{
-		}
-		
-		protected virtual void ObjectChanged(AObject aObj)
-		{
-		}
-		
-		protected virtual void ObjectEnabledChanged(AObject aObj)
-		{
-		}
-		
-		protected virtual void FileAdded(AObject aParent, AObject aObj)
-		{
-		}
-		
-		protected virtual void FileRemoved(AObject aParent, AObject aObj)
-		{
-		}
-		
-		protected virtual void FileChanged(AObject aObj)
-		{
-		}
-		
-		protected virtual void SearchAdded(AObject aParent, AObject aObj)
-		{
-		}
-		
-		protected virtual void SearchRemoved(AObject aParent, AObject aObj)
-		{
-		}
-		
-		protected virtual void SearchChanged(AObject aObj)
-		{
-		}
-		
-		protected virtual void SnapshotAdded(Snapshot aSnap)
-		{
-		}
-		
+
+		protected virtual void ObjectAdded(AObject aParent, AObject aObj) {}
+
+		protected virtual void ObjectRemoved(AObject aParent, AObject aObj) {}
+
+		protected virtual void ObjectChanged(AObject aObj) {}
+
+		protected virtual void ObjectEnabledChanged(AObject aObj) {}
+
+		protected virtual void FileAdded(AObject aParent, AObject aObj) {}
+
+		protected virtual void FileRemoved(AObject aParent, AObject aObj) {}
+
+		protected virtual void FileChanged(AObject aObj) {}
+
+		protected virtual void SearchAdded(AObject aParent, AObject aObj) {}
+
+		protected virtual void SearchRemoved(AObject aParent, AObject aObj) {}
+
+		protected virtual void SearchChanged(AObject aObj) {}
+
+		protected virtual void SnapshotAdded(Snapshot aSnap) {}
+
 		#endregion
 
 		#region FUNCTIONS
@@ -197,7 +167,7 @@ namespace XG.Server.Worker
 		{
 			try
 			{
-				_thread = new Thread(new ThreadStart(StartRun));
+				_thread = new Thread(StartRun);
 				_thread.Start();
 			}
 			catch (ThreadAbortException)
@@ -210,9 +180,7 @@ namespace XG.Server.Worker
 			}
 		}
 
-		protected virtual void StartRun()
-		{
-		}
+		protected virtual void StartRun() {}
 
 		public void Stop()
 		{
@@ -226,10 +194,8 @@ namespace XG.Server.Worker
 				_log.Fatal("Stop()", ex);
 			}
 		}
-		
-		protected virtual void StopRun()
-		{
-		}
+
+		protected virtual void StopRun() {}
 
 		#endregion
 	}

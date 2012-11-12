@@ -1,6 +1,6 @@
 // 
 //  Process.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,35 +15,23 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System.IO;
 
-#if !WINDOWS
 using NUnit.Framework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace XG.Server.Helper.Test
 {
-#if !WINDOWS
-    [TestFixture()]
-#else
-    [TestClass]
-#endif
+	[TestFixture]
 	public class Process
 	{
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void Run ()
+		[Test]
+		public void Run()
 		{
 			string file = "test.txt";
 			string archive = "test.rar";
@@ -61,18 +49,18 @@ namespace XG.Server.Helper.Test
 			File.Delete(file);
 		}
 
-		bool Compress (string file, string archive, string password)
+		bool Compress(string file, string archive, string password)
 		{
-			var p = new Server.Helper.Process();
+			var p = new Helper.Process();
 			p.Command = "rar";
 			p.Arguments = "a " + (string.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file;
 
 			return p.Run();
 		}
 
-		bool DeCompress (string archive)
+		bool DeCompress(string archive)
 		{
-			var p = new Server.Helper.Process();
+			var p = new Helper.Process();
 			p.Command = "unrar";
 			p.Arguments = "e -p- " + archive;
 
@@ -80,4 +68,3 @@ namespace XG.Server.Helper.Test
 		}
 	}
 }
-

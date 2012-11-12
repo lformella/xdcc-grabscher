@@ -1,6 +1,6 @@
 // 
 //  FilePart.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Runtime.Serialization;
@@ -52,6 +52,7 @@ namespace XG.Core
 
 		[NonSerialized]
 		Packet _packet;
+
 		public Packet Packet
 		{
 			get { return _packet; }
@@ -60,7 +61,10 @@ namespace XG.Core
 				if (_packet != value)
 				{
 					_packet = value;
-					if (_packet != null) { _packetGuid = _packet.Guid; }
+					if (_packet != null)
+					{
+						_packetGuid = _packet.Guid;
+					}
 					else
 					{
 						_packetGuidOld = _packetGuid;
@@ -71,79 +75,80 @@ namespace XG.Core
 		}
 
 		Guid _packetGuid;
+
 		public Guid PacketGuid
 		{
 			get { return _packetGuid; }
 		}
 
 		Guid _packetGuidOld;
+
 		public Guid PacketGuidOld
 		{
 			get { return _packetGuidOld; }
 		}
 
-		Int64 _startSize = 0;
+		Int64 _startSize;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 StartSize
 		{
 			get { return _startSize; }
 			set { SetProperty(ref _startSize, value); }
 		}
 
-		Int64 _stopSize = 0;
+		Int64 _stopSize;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 StopSize
 		{
 			get { return _stopSize; }
 			set { SetProperty(ref _stopSize, value); }
 		}
 
-		Int64 _currentSize = 0;
+		Int64 _currentSize;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 CurrentSize
 		{
 			get { return _currentSize; }
 			set { SetProperty(ref _currentSize, value); }
 		}
-		
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 MissingSize
 		{
 			get { return _stopSize - _currentSize; }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
-		}
-		
-		[DataMember]
-		[MySqlAttribute]
-		public Int64 TimeMissing
-		{
-			get { return (_speed > 0 ? (Int64)(MissingSize / Speed) : Int64.MaxValue); }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
-		Int64 _speed = 0;
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
+		public Int64 TimeMissing
+		{
+			get { return (_speed > 0 ? (MissingSize / Speed) : Int64.MaxValue); }
+			private set { throw new NotSupportedException("You can not set this Property."); }
+		}
+
+		Int64 _speed;
+
+		[DataMember]
+		[MySql]
 		public Int64 Speed
 		{
 			get { return _speed; }
 			set { SetProperty(ref _speed, value); }
 		}
 
-		FilePart.States _state;
+		States _state;
+
 		[DataMember]
-		[MySqlAttribute]
-		public FilePart.States State
+		[MySql]
+		public States State
 		{
 			get { return _state; }
 			set
@@ -151,24 +156,32 @@ namespace XG.Core
 				if (_state != value)
 				{
 					_state = value;
-					if (_state != FilePart.States.Open) { _speed = 0; }
-					if (_state == FilePart.States.Ready) { _currentSize = _stopSize; }
+					if (_state != States.Open)
+					{
+						_speed = 0;
+					}
+					if (_state == States.Ready)
+					{
+						_currentSize = _stopSize;
+					}
 					Modified = true;
 				}
 			}
 		}
 
 		bool _checked;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public bool Checked
 		{
 			get { return _checked; }
 			set { SetProperty(ref _checked, value); }
 		}
-		
+
 		[NonSerialized]
 		byte[] _startReference;
+
 		public byte[] StartReference
 		{
 			get { return _startReference; }

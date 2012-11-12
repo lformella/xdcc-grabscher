@@ -1,6 +1,6 @@
+﻿// 
+//  PrivateMessage.cs
 // 
-//  Parser.cs
-//  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,62 +15,46 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 
-#if !WINDOWS
 using NUnit.Framework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 using XG.Core;
 
 namespace XG.Server.Irc.Test
 {
-#if !WINDOWS
-    [TestFixture()]
-#else
-    [TestClass]
-#endif
+	[TestFixture]
 	public class PrivateMessage : AParser
 	{
-		public PrivateMessage ()
+		public PrivateMessage()
 		{
-			RegisterParser(new Server.Irc.PrivateMessage());
+			RegisterParser(new Irc.PrivateMessage());
 		}
 
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void ParseBandwidth ()
+		[Test]
+		public void ParseBandwidth()
 		{
 			_eventParsingError = "";
 
 			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s");
-			Assert.AreEqual(12.7 * 1024, _bot.InfoSpeedCurrent);
-			Assert.AreEqual(139.5 * 1024, _bot.InfoSpeedMax);
+			Assert.AreEqual((Int64) (12.7 * 1024), _bot.InfoSpeedCurrent);
+			Assert.AreEqual((Int64) (139.5 * 1024), _bot.InfoSpeedMax);
 
 			_ircParser.ParseData(_server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** Bandwidth Usage ** Current: 0.0KB/s, Record: 231.4KB/s");
 			Assert.AreEqual(0, _bot.InfoSpeedCurrent);
-			Assert.AreEqual(231.4 * 1024, _bot.InfoSpeedMax);
+			Assert.AreEqual((Int64) (231.4 * 1024), _bot.InfoSpeedMax);
 
 			Assert.AreEqual(true, string.IsNullOrEmpty(_eventParsingError));
 		}
 
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void ParsePacketInfo ()
+		[Test]
+		public void ParsePacketInfo()
 		{
 			_eventParsingError = "";
 
@@ -93,22 +77,20 @@ namespace XG.Server.Irc.Test
 			Assert.AreEqual(true, string.IsNullOrEmpty(_eventParsingError));
 		}
 
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void ParsePackets ()
+		[Test]
+		public void ParsePackets()
 		{
 			Packet tPack = null;
 			_eventParsingError = "";
 
-			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
+			_ircParser.ParseData(_server,
+			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
 			tPack = _bot.Packet(5);
 			Assert.AreEqual(181 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("Serie The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar", tPack.Name);
 
-			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
+			_ircParser.ParseData(_server,
+			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
 			tPack = _bot.Packet(3);
 			Assert.AreEqual(150 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar", tPack.Name);
@@ -118,13 +100,13 @@ namespace XG.Server.Irc.Test
 			Assert.AreEqual(5 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("5meg", tPack.Name);
 
-			_ircParser.ParseData(_server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
+			_ircParser.ParseData(_server,
+			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
 			tPack = _bot.Packet(18);
-			Assert.AreEqual((Int64)(2.2 * 1024 * 1024 * 1024), tPack.Size);
+			Assert.AreEqual((Int64) (2.2 * 1024 * 1024 * 1024), tPack.Size);
 			Assert.AreEqual("Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv", tPack.Name);
 
 			Assert.AreEqual(true, string.IsNullOrEmpty(_eventParsingError));
 		}
 	}
 }
-

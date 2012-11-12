@@ -1,6 +1,6 @@
 // 
-//  Main.cs
-//  
+//  Cmd.cs
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 #if !WINDOWS
 using Mono.Unix;
@@ -29,13 +29,15 @@ using System;
 using System.IO;
 using System.Threading;
 
+using XG.Server.Plugin;
+using XG.Server.Plugin.Backend.MySql;
+
 using log4net;
 using log4net.Appender;
 using log4net.Config;
+using log4net.Core;
+using log4net.Layout;
 using log4net.Repository.Hierarchy;
-
-using XG.Server;
-using XG.Server.Plugin;
 
 namespace XG.Server.Cmd
 {
@@ -43,7 +45,7 @@ namespace XG.Server.Cmd
 	{
 		public static void Main(string[] args)
 		{
-			if(File.Exists(Settings.Instance.AppDataPath + "log4net"))
+			if (File.Exists(Settings.Instance.AppDataPath + "log4net"))
 			{
 				// load settings from file
 				XmlConfigurator.Configure(new FileInfo(Settings.Instance.AppDataPath + "log4net"));
@@ -51,13 +53,12 @@ namespace XG.Server.Cmd
 			else
 			{
 				// build our own, who logs only fatals to console
-				Logger root = ((Hierarchy)LogManager.GetRepository()).Root;
+				Logger root = ((Hierarchy) LogManager.GetRepository()).Root;
 
 				ConsoleAppender lAppender = new ConsoleAppender();
 				lAppender.Name = "Console";
-				lAppender.Layout = new
-					log4net.Layout.PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n");
-				lAppender.Threshold = log4net.Core.Level.Fatal;
+				lAppender.Layout = new PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n");
+				lAppender.Threshold = Level.Fatal;
 				lAppender.ActivateOptions();
 
 				root.AddAppender(lAppender);
@@ -79,21 +80,21 @@ namespace XG.Server.Cmd
 			ABackendPlugin backend = null;
 			if (Settings.Instance.UseMySqlBackend)
 			{
-				backend = new Server.Plugin.Backend.MySql.BackendPlugin();
+				backend = new BackendPlugin();
 			}
 			else
 			{
-				backend = new Server.Plugin.Backend.File.BackendPlugin();
+				backend = new Plugin.Backend.File.BackendPlugin();
 			}
 			instance.AddBackendPlugin(backend);
 
 			if (Settings.Instance.UseWebServer)
 			{
-				instance.AddWorker(new Server.Plugin.General.Webserver.Plugin());
+				instance.AddWorker(new Plugin.General.Webserver.Plugin());
 			}
 			if (Settings.Instance.UseJabberClient)
 			{
-				instance.AddWorker(new Server.Plugin.General.Jabber.Plugin());
+				instance.AddWorker(new Plugin.General.Jabber.Plugin());
 			}
 
 			instance.Start();
@@ -109,7 +110,7 @@ namespace XG.Server.Cmd
 					}
 					catch (Exception ex)
 					{
-						LogManager.GetLogger(typeof(Main)).Fatal("Cant delete shutdown file", ex);
+						LogManager.GetLogger(typeof (Main)).Fatal("Cant delete shutdown file", ex);
 					}
 					instance.Stop();
 					break;
@@ -120,7 +121,7 @@ namespace XG.Server.Cmd
 				}
 			}
 
-			Environment.Exit (0);
+			Environment.Exit(0);
 		}
 	}
 }

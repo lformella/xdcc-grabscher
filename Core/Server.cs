@@ -1,6 +1,6 @@
 // 
 //  Server.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace XG.Core
 	public class Server : AObjects
 	{
 		#region VARIABLES
-		
+
 		[DataMember]
 		public override bool Connected
 		{
@@ -57,9 +57,10 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
-		int _port = 0;
+		int _port;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int Port
 		{
 			get { return _port; }
@@ -67,8 +68,9 @@ namespace XG.Core
 		}
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public SocketErrorCode ErrorCode
 		{
 			get { return _errorCode; }
@@ -86,8 +88,11 @@ namespace XG.Core
 
 		public Channel Channel(string aName)
 		{
-			if (!aName.StartsWith("#")) { aName = "#" + aName; }
-			return (Channel)base.Named(aName);
+			if (!aName.StartsWith("#"))
+			{
+				aName = "#" + aName;
+			}
+			return (Channel) base.Named(aName);
 		}
 
 		public Bot Bot(string aName)
@@ -96,7 +101,10 @@ namespace XG.Core
 			foreach (Channel chan in Channels)
 			{
 				tBot = chan.Bot(aName);
-				if (tBot != null) { break; }
+				if (tBot != null)
+				{
+					break;
+				}
 			}
 			return tBot;
 		}
@@ -109,7 +117,10 @@ namespace XG.Core
 		public void AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
-			if (!aChannel.StartsWith("#")) { aChannel = "#" + aChannel; }
+			if (!aChannel.StartsWith("#"))
+			{
+				aChannel = "#" + aChannel;
+			}
 			if (Channel(aChannel) == null)
 			{
 				Channel tChannel = new Channel();

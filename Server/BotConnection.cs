@@ -1,6 +1,6 @@
 // 
 //  BotConnection.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,33 +15,35 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using log4net;
-
 using XG.Core;
 using XG.Server.Connection;
+
+using log4net;
+
+using File = XG.Core.File;
 
 namespace XG.Server
 {
 	public delegate void PacketBotConnectDelegate(Packet aPack, BotConnection aCon);
 
 	/// <summary>
-	/// This class describes the connection to a single irc bot
-	/// it does the following things
-	/// - receiving all data comming from the bot
-	/// - writing the data into the file
-	/// - checking if the data matches the given file (rollback check)
-	/// </summary>	
+	/// 	This class describes the connection to a single irc bot
+	/// 	it does the following things
+	/// 	- receiving all data comming from the bot
+	/// 	- writing the data into the file
+	/// 	- checking if the data matches the given file (rollback check)
+	/// </summary>
 	public class BotConnection : AIrcConnection
 	{
 		#region VARIABLES
@@ -55,30 +57,28 @@ namespace XG.Server
 		DateTime _speedCalcTime;
 		Int64 _speedCalcSize;
 
-		byte[] _rollbackRefernce = null;
-		byte[] _startBuffer = null;
-		byte[] _stopBuffer = null;
+		byte[] _rollbackRefernce;
+		byte[] _startBuffer;
+		byte[] _stopBuffer;
 
-		bool _streamOk = false;
+		bool _streamOk;
 		public bool RemovePart { get; set; }
-		
+
 		Packet _packet;
+
 		public Packet Packet
 		{
-			get
-			{
-				return _packet;
-			}
+			get { return _packet; }
 			set
 			{
-				if(_packet != null)
+				if (_packet != null)
 				{
-					_packet.EnabledChanged -= new ObjectDelegate(EnabledChanged);
+					_packet.EnabledChanged -= EnabledChanged;
 				}
 				_packet = value;
-				if(_packet != null)
+				if (_packet != null)
 				{
-					_packet.EnabledChanged += new ObjectDelegate(EnabledChanged);
+					_packet.EnabledChanged += EnabledChanged;
 				}
 			}
 		}
@@ -102,7 +102,8 @@ namespace XG.Server
 		}
 
 		public FilePart Part { get; set; }
-		Core.File File
+
+		File File
 		{
 			get { return Part.Parent; }
 		}
@@ -115,8 +116,11 @@ namespace XG.Server
 				{
 					return Settings.Instance.TempPath + File.TmpPath + Part.StartSize;
 				}
-				// damn this should not happen
-				else { return ""; }
+					// damn this should not happen
+				else
+				{
+					return "";
+				}
 			}
 		}
 
@@ -137,7 +141,7 @@ namespace XG.Server
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
-			Core.File File = FileActions.NewFile(Packet.RealName, Packet.RealSize);
+			File File = FileActions.NewFile(Packet.RealName, Packet.RealSize);
 			if (File == null)
 			{
 				_log.Fatal("ConnectionConnected() cant find or create a file to download");
@@ -181,11 +185,11 @@ namespace XG.Server
 
 							// seek to 0 and extract the startbuffer bytes need for the previous file
 							stream.Seek(0, SeekOrigin.Begin);
-							Part.StartReference = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
+							Part.StartReference = _reader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
 
 							// seek to seekPos and extract the rollbackcheck bytes
 							stream.Seek(seekPos, SeekOrigin.Begin);
-							_rollbackRefernce = _reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
+							_rollbackRefernce = _reader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
 							// seek back
 							stream.Seek(seekPos, SeekOrigin.Begin);
 						}
@@ -196,7 +200,10 @@ namespace XG.Server
 							return;
 						}
 					}
-					else { _streamOk = true; }
+					else
+					{
+						_streamOk = true;
+					}
 
 					_writer = new BinaryWriter(stream);
 
@@ -214,6 +221,7 @@ namespace XG.Server
 					Packet.Parent.Commit();
 
 					#endregion
+
 #if !UNSAFE
 				}
 				catch (Exception ex)
@@ -241,7 +249,10 @@ namespace XG.Server
 		protected override void ConnectionDisconnected(SocketErrorCode aValue)
 		{
 			// close the writer
-			if (_writer != null) { _writer.Close(); }
+			if (_writer != null)
+			{
+				_writer.Close();
+			}
 
 			Packet.Connected = false;
 			Packet.Part = null;
@@ -271,7 +282,7 @@ namespace XG.Server
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
 					}
-					// that should not happen
+						// that should not happen
 					else if (CurrrentSize > StopSize)
 					{
 						Part.State = FilePart.States.Broken;
@@ -286,7 +297,7 @@ namespace XG.Server
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsBroken);
 					}
-					// it did not start
+						// it did not start
 					else if (_receivedBytes == 0)
 					{
 						_log.Error("ConnectionDisconnected() downloading did not start, disabling packet");
@@ -295,7 +306,7 @@ namespace XG.Server
 						// statistics
 						Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 					}
-					// it is incomplete
+						// it is incomplete
 					else
 					{
 						_log.Error("ConnectionDisconnected() incomplete");
@@ -306,7 +317,7 @@ namespace XG.Server
 				}
 				Part.Commit();
 			}
-			// the connection didnt even connected to the given ip and port
+				// the connection didnt even connected to the given ip and port
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
@@ -340,8 +351,11 @@ namespace XG.Server
 			if (!_streamOk)
 			{
 				// intial data
-				if (_startBuffer == null) { _startBuffer = aData; }
-				// resize buffer and copy data
+				if (_startBuffer == null)
+				{
+					_startBuffer = aData;
+				}
+					// resize buffer and copy data
 				else
 				{
 					int dL = aData.Length;
@@ -363,30 +377,36 @@ namespace XG.Server
 						_startBuffer = null;
 						_streamOk = true;
 					}
-					// data mismatch
+						// data mismatch
 					else
 					{
 						_log.Error("con_DataReceived() rollback check failed");
 
 						// unregister from the event because if this is triggered
 						// it will remove the part
-						Packet.EnabledChanged -= new ObjectDelegate(EnabledChanged);
+						Packet.EnabledChanged -= EnabledChanged;
 						Packet.Enabled = false;
 						aData = new byte[0];
 						Connection.Disconnect();
 						return;
 					}
 				}
-				// some data is missing, so wait for more
-				else { return; }
+					// some data is missing, so wait for more
+				else
+				{
+					return;
+				}
 			}
-			// save the reference bytes if it is a new file
-			else if (Part.StartReference == null || Part.StartReference.Length < (int)Settings.Instance.FileRollbackCheckBytes)
+				// save the reference bytes if it is a new file
+			else if (Part.StartReference == null || Part.StartReference.Length < Settings.Instance.FileRollbackCheckBytes)
 			{
 				byte[] startReference = Part.StartReference;
 				// initial data
-				if (startReference == null) { startReference = aData; }
-				// resize buffer and copy data
+				if (startReference == null)
+				{
+					startReference = aData;
+				}
+					// resize buffer and copy data
 				else
 				{
 					int dL = aData.Length;
@@ -397,7 +417,7 @@ namespace XG.Server
 				// shrink the reference if it is to big
 				if (startReference.Length > Settings.Instance.FileRollbackCheckBytes)
 				{
-					Array.Resize(ref startReference, (int)Settings.Instance.FileRollbackCheckBytes);
+					Array.Resize(ref startReference, Settings.Instance.FileRollbackCheckBytes);
 				}
 				Part.StartReference = startReference;
 			}
@@ -428,9 +448,9 @@ namespace XG.Server
 					// copy the overlapping data into the buffer
 					Array.Copy(aData, length, _stopBuffer, 0, aData.Length - length);
 					// and shrink the actual data
-					Array.Resize(ref aData, (int)length);
+					Array.Resize(ref aData, (int) length);
 				}
-				// resize buffer and copy data
+					// resize buffer and copy data
 				else
 				{
 					int dL = aData.Length;
@@ -455,7 +475,7 @@ namespace XG.Server
 							Connection.Disconnect();
 							return;
 						}
-						// data mismatch
+							// data mismatch
 						else
 						{
 							_log.Error("con_DataReceived() reference check failed");
@@ -463,13 +483,13 @@ namespace XG.Server
 							StopSize = stopSize;
 						}
 					}
-					// we are unchecked, so just close
+						// we are unchecked, so just close
 					else
 					{
 						// shrink the buffer if it is to big
 						if (_stopBuffer.Length > Settings.Instance.FileRollbackCheckBytes)
 						{
-							Array.Resize(ref _stopBuffer, (int)Settings.Instance.FileRollbackCheckBytes);
+							Array.Resize(ref _stopBuffer, Settings.Instance.FileRollbackCheckBytes);
 						}
 						// and write it to file to be able to check the next file
 						_writer.Write(_stopBuffer);
@@ -480,9 +500,12 @@ namespace XG.Server
 						return;
 					}
 				}
-				// the splitted data must be written to the file of course
-				// but if some data is missing wait for more
-				else if (!initial) { return; }
+					// the splitted data must be written to the file of course
+					// but if some data is missing wait for more
+				else if (!initial)
+				{
+					return;
+				}
 			}
 
 			#endregion
@@ -517,7 +540,7 @@ namespace XG.Server
 				_speedCalcSize = 0;
 
 				// statistics
-				if(Part.Speed > Statistic.Instance.Get(StatisticType.SpeedMax))
+				if (Part.Speed > Statistic.Instance.Get(StatisticType.SpeedMax))
 				{
 					Statistic.Instance.Set(StatisticType.SpeedMax, Part.Speed);
 				}

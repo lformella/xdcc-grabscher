@@ -1,6 +1,6 @@
 // 
 //  Main.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,23 +15,26 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-
-using log4net;
 
 using XG.Core;
 using XG.Server.Helper;
 using XG.Server.Irc;
 using XG.Server.Plugin;
 using XG.Server.Worker;
+
+using log4net;
+
+using File = XG.Core.File;
 
 namespace XG.Server
 {
@@ -41,10 +44,10 @@ namespace XG.Server
 
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		Parser _ircParser;
-		Servers _servers;
-		FileActions _fileActions;
-		Workers _workers;
+		readonly Parser _ircParser;
+		readonly Servers _servers;
+		readonly FileActions _fileActions;
+		readonly Workers _workers;
 
 		#endregion
 
@@ -56,7 +59,7 @@ namespace XG.Server
 
 			_ircParser = new Parser();
 			_ircParser.FileActions = _fileActions;
-			_ircParser.ParsingError += new DataTextDelegate(IrcParserParsingError);
+			_ircParser.ParsingError += IrcParserParsingError;
 
 			_servers = new Servers();
 			_servers.FileActions = _fileActions;
@@ -175,7 +178,7 @@ namespace XG.Server
 				foreach (File file in Files.All)
 				{
 					// lets check if the directory is still on the harddisk
-					if(!System.IO.Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
 						_log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
 						_fileActions.RemoveFile(file);
@@ -198,13 +201,14 @@ namespace XG.Server
 							}
 
 							// check if the real file and the part is actual the same
-							System.IO.FileInfo info = new System.IO.FileInfo(tmpPath + part.StartSize);
+							FileInfo info = new FileInfo(tmpPath + part.StartSize);
 							if (info.Exists)
 							{
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
 								if (part.CurrentSize != part.StartSize + info.Length)
 								{
-									_log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize + " real:" + info.Length);
+									_log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize +
+									          " real:" + info.Length);
 									part.CurrentSize = part.StartSize + info.Length;
 									complete = false;
 								}
@@ -222,7 +226,7 @@ namespace XG.Server
 								part.State = FilePart.States.Closed;
 								complete = false;
 							}
-							// the file is closed, so do smt
+								// the file is closed, so do smt
 							else
 							{
 								// check the file for safety
@@ -235,11 +239,11 @@ namespace XG.Server
 										try
 										{
 											_log.Fatal("Run() crash recovery checking " + next.Name);
-											System.IO.FileStream fileStream = System.IO.File.Open(_fileActions.CompletePath(part), System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
-											System.IO.BinaryReader fileReader = new System.IO.BinaryReader(fileStream);
+											FileStream fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite);
+											BinaryReader fileReader = new BinaryReader(fileStream);
 											// extract the needed refernce bytes
-											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, System.IO.SeekOrigin.End);
-											byte[] bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
+											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
+											byte[] bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
 											fileReader.Close();
 
 											_fileActions.CheckNextReferenceBytes(part, bytes);
@@ -259,7 +263,10 @@ namespace XG.Server
 
 						// check and maybee join the files if something happend the last run
 						// for exaple the disk was full or the rights were not there
-						if (complete && file.Parts.Count() > 0) { _fileActions.CheckFile(file); }
+						if (complete && file.Parts.Count() > 0)
+						{
+							_fileActions.CheckFile(file);
+						}
 					}
 				}
 			}
@@ -289,7 +296,7 @@ namespace XG.Server
 			worker = new SnapshotWorker();
 			worker.SecondsToSleep = Settings.Instance.TakeSnapshotTime;
 			AddWorker(worker);
-			
+
 			worker = new BotWatchdogWorker();
 			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckTime;
 			AddWorker(worker);
@@ -353,7 +360,7 @@ namespace XG.Server
 
 		protected override void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			if(aObj is Core.Server)
+			if (aObj is Core.Server)
 			{
 				Core.Server aServer = aObj as Core.Server;
 
@@ -364,7 +371,7 @@ namespace XG.Server
 
 		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if(aObj is Core.Server)
+			if (aObj is Core.Server)
 			{
 				Core.Server aServer = aObj as Core.Server;
 
@@ -378,11 +385,11 @@ namespace XG.Server
 
 		protected override void ObjectEnabledChanged(AObject aObj)
 		{
-			if(aObj is Core.Server)
+			if (aObj is Core.Server)
 			{
 				Core.Server aServer = aObj as Core.Server;
 
-				if(aObj.Enabled)
+				if (aObj.Enabled)
 				{
 					_servers.ServerConnect(aServer);
 				}
@@ -399,12 +406,12 @@ namespace XG.Server
 			{
 				try
 				{
-					System.IO.StreamWriter sw = new System.IO.StreamWriter(System.IO.File.OpenWrite(Settings.Instance.ParsingErrorFile));
-					sw.BaseStream.Seek(0, System.IO.SeekOrigin.End);
+					StreamWriter sw = new StreamWriter(System.IO.File.OpenWrite(Settings.Instance.ParsingErrorFile));
+					sw.BaseStream.Seek(0, SeekOrigin.End);
 					sw.WriteLine(aData.Normalize());
 					sw.Close();
 				}
-				catch (Exception) { }
+				catch (Exception) {}
 			}
 		}
 

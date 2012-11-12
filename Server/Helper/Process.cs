@@ -1,6 +1,6 @@
 // 
 //  Process.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Diagnostics;
@@ -44,7 +44,7 @@ namespace XG.Server.Helper
 
 		#region RUN
 
-		public bool Run ()
+		public bool Run()
 		{
 			bool result = true;
 
@@ -59,8 +59,8 @@ namespace XG.Server.Helper
 				p.StartInfo.RedirectStandardOutput = true;
 				p.StartInfo.RedirectStandardError = true;
 
-				p.OutputDataReceived += new DataReceivedEventHandler(OutputDataReceived);
-				p.ErrorDataReceived += new DataReceivedEventHandler(ErrorDataReceived);
+				p.OutputDataReceived += OutputDataReceived;
+				p.ErrorDataReceived += ErrorDataReceived;
 
 				p.Start();
 
@@ -70,8 +70,8 @@ namespace XG.Server.Helper
 				p.StandardInput.Close();
 				p.WaitForExit();
 
-				p.OutputDataReceived -= new DataReceivedEventHandler(OutputDataReceived);
-				p.ErrorDataReceived -= new DataReceivedEventHandler(ErrorDataReceived);
+				p.OutputDataReceived -= OutputDataReceived;
+				p.ErrorDataReceived -= ErrorDataReceived;
 
 				p.Close();
 			}

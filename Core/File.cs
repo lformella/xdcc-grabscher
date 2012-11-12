@@ -1,6 +1,6 @@
 // 
 //  File.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -36,54 +36,44 @@ namespace XG.Core
 
 		[NonSerialized]
 		public object Lock = new object();
-		
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public override string Name
 		{
 			get { return base.Name; }
-			set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
-		string _tmpPath;
+		readonly string _tmpPath;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public string TmpPath
 		{
 			get { return _tmpPath; }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
-		Int64 _size;
+		readonly Int64 _size;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 Size
 		{
 			get { return _size; }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion
 
 		#region CHILDREN
-		
+
 		[DataMember]
 		public List<FilePart> Parts
 		{
 			get { return base.All.Cast<FilePart>().ToList(); }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		public bool Add(FilePart aPart)
@@ -100,9 +90,7 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		File() : base()
-		{
-		}
+		File() {}
 
 		public File(string aName, Int64 aSize) : this()
 		{

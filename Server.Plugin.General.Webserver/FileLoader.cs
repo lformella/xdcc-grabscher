@@ -1,6 +1,6 @@
 // 
 //  FileLoader.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -36,45 +36,18 @@ namespace XG.Server.Plugin.General.Webserver
 
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		Dictionary<string, string> _dicString;
-		Dictionary<string, byte[]> _dicByte;
+		readonly Dictionary<string, string> _dicString;
+		readonly Dictionary<string, byte[]> _dicByte;
 
-		string[] _cssFiles =
-		{
-			"reset",
-			"fontello",
-			"jquery-ui",
-			"ui.jqgrid",
-			"layout-default",
-			"xg"
-		};
+		readonly string[] _cssFiles = {"reset", "fontello", "jquery-ui", "ui.jqgrid", "layout-default", "xg"};
 
-		string[] _jsFiles =
-		{
-			"sha256",
-			"json2.min",
-			"jquery.min",
-			"jquery-ui.min",
-			"jquery.class",
-			"jquery.cookie.min",
-			"jquery.layout.min",
-			"jquery.flot",
-			"jquery.flot.axislabels",
-			"jquery.jqGrid.min",
-			"i18n/xg.locale-en",
-			"i18n/grid.locale-#LANGUAGE_SHORT#",
-			"xg.translate",
-			"xg.enum",
-			"xg.cookie",
-			"xg.helper",
-			"xg.formatter",
-			"xg.resize",
-			"xg.refresh",
-			"xg.password",
-			"xg.url",
-			"xg",
-			"i18n/xg.locale-#LANGUAGE_SHORT#"
-		};
+		readonly string[] _jsFiles =
+			{
+				"sha256", "json2.min", "jquery.min", "jquery-ui.min", "jquery.class", "jquery.cookie.min", "jquery.layout.min",
+				"jquery.flot", "jquery.flot.axislabels", "jquery.jqGrid.min", "i18n/xg.locale-en", "i18n/grid.locale-#LANGUAGE_SHORT#"
+				, "xg.translate", "xg.enum", "xg.cookie", "xg.helper", "xg.formatter", "xg.resize", "xg.refresh", "xg.password",
+				"xg.url", "xg", "i18n/xg.locale-#LANGUAGE_SHORT#"
+			};
 
 		public string Salt;
 
@@ -101,14 +74,14 @@ namespace XG.Server.Plugin.General.Webserver
 					string content = "";
 					if (aFile == "/js/all.js")
 					{
-						foreach(string file in _jsFiles)
+						foreach (string file in _jsFiles)
 						{
 							content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aLanguages) + "\n";
 						}
 					}
 					else if (aFile == "/css/all.css")
 					{
-						foreach(string file in _cssFiles)
+						foreach (string file in _cssFiles)
 						{
 							content += LoadFile("/css/" + file + ".css", aLanguages) + "\n";
 						}
@@ -118,7 +91,7 @@ namespace XG.Server.Plugin.General.Webserver
 #if DEBUG && !WINDOWS
 						content = File.OpenText("./Resources" + aFile).ReadToEnd();
 #else
-						Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
+						Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
 						string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 						content = new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd();
 #endif
@@ -134,16 +107,16 @@ namespace XG.Server.Plugin.General.Webserver
 							string css = "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/all.css\" />\n";
 #endif
 							content = content.Replace("#CSS_FILES#", css);
-							
-//#if DEBUG
+
+							//#if DEBUG
 							string js = "";
 							foreach (string jsFile in _jsFiles)
 							{
 								js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
 							}
-//#else
-//							string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
-//#endif 
+							//#else
+							//							string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
+							//#endif 
 							content = content.Replace("#JS_FILES#", js);
 
 							content = content.Replace("#SALT#", Salt);
@@ -182,7 +155,7 @@ namespace XG.Server.Plugin.General.Webserver
 #if DEBUG && !WINDOWS
 					return File.ReadAllBytes("./Resources" + aFile);
 #else
-					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
+					Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
 					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					_dicByte.Add(aFile, new BinaryReader(assembly.GetManifestResourceStream(name)).ReadAllBytes());
 					return _dicByte[aFile];
@@ -218,7 +191,7 @@ namespace XG.Server.Plugin.General.Webserver
 				try
 				{
 #endif
-					Assembly assembly = Assembly.GetAssembly(typeof(FileLoader));
+					Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
 					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
 					Stream stream = assembly.GetManifestResourceStream(name);
 					byte[] data = new byte[stream.Length];
@@ -227,7 +200,10 @@ namespace XG.Server.Plugin.General.Webserver
 					while (remaining > 0)
 					{
 						int read = stream.Read(data, offset, remaining);
-						if (read <= 0) { throw new EndOfStreamException(String.Format("End of stream reached with {0} bytes left to read", remaining)); }
+						if (read <= 0)
+						{
+							throw new EndOfStreamException(String.Format("End of stream reached with {0} bytes left to read", remaining));
+						}
 						remaining -= read;
 						offset += read;
 					}
@@ -262,7 +238,6 @@ namespace XG.Server.Plugin.General.Webserver
 				}
 				return ms.ToArray();
 			}
-			
 		}
 	}
 }

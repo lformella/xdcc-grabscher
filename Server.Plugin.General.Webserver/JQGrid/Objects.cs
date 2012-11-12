@@ -1,6 +1,6 @@
 // 
 //  Objects.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -33,35 +33,26 @@ namespace XG.Server.Plugin.General.Webserver.JQGrid
 	[DataContract]
 	public class Objects
 	{
-		[DataMember (Name = "page")]
+		[DataMember(Name = "page")]
 		public int Page { get; set; }
 
-		[DataMember (Name = "total")]
+		[DataMember(Name = "total")]
 		public int Total
 		{
-			get
-			{
-				return (int)Math.Ceiling((double)_gridObjects.Count() / (double)Rows);
-			}
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			get { return (int) Math.Ceiling(_gridObjects.Count() / (double) Rows); }
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
-		
+
 		public int Rows { get; set; }
 
-		[DataMember (Name = "records")]
+		[DataMember(Name = "records")]
 		public int Records
 		{
 			get { return _gridObjects.Count(); }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
-		[DataMember (Name = "rows")]
+		[DataMember(Name = "rows")]
 		public IEnumerable<Object> RowObjects
 		{
 			get
@@ -70,13 +61,11 @@ namespace XG.Server.Plugin.General.Webserver.JQGrid
 				int count = Records < start + Rows ? Records - start : Rows;
 				return _gridObjects.GetRange(start, count);
 			}
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		List<Object> _gridObjects;
+
 		public void SetObjects(IEnumerable<AObject> aObjects)
 		{
 			_gridObjects = new List<Object>();
@@ -87,4 +76,3 @@ namespace XG.Server.Plugin.General.Webserver.JQGrid
 		}
 	}
 }
-

@@ -1,6 +1,6 @@
 // 
 //  AObject.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ using System.Runtime.Serialization;
 namespace XG.Core
 {
 	public delegate void ObjectDelegate(AObject aObj);
-	
+
 	[Serializable]
 	[DataContract]
 	public class AObject
@@ -40,7 +40,7 @@ namespace XG.Core
 
 		protected void FireEnabledChanged(AObject aObj)
 		{
-			if(EnabledChanged != null)
+			if (EnabledChanged != null)
 			{
 				EnabledChanged(aObj);
 			}
@@ -51,7 +51,7 @@ namespace XG.Core
 
 		protected void FireChanged(AObject aObj)
 		{
-			if(Changed != null)
+			if (Changed != null)
 			{
 				Changed(aObj);
 			}
@@ -60,7 +60,7 @@ namespace XG.Core
 		#endregion
 
 		#region PROPERTIES
-		
+
 		protected bool SetProperty<T>(ref T field, T value)
 		{
 			if (!EqualityComparer<T>.Default.Equals(field, value))
@@ -73,18 +73,17 @@ namespace XG.Core
 		}
 
 		Guid _parentGuid;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Guid ParentGuid
 		{
 			get { return _parentGuid; }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		AObject _parent;
+
 		public virtual AObject Parent
 		{
 			get { return _parent; }
@@ -93,25 +92,32 @@ namespace XG.Core
 				if (_parent != value)
 				{
 					_parent = value;
-					if (_parent != null) { _parentGuid = _parent.Guid; }
-					else { _parentGuid = Guid.Empty; }
+					if (_parent != null)
+					{
+						_parentGuid = _parent.Guid;
+					}
+					else
+					{
+						_parentGuid = Guid.Empty;
+					}
 				}
 			}
 		}
-		
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Guid Guid { get; set; }
 
 		string _name;
-		[MySqlAttribute]
+
+		[MySql]
 		public virtual string Name
 		{
 			get { return _name; }
 			set { SetProperty(ref _name, value); }
 		}
 
-		[DataMember (Name = "Name")]
+		[DataMember(Name = "Name")]
 		public string NameAscii
 		{
 			get { return Name.ToAscii(); }
@@ -119,7 +125,8 @@ namespace XG.Core
 		}
 
 		internal bool Modified;
-		public void Commit ()
+
+		public void Commit()
 		{
 			if (Modified)
 			{
@@ -129,17 +136,19 @@ namespace XG.Core
 		}
 
 		bool _connected;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public virtual bool Connected
 		{
 			get { return _connected; }
 			set { SetProperty(ref _connected, value); }
 		}
-		
+
 		bool _enabled;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public virtual bool Enabled
 		{
 			get { return _enabled; }
@@ -159,13 +168,11 @@ namespace XG.Core
 		}
 
 		DateTime _enabledTime = DateTime.MinValue.ToUniversalTime();
+
 		public DateTime EnabledTime
 		{
 			get { return _enabledTime; }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion
@@ -183,4 +190,3 @@ namespace XG.Core
 		#endregion
 	}
 }
-

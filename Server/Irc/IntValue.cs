@@ -1,6 +1,6 @@
 // 
 //  IntValue.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,19 +15,19 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-using log4net;
-
 using XG.Core;
+
+using log4net;
 
 namespace XG.Server.Irc
 {
@@ -41,31 +41,31 @@ namespace XG.Server.Irc
 
 			Bot tBot = aServer.Bot(aCommands[0].Split('!')[0]);
 			Channel tChan = aServer.Channel(aCommands[2]);
-			
+
 			string tComCodeStr = aCommands[1];
 			int tComCode = 0;
 			if (int.TryParse(tComCodeStr, out tComCode))
 			{
 				switch (tComCode)
 				{
-					#region 4
-	
+						#region 4
+
 					case 4: // 
 						aServer.Connected = true;
 						aServer.Commit();
 						break;
-	
-					#endregion
-	
-					#region RPL_WHOISCHANNELS
-	
+
+						#endregion
+
+						#region RPL_WHOISCHANNELS
+
 					case 319: // RPL_WHOISCHANNELS
 						tBot = aServer.Bot(aCommands[3]);
 						if (tBot != null)
 						{
 							string chanName = "";
 							bool addChan = true;
-							string[] tChannelList = aRawData.Split(':')[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+							string[] tChannelList = aRawData.Split(':')[2].Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 							foreach (string chan in tChannelList)
 							{
 								chanName = "#" + chan.Split('#')[1];
@@ -83,11 +83,11 @@ namespace XG.Server.Irc
 							}
 						}
 						break;
-	
-					#endregion
-	
-					#region RPL_NAMREPLY
-	
+
+						#endregion
+
+						#region RPL_NAMREPLY
+
 					case 353: // RPL_NAMREPLY
 						tChan = aServer.Channel(aCommands[4]);
 						if (tChan != null)
@@ -112,11 +112,11 @@ namespace XG.Server.Irc
 							}
 						}
 						break;
-	
-					#endregion
-	
-					#region RPL_ENDOFNAMES
-	
+
+						#endregion
+
+						#region RPL_ENDOFNAMES
+
 					case 366: // RPL_ENDOFNAMES
 						tChan = aServer.Channel(aCommands[3]);
 						if (tChan != null)
@@ -125,15 +125,15 @@ namespace XG.Server.Irc
 							tChan.Connected = true;
 							_log.Info("Parse() joined channel " + tChan.Name);
 						}
-	
+
 						// statistics
 						Statistic.Instance.Increase(StatisticType.ChannelConnectsOk);
 						break;
-	
-					#endregion
-	
-					#region RPL_ENDOFMOTD | ERR_NOMOTD
-	
+
+						#endregion
+
+						#region RPL_ENDOFMOTD | ERR_NOMOTD
+
 					case 376: // RPL_ENDOFMOTD
 					case 422: // ERR_NOMOTD
 						_log.Info("Parse() really connected");
@@ -141,17 +141,20 @@ namespace XG.Server.Irc
 						aServer.Commit();
 						foreach (Channel chan in aServer.Channels)
 						{
-							if (chan.Enabled) { FireJoinChannel(aServer, chan); }
+							if (chan.Enabled)
+							{
+								FireJoinChannel(aServer, chan);
+							}
 						}
-	
+
 						// statistics
 						Statistic.Instance.Increase(StatisticType.ServerConnectsOk);
 						break;
-	
-					#endregion
-	
-					#region ERR_NOCHANMODES
-	
+
+						#endregion
+
+						#region ERR_NOCHANMODES
+
 					case 477: // ERR_NOCHANMODES
 						tChan = aServer.Channel(aCommands[3]);
 						// TODO should we nickserv register here?
@@ -159,8 +162,8 @@ namespace XG.Server.Irc
 						{
 							FireSendDataEvent(aServer, "nickserv register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail);
 						}*/
-	
-						if(tChan != null)
+
+						if (tChan != null)
 						{
 							tChan.ErrorCode = tComCode;
 							//CreateTimerEvent(aServer, tChan, Settings.Instance.ChannelWaitTime);
@@ -171,11 +174,11 @@ namespace XG.Server.Irc
 							//if(tBot != null) { CreateTimerEvent(aServer, tBot, Settings.Instance.BotWaitTime); }
 						}
 						break;
-	
-					#endregion
-	
-					#region ERR_TOOMANYCHANNELS
-	
+
+						#endregion
+
+						#region ERR_TOOMANYCHANNELS
+
 					case 405:
 						tChan = aServer.Channel(aCommands[3]);
 						if (tChan != null)
@@ -184,15 +187,15 @@ namespace XG.Server.Irc
 							tChan.Connected = false;
 							_log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
 						}
-	
+
 						// statistics
 						Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
 						break;
-	
-					#endregion
-	
-					#region ERR_CHANNELISFULL | ERR_INVITEONLYCHAN | ERR_BANNEDFROMCHAN | ERR_BADCHANNELKEY | ERR_UNIQOPPRIVSNEEDED
-	
+
+						#endregion
+
+						#region ERR_CHANNELISFULL | ERR_INVITEONLYCHAN | ERR_BANNEDFROMCHAN | ERR_BADCHANNELKEY | ERR_UNIQOPPRIVSNEEDED
+
 					case 471: // ERR_CHANNELISFULL
 					case 473: // ERR_INVITEONLYCHAN
 					case 474: // ERR_BANNEDFROMCHAN
@@ -204,21 +207,22 @@ namespace XG.Server.Irc
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
 							_log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
-							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong, false);
+							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong,
+							                false);
 						}
-	
+
 						// statistics
 						Statistic.Instance.Increase(StatisticType.ChannelConnectsFailed);
 						break;
-	
-					#endregion
+
+						#endregion
 				}
-	
-				if(tBot != null)
+
+				if (tBot != null)
 				{
 					tBot.Commit();
 				}
-				if(tChan != null)
+				if (tChan != null)
 				{
 					tChan.Commit();
 				}
@@ -232,4 +236,3 @@ namespace XG.Server.Irc
 		#endregion
 	}
 }
-

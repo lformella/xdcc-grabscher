@@ -1,6 +1,6 @@
 // 
 //  AConnection.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,13 +15,14 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
+
 using XG.Core;
 
 namespace XG.Server.Connection
@@ -35,7 +36,8 @@ namespace XG.Server.Connection
 		public Int64 MaxData { get; set; }
 
 		public event EmptyDelegate Connected;
-		public void FireConnected ()
+
+		public void FireConnected()
 		{
 			if (Connected != null)
 			{
@@ -44,7 +46,8 @@ namespace XG.Server.Connection
 		}
 
 		public event SocketErrorDelegate Disconnected;
-		public void FireDisconnected (SocketErrorCode aValue)
+
+		public void FireDisconnected(SocketErrorCode aValue)
 		{
 			if (Disconnected != null)
 			{
@@ -53,7 +56,8 @@ namespace XG.Server.Connection
 		}
 
 		public event DataTextDelegate DataTextReceived;
-		public void FireDataTextReceived (string aData)
+
+		public void FireDataTextReceived(string aData)
 		{
 			if (DataTextReceived != null)
 			{
@@ -62,7 +66,8 @@ namespace XG.Server.Connection
 		}
 
 		public event DataBinaryDelegate DataBinaryReceived;
-		public void FireDataBinaryReceived (byte[] aData)
+
+		public void FireDataBinaryReceived(byte[] aData)
 		{
 			if (DataBinaryReceived != null)
 			{
@@ -70,11 +75,10 @@ namespace XG.Server.Connection
 			}
 		}
 
-		public abstract void Connect ();
+		public abstract void Connect();
 
-		public abstract void Disconnect ();
+		public abstract void Disconnect();
 
-		public abstract void SendData (string aData);
+		public abstract void SendData(string aData);
 	}
 }
-

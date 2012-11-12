@@ -1,6 +1,6 @@
 // 
-//  Notice.cs
-//  
+//  Nickserv.cs
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System.Collections.Generic;
 using System.Reflection;
@@ -31,7 +31,7 @@ namespace XG.Server.Irc
 {
 	public class Nickserv : AParser
 	{
-		List<Core.Server> _authenticatedServer = new List<Core.Server>();
+		readonly List<Core.Server> _authenticatedServer = new List<Core.Server>();
 
 		#region PARSING
 
@@ -56,7 +56,7 @@ namespace XG.Server.Irc
 			if (Matches(aMessage, ".*Your nick isn't registered.*"))
 			{
 				_log.Info("registering nick");
-				if(Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
+				if (Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 				{
 					FireSendData(aServer, tUserName + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail);
 				}
@@ -81,7 +81,7 @@ namespace XG.Server.Irc
 
 			if (Matches(aMessage, ".*(This nickname is registered and protected|This nick is being held for a registered user|msg NickServ IDENTIFY).*"))
 			{
-				if(Settings.Instance.IrcPasswort != "" && !_authenticatedServer.Contains(aServer))
+				if (Settings.Instance.IrcPasswort != "" && !_authenticatedServer.Contains(aServer))
 				{
 					_authenticatedServer.Add(aServer);
 					//TODO check if we are really registered
@@ -158,4 +158,3 @@ namespace XG.Server.Irc
 		}
 	}
 }
-

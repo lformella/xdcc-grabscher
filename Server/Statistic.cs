@@ -1,6 +1,6 @@
 // 
 //  Statistic.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,23 +15,25 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 using log4net;
 
 namespace XG.Server
 {
-	public enum StatisticType : int
+	public enum StatisticType
 	{
 		BytesLoaded,
 
@@ -64,62 +66,67 @@ namespace XG.Server
 	public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
 	{
 		#region IXmlSerializable Members
-		public System.Xml.Schema.XmlSchema GetSchema()
+
+		public XmlSchema GetSchema()
 		{
 			return null;
 		}
- 
-		public void ReadXml(System.Xml.XmlReader reader)
+
+		public void ReadXml(XmlReader reader)
 		{
-			XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-			XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
- 
+			XmlSerializer keySerializer = new XmlSerializer(typeof (TKey));
+			XmlSerializer valueSerializer = new XmlSerializer(typeof (TValue));
+
 			bool wasEmpty = reader.IsEmptyElement;
 			reader.Read();
- 
-			if (wasEmpty) { return; }
- 
-			while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+
+			if (wasEmpty)
+			{
+				return;
+			}
+
+			while (reader.NodeType != XmlNodeType.EndElement)
 			{
 				reader.ReadStartElement("item");
- 
+
 				reader.ReadStartElement("key");
-				TKey key = (TKey)keySerializer.Deserialize(reader);
+				TKey key = (TKey) keySerializer.Deserialize(reader);
 				reader.ReadEndElement();
- 
+
 				reader.ReadStartElement("value");
-				TValue value = (TValue)valueSerializer.Deserialize(reader);
+				TValue value = (TValue) valueSerializer.Deserialize(reader);
 				reader.ReadEndElement();
- 
+
 				Add(key, value);
- 
+
 				reader.ReadEndElement();
 				reader.MoveToContent();
 			}
 			reader.ReadEndElement();
 		}
- 
-		public void WriteXml(System.Xml.XmlWriter writer)
+
+		public void WriteXml(XmlWriter writer)
 		{
-			XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-			XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
- 
+			XmlSerializer keySerializer = new XmlSerializer(typeof (TKey));
+			XmlSerializer valueSerializer = new XmlSerializer(typeof (TValue));
+
 			foreach (TKey key in Keys)
 			{
 				writer.WriteStartElement("item");
- 
+
 				writer.WriteStartElement("key");
 				keySerializer.Serialize(writer, key);
 				writer.WriteEndElement();
- 
+
 				writer.WriteStartElement("value");
 				TValue value = this[key];
 				valueSerializer.Serialize(writer, value);
 				writer.WriteEndElement();
- 
+
 				writer.WriteEndElement();
 			}
 		}
+
 		#endregion
 	}
 
@@ -128,15 +135,17 @@ namespace XG.Server
 	{
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		static object locked = new object();
-		static XmlSerializer serializer = new XmlSerializer(typeof(Statistic));
+		static readonly object locked = new object();
+		static readonly XmlSerializer serializer = new XmlSerializer(typeof (Statistic));
 
 		[NonSerialized]
-		static Statistic instance = null;
+		static Statistic instance;
+
 		[NonSerialized]
-		static object statisticLock = new object();
+		static readonly object statisticLock = new object();
 
 		SerializableDictionary<StatisticType, Int64> myValuesInt = new SerializableDictionary<StatisticType, Int64>();
+
 		public SerializableDictionary<StatisticType, Int64> ValuesInt
 		{
 			get { return myValuesInt; }
@@ -144,6 +153,7 @@ namespace XG.Server
 		}
 
 		SerializableDictionary<StatisticType, double> myValuesDouble = new SerializableDictionary<StatisticType, double>();
+
 		public SerializableDictionary<StatisticType, double> ValuesDouble
 		{
 			get { return myValuesDouble; }
@@ -167,12 +177,12 @@ namespace XG.Server
 		{
 			if (File.Exists(Settings.Instance.AppDataPath + "statistics.xml"))
 			{
-				lock(locked)
+				lock (locked)
 				{
 					try
 					{
 						Stream streamRead = File.OpenRead(Settings.Instance.AppDataPath + "statistics.xml");
-						Statistic statistic = (Statistic)serializer.Deserialize(streamRead);
+						Statistic statistic = (Statistic) serializer.Deserialize(streamRead);
 						streamRead.Close();
 						return statistic;
 					}
@@ -191,7 +201,7 @@ namespace XG.Server
 
 		static void Serialize()
 		{
-			lock(locked)
+			lock (locked)
 			{
 				try
 				{
@@ -214,9 +224,7 @@ namespace XG.Server
 			}
 		}
 
-		Statistic()
-		{
-		}
+		Statistic() {}
 
 		public void Save()
 		{
@@ -230,18 +238,24 @@ namespace XG.Server
 
 		public void Increase(StatisticType aType, Int64 aValue)
 		{
-			lock(statisticLock)
+			lock (statisticLock)
 			{
-				if(!myValuesInt.ContainsKey(aType)) { myValuesInt.Add(aType, aValue); }
-				else { myValuesInt[aType] += aValue; }
+				if (!myValuesInt.ContainsKey(aType))
+				{
+					myValuesInt.Add(aType, aValue);
+				}
+				else
+				{
+					myValuesInt[aType] += aValue;
+				}
 			}
 		}
 
 		public double Get(StatisticType aType)
 		{
-			if(!myValuesDouble.ContainsKey(aType))
+			if (!myValuesDouble.ContainsKey(aType))
 			{
-				if(!myValuesInt.ContainsKey(aType))
+				if (!myValuesInt.ContainsKey(aType))
 				{
 					return 0;
 				}
@@ -258,10 +272,16 @@ namespace XG.Server
 
 		public void Set(StatisticType aType, double aValue)
 		{
-			lock(statisticLock)
+			lock (statisticLock)
 			{
-				if(!myValuesDouble.ContainsKey(aType)) { myValuesDouble.Add(aType, aValue); }
-				else { myValuesDouble[aType] = aValue; }
+				if (!myValuesDouble.ContainsKey(aType))
+				{
+					myValuesDouble.Add(aType, aValue);
+				}
+				else
+				{
+					myValuesDouble[aType] = aValue;
+				}
 			}
 		}
 	}

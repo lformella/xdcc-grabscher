@@ -1,6 +1,6 @@
 // 
 //  Filesystem.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,35 +15,23 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System.IO;
 
-#if !WINDOWS
 using NUnit.Framework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace XG.Server.Helper.Test
 {
-#if !WINDOWS
-    [TestFixture()]
-#else
-    [TestClass]
-#endif
+	[TestFixture]
 	public class Filesystem
 	{
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void MoveFile ()
+		[Test]
+		public void MoveFile()
 		{
 			string fileNameOld = "test1.txt";
 			string fileNameNew = "test2.txt";
@@ -52,7 +40,7 @@ namespace XG.Server.Helper.Test
 
 			File.Delete(fileNameOld);
 			File.Delete(fileNameNew);
-			
+
 			result = FileSystem.MoveFile(fileNameOld, fileNameNew);
 			Assert.AreEqual(false, result);
 
@@ -67,4 +55,3 @@ namespace XG.Server.Helper.Test
 		}
 	}
 }
-

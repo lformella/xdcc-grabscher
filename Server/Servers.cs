@@ -1,6 +1,6 @@
 // 
-//  ServerHandler.cs
-//  
+//  Servers.cs
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,36 +15,37 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
 
-using log4net;
-
 using XG.Core;
 using XG.Server.Helper;
 using XG.Server.Irc;
+
+using log4net;
 
 namespace XG.Server
 {
 	public delegate void DownloadDelegate(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort);
 
 	/// <summary>
-	/// This class describes a irc server connection handler
-	/// it does the following things
-	/// - connect to or disconnect from an irc server
-	/// - handling of global bot downloads
-	/// - splitting and merging the files to download
-	/// - writing files to disk
-	/// - timering some clean up tasks
+	/// 	This class describes a irc server connection handler
+	/// 	it does the following things
+	/// 	- connect to or disconnect from an irc server
+	/// 	- handling of global bot downloads
+	/// 	- splitting and merging the files to download
+	/// 	- writing files to disk
+	/// 	- timering some clean up tasks
 	/// </summary>
 	public class Servers
 	{
@@ -53,30 +54,31 @@ namespace XG.Server
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Parser _ircParser;
+
 		public Parser IrcParser
 		{
 			set
 			{
-				if(_ircParser != null)
+				if (_ircParser != null)
 				{
 					_ircParser.Parent = null;
-					_ircParser.AddDownload -= new DownloadDelegate (BotConnect);
-					_ircParser.RemoveDownload -= new BotDelegate (BotDisconnect);
+					_ircParser.AddDownload -= BotConnect;
+					_ircParser.RemoveDownload -= BotDisconnect;
 				}
 				_ircParser = value;
-				if(_ircParser != null)
+				if (_ircParser != null)
 				{
 					_ircParser.Parent = this;
-					_ircParser.AddDownload += new DownloadDelegate (BotConnect);
-					_ircParser.RemoveDownload += new BotDelegate (BotDisconnect);
+					_ircParser.AddDownload += BotConnect;
+					_ircParser.RemoveDownload += BotDisconnect;
 				}
 			}
 		}
 
 		public FileActions FileActions { get; set; }
 
-		Dictionary<Core.Server, ServerConnection> _servers;
-		Dictionary<Packet, BotConnection> _downloads;
+		readonly Dictionary<Core.Server, ServerConnection> _servers;
+		readonly Dictionary<Packet, BotConnection> _downloads;
 
 		#endregion
 
@@ -88,11 +90,11 @@ namespace XG.Server
 			_downloads = new Dictionary<Packet, BotConnection>();
 
 			// create my stuff if its not there
-			new System.IO.DirectoryInfo(Settings.Instance.ReadyPath).Create();
-			new System.IO.DirectoryInfo(Settings.Instance.TempPath).Create();
+			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
+			new DirectoryInfo(Settings.Instance.TempPath).Create();
 
 			// start the timed tasks
-			new Thread(new ThreadStart(RunTimer)).Start();
+			new Thread(RunTimer).Start();
 		}
 
 		#endregion
@@ -100,45 +102,46 @@ namespace XG.Server
 		#region SERVER
 
 		/// <summary>
-		/// Connects to the given server by using a new ServerConnnect class
+		/// 	Connects to the given server by using a new ServerConnnect class
 		/// </summary>
-		/// <param name="aServer"></param>
-		public void ServerConnect (Core.Server aServer)
+		/// <param name="aServer"> </param>
+		public void ServerConnect(Core.Server aServer)
 		{
-			if (!_servers.ContainsKey (aServer))
+			if (!_servers.ContainsKey(aServer))
 			{
-				ServerConnection con = new ServerConnection ();
+				ServerConnection con = new ServerConnection();
 				con.FileActions = FileActions;
 				con.Server = aServer;
 				con.IrcParser = _ircParser;
 
-				con.Connection = new Server.Connection.Connection();
+				con.Connection = new Connection.Connection();
 				con.Connection.Hostname = aServer.Name;
 				con.Connection.Port = aServer.Port;
 				con.Connection.MaxData = 0;
 
-				_servers.Add (aServer, con);
+				_servers.Add(aServer, con);
 
-				con.Connected += new ServerDelegate(ServerConnected);
-				con.Disconnected += new ServerSocketErrorDelegate(ServerDisconnected);
+				con.Connected += ServerConnected;
+				con.Disconnected += ServerDisconnected;
 
 				// start a new thread wich connects to the given server
-				new Thread(delegate() { con.Connection.Connect(); }).Start();
+				new Thread(() => con.Connection.Connect()).Start();
 			}
 			else
 			{
 				_log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
 			}
 		}
+
 		void ServerConnected(Core.Server aServer)
 		{
 			// nom nom nom ...
 		}
 
 		/// <summary>
-		/// Disconnects the given server
+		/// 	Disconnects the given server
 		/// </summary>
-		/// <param name="aServer"></param>
+		/// <param name="aServer"> </param>
 		public void ServerDisconnect(Core.Server aServer)
 		{
 			if (_servers.ContainsKey(aServer))
@@ -155,9 +158,10 @@ namespace XG.Server
 				_log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
+
 		void ServerDisconnected(Core.Server aServer, SocketErrorCode aValue)
 		{
-			if (_servers.ContainsKey (aServer))
+			if (_servers.ContainsKey(aServer))
 			{
 				ServerConnection con = _servers[aServer];
 
@@ -173,7 +177,7 @@ namespace XG.Server
 					else*/
 					{
 						int time = Settings.Instance.ReconnectWaitTime;
-						switch(aValue)
+						switch (aValue)
 						{
 							case SocketErrorCode.HostIsDown:
 							case SocketErrorCode.HostUnreachable:
@@ -181,18 +185,18 @@ namespace XG.Server
 							case SocketErrorCode.ConnectionRefused:
 								time = Settings.Instance.ReconnectWaitTimeLong;
 								break;
-//							case SocketErrorCode.HostNotFound:
-//							case SocketErrorCode.HostNotFoundTryAgain:
-//								time = Settings.Instance.ReconnectWaitTimeReallyLong;
-//								break;
+								//							case SocketErrorCode.HostNotFound:
+								//							case SocketErrorCode.HostNotFoundTryAgain:
+								//								time = Settings.Instance.ReconnectWaitTimeReallyLong;
+								//								break;
 						}
-						new Timer(new TimerCallback(ServerReconnect), aServer, time * 1000, System.Threading.Timeout.Infinite);
+						new Timer(ServerReconnect, aServer, time * 1000, Timeout.Infinite);
 					}
 				}
 				else
 				{
-					con.Connected -= new ServerDelegate(ServerConnected);
-					con.Disconnected -= new ServerSocketErrorDelegate(ServerDisconnected);
+					con.Connected -= ServerConnected;
+					con.Disconnected -= ServerDisconnected;
 
 					con.Server = null;
 					con.IrcParser = null;
@@ -221,7 +225,7 @@ namespace XG.Server
 					_log.Error("ReconnectServer(" + tServer.Name + ")");
 
 					// TODO do we need a new connection here?
-					con.Connection = new Server.Connection.Connection();
+					con.Connection = new Connection.Connection();
 					con.Connection.Hostname = tServer.Name;
 					con.Connection.Port = tServer.Port;
 					con.Connection.MaxData = 0;
@@ -240,31 +244,30 @@ namespace XG.Server
 		#region BOT
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aPack"></param>
-		/// <param name="aChunk"></param>
-		/// <param name="aIp"></param>
-		/// <param name="aPort"></param>
+		/// <param name="aPack"> </param>
+		/// <param name="aChunk"> </param>
+		/// <param name="aIp"> </param>
+		/// <param name="aPort"> </param>
 		void BotConnect(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
 			if (!_downloads.ContainsKey(aPack))
 			{
-				new Thread(delegate()
+				new Thread(() =>
 				{
 					BotConnection con = new BotConnection();
 					con.FileActions = FileActions;
 					con.Packet = aPack;
 					con.StartSize = aChunk;
-	
-					con.Connection = new Server.Connection.Connection();
+
+					con.Connection = new Connection.Connection();
 					con.Connection.Hostname = aIp.ToString();
 					con.Connection.Port = aPort;
 					con.Connection.MaxData = aPack.RealSize - aChunk;
-	
-					con.Connected += new PacketBotConnectDelegate(BotConnected);
-					con.Disconnected += new PacketBotConnectDelegate(BotDisconnected);
-	
+
+					con.Connected += BotConnected;
+					con.Disconnected += BotDisconnected;
+
 					_downloads.Add(aPack, con);
 					con.Connection.Connect();
 				}).Start();
@@ -275,11 +278,10 @@ namespace XG.Server
 				_log.Error("IrcParserAddDownload(" + aPack.Name + ") is already downloading");
 			}
 		}
-		void BotConnected (Packet aPack, BotConnection aCon)
-		{
-		}
 
-		void BotDisconnect (Bot aBot)
+		void BotConnected(Packet aPack, BotConnection aCon) {}
+
+		void BotDisconnect(Bot aBot)
 		{
 			foreach (var kvp in _downloads)
 			{
@@ -290,6 +292,7 @@ namespace XG.Server
 				}
 			}
 		}
+
 		void BotDisconnected(Packet aPacket, BotConnection aCon)
 		{
 			aCon.Packet = null;
@@ -297,15 +300,15 @@ namespace XG.Server
 
 			if (_downloads.ContainsKey(aPacket))
 			{
-				aCon.Connected -= new PacketBotConnectDelegate(BotConnected);
-				aCon.Disconnected -= new PacketBotConnectDelegate(BotDisconnected);
+				aCon.Connected -= BotConnected;
+				aCon.Disconnected -= BotDisconnected;
 				_downloads.Remove(aPacket);
 
 				try
 				{
 					// if the connection never connected, there will be no part!
 					// and if we manually killed stopped the packet there will be no parent of the part
-					if(aCon.Part != null && aCon.Part.Parent != null)
+					if (aCon.Part != null && aCon.Part.Parent != null)
 					{
 						// do this here because the bothandler sets the part state and after this we can check the file
 						FileActions.CheckFile(aCon.Part.Parent);

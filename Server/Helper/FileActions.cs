@@ -1,6 +1,6 @@
 // 
 //  FileActions.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,22 +15,25 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 
+using XG.Core;
+
 using log4net;
 
-using XG.Core;
+using File = XG.Core.File;
 
 namespace XG.Server.Helper
 {
@@ -41,12 +44,14 @@ namespace XG.Server.Helper
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Core.Servers _servers;
+
 		public Core.Servers Servers
 		{
 			set { _servers = value; }
 		}
 
 		Files _files;
+
 		public Files Files
 		{
 			set { _files = value; }
@@ -57,20 +62,18 @@ namespace XG.Server.Helper
 		#region HELPER
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aFile"></param>
-		/// <returns></returns>
+		/// <param name="aFile"> </param>
+		/// <returns> </returns>
 		public string CompletePath(File aFile)
 		{
 			return Settings.Instance.TempPath + aFile.TmpPath;
 		}
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aPart"></param>
-		/// <returns></returns>
+		/// <param name="aPart"> </param>
+		/// <returns> </returns>
 		public string CompletePath(FilePart aPart)
 		{
 			return CompletePath(aPart.Parent) + aPart.StartSize;
@@ -81,11 +84,11 @@ namespace XG.Server.Helper
 		#region FILE
 
 		/// <summary>
-		/// Returns a file or null if there isnt one
+		/// 	Returns a file or null if there isnt one
 		/// </summary>
-		/// <param name="aName"></param>
-		/// <param name="aSize"></param>
-		/// <returns></returns>
+		/// <param name="aName"> </param>
+		/// <param name="aSize"> </param>
+		/// <returns> </returns>
 		File File(string aName, Int64 aSize)
 		{
 			string name = Core.Helper.ShrinkFileName(aName, aSize);
@@ -95,7 +98,7 @@ namespace XG.Server.Helper
 				if (file.TmpPath == name)
 				{
 					// lets check if the directory is still on the harddisk
-					if(!System.IO.Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
 						_log.Warn("File(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
 						RemoveFile(file);
@@ -108,11 +111,11 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// Returns a file - an old if it is already there, or a new
+		/// 	Returns a file - an old if it is already there, or a new
 		/// </summary>
-		/// <param name="aName"></param>
-		/// <param name="aSize"></param>
-		/// <returns></returns>
+		/// <param name="aName"> </param>
+		/// <param name="aSize"> </param>
+		/// <returns> </returns>
 		public File NewFile(string aName, Int64 aSize)
 		{
 			File tFile = File(aName, aSize);
@@ -122,7 +125,7 @@ namespace XG.Server.Helper
 				_files.Add(tFile);
 				try
 				{
-					System.IO.Directory.CreateDirectory(Settings.Instance.TempPath + tFile.TmpPath);
+					Directory.CreateDirectory(Settings.Instance.TempPath + tFile.TmpPath);
 				}
 				catch (Exception ex)
 				{
@@ -134,10 +137,10 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// removes a File
-		/// stops all running part connections and removes the file
+		/// 	removes a File
+		/// 	stops all running part connections and removes the file
 		/// </summary>
-		/// <param name="aFile"></param>
+		/// <param name="aFile"> </param>
 		public void RemoveFile(File aFile)
 		{
 			_log.Info("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")");
@@ -156,7 +159,10 @@ namespace XG.Server.Helper
 					}
 				}
 			}
-			if (skip) { return; }
+			if (skip)
+			{
+				return;
+			}
 
 			FileSystem.DeleteDirectory(CompletePath(aFile));
 			_files.Remove(aFile);
@@ -167,11 +173,10 @@ namespace XG.Server.Helper
 		#region PART
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aFile"></param>
-		/// <param name="aSize"></param>
-		/// <returns></returns>
+		/// <param name="aFile"> </param>
+		/// <param name="aSize"> </param>
+		/// <returns> </returns>
 		public FilePart Part(File aFile, Int64 aSize)
 		{
 			FilePart returnPart = null;
@@ -228,10 +233,9 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aFile"></param>
-		/// <param name="aPart"></param>
+		/// <param name="aFile"> </param>
+		/// <param name="aPart"> </param>
 		public void RemovePart(File aFile, FilePart aPart)
 		{
 			_log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
@@ -244,7 +248,8 @@ namespace XG.Server.Helper
 					part.StopSize = aPart.StopSize;
 					if (part.State == FilePart.States.Ready)
 					{
-						_log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " + aPart.StopSize);
+						_log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " +
+						          aPart.StopSize);
 						part.State = FilePart.States.Closed;
 						part.Commit();
 						break;
@@ -253,7 +258,10 @@ namespace XG.Server.Helper
 			}
 
 			aFile.Remove(aPart);
-			if (aFile.Parts.Count() == 0) { RemoveFile(aFile); }
+			if (aFile.Parts.Count() == 0)
+			{
+				RemoveFile(aFile);
+			}
 			else
 			{
 				FileSystem.DeleteFile(CompletePath(aPart));
@@ -265,19 +273,25 @@ namespace XG.Server.Helper
 		#region GET NEXT STUFF
 
 		/// <summary>
-		/// Returns the next chunk of a file (subtracts already the rollback value for continued downloads)
+		/// 	Returns the next chunk of a file (subtracts already the rollback value for continued downloads)
 		/// </summary>
-		/// <param name="aName"></param>
-		/// <param name="aSize"></param>
-		/// <returns>-1 if there is no part, 0<= if there is a new part available</returns>
+		/// <param name="aName"> </param>
+		/// <param name="aSize"> </param>
+		/// <returns> -1 if there is no part, 0 < = if there is a new part available </returns>
 		public Int64 NextAvailablePartSize(string aName, Int64 aSize)
 		{
 			File tFile = File(aName, aSize);
-			if (tFile == null) { return 0; }
+			if (tFile == null)
+			{
+				return 0;
+			}
 
 			Int64 nextSize = -1;
 			IEnumerable<FilePart> parts = tFile.Parts;
-			if (parts.Count() == 0) { nextSize = 0; }
+			if (parts.Count() == 0)
+			{
+				nextSize = 0;
+			}
 			else
 			{
 				// first search incomplete parts not in use
@@ -288,7 +302,10 @@ namespace XG.Server.Helper
 						nextSize = part.CurrentSize - Settings.Instance.FileRollbackBytes;
 						// uhm, this is a bug if we have a very small downloaded file
 						// so just return 0
-						if (nextSize < 0) { nextSize = 0; }
+						if (nextSize < 0)
+						{
+							nextSize = 0;
+						}
 						break;
 					}
 				}
@@ -324,9 +341,8 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aObj"></param>
+		/// <param name="aObj"> </param>
 		void CheckNextReferenceBytes(object aObj)
 		{
 			PartBytesObject pbo = aObj as PartBytesObject;
@@ -334,35 +350,37 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aPart"></param>
-		/// <param name="aBytes"></param>
-		/// <returns></returns>
+		/// <param name="aPart"> </param>
+		/// <param name="aBytes"> </param>
+		/// <returns> </returns>
 		public Int64 CheckNextReferenceBytes(FilePart aPart, byte[] aBytes)
 		{
 			return CheckNextReferenceBytes(aPart, aBytes, false);
 		}
 
 		/// <summary>
-		/// 
 		/// </summary>
-		/// <param name="aPart"></param>
-		/// <param name="aBytes"></param>
-		/// <param name="aThreaded"></param>
-		/// <returns></returns>
+		/// <param name="aPart"> </param>
+		/// <param name="aBytes"> </param>
+		/// <param name="aThreaded"> </param>
+		/// <returns> </returns>
 		Int64 CheckNextReferenceBytes(FilePart aPart, byte[] aBytes, bool aThreaded)
 		{
 			File tFile = aPart.Parent;
 			IEnumerable<FilePart> parts = tFile.Parts;
-			_log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() + " parts called");
+			_log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() +
+			          " parts called");
 
 			foreach (FilePart part in parts)
 			{
 				if (part.StartSize == aPart.StopSize)
 				{
 					// is the part already checked?
-					if (part.Checked) { break; }
+					if (part.Checked)
+					{
+						break;
+					}
 
 					// the file is open
 					if (part.State == FilePart.States.Open)
@@ -387,18 +405,19 @@ namespace XG.Server.Helper
 						}
 						else
 						{
-							_log.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is open, but has no packet");
+							_log.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize +
+							           " is open, but has no packet");
 							return 0;
 						}
 					}
-					// it is already ready
+						// it is already ready
 					else if (part.State == FilePart.States.Closed || part.State == FilePart.States.Ready)
 					{
 						string fileName = CompletePath(part);
 						try
 						{
-							System.IO.BinaryReader reader = FileSystem.OpenFileReadable(fileName);
-							byte[] bytes = reader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
+							BinaryReader reader = FileSystem.OpenFileReadable(fileName);
+							byte[] bytes = reader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
 							reader.Close();
 
 							if (!bytes.IsEqualWith(aBytes))
@@ -417,11 +436,11 @@ namespace XG.Server.Helper
 									// file is not the last, so check the next one
 									if (part.StopSize < tFile.Size)
 									{
-										System.IO.FileStream fileStream = System.IO.File.Open(fileName, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite);
-										System.IO.BinaryReader fileReader = new System.IO.BinaryReader(fileStream);
+										FileStream fileStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.ReadWrite);
+										BinaryReader fileReader = new BinaryReader(fileStream);
 										// extract the needed refernce bytes
-										fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, System.IO.SeekOrigin.End);
-										bytes = fileReader.ReadBytes((int)Settings.Instance.FileRollbackCheckBytes);
+										fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
+										bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
 										// and truncate the file
 										//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheckBytes);
 										fileStream.SetLength(part.StopSize - part.StartSize);
@@ -434,7 +453,7 @@ namespace XG.Server.Helper
 										}
 										else
 										{
-											new Thread(new ParameterizedThreadStart(CheckNextReferenceBytes)).Start(new PartBytesObject(part, bytes));
+											new Thread(CheckNextReferenceBytes).Start(new PartBytesObject(part, bytes));
 										}
 									}
 								}
@@ -442,12 +461,15 @@ namespace XG.Server.Helper
 						}
 						catch (Exception ex)
 						{
-							_log.Fatal("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " + part.StartSize + "", ex);
+							_log.Fatal(
+							           "CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " +
+							           part.StartSize + "", ex);
 						}
 					}
 					else
 					{
-						_log.Error("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") do not know what to do with part " + part.StartSize);
+						_log.Error("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize +
+						           ") do not know what to do with part " + part.StartSize);
 					}
 
 					break;
@@ -461,15 +483,18 @@ namespace XG.Server.Helper
 		#region CHECK AND JOIN FILE
 
 		/// <summary>
-		/// Checks a file and if it is complete it starts a thread which join the file
+		/// 	Checks a file and if it is complete it starts a thread which join the file
 		/// </summary>
-		/// <param name="aFile"></param>
+		/// <param name="aFile"> </param>
 		public void CheckFile(File aFile)
 		{
 			lock (aFile.Lock)
 			{
 				_log.Info("CheckFile(" + aFile.Name + ")");
-				if (aFile.Parts.Count() == 0) { return; }
+				if (aFile.Parts.Count() == 0)
+				{
+					return;
+				}
 
 				bool complete = true;
 				IEnumerable<FilePart> parts = aFile.Parts;
@@ -484,17 +509,17 @@ namespace XG.Server.Helper
 				}
 				if (complete)
 				{
-					new Thread(new ParameterizedThreadStart(JoinCompleteParts)).Start(aFile);
+					new Thread(JoinCompleteParts).Start(aFile);
 				}
 			}
 		}
 
 		/// <summary>
-		/// Joins all parts of a File together by doing this
-		/// - disabling all matching packets to avoid the same download again
-		/// - merging the file and checking the file size
+		/// 	Joins all parts of a File together by doing this
+		/// 	- disabling all matching packets to avoid the same download again
+		/// 	- merging the file and checking the file size
 		/// </summary>
-		/// <param name="aObject"></param>
+		/// <param name="aObject"> </param>
 		void JoinCompleteParts(object aObject)
 		{
 			File tFile = aObject as File;
@@ -518,12 +543,11 @@ namespace XG.Server.Helper
 							{
 								foreach (Packet tPack in tBot.Packets)
 								{
-									if (tPack.Enabled && (
-										Core.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) ||
-										Core.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)
-										))
+									if (tPack.Enabled &&
+									    (Core.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || Core.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)))
 									{
-										_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " + tPack.Parent.Name);
+										_log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " +
+										          tPack.Parent.Name);
 										tPack.Enabled = false;
 										tPack.Commit();
 									}
@@ -547,15 +571,15 @@ namespace XG.Server.Helper
 
 				try
 				{
-					System.IO.FileStream stream = System.IO.File.Open(fileReady, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-					System.IO.BinaryWriter writer = new System.IO.BinaryWriter(stream);
+					FileStream stream = System.IO.File.Open(fileReady, FileMode.Create, FileAccess.Write);
+					BinaryWriter writer = new BinaryWriter(stream);
 					foreach (FilePart part in parts)
 					{
 						try
 						{
-							System.IO.BinaryReader reader = FileSystem.OpenFileReadable(CompletePath(part));
+							BinaryReader reader = FileSystem.OpenFileReadable(CompletePath(part));
 							byte[] data;
-							while ((data = reader.ReadBytes((int)Settings.Instance.DownloadPerReadBytes)).Length > 0)
+							while ((data = reader.ReadBytes(Settings.Instance.DownloadPerReadBytes)).Length > 0)
 							{
 								writer.Write(data);
 								writer.Flush();
@@ -568,15 +592,18 @@ namespace XG.Server.Helper
 							// dont delete the source if the disk is full!
 							// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
 							// TODO this doesnt work :(
-							int hresult = (int)ex.GetType().GetField("_HResult", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(ex);
-							if ((hresult & 0xFFFF) == 112L) { deleteOnError = false; }
+							int hresult = (int) ex.GetType().GetField("_HResult", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ex);
+							if ((hresult & 0xFFFF) == 112L)
+							{
+								deleteOnError = false;
+							}
 							break;
 						}
 					}
 					writer.Close();
 					stream.Close();
 
-					Int64 size = new System.IO.FileInfo(fileReady).Length;
+					Int64 size = new FileInfo(fileReady).Length;
 					if (size == tFile.Size)
 					{
 						FileSystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
@@ -596,7 +623,7 @@ namespace XG.Server.Helper
 						}
 
 						// great, all went right, so lets check what we can do with the file
-						new Thread(delegate() { HandleFile(fileReady); }).Start();
+						new Thread(() => HandleFile(fileReady)).Start();
 					}
 					else
 					{
@@ -624,9 +651,9 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// Handles a downloaded file by calling the FileHandler string in the settings file
+		/// 	Handles a downloaded file by calling the FileHandler string in the settings file
 		/// </summary>
-		/// <param name="aFile"></param>
+		/// <param name="aFile"> </param>
 		void HandleFile(string aFile)
 		{
 			if (!string.IsNullOrEmpty(aFile))
@@ -658,7 +685,7 @@ namespace XG.Server.Helper
 			}
 		}
 
-		void RunFileHandlerProcess (FileHandlerProcess aHandler, string aPath, string aFolder, string aFile, string aFileName, string aFileExtension)
+		void RunFileHandlerProcess(FileHandlerProcess aHandler, string aPath, string aFolder, string aFile, string aFileName, string aFileExtension)
 		{
 			if (aHandler == null || string.IsNullOrEmpty(aHandler.Command) || string.IsNullOrEmpty(aHandler.Arguments))
 			{

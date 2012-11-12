@@ -1,34 +1,34 @@
-//
+// 
 //  BotWatchdogWorker.cs
-//
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
-//
+// 
 //  Copyright (c) 2012 Lars Formella
-//
+// 
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 2 of the License, or
 //  (at your option) any later version.
-//
+// 
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-//
+//  
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
-using log4net;
-
 using XG.Core;
+
+using log4net;
 
 namespace XG.Server.Worker
 {
@@ -37,15 +37,18 @@ namespace XG.Server.Worker
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region AWorker
-		
+
 		protected override void LoopRun()
 		{
-			IEnumerable<Bot> tBots =
-				from server in Servers.All where server.Connected 
-				from channel in server.Channels where channel.Connected
-				from bot in channel.Bots
-					where !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Instance.BotOfflineTime && bot.OldestActivePacket() == null
-					select bot;
+			IEnumerable<Bot> tBots = from server in Servers.All
+			                         where server.Connected
+			                         from channel in server.Channels
+			                         where channel.Connected
+			                         from bot in channel.Bots
+			                         where
+				                         !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Instance.BotOfflineTime &&
+				                         bot.OldestActivePacket() == null
+			                         select bot;
 
 			int a = tBots.Count();
 			foreach (Bot tBot in tBots)
@@ -64,4 +67,3 @@ namespace XG.Server.Worker
 		#endregion
 	}
 }
-

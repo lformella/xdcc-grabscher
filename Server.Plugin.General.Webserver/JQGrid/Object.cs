@@ -1,6 +1,6 @@
 // 
 //  Object.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Runtime.Serialization;
@@ -29,13 +29,13 @@ using XG.Core;
 namespace XG.Server.Plugin.General.Webserver.JQGrid
 {
 	[DataContract]
-	[KnownType(typeof(Core.Server))]
-	[KnownType(typeof(Core.Channel))]
-	[KnownType(typeof(Core.Bot))]
-	[KnownType(typeof(Core.Packet))]
-	[KnownType(typeof(Core.File))]
-	[KnownType(typeof(Core.FilePart))]
-	[KnownType(typeof(Core.Snapshot))]
+	[KnownType(typeof (Core.Server))]
+	[KnownType(typeof (Channel))]
+	[KnownType(typeof (Bot))]
+	[KnownType(typeof (Packet))]
+	[KnownType(typeof (File))]
+	[KnownType(typeof (FilePart))]
+	[KnownType(typeof (Snapshot))]
 	public class Object
 	{
 		public Object() {}
@@ -45,18 +45,14 @@ namespace XG.Server.Plugin.General.Webserver.JQGrid
 			CellObject = aObject;
 		}
 
-		[DataMember (Name = "id")]
+		[DataMember(Name = "id")]
 		public Guid Guid
 		{
 			get { return CellObject.Guid; }
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
-		[DataMember (Name = "cell")]
+		[DataMember(Name = "cell")]
 		public AObject CellObject { get; set; }
 	}
 }
-

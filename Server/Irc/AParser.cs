@@ -1,6 +1,6 @@
 // 
 //  AParser.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,24 +15,24 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-using log4net;
-
 using XG.Core;
+
+using log4net;
 
 namespace XG.Server.Irc
 {
-	public delegate void BotDelegate (Bot aBot);
+	public delegate void BotDelegate(Bot aBot);
 
 	public abstract class AParser
 	{
@@ -45,12 +45,12 @@ namespace XG.Server.Irc
 		#endregion
 
 		#region EVENTS
-		
+
 		public event DownloadDelegate AddDownload;
 
 		protected void FireAddDownload(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
-			if(AddDownload != null)
+			if (AddDownload != null)
 			{
 				AddDownload(aPack, aChunk, aIp, aPort);
 			}
@@ -60,7 +60,7 @@ namespace XG.Server.Irc
 
 		protected void FireRemoveDownload(Bot aBot)
 		{
-			if(RemoveDownload != null)
+			if (RemoveDownload != null)
 			{
 				RemoveDownload(aBot);
 			}
@@ -70,7 +70,7 @@ namespace XG.Server.Irc
 
 		protected void FireParsingError(string aData)
 		{
-			if(ParsingError != null)
+			if (ParsingError != null)
 			{
 				ParsingError(aData);
 			}
@@ -80,7 +80,7 @@ namespace XG.Server.Irc
 
 		protected void FireSendData(Core.Server aServer, string aData)
 		{
-			if(SendData != null)
+			if (SendData != null)
 			{
 				SendData(aServer, aData);
 			}
@@ -90,7 +90,7 @@ namespace XG.Server.Irc
 
 		protected void FireJoinChannel(Core.Server aServer, Channel aChannel)
 		{
-			if(JoinChannel != null)
+			if (JoinChannel != null)
 			{
 				JoinChannel(aServer, aChannel);
 			}
@@ -100,7 +100,7 @@ namespace XG.Server.Irc
 
 		protected void FireCreateTimer(Core.Server aServer, AObject aObj, int aInt, bool aBool)
 		{
-			if(CreateTimer != null)
+			if (CreateTimer != null)
 			{
 				CreateTimer(aServer, aObj, aInt, aBool);
 			}
@@ -110,7 +110,7 @@ namespace XG.Server.Irc
 
 		protected void FireRequestFromBot(Core.Server aServer, Bot aBot)
 		{
-			if(RequestFromBot != null)
+			if (RequestFromBot != null)
 			{
 				RequestFromBot(aServer, aBot);
 			}
@@ -120,7 +120,7 @@ namespace XG.Server.Irc
 
 		protected void FireUnRequestFromBot(Core.Server aServer, Bot aBot)
 		{
-			if(UnRequestFromBot != null)
+			if (UnRequestFromBot != null)
 			{
 				UnRequestFromBot(aServer, aBot);
 			}
@@ -139,7 +139,7 @@ namespace XG.Server.Irc
 				{
 					string[] tCommands = aRawData.Split(':')[1].Split(' ');
 					// there is an evil : in the hostname - dont know if this matches the rfc2812
-					if(tCommands.Length < 3)
+					if (tCommands.Length < 3)
 					{
 						tSplit = aRawData.IndexOf(':', tSplit + 1);
 						tCommands = aRawData.Substring(1).Split(' ');
@@ -151,7 +151,7 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#region PING
+				#region PING
 
 			else if (aRawData.StartsWith("PING"))
 			{
@@ -159,9 +159,9 @@ namespace XG.Server.Irc
 				FireSendData(aServer, "PONG " + aRawData.Split(':')[1]);
 			}
 
-			#endregion
+				#endregion
 
-			#region ERROR
+				#region ERROR
 
 			else if (aRawData.StartsWith("ERROR"))
 			{
@@ -178,7 +178,8 @@ namespace XG.Server.Irc
 		#region HELPER
 
 		protected string ClearString(string aData)
-		{ // |\u0031|\u0015)
+		{
+			// |\u0031|\u0015)
 			aData = Regex.Replace(aData, "(\u0002|\u0003)(\\d+(,\\d{1,2}|)|)", "");
 			aData = Regex.Replace(aData, "(\u000F)", "");
 			return aData.Trim();
@@ -187,4 +188,3 @@ namespace XG.Server.Irc
 		#endregion
 	}
 }
-

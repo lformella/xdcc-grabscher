@@ -1,6 +1,6 @@
 // 
 //  ServerConnection.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,33 +15,33 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-using log4net;
-
 using XG.Core;
 using XG.Server.Connection;
 using XG.Server.Irc;
+
+using log4net;
 
 namespace XG.Server
 {
 	public delegate void ServerSocketErrorDelegate(Core.Server aServer, SocketErrorCode aValue);
 
 	/// <summary>
-	/// This class describes the connection to a single irc server
-	/// it does the following things
-	/// - creating and removing bots on the fly
-	/// - creating and removing packets on the fly (if the bot posts them into the channel)
-	/// - communicate with the bot to handle downloads
-	/// </summary>	
+	/// 	This class describes the connection to a single irc server
+	/// 	it does the following things
+	/// 	- creating and removing bots on the fly
+	/// 	- creating and removing packets on the fly (if the bot posts them into the channel)
+	/// 	- communicate with the bot to handle downloads
+	/// </summary>
 	public class ServerConnection : AIrcConnection
 	{
 		#region VARIABLES
@@ -49,22 +49,23 @@ namespace XG.Server
 		ILog _log;
 
 		Core.Server _server;
+
 		public Core.Server Server
 		{
 			set
 			{
-				if(_server != null)
+				if (_server != null)
 				{
-					_server.Added -= new ObjectsDelegate(ObjectAdded);
-					_server.Removed -= new ObjectsDelegate(ObjectRemoved);
-					_server.EnabledChanged -= new ObjectDelegate(EnabledChanged);
+					_server.Added -= ObjectAdded;
+					_server.Removed -= ObjectRemoved;
+					_server.EnabledChanged -= EnabledChanged;
 				}
 				_server = value;
-				if(_server != null)
+				if (_server != null)
 				{
-					_server.Added += new ObjectsDelegate(ObjectAdded);
-					_server.Removed += new ObjectsDelegate(ObjectRemoved);
-					_server.EnabledChanged += new ObjectDelegate(EnabledChanged);
+					_server.Added += ObjectAdded;
+					_server.Removed += ObjectRemoved;
+					_server.EnabledChanged += EnabledChanged;
 
 					_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + _server.Name + ")");
 				}
@@ -72,37 +73,42 @@ namespace XG.Server
 		}
 
 		Parser _ircParser;
+
 		public Parser IrcParser
 		{
 			set
 			{
-				if(_ircParser != null)
+				if (_ircParser != null)
 				{
-					_ircParser.SendData -= new ServerDataTextDelegate(IrcParserSendData);
-					_ircParser.JoinChannel -= new ServerChannelDelegate(IrcParserJoinChannel);
-					_ircParser.CreateTimer -= new ServerObjectIntBoolDelegate(IrcParserCreateTimer);
+					_ircParser.SendData -= IrcParserSendData;
+					_ircParser.JoinChannel -= IrcParserJoinChannel;
+					_ircParser.CreateTimer -= IrcParserCreateTimer;
 
-					_ircParser.RequestFromBot -= new ServerBotDelegate(IrcParserRequestFromBot);
-					_ircParser.UnRequestFromBot -= new ServerBotDelegate(IrcParserUnRequestFromBot);
+					_ircParser.RequestFromBot -= IrcParserRequestFromBot;
+					_ircParser.UnRequestFromBot -= IrcParserUnRequestFromBot;
 				}
 				_ircParser = value;
-				if(_ircParser != null)
+				if (_ircParser != null)
 				{
-					_ircParser.SendData += new ServerDataTextDelegate(IrcParserSendData);
-					_ircParser.JoinChannel += new ServerChannelDelegate(IrcParserJoinChannel);
-					_ircParser.CreateTimer += new ServerObjectIntBoolDelegate(IrcParserCreateTimer);
+					_ircParser.SendData += IrcParserSendData;
+					_ircParser.JoinChannel += IrcParserJoinChannel;
+					_ircParser.CreateTimer += IrcParserCreateTimer;
 
-					_ircParser.RequestFromBot += new ServerBotDelegate(IrcParserRequestFromBot);
-					_ircParser.UnRequestFromBot += new ServerBotDelegate(IrcParserUnRequestFromBot);
+					_ircParser.RequestFromBot += IrcParserRequestFromBot;
+					_ircParser.UnRequestFromBot += IrcParserUnRequestFromBot;
 				}
 			}
 		}
 
-		bool _isRunning = false;
-		public bool IsRunning { get { return _isRunning; } }
+		bool _isRunning;
 
-		Dictionary<AObject, DateTime> _timedObjects = new Dictionary<AObject, DateTime>();
-		Dictionary<string, DateTime> _latestPacketRequests = new Dictionary<string, DateTime>();
+		public bool IsRunning
+		{
+			get { return _isRunning; }
+		}
+
+		readonly Dictionary<AObject, DateTime> _timedObjects = new Dictionary<AObject, DateTime>();
+		readonly Dictionary<string, DateTime> _latestPacketRequests = new Dictionary<string, DateTime>();
 
 		#endregion
 
@@ -146,7 +152,7 @@ namespace XG.Server
 
 		void SendData(string aData)
 		{
-			if(Connection != null)
+			if (Connection != null)
 			{
 				Connection.SendData(aData);
 			}
@@ -173,7 +179,8 @@ namespace XG.Server
 					Packet tPacket = aBot.OldestActivePacket();
 					while (tPacket != null)
 					{
-						Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
+						Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name,
+						                                                 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1 || tChunk == -2)
 						{
 							_log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
@@ -190,7 +197,7 @@ namespace XG.Server
 								if (time > 0)
 								{
 									_log.Warn("RequestFromBot(" + aBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
-									CreateTimer(aBot, (int)time + 1, false);
+									CreateTimer(aBot, (int) time + 1, false);
 									return;
 								}
 							}
@@ -200,7 +207,10 @@ namespace XG.Server
 								_log.Info("RequestFromBot(" + aBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
 								SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
-								if (_latestPacketRequests.ContainsKey(name)) { _latestPacketRequests.Remove(name); }
+								if (_latestPacketRequests.ContainsKey(name))
+								{
+									_latestPacketRequests.Remove(name);
+								}
 								_latestPacketRequests.Add(name, DateTime.Now.AddSeconds(Settings.Instance.SamePacketRequestTime));
 
 								// statistics
@@ -267,7 +277,7 @@ namespace XG.Server
 
 		void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			if(aObj is Channel)
+			if (aObj is Channel)
 			{
 				Channel aChan = aObj as Channel;
 
@@ -280,7 +290,7 @@ namespace XG.Server
 
 		void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if(aObj is Channel)
+			if (aObj is Channel)
 			{
 				Channel aChan = aObj as Channel;
 
@@ -299,10 +309,10 @@ namespace XG.Server
 
 		void EnabledChanged(AObject aObj)
 		{
-			if(aObj is Channel)
+			if (aObj is Channel)
 			{
 				Channel tChan = aObj as Channel;
-	
+
 				if (tChan.Enabled)
 				{
 					JoinChannel(tChan);
@@ -313,14 +323,17 @@ namespace XG.Server
 				}
 			}
 
-			if(aObj is Packet)
+			if (aObj is Packet)
 			{
 				Packet tPack = aObj as Packet;
 				Bot tBot = tPack.Parent;
 
 				if (tPack.Enabled)
 				{
-					if (tBot.OldestActivePacket() == tPack) { RequestFromBot(tBot); }
+					if (tBot.OldestActivePacket() == tPack)
+					{
+						RequestFromBot(tBot);
+					}
 				}
 				else
 				{
@@ -381,7 +394,7 @@ namespace XG.Server
 		#region TIMER
 
 		/// <summary>
-		/// Is called from the parent onject ServerHandler (to have a single loop which triggers all ServerConnects) 
+		/// 	Is called from the parent onject ServerHandler (to have a single loop which triggers all ServerConnects)
 		/// </summary>
 		public void TriggerTimerRun()
 		{
@@ -389,14 +402,23 @@ namespace XG.Server
 			foreach (var kvp in _timedObjects)
 			{
 				DateTime time = kvp.Value;
-				if ((time - DateTime.Now).TotalSeconds < 0) { remove.Add(kvp.Key); }
+				if ((time - DateTime.Now).TotalSeconds < 0)
+				{
+					remove.Add(kvp.Key);
+				}
 			}
 			foreach (AObject obj in remove)
 			{
 				_timedObjects.Remove(obj);
 
-				if (obj is Channel) { JoinChannel(obj as Channel); }
-				else if (obj is Bot) { RequestFromBot(obj as Bot); }
+				if (obj is Channel)
+				{
+					JoinChannel(obj as Channel);
+				}
+				else if (obj is Bot)
+				{
+					RequestFromBot(obj as Bot);
+				}
 			}
 
 			//SendData("PING " + myServer.Name);
@@ -404,7 +426,7 @@ namespace XG.Server
 
 		public void CreateTimer(AObject aObject, int aTime, bool aOverride)
 		{
-			if(aObject == null)
+			if (aObject == null)
 			{
 				_log.Fatal("CreateTimer(null, " + aTime + ", " + aOverride + ") object is null!");
 				return;

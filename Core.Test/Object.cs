@@ -1,6 +1,6 @@
 // 
 //  Object.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,43 +15,28 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 
-#if !WINDOWS
 using NUnit.Framework;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace XG.Core.Test
 {
-#if !WINDOWS
-	[TestFixture()]
-#else
-    [TestClass]
-#endif
+	[TestFixture]
 	public class Object
 	{
-		bool _modified = false;
+		bool _modified;
 
-#if !WINDOWS
-        [Test()]
-#else
-        [TestMethod]
-#endif
-		public void Test ()
+		[Test]
+		public void Test()
 		{
 			Core.Object obj = new Core.Object();
-			obj.Changed += delegate
-			{
-				_modified = true;
-			};
+			obj.Changed += delegate { _modified = true; };
 			AssertModified(obj, false);
 
 			obj.Name = "Test";
@@ -78,9 +63,8 @@ namespace XG.Core.Test
 		void AssertModified(AObject aObject, bool modified)
 		{
 			aObject.Commit();
-			Assert.AreEqual(this._modified, modified);
-			this._modified = false;
+			Assert.AreEqual(_modified, modified);
+			_modified = false;
 		}
 	}
 }
-

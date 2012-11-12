@@ -1,6 +1,6 @@
 // 
 //  Channel.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -33,9 +33,9 @@ namespace XG.Core
 	public class Channel : AObjects
 	{
 		#region VARIABLES
-		
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public override bool Connected
 		{
 			get { return base.Connected; }
@@ -58,9 +58,10 @@ namespace XG.Core
 			set { base.Parent = value; }
 		}
 
-		int _errorCode = 0;
+		int _errorCode;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int ErrorCode
 		{
 			get { return _errorCode; }
@@ -78,14 +79,14 @@ namespace XG.Core
 
 		public Bot Bot(string aName)
 		{
-			return (Bot)base.Named(aName);
+			return (Bot) base.Named(aName);
 		}
 
 		public void AddBot(Bot aBot)
 		{
 			base.Add(aBot);
 		}
-		
+
 		public void RemoveBot(Bot aBot)
 		{
 			base.Remove(aBot);

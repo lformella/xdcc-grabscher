@@ -1,6 +1,6 @@
 // 
 //  AObjects.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ using System.Runtime.Serialization;
 namespace XG.Core
 {
 	public delegate void ObjectsDelegate(AObjects aObjects, AObject aObject);
-	
+
 	[Serializable]
 	[DataContract]
 	public class AObjects : AObject
@@ -41,7 +41,7 @@ namespace XG.Core
 
 		protected void FireAdded(AObjects aObjects, AObject aObject)
 		{
-			if(Added != null)
+			if (Added != null)
 			{
 				Added(aObjects, aObject);
 			}
@@ -52,7 +52,7 @@ namespace XG.Core
 
 		protected void FireRemoved(AObjects aObjects, AObject aObject)
 		{
-			if(Removed != null)
+			if (Removed != null)
 			{
 				Removed(aObjects, aObject);
 			}
@@ -61,14 +61,15 @@ namespace XG.Core
 		#endregion
 
 		#region PROPERTIES
-		
+
 		[NonSerialized]
 		object _objectLock = new object();
+
 		protected object ObjectLock
 		{
 			get
 			{
-				if(_objectLock == null)
+				if (_objectLock == null)
 				{
 					_objectLock = new object();
 				}
@@ -76,7 +77,8 @@ namespace XG.Core
 			}
 		}
 
-		List<AObject> _children;
+		readonly List<AObject> _children;
+
 		protected List<AObject> All
 		{
 			get { return _children.ToList(); }
@@ -90,7 +92,7 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				lock(ObjectLock)
+				lock (ObjectLock)
 				{
 					if (!_children.Contains(aObject))
 					{
@@ -100,19 +102,19 @@ namespace XG.Core
 							_children.Add(aObject);
 							aObject.Parent = this;
 
-							aObject.EnabledChanged += new ObjectDelegate(FireEnabledChanged);
-							aObject.Changed += new ObjectDelegate(FireChanged);
+							aObject.EnabledChanged += FireEnabledChanged;
+							aObject.Changed += FireChanged;
 
-							if(aObject is AObjects)
+							if (aObject is AObjects)
 							{
-								AObjects aObjects = (AObjects)aObject;
+								AObjects aObjects = (AObjects) aObject;
 
-								aObjects.Added += new ObjectsDelegate(FireAdded);
-								aObjects.Removed += new ObjectsDelegate(FireRemoved);
+								aObjects.Added += FireAdded;
+								aObjects.Removed += FireRemoved;
 							}
 							FireAdded(this, aObject);
 							aObject.Modified = false;
-	
+
 							return true;
 						}
 					}
@@ -125,26 +127,26 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				lock(ObjectLock)
+				lock (ObjectLock)
 				{
 					if (_children.Contains(aObject))
 					{
 						_children.Remove(aObject);
 						aObject.Parent = null;
 
-						aObject.EnabledChanged -= new ObjectDelegate(FireEnabledChanged);
-						aObject.Changed -= new ObjectDelegate(FireChanged);
+						aObject.EnabledChanged -= FireEnabledChanged;
+						aObject.Changed -= FireChanged;
 
-						if(aObject is AObjects)
+						if (aObject is AObjects)
 						{
-							AObjects aObjects = (AObjects)aObject;
+							AObjects aObjects = (AObjects) aObject;
 
-							aObjects.Added -= new ObjectsDelegate(FireAdded);
-							aObjects.Removed -= new ObjectsDelegate(FireRemoved);
+							aObjects.Added -= FireAdded;
+							aObjects.Removed -= FireRemoved;
 						}
 						FireRemoved(this, aObject);
 						aObject.Modified = false;
-	
+
 						return true;
 					}
 				}
@@ -156,16 +158,16 @@ namespace XG.Core
 		{
 			foreach (AObject tObject in All)
 			{
-				tObject.EnabledChanged += new ObjectDelegate(FireEnabledChanged);
-				tObject.Changed += new ObjectDelegate(FireChanged);
-				
-				if(tObject is AObjects)
-				{
-					AObjects tObjects = (AObjects)tObject;
+				tObject.EnabledChanged += FireEnabledChanged;
+				tObject.Changed += FireChanged;
 
-					tObjects.Added += new ObjectsDelegate(FireAdded);
-					tObjects.Removed += new ObjectsDelegate(FireRemoved);
-	
+				if (tObject is AObjects)
+				{
+					AObjects tObjects = (AObjects) tObject;
+
+					tObjects.Added += FireAdded;
+					tObjects.Removed += FireRemoved;
+
 					tObjects.AttachChildEvents();
 				}
 			}
@@ -173,8 +175,14 @@ namespace XG.Core
 
 		public virtual AObject WithGuid(Guid aGuid)
 		{
-			if (aGuid == Guid.Empty) { return null; }
-			if (Guid == aGuid) { return this; }
+			if (aGuid == Guid.Empty)
+			{
+				return null;
+			}
+			if (Guid == aGuid)
+			{
+				return this;
+			}
 
 			AObject tObjectReturn = null;
 			foreach (AObject tObject in All)
@@ -184,12 +192,15 @@ namespace XG.Core
 					tObjectReturn = tObject;
 					break;
 				}
-				else if(tObject is AObjects)
+				else if (tObject is AObjects)
 				{
-					AObjects tObjects = (AObjects)tObject;
+					AObjects tObjects = (AObjects) tObject;
 
 					tObjectReturn = tObjects.WithGuid(aGuid);
-					if (tObjectReturn != null) { break; }
+					if (tObjectReturn != null)
+					{
+						break;
+					}
 				}
 			}
 			return tObjectReturn;
@@ -213,8 +224,14 @@ namespace XG.Core
 				bool next = false;
 				foreach (AObject tObj in All)
 				{
-					if (tObj == aObject) { next = true; }
-					else if (next) { return tObj; }
+					if (tObj == aObject)
+					{
+						next = true;
+					}
+					else if (next)
+					{
+						return tObj;
+					}
 				}
 			}
 			return null;
@@ -232,4 +249,3 @@ namespace XG.Core
 		#endregion
 	}
 }
-

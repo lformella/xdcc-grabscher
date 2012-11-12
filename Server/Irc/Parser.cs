@@ -1,6 +1,6 @@
 // 
 //  Parser.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,24 +15,24 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Reflection;
 
-using log4net;
-
 using XG.Core;
 using XG.Server.Helper;
+
+using log4net;
 
 namespace XG.Server.Irc
 {
 	/// <summary>
-	/// this class parses all messages comming from the server, channel and bot
+	/// 	this class parses all messages comming from the server, channel and bot
 	/// </summary>
 	public class Parser : AParser
 	{
@@ -40,17 +40,14 @@ namespace XG.Server.Irc
 
 		public Servers Parent { get; set; }
 
-		IntValue _intValue;
-		PrivateMessage _privateMessage;
-		Notice _notice;
-		Nickserv _nickserv;
+		readonly IntValue _intValue;
+		readonly PrivateMessage _privateMessage;
+		readonly Notice _notice;
+		readonly Nickserv _nickserv;
 
 		public FileActions FileActions
 		{
-			set
-			{
-				_privateMessage.FileActions = value;
-			}
+			set { _privateMessage.FileActions = value; }
 		}
 
 		#endregion
@@ -65,21 +62,21 @@ namespace XG.Server.Irc
 
 			_notice = new Notice();
 			RegisterParser(_notice);
-			
+
 			_nickserv = new Nickserv();
 			RegisterParser(_nickserv);
 		}
 
 		void RegisterParser(AParser aParser)
 		{
-			aParser.AddDownload += new DownloadDelegate(FireAddDownload);
-			aParser.RemoveDownload += new BotDelegate(FireRemoveDownload);
-			aParser.ParsingError += new DataTextDelegate(FireParsingError);
-			aParser.SendData += new ServerDataTextDelegate(FireSendData);
-			aParser.JoinChannel += new ServerChannelDelegate(FireJoinChannel);
-			aParser.CreateTimer += new ServerObjectIntBoolDelegate(FireCreateTimer);
-			aParser.RequestFromBot += new ServerBotDelegate(FireRequestFromBot);
-			aParser.UnRequestFromBot += new ServerBotDelegate(FireUnRequestFromBot);
+			aParser.AddDownload += FireAddDownload;
+			aParser.RemoveDownload += FireRemoveDownload;
+			aParser.ParsingError += FireParsingError;
+			aParser.SendData += FireSendData;
+			aParser.JoinChannel += FireJoinChannel;
+			aParser.CreateTimer += FireCreateTimer;
+			aParser.RequestFromBot += FireRequestFromBot;
+			aParser.UnRequestFromBot += FireUnRequestFromBot;
 		}
 
 		#region PARSING
@@ -95,7 +92,7 @@ namespace XG.Server.Irc
 			Channel tChan = aServer.Channel(tChannelName);
 			Bot tBot = aServer.Bot(tUserName);
 
-			if(tBot != null)
+			if (tBot != null)
 			{
 				tBot.LastContact = DateTime.Now;
 			}
@@ -108,9 +105,9 @@ namespace XG.Server.Irc
 				return;
 			}
 
-			#endregion
+				#endregion
 
-			#region NOTICE
+				#region NOTICE
 
 			else if (tComCodeStr == "NOTICE")
 			{
@@ -125,9 +122,9 @@ namespace XG.Server.Irc
 				return;
 			}
 
-			#endregion
+				#endregion
 
-			#region NICK
+				#region NICK
 
 			else if (tComCodeStr == "NICK")
 			{
@@ -136,16 +133,16 @@ namespace XG.Server.Irc
 					tBot.Name = aMessage;
 					_log.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name);
 				}
-				else if(tUserName == Settings.Instance.IrcNick)
+				else if (tUserName == Settings.Instance.IrcNick)
 				{
 					// what should i do now?!
 					_log.Error("con_DataReceived() wtf? i was renamed to " + aMessage);
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region KICK
+				#region KICK
 
 			else if (tComCodeStr == "KICK")
 			{
@@ -175,9 +172,9 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region KILL
+				#region KILL
 
 			else if (tComCodeStr == "KILL")
 			{
@@ -196,9 +193,9 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region JOIN
+				#region JOIN
 
 			else if (tComCodeStr == "JOIN")
 			{
@@ -220,9 +217,9 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region PART
+				#region PART
 
 			else if (tComCodeStr == "PART")
 			{
@@ -237,9 +234,9 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region QUIT
+				#region QUIT
 
 			else if (tComCodeStr == "QUIT")
 			{
@@ -251,20 +248,18 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region	MODE / TOPIC / WALLOP
+				#region	MODE / TOPIC / WALLOP
 
-			else if (tComCodeStr == "MODE" ||
-					 tComCodeStr == "TOPIC" ||
-					 tComCodeStr == "WALLOP")
+			else if (tComCodeStr == "MODE" || tComCodeStr == "TOPIC" || tComCodeStr == "WALLOP")
 			{
 				// uhm, what to do now?!
 			}
 
-			#endregion
+				#endregion
 
-			#region	INVITE
+				#region	INVITE
 
 			else if (tComCodeStr == "INVITE")
 			{
@@ -278,18 +273,18 @@ namespace XG.Server.Irc
 				}
 			}
 
-			#endregion
+				#endregion
 
-			#region PONG
+				#region PONG
 
 			else if (tComCodeStr == "PONG")
 			{
 				_log.Info("con_DataReceived() PONG");
 			}
 
-			#endregion
+				#endregion
 
-			#region	INT VALUES
+				#region	INT VALUES
 
 			else
 			{
@@ -298,11 +293,11 @@ namespace XG.Server.Irc
 
 			#endregion
 
-			if(tBot != null)
+			if (tBot != null)
 			{
 				tBot.Commit();
 			}
-			if(tChan != null)
+			if (tChan != null)
 			{
 				tChan.Commit();
 			}

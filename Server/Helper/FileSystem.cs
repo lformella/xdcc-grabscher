@@ -1,6 +1,6 @@
 // 
-//  FileSystem.cs
-//  
+//  Filesystem.cs
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.IO;
@@ -34,11 +34,11 @@ namespace XG.Server.Helper
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Moves a file
+		/// 	Moves a file
 		/// </summary>
-		/// <param name="aNameOld">old filename</param>
-		/// <param name="aNameNew">new filename</param>
-		/// <returns>true if operation succeeded, false if it failed</returns>
+		/// <param name="aNameOld"> old filename </param>
+		/// <param name="aNameNew"> new filename </param>
+		/// <returns> true if operation succeeded, false if it failed </returns>
 		public static bool MoveFile(string aNameOld, string aNameNew)
 		{
 			if (File.Exists(aNameOld))
@@ -58,10 +58,10 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// Deletes a file
+		/// 	Deletes a file
 		/// </summary>
-		/// <param name="aName">file to delete</param>
-		/// <returns>true if operation succeeded, false if it failed</returns>
+		/// <param name="aName"> file to delete </param>
+		/// <returns> true if operation succeeded, false if it failed </returns>
 		public static bool DeleteFile(string aName)
 		{
 			if (File.Exists(aName))
@@ -81,10 +81,10 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// Deletes a directory
+		/// 	Deletes a directory
 		/// </summary>
-		/// <param name="aName">directory to delete</param>
-		/// <returns>true if operation succeeded, false if it failed</returns>
+		/// <param name="aName"> directory to delete </param>
+		/// <returns> true if operation succeeded, false if it failed </returns>
 		public static bool DeleteDirectory(string aName)
 		{
 			if (Directory.Exists(aName))
@@ -104,24 +104,24 @@ namespace XG.Server.Helper
 		}
 
 		/// <summary>
-		/// Lists a directory
+		/// 	Lists a directory
 		/// </summary>
-		/// <param name="aDir">directory to list</param>
-		/// <returns>file list</returns>
+		/// <param name="aDir"> directory to list </param>
+		/// <returns> file list </returns>
 		public static string[] ListDirectory(string aDir)
 		{
 			return ListDirectory(aDir, null);
 		}
 
 		/// <summary>
-		/// Lists a directory with search pattern
+		/// 	Lists a directory with search pattern
 		/// </summary>
-		/// <param name="aDir">directory to list</param>
-		/// <param name="aSearch">search pattern can be null to disable this</param>
-		/// <returns>file list</returns>
+		/// <param name="aDir"> directory to list </param>
+		/// <param name="aSearch"> search pattern can be null to disable this </param>
+		/// <returns> file list </returns>
 		public static string[] ListDirectory(string aDir, string aSearch)
 		{
-			string[] files = new string[] { };
+			string[] files = new string[] {};
 			try
 			{
 				files = aSearch == null ? Directory.GetFiles(aDir) : Directory.GetFiles(aDir, aSearch);
@@ -150,7 +150,7 @@ namespace XG.Server.Helper
 		{
 			string str = "";
 
-			if(File.Exists(aFile))
+			if (File.Exists(aFile))
 			{
 				try
 				{
@@ -158,8 +158,7 @@ namespace XG.Server.Helper
 					str = reader.ReadToEnd();
 					reader.Close();
 				}
-				catch(Exception)
-				{}
+				catch (Exception) {}
 			}
 
 			return str;

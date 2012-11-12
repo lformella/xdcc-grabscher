@@ -1,6 +1,6 @@
 // 
 //  Settings.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.IO;
@@ -35,11 +35,9 @@ namespace XG.Server
 	{
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		static Settings _instance = null;
+		static Settings _instance;
 
-		/// <value>
-		/// Returns an instance of the settings - just loaded once
-		/// </value>
+		/// <value> Returns an instance of the settings - just loaded once </value>
 		public static Settings Instance
 		{
 			get
@@ -57,9 +55,7 @@ namespace XG.Server
 			}
 		}
 
-		/// <value>
-		/// Returns an instance of the settings - loaded new every time you request it
-		/// </value>
+		/// <value> Returns an instance of the settings - loaded new every time you request it </value>
 		public static Settings InstanceReload
 		{
 			get
@@ -75,20 +71,18 @@ namespace XG.Server
 		}
 
 		/// <summary>
-		/// Deserializes a previously saved settings object from the file named setings.xml
+		/// 	Deserializes a previously saved settings object from the file named setings.xml
 		/// </summary>
-		/// <returns>
-		/// A <see cref="Settings"/>
-		/// </returns>
+		/// <returns> A <see cref="Settings" /> </returns>
 		static Settings Deserialize()
 		{
 			if (File.Exists(AppDataPathStatic + "settings.xml"))
 			{
 				try
 				{
-					XmlSerializer ser = new XmlSerializer(typeof(Settings));
+					XmlSerializer ser = new XmlSerializer(typeof (Settings));
 					StreamReader sr = new StreamReader(AppDataPathStatic + "settings.xml");
-					Settings settings = (Settings)ser.Deserialize(sr);
+					Settings settings = (Settings) ser.Deserialize(sr);
 					sr.Close();
 					return settings;
 				}
@@ -108,7 +102,7 @@ namespace XG.Server
 		{
 			try
 			{
-				XmlSerializer ser = new XmlSerializer(typeof(Settings));
+				XmlSerializer ser = new XmlSerializer(typeof (Settings));
 				StreamWriter sw = new StreamWriter(AppDataPathStatic + "settings.xml");
 				ser.Serialize(sw, _instance);
 				sw.Close();
@@ -241,7 +235,7 @@ namespace XG.Server
 		{
 			get { return 30; }
 		}
-		
+
 		public int ServerTimeoutTime
 		{
 			get { return 60; }
@@ -266,7 +260,7 @@ namespace XG.Server
 		{
 			get { return 5; }
 		}
-		
+
 		public long TakeSnapshotTime
 		{
 			get { return 600; }
@@ -298,6 +292,7 @@ namespace XG.Server
 		public bool AutoJoinOnInvite { get; set; }
 
 		string _tempPath;
+
 		public string TempPath
 		{
 			get { return _tempPath; }
@@ -332,7 +327,7 @@ namespace XG.Server
 
 		public bool UseWebServer { get; set; }
 		public int WebServerPort { get; set; }
-		
+
 		public bool UseJabberClient { get; set; }
 		public string JabberServer { get; set; }
 		public string JabberUser { get; set; }
@@ -344,7 +339,7 @@ namespace XG.Server
 		public string MySqlBackendDatabase { get; set; }
 		public string MySqlBackendUser { get; set; }
 		public string MySqlBackendPassword { get; set; }
-		
+
 		public FileHandler[] FileHandlers { get; set; }
 
 		#endregion

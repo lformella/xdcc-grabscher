@@ -1,6 +1,6 @@
 // 
 //  Packet.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Runtime.Serialization;
@@ -40,6 +40,7 @@ namespace XG.Core
 
 		[NonSerialized]
 		FilePart _part;
+
 		[DataMember]
 		public FilePart Part
 		{
@@ -62,24 +63,27 @@ namespace XG.Core
 		}
 
 		int _id = -1;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int Id
 		{
 			get { return _id; }
 			set { SetProperty(ref _id, value); }
 		}
 
-		Int64 _size = 0;
+		Int64 _size;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 Size
 		{
 			get { return _size; }
 			set { SetProperty(ref _size, value); }
 		}
 
-		Int64 _realSize = 0;
+		Int64 _realSize;
+
 		[DataMember]
 		public Int64 RealSize
 		{
@@ -88,13 +92,14 @@ namespace XG.Core
 		}
 
 		string _realName = "";
+
 		public string RealName
 		{
 			get { return _realName; }
 			set { SetProperty(ref _realName, value); }
 		}
 
-		[DataMember (Name = "RealName")]
+		[DataMember(Name = "RealName")]
 		public string RealNameAscii
 		{
 			get { return RealName.ToAscii(); }
@@ -102,8 +107,9 @@ namespace XG.Core
 		}
 
 		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public DateTime LastUpdated
 		{
 			get { return _lastUpdated; }
@@ -111,8 +117,9 @@ namespace XG.Core
 		}
 
 		DateTime _lastMentioned = DateTime.MinValue.ToUniversalTime();
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public DateTime LastMentioned
 		{
 			get { return _lastMentioned; }
@@ -127,10 +134,7 @@ namespace XG.Core
 				Packet oldestPacket = Parent != null ? Parent.OldestActivePacket() : null;
 				return oldestPacket != null && oldestPacket == this;
 			}
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion

@@ -1,6 +1,6 @@
 // 
 //  Bot.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.Collections.Generic;
@@ -53,16 +53,18 @@ namespace XG.Core
 		}
 
 		[NonSerialized]
-		Packet _currentQueuedPacket = null;
+		Packet _currentQueuedPacket;
+
 		public Packet CurrentQueuedPacket
 		{
 			get { return _currentQueuedPacket; }
 		}
 
-		Bot.States _state;
+		States _state;
+
 		[DataMember]
-		[MySqlAttribute]
-		public Bot.States State
+		[MySql]
+		public States State
 		{
 			get { return _state; }
 			set
@@ -73,7 +75,7 @@ namespace XG.Core
 					Modified = true;
 				}
 
-				if(value == Bot.States.Waiting)
+				if (value == States.Waiting)
 				{
 					_currentQueuedPacket = OldestActivePacket();
 				}
@@ -82,6 +84,7 @@ namespace XG.Core
 
 		[NonSerialized]
 		IPAddress _ip = IPAddress.None;
+
 		public IPAddress IP
 		{
 			get { return _ip; }
@@ -89,8 +92,9 @@ namespace XG.Core
 		}
 
 		string _lastMessage = "";
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public string LastMessage
 		{
 			get { return _lastMessage; }
@@ -104,15 +108,17 @@ namespace XG.Core
 		}
 
 		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public DateTime LastContact
 		{
 			get { return _lastContact; }
 			set { SetProperty(ref _lastContact, value); }
 		}
 
-		int _queuePosition = 0;
+		int _queuePosition;
+
 		[DataMember]
 		public int QueuePosition
 		{
@@ -120,7 +126,8 @@ namespace XG.Core
 			set { SetProperty(ref _queuePosition, value); }
 		}
 
-		int _queueTime = 0;
+		int _queueTime;
+
 		[DataMember]
 		public int QueueTime
 		{
@@ -128,71 +135,71 @@ namespace XG.Core
 			set { SetProperty(ref _queueTime, value); }
 		}
 
-		Int64 _infoSpeedMax = 0;
+		Int64 _infoSpeedMax;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 InfoSpeedMax
 		{
 			get { return _infoSpeedMax; }
 			set { SetProperty(ref _infoSpeedMax, value); }
 		}
 
-		Int64 _infoSpeedCurrent = 0;
+		Int64 _infoSpeedCurrent;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public Int64 InfoSpeedCurrent
 		{
 			get { return _infoSpeedCurrent; }
 			set { SetProperty(ref _infoSpeedCurrent, value); }
 		}
 
-		int _infoSlotTotal = 0;
+		int _infoSlotTotal;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int InfoSlotTotal
 		{
 			get { return _infoSlotTotal; }
 			set { SetProperty(ref _infoSlotTotal, value); }
 		}
 
-		int _infoSlotCurrent = 0;
+		int _infoSlotCurrent;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int InfoSlotCurrent
 		{
 			get { return _infoSlotCurrent; }
 			set { SetProperty(ref _infoSlotCurrent, value); }
 		}
 
-		int _infoQueueTotal = 0;
+		int _infoQueueTotal;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int InfoQueueTotal
 		{
 			get { return _infoQueueTotal; }
 			set { SetProperty(ref _infoQueueTotal, value); }
 		}
 
-		int _infoQueueCurrent = 0;
+		int _infoQueueCurrent;
+
 		[DataMember]
-		[MySqlAttribute]
+		[MySql]
 		public int InfoQueueCurrent
 		{
 			get { return _infoQueueCurrent; }
 			set { SetProperty(ref _infoQueueCurrent, value); }
 		}
-		
+
 		[DataMember]
 		public double Speed
 		{
-			get
-			{
-				return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum();
-			}
-			private set
-			{
-				throw new NotSupportedException("You can not set this Property.");
-			}
+			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }
+			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion
@@ -218,7 +225,7 @@ namespace XG.Core
 		{
 			base.Add(aPacket);
 		}
-		
+
 		public void RemovePacket(Packet aPacket)
 		{
 			base.Remove(aPacket);

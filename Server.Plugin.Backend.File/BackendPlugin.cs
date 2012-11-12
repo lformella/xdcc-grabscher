@@ -1,6 +1,6 @@
 // 
 //  BackendPlugin.cs
-//  
+// 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
@@ -15,11 +15,11 @@
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+// 
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-// 
+//  
 
 using System;
 using System.IO;
@@ -27,25 +27,25 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
-using log4net;
-
 using XG.Core;
 using XG.Server.Helper;
+
+using log4net;
 
 namespace XG.Server.Plugin.Backend.File
 {
 	public class BackendPlugin : ABackendPlugin
 	{
 		#region VARIABLES
-		
+
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		BinaryFormatter _formatter = new BinaryFormatter();
-		bool _isSaveFile = false;
-		object _saveObjectsLock = new object();
-		object _saveFilesLock = new object();
-		object _saveSearchesLock = new object();
-		object _saveSnapshotsLock = new object();
+		readonly BinaryFormatter _formatter = new BinaryFormatter();
+		bool _isSaveFile;
+		readonly object _saveObjectsLock = new object();
+		readonly object _saveFilesLock = new object();
+		readonly object _saveSearchesLock = new object();
+		readonly object _saveSnapshotsLock = new object();
 
 		string _dataBinary = "xg.bin";
 		string _filesBinary = "xgfiles.bin";
@@ -58,12 +58,12 @@ namespace XG.Server.Plugin.Backend.File
 
 		#region ABackendPlugin
 
-		public override Core.Servers LoadServers ()
+		public override Core.Servers LoadServers()
 		{
 			Core.Servers _servers = null;
 			try
 			{
-				_servers = (Core.Servers)Load(Settings.Instance.AppDataPath + _dataBinary);
+				_servers = (Core.Servers) Load(Settings.Instance.AppDataPath + _dataBinary);
 				_servers.AttachChildEvents();
 			}
 			catch {}
@@ -74,12 +74,12 @@ namespace XG.Server.Plugin.Backend.File
 			return _servers;
 		}
 
-		public override Files LoadFiles ()
+		public override Files LoadFiles()
 		{
 			Files _files = null;
 			try
 			{
-				_files = (Files)Load(Settings.Instance.AppDataPath + _filesBinary);
+				_files = (Files) Load(Settings.Instance.AppDataPath + _filesBinary);
 				_files.AttachChildEvents();
 			}
 			catch {}
@@ -90,12 +90,12 @@ namespace XG.Server.Plugin.Backend.File
 			return _files;
 		}
 
-		public override Objects LoadSearches ()
+		public override Objects LoadSearches()
 		{
 			Objects _searches = null;
 			try
 			{
-				_searches = (Objects)Load(Settings.Instance.AppDataPath + _searchesBinary);
+				_searches = (Objects) Load(Settings.Instance.AppDataPath + _searchesBinary);
 				_searches.AttachChildEvents();
 			}
 			catch {}
@@ -105,13 +105,13 @@ namespace XG.Server.Plugin.Backend.File
 			}
 			return _searches;
 		}
-		
-		public override Snapshots LoadStatistics ()
+
+		public override Snapshots LoadStatistics()
 		{
 			Snapshots _snapshots = null;
 			try
 			{
-				_snapshots = (Snapshots)Load(Settings.Instance.AppDataPath + _snapshotsBinary);
+				_snapshots = (Snapshots) Load(Settings.Instance.AppDataPath + _snapshotsBinary);
 			}
 			catch {}
 			if (_snapshots == null)
@@ -125,39 +125,39 @@ namespace XG.Server.Plugin.Backend.File
 
 		#region AWorker
 
-		protected override void StartRun ()
+		protected override void StartRun()
 		{
 			DateTime timeIrc = DateTime.Now;
 			DateTime timeStats = DateTime.Now;
-			
+
 			while (true)
 			{
 				// Objects
 				if ((DateTime.Now - timeIrc).TotalSeconds > BackupDataTime)
 				{
 					timeIrc = DateTime.Now;
-					
+
 					SaveObjects();
 				}
-				
+
 				// Files
 				if (_isSaveFile)
 				{
 					SaveFiles();
 				}
-				
+
 				// Statistics
 				if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
 				{
 					timeStats = DateTime.Now;
 					Statistic.Instance.Save();
 				}
-				
+
 				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
 			}
 		}
 
-		protected override void StopRun ()
+		protected override void StopRun()
 		{
 			// sync all to disk
 			SaveFiles();
@@ -165,17 +165,17 @@ namespace XG.Server.Plugin.Backend.File
 			SaveSearches();
 			SaveSnapshots();
 		}
-		
+
 		#endregion
 
 		#region EVENTHANDLER
 
-		protected override void FileAdded (AObject aParentObj, AObject aObj)
+		protected override void FileAdded(AObject aParentObj, AObject aObj)
 		{
 			SaveFiles();
 		}
 
-		protected override void FileRemoved (AObject aParentObj, AObject aObj)
+		protected override void FileRemoved(AObject aParentObj, AObject aObj)
 		{
 			SaveFiles();
 		}
@@ -194,7 +194,7 @@ namespace XG.Server.Plugin.Backend.File
 				{
 					SaveFiles();
 				}
-				// the data saving can be scheduled
+					// the data saving can be scheduled
 				else
 				{
 					_isSaveFile = true;
@@ -235,7 +235,7 @@ namespace XG.Server.Plugin.Backend.File
 				SaveObjects();
 			}
 		}
-		
+
 		protected override void SnapshotAdded(Snapshot aSnap)
 		{
 			SaveSnapshots();
@@ -246,10 +246,10 @@ namespace XG.Server.Plugin.Backend.File
 		#region SAVE + LOAD
 
 		/// <summary>
-		/// Serializes an object into a file
+		/// 	Serializes an object into a file
 		/// </summary>
-		/// <param name="aObj"></param>
-		/// <param name="aFile"></param>
+		/// <param name="aObj"> </param>
+		/// <param name="aFile"> </param>
 		bool Save(object aObj, string aFile)
 		{
 			try
@@ -271,10 +271,10 @@ namespace XG.Server.Plugin.Backend.File
 		}
 
 		/// <summary>
-		/// Deserializes an object from a file
+		/// 	Deserializes an object from a file
 		/// </summary>
-		/// <param name="aFile">Name of the File</param>
-		/// <returns>the object or null if the deserializing failed</returns>
+		/// <param name="aFile"> Name of the File </param>
+		/// <returns> the object or null if the deserializing failed </returns>
 		object Load(string aFile)
 		{
 			object obj = null;
@@ -289,7 +289,7 @@ namespace XG.Server.Plugin.Backend.File
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Load(" + aFile + ")" , ex);
+					_log.Fatal("Load(" + aFile + ")", ex);
 					// try to load the backup
 					try
 					{
@@ -331,7 +331,7 @@ namespace XG.Server.Plugin.Backend.File
 				return Save(Searches, Settings.Instance.AppDataPath + _searchesBinary);
 			}
 		}
-		
+
 		bool SaveSnapshots()
 		{
 			lock (_saveSnapshotsLock)
@@ -343,4 +343,3 @@ namespace XG.Server.Plugin.Backend.File
 		#endregion
 	}
 }
-
