@@ -72,7 +72,7 @@ namespace XG.Core
 		[DataMember]
 		public List<FilePart> Parts
 		{
-			get { return base.All.Cast<FilePart>().ToList(); }
+			get { return All.Cast<FilePart>().ToList(); }
 			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 

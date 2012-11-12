@@ -37,7 +37,7 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
-			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+			ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
 
 			string tUserName = aCommands[0].Split('!')[0];
 
@@ -45,30 +45,29 @@ namespace XG.Server.Irc
 			if (tBot != null)
 			{
 				bool isParsed = false;
-				Match tMatch = null;
-				Match tMatch1 = null;
-				Match tMatch2 = null;
-				Match tMatch3 = null;
-				Match tMatch4 = null;
-				Match tMatch5 = null;
+				Match tMatch;
+				Match tMatch1;
+				Match tMatch2 ;
+				Match tMatch3;
+				Match tMatch4;
 
-				int valueInt = 0;
+				int valueInt;
 				aMessage = ClearString(aMessage);
-				//double valueDouble = 0;
+				//double valueDouble;
 
 				#region ALL SLOTS FULL / ADDING TO QUEUE
 
-				if (!isParsed)
+				if (true)
 				{
 					tMatch1 = Regex.Match(aMessage,
-					                      "(" + MAGICSTRING +
+					                      "(" + Magicstring +
 					                      " All Slots Full, |)Added you to the main queue (for pack ([0-9]+) \\(\".*\"\\) |).*in positi(o|0)n (?<queue_cur>[0-9]+)\\. To Remove you(r|)self at a later time .*",
 					                      RegexOptions.IgnoreCase);
 					tMatch2 = Regex.Match(aMessage,
 					                      "Queueing you for pack [0-9]+ \\(.*\\) in slot (?<queue_cur>[0-9]+)/(?<queue_total>[0-9]+)\\. To remove you(r|)self from the queue, type: .*\\. To check your position in the queue, type: .*\\. Estimated time remaining in queue: (?<queue_d>[0-9]+) days, (?<queue_h>[0-9]+) hours, (?<queue_m>[0-9]+) minutes",
 					                      RegexOptions.IgnoreCase);
 					tMatch3 = Regex.Match(aMessage,
-					                      "(" + MAGICSTRING +
+					                      "(" + Magicstring +
 					                      " |)Es laufen bereits genug .bertragungen, Du bist jetzt in der Warteschlange f.r Datei [0-9]+ \\(.*\\) in Position (?<queue_cur>[0-9]+)\\. Wenn Du sp.ter Abbrechen willst schreibe .*",
 					                      RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
@@ -120,7 +119,7 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " Removed From Queue: .*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(aMessage, Magicstring + " Removed From Queue: .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -138,11 +137,10 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(aMessage, MAGICSTRING + " Die Nummer der Datei ist ung.ltig", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(aMessage, MAGICSTRING + " Invalid Pack Number, Try Again", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(aMessage, Magicstring + " Die Nummer der Datei ist ung.ltig", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(aMessage, Magicstring + " Invalid Pack Number, Try Again", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
-						tMatch = tMatch1.Success ? tMatch1 : tMatch2;
 						isParsed = true;
 						Packet tPack = tBot.OldestActivePacket();
 						if (tPack != null)
@@ -156,7 +154,7 @@ namespace XG.Server.Irc
 								tBot.RemovePacket(pack);
 							}
 						}
-						_log.Error("Parse() invalid packetnumber from " + tBot.Name);
+						log.Error("Parse() invalid packetnumber from " + tBot.Name);
 					}
 				}
 
@@ -166,8 +164,8 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(aMessage, MAGICSTRING + " You already requested that pack(.*|)", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(aMessage, MAGICSTRING + " Du hast diese Datei bereits angefordert(.*|)", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(aMessage, Magicstring + " You already requested that pack(.*|)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(aMessage, Magicstring + " Du hast diese Datei bereits angefordert(.*|)", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
@@ -185,12 +183,12 @@ namespace XG.Server.Irc
 				if (!isParsed)
 				{
 					tMatch1 = Regex.Match(aMessage, "Denied, You already have ([0-9]+) item(s|) queued, Try Again Later", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(aMessage, MAGICSTRING + " All Slots Full, Denied, You already have that item queued\\.", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(aMessage, Magicstring + " All Slots Full, Denied, You already have that item queued\\.", RegexOptions.IgnoreCase);
 					tMatch3 = Regex.Match(aMessage, "You are already receiving or are queued for the maximum number of packs .*", RegexOptions.IgnoreCase);
 					tMatch4 = Regex.Match(aMessage, "Du hast max\\. ([0-9]+) transfer auf einmal, Du bist jetzt in der Warteschlange f.r Datei .*",
 					                      RegexOptions.IgnoreCase);
-					tMatch5 = Regex.Match(aMessage, "Es laufen bereits genug .bertragungen, abgewiesen, Du hast diese Datei bereits in der Warteschlange\\.",
-					                      RegexOptions.IgnoreCase);
+					Match tMatch5 = Regex.Match(aMessage, "Es laufen bereits genug .bertragungen, abgewiesen, Du hast diese Datei bereits in der Warteschlange\\.",
+					                            RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success || tMatch3.Success || tMatch4.Success || tMatch5.Success)
 					{
 						isParsed = true;
@@ -216,11 +214,11 @@ namespace XG.Server.Irc
 				if (!isParsed)
 				{
 					tMatch1 = Regex.Match(aMessage,
-					                      MAGICSTRING +
+					                      Magicstring +
 					                      " You have a DCC pending, Set your client to receive the transfer\\. ((Type .*|Send XDCC CANCEL) to abort the transfer\\. |)\\((?<time>[0-9]+) seconds remaining until timeout\\)",
 					                      RegexOptions.IgnoreCase);
 					tMatch2 = Regex.Match(aMessage,
-					                      MAGICSTRING +
+					                      Magicstring +
 					                      " Du hast eine .bertragung schwebend, Du mu.t den Download jetzt annehmen\\. ((Schreibe .*|Sende XDCC CANCEL)            an den Bot um die .bertragung abzubrechen\\. |)\\((?<time>[0-9]+) Sekunden bis zum Abbruch\\)",
 					                      RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
@@ -244,10 +242,10 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(aMessage, MAGICSTRING + " All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later",
+					tMatch1 = Regex.Match(aMessage, Magicstring + " All Slots Full, Main queue of size (?<queue_total>[0-9]+) is Full, Try Again Later",
 					                      RegexOptions.IgnoreCase);
 					tMatch2 = Regex.Match(aMessage,
-					                      MAGICSTRING +
+					                      Magicstring +
 					                      " Es laufen bereits genug .bertragungen, abgewiesen, die Warteschlange ist voll, max\\. (?<queue_total>[0-9]+) Dateien, Versuche es sp.ter nochmal",
 					                      RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
@@ -275,7 +273,7 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " You can only have ([0-9]+) transfer(s|) at a time,.*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(aMessage, Magicstring + " You can only have ([0-9]+) transfer(s|) at a time,.*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -292,7 +290,7 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " The Owner Has Requested That No New Connections Are Made In The Next (?<time>[0-9]+) Minute(s|)",
+					tMatch = Regex.Match(aMessage, Magicstring + " The Owner Has Requested That No New Connections Are Made In The Next (?<time>[0-9]+) Minute(s|)",
 					                     RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
@@ -333,7 +331,7 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " XDCC SEND denied, (?<info>.*)", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(aMessage, Magicstring + " XDCC SEND denied, (?<info>.*)", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
@@ -360,7 +358,7 @@ namespace XG.Server.Irc
 								tBot.State = Bot.States.Idle;
 							}
 							FireCreateTimer(aServer, tBot, Settings.Instance.CommandWaitTime, false);
-							_log.Error("Parse() XDCC denied from " + tBot.Name + ": " + info);
+							log.Error("Parse() XDCC denied from " + tBot.Name + ": " + info);
 						}
 					}
 				}
@@ -371,8 +369,8 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch1 = Regex.Match(aMessage, MAGICSTRING + " Sending You (Your Queued |)Pack .*", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(aMessage, MAGICSTRING + " Sende dir jetzt die Datei .*", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(aMessage, Magicstring + " Sending You (Your Queued |)Pack .*", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(aMessage, Magicstring + " Sende dir jetzt die Datei .*", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
@@ -438,8 +436,8 @@ namespace XG.Server.Irc
 				if (!isParsed)
 				{
 					// Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now
-					tMatch1 = Regex.Match(aMessage, MAGICSTRING + " (Closing Connection|Transfer Completed)(?<reason>.*)", RegexOptions.IgnoreCase);
-					tMatch2 = Regex.Match(aMessage, MAGICSTRING + " (Schlie.e Verbindung)(?<reason>.*)", RegexOptions.IgnoreCase);
+					tMatch1 = Regex.Match(aMessage, Magicstring + " (Closing Connection|Transfer Completed)(?<reason>.*)", RegexOptions.IgnoreCase);
+					tMatch2 = Regex.Match(aMessage, Magicstring + " (Schlie.e Verbindung)(?<reason>.*)", RegexOptions.IgnoreCase);
 					if (tMatch1.Success || tMatch2.Success)
 					{
 						isParsed = true;
@@ -465,7 +463,7 @@ namespace XG.Server.Irc
 								channel = "#" + channel;
 							}
 							// ok, lets do a silent auto join
-							_log.Info("Parse() auto joining " + channel);
+							log.Info("Parse() auto joining " + channel);
 							FireSendData(aServer, "JOIN " + channel);
 						}
 					}
@@ -502,9 +500,9 @@ namespace XG.Server.Irc
 					                      RegexOptions.IgnoreCase);
 					tMatch3 = Regex.Match(aMessage, "Zur Strafe wirst du .* \\(.*\\) f.r (?<time_m>[0-9]*) Minuten ignoriert(.|)", RegexOptions.IgnoreCase);
 					tMatch4 = Regex.Match(aMessage, "Auto-ignore activated for .* \\(.*\\)", RegexOptions.IgnoreCase);
-					if (tMatch1.Success || tMatch2.Success || tMatch3.Success)
+					if (tMatch1.Success || tMatch2.Success || tMatch3.Success || tMatch4.Success)
 					{
-						tMatch = tMatch1.Success ? tMatch1 : tMatch2.Success ? tMatch2 : tMatch3;
+						tMatch = tMatch1.Success ? tMatch1 : tMatch2.Success ? tMatch2 : tMatch3.Success ? tMatch3 : tMatch4;
 						isParsed = true;
 						if (tBot.State == Bot.States.Waiting)
 						{
@@ -545,7 +543,7 @@ namespace XG.Server.Irc
 				else
 				{
 					tBot.LastMessage = aMessage;
-					_log.Info("Parse() message from " + tBot.Name + ": " + aMessage);
+					log.Info("Parse() message from " + tBot.Name + ": " + aMessage);
 				}
 
 				tBot.Commit();

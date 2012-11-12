@@ -25,7 +25,9 @@ using System.IO;
 
 using NUnit.Framework;
 
-namespace XG.Server.Helper.Test
+using XG.Server.Helper;
+
+namespace XG.Server.Test.Helper
 {
 	[TestFixture]
 	public class Filesystem
@@ -33,15 +35,13 @@ namespace XG.Server.Helper.Test
 		[Test]
 		public void MoveFile()
 		{
-			string fileNameOld = "test1.txt";
-			string fileNameNew = "test2.txt";
-
-			bool result = false;
+			const string fileNameOld = "test1.txt";
+			const string fileNameNew = "test2.txt";
 
 			File.Delete(fileNameOld);
 			File.Delete(fileNameNew);
 
-			result = FileSystem.MoveFile(fileNameOld, fileNameNew);
+			bool result = FileSystem.MoveFile(fileNameOld, fileNameNew);
 			Assert.AreEqual(false, result);
 
 			File.Create(fileNameOld).Close();

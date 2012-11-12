@@ -279,7 +279,7 @@ namespace XG.Server
 		{
 			if (aObj is Channel)
 			{
-				Channel aChan = aObj as Channel;
+				var aChan = aObj as Channel;
 
 				if (aChan.Enabled)
 				{
@@ -292,7 +292,7 @@ namespace XG.Server
 		{
 			if (aObj is Channel)
 			{
-				Channel aChan = aObj as Channel;
+				var aChan = aObj as Channel;
 
 				foreach (Bot tBot in aChan.Bots)
 				{
@@ -311,7 +311,7 @@ namespace XG.Server
 		{
 			if (aObj is Channel)
 			{
-				Channel tChan = aObj as Channel;
+				var tChan = aObj as Channel;
 
 				if (tChan.Enabled)
 				{
@@ -325,7 +325,7 @@ namespace XG.Server
 
 			if (aObj is Packet)
 			{
-				Packet tPack = aObj as Packet;
+				var tPack = aObj as Packet;
 				Bot tBot = tPack.Parent;
 
 				if (tPack.Enabled)
@@ -398,7 +398,7 @@ namespace XG.Server
 		/// </summary>
 		public void TriggerTimerRun()
 		{
-			List<AObject> remove = new List<AObject>();
+			var remove = new List<AObject>();
 			foreach (var kvp in _timedObjects)
 			{
 				DateTime time = kvp.Value;

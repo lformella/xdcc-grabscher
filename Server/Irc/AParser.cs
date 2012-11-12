@@ -38,9 +38,9 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected const string MAGICSTRING = @"((\*|:){2,3}|->|<-|)";
+		protected const string Magicstring = @"((\*|:){2,3}|->|<-|)";
 
 		#endregion
 
@@ -155,7 +155,7 @@ namespace XG.Server.Irc
 
 			else if (aRawData.StartsWith("PING"))
 			{
-				_log.Info("ParseData() PING");
+				Log.Info("ParseData() PING");
 				FireSendData(aServer, "PONG " + aRawData.Split(':')[1]);
 			}
 
@@ -165,7 +165,7 @@ namespace XG.Server.Irc
 
 			else if (aRawData.StartsWith("ERROR"))
 			{
-				_log.Error("ParseData() ERROR: " + aRawData);
+				Log.Error("ParseData() ERROR: " + aRawData);
 			}
 
 			#endregion

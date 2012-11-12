@@ -74,8 +74,8 @@ namespace XG.Server
 
 		public void ReadXml(XmlReader reader)
 		{
-			XmlSerializer keySerializer = new XmlSerializer(typeof (TKey));
-			XmlSerializer valueSerializer = new XmlSerializer(typeof (TValue));
+			var keySerializer = new XmlSerializer(typeof (TKey));
+			var valueSerializer = new XmlSerializer(typeof (TValue));
 
 			bool wasEmpty = reader.IsEmptyElement;
 			reader.Read();
@@ -90,11 +90,11 @@ namespace XG.Server
 				reader.ReadStartElement("item");
 
 				reader.ReadStartElement("key");
-				TKey key = (TKey) keySerializer.Deserialize(reader);
+				var key = (TKey) keySerializer.Deserialize(reader);
 				reader.ReadEndElement();
 
 				reader.ReadStartElement("value");
-				TValue value = (TValue) valueSerializer.Deserialize(reader);
+				var value = (TValue) valueSerializer.Deserialize(reader);
 				reader.ReadEndElement();
 
 				Add(key, value);
@@ -107,8 +107,8 @@ namespace XG.Server
 
 		public void WriteXml(XmlWriter writer)
 		{
-			XmlSerializer keySerializer = new XmlSerializer(typeof (TKey));
-			XmlSerializer valueSerializer = new XmlSerializer(typeof (TValue));
+			var keySerializer = new XmlSerializer(typeof (TKey));
+			var valueSerializer = new XmlSerializer(typeof (TValue));
 
 			foreach (TKey key in Keys)
 			{
@@ -133,43 +133,43 @@ namespace XG.Server
 	[Serializable]
 	public class Statistic
 	{
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		static readonly object locked = new object();
-		static readonly XmlSerializer serializer = new XmlSerializer(typeof (Statistic));
-
-		[NonSerialized]
-		static Statistic instance;
+		static readonly object Locked = new object();
+		static readonly XmlSerializer Serializer = new XmlSerializer(typeof (Statistic));
 
 		[NonSerialized]
-		static readonly object statisticLock = new object();
+		static Statistic _instance;
 
-		SerializableDictionary<StatisticType, Int64> myValuesInt = new SerializableDictionary<StatisticType, Int64>();
+		[NonSerialized]
+		static readonly object StatisticLock = new object();
+
+		SerializableDictionary<StatisticType, Int64> _myValuesInt = new SerializableDictionary<StatisticType, Int64>();
 
 		public SerializableDictionary<StatisticType, Int64> ValuesInt
 		{
-			get { return myValuesInt; }
-			set { myValuesInt = value; }
+			get { return _myValuesInt; }
+			set { _myValuesInt = value; }
 		}
 
-		SerializableDictionary<StatisticType, double> myValuesDouble = new SerializableDictionary<StatisticType, double>();
+		SerializableDictionary<StatisticType, double> _myValuesDouble = new SerializableDictionary<StatisticType, double>();
 
 		public SerializableDictionary<StatisticType, double> ValuesDouble
 		{
-			get { return myValuesDouble; }
-			set { myValuesDouble = value; }
+			get { return _myValuesDouble; }
+			set { _myValuesDouble = value; }
 		}
 
 		public static Statistic Instance
 		{
 			get
 			{
-				if (instance == null)
+				if (_instance == null)
 				{
-					instance = Deserialize();
+					_instance = Deserialize();
 					Serialize();
 				}
-				return instance;
+				return _instance;
 			}
 		}
 
@@ -177,36 +177,36 @@ namespace XG.Server
 		{
 			if (File.Exists(Settings.Instance.AppDataPath + "statistics.xml"))
 			{
-				lock (locked)
+				lock (Locked)
 				{
 					try
 					{
 						Stream streamRead = File.OpenRead(Settings.Instance.AppDataPath + "statistics.xml");
-						Statistic statistic = (Statistic) serializer.Deserialize(streamRead);
+						var statistic = (Statistic) Serializer.Deserialize(streamRead);
 						streamRead.Close();
 						return statistic;
 					}
 					catch (Exception ex)
 					{
-						_log.Fatal("Statistic.Deserialize", ex);
+						Log.Fatal("Statistic.Deserialize", ex);
 					}
 				}
 			}
 			else
 			{
-				_log.Error("Statistic.Deserialize found no settings file");
+				Log.Error("Statistic.Deserialize found no settings file");
 			}
 			return new Statistic();
 		}
 
 		static void Serialize()
 		{
-			lock (locked)
+			lock (Locked)
 			{
 				try
 				{
 					Stream streamWrite = File.Create(Settings.Instance.AppDataPath + "statistics.xml");
-					serializer.Serialize(streamWrite, instance);
+					Serializer.Serialize(streamWrite, _instance);
 					streamWrite.Close();
 				}
 				catch (InvalidOperationException)
@@ -219,7 +219,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Statistic.Serialize", ex);
+					Log.Fatal("Statistic.Serialize", ex);
 				}
 			}
 		}
@@ -238,49 +238,43 @@ namespace XG.Server
 
 		public void Increase(StatisticType aType, Int64 aValue)
 		{
-			lock (statisticLock)
+			lock (StatisticLock)
 			{
-				if (!myValuesInt.ContainsKey(aType))
+				if (!_myValuesInt.ContainsKey(aType))
 				{
-					myValuesInt.Add(aType, aValue);
+					_myValuesInt.Add(aType, aValue);
 				}
 				else
 				{
-					myValuesInt[aType] += aValue;
+					_myValuesInt[aType] += aValue;
 				}
 			}
 		}
 
 		public double Get(StatisticType aType)
 		{
-			if (!myValuesDouble.ContainsKey(aType))
+			if (!_myValuesDouble.ContainsKey(aType))
 			{
-				if (!myValuesInt.ContainsKey(aType))
+				if (!_myValuesInt.ContainsKey(aType))
 				{
 					return 0;
 				}
-				else
-				{
-					return myValuesInt[aType];
-				}
+				return _myValuesInt[aType];
 			}
-			else
-			{
-				return myValuesDouble[aType];
-			}
+			return _myValuesDouble[aType];
 		}
 
 		public void Set(StatisticType aType, double aValue)
 		{
-			lock (statisticLock)
+			lock (StatisticLock)
 			{
-				if (!myValuesDouble.ContainsKey(aType))
+				if (!_myValuesDouble.ContainsKey(aType))
 				{
-					myValuesDouble.Add(aType, aValue);
+					_myValuesDouble.Add(aType, aValue);
 				}
 				else
 				{
-					myValuesDouble[aType] = aValue;
+					_myValuesDouble[aType] = aValue;
 				}
 			}
 		}

@@ -85,7 +85,7 @@ namespace XG.Core
 		[NonSerialized]
 		IPAddress _ip = IPAddress.None;
 
-		public IPAddress IP
+		public IPAddress Ip
 		{
 			get { return _ip; }
 			set { SetProperty(ref _ip, value); }
@@ -208,7 +208,7 @@ namespace XG.Core
 
 		public IEnumerable<Packet> Packets
 		{
-			get { return base.All.Cast<Packet>(); }
+			get { return All.Cast<Packet>(); }
 		}
 
 		public Packet Packet(int aId)
@@ -217,18 +217,20 @@ namespace XG.Core
 			{
 				return Packets.First(pack => pack.Id == aId);
 			}
-			catch {}
-			return null;
+			catch (Exception)
+			{
+				return null;
+			}
 		}
 
 		public void AddPacket(Packet aPacket)
 		{
-			base.Add(aPacket);
+			Add(aPacket);
 		}
 
 		public void RemovePacket(Packet aPacket)
 		{
-			base.Remove(aPacket);
+			Remove(aPacket);
 		}
 
 		public Packet OldestActivePacket()

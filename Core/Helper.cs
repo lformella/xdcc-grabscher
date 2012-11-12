@@ -149,10 +149,7 @@ namespace XG.Core
 			{
 				return Regex.Replace(aName, "(\\(|\\)|\\[|\\]|\\{|\\}|-|_|\\.)", "").ToLower() + "." + aSize + "/";
 			}
-			else
-			{
-				return "";
-			}
+			return "";
 		}
 	}
 }

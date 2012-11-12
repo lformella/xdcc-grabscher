@@ -33,7 +33,7 @@ namespace XG.Server.Worker
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public Int64 SecondsToSleep { get; set; }
 		DateTime _last;
@@ -43,7 +43,7 @@ namespace XG.Server.Worker
 
 		#region FUNCTIONS
 
-		public ALoopWorker()
+		protected ALoopWorker()
 		{
 			_last = DateTime.MinValue.ToUniversalTime();
 			_allowRun = true;
@@ -63,7 +63,7 @@ namespace XG.Server.Worker
 					}
 					catch (Exception ex)
 					{
-						_log.Fatal("LoopRun()", ex);
+						Log.Fatal("LoopRun()", ex);
 					}
 				}
 

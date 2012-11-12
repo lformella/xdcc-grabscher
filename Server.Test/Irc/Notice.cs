@@ -23,28 +23,28 @@
 
 using NUnit.Framework;
 
-namespace XG.Server.Irc.Test
+namespace XG.Server.Test.Irc
 {
 	[TestFixture]
 	public class Notice : AParser
 	{
 		public Notice()
 		{
-			RegisterParser(new Irc.Notice());
+			RegisterParser(new Server.Irc.Notice());
 		}
 
 		[Test]
 		public void BotMessages()
 		{
-			_eventParsingError = "";
+			EventParsingError = "";
 
 			Settings.Instance.AutoJoinOnInvite = true;
 
-			_ircParser.ParseData(_server,
+			IrcParser.ParseData(Server,
 			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT NOTICE xg1_bitpir_at : ** Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now");
-			Assert.AreEqual("JOIN #MG-CHAT", _eventData);
+			Assert.AreEqual("JOIN #MG-CHAT", EventData);
 
-			Assert.AreEqual(true, string.IsNullOrEmpty(_eventParsingError));
+			Assert.AreEqual(true, string.IsNullOrEmpty(EventParsingError));
 		}
 	}
 }

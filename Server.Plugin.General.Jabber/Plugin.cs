@@ -27,7 +27,6 @@ using System.Linq;
 using XG.Core;
 
 using agsXMPP;
-using agsXMPP.Xml.Dom;
 using agsXMPP.protocol.client;
 
 using log4net;
@@ -38,7 +37,7 @@ namespace XG.Server.Plugin.General.Jabber
 	{
 		#region VARIABLES
 
-		static readonly ILog log = LogManager.GetLogger(typeof (Plugin));
+		static readonly ILog Log = LogManager.GetLogger(typeof (Plugin));
 
 		XmppClientConnection _client;
 
@@ -51,8 +50,8 @@ namespace XG.Server.Plugin.General.Jabber
 			_client = new XmppClientConnection(Settings.Instance.JabberServer);
 			_client.Open(Settings.Instance.JabberUser, Settings.Instance.JabberPassword);
 			_client.OnLogin += delegate { UpdateState(0); };
-			_client.OnError += delegate(object sender, Exception ex) { log.Fatal("StartRun()", ex); };
-			_client.OnAuthError += delegate(object sender, Element e) { log.Fatal("StartRun() " + e); };
+			_client.OnError += (sender, ex) => Log.Fatal("StartRun()", ex);
+			_client.OnAuthError += (sender, e) => Log.Fatal("StartRun() " + e);
 		}
 
 		protected override void StopRun()
@@ -68,12 +67,15 @@ namespace XG.Server.Plugin.General.Jabber
 		{
 			if (aObj is FilePart)
 			{
-				double speed = 0;
+				double speed;
 				try
 				{
 					speed = (from file in Files.All from part in file.Parts select part.Speed).Sum();
 				}
-				catch {}
+				catch (Exception)
+				{
+					speed = 0;
+				}
 				UpdateState(speed);
 			}
 		}
@@ -89,10 +91,10 @@ namespace XG.Server.Plugin.General.Jabber
 				return;
 			}
 
-			Presence p = null;
+			Presence p;
 			if (aSpeed > 0)
 			{
-				string str = "";
+				string str;
 				if (aSpeed < 1024)
 				{
 					str = aSpeed + " B/s";
@@ -110,13 +112,11 @@ namespace XG.Server.Plugin.General.Jabber
 					str = (aSpeed / (1024 * 1024 * 1024)).ToString("0.00") + " GB/s";
 				}
 
-				p = new Presence(ShowType.chat, str);
-				p.Type = PresenceType.available;
+				p = new Presence(ShowType.chat, str) {Type = PresenceType.available};
 			}
 			else
 			{
-				p = new Presence(ShowType.away, "Idle");
-				p.Type = PresenceType.available;
+				p = new Presence(ShowType.away, "Idle") {Type = PresenceType.available};
 			}
 			_client.Send(p);
 		}

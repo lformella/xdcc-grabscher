@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public HttpListenerContext Context { get; set; }
 
@@ -58,9 +59,9 @@ namespace XG.Server.Plugin.General.Webserver
 
 		protected override void StartRun()
 		{
-			Dictionary<string, string> tDic = new Dictionary<string, string>();
+			var tDic = new Dictionary<string, string>();
 			string str = Context.Request.RawUrl;
-			_log.Debug("StartRun() " + str);
+			Log.Debug("StartRun() " + str);
 
 #if !UNSAFE
 			try
@@ -99,16 +100,14 @@ namespace XG.Server.Plugin.General.Webserver
 						Context.Response.AppendCookie(new Cookie("xg.password", HttpUtility.UrlDecode(tDic["password"])));
 					}
 
-					ClientRequest tMessage = (ClientRequest) int.Parse(tDic["request"]);
+					var tMessage = (ClientRequest) int.Parse(tDic["request"]);
 
 					#region DATA HANDLING
 
 					string response = "";
 					Context.Response.AddHeader("Cache-Control", "no-cache");
 
-					bool showOfflineBots = Context.Request.Cookies["xg.show_offline_bots"] == null
-						                       ? true
-						                       : (Context.Request.Cookies["xg.show_offline_bots"].Value == "1" ? true : false);
+					bool showOfflineBots = Context.Request.Cookies["xg.show_offline_bots"] == null || (Context.Request.Cookies["xg.show_offline_bots"].Value == "1");
 					Guid guid = Guid.Empty;
 					try
 					{
@@ -183,8 +182,7 @@ namespace XG.Server.Plugin.General.Webserver
 							Object obj = Searches.Named(name);
 							if (obj == null)
 							{
-								obj = new Object();
-								obj.Name = name;
+								obj = new Object {Name = name};
 								Searches.Add(obj);
 							}
 							break;
@@ -297,8 +295,7 @@ namespace XG.Server.Plugin.General.Webserver
 							Bot tBot = chan.Bot(botName);
 							if (tBot == null)
 							{
-								tBot = new Bot();
-								tBot.Name = botName;
+								tBot = new Bot {Name = botName};
 								chan.AddBot(tBot);
 							}
 
@@ -306,9 +303,7 @@ namespace XG.Server.Plugin.General.Webserver
 							Packet pack = tBot.Packet(packetId);
 							if (pack == null)
 							{
-								pack = new Packet();
-								pack.Id = packetId;
-								pack.Name = link[5];
+								pack = new Packet {Id = packetId, Name = link[5]};
 								tBot.AddPacket(pack);
 							}
 							pack.Enabled = true;
@@ -399,8 +394,11 @@ namespace XG.Server.Plugin.General.Webserver
 				{
 					Context.Response.Close();
 				}
-				catch {}
-				_log.Fatal("StartRun(" + str + ")", ex);
+				catch (Exception)
+				{
+					// just ignore
+				}
+				Log.Fatal("StartRun(" + str + ")", ex);
 			}
 #endif
 		}
@@ -418,7 +416,7 @@ namespace XG.Server.Plugin.General.Webserver
 		{
 			if (Context.Request.Headers["Accept-Encoding"] != null)
 			{
-				using (MemoryStream ms = new MemoryStream())
+				using (var ms = new MemoryStream())
 				{
 					Stream compress = null;
 					if (Context.Request.Headers["Accept-Encoding"].Contains("gzip"))
@@ -654,13 +652,13 @@ namespace XG.Server.Plugin.General.Webserver
 
 		string Searches2Json(Objects aObjects)
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
 			sb.Append("{");
 			sb.Append("\"Searches\":[");
 
 			int count = 0;
-			foreach (AObject obj in aObjects.All)
+			foreach (var obj in aObjects.All)
 			{
 				count++;
 				sb.Append("{\"Search\": \"" + obj.Name + "\"}");
@@ -678,9 +676,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		string Objects2Json(IEnumerable<AObject> aObjects, int aPage, int aRows)
 		{
-			var tObjects = new JQGrid.Objects();
-			tObjects.Page = aPage;
-			tObjects.Rows = aRows;
+			var tObjects = new JQGrid.Objects {Page = aPage, Rows = aRows};
 			tObjects.SetObjects(aObjects);
 			return Json.Serialize(tObjects);
 		}
@@ -698,10 +694,10 @@ namespace XG.Server.Plugin.General.Webserver
 
 		string Statistic2Json()
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 			sb.Append("{");
 
-			List<StatisticType> types = new List<StatisticType>();
+			var types = new List<StatisticType>();
 			// uncool, but works
 			for (int a = (int) StatisticType.BytesLoaded; a <= (int) StatisticType.SpeedMax; a++)
 			{
@@ -713,7 +709,7 @@ namespace XG.Server.Plugin.General.Webserver
 			{
 				count++;
 				double val = Statistic.Instance.Get(type);
-				sb.Append("\"" + type + "\":" + val.ToString().Replace(",", "."));
+				sb.Append("\"" + type + "\":" + val.ToString(CultureInfo.InvariantCulture).Replace(",", "."));
 				if (count < types.Count)
 				{
 					sb.Append(",");

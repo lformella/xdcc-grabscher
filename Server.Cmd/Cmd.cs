@@ -55,10 +55,12 @@ namespace XG.Server.Cmd
 				// build our own, who logs only fatals to console
 				Logger root = ((Hierarchy) LogManager.GetRepository()).Root;
 
-				ConsoleAppender lAppender = new ConsoleAppender();
-				lAppender.Name = "Console";
-				lAppender.Layout = new PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n");
-				lAppender.Threshold = Level.Fatal;
+				var lAppender = new ConsoleAppender
+				{
+					Name = "Console",
+					Layout = new PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n"),
+					Threshold = Level.Fatal
+				};
 				lAppender.ActivateOptions();
 
 				root.AddAppender(lAppender);
@@ -75,9 +77,9 @@ namespace XG.Server.Cmd
 			}
 #endif
 
-			Main instance = new Main();
+			var instance = new Main();
 
-			ABackendPlugin backend = null;
+			ABackendPlugin backend;
 			if (Settings.Instance.UseMySqlBackend)
 			{
 				backend = new BackendPlugin();
@@ -115,10 +117,7 @@ namespace XG.Server.Cmd
 					instance.Stop();
 					break;
 				}
-				else
-				{
-					Thread.Sleep(1000);
-				}
+				Thread.Sleep(1000);
 			}
 
 			Environment.Exit(0);

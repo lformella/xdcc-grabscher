@@ -52,19 +52,18 @@ namespace XG.Server.Plugin
 
 		public void AddChannel(Guid aGuid, string aString)
 		{
-			AObject tObj = Servers.WithGuid(aGuid);
-			if (tObj != null)
+			var tServ = Servers.WithGuid(aGuid) as Core.Server;
+			if (tServ != null)
 			{
-				(tObj as Core.Server).AddChannel(aString);
+				tServ.AddChannel(aString);
 			}
 		}
 
 		public void RemoveChannel(Guid aGuid)
 		{
-			AObject tObj = Servers.WithGuid(aGuid);
-			if (tObj != null)
+			var tChan = Servers.WithGuid(aGuid) as Channel;
+			if (tChan != null)
 			{
-				Channel tChan = tObj as Channel;
 				tChan.Parent.RemoveChannel(tChan);
 			}
 		}

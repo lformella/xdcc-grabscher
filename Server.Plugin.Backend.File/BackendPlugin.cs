@@ -38,7 +38,7 @@ namespace XG.Server.Plugin.Backend.File
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		readonly BinaryFormatter _formatter = new BinaryFormatter();
 		bool _isSaveFile;
@@ -47,12 +47,12 @@ namespace XG.Server.Plugin.Backend.File
 		readonly object _saveSearchesLock = new object();
 		readonly object _saveSnapshotsLock = new object();
 
-		string _dataBinary = "xg.bin";
-		string _filesBinary = "xgfiles.bin";
-		string _searchesBinary = "xgsearches.bin";
-		string _snapshotsBinary = "xgsnapshots.bin";
+		const string DataBinary = "xg.bin";
+		const string FilesBinary = "xgfiles.bin";
+		const string SearchesBinary = "xgsearches.bin";
+		const string SnapshotsBinary = "xgsnapshots.bin";
 
-		int BackupDataTime = 900000;
+		const int BackupDataTime = 900000;
 
 		#endregion
 
@@ -60,65 +60,56 @@ namespace XG.Server.Plugin.Backend.File
 
 		public override Core.Servers LoadServers()
 		{
-			Core.Servers _servers = null;
 			try
 			{
-				_servers = (Core.Servers) Load(Settings.Instance.AppDataPath + _dataBinary);
-				_servers.AttachChildEvents();
+				var servers = (Core.Servers) Load(Settings.Instance.AppDataPath + DataBinary);
+				servers.AttachChildEvents();
+				return servers;
 			}
-			catch {}
-			if (_servers == null)
+			catch (Exception)
 			{
-				_servers = new Core.Servers();
+				return new Core.Servers();
 			}
-			return _servers;
 		}
 
 		public override Files LoadFiles()
 		{
-			Files _files = null;
 			try
 			{
-				_files = (Files) Load(Settings.Instance.AppDataPath + _filesBinary);
-				_files.AttachChildEvents();
+				var files = (Files) Load(Settings.Instance.AppDataPath + FilesBinary);
+				files.AttachChildEvents();
+				return files;
 			}
-			catch {}
-			if (_files == null)
+			catch (Exception)
 			{
-				_files = new Files();
+				return new Files();
 			}
-			return _files;
 		}
 
 		public override Objects LoadSearches()
 		{
-			Objects _searches = null;
 			try
 			{
-				_searches = (Objects) Load(Settings.Instance.AppDataPath + _searchesBinary);
-				_searches.AttachChildEvents();
+				var searches = (Objects) Load(Settings.Instance.AppDataPath + SearchesBinary);
+				searches.AttachChildEvents();
+				return searches;
 			}
-			catch {}
-			if (_searches == null)
+			catch (Exception)
 			{
-				_searches = new Objects();
+				return new Objects();
 			}
-			return _searches;
 		}
 
 		public override Snapshots LoadStatistics()
 		{
-			Snapshots _snapshots = null;
 			try
 			{
-				_snapshots = (Snapshots) Load(Settings.Instance.AppDataPath + _snapshotsBinary);
+				return (Snapshots) Load(Settings.Instance.AppDataPath + SnapshotsBinary);
 			}
-			catch {}
-			if (_snapshots == null)
+			catch (Exception)
 			{
-				_snapshots = new Snapshots();
+				return new Snapshots();
 			}
-			return _snapshots;
 		}
 
 		#endregion
@@ -154,6 +145,8 @@ namespace XG.Server.Plugin.Backend.File
 				}
 
 				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
+
+				// TODO break this!
 			}
 		}
 
@@ -188,7 +181,7 @@ namespace XG.Server.Plugin.Backend.File
 			}
 			else if (aObj is FilePart)
 			{
-				FilePart part = aObj as FilePart;
+				var part = aObj as FilePart;
 				// if this change is lost, the data might be corrupt, so save it now
 				if (part.State != FilePart.States.Open)
 				{
@@ -260,11 +253,11 @@ namespace XG.Server.Plugin.Backend.File
 				FileSystem.DeleteFile(aFile + ".bak");
 				FileSystem.MoveFile(aFile, aFile + ".bak");
 				FileSystem.MoveFile(aFile + ".new", aFile);
-				_log.Debug("Save(" + aFile + ")");
+				Log.Debug("Save(" + aFile + ")");
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Save(" + aFile + ")", ex);
+				Log.Fatal("Save(" + aFile + ")", ex);
 				return false;
 			}
 			return true;
@@ -285,22 +278,22 @@ namespace XG.Server.Plugin.Backend.File
 					Stream streamRead = System.IO.File.OpenRead(aFile);
 					obj = _formatter.Deserialize(streamRead);
 					streamRead.Close();
-					_log.Debug("Load(" + aFile + ")");
+					Log.Debug("Load(" + aFile + ")");
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Load(" + aFile + ")", ex);
+					Log.Fatal("Load(" + aFile + ")", ex);
 					// try to load the backup
 					try
 					{
 						Stream streamRead = System.IO.File.OpenRead(aFile + ".bak");
 						obj = _formatter.Deserialize(streamRead);
 						streamRead.Close();
-						_log.Debug("Load(" + aFile + ".bak)");
+						Log.Debug("Load(" + aFile + ".bak)");
 					}
 					catch (Exception)
 					{
-						_log.Fatal("Load(" + aFile + ".bak)", ex);
+						Log.Fatal("Load(" + aFile + ".bak)", ex);
 					}
 				}
 			}
@@ -312,7 +305,7 @@ namespace XG.Server.Plugin.Backend.File
 			lock (_saveFilesLock)
 			{
 				_isSaveFile = false;
-				return Save(Files, Settings.Instance.AppDataPath + _filesBinary);
+				return Save(Files, Settings.Instance.AppDataPath + FilesBinary);
 			}
 		}
 
@@ -320,7 +313,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveObjectsLock)
 			{
-				return Save(Servers, Settings.Instance.AppDataPath + _dataBinary);
+				return Save(Servers, Settings.Instance.AppDataPath + DataBinary);
 			}
 		}
 
@@ -328,7 +321,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveSearchesLock)
 			{
-				return Save(Searches, Settings.Instance.AppDataPath + _searchesBinary);
+				return Save(Searches, Settings.Instance.AppDataPath + SearchesBinary);
 			}
 		}
 
@@ -336,7 +329,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveSnapshotsLock)
 			{
-				return Save(Snapshots, Settings.Instance.AppDataPath + _snapshotsBinary);
+				return Save(Snapshots, Settings.Instance.AppDataPath + SnapshotsBinary);
 			}
 		}
 

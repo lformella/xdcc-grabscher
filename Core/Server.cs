@@ -44,7 +44,7 @@ namespace XG.Core
 				{
 					foreach (AObject obj in All)
 					{
-						obj.Connected = value;
+						obj.Connected = false;
 					}
 				}
 				base.Connected = value;
@@ -83,7 +83,7 @@ namespace XG.Core
 
 		public IEnumerable<Channel> Channels
 		{
-			get { return base.All.Cast<Channel>(); }
+			get { return All.Cast<Channel>(); }
 		}
 
 		public Channel Channel(string aName)
@@ -111,7 +111,7 @@ namespace XG.Core
 
 		public void AddChannel(Channel aChannel)
 		{
-			base.Add(aChannel);
+			Add(aChannel);
 		}
 
 		public void AddChannel(string aChannel)
@@ -123,16 +123,14 @@ namespace XG.Core
 			}
 			if (Channel(aChannel) == null)
 			{
-				Channel tChannel = new Channel();
-				tChannel.Name = aChannel;
-				tChannel.Enabled = Enabled;
+				var tChannel = new Channel {Name = aChannel, Enabled = Enabled};
 				AddChannel(tChannel);
 			}
 		}
 
 		public void RemoveChannel(Channel aChannel)
 		{
-			base.Remove(aChannel);
+			Remove(aChannel);
 		}
 
 		#endregion

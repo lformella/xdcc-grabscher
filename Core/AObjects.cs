@@ -67,14 +67,7 @@ namespace XG.Core
 
 		protected object ObjectLock
 		{
-			get
-			{
-				if (_objectLock == null)
-				{
-					_objectLock = new object();
-				}
-				return _objectLock;
-			}
+			get { return _objectLock ?? (_objectLock = new object()); }
 		}
 
 		readonly List<AObject> _children;
@@ -105,10 +98,9 @@ namespace XG.Core
 							aObject.EnabledChanged += FireEnabledChanged;
 							aObject.Changed += FireChanged;
 
-							if (aObject is AObjects)
+							var aObjects = aObject as AObjects;
+							if (aObjects != null)
 							{
-								AObjects aObjects = (AObjects) aObject;
-
 								aObjects.Added += FireAdded;
 								aObjects.Removed += FireRemoved;
 							}
@@ -137,10 +129,9 @@ namespace XG.Core
 						aObject.EnabledChanged -= FireEnabledChanged;
 						aObject.Changed -= FireChanged;
 
-						if (aObject is AObjects)
+						var aObjects = aObject as AObjects;
+						if (aObjects != null)
 						{
-							AObjects aObjects = (AObjects) aObject;
-
 							aObjects.Added -= FireAdded;
 							aObjects.Removed -= FireRemoved;
 						}
@@ -161,10 +152,9 @@ namespace XG.Core
 				tObject.EnabledChanged += FireEnabledChanged;
 				tObject.Changed += FireChanged;
 
-				if (tObject is AObjects)
+				var tObjects = tObject as AObjects;
+				if (tObjects != null)
 				{
-					AObjects tObjects = (AObjects) tObject;
-
 					tObjects.Added += FireAdded;
 					tObjects.Removed += FireRemoved;
 
@@ -192,10 +182,9 @@ namespace XG.Core
 					tObjectReturn = tObject;
 					break;
 				}
-				else if (tObject is AObjects)
+				var tObjects = tObject as AObjects;
+				if (tObjects != null)
 				{
-					AObjects tObjects = (AObjects) tObject;
-
 					tObjectReturn = tObjects.WithGuid(aGuid);
 					if (tObjectReturn != null)
 					{
@@ -208,13 +197,14 @@ namespace XG.Core
 
 		public virtual AObject Named(string aName)
 		{
-			AObject tObject = null;
 			try
 			{
-				tObject = All.First(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
+				return All.First(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
 			}
-			catch {}
-			return tObject;
+			catch (Exception)
+			{
+				return null;
+			}
 		}
 
 		public AObject Next(AObject aObject)

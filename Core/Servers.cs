@@ -50,10 +50,7 @@ namespace XG.Core
 			aServer = aServer.Trim().ToLower();
 			if (Server(aServer) == null)
 			{
-				Server tServer = new Server();
-				tServer.Name = aServer;
-				tServer.Port = 6667;
-				tServer.Enabled = true;
+				var tServer = new Server {Name = aServer, Port = 6667, Enabled = true};
 				Add(tServer);
 			}
 		}

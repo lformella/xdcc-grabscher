@@ -35,7 +35,7 @@ namespace XG.Server.Worker
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Thread _thread;
 
@@ -176,7 +176,7 @@ namespace XG.Server.Worker
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Start()", ex);
+				Log.Fatal("Start()", ex);
 			}
 		}
 
@@ -191,7 +191,7 @@ namespace XG.Server.Worker
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Stop()", ex);
+				Log.Fatal("Stop()", ex);
 			}
 		}
 

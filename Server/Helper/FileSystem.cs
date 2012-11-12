@@ -31,7 +31,7 @@ namespace XG.Server.Helper
 {
 	public class FileSystem
 	{
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// 	Moves a file
@@ -50,7 +50,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("MoveFile('" + aNameOld + "', '" + aNameNew + "') ", ex);
+					Log.Fatal("MoveFile('" + aNameOld + "', '" + aNameNew + "') ", ex);
 					return false;
 				}
 			}
@@ -73,7 +73,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("DeleteFile(" + aName + ") ", ex);
+					Log.Fatal("DeleteFile(" + aName + ") ", ex);
 					return false;
 				}
 			}
@@ -96,7 +96,7 @@ namespace XG.Server.Helper
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("DeleteDirectory(" + aName + ") ", ex);
+					Log.Fatal("DeleteDirectory(" + aName + ") ", ex);
 					return false;
 				}
 			}
@@ -121,7 +121,7 @@ namespace XG.Server.Helper
 		/// <returns> file list </returns>
 		public static string[] ListDirectory(string aDir, string aSearch)
 		{
-			string[] files = new string[] {};
+			var files = new string[] {};
 			try
 			{
 				files = aSearch == null ? Directory.GetFiles(aDir) : Directory.GetFiles(aDir, aSearch);
@@ -129,7 +129,7 @@ namespace XG.Server.Helper
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("ListDirectory('" + aDir + "', '" + aSearch + "') ", ex);
+				Log.Fatal("ListDirectory('" + aDir + "', '" + aSearch + "') ", ex);
 			}
 			return files;
 		}
@@ -148,20 +148,22 @@ namespace XG.Server.Helper
 
 		public static string ReadFile(string aFile)
 		{
-			string str = "";
-
 			if (File.Exists(aFile))
 			{
 				try
 				{
-					StreamReader reader = new StreamReader(aFile);
-					str = reader.ReadToEnd();
+					var reader = new StreamReader(aFile);
+					string str = reader.ReadToEnd();
 					reader.Close();
+					return str;
 				}
-				catch (Exception) {}
+				catch (Exception)
+				{
+					return "";
+				}
 			}
 
-			return str;
+			return "";
 		}
 	}
 }

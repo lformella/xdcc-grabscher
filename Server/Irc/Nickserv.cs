@@ -37,25 +37,25 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
-			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+			ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
 
 			string tUserName = aCommands[0].Split('!')[0];
 
 			if (Matches(aMessage, ".*Password incorrect.*"))
 			{
-				_log.Error("password wrong");
+				log.Error("password wrong");
 				return;
 			}
 
 			if (Matches(aMessage, ".*(The given email address has reached it's usage limit of 1 user|This nick is being held for a registered user).*"))
 			{
-				_log.Error("nick or email already used");
+				log.Error("nick or email already used");
 				return;
 			}
 
 			if (Matches(aMessage, ".*Your nick isn't registered.*"))
 			{
-				_log.Info("registering nick");
+				log.Info("registering nick");
 				if (Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 				{
 					FireSendData(aServer, tUserName + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail);
@@ -89,7 +89,7 @@ namespace XG.Server.Irc
 				}
 				else
 				{
-					_log.Error("nick is already registered and i got no password");
+					log.Error("nick is already registered and i got no password");
 				}
 				return;
 			}
@@ -103,25 +103,25 @@ namespace XG.Server.Irc
 
 			if (Matches(aMessage, ".*Please try again with a more obscure password.*"))
 			{
-				_log.Error("password is unsecure");
+				log.Error("password is unsecure");
 				return;
 			}
 
 			if (Matches(aMessage, ".*(A passcode has been sent to|This nick is awaiting an e-mail verification code).*"))
 			{
-				_log.Error("confirm email");
+				log.Error("confirm email");
 				return;
 			}
 
 			if (Matches(aMessage, ".*Nickname .*registered under your account.*"))
 			{
-				_log.Info("nick registered succesfully");
+				log.Info("nick registered succesfully");
 				return;
 			}
 
 			if (Matches(aMessage, ".*Password accepted.*"))
 			{
-				_log.Info("password accepted");
+				log.Info("password accepted");
 				return;
 			}
 
@@ -131,22 +131,22 @@ namespace XG.Server.Irc
 				if (tMatch.Success)
 				{
 					FireSendData(aServer, "/msg NickServ confirm " + tMatch.Groups["code"]);
-					_log.Info("Parse(" + aRawData + ") - confirming nickserv");
+					log.Info("Parse(" + aRawData + ") - confirming nickserv");
 				}
 				else
 				{
-					_log.Error("Parse(" + aRawData + ") - cant find nickserv code");
+					log.Error("Parse(" + aRawData + ") - cant find nickserv code");
 				}
 				return;
 			}
 
 			if (Matches(aMessage, ".*Your password is.*"))
 			{
-				_log.Info("password accepted");
+				log.Info("password accepted");
 				return;
 			}
 
-			_log.Error("unknow command: " + aRawData);
+			log.Error("unknow command: " + aRawData);
 		}
 
 		#endregion

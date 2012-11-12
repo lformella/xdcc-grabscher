@@ -46,7 +46,7 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
-			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+			ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
 
 			string tUserName = aCommands[0].Split('!')[0];
 			Channel tChan = aServer.Channel(aCommands[2]);
@@ -57,7 +57,7 @@ namespace XG.Server.Irc
 
 			if (aMessage == "VERSION")
 			{
-				_log.Info("Parse() VERSION: " + Settings.Instance.IrcVersion);
+				log.Info("Parse() VERSION: " + Settings.Instance.IrcVersion);
 				FireSendData(aServer, "NOTICE " + tUserName + " :\u0001VERSION " + Settings.Instance.IrcVersion + "\u0001");
 				return;
 			}
@@ -66,9 +66,9 @@ namespace XG.Server.Irc
 
 				#region XGVERSION
 
-			else if (aMessage == "XGVERSION")
+			if (aMessage == "XGVERSION")
 			{
-				_log.Info("Parse() XGVERSION: " + Settings.Instance.XgVersion);
+				log.Info("Parse() XGVERSION: " + Settings.Instance.XgVersion);
 				FireSendData(aServer, "NOTICE " + tUserName + " :\u0001XGVERSION " + Settings.Instance.XgVersion + "\u0001");
 				return;
 			}
@@ -77,7 +77,7 @@ namespace XG.Server.Irc
 
 				#region DCC DOWNLOAD MESSAGE
 
-			else if (aMessage.StartsWith("DCC") && tBot != null)
+			if (aMessage.StartsWith("DCC") && tBot != null)
 			{
 				Packet tPacket = tBot.OldestActivePacket();
 				if (tPacket != null)
@@ -90,7 +90,7 @@ namespace XG.Server.Irc
 					string[] tDataList = aMessage.Split(' ');
 					if (tDataList[1] == "SEND")
 					{
-						_log.Info("Parse() DCC from " + tBot.Name);
+						log.Info("Parse() DCC from " + tBot.Name);
 
 						// if the name of the file contains spaces, we have to replace em
 						if (aMessage.StartsWith("DCC SEND \""))
@@ -108,25 +108,24 @@ namespace XG.Server.Irc
 						try
 						{
 							// this works not in mono?!
-							tBot.IP = IPAddress.Parse(tDataList[3]);
+							tBot.Ip = IPAddress.Parse(tDataList[3]);
 						}
 						catch (FormatException)
 						{
 							#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
 
-							string ip = "";
+							string ip;
 							try
 							{
 								ip = new IPAddress(long.Parse(tDataList[3])).ToString();
 							}
 							catch (Exception ex)
 							{
-								_log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip from string: " + aMessage, ex);
 								return;
 							}
-							int pos = 0;
 							string realIp = "";
-							pos = ip.LastIndexOf('.');
+							int pos = ip.LastIndexOf('.');
 							try
 							{
 								realIp += ip.Substring(pos + 1) + ".";
@@ -142,18 +141,18 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								_log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + aMessage, ex);
 								return;
 							}
 
-							_log.Info("Parse() IP parsing failed, using this: " + realIp);
+							log.Info("Parse() IP parsing failed, using this: " + realIp);
 							try
 							{
-								tBot.IP = IPAddress.Parse(realIp);
+								tBot.Ip = IPAddress.Parse(realIp);
 							}
 							catch (Exception ex)
 							{
-								_log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip from string: " + aMessage, ex);
 								return;
 							}
 
@@ -168,13 +167,13 @@ namespace XG.Server.Irc
 						}
 						catch (Exception ex)
 						{
-							_log.Fatal("Parse() " + tBot.Name + " - can not parse bot port from string: " + aMessage, ex);
+							log.Fatal("Parse() " + tBot.Name + " - can not parse bot port from string: " + aMessage, ex);
 							return;
 						}
 						// we cant connect to port <= 0
 						if (tPort <= 0)
 						{
-							_log.Error("Parse() " + tBot.Name + " submitted wrong port: " + tPort + ", disabling packet");
+							log.Error("Parse() " + tBot.Name + " submitted wrong port: " + tPort + ", disabling packet");
 							tPacket.Enabled = false;
 							tPacket.Commit();
 
@@ -190,21 +189,21 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								_log.Fatal("Parse() " + tBot.Name + " - can not parse packet size from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot.Name + " - can not parse packet size from string: " + aMessage, ex);
 								return;
 							}
 
 							tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 							if (tChunk < 0)
 							{
-								_log.Error("Parse() file from " + tBot.Name + " already in use");
+								log.Error("Parse() file from " + tBot.Name + " already in use");
 								tPacket.Enabled = false;
 								tPacket.Commit();
 								FireUnRequestFromBot(aServer, tBot);
 							}
 							else if (tChunk > 0)
 							{
-								_log.Info("Parse() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk);
+								log.Info("Parse() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk);
 								FireSendData(aServer, "PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
 							}
 							else
@@ -215,14 +214,14 @@ namespace XG.Server.Irc
 					}
 					else if (tDataList[1] == "ACCEPT")
 					{
-						_log.Info("Parse() DCC resume accepted from " + tBot.Name);
+						log.Info("Parse() DCC resume accepted from " + tBot.Name);
 						try
 						{
 							tPort = int.Parse(tDataList[3]);
 						}
 						catch (Exception ex)
 						{
-							_log.Fatal("Parse() " + tBot.Name + " - can not parse bot port from string: " + aMessage, ex);
+							log.Fatal("Parse() " + tBot.Name + " - can not parse bot port from string: " + aMessage, ex);
 							return;
 						}
 						try
@@ -231,7 +230,7 @@ namespace XG.Server.Irc
 						}
 						catch (Exception ex)
 						{
-							_log.Fatal("Parse() " + tBot.Name + " - can not parse packet chunk from string: " + aMessage, ex);
+							log.Fatal("Parse() " + tBot.Name + " - can not parse packet chunk from string: " + aMessage, ex);
 							return;
 						}
 						isOk = true;
@@ -239,15 +238,15 @@ namespace XG.Server.Irc
 
 					if (isOk)
 					{
-						_log.Info("Parse() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
-						FireAddDownload(tPacket, tChunk, tBot.IP, tPort);
+						log.Info("Parse() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
+						FireAddDownload(tPacket, tChunk, tBot.Ip, tPort);
 					}
 
 					tPacket.Commit();
 				}
 				else
 				{
-					_log.Error("Parse() DCC not activated from " + tBot.Name);
+					log.Error("Parse() DCC not activated from " + tBot.Name);
 				}
 			}
 
@@ -261,30 +260,25 @@ namespace XG.Server.Irc
 				if (tBot == null)
 				{
 					insertBot = true;
-					tBot = new Bot();
-					tBot.Name = tUserName;
-					tBot.Connected = true;
-					tBot.LastMessage = "initial creation";
-					tBot.LastContact = DateTime.Now;
+					tBot = new Bot {Name = tUserName, Connected = true, LastMessage = "initial creation", LastContact = DateTime.Now};
 				}
 
 				bool isParsed = false;
-				Match tMatch = null;
-				int valueInt = 0;
-				double valueDouble = 0;
+				Match tMatch;
 
 				#region PACKET /SLOT / QUEUE INFO
 
-				if (!isParsed)
+				if (true)
 				{
 					tMatch = Regex.Match(aMessage,
-					                     MAGICSTRING + " ([0-9]*) (pack(s|)|Pa(c|)ket(e|)|Fil[e]+s) " + MAGICSTRING +
+					                     Magicstring + " ([0-9]*) (pack(s|)|Pa(c|)ket(e|)|Fil[e]+s) " + Magicstring +
 					                     "\\s*(?<slot_cur>[0-9]*) (of|von) (?<slot_total>[0-9]*) (slot(s|)|Pl(a|�|.)tz(e|)) (open|opened|free|frei|in use|offen)(, ((Queue|Warteschlange): (?<queue_cur>[0-9]*)(\\/| of )(?<queue_total>[0-9]*),|).*(Record( [a-zA-Z]+|): (?<record>[0-9.]*)(K|)B\\/s|)|)",
 					                     RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
 
+						int valueInt;
 						if (int.TryParse(tMatch.Groups["slot_cur"].ToString(), out valueInt))
 						{
 							tBot.InfoSlotCurrent = valueInt;
@@ -327,29 +321,30 @@ namespace XG.Server.Irc
 				if (!isParsed)
 				{
 					tMatch = Regex.Match(aMessage,
-					                     MAGICSTRING + " ((Bandwidth Usage|Bandbreite) " + MAGICSTRING +
+					                     Magicstring + " ((Bandwidth Usage|Bandbreite) " + Magicstring +
 					                     "|)\\s*(Current|Derzeit): (?<speed_cur>[0-9.]*)(?<speed_cur_end>(K|)(i|)B)(\\/s|s)(,|)(.*Record: (?<speed_max>[0-9.]*)(?<speed_max_end>(K|)(i|))B(\\/s|s)|)",
 					                     RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						isParsed = true;
 
-						string speed_cur_end = tMatch.Groups["speed_cur_end"].ToString().ToLower();
-						string speed_max_end = tMatch.Groups["speed_max_end"].ToString().ToLower();
-						string speed_cur = tMatch.Groups["speed_cur"].ToString();
-						string speed_max = tMatch.Groups["speed_max"].ToString();
+						string speedCurEnd = tMatch.Groups["speed_cur_end"].ToString().ToLower();
+						string speedMaxEnd = tMatch.Groups["speed_max_end"].ToString().ToLower();
+						string speedCur = tMatch.Groups["speed_cur"].ToString();
+						string speedMax = tMatch.Groups["speed_max"].ToString();
 						if (Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
 						{
-							speed_cur = speed_cur.Replace('.', ',');
-							speed_max = speed_max.Replace('.', ',');
+							speedCur = speedCur.Replace('.', ',');
+							speedMax = speedMax.Replace('.', ',');
 						}
-						if (double.TryParse(speed_cur, out valueDouble))
+						double valueDouble;
+						if (double.TryParse(speedCur, out valueDouble))
 						{
-							tBot.InfoSpeedCurrent = speed_cur_end.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
+							tBot.InfoSpeedCurrent = speedCurEnd.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
 						}
-						if (double.TryParse(speed_max, out valueDouble))
+						if (double.TryParse(speedMax, out valueDouble))
 						{
-							tBot.InfoSpeedMax = speed_max_end.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
+							tBot.InfoSpeedMax = speedMaxEnd.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
 						}
 					}
 				}
@@ -371,14 +366,14 @@ namespace XG.Server.Irc
 
 						try
 						{
-							int tPacketId = -1;
+							int tPacketId;
 							try
 							{
 								tPacketId = int.Parse(tMatch.Groups["pack_id"].ToString());
 							}
 							catch (Exception ex)
 							{
-								_log.Fatal("Parse() " + tBot.Name + " - can not parse packet id from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot.Name + " - can not parse packet id from string: " + aMessage, ex);
 								return;
 							}
 
@@ -405,7 +400,7 @@ namespace XG.Server.Irc
 							}
 							tPack.Name = name;
 
-							double tPacketSizeFormated = 0;
+							double tPacketSizeFormated;
 							string stringSize = tMatch.Groups["pack_size"].ToString().Replace("<", "").Replace(">", "");
 							if (Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator == ",")
 							{
@@ -429,7 +424,7 @@ namespace XG.Server.Irc
 							}
 
 							tPack.Commit();
-							_log.Info("Parse() updated packet #" + tPack.Id + " from " + tBot.Name);
+							log.Info("Parse() updated packet #" + tPack.Id + " from " + tBot.Name);
 						}
 						catch (FormatException) {}
 					}
@@ -443,14 +438,14 @@ namespace XG.Server.Irc
 					if (isParsed)
 					{
 						tChan.AddBot(tBot);
-						_log.Info("Parse() inserted bot " + tBot.Name);
+						log.Info("Parse() inserted bot " + tBot.Name);
 					}
 				}
 				// and insert packet _AFTER_ this
 				if (newPacket != null)
 				{
 					tBot.AddPacket(newPacket);
-					_log.Info("Parse() inserted packet #" + newPacket.Id + " into " + tBot.Name);
+					log.Info("Parse() inserted packet #" + newPacket.Id + " into " + tBot.Name);
 				}
 
 #if DEBUG
@@ -459,7 +454,7 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " To request .* type .*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(aMessage, Magicstring + " To request .* type .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						return;
@@ -469,7 +464,7 @@ namespace XG.Server.Irc
 					{
 						return;
 					}
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " To list a group, type .*", RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(aMessage, Magicstring + " To list a group, type .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						return;
@@ -486,7 +481,7 @@ namespace XG.Server.Irc
 					{
 						return;
 					}
-					tMatch = Regex.Match(aMessage, MAGICSTRING + " .*" + tChan.Name + " " + MAGICSTRING, RegexOptions.IgnoreCase);
+					tMatch = Regex.Match(aMessage, Magicstring + " .*" + tChan.Name + " " + Magicstring, RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
 						return;

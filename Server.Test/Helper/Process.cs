@@ -25,7 +25,7 @@ using System.IO;
 
 using NUnit.Framework;
 
-namespace XG.Server.Helper.Test
+namespace XG.Server.Test.Helper
 {
 	[TestFixture]
 	public class Process
@@ -33,8 +33,8 @@ namespace XG.Server.Helper.Test
 		[Test]
 		public void Run()
 		{
-			string file = "test.txt";
-			string archive = "test.rar";
+			const string file = "test.txt";
+			const string archive = "test.rar";
 			File.Create(file).Close();
 
 			Assert.AreEqual(true, Compress(file, archive, "test"));
@@ -51,18 +51,15 @@ namespace XG.Server.Helper.Test
 
 		bool Compress(string file, string archive, string password)
 		{
-			var p = new Helper.Process();
-			p.Command = "rar";
-			p.Arguments = "a " + (string.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file;
+			var p = new Server.Helper.Process
+			        {Command = "rar", Arguments = "a " + (string.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file};
 
 			return p.Run();
 		}
 
 		bool DeCompress(string archive)
 		{
-			var p = new Helper.Process();
-			p.Command = "unrar";
-			p.Arguments = "e -p- " + archive;
+			var p = new Server.Helper.Process {Command = "unrar", Arguments = "e -p- " + archive};
 
 			return p.Run();
 		}

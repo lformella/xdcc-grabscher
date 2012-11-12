@@ -34,7 +34,7 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		readonly Dictionary<string, string> _dicString;
 		readonly Dictionary<string, byte[]> _dicByte;
@@ -65,77 +65,76 @@ namespace XG.Server.Plugin.General.Webserver
 			{
 				return _dicString[aFile];
 			}
-			else
+#if !UNSAFE
+			try
 			{
-#if !UNSAFE
-				try
-				{
 #endif
-					string content = "";
-					if (aFile == "/js/all.js")
+				string content = "";
+				if (aFile == "/js/all.js")
+				{
+					foreach (string file in _jsFiles)
 					{
-						foreach (string file in _jsFiles)
-						{
-							content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aLanguages) + "\n";
-						}
+						content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aLanguages) + "\n";
 					}
-					else if (aFile == "/css/all.css")
+				}
+				else if (aFile == "/css/all.css")
+				{
+					foreach (string file in _cssFiles)
 					{
-						foreach (string file in _cssFiles)
-						{
-							content += LoadFile("/css/" + file + ".css", aLanguages) + "\n";
-						}
+						content += LoadFile("/css/" + file + ".css", aLanguages) + "\n";
 					}
-					else
-					{
+				}
+				else
+				{
 #if DEBUG && !WINDOWS
-						content = File.OpenText("./Resources" + aFile).ReadToEnd();
+					content = File.OpenText("./Resources" + aFile).ReadToEnd();
 #else
-						Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
-						string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-						content = new StreamReader(assembly.GetManifestResourceStream(name)).ReadToEnd();
-#endif
-						if (aFile == "/index.html")
-						{
-#if DEBUG
-							string css = "";
-							foreach (string cssFile in _cssFiles)
-							{
-								css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/" + cssFile + ".css\" />\n";
-							}
-#else
-							string css = "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/all.css\" />\n";
-#endif
-							content = content.Replace("#CSS_FILES#", css);
-
-							//#if DEBUG
-							string js = "";
-							foreach (string jsFile in _jsFiles)
-							{
-								js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
-							}
-							//#else
-							//							string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
-							//#endif 
-							content = content.Replace("#JS_FILES#", js);
-
-							content = content.Replace("#SALT#", Salt);
-							content = PatchLanguage(content, aLanguages);
-						}
+					Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
+					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+					Stream stream = assembly.GetManifestResourceStream(name);
+					if (stream != null)
+					{
+						content = new StreamReader(stream).ReadToEnd();
 					}
+#endif
+					if (aFile == "/index.html")
+					{
+#if DEBUG
+						string css = "";
+						foreach (string cssFile in _cssFiles)
+						{
+							css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/" + cssFile + ".css\" />\n";
+						}
+#else
+						string css = "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/all.css\" />\n";
+#endif
+						content = content.Replace("#CSS_FILES#", css);
+
+						//#if DEBUG
+						string js = "";
+						foreach (string jsFile in _jsFiles)
+						{
+							js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
+						}
+						//#else
+						//	string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
+						//#endif 
+						content = content.Replace("#JS_FILES#", js);
+
+						content = content.Replace("#SALT#", Salt);
+						content = PatchLanguage(content, aLanguages);
+					}
+				}
 #if !DEBUG
-					_dicString.Add(aFile, content);
+				_dicString.Add(aFile, content);
 #endif
-					return content;
+				return content;
 #if !UNSAFE
-				}
-				catch (Exception ex)
-				{
-					_log.Fatal("LoadFile(" + aFile + ")", ex);
-				}
-#endif
 			}
-#if !UNSAFE
+			catch (Exception ex)
+			{
+				Log.Fatal("LoadFile(" + aFile + ")", ex);
+			}
 			return "";
 #endif
 		}
@@ -146,29 +145,28 @@ namespace XG.Server.Plugin.General.Webserver
 			{
 				return _dicByte[aFile];
 			}
-			else
-			{
 #if !UNSAFE
-				try
-				{
+			try
+			{
 #endif
 #if DEBUG && !WINDOWS
-					return File.ReadAllBytes("./Resources" + aFile);
+				return File.ReadAllBytes("./Resources" + aFile);
 #else
-					Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
-					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					_dicByte.Add(aFile, new BinaryReader(assembly.GetManifestResourceStream(name)).ReadAllBytes());
-					return _dicByte[aFile];
-#endif
-#if !UNSAFE
-				}
-				catch (Exception ex)
+				Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
+				string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+				Stream stream = assembly.GetManifestResourceStream(name);
+				if (stream != null)
 				{
-					_log.Fatal("LoadFile(" + aFile + ")", ex);
+					_dicByte.Add(aFile, new BinaryReader(stream).ReadAllBytes());
+					return _dicByte[aFile];
 				}
 #endif
-			}
 #if !UNSAFE
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("LoadFile(" + aFile + ")", ex);
+			}
 			return new byte[0];
 #endif
 		}
@@ -185,15 +183,15 @@ namespace XG.Server.Plugin.General.Webserver
 			{
 				return _dicByte[aFile];
 			}
-			else
-			{
 #if !UNSAFE
-				try
-				{
+			try
+			{
 #endif
-					Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
-					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
-					Stream stream = assembly.GetManifestResourceStream(name);
+				Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
+				string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+				Stream stream = assembly.GetManifestResourceStream(name);
+				if (stream != null)
+				{
 					byte[] data = new byte[stream.Length];
 					int offset = 0;
 					int remaining = data.Length;
@@ -209,15 +207,13 @@ namespace XG.Server.Plugin.General.Webserver
 					}
 					_dicByte.Add(aFile, data);
 					return _dicByte[aFile];
+				}
 #if !UNSAFE
-				}
-				catch (Exception ex)
-				{
-					_log.Fatal("LoadImage(" + aFile + ")", ex);
-				}
-#endif
 			}
-#if !UNSAFE
+			catch (Exception ex)
+			{
+				Log.Fatal("LoadImage(" + aFile + ")", ex);
+			}
 			return null;
 #endif
 		}

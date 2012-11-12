@@ -33,25 +33,24 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		public static string Serialize<T>(T t)
 		{
-			DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof (T));
-			MemoryStream ms = new MemoryStream();
+			var ser = new DataContractJsonSerializer(typeof (T));
+			var ms = new MemoryStream();
 			ser.WriteObject(ms, t);
 			string jsonString = Encoding.UTF8.GetString(ms.ToArray());
 			ms.Close();
 
-			string p = @"\\/Date\(([0-9-]+)(((\+|-)[0-9]+)|)\)\\/";
+			const string p = @"\\/Date\(([0-9-]+)(((\+|-)[0-9]+)|)\)\\/";
 			MatchEvaluator matchEvaluator = ConvertJsonDateToDateString;
-			Regex reg = new Regex(p);
+			var reg = new Regex(p);
 			jsonString = reg.Replace(jsonString, matchEvaluator);
 			return jsonString;
 		}
 
 		static string ConvertJsonDateToDateString(Match m)
 		{
-			string result = string.Empty;
-			DateTime dt = new DateTime(1970, 1, 1);
+			var dt = new DateTime(1970, 1, 1);
 			dt = dt.AddMilliseconds(long.Parse(m.Groups[1].Value));
-			result = dt.ToString("HH:mm:ss dd.MM.yyyy");
+			string result = dt.ToString("HH:mm:ss dd.MM.yyyy");
 			return result;
 		}
 	}

@@ -34,7 +34,7 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		HttpListener _listener;
 
@@ -61,14 +61,13 @@ namespace XG.Server.Plugin.General.Webserver
 #if WINDOWS
 					if (ex.NativeErrorCode == 5)
 					{
-						_log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
+						Log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
 					}
 #endif
-					throw ex;
+					throw;
 				}
 
-				FileLoader fileLoader = new FileLoader();
-				fileLoader.Salt = _salt;
+				var fileLoader = new FileLoader {Salt = _salt};
 
 				while (true)
 				{
@@ -76,14 +75,16 @@ namespace XG.Server.Plugin.General.Webserver
 					try
 					{
 #endif
-						BrowserConnection connection = new BrowserConnection();
-						connection.Context = _listener.GetContext();
-						connection.Servers = Servers;
-						connection.Files = Files;
-						connection.Searches = Searches;
-						connection.Snapshots = Snapshots;
-						connection.FileLoader = fileLoader;
-						connection.Salt = _salt;
+						var connection = new BrowserConnection
+						{
+							Context = _listener.GetContext(),
+							Servers = Servers,
+							Files = Files,
+							Searches = Searches,
+							Snapshots = Snapshots,
+							FileLoader = fileLoader,
+							Salt = _salt
+						};
 
 						connection.Start();
 #if !UNSAFE

@@ -22,7 +22,6 @@
 //  
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using XG.Core;
@@ -35,12 +34,12 @@ namespace XG.Server.Worker
 
 		protected override void LoopRun()
 		{
-			IEnumerable<Core.Server> servers = from server in Servers.All select server;
-			IEnumerable<Channel> channels = from server in servers from channel in server.Channels select channel;
-			IEnumerable<Bot> bots = from channel in channels from bot in channel.Bots select bot;
-			IEnumerable<Packet> packets = from bot in bots from packet in bot.Packets select packet;
+			Core.Server[] servers = (from server in Servers.All select server).ToArray();
+			Channel[] channels = (from server in servers from channel in server.Channels select channel).ToArray();
+			Bot[] bots = (from channel in channels from bot in channel.Bots select bot).ToArray();
+			Packet[] packets = (from bot in bots from packet in bot.Packets select packet).ToArray();
 
-			Snapshot snap = new Snapshot();
+			var snap = new Snapshot();
 			snap.Set(SnapshotValue.Timestamp, DateTime.Now.ToTimestamp());
 
 			snap.Set(SnapshotValue.Speed, (from file in Files.All from part in file.Parts select part.Speed).Sum());

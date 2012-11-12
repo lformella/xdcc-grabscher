@@ -92,14 +92,7 @@ namespace XG.Core
 				if (_parent != value)
 				{
 					_parent = value;
-					if (_parent != null)
-					{
-						_parentGuid = _parent.Guid;
-					}
-					else
-					{
-						_parentGuid = Guid.Empty;
-					}
+					_parentGuid = _parent != null ? _parent.Guid : Guid.Empty;
 				}
 			}
 		}
@@ -172,7 +165,6 @@ namespace XG.Core
 		public DateTime EnabledTime
 		{
 			get { return _enabledTime; }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion

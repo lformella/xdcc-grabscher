@@ -45,7 +45,7 @@ namespace XG.Core
 				{
 					foreach (AObject obj in All)
 					{
-						obj.Connected = value;
+						obj.Connected = false;
 					}
 				}
 				base.Connected = value;
@@ -74,22 +74,22 @@ namespace XG.Core
 
 		public IEnumerable<Bot> Bots
 		{
-			get { return base.All.Cast<Bot>(); }
+			get { return All.Cast<Bot>(); }
 		}
 
 		public Bot Bot(string aName)
 		{
-			return (Bot) base.Named(aName);
+			return base.Named(aName) as Bot;
 		}
 
 		public void AddBot(Bot aBot)
 		{
-			base.Add(aBot);
+			Add(aBot);
 		}
 
 		public void RemoveBot(Bot aBot)
 		{
-			base.Remove(aBot);
+			Remove(aBot);
 		}
 
 		#endregion

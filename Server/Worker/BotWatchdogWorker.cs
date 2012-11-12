@@ -22,7 +22,6 @@
 //  
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -34,21 +33,21 @@ namespace XG.Server.Worker
 {
 	public class BotWatchdogWorker : ALoopWorker
 	{
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region AWorker
 
 		protected override void LoopRun()
 		{
-			IEnumerable<Bot> tBots = from server in Servers.All
-			                         where server.Connected
-			                         from channel in server.Channels
-			                         where channel.Connected
-			                         from bot in channel.Bots
-			                         where
-				                         !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Instance.BotOfflineTime &&
-				                         bot.OldestActivePacket() == null
-			                         select bot;
+			Bot[] tBots = (from server in Servers.All
+			                where server.Connected
+			                from channel in server.Channels
+			                where channel.Connected
+			                from bot in channel.Bots
+			                where
+				                !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Instance.BotOfflineTime &&
+				                bot.OldestActivePacket() == null
+			                select bot).ToArray();
 
 			int a = tBots.Count();
 			foreach (Bot tBot in tBots)
@@ -57,7 +56,7 @@ namespace XG.Server.Worker
 			}
 			if (a > 0)
 			{
-				_log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
+				Log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
 			}
 
 			// TODO scan for empty channels and send a "xdcc list" command to all the people in there

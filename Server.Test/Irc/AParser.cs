@@ -28,84 +28,81 @@ using NUnit.Framework;
 
 using XG.Core;
 
-namespace XG.Server.Irc.Test
+namespace XG.Server.Test.Irc
 {
 	public abstract class AParser
 	{
-		protected Core.Server _server;
-		protected Channel _channel;
-		protected Bot _bot;
+		protected Core.Server Server;
+		protected Channel Channel;
+		protected Bot Bot;
 
-		protected string _eventParsingError;
-		protected Channel _eventChannel;
-		protected Bot _eventBot;
-		protected Packet _eventPacket;
-		protected Int64 _eventChunk;
-		protected IPAddress _eventIp;
-		protected int _eventPort;
-		protected string _eventData;
-		protected AObject _eventObject;
-		protected Int64 _eventTime;
-		protected bool _eventOverride;
+		protected string EventParsingError;
+		protected Channel EventChannel;
+		protected Bot EventBot;
+		protected Packet EventPacket;
+		protected Int64 EventChunk;
+		protected IPAddress EventIp;
+		protected int EventPort;
+		protected string EventData;
+		protected AObject EventObject;
+		protected Int64 EventTime;
+		protected bool EventOverride;
 
-		protected Irc.AParser _ircParser;
+		protected Server.Irc.AParser IrcParser;
 
-		public AParser()
+		protected AParser()
 		{
-			_server = new Core.Server();
-			_server.Name = "test.bitpir.at";
+			Server = new Core.Server {Name = "test.bitpir.at"};
 
-			_channel = new Channel();
-			_channel.Name = "#test";
-			_server.AddChannel(_channel);
+			Channel = new Channel {Name = "#test"};
+			Server.AddChannel(Channel);
 
-			_bot = new Bot();
-			_bot.Name = "[XG]TestBot";
-			_channel.AddBot(_bot);
+			Bot = new Bot {Name = "[XG]TestBot"};
+			Channel.AddBot(Bot);
 		}
 
-		public void RegisterParser(Irc.AParser aParser)
+		public void RegisterParser(Server.Irc.AParser aParser)
 		{
-			_ircParser = aParser;
+			IrcParser = aParser;
 
-			_ircParser.ParsingError += delegate(string aData) { _eventParsingError = aData; };
+			IrcParser.ParsingError += delegate(string aData) { EventParsingError = aData; };
 
-			_ircParser.AddDownload += delegate(Packet aPack, long aChunk, IPAddress aIp, int aPort)
+			IrcParser.AddDownload += delegate(Packet aPack, long aChunk, IPAddress aIp, int aPort)
 			{
-				_eventPacket = aPack;
-				_eventChunk = aChunk;
-				_eventIp = aIp;
-				_eventPort = aPort;
+				EventPacket = aPack;
+				EventChunk = aChunk;
+				EventIp = aIp;
+				EventPort = aPort;
 			};
-			_ircParser.RemoveDownload += delegate(Bot aBot) { _eventBot = aBot; };
+			IrcParser.RemoveDownload += delegate(Bot aBot) { EventBot = aBot; };
 
-			_ircParser.SendData += delegate(Core.Server aServer, string aData)
+			IrcParser.SendData += delegate(Core.Server aServer, string aData)
 			{
-				Assert.AreEqual(_server, aServer);
-				_eventData = aData;
+				Assert.AreEqual(Server, aServer);
+				EventData = aData;
 			};
-			_ircParser.JoinChannel += delegate(Core.Server aServer, Channel aChannel)
+			IrcParser.JoinChannel += delegate(Core.Server aServer, Channel aChannel)
 			{
-				Assert.AreEqual(_server, aServer);
-				_eventChannel = aChannel;
+				Assert.AreEqual(Server, aServer);
+				EventChannel = aChannel;
 			};
-			_ircParser.CreateTimer += delegate(Core.Server aServer, AObject aObject, int aTime, bool aOverride)
+			IrcParser.CreateTimer += delegate(Core.Server aServer, AObject aObject, int aTime, bool aOverride)
 			{
-				Assert.AreEqual(_server, aServer);
-				_eventObject = aObject;
-				_eventTime = aTime;
-				_eventOverride = aOverride;
+				Assert.AreEqual(Server, aServer);
+				EventObject = aObject;
+				EventTime = aTime;
+				EventOverride = aOverride;
 			};
 
-			_ircParser.RequestFromBot += delegate(Core.Server aServer, Bot aBot)
+			IrcParser.RequestFromBot += delegate(Core.Server aServer, Bot aBot)
 			{
-				Assert.AreEqual(_server, aServer);
-				_eventBot = aBot;
+				Assert.AreEqual(Server, aServer);
+				EventBot = aBot;
 			};
-			_ircParser.UnRequestFromBot += delegate(Core.Server aServer, Bot aBot)
+			IrcParser.UnRequestFromBot += delegate(Core.Server aServer, Bot aBot)
 			{
-				Assert.AreEqual(_server, aServer);
-				_eventBot = aBot;
+				Assert.AreEqual(Server, aServer);
+				EventBot = aBot;
 			};
 		}
 	}

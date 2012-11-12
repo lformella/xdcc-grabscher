@@ -35,13 +35,13 @@ namespace XG.Core.Test
 		[Test]
 		public void Test()
 		{
-			Core.Objects parent = new Core.Objects();
+			var parent = new Core.Objects();
 			parent.Added += delegate { _childAdded = true; };
 			parent.Guid = Guid.NewGuid();
 
 			AssertChildAdded(false);
 
-			Core.Object obj = new Core.Object();
+			var obj = new Core.Object();
 			Assert.AreEqual(Guid.Empty, obj.ParentGuid);
 			parent.Add(obj);
 

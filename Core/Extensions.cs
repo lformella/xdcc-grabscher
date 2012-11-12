@@ -30,7 +30,7 @@ namespace XG.Core
 	{
 		public static string ToAscii(this string aString)
 		{
-			StringBuilder output = new StringBuilder(string.Empty);
+			var output = new StringBuilder(string.Empty);
 			if (!string.IsNullOrEmpty(aString))
 			{
 				for (int i = 0; i < aString.Length; i++)
@@ -43,16 +43,15 @@ namespace XG.Core
 
 		public static Int64 ToTimestamp(this DateTime aDate)
 		{
-			DateTime date = new DateTime(1970, 1, 1);
-			TimeSpan ts = new TimeSpan(aDate.Ticks - date.Ticks);
+			var date = new DateTime(1970, 1, 1);
+			var ts = new TimeSpan(aDate.Ticks - date.Ticks);
 			return (Convert.ToInt64(ts.TotalSeconds));
 		}
 
 		public static DateTime ToDate(this Int64 aTimestamp)
 		{
-			DateTime date = new DateTime(1970, 1, 1);
-			date.AddSeconds(aTimestamp);
-			return date;
+			var date = new DateTime(1970, 1, 1);
+			return date.AddSeconds(aTimestamp);
 		}
 
 		public static bool IsEqualWith(this byte[] aBytes1, byte[] aBytes2)

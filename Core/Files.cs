@@ -41,8 +41,10 @@ namespace XG.Core
 			{
 				return All.First(file => file.TmpPath == tmpPath);
 			}
-			catch {}
-			return null;
+			catch (Exception)
+			{
+				return null;
+			}
 		}
 
 		public void Add(File aFile)
@@ -52,7 +54,7 @@ namespace XG.Core
 
 		public void Add(string aName, Int64 aSize)
 		{
-			File tFile = new File(aName, aSize);
+			var tFile = new File(aName, aSize);
 			if (File(tFile.TmpPath) == null)
 			{
 				Add(tFile);

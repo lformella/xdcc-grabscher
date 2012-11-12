@@ -84,9 +84,7 @@ namespace XG.Server.Connection
 						// we just need a writer if reading in text mode
 						if (MaxData == 0)
 						{
-							_writer = new StreamWriter(stream);
-							_writer.NewLine = "\r\n";
-							_writer.AutoFlush = true;
+							_writer = new StreamWriter(stream) {NewLine = "\r\n", AutoFlush = true};
 						}
 
 						FireConnected();
@@ -97,7 +95,7 @@ namespace XG.Server.Connection
 
 							if (MaxData > 0)
 							{
-								using (BinaryReader reader = new BinaryReader(stream))
+								using (var reader = new BinaryReader(stream))
 								{
 									Int64 missing = MaxData;
 									Int64 max = Settings.Instance.DownloadPerReadBytes;
@@ -122,12 +120,11 @@ namespace XG.Server.Connection
 										}
 										catch (IOException ex)
 										{
-											if (ex.InnerException != null && ex.InnerException is SocketException)
+											if (ex.InnerException is SocketException)
 											{
-												SocketException exi = (SocketException) ex.InnerException;
+												var exi = (SocketException) ex.InnerException;
 												_errorCode = (SocketErrorCode) exi.ErrorCode;
 												_log.Fatal("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") reading: " + (_errorCode), ex);
-												break;
 											}
 											else
 											{
@@ -151,7 +148,7 @@ namespace XG.Server.Connection
 											_log.Warn("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") no data received");
 											break;
 										}
-									} while (data != null && missing > 0);
+									} while (missing > 0);
 								}
 							}
 
@@ -161,7 +158,7 @@ namespace XG.Server.Connection
 
 							else
 							{
-								using (StreamReader reader = new StreamReader(stream))
+								using (var reader = new StreamReader(stream))
 								{
 									int failCounter = 0;
 									string data = "";
@@ -185,11 +182,10 @@ namespace XG.Server.Connection
 										{
 											if (ex.InnerException is SocketException)
 											{
-												SocketException exi = (SocketException) ex.InnerException;
+												var exi = (SocketException) ex.InnerException;
 												_errorCode = (SocketErrorCode) exi.ErrorCode;
 												// we dont need to log this kind of exception, because it is just normal
 												//Log("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") reading: " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
-												break;
 											}
 											else
 											{
@@ -219,12 +215,9 @@ namespace XG.Server.Connection
 												_log.Warn("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") no data received");
 												break;
 											}
-											else
-											{
-												data = "";
-											}
+											data = "";
 										}
-									} while (data != null);
+									} while (true);
 								}
 							}
 
@@ -297,19 +290,25 @@ namespace XG.Server.Connection
 				{
 					if (ex.InnerException is SocketException)
 					{
-						SocketException exi = (SocketException) ex.InnerException;
+						var exi = (SocketException) ex.InnerException;
 						_errorCode = (SocketErrorCode) exi.ErrorCode;
 						// we dont need to log this kind of exception, because it is just normal
 						//Log("SendData(" + aData + ") : " + ((SocketErrorCode)exi.ErrorCode), LogLevel.Exception);
 					}
 					else
 					{
-						_log.Fatal("SendData(" + aData + ") ", ex);
+						if (_log != null)
+						{
+							_log.Fatal("SendData(" + aData + ") ", ex);
+						}
 					}
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("SendData(" + aData + ") ", ex);
+					if (_log != null)
+					{
+						_log.Fatal("SendData(" + aData + ") ", ex);
+					}
 				}
 			}
 		}

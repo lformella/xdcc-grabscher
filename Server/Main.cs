@@ -42,7 +42,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		readonly Parser _ircParser;
 		readonly Servers _servers;
@@ -57,13 +57,10 @@ namespace XG.Server
 		{
 			_fileActions = new FileActions();
 
-			_ircParser = new Parser();
-			_ircParser.FileActions = _fileActions;
+			_ircParser = new Parser {FileActions = _fileActions};
 			_ircParser.ParsingError += IrcParserParsingError;
 
-			_servers = new Servers();
-			_servers.FileActions = _fileActions;
-			_servers.IrcParser = _ircParser;
+			_servers = new Servers {FileActions = _fileActions, IrcParser = _ircParser};
 
 			_workers = new Workers();
 		}
@@ -83,7 +80,7 @@ namespace XG.Server
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
-						_log.Error("Run() removing dupe server " + s.Name);
+						Log.Error("Run() removing dupe server " + s.Name);
 						Servers.Remove(s);
 					}
 				}
@@ -94,7 +91,7 @@ namespace XG.Server
 					{
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
-							_log.Error("Run() removing dupe channel " + c.Name);
+							Log.Error("Run() removing dupe channel " + c.Name);
 							serv.RemoveChannel(c);
 						}
 					}
@@ -105,7 +102,7 @@ namespace XG.Server
 						{
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
-								_log.Error("Run() removing dupe bot " + b.Name);
+								Log.Error("Run() removing dupe bot " + b.Name);
 								chan.RemoveBot(b);
 							}
 						}
@@ -116,7 +113,7 @@ namespace XG.Server
 							{
 								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
-									_log.Error("Run() removing dupe Packet " + p.Name);
+									Log.Error("Run() removing dupe Packet " + p.Name);
 									bot.RemovePacket(p);
 								}
 							}
@@ -157,14 +154,14 @@ namespace XG.Server
 
 			#region CLEAR OLD DL
 
-			if (Files.All.Count() > 0 && Settings.Instance.ClearReadyDownloads)
+			if (Files.All.Any() && Settings.Instance.ClearReadyDownloads)
 			{
 				foreach (File file in Files.All)
 				{
 					if (file.Enabled)
 					{
 						Files.Remove(file);
-						_log.Info("Run() removing ready file " + file.Name);
+						Log.Info("Run() removing ready file " + file.Name);
 					}
 				}
 			}
@@ -173,14 +170,14 @@ namespace XG.Server
 
 			#region CRASH RECOVERY
 
-			if (Files.All.Count() > 0)
+			if (Files.All.Any())
 			{
 				foreach (File file in Files.All)
 				{
 					// lets check if the directory is still on the harddisk
 					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						_log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
+						Log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
 						_fileActions.RemoveFile(file);
 						continue;
 					}
@@ -201,13 +198,13 @@ namespace XG.Server
 							}
 
 							// check if the real file and the part is actual the same
-							FileInfo info = new FileInfo(tmpPath + part.StartSize);
+							var info = new FileInfo(tmpPath + part.StartSize);
 							if (info.Exists)
 							{
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
 								if (part.CurrentSize != part.StartSize + info.Length)
 								{
-									_log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize +
+									Log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize +
 									          " real:" + info.Length);
 									part.CurrentSize = part.StartSize + info.Length;
 									complete = false;
@@ -215,7 +212,7 @@ namespace XG.Server
 							}
 							else
 							{
-								_log.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
+								Log.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
 								_fileActions.RemovePart(file, part);
 								complete = false;
 							}
@@ -232,15 +229,15 @@ namespace XG.Server
 								// check the file for safety
 								if (part.Checked && part.State == FilePart.States.Ready)
 								{
-									FilePart next = file.Next(part) as FilePart;
+									var next = file.Next(part) as FilePart;
 									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
 									{
 										complete = false;
 										try
 										{
-											_log.Fatal("Run() crash recovery checking " + next.Name);
+											Log.Fatal("Run() crash recovery checking " + next.Name);
 											FileStream fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite);
-											BinaryReader fileReader = new BinaryReader(fileStream);
+											var fileReader = new BinaryReader(fileStream);
 											// extract the needed refernce bytes
 											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
 											byte[] bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
@@ -250,7 +247,7 @@ namespace XG.Server
 										}
 										catch (Exception ex)
 										{
-											_log.Fatal("Run() crash recovery", ex);
+											Log.Fatal("Run() crash recovery", ex);
 										}
 									}
 								}
@@ -263,7 +260,7 @@ namespace XG.Server
 
 						// check and maybee join the files if something happend the last run
 						// for exaple the disk was full or the rights were not there
-						if (complete && file.Parts.Count() > 0)
+						if (complete && file.Parts.Any())
 						{
 							_fileActions.CheckFile(file);
 						}
@@ -291,14 +288,10 @@ namespace XG.Server
 
 			#region WORKERS
 
-			ALoopWorker worker;
-
-			worker = new SnapshotWorker();
-			worker.SecondsToSleep = Settings.Instance.TakeSnapshotTime;
+			ALoopWorker worker = new SnapshotWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTime};
 			AddWorker(worker);
 
-			worker = new BotWatchdogWorker();
-			worker.SecondsToSleep = Settings.Instance.BotOfflineCheckTime;
+			worker = new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime};
 			AddWorker(worker);
 
 			#endregion
@@ -331,11 +324,11 @@ namespace XG.Server
 			{
 				// put a empty snapshot on top to nullify values
 				var lasttime = (from snapshot in Snapshots.All orderby snapshot.Get(SnapshotValue.Timestamp) select snapshot).Last().Get(SnapshotValue.Timestamp);
-				Snapshot lastSnapshot = new Snapshot();
+				var lastSnapshot = new Snapshot();
 				lastSnapshot.Set(SnapshotValue.Timestamp, lasttime + 1);
 				Snapshots.Add(lastSnapshot);
 
-				Snapshot firstSnapshot = new Snapshot();
+				var firstSnapshot = new Snapshot();
 				firstSnapshot.Set(SnapshotValue.Timestamp, DateTime.Now.ToTimestamp());
 				Snapshots.Add(firstSnapshot);
 			}
@@ -362,9 +355,9 @@ namespace XG.Server
 		{
 			if (aObj is Core.Server)
 			{
-				Core.Server aServer = aObj as Core.Server;
+				var aServer = aObj as Core.Server;
 
-				_log.Info("ServerObjectAdded(" + aServer.Name + ")");
+				Log.Info("ServerObjectAdded(" + aServer.Name + ")");
 				_servers.ServerConnect(aServer);
 			}
 		}
@@ -373,12 +366,12 @@ namespace XG.Server
 		{
 			if (aObj is Core.Server)
 			{
-				Core.Server aServer = aObj as Core.Server;
+				var aServer = aObj as Core.Server;
 
 				aServer.Enabled = false;
 				aServer.Commit();
 
-				_log.Info("ServerObjectRemoved(" + aServer.Name + ")");
+				Log.Info("ServerObjectRemoved(" + aServer.Name + ")");
 				_servers.ServerDisconnect(aServer);
 			}
 		}
@@ -387,7 +380,7 @@ namespace XG.Server
 		{
 			if (aObj is Core.Server)
 			{
-				Core.Server aServer = aObj as Core.Server;
+				var aServer = aObj as Core.Server;
 
 				if (aObj.Enabled)
 				{
@@ -406,12 +399,15 @@ namespace XG.Server
 			{
 				try
 				{
-					StreamWriter sw = new StreamWriter(System.IO.File.OpenWrite(Settings.Instance.ParsingErrorFile));
+					var sw = new StreamWriter(System.IO.File.OpenWrite(Settings.Instance.ParsingErrorFile));
 					sw.BaseStream.Seek(0, SeekOrigin.End);
 					sw.WriteLine(aData.Normalize());
 					sw.Close();
 				}
-				catch (Exception) {}
+				catch (Exception)
+				{
+					// just ignore
+				}
 			}
 		}
 

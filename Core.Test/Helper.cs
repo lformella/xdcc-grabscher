@@ -21,8 +21,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-
 using NUnit.Framework;
 
 namespace XG.Core.Test
@@ -33,8 +31,8 @@ namespace XG.Core.Test
 		[Test]
 		public void ShrinkFileName()
 		{
-			string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
-			Int64 fileSize = 440044;
+			const string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
+			const long fileSize = 440044;
 			string result = Core.Helper.ShrinkFileName(fileName, fileSize);
 
 			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);

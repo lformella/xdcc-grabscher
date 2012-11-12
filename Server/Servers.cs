@@ -51,7 +51,7 @@ namespace XG.Server
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Parser _ircParser;
 
@@ -109,15 +109,13 @@ namespace XG.Server
 		{
 			if (!_servers.ContainsKey(aServer))
 			{
-				ServerConnection con = new ServerConnection();
-				con.FileActions = FileActions;
-				con.Server = aServer;
-				con.IrcParser = _ircParser;
-
-				con.Connection = new Connection.Connection();
-				con.Connection.Hostname = aServer.Name;
-				con.Connection.Port = aServer.Port;
-				con.Connection.MaxData = 0;
+				var con = new ServerConnection
+				{
+					FileActions = FileActions,
+					Server = aServer,
+					IrcParser = _ircParser,
+					Connection = new Connection.Connection {Hostname = aServer.Name, Port = aServer.Port, MaxData = 0}
+				};
 
 				_servers.Add(aServer, con);
 
@@ -129,7 +127,7 @@ namespace XG.Server
 			}
 			else
 			{
-				_log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
+				Log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
 			}
 		}
 
@@ -155,7 +153,7 @@ namespace XG.Server
 			}
 			else
 			{
-				_log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
+				Log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
 			}
 		}
 
@@ -208,34 +206,31 @@ namespace XG.Server
 			}
 			else
 			{
-				_log.Error("ServerConnectionDisconnected(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
+				Log.Error("ServerConnectionDisconnected(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
 			}
 		}
 
 		void ServerReconnect(object aServer)
 		{
-			Core.Server tServer = aServer as Core.Server;
+			var tServer = aServer as Core.Server;
 
-			if (_servers.ContainsKey(tServer))
+			if (tServer != null && _servers.ContainsKey(tServer))
 			{
 				ServerConnection con = _servers[tServer];
 
 				if (tServer.Enabled)
 				{
-					_log.Error("ReconnectServer(" + tServer.Name + ")");
+					Log.Error("ReconnectServer(" + tServer.Name + ")");
 
 					// TODO do we need a new connection here?
-					con.Connection = new Connection.Connection();
-					con.Connection.Hostname = tServer.Name;
-					con.Connection.Port = tServer.Port;
-					con.Connection.MaxData = 0;
+					con.Connection = new Connection.Connection {Hostname = tServer.Name, Port = tServer.Port, MaxData = 0};
 
 					con.Connection.Connect();
 				}
 			}
-			else
+			else if (tServer != null)
 			{
-				_log.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
+				Log.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
 			}
 		}
 
@@ -255,15 +250,13 @@ namespace XG.Server
 			{
 				new Thread(() =>
 				{
-					BotConnection con = new BotConnection();
-					con.FileActions = FileActions;
-					con.Packet = aPack;
-					con.StartSize = aChunk;
-
-					con.Connection = new Connection.Connection();
-					con.Connection.Hostname = aIp.ToString();
-					con.Connection.Port = aPort;
-					con.Connection.MaxData = aPack.RealSize - aChunk;
+					var con = new BotConnection
+					{
+						FileActions = FileActions,
+						Packet = aPack,
+						StartSize = aChunk,
+						Connection = new Connection.Connection {Hostname = aIp.ToString(), Port = aPort, MaxData = aPack.RealSize - aChunk}
+					};
 
 					con.Connected += BotConnected;
 					con.Disconnected += BotDisconnected;
@@ -275,7 +268,7 @@ namespace XG.Server
 			else
 			{
 				// uhh - that should not happen
-				_log.Error("IrcParserAddDownload(" + aPack.Name + ") is already downloading");
+				Log.Error("IrcParserAddDownload(" + aPack.Name + ") is already downloading");
 			}
 		}
 
@@ -316,7 +309,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("bot_Disconnected()", ex);
+					Log.Fatal("bot_Disconnected()", ex);
 				}
 
 				try
@@ -326,7 +319,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("bot_Disconnected() request", ex);
+					Log.Fatal("bot_Disconnected() request", ex);
 				}
 			}
 		}
@@ -350,6 +343,8 @@ namespace XG.Server
 
 				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
 			}
+
+			// TODO break this!
 		}
 
 		#endregion

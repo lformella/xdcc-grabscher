@@ -83,7 +83,7 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
-			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+			ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
 
 			string tUserName = aCommands[0].Split('!')[0];
 			string tComCodeStr = aCommands[1];
@@ -109,7 +109,7 @@ namespace XG.Server.Irc
 
 				#region NOTICE
 
-			else if (tComCodeStr == "NOTICE")
+			if (tComCodeStr == "NOTICE")
 			{
 				if (tUserName.ToLower() == "nickserv")
 				{
@@ -126,17 +126,17 @@ namespace XG.Server.Irc
 
 				#region NICK
 
-			else if (tComCodeStr == "NICK")
+			if (tComCodeStr == "NICK")
 			{
 				if (tBot != null)
 				{
 					tBot.Name = aMessage;
-					_log.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name);
+					log.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name);
 				}
 				else if (tUserName == Settings.Instance.IrcNick)
 				{
 					// what should i do now?!
-					_log.Error("con_DataReceived() wtf? i was renamed to " + aMessage);
+					log.Error("con_DataReceived() wtf? i was renamed to " + aMessage);
 				}
 			}
 
@@ -152,8 +152,8 @@ namespace XG.Server.Irc
 					if (tUserName == Settings.Instance.IrcNick)
 					{
 						tChan.Connected = false;
-						_log.Warn("con_DataReceived() kicked from " + tChan.Name + (aCommands.Length >= 5 ? " (" + aCommands[4] + ")" : "") + " - rejoining");
-						_log.Warn("con_DataReceived() " + aRawData);
+						log.Warn("con_DataReceived() kicked from " + tChan.Name + (aCommands.Length >= 5 ? " (" + aCommands[4] + ")" : "") + " - rejoining");
+						log.Warn("con_DataReceived() " + aRawData);
 						FireJoinChannel(aServer, tChan);
 
 						// statistics
@@ -166,7 +166,7 @@ namespace XG.Server.Irc
 						{
 							tBot.Connected = false;
 							tBot.LastMessage = "kicked from channel " + tChan.Name;
-							_log.Info("con_DataReceived() bot " + tBot.Name + " is offline");
+							log.Info("con_DataReceived() bot " + tBot.Name + " is offline");
 						}
 					}
 				}
@@ -181,14 +181,14 @@ namespace XG.Server.Irc
 				tUserName = aCommands[2];
 				if (tUserName == Settings.Instance.IrcNick)
 				{
-					_log.Warn("con_DataReceived() i was killed from server because of " + aMessage);
+					log.Warn("con_DataReceived() i was killed from server because of " + aMessage);
 				}
 				else
 				{
 					tBot = aServer.Bot(tUserName);
 					if (tBot != null)
 					{
-						_log.Warn("con_DataReceived() bot " + tBot.Name + " was killed from server?");
+						log.Warn("con_DataReceived() bot " + tBot.Name + " was killed from server?");
 					}
 				}
 			}
@@ -211,7 +211,7 @@ namespace XG.Server.Irc
 						{
 							tBot.State = Bot.States.Idle;
 						}
-						_log.Info("con_DataReceived() bot " + tUserName + " is online");
+						log.Info("con_DataReceived() bot " + tUserName + " is online");
 						FireRequestFromBot(aServer, tBot);
 					}
 				}
@@ -229,7 +229,7 @@ namespace XG.Server.Irc
 					{
 						tBot.Connected = true;
 						tBot.LastMessage = "parted channel " + tChan.Name;
-						_log.Info("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name);
+						log.Info("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name);
 					}
 				}
 			}
@@ -244,7 +244,7 @@ namespace XG.Server.Irc
 				{
 					tBot.Connected = false;
 					tBot.LastMessage = "quited";
-					_log.Info("con_DataReceived() bot " + tBot.Name + " quited");
+					log.Info("con_DataReceived() bot " + tBot.Name + " quited");
 				}
 			}
 
@@ -263,12 +263,12 @@ namespace XG.Server.Irc
 
 			else if (tComCodeStr == "INVITE")
 			{
-				_log.Info("con_DataReceived() received an invite for channel " + aMessage);
+				log.Info("con_DataReceived() received an invite for channel " + aMessage);
 
 				// ok, lets do a silent auto join
 				if (Settings.Instance.AutoJoinOnInvite)
 				{
-					_log.Info("con_DataReceived() auto joining " + aMessage);
+					log.Info("con_DataReceived() auto joining " + aMessage);
 					FireSendData(aServer, "JOIN " + aMessage);
 				}
 			}
@@ -279,7 +279,7 @@ namespace XG.Server.Irc
 
 			else if (tComCodeStr == "PONG")
 			{
-				_log.Info("con_DataReceived() PONG");
+				log.Info("con_DataReceived() PONG");
 			}
 
 				#endregion

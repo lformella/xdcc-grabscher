@@ -33,7 +33,7 @@ namespace XG.Server.Helper
 	{
 		#region VARIABLES
 
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public string Command { get; set; }
 		public string Arguments { get; set; }
@@ -50,14 +50,19 @@ namespace XG.Server.Helper
 
 			try
 			{
-				System.Diagnostics.Process p = new System.Diagnostics.Process();
-				p.StartInfo.FileName = Command;
-				p.StartInfo.Arguments = Arguments;
-				p.StartInfo.CreateNoWindow = true;
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.RedirectStandardInput = true;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.RedirectStandardError = true;
+				var p = new System.Diagnostics.Process
+				{
+					StartInfo =
+					{
+						FileName = Command,
+						Arguments = Arguments,
+						CreateNoWindow = true,
+						UseShellExecute = false,
+						RedirectStandardInput = true,
+						RedirectStandardOutput = true,
+						RedirectStandardError = true
+					}
+				};
 
 				p.OutputDataReceived += OutputDataReceived;
 				p.ErrorDataReceived += ErrorDataReceived;
@@ -77,13 +82,13 @@ namespace XG.Server.Helper
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Run(" + Command + ", " + Arguments + ")", ex);
+				Log.Fatal("Run(" + Command + ", " + Arguments + ")", ex);
 				result = false;
 			}
 			finally
 			{
-				_log.Info("Run(" + Command + ", " + Arguments + ") Output: " + Output);
-				_log.Info("Run(" + Command + ", " + Arguments + ") Error: " + Error);
+				Log.Info("Run(" + Command + ", " + Arguments + ") Output: " + Output);
+				Log.Info("Run(" + Command + ", " + Arguments + ") Error: " + Error);
 
 				if (!string.IsNullOrEmpty(Error))
 				{

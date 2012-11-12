@@ -21,13 +21,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-namespace XG.Server.Irc.Test
+namespace XG.Server.Test.Irc
 {
 	public class Parser : AParser
 	{
 		public Parser()
 		{
-			RegisterParser(new Irc.Parser());
+			RegisterParser(new Server.Irc.Parser());
 		}
 	}
 }

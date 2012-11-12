@@ -21,7 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-namespace XG.Server
+namespace XG.Server.Helper
 {
 	public class FileHandler
 	{

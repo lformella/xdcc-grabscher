@@ -37,13 +37,13 @@ namespace XG.Server.Irc
 
 		protected override void Parse(Core.Server aServer, string aRawData, string aMessage, string[] aCommands)
 		{
-			ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
+			ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + aServer.Name + ")");
 
 			Bot tBot = aServer.Bot(aCommands[0].Split('!')[0]);
 			Channel tChan = aServer.Channel(aCommands[2]);
 
 			string tComCodeStr = aCommands[1];
-			int tComCode = 0;
+			int tComCode;
 			if (int.TryParse(tComCodeStr, out tComCode))
 			{
 				switch (tComCode)
@@ -78,7 +78,7 @@ namespace XG.Server.Irc
 							}
 							if (addChan)
 							{
-								_log.Info("Parse() auto adding channel " + chanName);
+								log.Info("Parse() auto adding channel " + chanName);
 								aServer.AddChannel(chanName);
 							}
 						}
@@ -105,7 +105,7 @@ namespace XG.Server.Irc
 									{
 										tBot.State = Bot.States.Idle;
 									}
-									_log.Info("Parse() bot " + tBot.Name + " is online");
+									log.Info("Parse() bot " + tBot.Name + " is online");
 									tBot.Commit();
 									FireRequestFromBot(aServer, tBot);
 								}
@@ -123,7 +123,7 @@ namespace XG.Server.Irc
 						{
 							tChan.ErrorCode = 0;
 							tChan.Connected = true;
-							_log.Info("Parse() joined channel " + tChan.Name);
+							log.Info("Parse() joined channel " + tChan.Name);
 						}
 
 						// statistics
@@ -136,7 +136,7 @@ namespace XG.Server.Irc
 
 					case 376: // RPL_ENDOFMOTD
 					case 422: // ERR_NOMOTD
-						_log.Info("Parse() really connected");
+						log.Info("Parse() really connected");
 						aServer.Connected = true;
 						aServer.Commit();
 						foreach (Channel chan in aServer.Channels)
@@ -185,7 +185,7 @@ namespace XG.Server.Irc
 						{
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
-							_log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
+							log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
 						}
 
 						// statistics
@@ -206,7 +206,7 @@ namespace XG.Server.Irc
 						{
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
-							_log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
+							log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
 							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong,
 							                false);
 						}
@@ -229,7 +229,7 @@ namespace XG.Server.Irc
 			}
 			else
 			{
-				_log.Error("Parse() Irc code " + tComCodeStr + " could not be parsed. (" + aRawData + ")");
+				log.Error("Parse() Irc code " + tComCodeStr + " could not be parsed. (" + aRawData + ")");
 			}
 		}
 

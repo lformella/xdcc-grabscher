@@ -26,6 +26,8 @@ using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 
+using XG.Server.Helper;
+
 using log4net;
 
 namespace XG.Server
@@ -33,7 +35,7 @@ namespace XG.Server
 	[Serializable]
 	public class Settings
 	{
-		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static Settings _instance;
 
@@ -80,20 +82,20 @@ namespace XG.Server
 			{
 				try
 				{
-					XmlSerializer ser = new XmlSerializer(typeof (Settings));
-					StreamReader sr = new StreamReader(AppDataPathStatic + "settings.xml");
-					Settings settings = (Settings) ser.Deserialize(sr);
+					var ser = new XmlSerializer(typeof (Settings));
+					var sr = new StreamReader(AppDataPathStatic + "settings.xml");
+					var settings = (Settings) ser.Deserialize(sr);
 					sr.Close();
 					return settings;
 				}
 				catch (Exception ex)
 				{
-					_log.Fatal("Settings.Deserialize", ex);
+					Log.Fatal("Settings.Deserialize", ex);
 				}
 			}
 			else
 			{
-				_log.Error("Settings.Deserialize found no settings file");
+				Log.Error("Settings.Deserialize found no settings file");
 			}
 			return null;
 		}
@@ -102,14 +104,14 @@ namespace XG.Server
 		{
 			try
 			{
-				XmlSerializer ser = new XmlSerializer(typeof (Settings));
-				StreamWriter sw = new StreamWriter(AppDataPathStatic + "settings.xml");
+				var ser = new XmlSerializer(typeof (Settings));
+				var sw = new StreamWriter(AppDataPathStatic + "settings.xml");
 				ser.Serialize(sw, _instance);
 				sw.Close();
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("Settings.Serialize", ex);
+				Log.Fatal("Settings.Serialize", ex);
 			}
 		}
 
