@@ -41,7 +41,9 @@ namespace XG.Server.Plugin.Backend.File
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		readonly BinaryFormatter _formatter = new BinaryFormatter();
+
 		bool _isSaveFile;
+
 		readonly object _saveObjectsLock = new object();
 		readonly object _saveFilesLock = new object();
 		readonly object _saveSearchesLock = new object();
@@ -53,6 +55,8 @@ namespace XG.Server.Plugin.Backend.File
 		const string SnapshotsBinary = "xgsnapshots.bin";
 
 		const int BackupDataTime = 900000;
+
+		bool _allowRunning = true;
 
 		#endregion
 
@@ -121,37 +125,43 @@ namespace XG.Server.Plugin.Backend.File
 			DateTime timeIrc = DateTime.Now;
 			DateTime timeStats = DateTime.Now;
 
-			while (true)
+			DateTime _last = DateTime.Now;
+			while (_allowRunning)
 			{
-				// Objects
-				if ((DateTime.Now - timeIrc).TotalSeconds > BackupDataTime)
+				if (_last.AddSeconds(Settings.Instance.RunLoopTime) < DateTime.Now)
 				{
-					timeIrc = DateTime.Now;
+					_last = DateTime.Now;
 
-					SaveObjects();
+					// Objects
+					if ((DateTime.Now - timeIrc).TotalSeconds > BackupDataTime)
+					{
+						timeIrc = DateTime.Now;
+
+						SaveObjects();
+					}
+
+					// Files
+					if (_isSaveFile)
+					{
+						SaveFiles();
+					}
+
+					// Statistics
+					if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
+					{
+						timeStats = DateTime.Now;
+						Statistic.Instance.Save();
+					}
 				}
 
-				// Files
-				if (_isSaveFile)
-				{
-					SaveFiles();
-				}
-
-				// Statistics
-				if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
-				{
-					timeStats = DateTime.Now;
-					Statistic.Instance.Save();
-				}
-
-				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
-
-				// TODO break this!
+				Thread.Sleep(500);
 			}
 		}
 
 		protected override void StopRun()
 		{
+			_allowRunning = false;
+
 			// sync all to disk
 			SaveFiles();
 			SaveObjects();

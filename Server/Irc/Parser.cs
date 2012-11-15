@@ -38,8 +38,6 @@ namespace XG.Server.Irc
 	{
 		#region VARIABLES
 
-		public Servers Parent { get; set; }
-
 		readonly IntValue _intValue;
 		readonly PrivateMessage _privateMessage;
 		readonly Notice _notice;

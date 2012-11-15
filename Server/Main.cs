@@ -299,6 +299,8 @@ namespace XG.Server
 
 		protected override void StopRun()
 		{
+			_servers.AllowRunning = false;
+
 			foreach (Core.Server serv in Servers.All)
 			{
 				_servers.ServerDisconnect(serv);

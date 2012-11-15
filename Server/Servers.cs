@@ -61,14 +61,12 @@ namespace XG.Server
 			{
 				if (_ircParser != null)
 				{
-					_ircParser.Parent = null;
 					_ircParser.AddDownload -= BotConnect;
 					_ircParser.RemoveDownload -= BotDisconnect;
 				}
 				_ircParser = value;
 				if (_ircParser != null)
 				{
-					_ircParser.Parent = this;
 					_ircParser.AddDownload += BotConnect;
 					_ircParser.RemoveDownload += BotDisconnect;
 				}
@@ -80,12 +78,16 @@ namespace XG.Server
 		readonly Dictionary<Core.Server, ServerConnection> _servers;
 		readonly Dictionary<Packet, BotConnection> _downloads;
 
+		public bool AllowRunning { set; get; }
+
 		#endregion
 
 		#region INIT
 
 		public Servers()
 		{
+			AllowRunning = true;
+
 			_servers = new Dictionary<Core.Server, ServerConnection>();
 			_downloads = new Dictionary<Packet, BotConnection>();
 
@@ -330,21 +332,23 @@ namespace XG.Server
 
 		void RunTimer()
 		{
-			while (true)
+			DateTime _last = DateTime.Now;
+			while (AllowRunning)
 			{
-				foreach (var kvp in _servers)
+				if (_last.AddSeconds(Settings.Instance.RunLoopTime) < DateTime.Now)
 				{
-					ServerConnection sc = kvp.Value;
-					if (sc.IsRunning)
+					foreach (var kvp in _servers)
 					{
-						sc.TriggerTimerRun();
+						ServerConnection sc = kvp.Value;
+						if (sc.IsRunning)
+						{
+							sc.TriggerTimerRun();
+						}
 					}
 				}
 
-				Thread.Sleep(Settings.Instance.RunLoopTime * 1000);
+				Thread.Sleep(500);
 			}
-
-			// TODO break this!
 		}
 
 		#endregion

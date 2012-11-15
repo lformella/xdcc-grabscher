@@ -67,7 +67,7 @@ namespace XG.Server.Worker
 					}
 				}
 
-				Thread.Sleep(1000);
+				Thread.Sleep(500);
 			}
 		}
 

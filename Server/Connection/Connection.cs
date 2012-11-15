@@ -46,6 +46,8 @@ namespace XG.Server.Connection
 
 		SocketErrorCode _errorCode = 0;
 
+		bool _allowRunning;
+
 		#endregion
 
 		#region CONNECT / RECEIVE DATA
@@ -89,6 +91,7 @@ namespace XG.Server.Connection
 
 						FireConnected();
 
+						_allowRunning = true;
 						try
 						{
 							#region BINARY READING
@@ -148,7 +151,7 @@ namespace XG.Server.Connection
 											_log.Warn("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") no data received");
 											break;
 										}
-									} while (missing > 0);
+									} while (_allowRunning && missing > 0);
 								}
 							}
 
@@ -217,7 +220,7 @@ namespace XG.Server.Connection
 											}
 											data = "";
 										}
-									} while (true);
+									} while (_allowRunning);
 								}
 							}
 
@@ -247,6 +250,8 @@ namespace XG.Server.Connection
 
 		public override void Disconnect()
 		{
+			_allowRunning = false;
+
 			if (_writer != null)
 			{
 				_writer.Close();

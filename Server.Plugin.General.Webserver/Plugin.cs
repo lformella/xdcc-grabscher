@@ -40,6 +40,8 @@ namespace XG.Server.Plugin.General.Webserver
 
 		readonly string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(BitConverter.GetBytes(new Random().Next()))).Replace("-", "");
 
+		bool _allowRunning = true;
+
 		#endregion
 
 		#region AWorker
@@ -69,7 +71,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 				var fileLoader = new FileLoader {Salt = _salt};
 
-				while (true)
+				while (_allowRunning)
 				{
 #if !UNSAFE
 					try
@@ -106,6 +108,8 @@ namespace XG.Server.Plugin.General.Webserver
 
 		protected override void StopRun()
 		{
+			_allowRunning = false;
+
 			_listener.Close();
 		}
 
