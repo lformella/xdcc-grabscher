@@ -117,6 +117,15 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.url.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.url.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.axislabels.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
+    <File subtype="Directory" buildaction="Compile" name="WebSocket" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Request.cs" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Server.cs" />
+    <File subtype="Directory" buildaction="Compile" name="WebSocket/Response" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Base.cs" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Object.cs" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Snapshots.cs" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Objects.cs" />
+    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Statistics.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

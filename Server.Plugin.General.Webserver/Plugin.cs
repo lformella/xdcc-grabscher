@@ -21,9 +21,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Alchemy;
-using Alchemy.Classes;
-
 using System;
 using System.Net;
 using System.Reflection;
@@ -41,7 +38,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		HttpListener _listener;
 
-		WebSocketServer _webSocket;
+		WebSocket.Server _webSocket;
 
 		readonly string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(BitConverter.GetBytes(new Random().Next()))).Replace("-", "");
 
@@ -55,16 +52,12 @@ namespace XG.Server.Plugin.General.Webserver
 		{
 			_listener = new HttpListener();
 
-			_webSocket = new WebSocketServer(Settings.Instance.WebServerPort + 1, IPAddress.Any)
+			_webSocket = new WebSocket.Server
 			{
-				OnReceive = OnReceive,
-				OnSend = OnSend,
-				OnConnect = OnConnect,
-				OnConnected = OnConnected,
-				OnDisconnect = OnDisconnect,
-				TimeOut = new TimeSpan(0, 5, 0)
+				Salt = _salt
 			};
 
+			_webSocket.Start();
 #if !UNSAFE
 			try
 			{
@@ -131,30 +124,6 @@ namespace XG.Server.Plugin.General.Webserver
 			_webSocket.Stop();
 
 			_listener.Close();
-		}
-
-		#endregion
-
-		#region WebSocket
-
-		void OnConnect(UserContext aContext)
-		{
-		}
-
-		void OnConnected(UserContext aContext)
-		{
-		}
-
-		void OnDisconnect(UserContext aContext)
-		{
-		}
-
-		void OnSend(UserContext aContext)
-		{
-		}
-
-		void OnReceive(UserContext aContext)
-		{
 		}
 
 		#endregion

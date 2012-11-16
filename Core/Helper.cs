@@ -26,42 +26,7 @@ using System.Text.RegularExpressions;
 
 namespace XG.Core
 {
-
 	#region ENUMS
-
-	public enum ClientRequest : byte
-	{
-		None = 0,
-		Version = 1,
-
-		AddServer = 2,
-		RemoveServer = 3,
-		AddChannel = 4,
-		RemoveChannel = 5,
-
-		ActivateObject = 6,
-		DeactivateObject = 7,
-
-		SearchPacket = 8,
-		SearchBot = 9,
-
-		Servers = 10,
-		ChannelsFromServer = 11,
-		BotsFromChannel = 12,
-		PacketsFromBot = 13,
-		Files = 14,
-		Object = 15,
-
-		AddSearch = 16,
-		RemoveSearch = 17,
-		Searches = 18,
-
-		Statistics = 19,
-		GetSnapshots = 20,
-		ParseXdccLink = 21,
-
-		CloseServer = 22
-	}
 
 	public enum SocketErrorCode
 	{
