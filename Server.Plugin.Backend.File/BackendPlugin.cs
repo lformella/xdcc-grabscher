@@ -67,13 +67,17 @@ namespace XG.Server.Plugin.Backend.File
 			try
 			{
 				var servers = (Core.Servers) Load(Settings.Instance.AppDataPath + DataBinary);
-				servers.AttachChildEvents();
-				return servers;
+				if (servers != null)
+				{
+					servers.AttachChildEvents();
+					return servers;
+				}
 			}
 			catch (Exception)
 			{
-				return new Core.Servers();
+				// skip all errors
 			}
+			return new Core.Servers();
 		}
 
 		public override Files LoadFiles()
@@ -81,13 +85,17 @@ namespace XG.Server.Plugin.Backend.File
 			try
 			{
 				var files = (Files) Load(Settings.Instance.AppDataPath + FilesBinary);
-				files.AttachChildEvents();
-				return files;
+				if (files != null)
+				{
+					files.AttachChildEvents();
+					return files;
+				}
 			}
 			catch (Exception)
 			{
-				return new Files();
+				// skip all errors
 			}
+			return new Files();
 		}
 
 		public override Objects LoadSearches()
@@ -95,25 +103,34 @@ namespace XG.Server.Plugin.Backend.File
 			try
 			{
 				var searches = (Objects) Load(Settings.Instance.AppDataPath + SearchesBinary);
-				searches.AttachChildEvents();
-				return searches;
+				if (searches != null)
+				{
+					searches.AttachChildEvents();
+					return searches;
+				}
 			}
 			catch (Exception)
 			{
-				return new Objects();
+				// skip all errors
 			}
+			return new Objects();
 		}
 
 		public override Snapshots LoadStatistics()
 		{
 			try
 			{
-				return (Snapshots) Load(Settings.Instance.AppDataPath + SnapshotsBinary);
+				var snapshots = (Snapshots) Load(Settings.Instance.AppDataPath + SnapshotsBinary);
+				if (snapshots != null)
+				{
+					return snapshots;
+				}
 			}
 			catch (Exception)
 			{
-				return new Snapshots();
+				// skip all errors
 			}
+			return new Snapshots();
 		}
 
 		#endregion
