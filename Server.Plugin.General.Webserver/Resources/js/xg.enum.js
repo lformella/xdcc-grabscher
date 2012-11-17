@@ -23,39 +23,82 @@
 
 function Enum() {}
 
-Enum.TCPClientRequest =
+Enum.Request =
 {
 	None: 0,
-	Version: 1,
 
-	AddServer: 2,
-	RemoveServer: 3,
-	AddChannel: 4,
-	RemoveChannel: 5,
+	AddServer: 1,
+	RemoveServer: 2,
+	AddChannel: 3,
+	RemoveChannel: 4,
 
-	ActivateObject: 6,
-	DeactivateObject: 7,
+	ActivateObject: 5,
+	DeactivateObject: 6,
 
-	SearchPacket: 8,
-	SearchBot: 9,
+	Search: 7,
 
-	GetServers: 10,
-	GetChannelsFromServer: 11,
-	GetBotsFromChannel: 12,
-	GetPacketsFromBot: 13,
-	GetFiles: 14,
-	GetObject: 15,
+	GetServers: 8,
+	GetChannelsFromServer: 9,
+	GetPacketsFromBot: 10,
+	GetFiles: 11,
+	GetObject: 12,
 
-	AddSearch: 16,
-	RemoveSearch: 17,
-	GetSearches: 18,
+	AddSearch: 13,
+	RemoveSearch: 14,
+	GetSearches: 15,
 
-	GetStatistics: 19,
-	GetSnapshots: 20,
-	ParseXdccLink: 21,
+	GetStatistics: 16,
+	GetSnapshots: 17,
+	ParseXdccLink: 18,
 
-	CloseServer: 22
+	CloseServer: 19
 };
+
+Enum.Response =
+{
+	None: 0,
+
+	ServerAdded: 1,
+	ServerRemoved: 2,
+	ServerChanged: 3,
+
+	ChannelAdded: 4,
+	ChannelRemoved: 5,
+	ChannelChanged: 6,
+
+	BotAdded: 7,
+	BotRemoved: 8,
+	BotChanged: 9,
+
+	PacketAdded: 10,
+	PacketRemoved: 11,
+	PacketChanged: 12,
+
+	FileAdded: 13,
+	FileRemoved: 14,
+	FileChanged: 15,
+
+	SearchAdded: 16,
+	SearchRemoved: 17,
+	SearchChanged: 18,
+
+	SnapshotAdded: 19,
+
+	SearchPacket: 101,
+	SearchBot: 102,
+
+	Servers: 103,
+	ChannelsFromServer: 104,
+	PacketsFromBot: 105,
+
+	Files: 106,
+	Object: 107,
+	Searches: 108,
+
+	Snapshots: 109,
+
+	Statistics: 110
+}
 
 Enum.TangoColor =
 {

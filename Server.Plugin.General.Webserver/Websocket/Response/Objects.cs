@@ -1,5 +1,5 @@
 //
-//  Object.cs
+//  Objects.cs
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,43 +21,28 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
+using Newtonsoft.Json;
+
+using System.Collections.Generic;
+
 using XG.Core;
 
-namespace XG.Server.Plugin.General.Webserver.Response
+namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
-	public class Object : Base
+	[JsonObject(MemberSerialization.OptIn)]
+	public class Objects : Base
 	{
-		#region ENUMS
-
-		public enum Types
-		{
-			None = 0,
-
-			ObjectAdded = 1,
-			ObjectRemoved = 1,
-			ObjectChanged = 3,
-			ObjectEnabledChanged = 4,
-
-			FileAdded = 5,
-			FileRemoved = 6,
-			FileChanged = 7,
-
-			SearchAdded = 8,
-			SearchRemoved = 9,
-			SearchChanged = 10,
-
-			SnapshotAdded = 11
-		}
-
-		#endregion
-
 		#region VARIABLES
-
-		public Types Type { get; set; }
-
-		public AObject Data { get; set; }
+		
+		[JsonProperty]
+		public IEnumerable<AObject> Data { get; set; }
 
 		#endregion
+
+		public Objects()
+		{
+			Data = new List<AObject>();
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
 //
-//  Base.cs
+//  Snapshot.cs
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,13 +21,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-namespace XG.Server.Plugin.General.Webserver.Response
+using Newtonsoft.Json;
+
+namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
-	public class Base
+	[JsonObject(MemberSerialization.OptIn)]
+	public class Snapshot : Base
 	{
-		public Base ()
-		{
-		}
+		#region VARIABLES
+		
+		[JsonProperty]
+		public Flot.Object Data { get; set; }
+
+		#endregion
 	}
 }
 

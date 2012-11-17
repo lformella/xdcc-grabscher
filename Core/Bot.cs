@@ -21,16 +21,18 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.Serialization;
 
 namespace XG.Core
 {
 	[Serializable]
-	[DataContract]
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Bot : AObjects
 	{
 		#region ENUMS
@@ -62,7 +64,7 @@ namespace XG.Core
 
 		States _state;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public States State
 		{
@@ -93,7 +95,7 @@ namespace XG.Core
 
 		string _lastMessage = "";
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public string LastMessage
 		{
@@ -109,7 +111,7 @@ namespace XG.Core
 
 		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public DateTime LastContact
 		{
@@ -119,7 +121,7 @@ namespace XG.Core
 
 		int _queuePosition;
 
-		[DataMember]
+		[JsonProperty]
 		public int QueuePosition
 		{
 			get { return _queuePosition; }
@@ -128,7 +130,7 @@ namespace XG.Core
 
 		int _queueTime;
 
-		[DataMember]
+		[JsonProperty]
 		public int QueueTime
 		{
 			get { return _queueTime; }
@@ -137,7 +139,7 @@ namespace XG.Core
 
 		Int64 _infoSpeedMax;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 InfoSpeedMax
 		{
@@ -147,7 +149,7 @@ namespace XG.Core
 
 		Int64 _infoSpeedCurrent;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 InfoSpeedCurrent
 		{
@@ -157,7 +159,7 @@ namespace XG.Core
 
 		int _infoSlotTotal;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public int InfoSlotTotal
 		{
@@ -167,7 +169,7 @@ namespace XG.Core
 
 		int _infoSlotCurrent;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public int InfoSlotCurrent
 		{
@@ -177,7 +179,7 @@ namespace XG.Core
 
 		int _infoQueueTotal;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public int InfoQueueTotal
 		{
@@ -187,7 +189,7 @@ namespace XG.Core
 
 		int _infoQueueCurrent;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public int InfoQueueCurrent
 		{
@@ -195,7 +197,7 @@ namespace XG.Core
 			set { SetProperty(ref _infoQueueCurrent, value); }
 		}
 
-		[DataMember]
+		[JsonProperty]
 		public double Speed
 		{
 			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }

@@ -21,13 +21,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using Newtonsoft.Json;
+
 using System;
-using System.Runtime.Serialization;
 
 namespace XG.Core
 {
 	[Serializable]
-	[DataContract]
+	[JsonObject(MemberSerialization.OptIn)]
 	public class FilePart : AObject
 	{
 		#region ENUMS
@@ -90,7 +91,7 @@ namespace XG.Core
 
 		Int64 _startSize;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 StartSize
 		{
@@ -100,7 +101,7 @@ namespace XG.Core
 
 		Int64 _stopSize;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 StopSize
 		{
@@ -110,7 +111,7 @@ namespace XG.Core
 
 		Int64 _currentSize;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 CurrentSize
 		{
@@ -118,7 +119,7 @@ namespace XG.Core
 			set { SetProperty(ref _currentSize, value); }
 		}
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 MissingSize
 		{
@@ -126,7 +127,7 @@ namespace XG.Core
 			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 TimeMissing
 		{
@@ -136,7 +137,7 @@ namespace XG.Core
 
 		Int64 _speed;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 Speed
 		{
@@ -146,7 +147,7 @@ namespace XG.Core
 
 		States _state;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public States State
 		{
@@ -171,7 +172,7 @@ namespace XG.Core
 
 		bool _checked;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public bool Checked
 		{

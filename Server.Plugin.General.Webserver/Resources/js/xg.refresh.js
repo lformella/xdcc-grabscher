@@ -130,7 +130,7 @@ var XGRefresh = Class.create(
 	 */
 	refreshObject: function (grid, guid)
 	{
-		$.getJSON(this.url.guidUrl(Enum.TCPClientRequest.GetObject, guid),
+		$.getJSON(this.url.guidUrl(Enum.Request.GetObject, guid),
 			function(result)
 			{
 				result.cell.Object = JSON.stringify(result.cell);
@@ -151,7 +151,7 @@ var XGRefresh = Class.create(
 	{
 		var self = this;
 
-		$.getJSON(this.url.jsonUrl(Enum.TCPClientRequest.GetStatistics),
+		$.getJSON(this.url.jsonUrl(Enum.Request.GetStatistics),
 			function(result)
 			{
 				$("#BytesLoaded").html(self.helper.size2Human(result.BytesLoaded));
@@ -191,7 +191,7 @@ var XGRefresh = Class.create(
 	{
 		var self = this;
 
-		$.getJSON(this.url.jsonUrl(Enum.TCPClientRequest.GetSnapshots),
+		$.getJSON(this.url.jsonUrl(Enum.Request.GetSnapshots),
 			function(result)
 			{
 				$.each(result, function(index, item) {

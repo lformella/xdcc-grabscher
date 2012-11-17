@@ -50,5 +50,11 @@ namespace XG.Core
 			AObject tObject = base.Named(aName);
 			return tObject != null ? (Object) tObject : null;
 		}
+
+		public new Object WithGuid(Guid aGuid)
+		{
+			AObject tObject = base.WithGuid(aGuid);
+			return tObject != null ? (Object) tObject : null;
+		}
 	}
 }

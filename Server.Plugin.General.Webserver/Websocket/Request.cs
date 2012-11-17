@@ -21,10 +21,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
+using Newtonsoft.Json;
+
 using System;
 
-namespace XG.Server.Plugin.General.Webserver.WebSocket
+namespace XG.Server.Plugin.General.Webserver.Websocket
 {
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Request
 	{
 		#region ENUMS
@@ -32,35 +35,32 @@ namespace XG.Server.Plugin.General.Webserver.WebSocket
 		public enum Types
 		{
 			None = 0,
-			Version = 1,
 
-			AddServer = 2,
-			RemoveServer = 3,
-			AddChannel = 4,
-			RemoveChannel = 5,
+			AddServer = 1,
+			RemoveServer = 2,
+			AddChannel = 3,
+			RemoveChannel = 4,
 
-			ActivateObject = 6,
-			DeactivateObject = 7,
+			ActivateObject = 5,
+			DeactivateObject = 6,
 
-			SearchPacket = 8,
-			SearchBot = 9,
+			Search = 7,
 
-			Servers = 10,
-			ChannelsFromServer = 11,
-			BotsFromChannel = 12,
-			PacketsFromBot = 13,
-			Files = 14,
-			Object = 15,
+			Servers = 8,
+			ChannelsFromServer = 9,
+			PacketsFromBot = 10,
+			Files = 11,
+			Object = 12,
 
-			AddSearch = 16,
-			RemoveSearch = 17,
-			Searches = 18,
+			AddSearch = 13,
+			RemoveSearch = 14,
+			Searches = 15,
 
-			Statistics = 19,
-			GetSnapshots = 20,
-			ParseXdccLink = 21,
+			Statistics = 16,
+			GetSnapshots = 17,
+			ParseXdccLink = 18,
 
-			CloseServer = 22
+			CloseServer = 19
 		}
 
 		public enum SortModes
@@ -72,28 +72,21 @@ namespace XG.Server.Plugin.General.Webserver.WebSocket
 		#endregion
 
 		#region VARIABLES
-
+		
+		[JsonProperty]
 		public Types Type { get; set; }
-
+		
+		[JsonProperty]
 		public string Password { get; set; }
-
+		
+		[JsonProperty]
 		public Guid Guid { get; set; }
-
+		
+		[JsonProperty]
 		public string Name { get; set; }
-
+		
+		[JsonProperty]
 		public bool IgnoreOfflineBots { get; set; }
-
-		public int Page { get; set; }
-
-		public int Rows { get; set; }
-
-		public string SearchBy { get; set; }
-
-		public string Search { get; set; }
-
-		public string SortBy { get; set; }
-
-		public SortModes SortMode { get; set; }
 
 		#endregion
 	}

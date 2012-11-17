@@ -23,6 +23,8 @@
 
 using System;
 
+using Newtonsoft.Json;
+
 using NUnit.Framework;
 
 using XG.Core;
@@ -35,54 +37,54 @@ namespace XG.Server.Plugin.General.Webserver.Test
 		[Test]
 		public void Serialize()
 		{
+			var jsonSerializerSettings = new JsonSerializerSettings
+			{
+				DateFormatHandling = DateFormatHandling.IsoDateFormat,
+				DateParseHandling = DateParseHandling.DateTime,
+				DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
+			};
+
 			var part = new FilePart {Connected = true, Enabled = true, Guid = Guid.Empty};
 
-			Assert.AreEqual(
-			                "{\"Checked\":false,\"Connected\":true,\"CurrentSize\":0,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"MissingSize\":0,\"Name\":\"\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Speed\":0,\"StartSize\":0,\"State\":0,\"StopSize\":0,\"TimeMissing\":9223372036854775807}",
-			                Webserver.Json.Serialize(part));
+			Assert.AreEqual("{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":9223372036854775807,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true}",
+			                JsonConvert.SerializeObject(part, jsonSerializerSettings));
 
 			var packet = new Packet
-			             {
-				             Name = "Test Packet",
-				             Connected = true,
-				             Enabled = true,
-				             Guid = Guid.Empty,
-				             LastMentioned = new DateTime(2012, 08, 04, 03, 45, 44),
-				             LastUpdated = new DateTime(2012, 08, 05, 03, 45, 44),
-				             Part = part
-			             };
+			{
+				Name = "Test Packet",
+				Connected = true,
+				Enabled = true,
+				Guid = Guid.Empty,
+				LastMentioned = new DateTime(2012, 08, 04, 03, 45, 44),
+				LastUpdated = new DateTime(2012, 08, 05, 03, 45, 44),
+				Part = part
+			};
 
-			Assert.AreEqual(
-			                "{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Id\":-1,\"LastMentioned\":\"" +
-			                packet.LastMentioned.ToString("HH:mm:ss dd.MM.yyyy") + "\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("HH:mm:ss dd.MM.yyyy") +
-			                "\",\"Name\":\"Test Packet\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Part\":{\"Checked\":false,\"Connected\":true,\"CurrentSize\":0,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"MissingSize\":0,\"Name\":\"\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Speed\":0,\"StartSize\":0,\"State\":0,\"StopSize\":0,\"TimeMissing\":9223372036854775807},\"RealName\":\"\",\"RealSize\":0,\"Size\":0}",
-			                Webserver.Json.Serialize(packet));
+			Assert.AreEqual("{\"Part\":{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":9223372036854775807,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true},\"Id\":-1,\"Size\":0,\"RealSize\":0,\"RealName\":\"\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"LastMentioned\":\"" + packet.LastMentioned.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Connected\":true,\"Enabled\":true}",
+			                JsonConvert.SerializeObject(packet, jsonSerializerSettings));
 
 			var bot = new Bot
-			          {
-				          Name = "Test Bot",
-				          Connected = true,
-				          Enabled = true,
-				          Guid = Guid.Empty,
-				          InfoQueueCurrent = 16,
-				          InfoQueueTotal = 16,
-				          InfoSlotCurrent = 16,
-				          InfoSlotTotal = 16,
-				          InfoSpeedCurrent = 16,
-				          InfoSpeedMax = 16,
-				          LastMessage = "Test Message",
-				          QueuePosition = 16,
-				          QueueTime = 16,
-				          State = Bot.States.Idle,
-				          LastContact = new DateTime(2012, 08, 05, 03, 45, 44)
-			          };
+			{
+				Name = "Test Bot",
+				Connected = true,
+				Enabled = true,
+				Guid = Guid.Empty,
+				InfoQueueCurrent = 16,
+				InfoQueueTotal = 16,
+				InfoSlotCurrent = 16,
+				InfoSlotTotal = 16,
+				InfoSpeedCurrent = 16,
+				InfoSpeedMax = 16,
+				LastMessage = "Test Message",
+				QueuePosition = 16,
+				QueueTime = 16,
+				State = Bot.States.Idle,
+				LastContact = new DateTime(2012, 08, 05, 03, 45, 44)
+			};
 			bot.AddPacket(packet);
 
-			Assert.AreEqual(
-			                "{\"Connected\":true,\"Enabled\":true,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"InfoQueueCurrent\":16,\"InfoQueueTotal\":16,\"InfoSlotCurrent\":16,\"InfoSlotTotal\":16,\"InfoSpeedCurrent\":16,\"InfoSpeedMax\":16,\"LastContact\":\"" +
-			                bot.LastContact.ToString("HH:mm:ss dd.MM.yyyy") +
-			                "\",\"LastMessage\":\"Test Message\",\"Name\":\"Test Bot\",\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"QueuePosition\":16,\"QueueTime\":16,\"Speed\":0,\"State\":0}",
-			                Webserver.Json.Serialize(bot));
+			Assert.AreEqual("{\"State\":0,\"LastMessage\":\"Test Message\",\"LastContact\":\"" + bot.LastContact.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0.0,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"&#84;&#101;&#115;&#116;&#32;&#66;&#111;&#116;\",\"Connected\":true,\"Enabled\":true}",
+			                JsonConvert.SerializeObject(bot, jsonSerializerSettings));
 		}
 	}
 }

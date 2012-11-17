@@ -21,20 +21,21 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using Newtonsoft.Json;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace XG.Core
 {
 	[Serializable]
-	[DataContract]
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Channel : AObjects
 	{
 		#region VARIABLES
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public override bool Connected
 		{
@@ -60,7 +61,7 @@ namespace XG.Core
 
 		int _errorCode;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public int ErrorCode
 		{

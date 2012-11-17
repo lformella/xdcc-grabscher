@@ -88,34 +88,55 @@ var XGFormatter = Class.create(
 	/* SEARCH FORMATER                                                                                                */
 	/* ************************************************************************************************************** */
 
-	formatSearchIcon: function (cellvalue)
+	formatSearchIcon: function (search)
 	{
 		var icon = "search";
 		var iconClass = "Aluminium2Middle";
 
-		switch (cellvalue)
+		switch (search.Guid)
 		{
-			case "1":
+			case "00000000-0000-0000-0000-000000000001":
 				icon = "clock";
 				iconClass = "OrangeMiddle";
 				break;
 
-			case "2":
+			case "00000000-0000-0000-0000-000000000002":
 				icon = "clock";
 				iconClass = "ButterMiddle";
 				break;
 
-			case "3":
+			case "00000000-0000-0000-0000-000000000003":
 				icon = "down-circle2";
 				iconClass = "SkyBlueMiddle";
 				break;
 
-			case "4":
+			case "00000000-0000-0000-0000-000000000004":
 				icon = "ok-circle2";
 				iconClass = "ChameleonMiddle";
 				break;
 		}
+
 		return this.formatIcon2(icon, iconClass);
+	},
+
+	formatSearchAction: function (search)
+	{
+		var result = "";
+
+		switch (search.Guid)
+		{
+			case "00000000-0000-0000-0000-000000000001":
+			case "00000000-0000-0000-0000-000000000002":
+			case "00000000-0000-0000-0000-000000000003":
+			case "00000000-0000-0000-0000-000000000004":
+				break;
+
+			default:
+				result = "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='XG.removeSearch(\"" + search.Guid + "\");'></i>";
+				break;
+		}
+
+		return result;
 	},
 
 	/* ************************************************************************************************************** */

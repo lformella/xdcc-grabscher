@@ -30,10 +30,12 @@ var XGBase = Class.create(
 	 * @param {XGRefresh} refresh
 	 * @param {XGCookie} cookie
 	 * @param {XGFormatter} formatter
+	 * @param {XGWebsocket} websocket
 	 */
-	initialize: function(url, helper, refresh, cookie, formatter)
+	initialize: function(url, helper, refresh, cookie, formatter, websocket)
 	{
 		XG = this;
+		var self = this;
 
 		this.url = url;
 		this.refresh = refresh;
@@ -41,13 +43,17 @@ var XGBase = Class.create(
 		this.helper = helper;
 		this.formatter = formatter;
 
+		this.websocket = websocket;
+		this.websocket.onConnected = self.onWebsocketConnected;
+		this.websocket.onDiscsonnected = self.onWebsocketDisconnected;
+		this.websocket.onMessageReceived = self.onWebsocketMessageReceived;
+
 		this.idServer = 0;
 		this.activeTab = 0;
 
 		this.initializeGrids();
 		this.initializeDialogs();
 		this.initializeOthers();
-		this.loadInitialSearches();
 	},
 
 	initializeGrids: function()
@@ -60,33 +66,19 @@ var XGBase = Class.create(
 
 		$("#servers_table").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.TCPClientRequest.GetServers, ''),
-			datatype: "json",
+			datatype: "local",
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Name')],
 			colModel: [
 				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatServerIcon(r, "XG.flipObject(\"" + o.rowId + "\", \"servers_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
+				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatServerIcon(r, "XG.flipObject(\"" + r.Guid + "\", \"servers_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
 				{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:216, editable:true, fixed:false}
 			],
-			onSelectRow: function(id)
+			onSelectRow: function(guid)
 			{
-				if(id)
-				{
-					self.idServer = id;
-					var serv = self.refresh.getRowData('servers_table', id);
-					if(serv)
-					{
-						self.refresh.reloadGrid("channels_table", self.url.guidUrl(Enum.TCPClientRequest.GetChannelsFromServer, id));
-					}
-				}
-			},
-			ondblClickRow: function(id)
-			{
-				if(id)
-				{
-					self.flipObject(id, "servers_table");
-				}
+				self.idServer = guid;
+				var server = self.getRowData("servers_table", guid);
+				self.websocket.sendGuid(Enum.Request.ChannelsFromServer, server.Guid);
 			},
 			onSortCol: function(index, iCol, sortorder)
 			{
@@ -114,7 +106,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeEditData: function (postdata)
 			{
-				return { request: Enum.TCPClientRequest.AddServer, name: postdata.Name };
+				return { request: Enum.Request.AddServer, name: postdata.Name };
 			}
 		},
 		{
@@ -122,7 +114,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeDelData: function (postdata)
 			{
-				return { request: Enum.TCPClientRequest.RemoveServer, guid: postdata.id };
+				return { request: Enum.Request.RemoveServer, guid: postdata.id };
 			}
 		});
 
@@ -132,22 +124,14 @@ var XGBase = Class.create(
 
 		$("#channels_table").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.TCPClientRequest.GetChannelsFromServer, ''),
-			datatype: "json",
+			datatype: "local",
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Name')],
 			colModel: [
 				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatChannelIcon(r, "XG.flipObject(\"" + o.rowId + "\", \"channels_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
+				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatChannelIcon(r, "XG.flipObject(\"" + r.Guid + "\", \"channels_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
 				{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:216, editable:true, fixed:false}
 			],
-			ondblClickRow: function(id)
-			{
-				if(id)
-				{
-					self.flipObject(id, "channels_table");
-				}
-			},
 			onSortCol: function(index, iCol, sortorder)
 			{
 				self.cookie.setCookie('channels.sort.index', index);
@@ -174,7 +158,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeEditData: function (postdata)
 			{
-				return { request: Enum.TCPClientRequest.AddChannel, name: postdata.Name, guid: self.idServer };
+				return { request: Enum.Request.AddChannel, name: postdata.Name, guid: self.idServer };
 			}
 		},
 		{
@@ -182,7 +166,7 @@ var XGBase = Class.create(
 			url: "/",
 			serializeDelData: function (postdata)
 			{
-				return { request: Enum.TCPClientRequest.RemoveChannel, guid: postdata.id };
+				return { request: Enum.Request.RemoveChannel, guid: postdata.id };
 			}
 		});
 
@@ -192,8 +176,7 @@ var XGBase = Class.create(
 
 		$("#bots_table").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.TCPClientRequest.GetBotsFromChannel, ''),
-			datatype: "json",
+			datatype: "local",
 			cmTemplate:{fixed:true},
 			colNames: ['', '', _('Name'), _('Speed'), _('Q-Pos'), _('Q-Time'), _('max Speed'), _('Slots'), _('Queue')],
 			colModel: [
@@ -209,10 +192,7 @@ var XGBase = Class.create(
 			],
 			onSelectRow: function(id)
 			{
-				if(id)
-				{
-					self.refresh.reloadGrid("packets_table", self.url.guidUrl(Enum.TCPClientRequest.GetPacketsFromBot, id));
-				}
+				self.refresh.reloadGrid("packets_table", self.url.guidUrl(Enum.Request.GetPacketsFromBot, id));
 			},
 			onSortCol: function(index, iCol, sortorder)
 			{
@@ -239,8 +219,7 @@ var XGBase = Class.create(
 
 		$("#packets_table").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.TCPClientRequest.GetPacketsFromBot, ''),
-			datatype: "json",
+			datatype: "local",
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Id'), _('Name'), _('Size'), _('Speed'), _('Time'), _('Updated')],
 			colModel: [
@@ -262,13 +241,6 @@ var XGBase = Class.create(
 					{
 						$('#bots_table').setSelection(pack.ParentGuid, false);
 					}
-				}
-			},
-			ondblClickRow: function(id)
-			{
-				if(id)
-				{
-					self.flipPacket(id);
 				}
 			},
 			onSortCol: function(index, iCol, sortorder)
@@ -300,58 +272,22 @@ var XGBase = Class.create(
 			colNames: ['', '', '', ''],
 			colModel: [
 				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Id',		index:'Id',		formatter: function(c) { return self.formatter.formatSearchIcon(c); }, width:26, sortable: false, classes: "icon-cell"},
-				{name:'Name',	index:'Name',	fixed:false, sortable: false},
-				{name:'Action',	index:'Action',	width:18, sortable: false}
+				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatSearchIcon(r); }, width:26, sortable: false, classes: "icon-cell"},
+				{name:'Name',	index:'Name',	formatter: function(c, o, r) { return _(r.Name); }, fixed: false, sortable: false},
+				{name:'Action',	index:'Action',	formatter: function(c, o, r) { return self.formatter.formatSearchAction(r); }, width:18, sortable: false}
 			],
-			onSelectRow: function(id)
+			onSelectRow: function(guid)
 			{
-				if(id)
-				{
-					var data = $("#search_table").getRowData(id);
-					var url1 = "";
-					var url2 = "";
-					switch(id)
-					{
-						case "1":
-							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, "0-86400") + "&searchBy=time";
-							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, "0-86400") + "&searchBy=time";
-							break;
-						case "2":
-							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, "0-604800") + "&searchBy=time";
-							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, "0-604800") + "&searchBy=time";
-							break;
-						case "3":
-							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=connected";
-							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=connected";
-							break;
-						case "4":
-							url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=enabled";
-							url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=enabled";
-							break;
-						default:
-							switch(self.activeTab)
-							{
-								case 0:
-									url1 = self.url.nameUrl(Enum.TCPClientRequest.SearchBot, data.Name) + "&searchBy=name";
-									url2 = self.url.nameUrl(Enum.TCPClientRequest.SearchPacket, data.Name) + "&searchBy=name";
-									break;
-								case 1:
-									self.refresh.reloadGrid("searches_xg_bitpir_at", "http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + data.Name);
-									break;
-							}
-							break;
-					}
+				var search = self.getRowData("search_table", guid);
 
-					if(url1 != "")
-					{
-						self.refresh.reloadGrid("bots_table", url1);
-					}
-					if(url2 != "")
-					{
-						self.refresh.reloadGrid("packets_table", url2);
-					}
-					self.idSearch = id;
+				switch(self.activeTab)
+				{
+					case 0:
+						self.websocket.sendGuid(Enum.Request.Search, search.Guid);
+						break;
+					case 1:
+						self.refresh.reloadGrid("searches_xg_bitpir_at", "http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + search.Name);
+						break;
 				}
 			},
 			pager: $('#search_pager'),
@@ -371,7 +307,7 @@ var XGBase = Class.create(
 		{
 			if (e.which == 13)
 			{
-				self.addNewSearch();
+				self.addSearch();
 			}
 		});
 
@@ -381,7 +317,7 @@ var XGBase = Class.create(
 
 		$("#searches_xg_bitpir_at").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.TCPClientRequest.Version, ''),
+			url: self.url.guidUrl(Enum.Request.Version, ''),
 			datatype:'jsonp',
 			cmTemplate:{fixed:true},
 			colNames:['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed'), ''],
@@ -397,13 +333,6 @@ var XGBase = Class.create(
 
 				{name:'IrcLink',		index:'IrcLink',		formatter: function(c, o, r) { return r.IrcLink; }, hidden:true}
 			],
-			ondblClickRow: function(id)
-			{
-				if(id)
-				{
-					self.downloadLink(id);
-				}
-			},
 			onSortCol: function(index, iCol, sortorder)
 			{
 				self.cookie.setCookie('searches_xg_bitpir_at.sort.index', index);
@@ -428,8 +357,7 @@ var XGBase = Class.create(
 
 		$("#files_table").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.TCPClientRequest.GetFiles, ''),
-			datatype: "json",
+			datatype: "local",
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Name'), _('Size'), _('Speed'), _('Time')],
 			colModel: [
@@ -471,7 +399,7 @@ var XGBase = Class.create(
 			.button({icons: { primary: "ui-icon-gear" }})
 			.click( function()
 			{
-				self.refresh.reloadGrid("servers_table", self.url.guidUrl(Enum.TCPClientRequest.GetServers, ''));
+				self.refresh.reloadGrid("servers_table", self.url.guidUrl(Enum.Request.GetServers, ''));
 				self.refresh.reloadGrid("channels_table", "");
 				$("#dialog_server_channels").dialog("open");
 			});
@@ -545,60 +473,14 @@ var XGBase = Class.create(
 			});
 	},
 
-	loadInitialSearches: function()
-	{
-		var self = this;
-
-		this.idSearchCount = 1;
-		var mydata = [
-			{Id:"1", Name: _("ODay Packets"), Action: ""},
-			{Id:"2", Name: _("OWeek Packets"), Action: ""},
-			{Id:"3", Name: _("Downloads"), Action: ""},
-			{Id:"4", Name: _("Enabled Packets"), Action: ""}
-		];
-		for(var i=0; i<=mydata.length; i++)
-		{
-			$("#search_table").addRowData(i + 1, mydata[i]);
-			this.idSearchCount++;
-		}
-
-		// get searches
-		$.getJSON(this.url.jsonUrl(Enum.TCPClientRequest.GetSearches),
-			function(result) {
-				$.each(result.Searches, function(i, item) {
-					self.addSearch(item.Search);
-				});
-			}
-		);
-	},
-
-	addNewSearch: function ()
+	addSearch: function ()
 	{
 		var tbox = $('#search-text');
 		if(tbox.val() != "")
 		{
-			$.get(this.url.nameUrl(Enum.TCPClientRequest.AddSearch, tbox.val()));
-			var id = this.addSearch(tbox.val());
+			this.websocket.sendName(Enum.Request.AddSearch, tbox.val());
 			tbox.val('');
-
-			$("#search-text").effect("transfer", { to: $("#" + id) }, 500);
 		}
-	},
-
-	/**
-	 * @param {String} search
-	 * @return {Integer}
-	 */
-	addSearch: function (search)
-	{
-		var datarow =
-		{
-			Id: this.idSearchCount,
-			Name: search,
-			Action: "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='XG.removeSearch(" + this.idSearchCount + ");'></i>"
-		};
-		$("#search_table").addRowData(this.idSearchCount, datarow);
-		return this.idSearchCount++;
 	},
 
 	/**
@@ -606,15 +488,7 @@ var XGBase = Class.create(
 	 */
 	removeSearch: function (guid)
 	{
-		if(guid <= 4)
-		{
-			return;
-		}
-		var data = $("#search_table").getRowData(guid);
-		$.get(this.url.nameUrl(Enum.TCPClientRequest.RemoveSearch, data.Name));
-
-		$("#" + guid).effect("transfer", { to: $("#search-text") }, 500);
-		$('#search_table').delRowData(guid);
+		this.websocket.sendGuid(Enum.Request.RemoveSearch, guid);
 	},
 
 	/**
@@ -624,32 +498,18 @@ var XGBase = Class.create(
 	{
 		var self = this;
 
-		var pack = this.refresh.getRowData('packets_table', guid);
+		var pack = self.getRowData('packets_table', guid);
 		if(pack)
 		{
 			if(!pack.Enabled)
 			{
 				$("#" + guid).effect("transfer", { to: $("#4") }, 500);
-
-				$.get(this.url.guidUrl(Enum.TCPClientRequest.ActivateObject, guid));
-				setTimeout(function() { self.refresh.refreshObject('packets_table', guid); }, 1000);
 			}
 			else
 			{
 				$("#4").effect("transfer", { to: $("#" + guid) }, 500);
-
-				$.get(this.url.guidUrl(Enum.TCPClientRequest.DeactivateObject, guid));
-
-				if (this.idSearch == 3 || this.idSearch == 4)
-				{
-					setTimeout(function() { self.refresh.reloadGrid("bots_table", ""); }, 1000);
-					setTimeout(function() { self.refresh.reloadGrid("packets_table", ""); }, 1000);
-				}
-				else
-				{
-					setTimeout(function() { self.refresh.refreshObject("packets_table", guid); }, 1000);
-				}
 			}
+			self.flipObject(guid, "packets_table");
 		}
 	},
 
@@ -661,18 +521,17 @@ var XGBase = Class.create(
 	{
 		var self = this;
 
-		var obj = this.refresh.getRowData(grid, guid);
+		var obj = self.getRowData(grid, guid);
 		if(obj)
 		{
 			if(!obj.Enabled)
 			{
-				$.get(this.url.guidUrl(Enum.TCPClientRequest.ActivateObject, guid));
+				self.websocket.sendGuid(Enum.Request.ActivateObject, guid);
 			}
 			else
 			{
-				$.get(this.url.guidUrl(Enum.TCPClientRequest.DeactivateObject, guid));
+				self.websocket.sendGuid(Enum.Request.DeactivateObject, guid);
 			}
-			setTimeout(function() { self.refresh.refreshObject(grid, guid); }, 1000);
 		}
 	},
 
@@ -684,6 +543,151 @@ var XGBase = Class.create(
 		$("#" + guid).effect("transfer", { to: $("#4") }, 500);
 
 		var data = this.refresh.getRowData("searches_xg_bitpir_at", guid);
-		$.get(this.url.nameUrl(Enum.TCPClientRequest.ParseXdccLink, data.IrcLink));
+		$.get(this.url.nameUrl(Enum.Request.ParseXdccLink, data.IrcLink));
+	},
+
+	/**
+	 * @param {String} grid
+	 * @param {String} guid
+	 * @return {object}
+	 */
+	getRowData: function (grid, guid)
+	{
+		return $.parseJSON($("#" + grid).getRowData(guid).Object);
+	},
+
+	onWebsocketConnected: function ()
+	{
+		var self = XG;
+
+		self.websocket.send(Enum.Request.GetSearches);
+		self.websocket.send(Enum.Request.GetServers);
+		self.websocket.send(Enum.Request.GetFiles);
+		//self.websocket.send(Enum.Request.GetSnapshots);
+	},
+
+	onWebsocketDisconnected: function ()
+	{
+	},
+
+	onWebsocketMessageReceived: function (json)
+	{
+		var self = XG;
+
+		switch (json.Type)
+		{
+			case Enum.Response.Searches:
+				self.setGridData("search_table", json.Data, true);
+				break;
+			case Enum.Response.SearchAdded:
+				self.addGridItem("search_table", json.Data, true);
+				$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
+				break;
+			case Enum.Response.SearchRemoved:
+				$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
+				self.removeGridItem("search_table", json.Data, true);
+				break;
+
+			case Enum.Response.Servers:
+				self.setGridData("servers_table", json.Data);
+				break;
+			case Enum.Response.ServerAdded:
+				self.addGridItem("servers_table", json.Data);
+				break;
+			case Enum.Response.ServerRemoved:
+				self.removeGridItem("servers_table", json.Data);
+				break;
+			case Enum.Response.ServerChanged:
+				self.updateGridItem("servers_table", json.Data);
+				break;
+
+			case Enum.Response.ChannelsFromServer:
+				self.setGridData("channels_table", json.Data);
+				break;
+			case Enum.Response.ChannelAdded:
+				self.addGridItem("channels_table", json.Data);
+				break;
+			case Enum.Response.ChannelRemoved:
+				self.removeGridItem("channels_table", json.Data);
+				break;
+			case Enum.Response.ChannelChanged:
+				self.updateGridItem("channels_table", json.Data);
+				break;
+
+			case Enum.Response.BotAdded:
+				self.addGridItem("bots_table", json.Data);
+				break;
+			case Enum.Response.BotRemoved:
+				self.removeGridItem("bots_table", json.Data);
+				break;
+			case Enum.Response.BotChanged:
+				self.updateGridItem("bots_table", json.Data);
+				break;
+
+			case Enum.Response.PacketAdded:
+				self.addGridItem("packets_table", json.Data);
+				break;
+			case Enum.Response.PacketRemoved:
+				self.removeGridItem("packets_table", json.Data);
+				break;
+			case Enum.Response.PacketChanged:
+				self.updateGridItem("packets_table", json.Data);
+				break;
+
+			case Enum.Response.SearchBot:
+				self.setGridData("bots_table", json.Data);
+				break;
+			case Enum.Response.SearchPacket:
+				self.setGridData("packets_table", json.Data);
+				break;
+		}
+	},
+
+	setGridData: function (grid, data, skipReload)
+	{
+		var gridElement = $("#" + grid);
+		gridElement.clearGridData();
+		$.each(data, function(i, item)
+		{
+			gridElement.addRowData(item.Guid, item);
+		});
+
+		if (!skipReload)
+		{
+			gridElement.trigger("reloadGrid");
+		}
+	},
+
+	addGridItem: function (grid, item, skipReload)
+	{
+		var gridElement = $("#" + grid);
+		gridElement.addRowData(item.Guid, item);
+
+		if (!skipReload)
+		{
+			gridElement.trigger("reloadGrid");
+		}
+	},
+
+	updateGridItem: function (grid, item, skipReload)
+	{
+		var gridElement = $("#" + grid);
+		gridElement.setRowData(item.Guid, item);
+
+		if (!skipReload)
+		{
+			gridElement.trigger("reloadGrid");
+		}
+	},
+
+	removeGridItem: function (grid, item, skipReload)
+	{
+		var gridElement = $("#" + grid);
+		gridElement.delRowData(item.Guid);
+
+		if (!skipReload)
+		{
+			gridElement.trigger("reloadGrid");
+		}
 	}
 });

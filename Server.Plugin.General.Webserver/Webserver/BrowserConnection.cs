@@ -30,9 +30,9 @@ using System.Text;
 
 using log4net;
 
-namespace XG.Server.Plugin.General.Webserver
+namespace XG.Server.Plugin.General.Webserver.Webserver
 {
-	public class BrowserConnection : APlugin
+	public class BrowserConnection : SaltedPassword
 	{
 		#region VARIABLES
 
@@ -41,7 +41,6 @@ namespace XG.Server.Plugin.General.Webserver
 		public HttpListenerContext Context { get; set; }
 
 		public FileLoader FileLoader;
-		public string Salt;
 
 		#endregion
 
@@ -55,12 +54,26 @@ namespace XG.Server.Plugin.General.Webserver
 			try
 			{
 #endif
+				// check for password
+				if (str.StartsWith("/?password="))
+				{
+					if (str.Substring(11) == Password)
+					{
+						WriteToStream("");
+					}
+					else
+					{
+						Context.Response.StatusCode = 403;
+						Context.Response.Close();
+						return;
+					}
+				}
 				// serve the favicon
-				if (str == "/favicon.ico")
+				else if (str == "/favicon.ico")
 				{
 					WriteToStream(FileLoader.LoadImage(str));
 				}
-					// load a file
+				// load a file
 				else
 				{
 					if (str.Contains("?"))

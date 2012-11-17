@@ -21,13 +21,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 using System;
-using System.Runtime.Serialization;
 
 namespace XG.Core
 {
 	[Serializable]
-	[DataContract]
+	[JsonObject(MemberSerialization.OptIn)]
 	public class Packet : AObject
 	{
 		#region VARIABLES
@@ -41,7 +43,7 @@ namespace XG.Core
 		[NonSerialized]
 		FilePart _part;
 
-		[DataMember]
+		[JsonProperty]
 		public FilePart Part
 		{
 			get { return _part; }
@@ -64,7 +66,7 @@ namespace XG.Core
 
 		int _id = -1;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public int Id
 		{
@@ -74,7 +76,7 @@ namespace XG.Core
 
 		Int64 _size;
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public Int64 Size
 		{
@@ -84,7 +86,7 @@ namespace XG.Core
 
 		Int64 _realSize;
 
-		[DataMember]
+		[JsonProperty]
 		public Int64 RealSize
 		{
 			get { return _realSize; }
@@ -92,23 +94,24 @@ namespace XG.Core
 		}
 
 		string _realName = "";
-
+		
+		[JsonProperty]
 		public string RealName
 		{
 			get { return _realName; }
 			set { SetProperty(ref _realName, value); }
 		}
-
-		[DataMember(Name = "RealName")]
+/*
+		[JsonProperty(PropertyName = "RealName")]
 		public string RealNameAscii
 		{
 			get { return RealName.ToAscii(); }
 			set { RealName = value; }
 		}
-
+*/
 		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public DateTime LastUpdated
 		{
@@ -118,7 +121,7 @@ namespace XG.Core
 
 		DateTime _lastMentioned = DateTime.MinValue.ToUniversalTime();
 
-		[DataMember]
+		[JsonProperty]
 		[MySql]
 		public DateTime LastMentioned
 		{
@@ -126,7 +129,7 @@ namespace XG.Core
 			set { SetProperty(ref _lastMentioned, value); }
 		}
 
-		[DataMember]
+		[JsonProperty]
 		public bool Next
 		{
 			get

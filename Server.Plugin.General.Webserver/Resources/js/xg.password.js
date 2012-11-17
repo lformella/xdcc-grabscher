@@ -75,7 +75,7 @@ var XGPassword = Class.create(
 	{
 		var passwordElement = $("#password");
 		var saltElement = $("#salt");
-		var password = CryptoJS.SHA256(saltElement.val() + passwordElement.val() + saltElement.val());
+		var password = encodeURIComponent(CryptoJS.SHA256(saltElement.val() + passwordElement.val() + saltElement.val()));
 
 		if (this.checkPassword(password))
 		{
@@ -83,6 +83,7 @@ var XGPassword = Class.create(
 			dialog.dialog('close');
 
 			this.url.password = password;
+			this.password = password;
 			this.loadGrid();
 		}
 		else
@@ -97,9 +98,10 @@ var XGPassword = Class.create(
 		var cookie = new XGCookie();
 		var formatter = new XGFormatter(helper);
 		var refresh = new XGRefresh(this.url, helper);
+		var websocket = new XGWebsocket("localhost", 5557, this.password);
 
 		// load grid
-		new XGBase(this.url, helper, refresh, cookie, formatter);
+		new XGBase(this.url, helper, refresh, cookie, formatter, websocket);
 
 		// resize
 		var resize = new XGResize(refresh);
@@ -114,7 +116,7 @@ var XGPassword = Class.create(
 
 		var res = false;
 		$.ajax({
-			url: self.url.jsonUrl(Enum.TCPClientRequest.Version + "&password=" + encodeURIComponent(password)),
+			url: "?password=" + password,
 			success: function()
 			{
 				res = true;

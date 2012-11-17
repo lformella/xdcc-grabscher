@@ -23,10 +23,6 @@
     <File subtype="Directory" buildaction="Compile" name="." />
     <File subtype="Code" buildaction="Compile" name="Plugin.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
-    <File subtype="Code" buildaction="Compile" name="Json.cs" />
-    <File subtype="Directory" buildaction="Compile" name="JQGrid" />
-    <File subtype="Code" buildaction="Compile" name="JQGrid/Object.cs" />
-    <File subtype="Code" buildaction="Compile" name="JQGrid/Objects.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/index.html" resource_id="XG.Server.Plugin.General.Webserver.Resources.index.html" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.jqGrid.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.jqGrid.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.min.js" />
@@ -101,9 +97,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.ttf" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.ttf" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.woff" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.woff" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/fontello.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.fontello.css" />
-    <File subtype="Code" buildaction="Compile" name="FileLoader.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
-    <File subtype="Code" buildaction="Compile" name="BrowserConnection.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.js" />
     <File subtype="Directory" buildaction="Compile" name="Flot" />
     <File subtype="Code" buildaction="Compile" name="Flot/Object.cs" />
@@ -117,15 +111,22 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.url.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.url.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.axislabels.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
-    <File subtype="Directory" buildaction="Compile" name="WebSocket" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Request.cs" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Server.cs" />
-    <File subtype="Directory" buildaction="Compile" name="WebSocket/Response" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Base.cs" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Object.cs" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Snapshots.cs" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Objects.cs" />
-    <File subtype="Code" buildaction="Compile" name="WebSocket/Response/Statistics.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Websocket" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Request.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Server.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Websocket/Response" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Base.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Object.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Snapshots.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Objects.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Statistics.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/User.cs" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Snapshot.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Webserver" />
+    <File subtype="Code" buildaction="Compile" name="Webserver/BrowserConnection.cs" />
+    <File subtype="Code" buildaction="Compile" name="Webserver/Server.cs" />
+    <File subtype="Code" buildaction="Compile" name="SaltedPassword.cs" />
+    <File subtype="Code" buildaction="Compile" name="Webserver/FileLoader.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -136,6 +137,7 @@
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="Lib/Alchemy.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="Lib/Fleck.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../Lib/Newtonsoft.Json.dll" />
   </References>
 </Project>

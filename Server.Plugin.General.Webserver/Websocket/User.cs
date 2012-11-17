@@ -1,5 +1,5 @@
 //
-//  Statistics.cs
+//  User.cs
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,28 +21,21 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using System.Collections.Generic;
+using Fleck;
 
-namespace XG.Server.Plugin.General.Webserver.Response
+using System;
+
+namespace XG.Server.Plugin.General.Webserver.Websocket
 {
-	public class Statistics : Base
+	public class User
 	{
-		#region ENUMS
-
-		public enum Types
-		{
-			None = 0,
-
-			Statistics = 61
-		}
-
-		#endregion
-
 		#region VARIABLES
 
-		public Types Type { get; set; }
+		public IWebSocketConnection Connection { get; set; }
 
-		public IEnumerable<int> Data { get; set; }
+		public Guid LastSearch { get; set; }
+
+		public bool IgnoreOfflineBots { get; set; }
 
 		#endregion
 	}

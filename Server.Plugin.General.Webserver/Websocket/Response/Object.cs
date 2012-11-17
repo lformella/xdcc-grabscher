@@ -1,5 +1,5 @@
 //
-//  Snapshots.cs
+//  Object.cs
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,28 +21,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace XG.Server.Plugin.General.Webserver.Response
+using XG.Core;
+
+namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
-	public class Snapshots : Base
+	[JsonObject(MemberSerialization.OptIn)]
+	public class Object : Base
 	{
-		#region ENUMS
-
-		public enum Types
-		{
-			None = 0,
-
-			Snapshots = 41
-		}
-
-		#endregion
-
 		#region VARIABLES
-
-		public Types Type { get; set; }
-
-		public IEnumerable<Snapshots> Data { get; set; }
+		
+		[JsonProperty]
+		public AObject Data { get; set; }
 
 		#endregion
 	}

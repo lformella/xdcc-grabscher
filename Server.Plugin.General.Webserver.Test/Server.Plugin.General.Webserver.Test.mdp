@@ -21,5 +21,6 @@
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="nunit.framework" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Webserver" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../Lib/Newtonsoft.Json.dll" />
   </References>
 </Project>

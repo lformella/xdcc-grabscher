@@ -1,5 +1,5 @@
 //
-//  Objects.cs
+//  Base.cs
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,52 +21,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using System.Collections.Generic;
-
-using XG.Core;
-
-namespace XG.Server.Plugin.General.Webserver.Response
+namespace XG.Server.Plugin.General.Webserver
 {
-	public class Objects : Base
+	public class SaltedPassword : APlugin
 	{
-		#region ENUMS
+		public string Salt { get; set; }
 
-		public enum Types
-		{
-			None = 0,
-
-			SearchPacket = 21,
-			SearchBot = 22,
-
-			Servers = 23,
-			ChannelsFromServer = 24,
-			PacketsFromBot = 25,
-
-			Files = 26,
-			Object = 27,
-			Searches = 28
-		}
-
-		#endregion
-
-		#region VARIABLES
-
-		public Types Type { get; set; }
-
-		public IEnumerable<AObject> Data { get; set; }
-
-		public int Page { get; set; }
-
-		public int Total { get; set; }
-
-		public int Rows { get; set; }
-
-		#endregion
-
-		public Objects()
-		{
-			Data = new List<AObject>();
-		}
+		public string Password { get; set; }
 	}
 }
 

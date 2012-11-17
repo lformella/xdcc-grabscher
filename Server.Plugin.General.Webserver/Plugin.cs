@@ -22,9 +22,9 @@
 //  
 
 using System;
-using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Text;
 
 using log4net;
 
@@ -34,15 +34,11 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		Webserver.Server _server;
 
-		HttpListener _listener;
-
-		WebSocket.Server _webSocket;
+		Websocket.Server _socket;
 
 		readonly string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(BitConverter.GetBytes(new Random().Next()))).Replace("-", "");
-
-		bool _allowRunning = true;
 
 		#endregion
 
@@ -50,80 +46,38 @@ namespace XG.Server.Plugin.General.Webserver
 
 		protected override void StartRun()
 		{
-			_listener = new HttpListener();
+			byte[] inputBytes = Encoding.UTF8.GetBytes(_salt + Settings.Instance.Password + _salt);
+			byte[] hashedBytes = new SHA256Managed().ComputeHash(inputBytes);
+			string passwortHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 
-			_webSocket = new WebSocket.Server
+			_server = new Webserver.Server
 			{
+				Servers = Servers,
+				Files = Files,
+				Searches = Searches,
+				Snapshots = Snapshots,
+				Password = passwortHash,
 				Salt = _salt
 			};
+			_server.Start();
 
-			_webSocket.Start();
-#if !UNSAFE
-			try
+			_socket = new Websocket.Server
 			{
-#endif
-				_listener.Prefixes.Add("http://*:" + (Settings.Instance.WebServerPort) + "/");
-				try
-				{
-					_listener.Start();
-				}
-				catch (HttpListenerException ex)
-				{
-#if WINDOWS
-					if (ex.NativeErrorCode == 5)
-					{
-						Log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
-					}
-#endif
-					throw;
-				}
-
-				_webSocket.Start();
-
-				var fileLoader = new FileLoader {Salt = _salt};
-
-				while (_allowRunning)
-				{
-#if !UNSAFE
-					try
-					{
-#endif
-						var connection = new BrowserConnection
-						{
-							Context = _listener.GetContext(),
-							Servers = Servers,
-							Files = Files,
-							Searches = Searches,
-							Snapshots = Snapshots,
-							FileLoader = fileLoader,
-							Salt = _salt
-						};
-
-						connection.Start();
-#if !UNSAFE
-					}
-					catch (HttpListenerException)
-					{
-						// this is ok
-					}
-#endif
-				}
-#if !UNSAFE
-			}
-			catch (HttpListenerException)
-			{
-				// this is ok
-			}
-#endif
+				Servers = Servers,
+				Files = Files,
+				Searches = Searches,
+				Snapshots = Snapshots,
+				Password = passwortHash,
+				Salt = _salt
+			};
+			_socket.Start();
 		}
 
 		protected override void StopRun()
 		{
-			_allowRunning = false;
+			_socket.Stop();
 
-			_webSocket.Stop();
-
-			_listener.Close();
+			_server.Stop();
 		}
 
 		#endregion
