@@ -31,7 +31,6 @@ using System.Linq;
 using System.Reflection;
 
 using XG.Core;
-using XG.Server.Plugin.General.Webserver.Websocket.Response;
 
 using log4net;
 
@@ -46,7 +45,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		WebSocketServer _webSocket;
 		static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
 		{
-			DateFormatHandling = DateFormatHandling.IsoDateFormat,
+			DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
 			DateParseHandling = DateParseHandling.DateTime,
 			DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
 		};
@@ -80,35 +79,40 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			var response = new Response.Object
+			var response = new Response
 			{
-				Type = Base.Types.ObjectAdded,
-				Data = aObj,
-				DataType = aObj.GetType()
+				Type = Response.Types.ObjectAdded,
+				Data = aObj
 			};
 			Broadcast(response);
 		}
 
 		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			var response = new Response.Object
+			var response = new Response
 			{
-				Type = Base.Types.ObjectRemoved,
-				Data = aObj,
-				DataType = aObj.GetType()
+				Type = Response.Types.ObjectRemoved,
+				Data = aObj
 			};
 			Broadcast(response);
 		}
 
 		protected override void ObjectChanged(AObject aObj)
 		{
-			var response = new Response.Object
+			var response = new Response
 			{
-				Type = Base.Types.ObjectChanged,
-				Data = aObj,
-				DataType = aObj.GetType()
+				Type = Response.Types.ObjectChanged,
+				Data = aObj
 			};
 			Broadcast(response);
+
+			// if a part changed dispatch bots and packets, too
+			if (aObj is FilePart)
+			{
+				var part = aObj as FilePart;
+				ObjectChanged(part.Packet);
+				ObjectChanged(part.Packet.Parent);
+			}
 		}
 
 		protected override void ObjectEnabledChanged(AObject aObj)
@@ -146,13 +150,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectChanged(aObj);
 		}
 
-		protected override void SnapshotAdded(Core.Snapshot aSnap)
+		protected override void SnapshotAdded(Snapshot aSnap)
 		{
-			var response = new Response.Snapshots
+			var response = new Response
 			{
-				Type = Base.Types.Snapshots,
-				Data = Snapshots2Flot(Snapshots),
-				DataType = aSnap.GetType()
+				Type = Response.Types.Snapshots,
+				Data = Snapshots2Flot(Snapshots)
 			};
 			Broadcast(response);
 		}
@@ -231,16 +234,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						currentUser.IgnoreOfflineBots = request.IgnoreOfflineBots;
 
 						IEnumerable<Packet> packets = FilteredPackets(AllPackets(request.IgnoreOfflineBots), request.Guid);
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.SearchPacket,
+							Type = Response.Types.SearchPacket,
 							Data = packets
 						});
 
 						IEnumerable<Bot> bots = FilteredBots(packets);
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.SearchBot,
+							Type = Response.Types.SearchBot,
 							Data = bots
 						});
 						break;
@@ -267,25 +270,25 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						searches.Add(new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000004"), Name = "Enabled Packets" });
 						searches.AddRange(Searches.All);
 
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.Searches,
+							Type = Response.Types.Searches,
 							Data = searches
 						});
 						break;
 
 					case Request.Types.Servers:
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.Servers,
+							Type = Response.Types.Servers,
 							Data = Servers.All
 						});
 						break;
 
 					case Request.Types.ChannelsFromServer:
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.ChannelsFromServer,
+							Type = Response.Types.ChannelsFromServer,
 							Data = from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel
 						});
 						break;
@@ -293,9 +296,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					case Request.Types.PacketsFromBot:
 						currentUser.LastSearch = request.Guid;
 
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.PacketsFromBot,
+							Type = Response.Types.PacketsFromBot,
 							Data = from server in Servers.All
 									from channel in server.Channels
 									from bot in channel.Bots
@@ -310,17 +313,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Snapshots:
-						Unicast(aContext, new Response.Snapshots
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.Snapshots,
+							Type = Response.Types.Snapshots,
 							Data = Snapshots2Flot(Snapshots)
 						});
 						break;
 
 					case Request.Types.Files:
-						Unicast(aContext, new Response.Objects
+						Unicast(aContext, new Response
 						{
-							Type = Base.Types.Files,
+							Type = Response.Types.Files,
 							Data = Files.All
 						});
 						break;
@@ -380,39 +383,34 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 #endif
 		}
 
-		void Broadcast(Base aResponse)
+		void Broadcast(Response aResponse)
 		{
 			foreach (var user in _users.ToArray())
 			{
-				if (user.LastSearch != Guid.Empty && aResponse is Response.Object)
+				if (aResponse.Data.GetType() == typeof(Bot))
 				{
-					var tResponse = aResponse as Response.Object;
-
-					if (aResponse.DataType == typeof(Bot))
+					var bots = FilteredBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
+					if (!bots.Contains(aResponse.Data as Bot))
 					{
-						var bots = FilteredBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
-						if (!bots.Contains(tResponse.Data))
+						break;
+					}
+				}
+
+				if (aResponse.Data.GetType() == typeof(Packet))
+				{
+					if (user.LastRequest == Request.Types.PacketsFromBot)
+					{
+						if ((aResponse.Data as Packet).ParentGuid != user.LastSearch)
 						{
 							break;
 						}
 					}
-
-					if (aResponse.DataType == typeof(Packet))
+					else
 					{
-						if (user.LastRequest == Request.Types.PacketsFromBot)
+						var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
+						if (!packets.Contains(aResponse.Data as Packet))
 						{
-							if (tResponse.Data.ParentGuid != user.LastSearch)
-							{
-								break;
-							}
-						}
-						else
-						{
-							var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
-							if (!packets.Contains(tResponse.Data))
-							{
-								break;
-							}
+							break;
 						}
 					}
 				}
@@ -421,7 +419,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 		}
 
-		void Unicast(IWebSocketConnection aConnection, Base aResponse)
+		void Unicast(IWebSocketConnection aConnection, Response aResponse)
 		{
 			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
 

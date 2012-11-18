@@ -22,25 +22,11 @@
 //  
 
 using System;
-using System.Text;
 
 namespace XG.Core
 {
 	public static class Extensions
 	{
-		public static string ToAscii(this string aString)
-		{
-			var output = new StringBuilder(string.Empty);
-			if (!string.IsNullOrEmpty(aString))
-			{
-				for (int i = 0; i < aString.Length; i++)
-				{
-					output.AppendFormat("&#{0};", Encoding.ASCII.GetBytes(aString.Substring(i, 1))[0]);
-				}
-			}
-			return output.ToString();
-		}
-
 		public static Int64 ToTimestamp(this DateTime aDate)
 		{
 			var date = new DateTime(1970, 1, 1);

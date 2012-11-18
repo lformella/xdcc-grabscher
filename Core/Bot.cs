@@ -22,7 +22,6 @@
 //  
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 using System;
 using System.Collections.Generic;
@@ -201,7 +200,6 @@ namespace XG.Core
 		public double Speed
 		{
 			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion

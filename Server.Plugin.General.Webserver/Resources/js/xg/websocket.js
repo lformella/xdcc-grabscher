@@ -23,9 +23,11 @@
 
 var XGWebsocket = Class.create(
 {
-	initialize: function(url, port, password)
+	initialize: function(cookie, url, port, password)
 	{
 		var self = this;
+
+		this.cookie = cookie;
 
 		this.onConnected = 0;
 		this.onDisconnected = 0;
@@ -88,7 +90,8 @@ var XGWebsocket = Class.create(
 	{
 		return {
 			"Password": this.Password,
-			"Type": Type
+			"Type": Type,
+			"IgnoreOfflineBots": this.cookie.getCookie("show_offline_bots", false)
 		};
 	},
 

@@ -62,12 +62,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			CloseServer = 18
 		}
 
-		public enum SortModes
-		{
-			Asc,
-			Desc
-		}
-
 		#endregion
 
 		#region VARIABLES

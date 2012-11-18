@@ -24,51 +24,7 @@
     <File subtype="Code" buildaction="Compile" name="Plugin.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/index.html" resource_id="XG.Server.Plugin.General.Webserver.Resources.index.html" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.jqGrid.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.jqGrid.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery-ui.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.class.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.class.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.formatter.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.formatter.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.helper.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.helper.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-bg.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-bg.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-bg1251.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-bg1251.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-cat.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-cat.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-cs.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-cd.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-cn.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-cn.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-da.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-da.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-de.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-el.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-el.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-en.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-es.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-es.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-fa.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-fa.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-fi.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-fi.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-fr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-fr.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-gl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-gl.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-he.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-he.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-hu.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-hu.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-is.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-is.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-it.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-it.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ja.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-ja.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-nl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-nl.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-no.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-no.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-pl.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pt.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-pt.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-pt-br.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-pt-br.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ro.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-ro.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ru.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-ru.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sk.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-sk.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-sr.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sv.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-sv.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-tr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-tr.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ua.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-ua.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-ar.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-ar.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-lt.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-lt.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-mne.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-mne.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-th.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-th.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg.locale-de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.locale-de.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/ui.jqgrid.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.ui.jqgrid.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.cookie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.cookie.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/jquery-ui.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.jquery-ui.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/layout-default.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.layout-default.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_diagonals-thick_90_eeeeee_40x40.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
@@ -85,48 +41,123 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_949494_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_949494_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_969696_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_969696_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_ffffff_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_ffffff_256x240.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.layout.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.layout.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-hr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-hr.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-hr1250.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-hr1250.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/grid.locale-sr-latin.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.grid.locale-sr-latin.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/xg.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.xg.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/json2.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.json2.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/sha256.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.sha256.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.eot" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.eot" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.svg" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.svg" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.ttf" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.ttf" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.woff" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.woff" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/fontello.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.fontello.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.js" />
     <File subtype="Directory" buildaction="Compile" name="Flot" />
     <File subtype="Code" buildaction="Compile" name="Flot/Object.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/reset.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.reset.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg.locale-en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.locale-en.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.cookie.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.cookie.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.enum.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.enum.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.password.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.password.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.refresh.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.refresh.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.axislabels.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
     <File subtype="Directory" buildaction="Compile" name="Websocket" />
     <File subtype="Code" buildaction="Compile" name="Websocket/Request.cs" />
     <File subtype="Code" buildaction="Compile" name="Websocket/Server.cs" />
-    <File subtype="Directory" buildaction="Compile" name="Websocket/Response" />
-    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Base.cs" />
-    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Object.cs" />
-    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Snapshots.cs" />
-    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Objects.cs" />
-    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Statistics.cs" />
     <File subtype="Code" buildaction="Compile" name="Websocket/User.cs" />
-    <File subtype="Code" buildaction="Compile" name="Websocket/Response/Snapshot.cs" />
     <File subtype="Directory" buildaction="Compile" name="Webserver" />
     <File subtype="Code" buildaction="Compile" name="Webserver/BrowserConnection.cs" />
     <File subtype="Code" buildaction="Compile" name="Webserver/Server.cs" />
     <File subtype="Code" buildaction="Compile" name="SaltedPassword.cs" />
     <File subtype="Code" buildaction="Compile" name="Webserver/FileLoader.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.websocket.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.websocket.js" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/Response.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n/jqgrid" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-ar.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-ar.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-bg.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-bg.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-bg1251.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-bg1251.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-cat.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-cat.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-cn.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-cn.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-cs.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-cs.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-da.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-da.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-de.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-el.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-el.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-en.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-es.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-es.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-fa.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-fa.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-fi.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-fi.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-fr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-fr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-gl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-gl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-he.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-he.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-hr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-hr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-hr1250.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-hr1250.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-hu.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-hu.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-is.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-is.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-it.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-it.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-ja.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-ja.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-lt.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-lt.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-mne.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-mne.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-nl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-nl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-no.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-no.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-pl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-pl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-pt-br.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-pt-br.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-pt.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-pt.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-ro.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-ro.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-ru.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-ru.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-sk.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-sk.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-sr-latin.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-sr-latin.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-sr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-sr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-sv.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-sv.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-th.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-th.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-tr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-tr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/jqgrid/grid.locale-ua.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.jqgrid.grid.locale-ua.js" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/js/external" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.class.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.class.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.cookie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.cookie.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.axislabels.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.jqGrid.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.jqGrid.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.layout.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.layout.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/json2.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.json2.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/moment.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.moment.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/sha256.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.sha256.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.de.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg/de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.de.js" />
+    <File subtype="Directory" buildaction="Compile" name="Resources/js/xg" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/cookie.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.cookie.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/enum.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.enum.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/formatter.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.formatter.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/helper.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.helper.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/main.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.main.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/password.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.password.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/refresh.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.refresh.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/websocket.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.websocket.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/bg.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.bg.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/ca.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.ca.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/cv.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.cv.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/da.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.da.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/en-ca.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.en-ca.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/en-gb.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.en-gb.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/es.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.es.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/et.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.et.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/eu.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.eu.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/fi.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.fi.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/fr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.fr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/fr-ca.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.fr-ca.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/gl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.gl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/he.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.he.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/hu.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.hu.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/is.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.is.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/it.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.it.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/ja.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.ja.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/jp.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.jp.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/ko.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.ko.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/kr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.kr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/nb.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.nb.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/nl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.nl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/pl.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.pl.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/pt.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.pt.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/pt-br.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.pt-br.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/ro.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.ro.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/ru.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.ru.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/sv.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.sv.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/tr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.tr.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-cn.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-cn.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-tw.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-tw.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

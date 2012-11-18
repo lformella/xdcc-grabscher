@@ -26,14 +26,8 @@ using Newtonsoft.Json;
 namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class Snapshot : Base
+	public class Snapshot : Response
 	{
-		#region VARIABLES
-		
-		[JsonProperty]
-		public Flot.Object Data { get; set; }
-
-		#endregion
 	}
 }
 

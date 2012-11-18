@@ -28,14 +28,8 @@ using System.Collections.Generic;
 namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class Snapshots : Base
+	public class Snapshots : Response
 	{
-		#region VARIABLES
-		
-		[JsonProperty]
-		public IEnumerable<Flot.Object> Data { get; set; }
-
-		#endregion
 	}
 }
 

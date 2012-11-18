@@ -85,11 +85,11 @@ var XGPassword = Class.create(
 
 	loadGrid: function ()
 	{
-		var helper = new XGHelper();
 		var cookie = new XGCookie();
+		var helper = new XGHelper(cookie);
 		var formatter = new XGFormatter(helper);
 		var refresh = new XGRefresh(helper);
-		var websocket = new XGWebsocket("localhost", 5557, this.password);
+		var websocket = new XGWebsocket(cookie, "localhost", 5557, this.password);
 
 		// load grid
 		new XGBase(helper, refresh, cookie, formatter, websocket);

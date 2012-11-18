@@ -68,9 +68,39 @@ var XGBase = Class.create(
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Name')],
 			colModel: [
-				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatServerIcon(r, "XG.flipObject(\"" + r.Guid + "\", \"servers_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
-				{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:216, editable:true, fixed:false}
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true
+				},
+				{
+					name: 'Icon',
+					index: 'Icon',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatServerIcon(obj, "XG.flipObject(\"" + obj.Guid + "\", \"servers_table\");");
+					},
+					width: 36,
+					sortable: false,
+					classes: "icon-cell"
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return obj.Name;
+					},
+					width: 216,
+					editable: true,
+					fixed: false
+				}
 			],
 			onSelectRow: function(guid)
 			{
@@ -126,9 +156,39 @@ var XGBase = Class.create(
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Name')],
 			colModel: [
-				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatChannelIcon(r, "XG.flipObject(\"" + r.Guid + "\", \"channels_table\");"); }, width:36, sortable: false, classes: "icon-cell"},
-				{name:'Name',	index:'Name',	formatter: function(c, o, r) { return r.Name; }, width:216, editable:true, fixed:false}
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true
+				},
+				{
+					name: 'Icon',
+					index: 'Icon',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatChannelIcon(obj, "XG.flipObject(\"" + obj.Guid + "\", \"channels_table\");");
+					},
+					width: 36,
+					sortable: false,
+					classes: "icon-cell"
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return obj.Name;
+					},
+					width: 216,
+					editable: true,
+					fixed: false
+				}
 			],
 			onSortCol: function(index, iCol, sortorder)
 			{
@@ -178,15 +238,127 @@ var XGBase = Class.create(
 			cmTemplate:{fixed:true},
 			colNames: ['', '', _('Name'), _('Speed'), _('Q-Pos'), _('Q-Time'), _('max Speed'), _('Slots'), _('Queue')],
 			colModel: [
-				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return self.formatter.formatBotIcon(r); }, width:32, sortable: false, classes: "icon-cell"},
-				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return self.formatter.formatBotName(r); }, fixed:false},
-				{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return self.helper.speed2Human(r.Speed); }, width:70, align:"right"},
-				{name:'QueuePosition',	index:'QueuePosition',	formatter: function(c, o, r) { return r.QueuePosition > 0 ? r.QueuePosition : "&nbsp;"; }, width:70, align:"right"},
-				{name:'QueueTime',		index:'QueueTime',		formatter: function(c, o, r) { return self.helper.time2Human(r.QueueTime); }, width:70, align:"right"},
-				{name:'InfoSpeedMax',	index:'InfoSpeedMax',	formatter: function(c, o, r) { return self.formatter.formatBotSpeed(r); }, width:100, align:"right"},
-				{name:'InfoSlotTotal',	index:'InfoSlotTotal',	formatter: function(c, o, r) { return self.formatter.formatBotSlots(r); }, width:60, align:"right"},
-				{name:'InfoQueueTotal',	index:'InfoQueueTotal',	formatter: function(c, o, r) { return self.formatter.formatBotQueue(r); }, width:60, align:"right"}
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true
+				},
+				{
+					name: 'Icon',
+					index: 'Icon',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatBotIcon(obj);
+					},
+					width: 32,
+					sortable: false,
+					classes: "icon-cell"
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatBotName(obj);
+					},
+					fixed: false
+				},
+				{
+					name: 'Speed',
+					index: 'Speed',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.helper.speed2Human(obj.Speed);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Speed;
+					},
+					width: 70,
+					align: "right"
+				},
+				{
+					name: 'QueuePosition',
+					index: 'QueuePosition',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return obj.QueuePosition > 0 ? obj.QueuePosition : "&nbsp;";
+					},
+					sorttype: function (c, o)
+					{
+						return o.QueuePosition > 0 ? o.QueuePosition : 0;
+					},
+					width: 70,
+					align: "right"
+				},
+				{
+					name: 'QueueTime',
+					index: 'QueueTime',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.helper.time2Human(obj.QueueTime);
+					},
+					sorttype: function (c, o)
+					{
+						return o.QueueTime;
+					},
+					width: 70,
+					align: "right"
+				},
+				{
+					name: 'InfoSpeed',
+					index: 'InfoSpeed',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatBotSpeed(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.InfoSpeedCurrent > 0 ? o.InfoSpeedCurrent : 0;
+					},
+					width: 100,
+					align: "right"
+				},
+				{
+					name: 'InfoSlot',
+					index: 'InfoSlot',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatBotSlots(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.InfoSlotCurrent;
+					},
+					width: 60,
+					align: "right"
+				},
+				{
+					name: 'InfoQueue',
+					index: 'InfoQueue',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatBotQueue(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.InfoQueueCurrent;
+					},
+					width: 60,
+					align: "right"
+				}
 			],
 			onSelectRow: function(guid)
 			{
@@ -221,14 +393,114 @@ var XGBase = Class.create(
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Id'), _('Name'), _('Size'), _('Speed'), _('Time'), _('Updated')],
 			colModel: [
-				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return self.formatter.formatPacketIcon(r, "XG.flipPacket(\"" + o.rowId + "\");"); }, width:36, sortable: false, classes: "icon-cell"},
-				{name:'Id',				index:'Id',				formatter: function(c, o, r) { return self.formatter.formatPacketId(r); }, width:40, align:"right"},
-				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return self.formatter.formatPacketName(r); }, fixed:false},
-				{name:'Size',			index:'Size',			formatter: function(c, o, r) { return self.formatter.formatPacketSize(r); }, width:70, align:"right"},
-				{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return self.formatter.formatPacketSpeed(r); }, width:70, align:"right"},
-				{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return self.formatter.formatPacketTimeMissing(r) }, width:90, align:"right"},
-				{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"}
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true},
+				{
+					name: 'Icon',
+					index: 'Icon',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\");");
+					},
+					width: 36,
+					sortable: false,
+					classes: "icon-cell"
+				},
+				{
+					name: 'Id',
+					index: 'Id',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketId(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Id;
+					},
+					width: 40,
+					align: "right"
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketName(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.RealName != undefined && o.RealName != "" ? o.RealName : o.Name;
+					},
+					fixed: false
+				},
+				{
+					name: 'Size',
+					index: 'Size',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketSize(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.RealSize > 0 ? o.RealSize : o.Size;
+					},
+					width: 70,
+					align: "right"},
+				{
+					name: 'Speed',
+					index: 'Speed',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketSpeed(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Part != null ? o.Part.Speed : 0;
+					},
+					width: 70,
+					align: "right"
+				},
+				{
+					name: 'TimeMissing',
+					index: 'TimeMissing',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketTimeMissing(obj)
+					},
+					sorttype: function (c, o)
+					{
+						return o.Part != null ? o.Part.TimeMissing : 0;
+					},
+					width: 90,
+					align: "right"
+				},
+				{
+					name: 'LastUpdated',
+					index: 'LastUpdated',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.helper.date2Human(obj.LastUpdated);
+					},
+					sorttype: function (c, o)
+					{
+						return moment(o.LastUpdated).valueOf();
+					},
+					width: 135,
+					align: "right"
+				}
 			],
 			onSelectRow: function(guid)
 			{
@@ -266,10 +538,49 @@ var XGBase = Class.create(
 			cmTemplate: {fixed:true},
 			colNames: ['', '', '', ''],
 			colModel: [
-				{name:'Object',	index:'Object',	formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',	index:'Icon',	formatter: function(c, o, r) { return self.formatter.formatSearchIcon(r); }, width:26, sortable: false, classes: "icon-cell"},
-				{name:'Name',	index:'Name',	formatter: function(c, o, r) { return _(r.Name); }, fixed: false, sortable: false},
-				{name:'Action',	index:'Action',	formatter: function(c, o, r) { return self.formatter.formatSearchAction(r); }, width:18, sortable: false}
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true
+				},
+				{
+					name: 'Icon',
+					index: 'Icon',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatSearchIcon(obj);
+					},
+					width: 26,
+					sortable: false,
+					classes: "icon-cell"
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return _(obj.Name);
+					},
+					fixed: false,
+					sortable: false
+				},
+				{
+					name: 'Action',
+					index: 'Action',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatSearchAction(obj);
+					},
+					width: 18,
+					sortable: false
+				}
 			],
 			onSelectRow: function(guid)
 			{
@@ -318,18 +629,102 @@ var XGBase = Class.create(
 			url: "",
 			datatype:'jsonp',
 			cmTemplate:{fixed:true},
-			colNames:['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed'), ''],
-			colModel:[
-				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Connected',		index:'Connected',		formatter: function(c, o, r) { return self.formatter.formatPacketIcon(r, "XG.downloadLink(\"" + o.rowId + "\");", true); }, width:24, sortable: false},
-				{name:'Id',				index:'Id',				formatter: function(c, o, r) { return self.formatter.formatPacketId(r); }, width:38, align:"right"},
-				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return self.formatter.formatPacketName(r); }, fixed:false},
-				{name:'LastMentioned',	index:'LastMentioned',	formatter: function(c, o, r) { return self.helper.timeStampToHuman(r.LastMentioned); }, width:140, align:"right"},
-				{name:'Size',			index:'Size',			formatter: function(c, o, r) { return self.helper.size2Human(r.Size); }, width:60, align:"right"},
-				{name:'BotName',		index:'BotName',		formatter: function(c, o, r) { return r.BotName; }, width:160},
-				{name:'BotSpeed',		index:'BotSpeed',		formatter: function(c, o, r) { return self.helper.speed2Human(r.BotSpeed); }, width:80, align:"right"},
-
-				{name:'IrcLink',		index:'IrcLink',		formatter: function(c, o, r) { return r.IrcLink; }, hidden:true}
+			colNames: ['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed'), ''],
+			colModel: [
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true
+				},
+				{
+					name: 'Connected',
+					index: 'Connected',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketIcon(obj, "XG.downloadLink(\"" + obj.rowId + "\");", true);
+					},
+					width: 24,
+					sortable: false
+				},
+				{
+					name: 'Id',
+					index: 'Id',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketId(obj);
+					},
+					width: 38,
+					align: "right"
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatPacketName(obj);
+					},
+					fixed: false
+				},
+				{
+					name: 'LastMentioned',
+					index: 'LastMentioned',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.helper.timeStampToHuman(obj.LastMentioned);
+					},
+					width: 140,
+					align: "right"
+				},
+				{
+					name: 'Size',
+					index: 'Size',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.helper.size2Human(obj.Size);
+					},
+					width: 60,
+					align: "right"
+				},
+				{
+					name: 'BotName',
+					index: 'BotName',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return obj.BotName;
+					},
+					width: 160
+				},
+				{
+					name: 'BotSpeed',
+					index: 'BotSpeed',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.helper.speed2Human(obj.BotSpeed);
+					},
+					width: 80,
+					align: "right"
+				},
+				{
+					name: 'IrcLink',
+					index: 'IrcLink',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return obj.IrcLink;
+					},
+					hidden: true
+				}
 			],
 			onSortCol: function(index, iCol, sortorder)
 			{
@@ -359,12 +754,91 @@ var XGBase = Class.create(
 			cmTemplate: {fixed:true},
 			colNames: ['', '', _('Name'), _('Size'), _('Speed'), _('Time')],
 			colModel: [
-				{name:'Object',			index:'Object',			formatter: function(c, o, r) { return JSON.stringify(r); }, hidden:true},
-				{name:'Icon',			index:'Icon',			formatter: function(c, o, r) { return self.formatter.formatFileIcon(r); }, width:24, sortable: false},
-				{name:'Name',			index:'Name',			formatter: function(c, o, r) { return self.formatter.formatFileName(r); }, fixed:false},
-				{name:'Size',			index:'Size',			formatter: function(c, o, r) { return self.formatter.formatFileSize(r); }, width:70, align:"right"},
-				{name:'Speed',			index:'Speed',			formatter: function(c, o, r) { return self.formatter.formatFileSpeed(r); }, width:70, align:"right"},
-				{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return self.formatter.formatFileTimeMissing(r) }, width:90, align:"right"}
+				{
+					name: 'Object',
+					index: 'Object',
+					formatter: function (c, o, r)
+					{
+						return JSON.stringify(r);
+					},
+					hidden: true
+				},
+				{
+					name: 'Icon',
+					index: 'Icon',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatFileIcon(obj);
+					},
+					width: 24,
+					sortable: false
+				},
+				{
+					name: 'Name',
+					index: 'Name',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatFileName(obj);
+					},
+					fixed: false
+				},
+				{
+					name: 'Size',
+					index: 'Size',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatFileSize(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Size;
+					},
+					width: 70,
+					align: "right"
+				},
+				{
+					name: 'Speed',
+					index: 'Speed',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatFileSpeed(robj);
+					},
+					sorttype: function (c, o)
+					{
+						var speed = 0;
+						$.each(o.Parts, function (i, part)
+						{
+							speed += part.Speed;
+						});
+						return speed;
+					},
+					width: 70,
+					align: "right"
+				},
+				{
+					name: 'TimeMissing',
+					index: 'TimeMissing',
+					formatter: function (c, o, r)
+					{
+						var obj = JSON.parse(r.Object);
+						return self.formatter.formatFileTimeMissing(obj)
+					},
+					sorttype: function (c, o)
+					{
+						var time = 0;
+						$.each(o.Parts, function (i, part)
+						{
+							time = time == 0 ? part.TimeMissing : (time < part.TimeMissing ? time : part.TimeMissing);
+						});
+						return time;
+					},
+					width: 90,
+					align: "right"
+				}
 			],
 			onSortCol: function(index, iCol, sortorder)
 			{
@@ -481,6 +955,11 @@ var XGBase = Class.create(
 			{
 				self.cookie.setCookie("show_offline_bots", $("#show_offline_bots").attr('checked') ? "1" : "0" );
 			});
+		$("#human_dates").button()
+			.click( function()
+			{
+				self.cookie.setCookie("human_dates", $("#human_dates").attr('checked') ? "1" : "0" );
+			});
 	},
 
 	addSearch: function ()
@@ -513,11 +992,11 @@ var XGBase = Class.create(
 		{
 			if(!pack.Enabled)
 			{
-				$("#" + guid).effect("transfer", { to: $("#4") }, 500);
+				$("#" + pack.Guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
 			}
 			else
 			{
-				$("#4").effect("transfer", { to: $("#" + guid) }, 500);
+				$("#00000000-0000-0000-0000-000000000004").effect("transfer", { to: $("#" + pack.Guid) }, 500);
 			}
 			self.flipObject(guid, "packets_table");
 		}
@@ -536,11 +1015,11 @@ var XGBase = Class.create(
 		{
 			if(!obj.Enabled)
 			{
-				self.websocket.sendGuid(Enum.Request.ActivateObject, guid);
+				self.websocket.sendGuid(Enum.Request.ActivateObject, obj.Guid);
 			}
 			else
 			{
-				self.websocket.sendGuid(Enum.Request.DeactivateObject, guid);
+				self.websocket.sendGuid(Enum.Request.DeactivateObject, obj.Guid);
 			}
 		}
 	},
@@ -552,7 +1031,7 @@ var XGBase = Class.create(
 	{
 		var self = XG;
 
-		$("#" + guid).effect("transfer", { to: $("#4") }, 500);
+		$("#" + guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
 
 		var data = self.getRowData("searches_xg_bitpir_at", guid);
 		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
@@ -565,7 +1044,8 @@ var XGBase = Class.create(
 	 */
 	getRowData: function (grid, guid)
 	{
-		return $.parseJSON($("#" + grid).getRowData(guid).Object);
+		var str = $("#" + grid).getRowData(guid).Object;
+		return $.parseJSON($.parseJSON(str).Object);
 	},
 
 	onWebsocketConnected: function ()
@@ -674,10 +1154,13 @@ var XGBase = Class.create(
 
 	setGridData: function (grid, data, skipReload)
 	{
+		var self = XG;
+
 		var gridElement = $("#" + grid);
 		gridElement.clearGridData();
 		$.each(data, function(i, item)
 		{
+			item = self.adjustObject(item);
 			gridElement.addRowData(item.Guid, item);
 		});
 
@@ -689,7 +1172,10 @@ var XGBase = Class.create(
 
 	addGridItem: function (grid, item, skipReload)
 	{
+		var self = XG;
+
 		var gridElement = $("#" + grid);
+		item = self.adjustObject(item);
 		gridElement.addRowData(item.Guid, item);
 
 		if (!skipReload)
@@ -698,19 +1184,21 @@ var XGBase = Class.create(
 		}
 	},
 
-	updateGridItem: function (grid, item, skipReload)
+	updateGridItem: function (grid, item)
 	{
-		var gridElement = $("#" + grid);
-		gridElement.setRowData(item.Guid, item);
+		var self = XG;
 
-		if (!skipReload)
-		{
-			gridElement.trigger("reloadGrid");
-		}
+		var gridElement = $("#" + grid);
+		item = self.adjustObject(item);
+		gridElement.jqGrid("setRowData", item.Guid, item);
+
+		gridElement.trigger("reloadGrid");
 	},
 
 	removeGridItem: function (grid, item, skipReload)
 	{
+		var self = XG;
+
 		var gridElement = $("#" + grid);
 		gridElement.delRowData(item.Guid);
 
@@ -718,5 +1206,11 @@ var XGBase = Class.create(
 		{
 			gridElement.trigger("reloadGrid");
 		}
+	},
+
+	adjustObject: function (item)
+	{
+		item.Object = JSON.stringify(item);
+		return item;
 	}
 });

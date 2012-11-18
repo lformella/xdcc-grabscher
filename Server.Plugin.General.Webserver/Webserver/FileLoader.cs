@@ -42,12 +42,32 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		readonly string[] _cssFiles = {"reset", "fontello", "jquery-ui", "ui.jqgrid", "layout-default", "xg"};
 
 		readonly string[] _jsFiles =
-			{
-				"sha256", "json2.min", "jquery.min", "jquery-ui.min", "jquery.class", "jquery.cookie.min", "jquery.layout.min",
-				"jquery.flot", "jquery.flot.axislabels", "jquery.jqGrid.min", "i18n/xg.locale-en", "i18n/grid.locale-#LANGUAGE_SHORT#"
-				, "xg.translate", "xg.enum", "xg.cookie", "xg.helper", "xg.formatter", "xg.resize", "xg.refresh", "xg.password",
-				"xg.websocket", "xg", "i18n/xg.locale-#LANGUAGE_SHORT#"
-			};
+		{
+			"external/moment.min",
+			"external/jquery.min",
+			"external/jquery.class",
+			"external/jquery.cookie.min",
+			"external/jquery.layout.min",
+			"external/jquery.flot",
+			"external/jquery.flot.axislabels",
+			"external/jquery.jqGrid.min",
+			"external/jquery-ui.min",
+			"external/json2.min",
+			"external/sha256",
+			"i18n/jqgrid/grid.locale-#LANGUAGE_SHORT#",
+			"i18n/moment/#LANGUAGE_SHORT#",
+			"i18n/xg/#LANGUAGE_SHORT#",
+			"xg/enum",
+			"xg/cookie",
+			"xg/formatter",
+			"xg/helper",
+			"xg/main",
+			"xg/password",
+			"xg/resize",
+			"xg/refresh",
+			"xg/translate",
+			"xg/websocket"
+		};
 
 		public string Salt;
 

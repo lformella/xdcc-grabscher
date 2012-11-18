@@ -22,7 +22,6 @@
 //  
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 using System;
 
@@ -101,14 +100,7 @@ namespace XG.Core
 			get { return _realName; }
 			set { SetProperty(ref _realName, value); }
 		}
-/*
-		[JsonProperty(PropertyName = "RealName")]
-		public string RealNameAscii
-		{
-			get { return RealName.ToAscii(); }
-			set { RealName = value; }
-		}
-*/
+
 		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
 
 		[JsonProperty]
@@ -137,7 +129,6 @@ namespace XG.Core
 				Packet oldestPacket = Parent != null ? Parent.OldestActivePacket() : null;
 				return oldestPacket != null && oldestPacket == this;
 			}
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion

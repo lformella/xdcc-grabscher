@@ -60,7 +60,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 				Part = part
 			};
 
-			Assert.AreEqual("{\"Part\":{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":9223372036854775807,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true},\"Id\":-1,\"Size\":0,\"RealSize\":0,\"RealName\":\"\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"LastMentioned\":\"" + packet.LastMentioned.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Connected\":true,\"Enabled\":true}",
+			Assert.AreEqual("{\"Part\":{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":9223372036854775807,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true},\"Name\":\"Test Packet\",\"Id\":-1,\"Size\":0,\"RealSize\":0,\"RealName\":\"\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"LastMentioned\":\"" + packet.LastMentioned.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Connected\":true,\"Enabled\":true}",
 			                JsonConvert.SerializeObject(packet, jsonSerializerSettings));
 
 			var bot = new Bot
@@ -83,7 +83,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 			};
 			bot.AddPacket(packet);
 
-			Assert.AreEqual("{\"State\":0,\"LastMessage\":\"Test Message\",\"LastContact\":\"" + bot.LastContact.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0.0,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"&#84;&#101;&#115;&#116;&#32;&#66;&#111;&#116;\",\"Connected\":true,\"Enabled\":true}",
+			Assert.AreEqual("{\"State\":0,\"LastMessage\":\"Test Message\",\"LastContact\":\"" + bot.LastContact.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0.0,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test Bot\",\"Connected\":true,\"Enabled\":true}",
 			                JsonConvert.SerializeObject(bot, jsonSerializerSettings));
 		}
 	}

@@ -264,7 +264,7 @@ var XGRefresh = Class.create(
 				mode: "time",
 				timeformat: timeFormat,
 				minTickSize: tickSize,
-				monthNames: LANG_MONTH_SHORT
+				monthNames: moment.monthsShort
 			},
 			yaxes: [
 				{

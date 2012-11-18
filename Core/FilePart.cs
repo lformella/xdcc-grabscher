@@ -124,7 +124,6 @@ namespace XG.Core
 		public Int64 MissingSize
 		{
 			get { return _stopSize - _currentSize; }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		[JsonProperty]
@@ -132,7 +131,6 @@ namespace XG.Core
 		public Int64 TimeMissing
 		{
 			get { return (_speed > 0 ? (MissingSize / Speed) : Int64.MaxValue); }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		Int64 _speed;

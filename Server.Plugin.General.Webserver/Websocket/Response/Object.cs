@@ -28,14 +28,8 @@ using XG.Core;
 namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class Object : Base
+	public class Object : Response
 	{
-		#region VARIABLES
-		
-		[JsonProperty]
-		public AObject Data { get; set; }
-
-		#endregion
 	}
 }
 

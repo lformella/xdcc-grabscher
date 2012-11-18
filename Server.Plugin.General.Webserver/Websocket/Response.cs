@@ -1,5 +1,5 @@
 //
-//  xg.locale-en.js
+//  Base.cs
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,6 +21,66 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-var LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+using Newtonsoft.Json;
+
+namespace XG.Server.Plugin.General.Webserver.Websocket
+{
+	[JsonObject(MemberSerialization.OptIn)]
+	public class Response
+	{
+		#region ENUMS
+
+		public enum Types
+		{
+			None = 0,
+
+			#region SINGLE
+
+			ObjectAdded = 1,
+			ObjectRemoved = 2,
+			ObjectChanged = 3,
+
+			#endregion
+
+			#region MULTI
+
+			SearchPacket = 11,
+			SearchBot = 12,
+
+			Servers = 13,
+			ChannelsFromServer = 14,
+			PacketsFromBot = 15,
+
+			Files = 16,
+			Searches = 17,
+
+			Snapshots = 18,
+
+			Statistics = 19
+
+			#endregion
+		}
+
+		#endregion
+
+		#region VARIABLES
+
+		[JsonProperty]
+		public Types Type { get; set; }
+
+		[JsonProperty]
+		public object Data { get; set; }
+
+		[JsonProperty]
+		public string DataType
+		{
+			get
+			{
+				return Data.GetType().Name;
+			}
+		}
+
+		#endregion
+	}
+}
+

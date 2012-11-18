@@ -80,7 +80,6 @@ namespace XG.Core
 		public Guid ParentGuid
 		{
 			get { return _parentGuid; }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		AObject _parent;
@@ -104,21 +103,14 @@ namespace XG.Core
 
 		string _name;
 
-		[MySql]
 		[JsonProperty]
+		[MySql]
 		public virtual string Name
 		{
 			get { return _name; }
 			set { SetProperty(ref _name, value); }
 		}
-/*
-		[JsonProperty(PropertyName = "Name")]
-		public string NameAscii
-		{
-			get { return Name.ToAscii(); }
-			set { Name = value; }
-		}
-*/
+
 		internal bool Modified;
 
 		public void Commit()

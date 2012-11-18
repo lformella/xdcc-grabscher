@@ -21,10 +21,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-LANG_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
-LANG_MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-LANG_WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 translatedArray =
 {
 	/* ************************************************************************************************************** */
@@ -119,5 +115,6 @@ translatedArray =
 	"Enabled": "Aktiviert",
 	"Disabled": "Deaktiviert",
 	"Count": "Zähler",
-	"Time": "Zeit"
+	"Time": "Zeit",
+	"Human readable dates": "Lesbare Zeiten"
 };

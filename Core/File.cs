@@ -43,7 +43,6 @@ namespace XG.Core
 		public override string Name
 		{
 			get { return base.Name; }
-			set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		readonly string _tmpPath;
@@ -53,7 +52,6 @@ namespace XG.Core
 		public string TmpPath
 		{
 			get { return _tmpPath; }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		readonly Int64 _size;
@@ -63,7 +61,6 @@ namespace XG.Core
 		public Int64 Size
 		{
 			get { return _size; }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		#endregion
@@ -74,7 +71,6 @@ namespace XG.Core
 		public List<FilePart> Parts
 		{
 			get { return All.Cast<FilePart>().ToList(); }
-			private set { throw new NotSupportedException("You can not set this Property."); }
 		}
 
 		public bool Add(FilePart aPart)

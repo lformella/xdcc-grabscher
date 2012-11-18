@@ -30,6 +30,6 @@ var XGCookie = Class.create(
 	getCookie: function (name, value)
 	{
 		var val = $.cookie('xg.' + name);
-		return val != undefined && val != "" ? val : value;
+		return val != undefined && val != "" ? val : (value != undefined ? value : false);
 	}
 });
