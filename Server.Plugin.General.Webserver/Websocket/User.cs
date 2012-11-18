@@ -33,6 +33,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		public IWebSocketConnection Connection { get; set; }
 
+		public Request.Types LastRequest { get; set; }
+
 		public Guid LastSearch { get; set; }
 
 		public bool IgnoreOfflineBots { get; set; }

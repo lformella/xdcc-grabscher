@@ -80,84 +80,33 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			var type = Base.Types.None;
-			if (aObj is Core.Server)
-			{
-				type = Base.Types.ServerAdded;
-			}
-			if (aObj is Channel)
-			{
-				type = Base.Types.ChannelAdded;
-			}
-			if (aObj is Bot)
-			{
-				type = Base.Types.BotAdded;
-			}
-			if (aObj is Packet)
-			{
-				type = Base.Types.PacketAdded;
-			}
-
 			var response = new Response.Object
 			{
-				Type = type,
-				Data = aObj
+				Type = Base.Types.ObjectAdded,
+				Data = aObj,
+				DataType = aObj.GetType()
 			};
 			Broadcast(response);
 		}
 
 		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			var type = Base.Types.None;
-			if (aObj is Core.Server)
-			{
-				type = Base.Types.ServerRemoved;
-			}
-			if (aObj is Channel)
-			{
-				type = Base.Types.ChannelRemoved;
-			}
-			if (aObj is Bot)
-			{
-				type = Base.Types.BotRemoved;
-			}
-			if (aObj is Packet)
-			{
-				type = Base.Types.PacketRemoved;
-			}
-
 			var response = new Response.Object
 			{
-				Type = type,
-				Data = aObj
+				Type = Base.Types.ObjectRemoved,
+				Data = aObj,
+				DataType = aObj.GetType()
 			};
 			Broadcast(response);
 		}
 
 		protected override void ObjectChanged(AObject aObj)
 		{
-			var type = Base.Types.None;
-			if (aObj is Core.Server)
-			{
-				type = Base.Types.ServerChanged;
-			}
-			if (aObj is Channel)
-			{
-				type = Base.Types.ChannelChanged;
-			}
-			if (aObj is Bot)
-			{
-				type = Base.Types.BotChanged;
-			}
-			if (aObj is Packet)
-			{
-				type = Base.Types.PacketChanged;
-			}
-
 			var response = new Response.Object
 			{
-				Type = type,
-				Data = aObj
+				Type = Base.Types.ObjectChanged,
+				Data = aObj,
+				DataType = aObj.GetType()
 			};
 			Broadcast(response);
 		}
@@ -169,62 +118,32 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void FileAdded(AObject aParent, AObject aObj)
 		{
-			var response = new Response.Object
-			{
-				Type = Base.Types.FileAdded,
-				Data = aObj
-			};
-			Broadcast(response);
+			ObjectAdded(aParent, aObj);
 		}
 
 		protected override void FileRemoved(AObject aParent, AObject aObj)
 		{
-			var response = new Response.Object
-			{
-				Type = Base.Types.FileRemoved,
-				Data = aObj
-			};
-			Broadcast(response);
+			ObjectRemoved(aParent, aObj);
 		}
 
 		protected override void FileChanged(AObject aObj)
 		{
-			var response = new Response.Object
-			{
-				Type = Base.Types.FileChanged,
-				Data = aObj
-			};
-			Broadcast(response);
+			ObjectChanged(aObj);
 		}
 
 		protected override void SearchAdded(AObject aParent, AObject aObj)
 		{
-			var response = new Response.Object
-			{
-				Type = Base.Types.SearchAdded,
-				Data = aObj
-			};
-			Broadcast(response);
+			ObjectAdded(aParent, aObj);
 		}
 
 		protected override void SearchRemoved(AObject aParent, AObject aObj)
 		{
-			var response = new Response.Object
-			{
-				Type = Base.Types.SearchRemoved,
-				Data = aObj
-			};
-			Broadcast(response);
+			ObjectRemoved(aParent, aObj);
 		}
 
 		protected override void SearchChanged(AObject aObj)
 		{
-			var response = new Response.Object
-			{
-				Type = Base.Types.SearchChanged,
-				Data = aObj
-			};
-			Broadcast(response);
+			ObjectChanged(aObj);
 		}
 
 		protected override void SnapshotAdded(Core.Snapshot aSnap)
@@ -232,7 +151,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var response = new Response.Snapshots
 			{
 				Type = Base.Types.Snapshots,
-				Data = Snapshots2Flot(Snapshots)
+				Data = Snapshots2Flot(Snapshots),
+				DataType = aSnap.GetType()
 			};
 			Broadcast(response);
 		}
@@ -277,6 +197,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					// exit
 					return;
 				}
+
+				currentUser.LastRequest = request.Type;
 
 				switch (request.Type)
 				{
@@ -369,6 +291,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.PacketsFromBot:
+						currentUser.LastSearch = request.Guid;
+
 						Unicast(aContext, new Response.Objects
 						{
 							Type = Base.Types.PacketsFromBot,
@@ -385,7 +309,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						//response = Statistic2Json();
 						break;
 
-					case Request.Types.GetSnapshots:
+					case Request.Types.Snapshots:
 						Unicast(aContext, new Response.Snapshots
 						{
 							Type = Base.Types.Snapshots,
@@ -460,11 +384,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			foreach (var user in _users.ToArray())
 			{
-				if (aResponse is Response.Object)
+				if (user.LastSearch != Guid.Empty && aResponse is Response.Object)
 				{
 					var tResponse = aResponse as Response.Object;
 
-					if (aResponse.Type == Base.Types.BotAdded || aResponse.Type == Base.Types.BotChanged || aResponse.Type == Base.Types.BotRemoved)
+					if (aResponse.DataType == typeof(Bot))
 					{
 						var bots = FilteredBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
 						if (!bots.Contains(tResponse.Data))
@@ -473,12 +397,22 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						}
 					}
 
-					if (aResponse.Type == Base.Types.PacketAdded || aResponse.Type == Base.Types.PacketChanged || aResponse.Type == Base.Types.PacketRemoved)
+					if (aResponse.DataType == typeof(Packet))
 					{
-						var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
-						if (!packets.Contains(tResponse.Data))
+						if (user.LastRequest == Request.Types.PacketsFromBot)
 						{
-							break;
+							if (tResponse.Data.ParentGuid != user.LastSearch)
+							{
+								break;
+							}
+						}
+						else
+						{
+							var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
+							if (!packets.Contains(tResponse.Data))
+							{
+								break;
+							}
 						}
 					}
 				}

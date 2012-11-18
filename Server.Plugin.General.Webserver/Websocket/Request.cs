@@ -50,17 +50,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ChannelsFromServer = 9,
 			PacketsFromBot = 10,
 			Files = 11,
-			Object = 12,
 
-			AddSearch = 13,
-			RemoveSearch = 14,
-			Searches = 15,
+			AddSearch = 12,
+			RemoveSearch = 13,
+			Searches = 14,
 
-			Statistics = 16,
-			GetSnapshots = 17,
-			ParseXdccLink = 18,
+			Statistics = 15,
+			Snapshots = 16,
+			ParseXdccLink = 17,
 
-			CloseServer = 19
+			CloseServer = 18
 		}
 
 		public enum SortModes

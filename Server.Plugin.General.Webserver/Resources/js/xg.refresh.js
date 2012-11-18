@@ -23,135 +23,20 @@
 var XGRefresh = Class.create(
 {
 	/**
-	 * @param {XGUrl} url
 	 * @param {XGHelper} helper
 	 */
-	initialize: function(url, helper)
+	initialize: function(helper)
 	{
-		this.url = url;
 		this.helper = helper;
 
 		this.snapshots = {};
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {String} guid
-	 * @return {object}
-	 */
-	getRowData: function (grid, guid)
-	{
-		return $.parseJSON($("#" + grid).getRowData(guid).Object);
-	},
-
-	/**
-	 * @param {string} grid
-	 * @param {String} url
-	 */
-	reloadGrid: function (grid, url)
-	{
-		var gridElement = $("#" + grid);
-		gridElement.clearGridData();
-		if(url != undefined && url != "")
-		{
-			gridElement.setGridParam({url: url, page: 1});
-		}
-		gridElement.trigger("reloadGrid");
-	},
-
-	/**
-	 * @param {Integer} count
-	 */
-	refreshGrid: function (count)
-	{
-		var self = this;
-
-		// connected things every 2,5 seconds, waiting just every 25 seconds
-		var mod = !!(count % 10 == 0);
-
-		// every 5 minutes
-		if (!!(count % 120 == 0))
-		{
-			this.updateSnapshots();
-		}
-
-		switch(XG.activeTab)
-		{
-			case 0:
-				// refresh bot grid
-				$.each($("#bots_table").getDataIDs(), function(i, id)
-				{
-					var bot = self.getRowData("bots_table", id);
-					if(bot.State == 1 || (mod && bot.State == 2))
-					{
-						self.refreshObject("bots_table", id);
-					}
-				});
-
-				// refresh packet grid
-				$.each($("#packets_table").getDataIDs(), function(i, id)
-				{
-					var pack = self.getRowData("packets_table", id);
-					if(pack.Connected || (mod && pack.Enabled))
-					{
-						self.refreshObject("packets_table", id);
-					}
-				});
-				break;
-
-			case 1:
-				break;
-
-			case 2:
-				$.each($("#files_table").getDataIDs(), function(i, id)
-				{
-					var file = self.getRowData("files_table", id);
-
-					var state = -1;
-					$.each(file.Parts, function(i, part)
-					{
-						return part.State != 0;
-					});
-
-					if(state == 0)
-					{
-						self.refreshObject("files_table", id);
-					}
-				});
-				break;
-		}
-
-		setTimeout(function() { self.refreshGrid(count + 1); }, 2500);
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {String} guid
-	 */
-	refreshObject: function (grid, guid)
-	{
-		$.getJSON(this.url.guidUrl(Enum.Request.GetObject, guid),
-			function(result)
-			{
-				result.cell.Object = JSON.stringify(result.cell);
-				result.cell.Icon = "";
-
-				if(grid == "packets_table")
-				{
-					result.cell.Speed = "";
-					result.cell.TimeMissing = "";
-				}
-
-				$("#" + grid).setRowData(guid, result.cell);
-			}
-		);
 	},
 
 	refreshStatistic: function ()
 	{
 		var self = this;
 
-		$.getJSON(this.url.jsonUrl(Enum.Request.GetStatistics),
+		$.getJSON(// TODO this.url.jsonUrl(Enum.Request.GetStatistics),
 			function(result)
 			{
 				$("#BytesLoaded").html(self.helper.size2Human(result.BytesLoaded));
@@ -191,7 +76,7 @@ var XGRefresh = Class.create(
 	{
 		var self = this;
 
-		$.getJSON(this.url.jsonUrl(Enum.Request.GetSnapshots),
+		$.getJSON(// TODO this.url.jsonUrl(Enum.Request.GetSnapshots),
 			function(result)
 			{
 				$.each(result, function(index, item) {

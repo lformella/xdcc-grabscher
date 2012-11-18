@@ -29,15 +29,7 @@ var XGPassword = Class.create(
 		var self = this;
 		Password = this;
 
-		this.url = new XGUrl();
 		this.password = "";
-
-		// check for cookies
-		if (this.checkPassword(""))
-		{
-			this.loadGrid();
-			return;
-		}
 
 		var buttonText = { text: _("Connect") };
 		var buttons = {};
@@ -55,7 +47,7 @@ var XGPassword = Class.create(
 			buttons: buttons,
 			close: function()
 			{
-				if(self.url.password == "")
+				if(self.password == "")
 				{
 					$('#dialog_password').dialog('open');
 				}
@@ -82,7 +74,6 @@ var XGPassword = Class.create(
 			passwordElement.removeClass('ui-state-error');
 			dialog.dialog('close');
 
-			this.url.password = password;
 			this.password = password;
 			this.loadGrid();
 		}
@@ -97,23 +88,18 @@ var XGPassword = Class.create(
 		var helper = new XGHelper();
 		var cookie = new XGCookie();
 		var formatter = new XGFormatter(helper);
-		var refresh = new XGRefresh(this.url, helper);
+		var refresh = new XGRefresh(helper);
 		var websocket = new XGWebsocket("localhost", 5557, this.password);
 
 		// load grid
-		new XGBase(this.url, helper, refresh, cookie, formatter, websocket);
+		new XGBase(helper, refresh, cookie, formatter, websocket);
 
 		// resize
 		var resize = new XGResize(refresh);
-
-		// start the refresh
-		refresh.refreshGrid(0);
 	},
 
 	checkPassword: function (password)
 	{
-		var self = this;
-
 		var res = false;
 		$.ajax({
 			url: "?password=" + password,

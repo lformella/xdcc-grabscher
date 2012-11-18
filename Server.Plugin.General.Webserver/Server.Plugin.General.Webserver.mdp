@@ -108,7 +108,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.password.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.password.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.refresh.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.refresh.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.url.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.url.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.jquery.flot.axislabels.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
     <File subtype="Directory" buildaction="Compile" name="Websocket" />
@@ -127,6 +126,7 @@
     <File subtype="Code" buildaction="Compile" name="Webserver/Server.cs" />
     <File subtype="Code" buildaction="Compile" name="SaltedPassword.cs" />
     <File subtype="Code" buildaction="Compile" name="Webserver/FileLoader.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg.websocket.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.websocket.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

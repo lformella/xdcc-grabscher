@@ -37,67 +37,43 @@ Enum.Request =
 
 	Search: 7,
 
-	GetServers: 8,
-	GetChannelsFromServer: 9,
-	GetPacketsFromBot: 10,
-	GetFiles: 11,
-	GetObject: 12,
+	Servers: 8,
+	ChannelsFromServer: 9,
+	PacketsFromBot: 10,
+	Files: 11,
 
-	AddSearch: 13,
-	RemoveSearch: 14,
-	GetSearches: 15,
+	AddSearch: 12,
+	RemoveSearch: 13,
+	Searches: 14,
 
-	GetStatistics: 16,
-	GetSnapshots: 17,
-	ParseXdccLink: 18,
+	Statistics: 15,
+	Snapshots: 16,
+	ParseXdccLink: 17,
 
-	CloseServer: 19
+	CloseServer: 18
 };
 
 Enum.Response =
 {
 	None: 0,
 
-	ServerAdded: 1,
-	ServerRemoved: 2,
-	ServerChanged: 3,
+	ObjectAdded: 1,
+	ObjectRemoved: 2,
+	ObjectChanged: 3,
 
-	ChannelAdded: 4,
-	ChannelRemoved: 5,
-	ChannelChanged: 6,
+	SearchPacket: 11,
+	SearchBot: 12,
 
-	BotAdded: 7,
-	BotRemoved: 8,
-	BotChanged: 9,
+	Servers: 13,
+	ChannelsFromServer: 14,
+	PacketsFromBot: 15,
 
-	PacketAdded: 10,
-	PacketRemoved: 11,
-	PacketChanged: 12,
+	Files: 16,
+	Searches: 17,
 
-	FileAdded: 13,
-	FileRemoved: 14,
-	FileChanged: 15,
+	Snapshots: 18,
 
-	SearchAdded: 16,
-	SearchRemoved: 17,
-	SearchChanged: 18,
-
-	SnapshotAdded: 19,
-
-	SearchPacket: 101,
-	SearchBot: 102,
-
-	Servers: 103,
-	ChannelsFromServer: 104,
-	PacketsFromBot: 105,
-
-	Files: 106,
-	Object: 107,
-	Searches: 108,
-
-	Snapshots: 109,
-
-	Statistics: 110
+	Statistics: 19
 }
 
 Enum.TangoColor =

@@ -43,6 +43,8 @@ translatedArray =
 	"Change Servers and Channels": "Server und Channels &auml;ndern",
 	"View Statistics": "Statistiken anschauen",
 	"View Snapshots": "Erweiterte Statistiken anschauen",
+	"Error": "Fehler",
+	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
 
 	/* ************************************************************************************************************** */
 	/* GRIDS                                                                                                          */

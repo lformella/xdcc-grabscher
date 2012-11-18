@@ -46,7 +46,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 				"sha256", "json2.min", "jquery.min", "jquery-ui.min", "jquery.class", "jquery.cookie.min", "jquery.layout.min",
 				"jquery.flot", "jquery.flot.axislabels", "jquery.jqGrid.min", "i18n/xg.locale-en", "i18n/grid.locale-#LANGUAGE_SHORT#"
 				, "xg.translate", "xg.enum", "xg.cookie", "xg.helper", "xg.formatter", "xg.resize", "xg.refresh", "xg.password",
-				"xg.websocket", "xg.url", "xg", "i18n/xg.locale-#LANGUAGE_SHORT#"
+				"xg.websocket", "xg", "i18n/xg.locale-#LANGUAGE_SHORT#"
 			};
 
 		public string Salt;

@@ -23,6 +23,8 @@
 
 using Newtonsoft.Json;
 
+using System;
+
 namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 {
 	[JsonObject(MemberSerialization.OptIn)]
@@ -36,50 +38,27 @@ namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 
 			#region SINGLE
 
-			ServerAdded = 1,
-			ServerRemoved = 2,
-			ServerChanged = 3,
-
-			ChannelAdded = 4,
-			ChannelRemoved = 5,
-			ChannelChanged = 6,
-
-			BotAdded = 7,
-			BotRemoved = 8,
-			BotChanged = 9,
-
-			PacketAdded = 10,
-			PacketRemoved = 11,
-			PacketChanged = 12,
-
-			FileAdded = 13,
-			FileRemoved = 14,
-			FileChanged = 15,
-
-			SearchAdded = 16,
-			SearchRemoved = 17,
-			SearchChanged = 18,
-
-			SnapshotAdded = 19,
+			ObjectAdded = 1,
+			ObjectRemoved = 2,
+			ObjectChanged = 3,
 
 			#endregion
 
 			#region MULTI
 
-			SearchPacket = 101,
-			SearchBot = 102,
+			SearchPacket = 11,
+			SearchBot = 12,
 
-			Servers = 103,
-			ChannelsFromServer = 104,
-			PacketsFromBot = 105,
+			Servers = 13,
+			ChannelsFromServer = 14,
+			PacketsFromBot = 15,
 
-			Files = 106,
-			Object = 107,
-			Searches = 108,
+			Files = 16,
+			Searches = 17,
 
-			Snapshots = 109,
+			Snapshots = 18,
 
-			Statistics = 110
+			Statistics = 19
 
 			#endregion
 		}
@@ -90,6 +69,21 @@ namespace XG.Server.Plugin.General.Webserver.Websocket.Response
 		
 		[JsonProperty]
 		public Types Type { get; set; }
+
+		public Type DataType { get; set; }
+
+		[JsonProperty(PropertyName="DataType")]
+		public string DataTypeString
+		{
+			get
+			{
+				if (DataType != null)
+				{
+					return DataType.Name;
+				}
+				return "";
+			}
+		}
 
 		#endregion
 	}

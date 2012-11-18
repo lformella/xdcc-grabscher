@@ -25,19 +25,17 @@ var XG;
 var XGBase = Class.create(
 {
 	/**
-	 * @param {XGUrl} url
 	 * @param {XGHelper} helper
 	 * @param {XGRefresh} refresh
 	 * @param {XGCookie} cookie
 	 * @param {XGFormatter} formatter
 	 * @param {XGWebsocket} websocket
 	 */
-	initialize: function(url, helper, refresh, cookie, formatter, websocket)
+	initialize: function(helper, refresh, cookie, formatter, websocket)
 	{
 		XG = this;
 		var self = this;
 
-		this.url = url;
 		this.refresh = refresh;
 		this.cookie = cookie;
 		this.helper = helper;
@@ -45,7 +43,7 @@ var XGBase = Class.create(
 
 		this.websocket = websocket;
 		this.websocket.onConnected = self.onWebsocketConnected;
-		this.websocket.onDiscsonnected = self.onWebsocketDisconnected;
+		this.websocket.onDisconnected = self.onWebsocketDisconnected;
 		this.websocket.onMessageReceived = self.onWebsocketMessageReceived;
 
 		this.idServer = 0;
@@ -190,9 +188,9 @@ var XGBase = Class.create(
 				{name:'InfoSlotTotal',	index:'InfoSlotTotal',	formatter: function(c, o, r) { return self.formatter.formatBotSlots(r); }, width:60, align:"right"},
 				{name:'InfoQueueTotal',	index:'InfoQueueTotal',	formatter: function(c, o, r) { return self.formatter.formatBotQueue(r); }, width:60, align:"right"}
 			],
-			onSelectRow: function(id)
+			onSelectRow: function(guid)
 			{
-				self.refresh.reloadGrid("packets_table", self.url.guidUrl(Enum.Request.GetPacketsFromBot, id));
+				self.websocket.sendGuid(Enum.Request.PacketsFromBot, guid);
 			},
 			onSortCol: function(index, iCol, sortorder)
 			{
@@ -232,15 +230,12 @@ var XGBase = Class.create(
 				{name:'TimeMissing',	index:'TimeMissing',	formatter: function(c, o, r) { return self.formatter.formatPacketTimeMissing(r) }, width:90, align:"right"},
 				{name:'LastUpdated',	index:'LastUpdated',	formatter: function(c, o, r) { return r.LastUpdated; }, width:135, align:"right"}
 			],
-			onSelectRow: function(id)
+			onSelectRow: function(guid)
 			{
-				if(id)
+				var pack = self.getRowData('packets_table', guid);
+				if(pack)
 				{
-					var pack = self.refresh.getRowData('packets_table', id);
-					if(pack)
-					{
-						$('#bots_table').setSelection(pack.ParentGuid, false);
-					}
+					$('#bots_table').setSelection(pack.ParentGuid, false);
 				}
 			},
 			onSortCol: function(index, iCol, sortorder)
@@ -286,7 +281,10 @@ var XGBase = Class.create(
 						self.websocket.sendGuid(Enum.Request.Search, search.Guid);
 						break;
 					case 1:
-						self.refresh.reloadGrid("searches_xg_bitpir_at", "http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + search.Name);
+						var gridElement = $("#searches_xg_bitpir_at");
+						gridElement.clearGridData();
+						gridElement.setGridParam({url: "http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + search.Name, page: 1});
+						gridElement.trigger("reloadGrid");
 						break;
 				}
 			},
@@ -317,7 +315,7 @@ var XGBase = Class.create(
 
 		$("#searches_xg_bitpir_at").jqGrid(
 		{
-			url: self.url.guidUrl(Enum.Request.Version, ''),
+			url: "",
 			datatype:'jsonp',
 			cmTemplate:{fixed:true},
 			colNames:['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed'), ''],
@@ -399,8 +397,6 @@ var XGBase = Class.create(
 			.button({icons: { primary: "ui-icon-gear" }})
 			.click( function()
 			{
-				self.refresh.reloadGrid("servers_table", self.url.guidUrl(Enum.Request.GetServers, ''));
-				self.refresh.reloadGrid("channels_table", "");
 				$("#dialog_server_channels").dialog("open");
 			});
 
@@ -453,6 +449,20 @@ var XGBase = Class.create(
 			height: $(window).height() - 20,
 			modal: true,
 			resizable: false
+		});
+
+		/* ********************************************************************************************************** */
+		/* ERROR DIALOG                                                                                               */
+		/* ********************************************************************************************************** */
+
+		$("#dialog_error").dialog({
+			autoOpen: false,
+			modal: true,
+			resizable: false,
+			close: function()
+			{
+				$('#dialog_error').dialog('open');
+			}
 		});
 	},
 
@@ -540,10 +550,12 @@ var XGBase = Class.create(
 	 */
 	downloadLink: function (guid)
 	{
+		var self = XG;
+
 		$("#" + guid).effect("transfer", { to: $("#4") }, 500);
 
-		var data = this.refresh.getRowData("searches_xg_bitpir_at", guid);
-		$.get(this.url.nameUrl(Enum.Request.ParseXdccLink, data.IrcLink));
+		var data = self.getRowData("searches_xg_bitpir_at", guid);
+		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
 	},
 
 	/**
@@ -560,85 +572,102 @@ var XGBase = Class.create(
 	{
 		var self = XG;
 
-		self.websocket.send(Enum.Request.GetSearches);
-		self.websocket.send(Enum.Request.GetServers);
-		self.websocket.send(Enum.Request.GetFiles);
+		self.websocket.send(Enum.Request.Searches);
+		self.websocket.send(Enum.Request.Servers);
+		self.websocket.send(Enum.Request.Files);
 		//self.websocket.send(Enum.Request.GetSnapshots);
 	},
 
 	onWebsocketDisconnected: function ()
 	{
+		$("#dialog_error").dialog("open");
 	},
 
 	onWebsocketMessageReceived: function (json)
 	{
 		var self = XG;
 
+		var grid = "";
+		switch (json.DataType)
+		{
+			case "Server":
+				grid = "servers_table";
+				break;
+			case "Channel":
+				grid = "channels_table";
+				break;
+			case "Bot":
+				grid = "bots_table";
+				break;
+			case "Packet":
+				grid = "packets_table";
+				break;
+			case "Search":
+				grid = "search_table";
+				break;
+			case "Snapshot":
+				break;
+		}
+
 		switch (json.Type)
 		{
-			case Enum.Response.Searches:
-				self.setGridData("search_table", json.Data, true);
+			case Enum.Response.ObjectAdded:
+				if (grid != "")
+				{
+					if (grid == "search_table")
+					{
+						self.addGridItem("search_table", json.Data, true);
+						$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
+					}
+					else
+					{
+						self.addGridItem(grid, json.Data);
+					}
+				}
 				break;
-			case Enum.Response.SearchAdded:
-				self.addGridItem("search_table", json.Data, true);
-				$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
+			case Enum.Response.ObjectRemoved:
+				if (grid != "")
+				{
+					if (grid == "search_table")
+					{
+						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
+						self.removeGridItem("search_table", json.Data, true);
+					}
+					else
+					{
+						self.removeGridItem(grid, json.Data);
+					}
+				}
 				break;
-			case Enum.Response.SearchRemoved:
-				$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
-				self.removeGridItem("search_table", json.Data, true);
+			case Enum.Response.ObjectChanged:
+				if (grid != "")
+				{
+					self.updateGridItem(grid, json.Data);
+				}
+				break;
+
+			case Enum.Response.SearchPacket:
+				self.setGridData("packets_table", json.Data);
+				break;
+			case Enum.Response.SearchBot:
+				self.setGridData("bots_table", json.Data);
 				break;
 
 			case Enum.Response.Servers:
 				self.setGridData("servers_table", json.Data);
 				break;
-			case Enum.Response.ServerAdded:
-				self.addGridItem("servers_table", json.Data);
-				break;
-			case Enum.Response.ServerRemoved:
-				self.removeGridItem("servers_table", json.Data);
-				break;
-			case Enum.Response.ServerChanged:
-				self.updateGridItem("servers_table", json.Data);
-				break;
-
 			case Enum.Response.ChannelsFromServer:
 				self.setGridData("channels_table", json.Data);
 				break;
-			case Enum.Response.ChannelAdded:
-				self.addGridItem("channels_table", json.Data);
-				break;
-			case Enum.Response.ChannelRemoved:
-				self.removeGridItem("channels_table", json.Data);
-				break;
-			case Enum.Response.ChannelChanged:
-				self.updateGridItem("channels_table", json.Data);
-				break;
-
-			case Enum.Response.BotAdded:
-				self.addGridItem("bots_table", json.Data);
-				break;
-			case Enum.Response.BotRemoved:
-				self.removeGridItem("bots_table", json.Data);
-				break;
-			case Enum.Response.BotChanged:
-				self.updateGridItem("bots_table", json.Data);
-				break;
-
-			case Enum.Response.PacketAdded:
-				self.addGridItem("packets_table", json.Data);
-				break;
-			case Enum.Response.PacketRemoved:
-				self.removeGridItem("packets_table", json.Data);
-				break;
-			case Enum.Response.PacketChanged:
-				self.updateGridItem("packets_table", json.Data);
-				break;
-
-			case Enum.Response.SearchBot:
-				self.setGridData("bots_table", json.Data);
-				break;
-			case Enum.Response.SearchPacket:
+			case Enum.Response.PacketsFromBot:
 				self.setGridData("packets_table", json.Data);
+				break;
+
+			case Enum.Response.Files:
+				self.setGridData("files_table", json.Data);
+				break;
+			case Enum.Response.Searches:
+				self.setGridData("search_table", json.Data, true);
 				break;
 		}
 	},
