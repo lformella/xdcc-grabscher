@@ -46,6 +46,7 @@ namespace XG.Core
 					foreach (AObject obj in All)
 					{
 						obj.Connected = false;
+						obj.Commit();
 					}
 				}
 				base.Connected = value;

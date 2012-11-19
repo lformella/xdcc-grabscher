@@ -51,6 +51,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/jquery.flot",
 			"external/jquery.flot.axislabels",
 			"external/jquery.jqGrid.min",
+			"external/jquery-timing.min",
 			"external/jquery-ui.min",
 			"external/json2.min",
 			"external/sha256",

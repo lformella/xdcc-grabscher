@@ -130,19 +130,24 @@ var XGBase = Class.create(
 			hidegrid: false
 		}).navGrid('#servers_pager', {edit:false, search:false}, {},
 		{
-			mtype: "GET",
-			url: "/",
-			serializeEditData: function (postdata)
+			processing: true,
+			reloadAfterSubmit: false,
+			savekey: [true,13],
+			closeOnEscape: true,
+			closeAfterAdd: true,
+			onclickSubmit: function (options, obj)
 			{
-				return { request: Enum.Request.AddServer, name: postdata.Name };
+				self.websocket.sendName(Enum.Request.AddServer, obj.Name);
+				return {};
 			}
 		},
 		{
-			mtype: "GET",
-			url: "/",
-			serializeDelData: function (postdata)
+			processing: true,
+			closeOnEscape: true,
+			onclickSubmit: function(options, guid)
 			{
-				return { request: Enum.Request.RemoveServer, guid: postdata.id };
+				self.websocket.sendGuid(Enum.Request.RemoveServer, guid);
+				return true;
 			}
 		});
 
@@ -212,19 +217,24 @@ var XGBase = Class.create(
 			hidegrid: false
 		}).navGrid('#channels_pager', {edit:false, search:false}, {},
 		{
-			mtype: "GET",
-			url: "/",
-			serializeEditData: function (postdata)
+			processing: true,
+			reloadAfterSubmit: false,
+			savekey: [true,13],
+			closeOnEscape: true,
+			closeAfterAdd: true,
+			onclickSubmit: function (options, obj)
 			{
-				return { request: Enum.Request.AddChannel, name: postdata.Name, guid: self.idServer };
+				self.websocket.sendNameGuid(Enum.Request.AddChannel, obj.Name, self.idServer);
+				return {};
 			}
 		},
 		{
-			mtype: "GET",
-			url: "/",
-			serializeDelData: function (postdata)
+			processing: true,
+			closeOnEscape: true,
+			onclickSubmit: function(options, guid)
 			{
-				return { request: Enum.Request.RemoveChannel, guid: postdata.id };
+				self.websocket.sendGuid(Enum.Request.RemoveChannel, guid);
+				return true;
 			}
 		});
 

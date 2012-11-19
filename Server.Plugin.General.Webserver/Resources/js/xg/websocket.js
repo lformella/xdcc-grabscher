@@ -29,10 +29,10 @@ var XGWebsocket = Class.create(
 
 		this.cookie = cookie;
 
-		this.onConnected = 0;
-		this.onDisconnected = 0;
-		this.onMessageReceived = 0;
-		this.onError = 0;
+		this.onConnected = function () {};
+		this.onDisconnected = function () {};
+		this.onMessageReceived = function (msg) {};
+		this.onError = function (exception) {};
 
 		this.Password = password;
 
@@ -44,45 +44,30 @@ var XGWebsocket = Class.create(
 			{
 				self.state = self.socket.readyState;
 
-				if (self.onConnected != 0)
-				{
-					self.onConnected();
-				}
-			}
+				self.onConnected();
+			};
 			this.socket.onmessage = function (msg)
 			{
-				if (self.onMessageReceived != 0)
-				{
-					self.onMessageReceived(JSON.parse(msg.data));
-				}
-			}
+				self.onMessageReceived(JSON.parse(msg.data));
+			};
 			this.socket.onclose = function ()
 			{
 				self.state = self.socket.readyState;
 
-				if (self.onDisconnected != 0)
-				{
-					self.onDisconnected();
-				}
-			}
+				self.onDisconnected();
+			};
 			this.socket.onerror = function ()
 			{
 				self.state = self.socket.readyState;
 
-				if (self.onError != 0)
-				{
-					self.onError();
-				}
-			}
+				self.onError("");
+			};
 		}
 		catch (exception)
 		{
 			this.state = self.socket.readyState;
 
-			if (self.onError != 0)
-			{
-				self.onError(exception);
-			}
+			self.onError(exception);
 		}
 	},
 
@@ -91,7 +76,7 @@ var XGWebsocket = Class.create(
 		return {
 			"Password": this.Password,
 			"Type": Type,
-			"IgnoreOfflineBots": this.cookie.getCookie("show_offline_bots", false)
+			"IgnoreOfflineBots": this.cookie.getCookie("show_offline_bots", false) == "1"
 		};
 	},
 
@@ -113,6 +98,15 @@ var XGWebsocket = Class.create(
 	sendGuid: function(type, guid)
 	{
 		var request = this.buildRequest(type);
+		request.Guid = guid;
+
+		return this.sendRequest(request);
+	},
+
+	sendNameGuid: function(type, name, guid)
+	{
+		var request = this.buildRequest(type);
+		request.Name = name;
 		request.Guid = guid;
 
 		return this.sendRequest(request);

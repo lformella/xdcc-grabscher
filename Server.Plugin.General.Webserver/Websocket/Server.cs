@@ -52,6 +52,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		readonly List<User> _users = new List<User>();
 
+		static readonly Guid guid0Day = Guid.Parse("00000000-0000-0000-0000-000000000001");
+		static readonly Guid guid0Week = Guid.Parse("00000000-0000-0000-0000-000000000002");
+		static readonly Guid guidDownloads = Guid.Parse("00000000-0000-0000-0000-000000000003");
+		static readonly Guid guidEnabled = Guid.Parse("00000000-0000-0000-0000-000000000004");
+
 		#endregion
 
 		#region AWorker
@@ -117,7 +122,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectEnabledChanged(AObject aObj)
 		{
-			ObjectChanged(aObj);
+			var response = new Response
+			{
+				Type = Response.Types.ObjectEnabledChanged,
+				Data = aObj
+			};
+			Broadcast(response);
 		}
 
 		protected override void FileAdded(AObject aParent, AObject aObj)
@@ -154,7 +164,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			var response = new Response
 			{
-				Type = Response.Types.Snapshots,
+				Type = Response.Types.ObjectAdded,
 				Data = Snapshots2Flot(Snapshots)
 			};
 			Broadcast(response);
@@ -264,10 +274,10 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Searches:
 						var searches = new List<Core.Object>();
-						searches.Add(new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "ODay Packets" });
-						searches.Add(new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "OWeek Packets" });
-						searches.Add(new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Downloads" });
-						searches.Add(new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000004"), Name = "Enabled Packets" });
+						searches.Add(new Core.Object{ Guid = guid0Day, Name = "ODay Packets" });
+						searches.Add(new Core.Object{ Guid = guid0Week, Name = "OWeek Packets" });
+						searches.Add(new Core.Object{ Guid = guidDownloads, Name = "Downloads" });
+						searches.Add(new Core.Object{ Guid = guidEnabled, Name = "Enabled Packets" });
 						searches.AddRange(Searches.All);
 
 						Unicast(aContext, new Response
@@ -389,8 +399,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			{
 				if (aResponse.Data.GetType() == typeof(Bot))
 				{
+					var bot = aResponse.Data as Bot;
+/*
+					if (aResponse.Type == Response.Types.ObjectEnabledChanged && user.LastSearch == guidEnabled)
+					{
+						aResponse.Type = bot.Enabled ? Response.Types.ObjectAdded : Response.Types.ObjectRemoved;
+						Broadcast(aResponse);
+						break;
+					}
+*/
 					var bots = FilteredBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
-					if (!bots.Contains(aResponse.Data as Bot))
+					if (!bots.Contains(bot))
 					{
 						break;
 					}
@@ -398,9 +417,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 				if (aResponse.Data.GetType() == typeof(Packet))
 				{
+					var packet = aResponse.Data as Packet;
+
 					if (user.LastRequest == Request.Types.PacketsFromBot)
 					{
-						if ((aResponse.Data as Packet).ParentGuid != user.LastSearch)
+						if (packet.ParentGuid != user.LastSearch)
 						{
 							break;
 						}
@@ -408,7 +429,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					else
 					{
 						var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
-						if (!packets.Contains(aResponse.Data as Packet))
+						if (!packets.Contains(packet))
 						{
 							break;
 						}
@@ -461,23 +482,23 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			DateTime init = DateTime.MinValue.ToUniversalTime();
 			DateTime now = DateTime.Now;
 
-			if (aGuid.ToString() == "00000000-0000-0000-0000-000000000001")
+			if (aGuid == guid0Day)
 			{
 				aPackets = from packet in aPackets
 							where packet.LastUpdated != init && 0 <= (now - packet.LastUpdated).TotalSeconds && 86400 >= (now - packet.LastUpdated).TotalSeconds
 							select packet;
 			}
-			else if (aGuid.ToString() == "00000000-0000-0000-0000-000000000002")
+			else if (aGuid == guid0Week)
 			{
 				aPackets = from packet in aPackets
 							where packet.LastUpdated != init && 0 <= (now - packet.LastUpdated).TotalSeconds && 604800 >= (now - packet.LastUpdated).TotalSeconds
 							select packet;
 			}
-			else if (aGuid.ToString() == "00000000-0000-0000-0000-000000000003")
+			else if (aGuid == guidDownloads)
 			{
 				aPackets = from packet in aPackets where packet.Connected select packet;
 			}
-			else if (aGuid.ToString() == "00000000-0000-0000-0000-000000000004")
+			else if (aGuid == guidEnabled)
 			{
 				aPackets = from packet in aPackets where packet.Enabled select packet;
 			}
