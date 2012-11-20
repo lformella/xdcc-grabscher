@@ -24,6 +24,9 @@
 using Fleck;
 
 using System;
+using System.Collections.Generic;
+
+using XG.Core;
 
 namespace XG.Server.Plugin.General.Webserver.Websocket
 {
@@ -33,11 +36,19 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		public IWebSocketConnection Connection { get; set; }
 
-		public Request.Types LastRequest { get; set; }
+		public bool IgnoreOfflineBots { get; set; }
 
+		public Guid LastViewedServer { get; set; }
+
+		public List<Channel> LastLoadedChannels { get; set; }
+		
 		public Guid LastSearch { get; set; }
 
-		public bool IgnoreOfflineBots { get; set; }
+		public List<Bot> LastLoadedBots { get; set; }
+		
+		public Guid LastViewedBot { get; set; }
+
+		public List<Packet> LastLoadedPackets { get; set; }
 
 		#endregion
 	}

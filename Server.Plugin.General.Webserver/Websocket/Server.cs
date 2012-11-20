@@ -51,11 +51,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		};
 
 		readonly List<User> _users = new List<User>();
-
-		static readonly Guid guid0Day = Guid.Parse("00000000-0000-0000-0000-000000000001");
-		static readonly Guid guid0Week = Guid.Parse("00000000-0000-0000-0000-000000000002");
-		static readonly Guid guidDownloads = Guid.Parse("00000000-0000-0000-0000-000000000003");
-		static readonly Guid guidEnabled = Guid.Parse("00000000-0000-0000-0000-000000000004");
+		
+		static readonly Core.Object _search0Day = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "ODay Packets" };
+		static readonly Core.Object _search0Week = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "OWeek Packets" };
+		static readonly Core.Object _searchDownloads = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Downloads" };
+		static readonly Core.Object _searchEnabled = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000004"), Name = "Enabled Packets" };
 
 		#endregion
 
@@ -115,19 +115,24 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			if (aObj is FilePart)
 			{
 				var part = aObj as FilePart;
-				ObjectChanged(part.Packet);
-				ObjectChanged(part.Packet.Parent);
+				if (part.Packet != null)
+				{
+					ObjectChanged(part.Packet);
+					ObjectChanged(part.Packet.Parent);
+				}
 			}
 		}
 
 		protected override void ObjectEnabledChanged(AObject aObj)
 		{
-			var response = new Response
+			ObjectChanged(aObj);
+
+			// if a packet changed dispatch the bot, too
+			if (aObj is Packet)
 			{
-				Type = Response.Types.ObjectEnabledChanged,
-				Data = aObj
-			};
-			Broadcast(response);
+				var part = aObj as Packet;
+				ObjectChanged(part.Parent);
+			}
 		}
 
 		protected override void FileAdded(AObject aParent, AObject aObj)
@@ -211,8 +216,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					return;
 				}
 
-				currentUser.LastRequest = request.Type;
-
 				switch (request.Type)
 				{
 					case Request.Types.AddServer:
@@ -240,22 +243,25 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Search:
-						currentUser.LastSearch = request.Guid;
-						currentUser.IgnoreOfflineBots = request.IgnoreOfflineBots;
-
-						IEnumerable<Packet> packets = FilteredPackets(AllPackets(request.IgnoreOfflineBots), request.Guid);
-						Unicast(aContext, new Response
+						var packets = FilteredPackets(AllPackets(request.IgnoreOfflineBots), request.Guid);
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.SearchPacket,
 							Data = packets
 						});
 
-						IEnumerable<Bot> bots = FilteredBots(packets);
-						Unicast(aContext, new Response
+						var bots = DistinctBots(packets);
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.SearchBot,
 							Data = bots
 						});
+
+						currentUser.IgnoreOfflineBots = request.IgnoreOfflineBots;
+						currentUser.LastSearch = request.Guid;
+						currentUser.LastLoadedBots = bots;
+						currentUser.LastViewedBot = Guid.Empty;
+						currentUser.LastLoadedPackets = packets;
 						break;
 
 					case Request.Types.AddSearch:
@@ -274,13 +280,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Searches:
 						var searches = new List<Core.Object>();
-						searches.Add(new Core.Object{ Guid = guid0Day, Name = "ODay Packets" });
-						searches.Add(new Core.Object{ Guid = guid0Week, Name = "OWeek Packets" });
-						searches.Add(new Core.Object{ Guid = guidDownloads, Name = "Downloads" });
-						searches.Add(new Core.Object{ Guid = guidEnabled, Name = "Enabled Packets" });
+						searches.Add(_search0Day);
+						searches.Add(_search0Week);
+						searches.Add(_searchDownloads);
+						searches.Add(_searchEnabled);
 						searches.AddRange(Searches.All);
 
-						Unicast(aContext, new Response
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.Searches,
 							Data = searches
@@ -288,7 +294,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Servers:
-						Unicast(aContext, new Response
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.Servers,
 							Data = Servers.All
@@ -296,26 +302,32 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.ChannelsFromServer:
-						Unicast(aContext, new Response
+						var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.ChannelsFromServer,
-							Data = from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel
+							Data = channels
 						});
+
+						currentUser.LastViewedServer = request.Guid;
+						currentUser.LastLoadedChannels = channels;
 						break;
 
 					case Request.Types.PacketsFromBot:
-						currentUser.LastSearch = request.Guid;
-
-						Unicast(aContext, new Response
+						var botPackets = (from server in Servers.All
+										from channel in server.Channels
+										from bot in channel.Bots
+										from packet in bot.Packets
+										where packet.ParentGuid == request.Guid
+										select packet).ToList();
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.PacketsFromBot,
-							Data = from server in Servers.All
-									from channel in server.Channels
-									from bot in channel.Bots
-									from packet in bot.Packets
-									where packet.ParentGuid == request.Guid
-									select packet
+							Data = botPackets
 						});
+
+						currentUser.LastViewedBot = request.Guid;
+						currentUser.LastLoadedPackets = botPackets;
 						break;
 
 					case Request.Types.Statistics:
@@ -323,7 +335,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Snapshots:
-						Unicast(aContext, new Response
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.Snapshots,
 							Data = Snapshots2Flot(Snapshots)
@@ -331,7 +343,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Files:
-						Unicast(aContext, new Response
+						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.Files,
 							Data = Files.All
@@ -397,56 +409,139 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			foreach (var user in _users.ToArray())
 			{
-				if (aResponse.Data.GetType() == typeof(Bot))
+				if (user.LastSearch == Guid.Empty && (aResponse.Data.GetType() == typeof(Bot) || aResponse.Data.GetType() == typeof(Packet)))
 				{
-					var bot = aResponse.Data as Bot;
-/*
-					if (aResponse.Type == Response.Types.ObjectEnabledChanged && user.LastSearch == guidEnabled)
-					{
-						aResponse.Type = bot.Enabled ? Response.Types.ObjectAdded : Response.Types.ObjectRemoved;
-						Broadcast(aResponse);
-						break;
-					}
-*/
-					var bots = FilteredBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
-					if (!bots.Contains(bot))
-					{
-						break;
-					}
+					continue;
 				}
 
-				if (aResponse.Data.GetType() == typeof(Packet))
+				if (aResponse.Type == Response.Types.ObjectAdded)
 				{
-					var packet = aResponse.Data as Packet;
-
-					if (user.LastRequest == Request.Types.PacketsFromBot)
+					if (aResponse.Data.GetType() == typeof(Channel))
 					{
-						if (packet.ParentGuid != user.LastSearch)
+						var chan = aResponse.Data as Channel;
+						// dont add chan if the parent server is not selected
+						if (chan.ParentGuid != user.LastViewedServer)
 						{
-							break;
+							continue;
 						}
 					}
-					else
+
+					if (aResponse.Data.GetType() == typeof(Bot))
 					{
+						var bot = aResponse.Data as Bot;
+						// dont add bots which arent matching our last search
+						var bots = DistinctBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
+						if (!bots.Contains(bot))
+						{
+							continue;
+						}
+					}
+
+					if (aResponse.Data.GetType() == typeof(Packet))
+					{
+						var packet = aResponse.Data as Packet;
+						// dont add packets which arent matching the current loaded bot
+						if (user.LastViewedBot != Guid.Empty && packet.ParentGuid != user.LastViewedBot)
+						{
+							continue;
+						}
+						// or our last search
 						var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
 						if (!packets.Contains(packet))
 						{
-							break;
+							continue;
 						}
 					}
 				}
 
-				Unicast(user.Connection, aResponse);
+				if (aResponse.Type == Response.Types.ObjectChanged)
+				{
+					if (aResponse.Data.GetType() == typeof(Channel))
+					{
+						var chan = aResponse.Data as Channel;
+						// skip chan if the parent server is not selected
+						if (chan.ParentGuid != user.LastViewedServer)
+						{
+							continue;
+						}
+					}
+
+					if (aResponse.Data.GetType() == typeof(Bot))
+					{
+						var bot = aResponse.Data as Bot;
+						var bots = DistinctBots(FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch));
+
+						// remove bots which arent matching our last search anymore
+						if (user.LastLoadedBots.Contains(bot) && !bots.Contains(bot) && bot.Guid != user.LastViewedBot)
+						{
+							Unicast(user, new Response {
+								Type = Response.Types.ObjectRemoved,
+								Data = aResponse.Data
+							});
+							user.LastLoadedBots.Remove(bot);
+							continue;
+						}
+
+						// and add em if the match now
+						if (!user.LastLoadedBots.Contains(bot) && bots.Contains(bot))
+						{
+							Unicast(user, new Response {
+								Type = Response.Types.ObjectAdded,
+								Data = aResponse.Data
+							});
+							user.LastLoadedBots.Add(bot);
+							continue;
+						}
+					}
+
+					if (aResponse.Data.GetType() == typeof(Packet))
+					{
+						var packet = aResponse.Data as Packet;
+						var packets = FilteredPackets(AllPackets(user.IgnoreOfflineBots), user.LastSearch);
+						if (user.LastViewedBot != Guid.Empty)
+						{
+							var bot = Servers.WithGuid(user.LastViewedBot) as Bot;
+							if (bot != null)
+							{
+								packets = bot.Packets.ToList();
+							}
+						}
+
+						// remove packets which arent matching our last search anymore
+						if (user.LastLoadedPackets.Contains(packet) && !packets.Contains(packet))
+						{
+							Unicast(user, new Response {
+								Type = Response.Types.ObjectRemoved,
+								Data = aResponse.Data
+							});
+							user.LastLoadedPackets.Remove(packet);
+							continue;
+						}
+
+						// and add em if the match now
+						if (!user.LastLoadedPackets.Contains(packet) && packets.Contains(packet))
+						{
+							Unicast(user, new Response {
+								Type = Response.Types.ObjectAdded,
+								Data = aResponse.Data
+							});
+							user.LastLoadedPackets.Add(packet);
+							continue;
+						}
+					}
+				}
+
+				Unicast(user, aResponse);
 			}
 		}
 
-		void Unicast(IWebSocketConnection aConnection, Response aResponse)
+		void Unicast(User aUser, Response aResponse)
 		{
 			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
 
 			try
 			{
-				aConnection.Send(message);
+				aUser.Connection.Send(message);
 			}
 			catch (Exception ex)
 			{
@@ -458,49 +553,49 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region Object Searching
 
-		IEnumerable<Bot> FilteredBots(IEnumerable<Packet> aPackets)
+		List<Bot> DistinctBots(List<Packet> aPackets)
 		{
-			IEnumerable<Bot> tBots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in aPackets on b.Guid equals p.Parent.Guid select b).Distinct();
+			var tBots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in aPackets on b.Guid equals p.Parent.Guid select b).Distinct();
 
-			return tBots;
+			return tBots.ToList();
 		}
 
-		IEnumerable<Packet> AllPackets (bool ignoreOfflineBots)
+		List<Packet> AllPackets (bool ignoreOfflineBots)
 		{
-			IEnumerable<Bot> allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
+			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			if (ignoreOfflineBots)
 			{
 				allBots = from bot in allBots where !bot.Connected select bot;
 			}
-			IEnumerable<Packet> allPackets = from bot in allBots from packet in bot.Packets select packet;
+			var allPackets = from bot in allBots from packet in bot.Packets select packet;
 
-			return allPackets;
+			return allPackets.ToList();
 		}
 
-		IEnumerable<Packet> FilteredPackets (IEnumerable<Packet> aPackets, Guid aGuid)
+		List<Packet> FilteredPackets (List<Packet> aPackets, Guid aGuid)
 		{
 			DateTime init = DateTime.MinValue.ToUniversalTime();
 			DateTime now = DateTime.Now;
 
-			if (aGuid == guid0Day)
+			if (aGuid == _search0Day.Guid)
 			{
-				aPackets = from packet in aPackets
+				aPackets = (from packet in aPackets
 							where packet.LastUpdated != init && 0 <= (now - packet.LastUpdated).TotalSeconds && 86400 >= (now - packet.LastUpdated).TotalSeconds
-							select packet;
+							select packet).ToList();
 			}
-			else if (aGuid == guid0Week)
+			else if (aGuid == _search0Week.Guid)
 			{
-				aPackets = from packet in aPackets
+				aPackets = (from packet in aPackets
 							where packet.LastUpdated != init && 0 <= (now - packet.LastUpdated).TotalSeconds && 604800 >= (now - packet.LastUpdated).TotalSeconds
-							select packet;
+							select packet).ToList();
 			}
-			else if (aGuid == guidDownloads)
+			else if (aGuid == _searchDownloads.Guid)
 			{
-				aPackets = from packet in aPackets where packet.Connected select packet;
+				aPackets = (from packet in aPackets where packet.Connected select packet).ToList();
 			}
-			else if (aGuid == guidEnabled)
+			else if (aGuid == _searchEnabled.Guid)
 			{
-				aPackets = from packet in aPackets where packet.Enabled select packet;
+				aPackets = (from packet in aPackets where packet.Enabled select packet).ToList();
 			}
 			else 
 			{
@@ -510,7 +605,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					string[] searches = search.Name.ToLower().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 					foreach (string currentSearch in searches)
 					{
-						aPackets = (from packet in aPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToArray();
+						aPackets = (from packet in aPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToList();
 					}
 				}
 			}
@@ -518,7 +613,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return aPackets;
 		}
 
-		Flot.Object[] Snapshots2Flot(Core.Snapshots aSnapshots)
+		Flot.Object[] Snapshots2Flot(Snapshots aSnapshots)
 		{
 			var tObjects = new List<Flot.Object>();
 			for (int a = 1; a <= 26; a++)
