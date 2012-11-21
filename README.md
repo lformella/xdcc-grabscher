@@ -22,6 +22,16 @@ If you click on a packet icon, XG will try to download it and keeps you up to da
 
 Packet icon = ![Packet Icon](http://xg.bitpir.at/images/help/packet_icon.png)
 
+### If running on Ubuntu with Mono
+
+The following packets must be installed:
+
+* mono-runtime
+* libmono-posix4.0-cil mono-dmcs
+* libmono-system-web4.0-cil
+* libmono-system-runtime-serialization4.0-cil
+* libmono-system-xml-linq4.0-cil
+
 ## Settings
 
 You should change the default settings and this explanation will help you. If you don't want to use a special feature, just disable or remove it.

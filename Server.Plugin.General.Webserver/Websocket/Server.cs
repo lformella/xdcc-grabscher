@@ -64,6 +64,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		protected override void StartRun ()
 		{
 			_webSocket = new WebSocketServer("ws://localhost:" + (Settings.Instance.WebServerPort + 1));
+			//FleckLog.Level = LogLevel.Debug;
 
 			_webSocket.Start (socket =>
 			{
@@ -181,6 +182,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnOpen(IWebSocketConnection aContext)
 		{
+			Log.Info("OnOpen() client " + aContext.ConnectionInfo.ToString());
+
 			var user = new User
 			{
 				Connection = aContext,
@@ -192,6 +195,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnClose(IWebSocketConnection aContext)
 		{
+			Log.Info("OnClose() client " + aContext.ConnectionInfo.ToString());
+
 			foreach (var user in _users.ToArray())
 			{
 				if (user.Connection == aContext)
@@ -203,6 +208,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnMessage(IWebSocketConnection aContext, string aMessage)
 		{
+			Log.Info("OnMessage() message '" + aMessage + "' from client " + aContext.ConnectionInfo.ToString());
+
 			var currentUser = (from user in _users where user.Connection == aContext select user).SingleOrDefault();
 			var request = JsonConvert.DeserializeObject<Request>(aMessage);
 #if !UNSAFE
@@ -212,6 +219,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				// no pass, no way
 				if (request.Password != Password)
 				{
+					Log.Error("OnMessage() bad password from client " + aContext.ConnectionInfo.ToString());
 					// exit
 					return;
 				}

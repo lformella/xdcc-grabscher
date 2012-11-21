@@ -131,7 +131,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						}
 						else
 						{
-							WriteToStream(FileLoader.LoadFile(str, Context.Request.UserLanguages));
+							WriteToStream(FileLoader.LoadFile(str, Context.Request.Url.Host, Context.Request.UserLanguages));
 						}
 					}
 				}

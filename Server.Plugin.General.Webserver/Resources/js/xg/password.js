@@ -24,12 +24,13 @@
 var Password;
 var XGPassword = Class.create(
 {
-	initialize: function ()
+	initialize: function (host)
 	{
 		var self = this;
 		Password = this;
 
 		this.password = "";
+		this.host = host;
 
 		var buttonText = { text: _("Connect") };
 		var buttons = {};
@@ -89,7 +90,7 @@ var XGPassword = Class.create(
 		var helper = new XGHelper(cookie);
 		var formatter = new XGFormatter(helper);
 		var refresh = new XGRefresh(helper);
-		var websocket = new XGWebsocket(cookie, "localhost", 5557, this.password);
+		var websocket = new XGWebsocket(cookie, this.host, 5557, this.password);
 
 		// load grid
 		new XGBase(helper, refresh, cookie, formatter, websocket);

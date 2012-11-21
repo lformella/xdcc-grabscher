@@ -1202,7 +1202,7 @@ var XGBase = Class.create(
 		item = self.adjustObject(item);
 		gridElement.jqGrid("setRowData", item.Guid, item);
 
-		gridElement.trigger("reloadGrid");
+		//gridElement.trigger("reloadGrid");
 	},
 
 	removeGridItem: function (grid, item, skipReload)

@@ -80,7 +80,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			_dicByte = new Dictionary<string, byte[]>();
 		}
 
-		public string LoadFile(string aFile, string[] aLanguages)
+		public string LoadFile(string aFile, string aHost, string[] aLanguages)
 		{
 			if (_dicString.ContainsKey(aFile))
 			{
@@ -95,14 +95,14 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 				{
 					foreach (string file in _jsFiles)
 					{
-						content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aLanguages) + "\n";
+						content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aHost, aLanguages) + "\n";
 					}
 				}
 				else if (aFile == "/css/all.css")
 				{
 					foreach (string file in _cssFiles)
 					{
-						content += LoadFile("/css/" + file + ".css", aLanguages) + "\n";
+						content += LoadFile("/css/" + file + ".css", aHost, aLanguages) + "\n";
 					}
 				}
 				else
@@ -120,6 +120,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 #endif
 					if (aFile == "/index.html")
 					{
+						content = content.Replace("#HOST#", aHost);
 #if DEBUG
 						string css = "";
 						foreach (string cssFile in _cssFiles)

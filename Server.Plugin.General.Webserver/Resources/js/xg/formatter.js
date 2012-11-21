@@ -195,7 +195,7 @@ var XGFormatter = Class.create(
 		var ret = bot.Name;
 		if (bot.LastMessage != "")
 		{
-			ret += "<br /><small><b>" + this.helper.date2Human(bot.LastContact) + ":</b> " + bot.LastMessage + "</small>";
+			ret += "<br /><small><b>" + this.helper.date2Human(bot.LastMessageTime) + ":</b> " + bot.LastMessage + "</small>";
 		}
 		return ret;
 	},

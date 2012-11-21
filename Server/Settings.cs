@@ -205,7 +205,7 @@ namespace XG.Server
 
 		public int UpdateDownloadTime
 		{
-			get { return 5; }
+			get { return 3; }
 		}
 
 		public int DownloadPerReadBytes

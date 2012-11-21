@@ -104,8 +104,19 @@ namespace XG.Core
 				if (SetProperty(ref _lastMessage, value))
 				{
 					_lastContact = DateTime.Now;
+					_lastMessageTime = DateTime.Now;
 				}
 			}
+		}
+
+		DateTime _lastMessageTime = DateTime.MinValue.ToUniversalTime();
+
+		[JsonProperty]
+		[MySql]
+		public DateTime LastMessageTime
+		{
+			get { return _lastMessageTime; }
+			set { SetProperty(ref _lastMessageTime, value); }
 		}
 
 		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
