@@ -283,6 +283,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.RemoveSearch:
+						foreach (var user in _users)
+						{
+							if (user.LastSearch == request.Guid)
+							{
+								user.LastSearch = Guid.Empty;
+							}
+						}
+
 						Searches.Remove(Searches.WithGuid(request.Guid));
 						break;
 

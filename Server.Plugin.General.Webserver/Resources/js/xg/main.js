@@ -114,21 +114,18 @@ var XGBase = Class.create(
 				self.cookie.setCookie('servers.sort.sortorder', sortorder);
 			},
 			pager: $('#servers_pager'),
-			rowNum: 1000,
 			pgbuttons: false,
 			pginput: false,
-			recordtext: '',
-			pgtext: '',
 			ExpandColumn: 'Name',
 			viewrecords: true,
 			autowidth: true,
 			scrollrows: true,
+			hidegrid: false,
 			height: 300,
 			sortname: self.cookie.getCookie('servers.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('servers.sort.sortorder', 'asc'),
-			caption: _("Servers"),
-			hidegrid: false
-		}).navGrid('#servers_pager', {edit:false, search:false}, {},
+			caption: _("Servers")
+		}).navGrid('#servers_pager', {edit:false, search:false, refresh:false}, {},
 		{
 			processing: true,
 			reloadAfterSubmit: false,
@@ -201,21 +198,18 @@ var XGBase = Class.create(
 				self.cookie.setCookie('channels.sort.sortorder', sortorder);
 			},
 			pager: $('#channels_pager'),
-			rowNum: 1000,
 			pgbuttons: false,
 			pginput: false,
-			recordtext: '',
-			pgtext: '',
 			ExpandColumn: 'Name',
 			viewrecords: true,
 			autowidth: true,
 			scrollrows: true,
+			hidegrid: false,
 			height: 300,
 			sortname: self.cookie.getCookie('channels.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('channels.sort.sortorder', 'asc'),
-			caption: _("Channels"),
-			hidegrid: false
-		}).navGrid('#channels_pager', {edit:false, search:false}, {},
+			caption: _("Channels")
+		}).navGrid('#channels_pager', {edit:false, search:false, refresh:false}, {},
 		{
 			processing: true,
 			reloadAfterSubmit: false,
@@ -379,19 +373,18 @@ var XGBase = Class.create(
 				self.cookie.setCookie('bots.sort.index', index);
 				self.cookie.setCookie('bots.sort.sortorder', sortorder);
 			},
-			rowNum: 100,
-			rowList: [100, 200, 400, 800],
 			pager: $('#bots_pager'),
+			pgbuttons: false,
+			pginput: false,
 			ExpandColumn: 'Name',
 			viewrecords: true,
 			autowidth: true,
 			scrollrows: true,
-			height: 300,
+			hidegrid: false,
 			sortname: self.cookie.getCookie('bots.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('bots.sort.sortorder', 'asc'),
-			caption: _("Bots"),
-			hidegrid: false
-		}).navGrid('#bots_pager', {edit:false, add:false, del:false, search:false});
+			caption: _("Bots")
+		});
 
 		/* ********************************************************************************************************** */
 		/* PACKET GRID                                                                                                */
@@ -525,18 +518,18 @@ var XGBase = Class.create(
 				self.cookie.setCookie('packets.sort.index', index);
 				self.cookie.setCookie('packets.sort.sortorder', sortorder);
 			},
-			rowNum: 100,
-			rowList: [100, 200, 400, 800],
 			pager: $('#packets_pager'),
+			pgbuttons: false,
+			pginput: false,
 			ExpandColumn: 'Name',
 			viewrecords: true,
 			autowidth: true,
-			height: 300,
+			scrollrows: true,
+			hidegrid: false,
 			sortname: self.cookie.getCookie('packets.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('packets.sort.sortorder', 'asc'),
-			caption: _("Packets"),
-			hidegrid: false
-		}).navGrid('#packets_pager', {edit:false, add:false, del:false, search:false});
+			caption: _("Packets")
+		});
 
 		/* ********************************************************************************************************** */
 		/* SEARCH GRID                                                                                                */
@@ -609,16 +602,9 @@ var XGBase = Class.create(
 						break;
 				}
 			},
-			pager: $('#search_pager'),
-			pgbuttons: false,
-			pginput: false,
-			recordtext: '',
-			pgtext: '',
-			sortname: 'Name',
 			ExpandColumn : 'Name',
 			viewrecords: true,
 			autowidth: true,
-			sortorder: "desc",
 			hidegrid: false
 		});
 
@@ -741,18 +727,18 @@ var XGBase = Class.create(
 				self.cookie.setCookie('searches_xg_bitpir_at.sort.index', index);
 				self.cookie.setCookie('searches_xg_bitpir_at.sort.sortorder', sortorder);
 			},
-			rowNum: 100,
-			rowList: [100, 200, 400, 800],
 			pager:$('#searches_pager_xg_bitpir_at'),
-			viewrecords:true,
-			ExpandColumn:'Name',
-			height:'100%',
-			autowidth:true,
+			pgbuttons: false,
+			pginput: false,
+			ExpandColumn: 'Name',
+			viewrecords: true,
+			autowidth: true,
+			scrollrows: true,
+			hidegrid: false,
 			sortname: self.cookie.getCookie('searches_xg_bitpir_at.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('searches_xg_bitpir_at.sort.sortorder', 'asc'),
-			caption: _("Search via xg.bitpir.at"),
-			hidegrid: false
-		}).navGrid('#searches_pager_xg_bitpir_at', {edit:false, add:false, del:false, search:false});
+			caption: _("Search via xg.bitpir.at")
+		});
 
 		/* ********************************************************************************************************** */
 		/* FILE GRID                                                                                                  */
@@ -855,18 +841,18 @@ var XGBase = Class.create(
 				self.cookie.setCookie('files.sort.index', index);
 				self.cookie.setCookie('files.sort.sortorder', sortorder);
 			},
-			rowNum: 100,
-			rowList: [100, 200, 400, 800],
 			pager: $('#files_pager'),
+			pgbuttons: false,
+			pginput: false,
 			ExpandColumn: 'Name',
 			viewrecords: true,
 			autowidth: true,
-			height: 300,
+			scrollrows: true,
+			hidegrid: false,
 			sortname: self.cookie.getCookie('files.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('files.sort.sortorder', 'asc'),
-			caption: _("Files"),
-			hidegrid: false
-		}).navGrid('#files_pager', {edit:false, add:false, del:false, search:false});
+			caption: _("Files")
+		});
 	},
 
 	initializeDialogs: function()
@@ -1065,7 +1051,7 @@ var XGBase = Class.create(
 		self.websocket.send(Enum.Request.Searches);
 		self.websocket.send(Enum.Request.Servers);
 		self.websocket.send(Enum.Request.Files);
-		//self.websocket.send(Enum.Request.GetSnapshots);
+		self.websocket.send(Enum.Request.Snapshots);
 	},
 
 	onWebsocketDisconnected: function ()
@@ -1092,10 +1078,13 @@ var XGBase = Class.create(
 			case "Packet":
 				grid = "packets_table";
 				break;
-			case "Search":
+			case "Object":
 				grid = "search_table";
 				break;
 			case "Snapshot":
+				break;
+			case "File":
+				grid = "servers_table";
 				break;
 		}
 
@@ -1106,7 +1095,7 @@ var XGBase = Class.create(
 				{
 					if (grid == "search_table")
 					{
-						self.addGridItem("search_table", json.Data, true);
+						self.addGridItem("search_table", json.Data);
 						$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
 					}
 					else
@@ -1121,7 +1110,7 @@ var XGBase = Class.create(
 					if (grid == "search_table")
 					{
 						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
-						self.removeGridItem("search_table", json.Data, true);
+						self.removeGridItem("search_table", json.Data);
 					}
 					else
 					{
@@ -1157,12 +1146,19 @@ var XGBase = Class.create(
 				self.setGridData("files_table", json.Data);
 				break;
 			case Enum.Response.Searches:
-				self.setGridData("search_table", json.Data, true);
+				self.setGridData("search_table", json.Data);
+				break;
+
+			case Enum.Response.Snapshots:
+				self.refresh.setSnapshots(json.Data);
+				break;
+			case Enum.Response.Statistics:
+				self.refresh.setStatistics(json.Data);
 				break;
 		}
 	},
 
-	setGridData: function (grid, data, skipReload)
+	setGridData: function (grid, data)
 	{
 		var self = XG;
 
@@ -1173,25 +1169,15 @@ var XGBase = Class.create(
 			item = self.adjustObject(item);
 			gridElement.addRowData(item.Guid, item);
 		});
-
-		if (!skipReload)
-		{
-			gridElement.trigger("reloadGrid");
-		}
 	},
 
-	addGridItem: function (grid, item, skipReload)
+	addGridItem: function (grid, item)
 	{
 		var self = XG;
 
 		var gridElement = $("#" + grid);
 		item = self.adjustObject(item);
 		gridElement.addRowData(item.Guid, item);
-
-		if (!skipReload)
-		{
-			gridElement.trigger("reloadGrid");
-		}
 	},
 
 	updateGridItem: function (grid, item)
@@ -1201,21 +1187,14 @@ var XGBase = Class.create(
 		var gridElement = $("#" + grid);
 		item = self.adjustObject(item);
 		gridElement.jqGrid("setRowData", item.Guid, item);
-
-		//gridElement.trigger("reloadGrid");
 	},
 
-	removeGridItem: function (grid, item, skipReload)
+	removeGridItem: function (grid, item)
 	{
 		var self = XG;
 
 		var gridElement = $("#" + grid);
 		gridElement.delRowData(item.Guid);
-
-		if (!skipReload)
-		{
-			gridElement.trigger("reloadGrid");
-		}
 	},
 
 	adjustObject: function (item)

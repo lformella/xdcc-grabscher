@@ -32,95 +32,81 @@ var XGRefresh = Class.create(
 		this.snapshots = {};
 	},
 
-	refreshStatistic: function ()
+	setStatistics: function (result)
 	{
-		var self = this;
+		$("#BytesLoaded").html(this.helper.size2Human(result.BytesLoaded));
 
-		$.getJSON(// TODO this.url.jsonUrl(Enum.Request.GetStatistics),
-			function(result)
-			{
-				$("#BytesLoaded").html(self.helper.size2Human(result.BytesLoaded));
+		$("#PacketsCompleted").html(result.PacketsCompleted);
+		$("#PacketsIncompleted").html(result.PacketsIncompleted);
+		$("#PacketsBroken").html(result.PacketsBroken);
 
-				$("#PacketsCompleted").html(result.PacketsCompleted);
-				$("#PacketsIncompleted").html(result.PacketsIncompleted);
-				$("#PacketsBroken").html(result.PacketsBroken);
+		$("#PacketsRequested").html(result.PacketsRequested);
+		$("#PacketsRemoved").html(result.PacketsRemoved);
 
-				$("#PacketsRequested").html(result.PacketsRequested);
-				$("#PacketsRemoved").html(result.PacketsRemoved);
+		$("#FilesCompleted").html(result.FilesCompleted);
+		$("#FilesBroken").html(result.FilesBroken);
 
-				$("#FilesCompleted").html(result.FilesCompleted);
-				$("#FilesBroken").html(result.FilesBroken);
+		$("#ServerConnectsOk").html(result.ServerConnectsOk);
+		$("#ServerConnectsFailed").html(result.ServerConnectsFailed);
 
-				$("#ServerConnectsOk").html(result.ServerConnectsOk);
-				$("#ServerConnectsFailed").html(result.ServerConnectsFailed);
+		$("#ChannelConnectsOk").html(result.ChannelConnectsOk);
+		$("#ChannelConnectsFailed").html(result.ChannelConnectsFailed);
+		$("#ChannelsJoined").html(result.ChannelsJoined);
+		$("#ChannelsParted").html(result.ChannelsParted);
+		$("#ChannelsKicked").html(result.ChannelsKicked);
 
-				$("#ChannelConnectsOk").html(result.ChannelConnectsOk);
-				$("#ChannelConnectsFailed").html(result.ChannelConnectsFailed);
-				$("#ChannelsJoined").html(result.ChannelsJoined);
-				$("#ChannelsParted").html(result.ChannelsParted);
-				$("#ChannelsKicked").html(result.ChannelsKicked);
+		$("#BotConnectsOk").html(result.BotConnectsOk);
+		$("#BotConnectsFailed").html(result.BotConnectsFailed);
 
-				$("#BotConnectsOk").html(result.BotConnectsOk);
-				$("#BotConnectsFailed").html(result.BotConnectsFailed);
-
-				$("#SpeedMax").html(self.helper.speed2Human(result.SpeedMax));
-			}
-		);
+		$("#SpeedMax").html(this.helper.speed2Human(result.SpeedMax));
 	},
 
 	/* ************************************************************************************************************** */
 	/* SNAPSHOT STUFF                                                                                                 */
 	/* ************************************************************************************************************** */
 
-	updateSnapshots: function ()
+	setSnapshots: function (result)
 	{
-		var self = this;
-
-		$.getJSON(// TODO this.url.jsonUrl(Enum.Request.GetSnapshots),
-			function(result)
+		$.each(result, function(index, item) {
+			item.color = index;
+			switch (index + 1)
 			{
-				$.each(result, function(index, item) {
-					item.color = index;
-					switch (index + 1)
-					{
-						case Enum.SnapshotValue.Bots:
-						case Enum.SnapshotValue.BotsConnected:
-						case Enum.SnapshotValue.BotsDisconnected:
-						case Enum.SnapshotValue.BotsFreeQueue:
-						case Enum.SnapshotValue.BotsFreeSlots:
-							item.yaxis = 2;
-							break;
+				case Enum.SnapshotValue.Bots:
+				case Enum.SnapshotValue.BotsConnected:
+				case Enum.SnapshotValue.BotsDisconnected:
+				case Enum.SnapshotValue.BotsFreeQueue:
+				case Enum.SnapshotValue.BotsFreeSlots:
+					item.yaxis = 2;
+					break;
 
-						case Enum.SnapshotValue.Packets:
-						case Enum.SnapshotValue.PacketsConnected:
-						case Enum.SnapshotValue.PacketsDisconnected:
-							item.yaxis = 3;
-							break;
+				case Enum.SnapshotValue.Packets:
+				case Enum.SnapshotValue.PacketsConnected:
+				case Enum.SnapshotValue.PacketsDisconnected:
+					item.yaxis = 3;
+					break;
 
-						case Enum.SnapshotValue.PacketsSize:
-						case Enum.SnapshotValue.PacketsSizeDownloading:
-						case Enum.SnapshotValue.PacketsSizeNotDownloading:
-						case Enum.SnapshotValue.PacketsSizeConnected:
-						case Enum.SnapshotValue.PacketsSizeDisconnected:
-							item.yaxis = 4;
-							break;
+				case Enum.SnapshotValue.PacketsSize:
+				case Enum.SnapshotValue.PacketsSizeDownloading:
+				case Enum.SnapshotValue.PacketsSizeNotDownloading:
+				case Enum.SnapshotValue.PacketsSizeConnected:
+				case Enum.SnapshotValue.PacketsSizeDisconnected:
+					item.yaxis = 4;
+					break;
 
-						case Enum.SnapshotValue.Speed:
-						case Enum.SnapshotValue.BotsAverageCurrentSpeed:
-						case Enum.SnapshotValue.BotsAverageMaxSpeed:
-							item.yaxis = 5;
-							break;
+				case Enum.SnapshotValue.Speed:
+				case Enum.SnapshotValue.BotsAverageCurrentSpeed:
+				case Enum.SnapshotValue.BotsAverageMaxSpeed:
+					item.yaxis = 5;
+					break;
 
-						default:
-							item.yaxis = 1;
-							break;
-					}
-				});
-
-				self.snapshots = result;
-				self.updateSnapshotPlot();
+				default:
+					item.yaxis = 1;
+					break;
 			}
-		);
+		});
+
+		this.snapshots = result;
+		this.updateSnapshotPlot();
 	},
 
 	updateSnapshotPlot: function ()

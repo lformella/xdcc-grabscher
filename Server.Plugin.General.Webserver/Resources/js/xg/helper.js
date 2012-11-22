@@ -87,7 +87,12 @@ var XGHelper = Class.create(
 	 */
 	date2Human: function (date)
 	{
-		return this.cookie.getCookie("human_dates", "0") == "1" ? moment(date).fromNow() : moment(date).format("L LT");
+		var momentDate = moment(date);
+		if (momentDate.year() == 1)
+		{
+			return "";
+		}
+		return this.cookie.getCookie("human_dates", "0") == "1" ? momentDate.fromNow() : momentDate.format("L LT");
 	},
 
 	/**
