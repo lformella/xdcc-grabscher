@@ -815,7 +815,7 @@ var XGBase = Class.create(
 					formatter: function (c, o, r)
 					{
 						var obj = JSON.parse(r.Object);
-						return self.formatter.formatFileSpeed(robj);
+						return self.formatter.formatFileSpeed(obj);
 					},
 					sorttype: function (c, o)
 					{
