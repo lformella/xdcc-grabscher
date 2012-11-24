@@ -1,5 +1,5 @@
 //
-//  xg.translate.js
+//  translate.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>

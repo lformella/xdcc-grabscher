@@ -101,11 +101,9 @@ namespace XG.Core
 			get { return _lastMessage; }
 			set
 			{
-				if (SetProperty(ref _lastMessage, value))
-				{
-					_lastContact = DateTime.Now;
-					_lastMessageTime = DateTime.Now;
-				}
+				SetProperty(ref _lastMessage, value);
+				_lastContact = DateTime.Now;
+				_lastMessageTime = DateTime.Now;
 			}
 		}
 
@@ -208,7 +206,7 @@ namespace XG.Core
 		}
 
 		[JsonProperty]
-		public double Speed
+		public Int64 Speed
 		{
 			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }
 		}

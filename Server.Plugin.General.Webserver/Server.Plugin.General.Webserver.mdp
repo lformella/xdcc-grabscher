@@ -122,7 +122,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/helper.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.helper.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/main.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.main.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/password.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.password.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/refresh.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.refresh.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/statistics.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.statistics.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/websocket.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.websocket.js" />

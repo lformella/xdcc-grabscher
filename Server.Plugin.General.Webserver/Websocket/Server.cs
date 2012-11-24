@@ -112,10 +112,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			};
 			Broadcast(response);
 
-			// if a part changed dispatch bots and packets, too
+			// if a part changed dispatch the file, packet and bot, too
 			if (aObj is FilePart)
 			{
 				var part = aObj as FilePart;
+				ObjectChanged(part.Parent);
 				if (part.Packet != null)
 				{
 					ObjectChanged(part.Packet);
@@ -182,7 +183,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnOpen(IWebSocketConnection aContext)
 		{
-			Log.Info("OnOpen() client " + aContext.ConnectionInfo.ToString());
+			Log.Info("OnOpen() client " + aContext.ConnectionInfo.ClientIpAddress);
 
 			var user = new User
 			{
@@ -195,7 +196,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnClose(IWebSocketConnection aContext)
 		{
-			Log.Info("OnClose() client " + aContext.ConnectionInfo.ToString());
+			Log.Info("OnClose() client " + aContext.ConnectionInfo.ClientIpAddress);
 
 			foreach (var user in _users.ToArray())
 			{
@@ -208,7 +209,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnMessage(IWebSocketConnection aContext, string aMessage)
 		{
-			Log.Info("OnMessage() message '" + aMessage + "' from client " + aContext.ConnectionInfo.ToString());
+			Log.Info("OnMessage() message '" + aMessage + "' from client " + aContext.ConnectionInfo.ClientIpAddress);
 
 			var currentUser = (from user in _users where user.Connection == aContext select user).SingleOrDefault();
 			var request = JsonConvert.DeserializeObject<Request>(aMessage);
@@ -274,7 +275,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.AddSearch:
 						string name = request.Name;
-						Core.Object obj = Searches.Named(name);
+						var obj = Searches.Named(name);
 						if (obj == null)
 						{
 							obj = new Core.Object {Name = name};
@@ -283,15 +284,19 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.RemoveSearch:
-						foreach (var user in _users)
+						var search = Searches.WithGuid(request.Guid);
+						if (search != null)
 						{
-							if (user.LastSearch == request.Guid)
+							foreach (var user in _users)
 							{
-								user.LastSearch = Guid.Empty;
+								if (user.LastSearch == request.Guid)
+								{
+									user.LastSearch = Guid.Empty;
+								}
 							}
-						}
 
-						Searches.Remove(Searches.WithGuid(request.Guid));
+							Searches.Remove(search);
+						}
 						break;
 
 					case Request.Types.Searches:
@@ -416,7 +421,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("OnReceive()", ex);
+				Log.Fatal("OnMessage(" + aContext.ConnectionInfo.ToString() + ", " + aMessage + ")", ex);
 			}
 #endif
 		}
@@ -553,16 +558,26 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void Unicast(User aUser, Response aResponse)
 		{
-			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
+			if (aUser.Connection == null)
+			{
+				//OnClose(aUser.Connection);
+				//return;
+			}
 
+			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
+			
+#if !UNSAFE
 			try
 			{
+#endif
 				aUser.Connection.Send(message);
+#if !UNSAFE
 			}
 			catch (Exception ex)
 			{
 				Log.Fatal("Unicast()", ex);
 			}
+#endif
 		}
 
 		#endregion
@@ -581,7 +596,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			if (ignoreOfflineBots)
 			{
-				allBots = from bot in allBots where !bot.Connected select bot;
+				allBots = from bot in allBots where bot.Connected select bot;
 			}
 			var allPackets = from bot in allBots from packet in bot.Packets select packet;
 
@@ -623,6 +638,10 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					{
 						aPackets = (from packet in aPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToList();
 					}
+				}
+				else
+				{
+					aPackets.Clear();
 				}
 			}
 

@@ -1,5 +1,5 @@
 // 
-//  xg.helper.js
+//  helper.js
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>

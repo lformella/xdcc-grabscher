@@ -1,5 +1,5 @@
 //
-//  xg.password.js
+//  password.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -24,13 +24,14 @@
 var Password;
 var XGPassword = Class.create(
 {
-	initialize: function (host)
+	initialize: function (host, port)
 	{
 		var self = this;
 		Password = this;
 
 		this.password = "";
 		this.host = host;
+		this.port = port;
 
 		var buttonText = { text: _("Connect") };
 		var buttons = {};
@@ -89,14 +90,14 @@ var XGPassword = Class.create(
 		var cookie = new XGCookie();
 		var helper = new XGHelper(cookie);
 		var formatter = new XGFormatter(helper);
-		var refresh = new XGRefresh(helper);
-		var websocket = new XGWebsocket(cookie, this.host, 5557, this.password);
+		var statistics = new XGStatistics(helper);
+		var websocket = new XGWebsocket(cookie, this.host, this.port, this.password, statistics);
 
 		// load grid
-		new XGBase(helper, refresh, cookie, formatter, websocket);
+		new XGBase(helper, statistics, cookie, formatter, websocket);
 
 		// resize
-		var resize = new XGResize(refresh);
+		var resize = new XGResize(statistics);
 	},
 
 	checkPassword: function (password)

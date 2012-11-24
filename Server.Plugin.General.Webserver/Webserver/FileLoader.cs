@@ -65,7 +65,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"xg/main",
 			"xg/password",
 			"xg/resize",
-			"xg/refresh",
+			"xg/statistics",
 			"xg/translate",
 			"xg/websocket"
 		};
@@ -121,6 +121,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 					if (aFile == "/index.html")
 					{
 						content = content.Replace("#HOST#", aHost);
+						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));
 #if DEBUG
 						string css = "";
 						foreach (string cssFile in _cssFiles)

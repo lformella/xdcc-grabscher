@@ -1,5 +1,5 @@
 //
-//  xg.js
+//  main.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -26,25 +26,21 @@ var XGBase = Class.create(
 {
 	/**
 	 * @param {XGHelper} helper
-	 * @param {XGRefresh} refresh
+	 * @param {XGStatistics} statistics
 	 * @param {XGCookie} cookie
 	 * @param {XGFormatter} formatter
 	 * @param {XGWebsocket} websocket
 	 */
-	initialize: function(helper, refresh, cookie, formatter, websocket)
+	initialize: function(helper, statistics, cookie, formatter, websocket)
 	{
 		XG = this;
 		var self = this;
 
-		this.refresh = refresh;
+		this.statistics = statistics;
 		this.cookie = cookie;
 		this.helper = helper;
 		this.formatter = formatter;
-
 		this.websocket = websocket;
-		this.websocket.onConnected = self.onWebsocketConnected;
-		this.websocket.onDisconnected = self.onWebsocketDisconnected;
-		this.websocket.onMessageReceived = self.onWebsocketMessageReceived;
 
 		this.idServer = 0;
 		this.activeTab = 0;
@@ -71,18 +67,18 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true
 				},
 				{
 					name: 'Icon',
 					index: 'Icon',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatServerIcon(obj, "XG.flipObject(\"" + obj.Guid + "\", \"servers_table\");");
 					},
 					width: 36,
@@ -92,9 +88,9 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return obj.Name;
 					},
 					width: 216,
@@ -105,7 +101,7 @@ var XGBase = Class.create(
 			onSelectRow: function(guid)
 			{
 				self.idServer = guid;
-				var server = self.getRowData("servers_table", guid);
+				var server = self.websocket.getRowData("servers_table", guid);
 				self.websocket.sendGuid(Enum.Request.ChannelsFromServer, server.Guid);
 			},
 			onSortCol: function(index, iCol, sortorder)
@@ -118,10 +114,11 @@ var XGBase = Class.create(
 			pginput: false,
 			ExpandColumn: 'Name',
 			viewrecords: true,
-			autowidth: true,
+			width: 400,
 			scrollrows: true,
 			hidegrid: false,
-			height: 300,
+			height: 400,
+			rowNum: 999999999,
 			sortname: self.cookie.getCookie('servers.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('servers.sort.sortorder', 'asc'),
 			caption: _("Servers")
@@ -161,18 +158,18 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true
 				},
 				{
 					name: 'Icon',
 					index: 'Icon',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatChannelIcon(obj, "XG.flipObject(\"" + obj.Guid + "\", \"channels_table\");");
 					},
 					width: 36,
@@ -182,9 +179,9 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return obj.Name;
 					},
 					width: 216,
@@ -202,10 +199,11 @@ var XGBase = Class.create(
 			pginput: false,
 			ExpandColumn: 'Name',
 			viewrecords: true,
-			autowidth: true,
+			width: 400,
 			scrollrows: true,
 			hidegrid: false,
-			height: 300,
+			height: 400,
+			rowNum: 999999999,
 			sortname: self.cookie.getCookie('channels.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('channels.sort.sortorder', 'asc'),
 			caption: _("Channels")
@@ -245,18 +243,18 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true
 				},
 				{
 					name: 'Icon',
 					index: 'Icon',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotIcon(obj);
 					},
 					width: 32,
@@ -266,9 +264,9 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotName(obj);
 					},
 					fixed: false
@@ -276,9 +274,9 @@ var XGBase = Class.create(
 				{
 					name: 'Speed',
 					index: 'Speed',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.helper.speed2Human(obj.Speed);
 					},
 					sorttype: function (c, o)
@@ -291,9 +289,9 @@ var XGBase = Class.create(
 				{
 					name: 'QueuePosition',
 					index: 'QueuePosition',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return obj.QueuePosition > 0 ? obj.QueuePosition : "&nbsp;";
 					},
 					sorttype: function (c, o)
@@ -306,9 +304,9 @@ var XGBase = Class.create(
 				{
 					name: 'QueueTime',
 					index: 'QueueTime',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.helper.time2Human(obj.QueueTime);
 					},
 					sorttype: function (c, o)
@@ -321,9 +319,9 @@ var XGBase = Class.create(
 				{
 					name: 'InfoSpeed',
 					index: 'InfoSpeed',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotSpeed(obj);
 					},
 					sorttype: function (c, o)
@@ -336,9 +334,9 @@ var XGBase = Class.create(
 				{
 					name: 'InfoSlot',
 					index: 'InfoSlot',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotSlots(obj);
 					},
 					sorttype: function (c, o)
@@ -351,9 +349,9 @@ var XGBase = Class.create(
 				{
 					name: 'InfoQueue',
 					index: 'InfoQueue',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotQueue(obj);
 					},
 					sorttype: function (c, o)
@@ -381,6 +379,7 @@ var XGBase = Class.create(
 			autowidth: true,
 			scrollrows: true,
 			hidegrid: false,
+			rowNum: 999999999,
 			sortname: self.cookie.getCookie('bots.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('bots.sort.sortorder', 'asc'),
 			caption: _("Bots")
@@ -399,17 +398,17 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true},
 				{
 					name: 'Icon',
 					index: 'Icon',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\");");
 					},
 					width: 36,
@@ -419,9 +418,9 @@ var XGBase = Class.create(
 				{
 					name: 'Id',
 					index: 'Id',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketId(obj);
 					},
 					sorttype: function (c, o)
@@ -434,23 +433,24 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketName(obj);
 					},
 					sorttype: function (c, o)
 					{
 						return o.RealName != undefined && o.RealName != "" ? o.RealName : o.Name;
 					},
-					fixed: false
+					fixed: false,
+					classes: "progress-cell"
 				},
 				{
 					name: 'Size',
 					index: 'Size',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketSize(obj);
 					},
 					sorttype: function (c, o)
@@ -462,9 +462,9 @@ var XGBase = Class.create(
 				{
 					name: 'Speed',
 					index: 'Speed',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketSpeed(obj);
 					},
 					sorttype: function (c, o)
@@ -477,9 +477,9 @@ var XGBase = Class.create(
 				{
 					name: 'TimeMissing',
 					index: 'TimeMissing',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketTimeMissing(obj)
 					},
 					sorttype: function (c, o)
@@ -492,9 +492,9 @@ var XGBase = Class.create(
 				{
 					name: 'LastUpdated',
 					index: 'LastUpdated',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.helper.date2Human(obj.LastUpdated);
 					},
 					sorttype: function (c, o)
@@ -507,7 +507,7 @@ var XGBase = Class.create(
 			],
 			onSelectRow: function(guid)
 			{
-				var pack = self.getRowData('packets_table', guid);
+				var pack = self.websocket.getRowData('packets_table', guid);
 				if(pack)
 				{
 					$('#bots_table').setSelection(pack.ParentGuid, false);
@@ -526,6 +526,7 @@ var XGBase = Class.create(
 			autowidth: true,
 			scrollrows: true,
 			hidegrid: false,
+			rowNum: 999999999,
 			sortname: self.cookie.getCookie('packets.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('packets.sort.sortorder', 'asc'),
 			caption: _("Packets")
@@ -544,18 +545,18 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true
 				},
 				{
 					name: 'Icon',
 					index: 'Icon',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatSearchIcon(obj);
 					},
 					width: 26,
@@ -565,9 +566,9 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return _(obj.Name);
 					},
 					fixed: false,
@@ -576,9 +577,9 @@ var XGBase = Class.create(
 				{
 					name: 'Action',
 					index: 'Action',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatSearchAction(obj);
 					},
 					width: 18,
@@ -587,7 +588,7 @@ var XGBase = Class.create(
 			],
 			onSelectRow: function(guid)
 			{
-				var search = self.getRowData("search_table", guid);
+				var search = self.websocket.getRowData("search_table", guid);
 
 				switch(self.activeTab)
 				{
@@ -605,7 +606,8 @@ var XGBase = Class.create(
 			ExpandColumn : 'Name',
 			viewrecords: true,
 			autowidth: true,
-			hidegrid: false
+			hidegrid: false,
+			rowNum: 999999999
 		});
 
 		$("#search-text").keyup( function (e)
@@ -630,18 +632,18 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true
 				},
 				{
 					name: 'Connected',
 					index: 'Connected',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketIcon(obj, "XG.downloadLink(\"" + obj.rowId + "\");", true);
 					},
 					width: 24,
@@ -650,9 +652,9 @@ var XGBase = Class.create(
 				{
 					name: 'Id',
 					index: 'Id',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketId(obj);
 					},
 					width: 38,
@@ -661,9 +663,9 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketName(obj);
 					},
 					fixed: false
@@ -671,9 +673,9 @@ var XGBase = Class.create(
 				{
 					name: 'LastMentioned',
 					index: 'LastMentioned',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.helper.timeStampToHuman(obj.LastMentioned);
 					},
 					width: 140,
@@ -682,9 +684,9 @@ var XGBase = Class.create(
 				{
 					name: 'Size',
 					index: 'Size',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.helper.size2Human(obj.Size);
 					},
 					width: 60,
@@ -693,9 +695,9 @@ var XGBase = Class.create(
 				{
 					name: 'BotName',
 					index: 'BotName',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return obj.BotName;
 					},
 					width: 160
@@ -703,9 +705,9 @@ var XGBase = Class.create(
 				{
 					name: 'BotSpeed',
 					index: 'BotSpeed',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.helper.speed2Human(obj.BotSpeed);
 					},
 					width: 80,
@@ -714,9 +716,9 @@ var XGBase = Class.create(
 				{
 					name: 'IrcLink',
 					index: 'IrcLink',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return obj.IrcLink;
 					},
 					hidden: true
@@ -735,6 +737,7 @@ var XGBase = Class.create(
 			autowidth: true,
 			scrollrows: true,
 			hidegrid: false,
+			rowNum: 999999999,
 			sortname: self.cookie.getCookie('searches_xg_bitpir_at.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('searches_xg_bitpir_at.sort.sortorder', 'asc'),
 			caption: _("Search via xg.bitpir.at")
@@ -753,18 +756,18 @@ var XGBase = Class.create(
 				{
 					name: 'Object',
 					index: 'Object',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						return JSON.stringify(r);
+						return JSON.stringify(obj);
 					},
 					hidden: true
 				},
 				{
 					name: 'Icon',
 					index: 'Icon',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatFileIcon(obj);
 					},
 					width: 24,
@@ -773,19 +776,20 @@ var XGBase = Class.create(
 				{
 					name: 'Name',
 					index: 'Name',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatFileName(obj);
 					},
-					fixed: false
+					fixed: false,
+					classes: "progress-cell"
 				},
 				{
 					name: 'Size',
 					index: 'Size',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatFileSize(obj);
 					},
 					sorttype: function (c, o)
@@ -798,9 +802,9 @@ var XGBase = Class.create(
 				{
 					name: 'Speed',
 					index: 'Speed',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatFileSpeed(obj);
 					},
 					sorttype: function (c, o)
@@ -818,9 +822,9 @@ var XGBase = Class.create(
 				{
 					name: 'TimeMissing',
 					index: 'TimeMissing',
-					formatter: function (c, o, r)
+					formatter: function (cell, grid, obj)
 					{
-						var obj = JSON.parse(r.Object);
+						obj = JSON.parse(obj.Object);
 						return self.formatter.formatFileTimeMissing(obj)
 					},
 					sorttype: function (c, o)
@@ -849,6 +853,7 @@ var XGBase = Class.create(
 			autowidth: true,
 			scrollrows: true,
 			hidegrid: false,
+			rowNum: 999999999,
 			sortname: self.cookie.getCookie('files.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('files.sort.sortorder', 'asc'),
 			caption: _("Files")
@@ -872,7 +877,7 @@ var XGBase = Class.create(
 
 		$("#dialog_server_channels").dialog({
 			autoOpen: false,
-			width: 560,
+			width: 830,
 			modal: true,
 			resizable: false
 		});
@@ -885,7 +890,7 @@ var XGBase = Class.create(
 			.button({icons: { primary: "ui-icon-comment" }})
 			.click( function()
 			{
-				self.refresh.refreshStatistic();
+				self.websocket.send(Enum.Request.Statistics);
 				$("#dialog_statistics").dialog("open");
 			});
 
@@ -903,7 +908,7 @@ var XGBase = Class.create(
 		//$(".snapshot_checkbox").button();
 		$(".snapshot_checkbox, input[name='snapshot_time']").click( function()
 		{
-			self.refresh.updateSnapshotPlot();
+			self.statistics.updateSnapshotPlot();
 		});
 
 		$("#snapshots_button")
@@ -983,7 +988,7 @@ var XGBase = Class.create(
 	{
 		var self = this;
 
-		var pack = self.getRowData('packets_table', guid);
+		var pack = self.websocket.getRowData('packets_table', guid);
 		if(pack)
 		{
 			if(!pack.Enabled)
@@ -1006,7 +1011,7 @@ var XGBase = Class.create(
 	{
 		var self = this;
 
-		var obj = self.getRowData(grid, guid);
+		var obj = self.websocket.getRowData(grid, guid);
 		if(obj)
 		{
 			if(!obj.Enabled)
@@ -1029,177 +1034,7 @@ var XGBase = Class.create(
 
 		$("#" + guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
 
-		var data = self.getRowData("searches_xg_bitpir_at", guid);
+		var data = self.websocket.getRowData("searches_xg_bitpir_at", guid);
 		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {String} guid
-	 * @return {object}
-	 */
-	getRowData: function (grid, guid)
-	{
-		var str = $("#" + grid).getRowData(guid).Object;
-		return $.parseJSON($.parseJSON(str).Object);
-	},
-
-	onWebsocketConnected: function ()
-	{
-		var self = XG;
-
-		self.websocket.send(Enum.Request.Searches);
-		self.websocket.send(Enum.Request.Servers);
-		self.websocket.send(Enum.Request.Files);
-		self.websocket.send(Enum.Request.Snapshots);
-	},
-
-	onWebsocketDisconnected: function ()
-	{
-		$("#dialog_error").dialog("open");
-	},
-
-	onWebsocketMessageReceived: function (json)
-	{
-		var self = XG;
-
-		var grid = "";
-		switch (json.DataType)
-		{
-			case "Server":
-				grid = "servers_table";
-				break;
-			case "Channel":
-				grid = "channels_table";
-				break;
-			case "Bot":
-				grid = "bots_table";
-				break;
-			case "Packet":
-				grid = "packets_table";
-				break;
-			case "Object":
-				grid = "search_table";
-				break;
-			case "Snapshot":
-				break;
-			case "File":
-				grid = "servers_table";
-				break;
-		}
-
-		switch (json.Type)
-		{
-			case Enum.Response.ObjectAdded:
-				if (grid != "")
-				{
-					if (grid == "search_table")
-					{
-						self.addGridItem("search_table", json.Data);
-						$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
-					}
-					else
-					{
-						self.addGridItem(grid, json.Data);
-					}
-				}
-				break;
-			case Enum.Response.ObjectRemoved:
-				if (grid != "")
-				{
-					if (grid == "search_table")
-					{
-						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
-						self.removeGridItem("search_table", json.Data);
-					}
-					else
-					{
-						self.removeGridItem(grid, json.Data);
-					}
-				}
-				break;
-			case Enum.Response.ObjectChanged:
-				if (grid != "")
-				{
-					self.updateGridItem(grid, json.Data);
-				}
-				break;
-
-			case Enum.Response.SearchPacket:
-				self.setGridData("packets_table", json.Data);
-				break;
-			case Enum.Response.SearchBot:
-				self.setGridData("bots_table", json.Data);
-				break;
-
-			case Enum.Response.Servers:
-				self.setGridData("servers_table", json.Data);
-				break;
-			case Enum.Response.ChannelsFromServer:
-				self.setGridData("channels_table", json.Data);
-				break;
-			case Enum.Response.PacketsFromBot:
-				self.setGridData("packets_table", json.Data);
-				break;
-
-			case Enum.Response.Files:
-				self.setGridData("files_table", json.Data);
-				break;
-			case Enum.Response.Searches:
-				self.setGridData("search_table", json.Data);
-				break;
-
-			case Enum.Response.Snapshots:
-				self.refresh.setSnapshots(json.Data);
-				break;
-			case Enum.Response.Statistics:
-				self.refresh.setStatistics(json.Data);
-				break;
-		}
-	},
-
-	setGridData: function (grid, data)
-	{
-		var self = XG;
-
-		var gridElement = $("#" + grid);
-		gridElement.clearGridData();
-		$.each(data, function(i, item)
-		{
-			item = self.adjustObject(item);
-			gridElement.addRowData(item.Guid, item);
-		});
-	},
-
-	addGridItem: function (grid, item)
-	{
-		var self = XG;
-
-		var gridElement = $("#" + grid);
-		item = self.adjustObject(item);
-		gridElement.addRowData(item.Guid, item);
-	},
-
-	updateGridItem: function (grid, item)
-	{
-		var self = XG;
-
-		var gridElement = $("#" + grid);
-		item = self.adjustObject(item);
-		gridElement.jqGrid("setRowData", item.Guid, item);
-	},
-
-	removeGridItem: function (grid, item)
-	{
-		var self = XG;
-
-		var gridElement = $("#" + grid);
-		gridElement.delRowData(item.Guid);
-	},
-
-	adjustObject: function (item)
-	{
-		item.Object = JSON.stringify(item);
-		return item;
 	}
 });

@@ -1,4 +1,4 @@
-//  xg.cookie.js
+//  cookie.js
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>

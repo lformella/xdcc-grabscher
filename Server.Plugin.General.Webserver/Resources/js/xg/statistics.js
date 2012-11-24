@@ -1,4 +1,4 @@
-//  xg.refresh.js
+//  statistics.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -20,7 +20,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGRefresh = Class.create(
+var XGStatistics = Class.create(
 {
 	/**
 	 * @param {XGHelper} helper

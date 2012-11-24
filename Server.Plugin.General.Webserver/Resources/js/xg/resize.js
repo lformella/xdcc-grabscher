@@ -1,4 +1,4 @@
-//  xg.resize.js
+//  resize.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -23,13 +23,13 @@
 var XGResize = Class.create(
 {
 	/**
-	 * @param {XGRefresh} refresh
+	 * @param {XGStatistics} refresh
 	 */
 	initialize: function (refresh)
 	{
 		var self = this;
 
-		this.refresh = refresh;
+		this.statistics = refresh;
 
 		$("body").layout({
 			onresize: function () {
@@ -119,7 +119,7 @@ var XGResize = Class.create(
 				.width(width - 240)
 				.height(height - 40);
 			// and update the snapshot plot
-			this.refresh.updateSnapshotPlot();
+			this.statistics.updateSnapshotPlot();
 		}
 
 		innerLayout.resizeAll();

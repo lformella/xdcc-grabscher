@@ -1,5 +1,5 @@
 //
-//  xg.enum.js
+//  enum.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>

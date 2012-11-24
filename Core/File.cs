@@ -63,6 +63,18 @@ namespace XG.Core
 			get { return _size; }
 		}
 
+		[JsonProperty]
+		public Int64 CurrentSize
+		{
+			get { return (from part in Parts select part.CurrentSize).Sum(); }
+		}
+
+		[JsonProperty]
+		public Int64 TimeMissing
+		{
+			get { return (from part in Parts select part.TimeMissing).Max(); }
+		}
+
 		#endregion
 
 		#region CHILDREN

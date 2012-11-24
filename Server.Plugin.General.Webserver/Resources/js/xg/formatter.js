@@ -1,5 +1,5 @@
 //
-//  xg.formatter.js
+//  formatter.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -242,11 +242,26 @@ var XGFormatter = Class.create(
 
 	formatPacketIcon: function (packet, onclick, skipOverlay)
 	{
-		var icon = "gift";
+		var icon = "doc";
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
 		var overlayStyle = "";
+
+		var name = packet.RealName != undefined && packet.RealName != "" ? packet.RealName : packet.Name;
+		var ext = name.toLowerCase().substr(-3);
+		if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
+		{
+			icon = "video-1";
+		}
+		else if (ext == "mp3")
+		{
+			icon = "headphones";
+		}
+		else if (ext == "rar" || ext == "tar" || ext == "zip")
+		{
+			icon = "th";
+		}
 
 		if (!packet.Enabled)
 		{
@@ -290,42 +305,11 @@ var XGFormatter = Class.create(
 			return "";
 		}
 
-		var icon = "doc";
-		var iconClass = "Aluminium2Middle";
-
-		var ext = name.toLowerCase().substr(-3);
-		var ret = "";
-		if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
-		{
-			icon = "video-1";
-		}
-		else if (ext == "mp3")
-		{
-			icon = "headphones";
-		}
-		else if (ext == "rar" || ext == "tar" || ext == "zip")
-		{
-			icon = "th";
-		}
-		ret += this.formatIcon(icon, iconClass) + "&nbsp;&nbsp;" + name;
+		var ret = name;
 
 		if (packet.Connected && packet.Part != null)
 		{
-			ret += "<br />";
-
-			var a = ((packet.Part.StartSize) / packet.RealSize).toFixed(2) * 100;
-			var b = ((packet.Part.CurrentSize - packet.Part.StartSize) / packet.RealSize).toFixed(2) * 100;
-			var c = ((packet.Part.StopSize - packet.Part.CurrentSize) / packet.RealSize).toFixed(2) * 100;
-			if (a + b + c > 100)
-			{
-				c = 100 - a - b;
-			}
-			// Enum.TangoColor.SkyBlue.Middle
-			ret += "<div role='progressbar' class='ui-progressbar ui-widget ui-corner-all' style='height:2px'>" +
-				"<div style='width: " + a + "%;float:left' class='ui-progressbar-value ui-corner-left'></div>" +
-				"<div style='width: " + b + "%;float:left;background:#" + (packet.Part.Checked ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
-				"<div style='width: " + c + "%;float:left;background:#" + (packet.Part.Checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>" +
-				"</div><div class='clear'></div>";
+			ret += "<progress max='" + packet.RealSize + "' value='" + packet.Part.CurrentSize + "'></progress>";
 		}
 
 		return ret;
@@ -376,18 +360,7 @@ var XGFormatter = Class.create(
 	{
 		var ret = file.Name;
 
-		ret += "<br /><div role='progressbar' class='ui-progressbar ui-widget ui-corner-all' style='height:4px'>";
-
-		$.each(file.Parts, function (i, part)
-		{
-			var b = ((part.CurrentSize - part.StartSize) / file.Size).toFixed(2) * 100;
-			var c = ((part.StopSize - part.CurrentSize) / file.Size).toFixed(2) * 100;
-
-			ret += "<div style='width: " + b + "%;float:left;background:#" + (part.Checked ? Enum.TangoColor.SkyBlue.Dark : Enum.TangoColor.Plum.Dark) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>";
-			ret += "<div style='width: " + c + "%;float:left;background:#" + (part.Checked ? Enum.TangoColor.SkyBlue.Light : Enum.TangoColor.Plum.Light) + "' class='ui-progressbar-value ui-corner-left ui-widget-header'></div>";
-		});
-
-		ret += "</div><div class='clear'></div>";
+		ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
 
 		return ret;
 	},
@@ -409,12 +382,7 @@ var XGFormatter = Class.create(
 
 	formatFileTimeMissing: function (file)
 	{
-		var time = 0;
-		$.each(file.Parts, function (i, part)
-		{
-			time = time == 0 ? part.TimeMissing : (time < part.TimeMissing ? time : part.TimeMissing);
-		});
-		return this.helper.time2Human(time);
+		return this.helper.time2Human(file.TimeMissing);
 	},
 
 	/* ************************************************************************************************************** */
