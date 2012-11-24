@@ -253,6 +253,9 @@ var XGWebsocket = Class.create(
 			case Enum.Response.SearchBot:
 				this.setGridData("bots_table", json.Data);
 				break;
+			case Enum.Response.SearchExternal:
+				this.setGridData("packets_external", json.Data);
+				break;
 
 			case Enum.Response.Servers:
 				this.setGridData("servers_table", json.Data);

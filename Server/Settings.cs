@@ -126,7 +126,6 @@ namespace XG.Server
 			TempPath = AppDataPath + "tmp" + Path.DirectorySeparatorChar;
 			ReadyPath = AppDataPath + "dl" + Path.DirectorySeparatorChar;
 			EnableMultiDownloads = false;
-			ClearReadyDownloads = true;
 
 			Password = "xgisgreat";
 
@@ -323,7 +322,6 @@ namespace XG.Server
 		}
 
 		public bool EnableMultiDownloads { get; set; }
-		public bool ClearReadyDownloads { get; set; }
 
 		public string Password { get; set; }
 

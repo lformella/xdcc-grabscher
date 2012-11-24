@@ -94,11 +94,11 @@ var XGResize = Class.create(
 		{
 			subSize += 1;
 		}
-		$("#searches_xg_bitpir_at, #files_table")
+		$("#packets_external, #files_table")
 			.setGridWidth(objectLayout.width() - 1)
 			.setGridHeight(objectLayout.height() - subSize);
-		$($("#searches_xg_bitpir_at .jqgfirstrow td")[3]).width("");
-		$("#searches_xg_bitpir_at_Name").width("");
+		$($("#packets_external .jqgfirstrow td")[3]).width("");
+		$("#packets_external_Name").width("");
 		$($("#files_table .jqgfirstrow td")[2]).width("");
 		$("#files_table_Name").width("");
 

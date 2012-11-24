@@ -46,17 +46,18 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 			SearchPacket = 11,
 			SearchBot = 12,
+			SearchExternal = 13,
 
-			Servers = 13,
-			ChannelsFromServer = 14,
-			PacketsFromBot = 15,
+			Servers = 14,
+			ChannelsFromServer = 15,
+			PacketsFromBot = 16,
 
-			Files = 16,
-			Searches = 17,
+			Files = 17,
+			Searches = 18,
 
-			Snapshots = 18,
+			Snapshots = 19,
 
-			Statistics = 19
+			Statistics = 20
 
 			#endregion
 		}

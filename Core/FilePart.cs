@@ -130,7 +130,11 @@ namespace XG.Core
 		[MySql]
 		public Int64 TimeMissing
 		{
-			get { return (_speed > 0 ? (MissingSize / Speed) : 0); }
+			get
+			{
+				Int64 time = (_speed > 0 ? (MissingSize / Speed) : 0);
+				return time;
+			}
 		}
 
 		Int64 _speed;

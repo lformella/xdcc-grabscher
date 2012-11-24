@@ -1,5 +1,5 @@
 // 
-//  Object.cs
+//  ExternalSearch.cs
 // 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -25,15 +25,20 @@ using Newtonsoft.Json;
 
 using System;
 
-namespace XG.Server.Plugin.General.Webserver.Flot
+using XG.Core;
+
+namespace XG.Server.Plugin.General.Webserver.Object
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class Object
+	public class ExternalSearch : Packet
 	{
-		[JsonProperty(PropertyName = "label")]
-		public string Label { get; set; }
+		[JsonProperty]
+		public string BotName { get; set; }
 
-		[JsonProperty(PropertyName = "data")]
-		public Int64[][] Data { get; set; }
+		[JsonProperty]
+		public Int64 BotSpeed { get; set; }
+
+		[JsonProperty]
+		public string IrcLink { get; set; }
 	}
 }

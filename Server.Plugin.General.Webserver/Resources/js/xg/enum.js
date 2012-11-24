@@ -36,21 +36,22 @@ Enum.Request =
 	DeactivateObject: 6,
 
 	Search: 7,
+	SearchExternal: 8,
 
-	Servers: 8,
-	ChannelsFromServer: 9,
-	PacketsFromBot: 10,
-	Files: 11,
+	Servers: 9,
+	ChannelsFromServer: 10,
+	PacketsFromBot: 11,
+	Files: 12,
 
-	AddSearch: 12,
-	RemoveSearch: 13,
-	Searches: 14,
+	AddSearch: 13,
+	RemoveSearch: 14,
+	Searches: 15,
 
-	Statistics: 15,
-	Snapshots: 16,
-	ParseXdccLink: 17,
+	Statistics: 16,
+	Snapshots: 17,
+	ParseXdccLink: 18,
 
-	CloseServer: 18
+	CloseServer: 19
 };
 
 Enum.Response =
@@ -63,17 +64,18 @@ Enum.Response =
 
 	SearchPacket: 11,
 	SearchBot: 12,
+	SearchExternal: 13,
 
-	Servers: 13,
-	ChannelsFromServer: 14,
-	PacketsFromBot: 15,
+	Servers: 14,
+	ChannelsFromServer: 15,
+	PacketsFromBot: 16,
 
-	Files: 16,
-	Searches: 17,
+	Files: 17,
+	Searches: 18,
 
-	Snapshots: 18,
+	Snapshots: 19,
 
-	Statistics: 19
+	Statistics: 20
 }
 
 Enum.TangoColor =

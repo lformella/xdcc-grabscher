@@ -73,9 +73,9 @@ namespace XG.Core
 
 		readonly List<AObject> _children;
 
-		protected List<AObject> All
+		protected AObject[] All
 		{
-			get { return _children.ToList(); }
+			get { return _children.ToArray(); }
 		}
 
 		#endregion

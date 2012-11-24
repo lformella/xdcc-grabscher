@@ -48,8 +48,8 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.woff" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.woff" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/fontello.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.fontello.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
-    <File subtype="Directory" buildaction="Compile" name="Flot" />
-    <File subtype="Code" buildaction="Compile" name="Flot/Object.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Object" />
+    <File subtype="Code" buildaction="Compile" name="Object/Flot.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/reset.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.reset.css" />
     <File subtype="Directory" buildaction="Compile" name="Websocket" />
     <File subtype="Code" buildaction="Compile" name="Websocket/Request.cs" />
@@ -158,6 +158,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/tr.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.tr.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-cn.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-cn.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-tw.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-tw.js" />
+    <File subtype="Code" buildaction="Compile" name="Object/ExternalSearch.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

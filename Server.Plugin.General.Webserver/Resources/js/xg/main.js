@@ -590,18 +590,7 @@ var XGBase = Class.create(
 			{
 				var search = self.websocket.getRowData("search_table", guid);
 
-				switch(self.activeTab)
-				{
-					case 0:
-						self.websocket.sendGuid(Enum.Request.Search, search.Guid);
-						break;
-					case 1:
-						var gridElement = $("#searches_xg_bitpir_at");
-						gridElement.clearGridData();
-						gridElement.setGridParam({url: "http://xg.bitpir.at/index.php?show=search&action=json&do=search_packets&searchString=" + search.Name, page: 1});
-						gridElement.trigger("reloadGrid");
-						break;
-				}
+				self.websocket.sendGuid(self.activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, search.Guid);
 			},
 			ExpandColumn : 'Name',
 			viewrecords: true,
@@ -622,12 +611,12 @@ var XGBase = Class.create(
 		/* SEARCH GRID                                                                                                */
 		/**************************************************************************************************************/
 
-		$("#searches_xg_bitpir_at").jqGrid(
+		$("#packets_external").jqGrid(
 		{
 			url: "",
-			datatype:'jsonp',
+			datatype:'local',
 			cmTemplate:{fixed:true},
-			colNames: ['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed'), ''],
+			colNames: ['', '', _('Id'), _('Name'), _('Last Mentioned'), _('Size'), _('Bot'), _('Speed')],
 			colModel: [
 				{
 					name: 'Object',
@@ -639,12 +628,12 @@ var XGBase = Class.create(
 					hidden: true
 				},
 				{
-					name: 'Connected',
-					index: 'Connected',
+					name: 'Icon',
+					index: 'Icon',
 					formatter: function (cell, grid, obj)
 					{
 						obj = JSON.parse(obj.Object);
-						return self.formatter.formatPacketIcon(obj, "XG.downloadLink(\"" + obj.rowId + "\");", true);
+						return self.formatter.formatPacketIcon(obj, "XG.downloadLink(\"" + obj.Guid + "\");", true);
 					},
 					width: 24,
 					sortable: false
@@ -656,6 +645,10 @@ var XGBase = Class.create(
 					{
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketId(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Id;
 					},
 					width: 38,
 					align: "right"
@@ -676,7 +669,11 @@ var XGBase = Class.create(
 					formatter: function (cell, grid, obj)
 					{
 						obj = JSON.parse(obj.Object);
-						return self.helper.timeStampToHuman(obj.LastMentioned);
+						return self.helper.date2Human(obj.LastMentioned);
+					},
+					sorttype: function (c, o)
+					{
+						return moment(o.LastMentioned).valueOf();
 					},
 					width: 140,
 					align: "right"
@@ -688,6 +685,10 @@ var XGBase = Class.create(
 					{
 						obj = JSON.parse(obj.Object);
 						return self.helper.size2Human(obj.Size);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Size;
 					},
 					width: 60,
 					align: "right"
@@ -710,26 +711,20 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.helper.speed2Human(obj.BotSpeed);
 					},
+					sorttype: function (c, o)
+					{
+						return o.BotSpeed;
+					},
 					width: 80,
 					align: "right"
-				},
-				{
-					name: 'IrcLink',
-					index: 'IrcLink',
-					formatter: function (cell, grid, obj)
-					{
-						obj = JSON.parse(obj.Object);
-						return obj.IrcLink;
-					},
-					hidden: true
 				}
 			],
 			onSortCol: function(index, iCol, sortorder)
 			{
-				self.cookie.setCookie('searches_xg_bitpir_at.sort.index', index);
-				self.cookie.setCookie('searches_xg_bitpir_at.sort.sortorder', sortorder);
+				self.cookie.setCookie('packets_external.sort.index', index);
+				self.cookie.setCookie('packets_external.sort.sortorder', sortorder);
 			},
-			pager:$('#searches_pager_xg_bitpir_at'),
+			pager:$('#packets_external_pager'),
 			pgbuttons: false,
 			pginput: false,
 			ExpandColumn: 'Name',
@@ -738,8 +733,8 @@ var XGBase = Class.create(
 			scrollrows: true,
 			hidegrid: false,
 			rowNum: 999999999,
-			sortname: self.cookie.getCookie('searches_xg_bitpir_at.sort.index', 'Id'),
-			sortorder: self.cookie.getCookie('searches_xg_bitpir_at.sort.sortorder', 'asc'),
+			sortname: self.cookie.getCookie('packets_external.sort.index', 'Id'),
+			sortorder: self.cookie.getCookie('packets_external.sort.sortorder', 'asc'),
 			caption: _("Search via xg.bitpir.at")
 		});
 
@@ -1034,7 +1029,7 @@ var XGBase = Class.create(
 
 		$("#" + guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
 
-		var data = self.websocket.getRowData("searches_xg_bitpir_at", guid);
+		var data = self.websocket.getRowData("packets_external", guid);
 		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
 	}
 });

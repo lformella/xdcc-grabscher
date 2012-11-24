@@ -45,21 +45,22 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			DeactivateObject = 6,
 
 			Search = 7,
+			SearchExternal = 8,
 
-			Servers = 8,
-			ChannelsFromServer = 9,
-			PacketsFromBot = 10,
-			Files = 11,
+			Servers = 9,
+			ChannelsFromServer = 10,
+			PacketsFromBot = 11,
+			Files = 12,
 
-			AddSearch = 12,
-			RemoveSearch = 13,
-			Searches = 14,
+			AddSearch = 13,
+			RemoveSearch = 14,
+			Searches = 15,
 
-			Statistics = 15,
-			Snapshots = 16,
-			ParseXdccLink = 17,
+			Statistics = 16,
+			Snapshots = 17,
+			ParseXdccLink = 18,
 
-			CloseServer = 18
+			CloseServer = 19
 		}
 
 		#endregion

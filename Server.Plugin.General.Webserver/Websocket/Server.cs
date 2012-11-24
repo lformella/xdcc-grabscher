@@ -27,10 +27,13 @@ using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 using XG.Core;
+using XG.Server.Plugin.General.Webserver.Object;
 
 using log4net;
 
@@ -271,6 +274,27 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						currentUser.LastLoadedBots = bots;
 						currentUser.LastViewedBot = Guid.Empty;
 						currentUser.LastLoadedPackets = packets;
+						break;
+
+					case Request.Types.SearchExternal:
+						var searchExternal = Searches.WithGuid(request.Guid);
+						if (searchExternal != null)
+						{
+							var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&search=" + searchExternal.Name + "&xg=" + Settings.Instance.XgVersion);
+							var req = HttpWebRequest.Create(uri);
+
+							var response = req.GetResponse();
+							StreamReader sr = new StreamReader(response.GetResponseStream());
+							string text = sr.ReadToEnd();
+							response.Close();
+
+							var results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.SearchExternal,
+								Data = results
+							});
+						}
 						break;
 
 					case Request.Types.AddSearch:
@@ -648,14 +672,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return aPackets;
 		}
 
-		Flot.Object[] Snapshots2Flot(Snapshots aSnapshots)
+		Flot[] Snapshots2Flot(Snapshots aSnapshots)
 		{
-			var tObjects = new List<Flot.Object>();
+			var tObjects = new List<Flot>();
 			for (int a = 1; a <= 26; a++)
 			{
 				var value = (SnapshotValue) a;
 
-				var obj = new Flot.Object();
+				var obj = new Flot();
 
 				var list = new List<Int64[]>();
 				foreach (Core.Snapshot snapshot in aSnapshots.All)

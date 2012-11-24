@@ -66,13 +66,33 @@ namespace XG.Core
 		[JsonProperty]
 		public Int64 CurrentSize
 		{
-			get { return (from part in Parts select part.CurrentSize).Sum(); }
+			get
+			{
+				try
+				{
+					return (from part in Parts select part.CurrentSize).Sum();
+				}
+				catch
+				{
+					return 0;
+				}
+			}
 		}
 
 		[JsonProperty]
 		public Int64 TimeMissing
 		{
-			get { return (from part in Parts select part.TimeMissing).Max(); }
+			get
+			{
+				try
+				{
+					return (from part in Parts select part.TimeMissing).Max();
+				}
+				catch
+				{
+					return 0;
+				}
+			}
 		}
 
 		#endregion
@@ -80,9 +100,9 @@ namespace XG.Core
 		#region CHILDREN
 
 		[JsonProperty]
-		public List<FilePart> Parts
+		public IEnumerable<FilePart> Parts
 		{
-			get { return All.Cast<FilePart>().ToList(); }
+			get { return All.Cast<FilePart>(); }
 		}
 
 		public bool Add(FilePart aPart)

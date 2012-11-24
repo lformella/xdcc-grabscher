@@ -107,19 +107,5 @@ var XGHelper = Class.create(
 		}
 	
 		return moment.humanizeDuration(time, "seconds");
-	},
-
-	/**
-	 * @param {int} timestamp
-	 * @return {String}
-	 */
-	timeStampToHuman: function (timestamp)
-	{
-		if (timestamp <= 0)
-		{
-			return "";
-		}
-
-		return this.cookie.getCookie("human_dates", "0") == "1" ? moment.unix(timestamp).fromNow() : moment.unix(timestamp).format("L LT");
 	}
 });

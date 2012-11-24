@@ -10,7 +10,6 @@
   <TempPath>tmp/</TempPath> <!-- relative folder of the temporary download folder -->
   <ReadyPath>dl/</ReadyPath> <!-- relative folder for ready downloads -->
   <EnableMultiDownloads>false</EnableMultiDownloads> <!-- enable multi bot dl feature -->
-  <ClearReadyDownloads>false</ClearReadyDownloads> <!-- remove ready files from database -->
   
   <Password>xgisgreat</Password> <!-- server password -->
   

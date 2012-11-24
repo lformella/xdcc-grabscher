@@ -614,11 +614,8 @@ namespace XG.Server.Helper
 							tFile.Enabled = true;
 							error = false;
 
-							// maybee clear it
-							if (Settings.Instance.ClearReadyDownloads)
-							{
-								RemoveFile(tFile);
-							}
+							// clear it
+							RemoveFile(tFile);
 
 							// great, all went right, so lets check what we can do with the file
 							new Thread(() => HandleFile(fileReady)).Start();

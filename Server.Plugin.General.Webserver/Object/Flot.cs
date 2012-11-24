@@ -1,5 +1,5 @@
 // 
-//  Snapshots.cs
+//  Flot.cs
 // 
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -21,48 +21,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using Newtonsoft.Json;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace XG.Core
+namespace XG.Server.Plugin.General.Webserver.Object
 {
-	public delegate void SnapshotDelegate(Snapshot aSnapshot);
-
-	[Serializable]
-	public class Snapshots
+	[JsonObject(MemberSerialization.OptIn)]
+	public class Flot
 	{
-		#region EVENTS
+		[JsonProperty(PropertyName = "label")]
+		public string Label { get; set; }
 
-		[field: NonSerialized]
-		public event SnapshotDelegate Added;
-
-		protected void FireAdded(Snapshot aSnapshot)
-		{
-			if (Added != null)
-			{
-				Added(aSnapshot);
-			}
-		}
-
-		#endregion
-
-		readonly List<Snapshot> _all;
-
-		public IEnumerable<Snapshot> All
-		{
-			get { return _all.ToArray(); }
-		}
-
-		public void Add(Snapshot aSnapshot)
-		{
-			_all.Add(aSnapshot);
-			FireAdded(aSnapshot);
-		}
-
-		public Snapshots()
-		{
-			_all = new List<Snapshot>();
-		}
+		[JsonProperty(PropertyName = "data")]
+		public Int64[][] Data { get; set; }
 	}
 }

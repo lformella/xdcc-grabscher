@@ -154,7 +154,7 @@ namespace XG.Server
 
 			#region CLEAR OLD DL
 
-			if (Files.All.Any() && Settings.Instance.ClearReadyDownloads)
+			if (Files.All.Any())
 			{
 				foreach (File file in Files.All)
 				{
@@ -322,7 +322,7 @@ namespace XG.Server
 			Searches = aPlugin.LoadSearches();
 			Snapshots = aPlugin.LoadStatistics();
 
-			if (Snapshots.All.Count > 0)
+			if (Snapshots.All.Count() > 0)
 			{
 				// put a empty snapshot on top to nullify values
 				var lasttime = (from snapshot in Snapshots.All orderby snapshot.Get(SnapshotValue.Timestamp) select snapshot).Last().Get(SnapshotValue.Timestamp);
