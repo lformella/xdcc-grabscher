@@ -239,30 +239,20 @@ var XGWebsocket = Class.create(
 			case Enum.Response.ObjectAdded:
 				if (grid != "")
 				{
-					grid += "_table";
-					if (grid == "search_table")
+					this.addGridItem(grid, json.Data);
+					if (grid == "search")
 					{
-						this.addGridItem("search_table", json.Data);
 						$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
-					}
-					else
-					{
-						this.addGridItem(grid, json.Data);
 					}
 				}
 				break;
 			case Enum.Response.ObjectRemoved:
 				if (grid != "")
 				{
-					grid += "_table";
-					if (grid == "search_table")
+					this.removeGridItem(grid, json.Data);
+					if (grid == "search")
 					{
 						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
-						this.removeGridItem("search_table", json.Data);
-					}
-					else
-					{
-						this.removeGridItem(grid, json.Data);
 					}
 				}
 				break;
@@ -333,7 +323,7 @@ var XGWebsocket = Class.create(
 	 */
 	addGridItem: function (grid, item)
 	{
-		var gridElement = $("#" + grid);
+		var gridElement = $("#" + grid + "_table");
 		item = this.adjustObjectForJQGrid(item);
 		gridElement.addRowData(item.Guid, item);
 	},
@@ -344,7 +334,7 @@ var XGWebsocket = Class.create(
 	 */
 	updateGridItem: function (grid, item)
 	{
-		var gridElement = $("#" + grid);
+		var gridElement = $("#" + grid + "_table");
 		item = this.adjustObjectForJQGrid(item);
 		gridElement.jqGrid("setRowData", item.Guid, item);
 	},
@@ -355,7 +345,7 @@ var XGWebsocket = Class.create(
 	 */
 	removeGridItem: function (grid, item)
 	{
-		var gridElement = $("#" + grid);
+		var gridElement = $("#" + grid + "_table");
 		gridElement.delRowData(item.Guid);
 	},
 

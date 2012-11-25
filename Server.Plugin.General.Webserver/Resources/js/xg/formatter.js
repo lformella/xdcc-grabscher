@@ -367,12 +367,7 @@ var XGFormatter = Class.create(
 
 	formatFileSpeed: function (file)
 	{
-		var speed = 0;
-		$.each(file.Parts, function (i, part)
-		{
-			speed += part.Speed;
-		});
-		return this.helper.speed2Human(speed);
+		return this.helper.speed2Human(file.Speed);
 	},
 
 	formatFileSize: function (file)

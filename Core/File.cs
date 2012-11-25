@@ -95,6 +95,22 @@ namespace XG.Core
 			}
 		}
 
+		[JsonProperty]
+		public Int64 Speed
+		{
+			get
+			{
+				try
+				{
+					return (from part in Parts select part.Speed).Sum();
+				}
+				catch
+				{
+					return 0;
+				}
+			}
+		}
+
 		#endregion
 
 		#region CHILDREN
