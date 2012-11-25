@@ -44,14 +44,13 @@
 					var item = $(element);
 					item.attr("title", _(item.attr("title")));
 				});
-				new XGPassword("#HOST#", "#PORT#");
+
+				new XGPassword("#SALT#", "#HOST#", "#PORT#");
 			});
 		</script>
 	</head>
 
 	<body>
-		<input type="hidden" name="salt" id="salt" value="#SALT#" />
-
 		<div id="dialog_error" title="Error" style="display: none;" class="translateTitle">
 
 			<label class="translate">Lost connection to XG server - please reload page!</label>
@@ -63,6 +62,7 @@
 			<p id="password_tip" class="translate">Please enter the password for this webfrontend.</p>
 			<label id="password_label" for="password" class="translate">Password</label>
 			<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
+			<i id="loading_password" class="loading-symbol" style="display: none"></i>
 
 		</div>
 
@@ -184,9 +184,9 @@
 		<div id="layout_objects" class="ui-layout-center" style="display: none;">
 			<div id="tabs" style="border: none;">
 				<ul style="margin-bottom: 4px;">
-					<li><a id="tab_1" href="#tabs_1" class="translate">IRC View</a></li>
-					<li><a id="tab_2" href="#tabs_2" class="translate">External Search via xg.bitpir.at</a></li>
-					<li><a id="tab_3" href="#tabs_3" class="translate">Files</a></li>
+					<li><a id="tab_1" href="#tabs_1"><span class="icon-home"></span>&nbsp;<span class="translate">IRC View</span></a></li>
+					<li><a id="tab_2" href="#tabs_2"><span class="icon-globe"></span>&nbsp;<span class="translate">External Search via xg.bitpir.at</span></a></li>
+					<li><a id="tab_3" href="#tabs_3"><span class="icon-doc"></span>&nbsp;<span class="translate">Files</span></a></li>
 				</ul>
 
 				<div id="tabs_1">
@@ -214,7 +214,7 @@
 
 				<div id="tabs_2" style="padding: 0px;">
 
-					<table width="100%" id="packets_external"></table>
+					<table width="100%" id="packets_external_table"></table>
 					<div id="packets_external_pager"></div>
 
 				</div>

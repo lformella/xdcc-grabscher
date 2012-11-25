@@ -23,13 +23,13 @@
 var XGResize = Class.create(
 {
 	/**
-	 * @param {XGStatistics} refresh
+	 * @param {XGStatistics} statistics
 	 */
-	initialize: function (refresh)
+	initialize: function (statistics)
 	{
 		var self = this;
 
-		this.statistics = refresh;
+		this.statistics = statistics;
 
 		$("body").layout({
 			onresize: function () {
@@ -94,11 +94,11 @@ var XGResize = Class.create(
 		{
 			subSize += 1;
 		}
-		$("#packets_external, #files_table")
+		$("#packets_external_table, #files_table")
 			.setGridWidth(objectLayout.width() - 1)
 			.setGridHeight(objectLayout.height() - subSize);
-		$($("#packets_external .jqgfirstrow td")[3]).width("");
-		$("#packets_external_Name").width("");
+		$($("#packets_external_table .jqgfirstrow td")[3]).width("");
+		$("#packets_external_table_Name").width("");
 		$($("#files_table .jqgfirstrow td")[2]).width("");
 		$("#files_table_Name").width("");
 

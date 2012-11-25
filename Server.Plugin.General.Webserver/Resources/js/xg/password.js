@@ -24,12 +24,13 @@
 var Password;
 var XGPassword = Class.create(
 {
-	initialize: function (host, port)
+	initialize: function (salt, host, port)
 	{
 		var self = this;
 		Password = this;
 
 		this.password = "";
+		this.salt = salt;
 		this.host = host;
 		this.port = port;
 
@@ -39,6 +40,8 @@ var XGPassword = Class.create(
 		{
 			self.buttonConnectClicked($(this));
 		};
+
+		//this.enableLoadingSymbols();
 		// display login
 		$("#dialog_password").dialog({
 			bgiframe: true,
@@ -69,7 +72,7 @@ var XGPassword = Class.create(
 	{
 		var passwordElement = $("#password");
 		var saltElement = $("#salt");
-		var password = encodeURIComponent(CryptoJS.SHA256(saltElement.val() + passwordElement.val() + saltElement.val()));
+		var password = encodeURIComponent(CryptoJS.SHA256(this.salt + passwordElement.val() + this.salt));
 
 		if (this.checkPassword(password))
 		{
@@ -98,10 +101,12 @@ var XGPassword = Class.create(
 
 		// resize
 		var resize = new XGResize(statistics);
+		this.enableLoadingSymbols();
 	},
 
 	checkPassword: function (password)
 	{
+		$("#loading_password").show();
 		var res = false;
 		$.ajax({
 			url: "?password=" + password,
@@ -111,6 +116,23 @@ var XGPassword = Class.create(
 			},
 			async: false
 		});
+		if (!res)
+		{
+			$("#loading_password").hide();
+		}
 		return res;
+	},
+
+	enableLoadingSymbols: function()
+	{
+		var wait = 190;
+		var symbols = $('.loading-symbol');
+		symbols.repeat().each($)
+			.wait(wait).addClass('icon-progress-1').removeClass('icon-progress-0')
+			.wait(wait).addClass('icon-progress-2').removeClass('icon-progress-1')
+			.wait(wait).addClass('icon-progress-3').removeClass('icon-progress-2')
+			.wait(wait).addClass('icon-progress-4').removeClass('icon-progress-3')
+			.wait(wait).addClass('icon-progress-5').removeClass('icon-progress-4')
+			.wait(wait).addClass('icon-progress-0').removeClass('icon-progress-5');
 	}
 });

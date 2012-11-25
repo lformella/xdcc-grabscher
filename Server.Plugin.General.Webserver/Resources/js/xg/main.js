@@ -143,7 +143,13 @@ var XGBase = Class.create(
 				self.websocket.sendGuid(Enum.Request.RemoveServer, guid);
 				return true;
 			}
+		})
+		.navButtonAdd('#servers_pager',{
+			caption:"",
+			buttonicon:"loading-symbol",
+			id: "servers_loading"
 		});
+		$("#servers_loading .ui-icon").hide();
 
 		/* ********************************************************************************************************** */
 		/* CHANNEL GRID                                                                                               */
@@ -228,7 +234,13 @@ var XGBase = Class.create(
 				self.websocket.sendGuid(Enum.Request.RemoveChannel, guid);
 				return true;
 			}
+		})
+		.navButtonAdd('#channels_pager',{
+			caption:"",
+			buttonicon:"loading-symbol",
+			id: "channels_loading"
 		});
+		$("#channels_loading .ui-icon").hide();
 
 		/* ********************************************************************************************************** */
 		/* BOT GRID                                                                                                   */
@@ -383,7 +395,14 @@ var XGBase = Class.create(
 			sortname: self.cookie.getCookie('bots.sort.index', 'Name'),
 			sortorder: self.cookie.getCookie('bots.sort.sortorder', 'asc'),
 			caption: _("Bots")
+		})
+		.navGrid('#bots_pager',{edit:false,add:false,del:false,search:false,refresh:false})
+		.navButtonAdd('#bots_pager',{
+			caption:"",
+			buttonicon:"loading-symbol",
+			id: "bots_loading"
 		});
+		$("#bots_loading .ui-icon").hide();
 
 		/* ********************************************************************************************************** */
 		/* PACKET GRID                                                                                                */
@@ -530,7 +549,14 @@ var XGBase = Class.create(
 			sortname: self.cookie.getCookie('packets.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('packets.sort.sortorder', 'asc'),
 			caption: _("Packets")
+		})
+		.navGrid('#packets_pager',{edit:false,add:false,del:false,search:false,refresh:false})
+		.navButtonAdd('#packets_pager',{
+			caption:"",
+			buttonicon:"loading-symbol",
+			id: "packets_loading"
 		});
+		$("#packets_loading .ui-icon").hide();
 
 		/* ********************************************************************************************************** */
 		/* SEARCH GRID                                                                                                */
@@ -611,7 +637,7 @@ var XGBase = Class.create(
 		/* SEARCH GRID                                                                                                */
 		/**************************************************************************************************************/
 
-		$("#packets_external").jqGrid(
+		$("#packets_external_table").jqGrid(
 		{
 			url: "",
 			datatype:'local',
@@ -736,7 +762,14 @@ var XGBase = Class.create(
 			sortname: self.cookie.getCookie('packets_external.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('packets_external.sort.sortorder', 'asc'),
 			caption: _("Search via xg.bitpir.at")
+		})
+		.navGrid('#packets_external_pager',{edit:false,add:false,del:false,search:false,refresh:false})
+		.navButtonAdd('#packets_external_pager',{
+			caption:"",
+			buttonicon:"loading-symbol",
+			id: "packets_external_loading"
 		});
+		$("#packets_external_loading .ui-icon").hide();
 
 		/* ********************************************************************************************************** */
 		/* FILE GRID                                                                                                  */
@@ -852,7 +885,14 @@ var XGBase = Class.create(
 			sortname: self.cookie.getCookie('files.sort.index', 'Id'),
 			sortorder: self.cookie.getCookie('files.sort.sortorder', 'asc'),
 			caption: _("Files")
+		})
+		.navGrid('#files_pager',{edit:false,add:false,del:false,search:false,refresh:false})
+		.navButtonAdd('#files_pager',{
+			caption:"",
+			buttonicon:"loading-symbol",
+			id: "files_loading"
 		});
+		$("#files_loading .ui-icon").hide();
 	},
 
 	initializeDialogs: function()
@@ -864,7 +904,7 @@ var XGBase = Class.create(
 		/* ********************************************************************************************************** */
 
 		$("#server_channel_button")
-			.button({icons: { primary: "ui-icon-gear" }})
+			.button({icons: { primary: "icon-asterisk" }})
 			.click( function()
 			{
 				$("#dialog_server_channels").dialog("open");
@@ -882,7 +922,7 @@ var XGBase = Class.create(
 		/* ********************************************************************************************************** */
 
 		$("#statistics_button")
-			.button({icons: { primary: "ui-icon-comment" }})
+			.button({icons: { primary: "icon-chart-bar" }})
 			.click( function()
 			{
 				self.websocket.send(Enum.Request.Statistics);
@@ -907,7 +947,7 @@ var XGBase = Class.create(
 		});
 
 		$("#snapshots_button")
-			.button({icons: { primary: "ui-icon-comment" }})
+			.button({icons: { primary: "icon-chart-bar" }})
 			.click( function()
 			{
 				$("#dialog_snapshots").dialog("open");
@@ -946,12 +986,14 @@ var XGBase = Class.create(
 				self.activeTab = ui.index;
 			}
 		});
-		$("#show_offline_bots").button()
+		$("#show_offline_bots")
+			.button({icons: { primary: "icon-user" }})
 			.click( function()
 			{
 				self.cookie.setCookie("show_offline_bots", $("#show_offline_bots").attr('checked') ? "1" : "0" );
 			});
-		$("#human_dates").button()
+		$("#human_dates")
+			.button({icons: { primary: "icon-clock" }})
 			.click( function()
 			{
 				self.cookie.setCookie("human_dates", $("#human_dates").attr('checked') ? "1" : "0" );
@@ -1029,7 +1071,7 @@ var XGBase = Class.create(
 
 		$("#" + guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
 
-		var data = self.websocket.getRowData("packets_external", guid);
+		var data = self.websocket.getRowData("packets_external_table", guid);
 		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
 	}
 });

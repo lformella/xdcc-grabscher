@@ -204,6 +204,12 @@ td
 {
 	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
 }
+.ui-button-icon-primary, .loading-symbol, .ui-button-icon-primary.ui-icon, .ui-icon.loading-symbol
+{
+	text-indent: 0;
+	background-image: none;
+	font-size: 12px;
+}
 
 /* JQuery Fixes */
 

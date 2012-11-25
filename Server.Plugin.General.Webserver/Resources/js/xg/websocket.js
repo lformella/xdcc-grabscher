@@ -146,6 +146,30 @@ var XGWebsocket = Class.create(
 	{
 		if (this.state == WebSocket.OPEN)
 		{
+			switch (request.Type)
+			{
+				case Enum.Request.Search:
+					$("#bots_loading .loading-symbol").show();
+					$("#packets_loading .loading-symbol").show();
+					break;
+				case Enum.Request.SearchExternal:
+					$("#packets_external_loading .loading-symbol").show();
+					break;
+
+				case Enum.Request.Servers:
+					$("#servers_loading .loading-symbol").show();
+					break;
+				case Enum.Request.ChannelsFromServer:
+					$("#channels_loading .loading-symbol").show();
+					break;
+				case Enum.Request.PacketsFromBot:
+					$("#packets_loading .loading-symbol").show();
+					break;
+				case Enum.Request.Files:
+					$("#files_loading .loading-symbol").show();
+					break;
+			}
+
 			try
 			{
 				this.socket.send(JSON.stringify(request));
@@ -189,24 +213,24 @@ var XGWebsocket = Class.create(
 		switch (json.DataType)
 		{
 			case "Server":
-				grid = "servers_table";
+				grid = "servers";
 				break;
 			case "Channel":
-				grid = "channels_table";
+				grid = "channels";
 				break;
 			case "Bot":
-				grid = "bots_table";
+				grid = "bots";
 				break;
 			case "Packet":
-				grid = "packets_table";
+				grid = "packets";
 				break;
 			case "Object":
-				grid = "search_table";
+				grid = "search";
 				break;
 			case "Snapshot":
 				break;
 			case "File":
-				grid = "files_table";
+				grid = "files";
 				break;
 		}
 
@@ -215,6 +239,7 @@ var XGWebsocket = Class.create(
 			case Enum.Response.ObjectAdded:
 				if (grid != "")
 				{
+					grid += "_table";
 					if (grid == "search_table")
 					{
 						this.addGridItem("search_table", json.Data);
@@ -229,6 +254,7 @@ var XGWebsocket = Class.create(
 			case Enum.Response.ObjectRemoved:
 				if (grid != "")
 				{
+					grid += "_table";
 					if (grid == "search_table")
 					{
 						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
@@ -248,30 +274,30 @@ var XGWebsocket = Class.create(
 				break;
 
 			case Enum.Response.SearchPacket:
-				this.setGridData("packets_table", json.Data);
+				this.setGridData("packets", json.Data);
 				break;
 			case Enum.Response.SearchBot:
-				this.setGridData("bots_table", json.Data);
+				this.setGridData("bots", json.Data);
 				break;
 			case Enum.Response.SearchExternal:
 				this.setGridData("packets_external", json.Data);
 				break;
 
 			case Enum.Response.Servers:
-				this.setGridData("servers_table", json.Data);
+				this.setGridData("servers", json.Data);
 				break;
 			case Enum.Response.ChannelsFromServer:
-				this.setGridData("channels_table", json.Data);
+				this.setGridData("channels", json.Data);
 				break;
 			case Enum.Response.PacketsFromBot:
-				this.setGridData("packets_table", json.Data);
+				this.setGridData("packets", json.Data);
 				break;
 
 			case Enum.Response.Files:
-				this.setGridData("files_table", json.Data);
+				this.setGridData("files", json.Data);
 				break;
 			case Enum.Response.Searches:
-				this.setGridData("search_table", json.Data);
+				this.setGridData("search", json.Data);
 				break;
 
 			case Enum.Response.Snapshots:
@@ -291,7 +317,8 @@ var XGWebsocket = Class.create(
 	{
 		var self = this;
 
-		var gridElement = $("#" + grid);
+		$("#" + grid + "_loading .loading-symbol").hide();
+		var gridElement = $("#" + grid + "_table");
 		gridElement.clearGridData();
 		$.each(data, function(i, item)
 		{
