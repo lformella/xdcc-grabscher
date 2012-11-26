@@ -249,11 +249,11 @@ var XGWebsocket = Class.create(
 			case Enum.Response.ObjectRemoved:
 				if (grid != "")
 				{
-					this.removeGridItem(grid, json.Data);
 					if (grid == "search")
 					{
 						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
 					}
+					this.removeGridItem(grid, json.Data);
 				}
 				break;
 			case Enum.Response.ObjectChanged:
