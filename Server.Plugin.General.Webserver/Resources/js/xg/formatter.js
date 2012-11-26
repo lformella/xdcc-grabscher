@@ -34,7 +34,7 @@ var XGFormatter = Class.create(
 
 	formatServerIcon: function (server, onclick)
 	{
-		var icon = "book";
+		var icon = "hdd";
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
@@ -51,7 +51,7 @@ var XGFormatter = Class.create(
 		}
 		else if (server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0")
 		{
-			overlay = "attention";
+			overlay = "attention-circle";
 			overlayClass = "ScarletRedMiddle";
 		}
 
@@ -60,7 +60,7 @@ var XGFormatter = Class.create(
 
 	formatChannelIcon: function (channel, onclick)
 	{
-		var icon = "folder";
+		var icon = "comment";
 		var iconClass = "Aluminium2Middle";
 		var overlay = "";
 		var overlayClass = "";
@@ -77,11 +77,21 @@ var XGFormatter = Class.create(
 		}
 		else if (channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0")
 		{
-			overlay = "attention";
+			overlay = "attention-circle";
 			overlayClass = "ScarletRedMiddle";
 		}
 
 		return this.formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
+	},
+	
+	formatServerChannelName: function (obj)
+	{
+		var str = obj.Name;
+		if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
+		{
+			str += "<br /><small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+		}
+		return str;
 	},
 
 	/* ************************************************************************************************************** */

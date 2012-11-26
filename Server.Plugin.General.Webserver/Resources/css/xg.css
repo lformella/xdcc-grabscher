@@ -84,6 +84,16 @@ td
 	padding: 0 2px 0 2px;
 }
 
+/* Fontello Fixes */
+
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before
+{
+	margin-right: 0;
+	opacity: 1;
+}
+
 /* JQGrid Fixes */
 
 #gbox_packets_table, #gbox_packets_table .ui-jqgrid-titlebar
@@ -200,9 +210,13 @@ td
 	float: right;
 }
 
-.icon-big, .icon-medium, .icon-overlay
+.icon, .icon-big, .icon-medium, .icon-overlay, .ui-icon
 {
 	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
+}
+.ui-state-active .ui-icon, .ui-state-active .icon
+{
+	text-shadow: none;
 }
 .ui-button-icon-primary, .loading-symbol, .ui-button-icon-primary.ui-icon, .ui-icon.loading-symbol
 {

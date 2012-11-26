@@ -81,7 +81,7 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatServerIcon(obj, "XG.flipObject(\"" + obj.Guid + "\", \"servers_table\");");
 					},
-					width: 36,
+					width: 38,
 					sortable: false,
 					classes: "icon-cell"
 				},
@@ -91,9 +91,9 @@ var XGBase = Class.create(
 					formatter: function (cell, grid, obj)
 					{
 						obj = JSON.parse(obj.Object);
-						return obj.Name;
+						return self.formatter.formatServerChannelName(obj);
 					},
-					width: 216,
+					width: 214,
 					editable: true,
 					fixed: false
 				}
@@ -178,7 +178,7 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatChannelIcon(obj, "XG.flipObject(\"" + obj.Guid + "\", \"channels_table\");");
 					},
-					width: 36,
+					width: 40,
 					sortable: false,
 					classes: "icon-cell"
 				},
@@ -188,9 +188,9 @@ var XGBase = Class.create(
 					formatter: function (cell, grid, obj)
 					{
 						obj = JSON.parse(obj.Object);
-						return obj.Name;
+						return self.formatter.formatServerChannelName(obj);
 					},
-					width: 216,
+					width: 212,
 					editable: true,
 					fixed: false
 				}
@@ -269,7 +269,7 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotIcon(obj);
 					},
-					width: 32,
+					width: 34,
 					sortable: false,
 					classes: "icon-cell"
 				},
@@ -430,7 +430,7 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\");");
 					},
-					width: 36,
+					width: 38,
 					sortable: false,
 					classes: "icon-cell"
 				},
@@ -904,7 +904,7 @@ var XGBase = Class.create(
 		/* ********************************************************************************************************** */
 
 		$("#server_channel_button")
-			.button({icons: { primary: "icon-asterisk" }})
+			.button({icons: { primary: "icon-globe-1" }})
 			.click( function()
 			{
 				$("#dialog_server_channels").dialog("open");
@@ -987,7 +987,7 @@ var XGBase = Class.create(
 			}
 		});
 		$("#show_offline_bots")
-			.button({icons: { primary: "icon-user" }})
+			.button({icons: { primary: "icon-eye" }})
 			.click( function()
 			{
 				self.cookie.setCookie("show_offline_bots", $("#show_offline_bots").attr('checked') ? "1" : "0" );
