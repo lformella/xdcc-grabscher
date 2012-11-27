@@ -31,8 +31,6 @@ using XG.Server.Connection;
 
 using log4net;
 
-using File = XG.Core.File;
-
 namespace XG.Server
 {
 	public delegate void PacketBotConnectDelegate(Packet aPack, BotConnection aCon);
@@ -103,7 +101,7 @@ namespace XG.Server
 
 		public FilePart Part { get; set; }
 
-		File File
+		Core.File File
 		{
 			get { return Part.Parent; }
 		}
@@ -138,7 +136,7 @@ namespace XG.Server
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
-			File tFile = FileActions.NewFile(Packet.RealName, Packet.RealSize);
+			var tFile = FileActions.NewFile(Packet.RealName, Packet.RealSize);
 			if (tFile == null)
 			{
 				Log.Fatal("ConnectionConnected() cant find or create a file to download");
