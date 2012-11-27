@@ -74,6 +74,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				socket.OnOpen = () => OnOpen(socket);
 				socket.OnClose = () => OnClose(socket);
 				socket.OnMessage = message => OnMessage(socket, message);
+				socket.OnError = exception => OnError(socket, exception);
 			});
 		}
 
@@ -280,15 +281,24 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						var searchExternal = Searches.WithGuid(request.Guid);
 						if (searchExternal != null)
 						{
-							var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&search=" + searchExternal.Name + "&xg=" + Settings.Instance.XgVersion);
-							var req = HttpWebRequest.Create(uri);
+							ExternalSearch[] results = new ExternalSearch[0];
+							try
+							{
+								var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&search=" + searchExternal.Name + "&xg=" + Settings.Instance.XgVersion);
+								var req = HttpWebRequest.Create(uri);
 
-							var response = req.GetResponse();
-							StreamReader sr = new StreamReader(response.GetResponseStream());
-							string text = sr.ReadToEnd();
-							response.Close();
+								var response = req.GetResponse();
+								StreamReader sr = new StreamReader(response.GetResponseStream());
+								string text = sr.ReadToEnd();
+								response.Close();
 
-							var results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
+								results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
+							}
+							catch (Exception ex)
+							{
+								Log.Fatal("OnMessage() cant load external search for " + searchExternal.Name, ex);
+							}
+
 							Unicast(currentUser, new Response
 							{
 								Type = Response.Types.SearchExternal,
@@ -450,6 +460,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 #endif
 		}
 
+		void OnError(IWebSocketConnection aContext, Exception aException)
+		{
+			Log.Info("OnError() client " + aContext.ConnectionInfo.ClientIpAddress, aException);
+
+			OnClose(aContext);
+		}
+
 		void Broadcast(Response aResponse)
 		{
 			foreach (var user in _users.ToArray())
@@ -582,12 +599,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void Unicast(User aUser, Response aResponse)
 		{
-			if (aUser.Connection == null)
-			{
-				//OnClose(aUser.Connection);
-				//return;
-			}
-
 			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
 			
 #if !UNSAFE
