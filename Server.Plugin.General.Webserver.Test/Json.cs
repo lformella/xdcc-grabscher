@@ -34,6 +34,20 @@ namespace XG.Server.Plugin.General.Webserver.Test
 	[TestFixture]
 	public class Json
 	{
+		TimeZone _zone = TimeZone.CurrentTimeZone;
+
+		string JsonDate(DateTime dt)
+		{
+			DateTime d1 = new DateTime(1970, 1, 1);
+			DateTime d2 = dt.ToUniversalTime();
+			TimeSpan ts = new TimeSpan(d2.Ticks - d1.Ticks);
+
+			var hours = _zone.GetUtcOffset(DateTime.Now).Hours;
+			var str = hours < 10 && hours > -10 ? "0" + hours : "" + hours;
+			str = hours > 0 ? "+" + str + "00" : (hours < 0 ? "-" + str + "00" : "");
+			return @"\/Date(" + (Int64)ts.TotalMilliseconds + str + @")\/";
+		}
+
 		[Test]
 		public void Serialize()
 		{
@@ -47,7 +61,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 			var part = new FilePart {Connected = true, Enabled = true, Guid = Guid.Empty};
 
 			Assert.AreEqual(
-				"{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":9223372036854775807,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true}",
+				"{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":0,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true}",
 				JsonConvert.SerializeObject(part, jsonSerializerSettings)
 			);
 
@@ -57,13 +71,13 @@ namespace XG.Server.Plugin.General.Webserver.Test
 				Connected = true,
 				Enabled = true,
 				Guid = Guid.Empty,
-				LastMentioned = new DateTime(2012, 08, 04, 03, 45, 44),
-				LastUpdated = new DateTime(2012, 08, 05, 03, 45, 44),
+				LastMentioned = DateTime.Now,
+				LastUpdated = DateTime.Now,
 				Part = part
 			};
 
 			Assert.AreEqual(
-				"{\"Part\":{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":9223372036854775807,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true},\"Name\":\"Test Packet\",\"Id\":-1,\"Size\":0,\"RealSize\":0,\"RealName\":\"\",\"LastUpdated\":\"" + packet.LastUpdated.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"LastMentioned\":\"" + packet.LastMentioned.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Connected\":true,\"Enabled\":true}",
+				"{\"Part\":{\"StartSize\":0,\"StopSize\":0,\"CurrentSize\":0,\"MissingSize\":0,\"TimeMissing\":0,\"Speed\":0,\"State\":0,\"Checked\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"\",\"Connected\":true,\"Enabled\":true},\"Name\":\"Test Packet\",\"Id\":-1,\"Size\":0,\"RealSize\":0,\"RealName\":\"\",\"LastUpdated\":\"" + JsonDate(packet.LastUpdated) + "\",\"LastMentioned\":\"" + JsonDate(packet.LastMentioned) + "\",\"Next\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Connected\":true,\"Enabled\":true}",
 				JsonConvert.SerializeObject(packet, jsonSerializerSettings)
 			);
 
@@ -83,12 +97,12 @@ namespace XG.Server.Plugin.General.Webserver.Test
 				QueuePosition = 16,
 				QueueTime = 16,
 				State = Bot.States.Idle,
-				LastContact = new DateTime(2012, 08, 05, 03, 45, 44)
+				LastContact = DateTime.Now
 			};
 			bot.AddPacket(packet);
 
 			Assert.AreEqual(
-				"{\"State\":0,\"LastMessage\":\"Test Message\",\"LastMessageTime\":\"" + bot.LastMessageTime.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"LastContact\":\"" + bot.LastContact.ToString("yyyy-MM-ddTHH:mm:ss") + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0.0,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test Bot\",\"Connected\":true,\"Enabled\":true}",
+				"{\"State\":0,\"LastMessage\":\"Test Message\",\"LastMessageTime\":\"" + JsonDate(bot.LastMessageTime) + "\",\"LastContact\":\"" + JsonDate(bot.LastContact) + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test Bot\",\"Connected\":true,\"Enabled\":true}",
 				JsonConvert.SerializeObject(bot, jsonSerializerSettings)
 			);
 		}
