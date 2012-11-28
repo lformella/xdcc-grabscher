@@ -14,6 +14,7 @@ If you want to change the settings, create a file named __settings.xml__ using t
 
 * Windows 7: C:\Users\Benutzername\AppData\Roaming\XG
 * Linux: /home/Benutzername/.config/XG
+* Mac: dont know - send me an info if you are successfully running XG on mac :-)
 
 
 Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__.
