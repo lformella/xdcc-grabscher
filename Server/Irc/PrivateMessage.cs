@@ -196,7 +196,7 @@ namespace XG.Server.Irc
 							tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 							if (tChunk < 0)
 							{
-								log.Error("Parse() file from " + tBot.Name + " already in use");
+								log.Error("Parse() file (" + tPacket.RealName + ") from " + tBot.Name + " already in use, disable packet");
 								tPacket.Enabled = false;
 								tPacket.Commit();
 								FireUnRequestFromBot(aServer, tBot);

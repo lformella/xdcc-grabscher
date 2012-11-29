@@ -181,7 +181,7 @@ namespace XG.Server
 					{
 						Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name,
 						                                                 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
-						if (tChunk == -1 || tChunk == -2)
+						if (tChunk == -1)
 						{
 							_log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
