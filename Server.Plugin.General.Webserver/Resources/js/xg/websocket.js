@@ -315,6 +315,7 @@ var XGWebsocket = Class.create(
 			item = self.adjustObjectForJQGrid(item);
 			gridElement.addRowData(item.Guid, item);
 		});
+		gridElement.trigger("reloadGrid");
 	},
 
 	/**

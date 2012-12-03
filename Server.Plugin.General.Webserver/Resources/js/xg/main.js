@@ -93,6 +93,10 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatServerChannelName(obj);
 					},
+					sorttype: function (c, o)
+					{
+						return o.Name;
+					},
 					width: 214,
 					editable: true,
 					fixed: false
@@ -190,6 +194,10 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatServerChannelName(obj);
 					},
+					sorttype: function (c, o)
+					{
+						return o.Name;
+					},
 					width: 212,
 					editable: true,
 					fixed: false
@@ -280,6 +288,10 @@ var XGBase = Class.create(
 					{
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatBotName(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Name;
 					},
 					fixed: false
 				},
@@ -597,6 +609,10 @@ var XGBase = Class.create(
 						obj = JSON.parse(obj.Object);
 						return _(obj.Name);
 					},
+					sorttype: function (c, o)
+					{
+						return o.Name;
+					},
 					fixed: false,
 					sortable: false
 				},
@@ -686,6 +702,10 @@ var XGBase = Class.create(
 					{
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatPacketName(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Name;
 					},
 					fixed: false
 				},
@@ -808,6 +828,10 @@ var XGBase = Class.create(
 					{
 						obj = JSON.parse(obj.Object);
 						return self.formatter.formatFileName(obj);
+					},
+					sorttype: function (c, o)
+					{
+						return o.Name;
 					},
 					fixed: false,
 					classes: "progress-cell"
