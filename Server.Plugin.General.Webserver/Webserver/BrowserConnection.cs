@@ -90,6 +90,11 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						Context.Response.ContentType = "image/png";
 						WriteToStream(FileLoader.LoadImage(str));
 					}
+					else if (str.EndsWith(".gif"))
+					{
+						Context.Response.ContentType = "image/gif";
+						WriteToStream(FileLoader.LoadImage(str));
+					}
 					else
 					{
 						bool binary = false;

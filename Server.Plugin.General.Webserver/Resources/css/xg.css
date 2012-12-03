@@ -225,6 +225,11 @@ td
 	font-size: 12px;
 }
 
+.loading-symbol, .ui-icon.loading-symbol
+{
+	background-image: url(images/spinner.gif);
+}
+
 /* JQuery Fixes */
 
 .ui-tabs, .ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-buttonpane

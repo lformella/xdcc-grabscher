@@ -41,7 +41,6 @@ var XGPassword = Class.create(
 			self.buttonConnectClicked($(this));
 		};
 
-		//this.enableLoadingSymbols();
 		// display login
 		$("#dialog_password").dialog({
 			bgiframe: true,
@@ -101,7 +100,6 @@ var XGPassword = Class.create(
 
 		// resize
 		var resize = new XGResize(statistics);
-		this.enableLoadingSymbols();
 	},
 
 	checkPassword: function (password)
@@ -121,18 +119,5 @@ var XGPassword = Class.create(
 			$("#loading_password").hide();
 		}
 		return res;
-	},
-
-	enableLoadingSymbols: function()
-	{
-		var wait = 190;
-		var symbols = $('.loading-symbol');
-		symbols.repeat().each($)
-			.wait(wait).addClass('icon-progress-1').removeClass('icon-progress-0')
-			.wait(wait).addClass('icon-progress-2').removeClass('icon-progress-1')
-			.wait(wait).addClass('icon-progress-3').removeClass('icon-progress-2')
-			.wait(wait).addClass('icon-progress-4').removeClass('icon-progress-3')
-			.wait(wait).addClass('icon-progress-5').removeClass('icon-progress-4')
-			.wait(wait).addClass('icon-progress-0').removeClass('icon-progress-5');
 	}
 });
