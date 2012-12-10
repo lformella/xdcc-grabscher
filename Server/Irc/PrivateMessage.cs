@@ -387,7 +387,7 @@ namespace XG.Server.Irc
 							}
 							tPack.LastMentioned = DateTime.Now;
 
-							string name = ClearPacketName(tMatch.Groups["pack_name"].ToString());
+							string name = RemoveSpecialIrcCharsFromPacketName(tMatch.Groups["pack_name"].ToString());
 							if (tPack.Name != name && tPack.Name != "")
 							{
 								//myLog.Warn(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content");
@@ -496,7 +496,7 @@ namespace XG.Server.Irc
 
 				if (!isParsed) // && tBot.Packets.Count() > 0)
 				{
-					FireParsingError("[DCC Info] " + tBot.Name + " : " + ClearString(aMessage));
+					FireParsingError("[DCC Info] " + tBot.Name + " : " + RemoveSpecialIrcChars(aMessage));
 				}
 
 				#endregion
@@ -520,17 +520,11 @@ namespace XG.Server.Irc
 
 		#region HELPER
 
-		string ClearPacketName(string aData)
+		string RemoveSpecialIrcCharsFromPacketName(string aData)
 		{
-			string tData = ClearString(aData);
-			tData = tData.Replace("Movies", string.Empty);
-			tData = tData.Replace("Charts", string.Empty);
-			tData = tData.Replace("[]", string.Empty);
-			tData = tData.Replace("\u000F", string.Empty);
-			tData = tData.Replace("\uFFFD", string.Empty);
-			tData = tData.Replace("\u0016", string.Empty);
+			string tData = RemoveSpecialIrcChars(aData);
 			tData = tData.Replace("  ", " ");
-			return tData.Clear();
+			return tData.RemoveSpecialChars();
 		}
 
 		#endregion

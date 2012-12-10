@@ -57,7 +57,7 @@ namespace XG.Core
 			return true;
 		}
 
-		public static string Clear(this string aStr)
+		public static string RemoveSpecialChars(this string aStr)
 		{
 			return Regex.Replace(aStr, @"[^a-z0-9,.;:_\(\)\[\]\s-]", "", RegexOptions.IgnoreCase).Trim();
 		}

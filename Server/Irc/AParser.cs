@@ -177,11 +177,13 @@ namespace XG.Server.Irc
 
 		#region HELPER
 
-		protected string ClearString(string aData)
+		protected string RemoveSpecialIrcChars(string aData)
 		{
 			// |\u0031|\u0015)
 			aData = Regex.Replace(aData, "(\u0002|\u0003)(\\d+(,\\d{1,2}|)|)", "");
-			aData = Regex.Replace(aData, "(\u000F)", "");
+			aData = aData.Replace("\u000F", string.Empty);
+			aData = aData.Replace("\uFFFD", string.Empty);
+			aData = aData.Replace("\u0016", string.Empty);
 			return aData.Trim();
 		}
 

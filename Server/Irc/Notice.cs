@@ -52,7 +52,7 @@ namespace XG.Server.Irc
 				Match tMatch4;
 
 				int valueInt;
-				aMessage = ClearString(aMessage);
+				aMessage = RemoveSpecialIrcChars(aMessage);
 				//double valueDouble;
 
 				#region ALL SLOTS FULL / ADDING TO QUEUE
