@@ -423,8 +423,10 @@ namespace XG.Server.Irc
 								tPack.Size = (Int64) (tPacketSizeFormated * 1024 * 1024 * 1024);
 							}
 
-							tPack.Commit();
-							log.Info("Parse() updated packet #" + tPack.Id + " from " + tBot.Name);
+							if (tPack.Commit())
+							{
+								log.Info("Parse() updated packet #" + tPack.Id + " from " + tBot.Name);
+							}
 						}
 						catch (FormatException) {}
 					}
@@ -520,7 +522,6 @@ namespace XG.Server.Irc
 
 		string ClearPacketName(string aData)
 		{
-			// TODO remove all chars not matching this [a-z0-9.-_()]
 			string tData = ClearString(aData);
 			tData = tData.Replace("Movies", string.Empty);
 			tData = tData.Replace("Charts", string.Empty);
@@ -529,7 +530,7 @@ namespace XG.Server.Irc
 			tData = tData.Replace("\uFFFD", string.Empty);
 			tData = tData.Replace("\u0016", string.Empty);
 			tData = tData.Replace("  ", " ");
-			return tData.Trim();
+			return tData.Clear();
 		}
 
 		#endregion

@@ -22,11 +22,8 @@
 //  
 
 using System;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-
-using log4net;
 
 namespace XG.Server.Plugin.General.Webserver
 {

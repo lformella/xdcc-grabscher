@@ -33,8 +33,6 @@ using XG.Core;
 
 using log4net;
 
-using File = XG.Core.File;
-
 namespace XG.Server.Helper
 {
 	public class FileActions
@@ -65,7 +63,7 @@ namespace XG.Server.Helper
 		/// </summary>
 		/// <param name="aFile"> </param>
 		/// <returns> </returns>
-		public string CompletePath(File aFile)
+		public string CompletePath(Core.File aFile)
 		{
 			return Settings.Instance.TempPath + aFile.TmpPath;
 		}
@@ -89,10 +87,10 @@ namespace XG.Server.Helper
 		/// <param name="aName"> </param>
 		/// <param name="aSize"> </param>
 		/// <returns> </returns>
-		File File(string aName, Int64 aSize)
+		Core.File File(string aName, Int64 aSize)
 		{
 			string name = Core.Helper.ShrinkFileName(aName, aSize);
-			foreach (File file in _files.All)
+			foreach (var file in _files.All)
 			{
 				//Console.WriteLine(file.TmpPath + " - " + name);
 				if (file.TmpPath == name)
@@ -116,12 +114,12 @@ namespace XG.Server.Helper
 		/// <param name="aName"> </param>
 		/// <param name="aSize"> </param>
 		/// <returns> </returns>
-		public File NewFile(string aName, Int64 aSize)
+		public Core.File NewFile(string aName, Int64 aSize)
 		{
-			File tFile = File(aName, aSize);
+			var tFile = File(aName, aSize);
 			if (tFile == null)
 			{
-				tFile = new File(aName, aSize);
+				tFile = new Core.File(aName, aSize);
 				_files.Add(tFile);
 				try
 				{
@@ -141,7 +139,7 @@ namespace XG.Server.Helper
 		/// 	stops all running part connections and removes the file
 		/// </summary>
 		/// <param name="aFile"> </param>
-		public void RemoveFile(File aFile)
+		public void RemoveFile(Core.File aFile)
 		{
 			Log.Info("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")");
 
@@ -177,7 +175,7 @@ namespace XG.Server.Helper
 		/// <param name="aFile"> </param>
 		/// <param name="aSize"> </param>
 		/// <returns> </returns>
-		public FilePart Part(File aFile, Int64 aSize)
+		public FilePart Part(Core.File aFile, Int64 aSize)
 		{
 			FilePart returnPart = null;
 
@@ -229,7 +227,7 @@ namespace XG.Server.Helper
 		/// </summary>
 		/// <param name="aFile"> </param>
 		/// <param name="aPart"> </param>
-		public void RemovePart(File aFile, FilePart aPart)
+		public void RemovePart(Core.File aFile, FilePart aPart)
 		{
 			Log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
 
@@ -273,7 +271,7 @@ namespace XG.Server.Helper
 		/// <returns> -1 if there is no part, 0 or greater if there is a new part available </returns>
 		public Int64 NextAvailablePartSize(string aName, Int64 aSize)
 		{
-			File tFile = File(aName, aSize);
+			var tFile = File(aName, aSize);
 			if (tFile == null)
 			{
 				return 0;
@@ -363,7 +361,7 @@ namespace XG.Server.Helper
 		/// <returns> </returns>
 		Int64 CheckNextReferenceBytes(FilePart aPart, byte[] aBytes, bool aThreaded)
 		{
-			File tFile = aPart.Parent;
+			var tFile = aPart.Parent;
 			IEnumerable<FilePart> parts = tFile.Parts;
 			Log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() +
 			          " parts called");
@@ -482,7 +480,7 @@ namespace XG.Server.Helper
 		/// 	Checks a file and if it is complete it starts a thread which join the file
 		/// </summary>
 		/// <param name="aFile"> </param>
-		public void CheckFile(File aFile)
+		public void CheckFile(Core.File aFile)
 		{
 			lock (aFile.Lock)
 			{
@@ -518,7 +516,7 @@ namespace XG.Server.Helper
 		/// <param name="aObject"> </param>
 		void JoinCompleteParts(object aObject)
 		{
-			var tFile = aObject as File;
+			var tFile = aObject as Core.File;
 			if (tFile != null)
 			{
 				lock (tFile.Lock)

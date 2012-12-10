@@ -70,11 +70,7 @@ namespace XG.Core
 			get { return _state; }
 			set
 			{
-				if (_state != value)
-				{
-					_state = value;
-					Modified = true;
-				}
+				SetProperty(ref _state, value);
 
 				if (value == States.Waiting)
 				{

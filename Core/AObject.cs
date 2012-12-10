@@ -67,7 +67,7 @@ namespace XG.Core
 			if (!EqualityComparer<T>.Default.Equals(field, value))
 			{
 				field = value;
-				Modified = true;
+				_modified = true;
 				return true;
 			}
 			return false;
@@ -111,15 +111,17 @@ namespace XG.Core
 			set { SetProperty(ref _name, value); }
 		}
 
-		internal bool Modified;
+		bool _modified;
 
-		public void Commit()
+		public bool Commit()
 		{
-			if (Modified)
+			if (_modified)
 			{
 				FireChanged(this);
-				Modified = false;
+				_modified = false;
+				return true;
 			}
+			return false;
 		}
 
 		bool _connected;

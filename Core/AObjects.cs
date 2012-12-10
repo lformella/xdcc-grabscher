@@ -106,7 +106,6 @@ namespace XG.Core
 								aObjects.Removed += FireRemoved;
 							}
 							FireAdded(this, aObject);
-							aObject.Modified = false;
 
 							return true;
 						}
@@ -137,7 +136,6 @@ namespace XG.Core
 							aObjects.Removed -= FireRemoved;
 						}
 						FireRemoved(this, aObject);
-						aObject.Modified = false;
 
 						return true;
 					}

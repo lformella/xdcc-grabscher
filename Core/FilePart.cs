@@ -158,7 +158,8 @@ namespace XG.Core
 			{
 				if (_state != value)
 				{
-					_state = value;
+					SetProperty(ref _state, value);
+
 					if (_state != States.Open)
 					{
 						_speed = 0;
@@ -167,7 +168,6 @@ namespace XG.Core
 					{
 						_currentSize = _stopSize;
 					}
-					Modified = true;
 				}
 			}
 		}

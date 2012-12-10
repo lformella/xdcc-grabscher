@@ -22,6 +22,7 @@
 //  
 
 using System;
+using System.Text.RegularExpressions;
 
 namespace XG.Core
 {
@@ -54,6 +55,11 @@ namespace XG.Core
 				}
 			}
 			return true;
+		}
+
+		public static string Clear(this string aStr)
+		{
+			return Regex.Replace(aStr, @"[^a-z0-9,.-;:_\(\)\[\]]", "", RegexOptions.IgnoreCase).Trim();
 		}
 	}
 }
