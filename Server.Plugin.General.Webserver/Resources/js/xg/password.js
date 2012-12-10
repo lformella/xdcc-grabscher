@@ -21,13 +21,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var Password;
+var password;
 var XGPassword = Class.create(
 {
 	initialize: function (salt, host, port)
 	{
 		var self = this;
-		Password = this;
+		password = this;
 
 		this.password = "";
 		this.salt = salt;

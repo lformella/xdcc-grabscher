@@ -62,15 +62,18 @@ Enum.Response =
 	ObjectRemoved: 2,
 	ObjectChanged: 3,
 
-	SearchPacket: 11,
-	SearchBot: 12,
+	BlockStart: 4,
+	BlockStop: 5,
+
+	//SearchPacket: 11,
+	//SearchBot: 12,
 	SearchExternal: 13,
 
-	Servers: 14,
-	ChannelsFromServer: 15,
-	PacketsFromBot: 16,
+	//Servers: 14,
+	//ChannelsFromServer: 15,
+	//PacketsFromBot: 16,
 
-	Files: 17,
+	//Files: 17,
 	Searches: 18,
 
 	Snapshots: 19,

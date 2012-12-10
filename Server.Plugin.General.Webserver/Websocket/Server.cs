@@ -187,7 +187,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnOpen(IWebSocketConnection aContext)
 		{
-			Log.Info("OnOpen() client " + aContext.ConnectionInfo.ClientIpAddress);
+			Log.Info("OnOpen(" + aContext.ConnectionInfo.ClientIpAddress + ")");
 
 			var user = new User
 			{
@@ -200,7 +200,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnClose(IWebSocketConnection aContext)
 		{
-			Log.Info("OnClose() client " + aContext.ConnectionInfo.ClientIpAddress);
+			Log.Info("OnClose(" + aContext.ConnectionInfo.ClientIpAddress + ")");
 
 			foreach (var user in _users.ToArray())
 			{
@@ -213,7 +213,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void OnMessage(IWebSocketConnection aContext, string aMessage)
 		{
-			Log.Info("OnMessage() message '" + aMessage + "' from client " + aContext.ConnectionInfo.ClientIpAddress);
+			Log.Info("OnMessage(" + aContext.ConnectionInfo.ClientIpAddress + ", " + aMessage + ")");
 
 			var currentUser = (from user in _users where user.Connection == aContext select user).SingleOrDefault();
 			var request = JsonConvert.DeserializeObject<Request>(aMessage);
@@ -224,7 +224,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				// no pass, no way
 				if (request.Password != Password)
 				{
-					Log.Error("OnMessage() bad password from client " + aContext.ConnectionInfo.ToString());
+					Log.Error("OnMessage(" + aContext.ConnectionInfo.ClientIpAddress + ") bad password");
 					// exit
 					return;
 				}
@@ -257,18 +257,10 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Search:
 						var packets = FilteredPackets(AllPackets(request.IgnoreOfflineBots), request.Guid);
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.SearchPacket,
-							Data = packets
-						});
+						UnicastBlock(currentUser, "Packet", packets);
 
 						var bots = DistinctBots(packets);
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.SearchBot,
-							Data = bots
-						});
+						UnicastBlock(currentUser, "Bot", bots);
 
 						currentUser.IgnoreOfflineBots = request.IgnoreOfflineBots;
 						currentUser.LastSearch = request.Guid;
@@ -349,20 +341,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Servers:
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.Servers,
-							Data = Servers.All
-						});
+						UnicastBlock(currentUser, "Server", Servers.All);
 						break;
 
 					case Request.Types.ChannelsFromServer:
 						var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.ChannelsFromServer,
-							Data = channels
-						});
+						UnicastBlock(currentUser, "Channel", channels);
 
 						currentUser.LastViewedServer = request.Guid;
 						currentUser.LastLoadedChannels = channels;
@@ -375,11 +359,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 										from packet in bot.Packets
 										where packet.ParentGuid == request.Guid
 										select packet).ToList();
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.PacketsFromBot,
-							Data = botPackets
-						});
+						UnicastBlock(currentUser, "Packet", botPackets);
 
 						currentUser.LastViewedBot = request.Guid;
 						currentUser.LastLoadedPackets = botPackets;
@@ -398,11 +378,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Files:
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.Files,
-							Data = Files.All
-						});
+						UnicastBlock(currentUser, "File", Files.All);
 						break;
 
 					case Request.Types.CloseServer:
@@ -455,14 +431,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("OnMessage(" + aContext.ConnectionInfo.ToString() + ", " + aMessage + ")", ex);
+				Log.Fatal("OnMessage(" + aContext.ConnectionInfo.ClientIpAddress + ", " + aMessage + ")", ex);
 			}
 #endif
 		}
 
 		void OnError(IWebSocketConnection aContext, Exception aException)
 		{
-			Log.Info("OnError() client " + aContext.ConnectionInfo.ClientIpAddress, aException);
+			Log.Info("OnError(" + aContext.ConnectionInfo.ClientIpAddress + ")", aException);
 
 			OnClose(aContext);
 		}
@@ -541,6 +517,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = aResponse.Data
 							});
 							user.LastLoadedBots.Remove(bot);
+
+							// do the same with bot packets
+							foreach (Packet pack in bot.Packets)
+							{
+								Unicast(user, new Response {
+									Type = Response.Types.ObjectRemoved,
+									Data = pack
+								});
+								user.LastLoadedPackets.Remove(pack);
+							}
 							continue;
 						}
 
@@ -552,6 +538,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = aResponse.Data
 							});
 							user.LastLoadedBots.Add(bot);
+
+							// do the same with bot packets
+							foreach (Packet pack in bot.Packets)
+							{
+								Unicast(user, new Response {
+									Type = Response.Types.ObjectAdded,
+									Data = pack
+								});
+								user.LastLoadedPackets.Add(pack);
+							}
 							continue;
 						}
 					}
@@ -606,13 +602,38 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			{
 #endif
 				aUser.Connection.Send(message);
+				Log.Info("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + message + ")");
 #if !UNSAFE
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("Unicast()", ex);
+				Log.Fatal("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + message + ")", ex);
 			}
 #endif
+		}
+
+		void UnicastBlock(User aUser, string aType, IEnumerable<AObject> aObjects)
+		{
+			Unicast(aUser, new Response
+			{
+				Type = Response.Types.BlockStart,
+				Data = aType
+			});
+
+			foreach (AObject aObject in aObjects)
+			{
+				Unicast(aUser, new Response
+				{
+					Type = Response.Types.ObjectAdded,
+					Data = aObject
+				});
+			}
+
+			Unicast(aUser, new Response
+			{
+				Type = Response.Types.BlockStop,
+				Data = aType
+			});
 		}
 
 		#endregion

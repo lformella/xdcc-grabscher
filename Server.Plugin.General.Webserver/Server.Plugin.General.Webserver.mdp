@@ -160,6 +160,8 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-tw.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-tw.js" />
     <File subtype="Code" buildaction="Compile" name="Object/ExternalSearch.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/spinner.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.spinner.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.en.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.en.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

@@ -28,20 +28,27 @@ var XGWebsocket = Class.create(
 	 * @param {String} url
 	 * @param {String} port
 	 * @param {String} password
+	 * @param {XGStatistics} statistics
 	 */
 	initialize: function(cookie, url, port, password, statistics)
 	{
-		var self = this;
-
 		this.cookie = cookie;
+		this.url = url;
+		this.port = port;
+		this.password = password;
 		this.statistics = statistics;
 
-		this.Password = password;
+		this.connect();
+	},
+
+	connect: function ()
+	{
+		var self = this;
 
 		this.state = WebSocket.CLOSED;
 		try
 		{
-			this.socket = new WebSocket("ws://" + url + ":" + port);
+			this.socket = new WebSocket("ws://" + this.url + ":" + this.port);
 			this.socket.onopen = function ()
 			{
 				self.state = self.socket.readyState;
@@ -67,7 +74,10 @@ var XGWebsocket = Class.create(
 		}
 		catch (exception)
 		{
-			self.state = self.socket.readyState;
+			if (self.socket != undefined)
+			{
+				self.state = self.socket.readyState;
+			}
 
 			self.onError(exception);
 		}
@@ -80,7 +90,7 @@ var XGWebsocket = Class.create(
 	buildRequest: function(Type)
 	{
 		return {
-			"Password": this.Password,
+			"Password": this.password,
 			"Type": Type,
 			"IgnoreOfflineBots": this.cookie.getCookie("show_offline_bots", false) == "1"
 		};
@@ -209,6 +219,11 @@ var XGWebsocket = Class.create(
 
 	onMessageReceived: function (json)
 	{
+		if (json.DataType == "String")
+		{
+			json.DataType = json.Data;
+		}
+	
 		var grid = "";
 		switch (json.DataType)
 		{
@@ -263,16 +278,26 @@ var XGWebsocket = Class.create(
 				}
 				break;
 
+			case Enum.Response.BlockStart:
+				var gridElement = $("#" + grid + "_table");
+				gridElement.clearGridData();
+				break;
+
+			case Enum.Response.BlockStop:
+				$("#" + grid + "_loading .loading-symbol").hide();
+				break;
+/*
 			case Enum.Response.SearchPacket:
 				this.setGridData("packets", json.Data);
 				break;
 			case Enum.Response.SearchBot:
 				this.setGridData("bots", json.Data);
 				break;
+*/
 			case Enum.Response.SearchExternal:
 				this.setGridData("packets_external", json.Data);
 				break;
-
+/*
 			case Enum.Response.Servers:
 				this.setGridData("servers", json.Data);
 				break;
@@ -286,6 +311,7 @@ var XGWebsocket = Class.create(
 			case Enum.Response.Files:
 				this.setGridData("files", json.Data);
 				break;
+*/
 			case Enum.Response.Searches:
 				this.setGridData("search", json.Data);
 				break;
