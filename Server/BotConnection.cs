@@ -115,6 +115,7 @@ namespace XG.Server
 					return Settings.Instance.TempPath + File.TmpPath + Part.StartSize;
 				}
 				// damn this should not happen
+				Log.Error("Filename find no part or file");
 				return "";
 			}
 		}
@@ -522,7 +523,7 @@ namespace XG.Server
 				return;
 			}
 
-			// update all listeners with new values and a calculated speed
+			// update part speed
 			if ((DateTime.Now - _speedCalcTime).TotalSeconds > Settings.Instance.UpdateDownloadTime)
 			{
 				DateTime old = _speedCalcTime;
