@@ -59,7 +59,7 @@ namespace XG.Core
 
 		public static string Clear(this string aStr)
 		{
-			return Regex.Replace(aStr, @"[^a-z0-9,.-;:_\(\)\[\]]", "", RegexOptions.IgnoreCase).Trim();
+			return Regex.Replace(aStr, @"[^a-z0-9,.;:_\(\)\[\]\s-]", "", RegexOptions.IgnoreCase).Trim();
 		}
 	}
 }
