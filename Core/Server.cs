@@ -94,7 +94,7 @@ namespace XG.Core
 			{
 				aName = "#" + aName;
 			}
-			return (Channel) base.Named(aName);
+			return base.Named(aName) as Channel;
 		}
 
 		public Bot Bot(string aName)

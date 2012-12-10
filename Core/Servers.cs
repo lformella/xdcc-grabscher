@@ -37,7 +37,7 @@ namespace XG.Core
 
 		public Server Server(string aName)
 		{
-			return (Server) base.Named(aName);
+			return base.Named(aName) as Server;
 		}
 
 		public void Add(Server aServer)
