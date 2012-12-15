@@ -137,6 +137,10 @@ namespace XG.Server
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
+			Packet.Parent.QueuePosition = 0;
+			Packet.Parent.QueueTime = 0;
+			Packet.Parent.Commit();
+
 			var tFile = FileActions.NewFile(Packet.RealName, Packet.RealSize);
 			if (tFile == null)
 			{
@@ -212,8 +216,6 @@ namespace XG.Server
 					Packet.Commit();
 
 					Packet.Parent.State = Bot.States.Active;
-					Packet.Parent.QueuePosition = 0;
-					Packet.Parent.QueueTime = 0;
 					Packet.Parent.Commit();
 
 					#endregion
@@ -257,6 +259,7 @@ namespace XG.Server
 			Packet.Parent.State = Bot.States.Idle;
 			Packet.Parent.Commit();
 
+			Packet.Parent.HasNetworkProblems = false;
 			if (Part != null)
 			{
 				Part.Packet = null;
@@ -298,6 +301,7 @@ namespace XG.Server
 					{
 						Log.Error("ConnectionDisconnected() downloading did not start, disabling packet");
 						Packet.Enabled = false;
+						Packet.Parent.HasNetworkProblems = true;
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
@@ -311,7 +315,6 @@ namespace XG.Server
 						Statistic.Instance.Increase(StatisticType.PacketsIncompleted);
 					}
 				}
-				Part.Commit();
 			}
 				// the connection didnt even connected to the given ip and port
 			else
@@ -319,10 +322,14 @@ namespace XG.Server
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
 				Log.Error("ConnectionDisconnected() connection did not work, disabling packet");
 				Packet.Enabled = false;
+				Packet.Parent.HasNetworkProblems = true;
 
 				// statistics
 				Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 			}
+
+			Part.Commit();
+			Packet.Parent.Commit();
 
 			Disconnected(Packet, this);
 		}

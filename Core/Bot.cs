@@ -207,6 +207,15 @@ namespace XG.Core
 			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }
 		}
 
+		bool _hasNetworkProblems;
+
+		[JsonProperty]
+		public bool HasNetworkProblems
+		{
+			get { return _hasNetworkProblems; }
+			set { SetProperty(ref _hasNetworkProblems, value); }
+		}
+
 		#endregion
 
 		#region CHILDREN

@@ -164,6 +164,12 @@ var XGFormatter = Class.create(
 		if (!bot.Connected)
 		{
 			iconClass = "Aluminium1Dark";
+
+			if (bot.HasNetworkProblems)
+			{
+				overlay = "attention-circle";
+				overlayClass = "ScarletRedMiddle";
+			}
 		}
 		else
 		{
