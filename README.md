@@ -39,9 +39,11 @@ The following packets must be installed:
 * libmono-system-runtime-serialization4.0-cil
 * libmono-system-xml-linq4.0-cil
 
-Install command to copy paste:
+####Install command to copy paste:
 
+```bash
 sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-web4.0-cil libmono-system-runtime-serialization4.0-cil libmono-system-xml-linq4.0-cil
+```
 
 ### If running on Windows Vista and greater
 
