@@ -39,6 +39,10 @@ The following packets must be installed:
 * libmono-system-runtime-serialization4.0-cil
 * libmono-system-xml-linq4.0-cil
 
+Install command to copy paste:
+
+sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-web4.0-cil libmono-system-runtime-serialization4.0-cil libmono-system-xml-linq4.0-cil
+
 ### If running on Windows Vista and greater
 
 If you dont want to run XG with admin rights, you have to execute the following command once using an admin shell: __netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%__ - you have to adjust the port if you changed it before, of course. Otherwise the integrated webserver wont work.
