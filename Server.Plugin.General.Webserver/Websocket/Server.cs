@@ -550,6 +550,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							}
 							continue;
 						}
+
+						// and skip changed bots if they are not in our list
+						if (!user.LastLoadedBots.Contains(bot))
+						{
+							continue;
+						}
 					}
 
 					if (aResponse.Data.GetType() == typeof(Packet))
@@ -584,6 +590,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = aResponse.Data
 							});
 							user.LastLoadedPackets.Add(packet);
+							continue;
+						}
+
+						// and skip changed packets if they are not in our list
+						if (!user.LastLoadedPackets.Contains(packet))
+						{
 							continue;
 						}
 					}
