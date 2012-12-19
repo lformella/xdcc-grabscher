@@ -132,5 +132,14 @@ namespace XG.Core
 		}
 
 		#endregion
+
+		#region HELPER
+
+		public override string ToString()
+		{
+			return base.ToString() + "|#" + Id + "|" + (RealSize > 0 ? RealSize : Size);
+		}
+
+		#endregion
 	}
 }

@@ -176,5 +176,14 @@ namespace XG.Core
 		}
 
 		#endregion
+
+		#region HELPER
+
+		public override string ToString()
+		{
+			return GetType().Name + "|" + Name;
+		}
+
+		#endregion
 	}
 }

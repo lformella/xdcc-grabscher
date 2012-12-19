@@ -129,7 +129,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("ConnectServer(" + aServer.Name + ") server is already in the dictionary");
+				Log.Error("ConnectServer(" + aServer + ") is already in the dictionary");
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("DisconnectServer(" + aServer.Name + ") server is not in the dictionary");
+				Log.Error("DisconnectServer(" + aServer + ") is not in the dictionary");
 			}
 		}
 
@@ -208,7 +208,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("ServerConnectionDisconnected(" + aServer.Name + ", " + aValue + ") server is not in the dictionary");
+				Log.Error("ServerConnectionDisconnected(" + aServer + ", " + aValue + ") is not in the dictionary");
 			}
 		}
 
@@ -222,7 +222,7 @@ namespace XG.Server
 
 				if (tServer.Enabled)
 				{
-					Log.Error("ReconnectServer(" + tServer.Name + ")");
+					Log.Error("ReconnectServer(" + tServer + ")");
 
 					// TODO do we need a new connection here?
 					con.Connection = new Connection.Connection {Hostname = tServer.Name, Port = tServer.Port, MaxData = 0};
@@ -232,7 +232,7 @@ namespace XG.Server
 			}
 			else if (tServer != null)
 			{
-				Log.Error("ReconnectServer(" + tServer.Name + ") server is not in the dictionary");
+				Log.Error("ReconnectServer(" + tServer + ") is not in the dictionary");
 			}
 		}
 
@@ -270,7 +270,7 @@ namespace XG.Server
 			else
 			{
 				// uhh - that should not happen
-				Log.Error("IrcParserAddDownload(" + aPack.Name + ") is already downloading");
+				Log.Error("IrcParserAddDownload(" + aPack + ") is already downloading");
 			}
 		}
 

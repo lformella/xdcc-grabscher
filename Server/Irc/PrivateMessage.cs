@@ -90,7 +90,7 @@ namespace XG.Server.Irc
 					string[] tDataList = aMessage.Split(' ');
 					if (tDataList[1] == "SEND")
 					{
-						log.Info("Parse() DCC from " + tBot.Name);
+						log.Info("Parse() DCC from " + tBot);
 
 						// if the name of the file contains spaces, we have to replace em
 						if (aMessage.StartsWith("DCC SEND \""))
@@ -121,7 +121,7 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
 								return;
 							}
 							string realIp = "";
@@ -141,7 +141,7 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip '" + ip + "' from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot + " - can not parse bot ip '" + ip + "' from string: " + aMessage, ex);
 								return;
 							}
 
@@ -152,7 +152,7 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								log.Fatal("Parse() " + tBot.Name + " - can not parse bot ip from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
 								return;
 							}
 
@@ -167,13 +167,13 @@ namespace XG.Server.Irc
 						}
 						catch (Exception ex)
 						{
-							log.Fatal("Parse() " + tBot.Name + " - can not parse bot port from string: " + aMessage, ex);
+							log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
 							return;
 						}
 						// we cant connect to port <= 0
 						if (tPort <= 0)
 						{
-							log.Error("Parse() " + tBot.Name + " submitted wrong port: " + tPort + ", disabling packet");
+							log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
 							tPacket.Enabled = false;
 							tPacket.Commit();
 
@@ -189,21 +189,21 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								log.Fatal("Parse() " + tBot.Name + " - can not parse packet size from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot + " - can not parse packet size from string: " + aMessage, ex);
 								return;
 							}
 
 							tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
 							if (tChunk < 0)
 							{
-								log.Error("Parse() file (" + tPacket.RealName + ") from " + tBot.Name + " already in use, disable packet");
+								log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use, disabling packet");
 								tPacket.Enabled = false;
 								tPacket.Commit();
 								FireUnRequestFromBot(aServer, tBot);
 							}
 							else if (tChunk > 0)
 							{
-								log.Info("Parse() try resume from " + tBot.Name + " for " + tPacket.RealName + " @ " + tChunk);
+								log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + tChunk);
 								FireSendData(aServer, "PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
 							}
 							else
@@ -214,14 +214,14 @@ namespace XG.Server.Irc
 					}
 					else if (tDataList[1] == "ACCEPT")
 					{
-						log.Info("Parse() DCC resume accepted from " + tBot.Name);
+						log.Info("Parse() DCC resume accepted from " + tBot);
 						try
 						{
 							tPort = int.Parse(tDataList[3]);
 						}
 						catch (Exception ex)
 						{
-							log.Fatal("Parse() " + tBot.Name + " - can not parse bot port from string: " + aMessage, ex);
+							log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
 							return;
 						}
 						try
@@ -230,7 +230,7 @@ namespace XG.Server.Irc
 						}
 						catch (Exception ex)
 						{
-							log.Fatal("Parse() " + tBot.Name + " - can not parse packet chunk from string: " + aMessage, ex);
+							log.Fatal("Parse() " + tBot + " - can not parse packet chunk from string: " + aMessage, ex);
 							return;
 						}
 						isOk = true;
@@ -238,7 +238,7 @@ namespace XG.Server.Irc
 
 					if (isOk)
 					{
-						log.Info("Parse() downloading from " + tBot.Name + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
+						log.Info("Parse() downloading from " + tBot + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
 						FireAddDownload(tPacket, tChunk, tBot.Ip, tPort);
 					}
 
@@ -246,7 +246,7 @@ namespace XG.Server.Irc
 				}
 				else
 				{
-					log.Error("Parse() DCC not activated from " + tBot.Name);
+					log.Error("Parse() DCC not activated from " + tBot);
 				}
 			}
 
@@ -373,7 +373,7 @@ namespace XG.Server.Irc
 							}
 							catch (Exception ex)
 							{
-								log.Fatal("Parse() " + tBot.Name + " - can not parse packet id from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot + " - can not parse packet id from string: " + aMessage, ex);
 								return;
 							}
 
@@ -390,7 +390,6 @@ namespace XG.Server.Irc
 							string name = RemoveSpecialIrcCharsFromPacketName(tMatch.Groups["pack_name"].ToString());
 							if (tPack.Name != name && tPack.Name != "")
 							{
-								//myLog.Warn(this, "The Packet " + tPack.Id + "(" + tPacketId + ") name changed from '" + tPack.Name + "' to '" + name + "' maybee they changed the content");
 								tPack.Enabled = false;
 								if (!tPack.Connected)
 								{
@@ -425,7 +424,7 @@ namespace XG.Server.Irc
 
 							if (tPack.Commit())
 							{
-								log.Info("Parse() updated packet #" + tPack.Id + " from " + tBot.Name);
+								log.Info("Parse() updated " + tPack + " from " + tBot);
 							}
 						}
 						catch (FormatException) {}
@@ -440,14 +439,14 @@ namespace XG.Server.Irc
 					if (isParsed)
 					{
 						tChan.AddBot(tBot);
-						log.Info("Parse() inserted bot " + tBot.Name);
+						log.Info("Parse() inserted " + tBot);
 					}
 				}
 				// and insert packet _AFTER_ this
 				if (newPacket != null)
 				{
 					tBot.AddPacket(newPacket);
-					log.Info("Parse() inserted packet #" + newPacket.Id + " into " + tBot.Name);
+					log.Info("Parse() inserted " + newPacket + " into " + tBot);
 				}
 
 #if DEBUG

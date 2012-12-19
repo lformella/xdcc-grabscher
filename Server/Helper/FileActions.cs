@@ -98,7 +98,7 @@ namespace XG.Server.Helper
 					// lets check if the directory is still on the harddisk
 					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						Log.Warn("File(" + aName + ", " + aSize + ") directory " + file.TmpPath + " is missing ");
+						Log.Warn("File(" + aName + ", " + aSize + ") directory of " + file + " is missing ");
 						RemoveFile(file);
 						break;
 					}
@@ -141,7 +141,7 @@ namespace XG.Server.Helper
 		/// <param name="aFile"> </param>
 		public void RemoveFile(Core.File aFile)
 		{
-			Log.Info("RemoveFile(" + aFile.Name + ", " + aFile.Size + ")");
+			Log.Info("RemoveFile(" + aFile + ")");
 
 			// check if this file is currently downloaded
 			bool skip = false;
@@ -229,7 +229,7 @@ namespace XG.Server.Helper
 		/// <param name="aPart"> </param>
 		public void RemovePart(Core.File aFile, FilePart aPart)
 		{
-			Log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ")");
+			Log.Info("RemovePart(" + aFile + ", " + aPart + ")");
 
 			IEnumerable<FilePart> parts = aFile.Parts;
 			foreach (FilePart part in parts)
@@ -239,8 +239,7 @@ namespace XG.Server.Helper
 					part.StopSize = aPart.StopSize;
 					if (part.State == FilePart.States.Ready)
 					{
-						Log.Info("RemovePart(" + aFile.Name + ", " + aFile.Size + ", " + aPart.StartSize + ") expanding part " + part.StartSize + " to " +
-						          aPart.StopSize);
+						Log.Info("RemovePart(" + aFile + ", " + aPart + ") expanding " + part.StartSize + " to " + aPart.StopSize);
 						part.State = FilePart.States.Closed;
 						part.Commit();
 						break;
@@ -363,8 +362,7 @@ namespace XG.Server.Helper
 		{
 			var tFile = aPart.Parent;
 			IEnumerable<FilePart> parts = tFile.Parts;
-			Log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ", " + aPart.StopSize + ") with " + parts.Count() +
-			          " parts called");
+			Log.Info("CheckNextReferenceBytes(" + tFile + ", " + aPart + ") with " + parts.Count() + " parts called");
 
 			foreach (FilePart part in parts)
 			{
@@ -383,7 +381,7 @@ namespace XG.Server.Helper
 						{
 							if (!part.StartReference.IsEqualWith(aBytes))
 							{
-								Log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing next part " + part.StartSize);
+								Log.Warn("CheckNextReferenceBytes(" + tFile + ", " + aPart + ") removing next " + part);
 								part.Packet.Enabled = false;
 								part.Packet.Commit();
 								RemovePart(tFile, part);
@@ -391,7 +389,7 @@ namespace XG.Server.Helper
 							}
 							else
 							{
-								Log.Info("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize + " is checked");
+								Log.Info("CheckNextReferenceBytes(" + tFile + ", " + aPart + ") " + part + " is checked");
 								part.Checked = true;
 								part.Commit();
 								return 0;
@@ -399,8 +397,7 @@ namespace XG.Server.Helper
 						}
 						else
 						{
-							Log.Error("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") part " + part.StartSize +
-							           " is open, but has no packet");
+							Log.Error("CheckNextReferenceBytes(" + tFile + ", " + aPart + ") " + part + " is open, but has no packet");
 							return 0;
 						}
 					}
@@ -416,7 +413,7 @@ namespace XG.Server.Helper
 
 							if (!bytes.IsEqualWith(aBytes))
 							{
-								Log.Warn("CheckNextReferenceBytes(" + tFile.Name + ", " + tFile.Size + ", " + aPart.StartSize + ") removing closed part " + part.StartSize);
+								Log.Warn("CheckNextReferenceBytes(" + tFile + ", " + aPart + ") removing closed " + part);
 								RemovePart(tFile, part);
 								return part.StopSize;
 							}
@@ -455,15 +452,12 @@ namespace XG.Server.Helper
 						}
 						catch (Exception ex)
 						{
-							Log.Fatal(
-							           "CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize + ") handling part " +
-							           part.StartSize + "", ex);
+							Log.Fatal("CheckNextReferenceBytes(" + aPart.Parent + ", " + aPart + ") handling " + part + "", ex);
 						}
 					}
 					else
 					{
-						Log.Error("CheckNextReferenceBytes(" + aPart.Parent.Name + ", " + aPart.Parent.Size + ", " + aPart.StartSize +
-						           ") do not know what to do with part " + part.StartSize);
+						Log.Error("CheckNextReferenceBytes(" + aPart.Parent + ", " + aPart + ") do not know what to do with " + part);
 					}
 
 					break;
@@ -484,7 +478,7 @@ namespace XG.Server.Helper
 		{
 			lock (aFile.Lock)
 			{
-				Log.Info("CheckFile(" + aFile.Name + ")");
+				Log.Info("CheckFile(" + aFile + ")");
 				if (!aFile.Parts.Any())
 				{
 					return;
@@ -497,7 +491,7 @@ namespace XG.Server.Helper
 					if (part.State != FilePart.States.Ready)
 					{
 						complete = false;
-						Log.Info("CheckFile(" + aFile.Name + ") part " + part.StartSize + " is not complete");
+						Log.Info("CheckFile(" + aFile + ") " + part + " is not complete");
 						break;
 					}
 				}
@@ -521,7 +515,7 @@ namespace XG.Server.Helper
 			{
 				lock (tFile.Lock)
 				{
-					Log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") starting");
+					Log.Info("JoinCompleteParts(" + tFile + ") starting");
 
 					#region DISABLE ALL MATCHING PACKETS
 
@@ -539,11 +533,9 @@ namespace XG.Server.Helper
 								{
 									foreach (Packet tPack in tBot.Packets)
 									{
-										if (tPack.Enabled &&
-										    (Core.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || Core.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)))
+										if (tPack.Enabled && (Core.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || Core.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)))
 										{
-											Log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") disabling packet #" + tPack.Id + " (" + tPack.Name + ") from " +
-											         tPack.Parent.Name);
+											Log.Info("JoinCompleteParts(" + tFile + ") disabling " + tPack + " from " + tPack.Parent);
 											tPack.Enabled = false;
 											tPack.Commit();
 										}
@@ -584,7 +576,7 @@ namespace XG.Server.Helper
 							}
 							catch (Exception ex)
 							{
-								Log.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") handling part " + part.StartSize + "", ex);
+								Log.Fatal("JoinCompleteParts(" + tFile + ") handling " + part + "", ex);
 								// dont delete the source if the disk is full!
 								// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
 								// TODO this doesnt work :(
@@ -603,7 +595,7 @@ namespace XG.Server.Helper
 						if (size == tFile.Size)
 						{
 							FileSystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
-							Log.Info("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") file build");
+							Log.Info("JoinCompleteParts(" + tFile + ") build");
 
 							// statistics
 							Statistic.Instance.Increase(StatisticType.FilesCompleted);
@@ -620,7 +612,7 @@ namespace XG.Server.Helper
 						}
 						else
 						{
-							Log.Error("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") filesize is not the same: " + size);
+							Log.Error("JoinCompleteParts(" + tFile + ") filesize is not the same: " + size);
 
 							// statistics
 							Statistic.Instance.Increase(StatisticType.FilesBroken);
@@ -628,7 +620,7 @@ namespace XG.Server.Helper
 					}
 					catch (Exception ex)
 					{
-						Log.Fatal("JoinCompleteParts(" + tFile.Name + ", " + tFile.Size + ") make", ex);
+						Log.Fatal("JoinCompleteParts(" + tFile + ") make", ex);
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.FilesBroken);

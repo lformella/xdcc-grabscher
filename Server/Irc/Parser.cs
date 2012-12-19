@@ -129,7 +129,7 @@ namespace XG.Server.Irc
 				if (tBot != null)
 				{
 					tBot.Name = aMessage;
-					log.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot.Name);
+					log.Info("con_DataReceived() bot " + tUserName + " renamed to " + tBot);
 				}
 				else if (tUserName == Settings.Instance.IrcNick)
 				{
@@ -150,7 +150,7 @@ namespace XG.Server.Irc
 					if (tUserName == Settings.Instance.IrcNick)
 					{
 						tChan.Connected = false;
-						log.Warn("con_DataReceived() kicked from " + tChan.Name + (aCommands.Length >= 5 ? " (" + aCommands[4] + ")" : "") + " - rejoining");
+						log.Warn("con_DataReceived() kicked from " + tChan + (aCommands.Length >= 5 ? " (" + aCommands[4] + ")" : "") + " - rejoining");
 						log.Warn("con_DataReceived() " + aRawData);
 						FireJoinChannel(aServer, tChan);
 
@@ -163,8 +163,8 @@ namespace XG.Server.Irc
 						if (tBot != null)
 						{
 							tBot.Connected = false;
-							tBot.LastMessage = "kicked from channel " + tChan.Name;
-							log.Info("con_DataReceived() bot " + tBot.Name + " is offline");
+							tBot.LastMessage = "kicked from " + tChan;
+							log.Info("con_DataReceived() " + tBot + " is offline");
 						}
 					}
 				}
@@ -186,7 +186,7 @@ namespace XG.Server.Irc
 					tBot = aServer.Bot(tUserName);
 					if (tBot != null)
 					{
-						log.Warn("con_DataReceived() bot " + tBot.Name + " was killed from server?");
+						log.Warn("con_DataReceived() " + tBot + " was killed from server?");
 					}
 				}
 			}
@@ -209,7 +209,7 @@ namespace XG.Server.Irc
 						{
 							tBot.State = Bot.States.Idle;
 						}
-						log.Info("con_DataReceived() bot " + tUserName + " is online");
+						log.Info("con_DataReceived() " + tBot + " is online");
 						FireRequestFromBot(aServer, tBot);
 					}
 				}
@@ -227,7 +227,7 @@ namespace XG.Server.Irc
 					{
 						tBot.Connected = true;
 						tBot.LastMessage = "parted channel " + tChan.Name;
-						log.Info("con_DataReceived() bot " + tBot.Name + " parted from " + tChan.Name);
+						log.Info("con_DataReceived() " + tBot + " parted from " + tChan);
 					}
 				}
 			}
@@ -242,7 +242,7 @@ namespace XG.Server.Irc
 				{
 					tBot.Connected = false;
 					tBot.LastMessage = "quited";
-					log.Info("con_DataReceived() bot " + tBot.Name + " quited");
+					log.Info("con_DataReceived() " + tBot + " quited");
 				}
 			}
 

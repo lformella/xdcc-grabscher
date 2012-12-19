@@ -154,7 +154,7 @@ namespace XG.Server.Irc
 								tBot.RemovePacket(pack);
 							}
 						}
-						log.Error("Parse() invalid packetnumber from " + tBot.Name);
+						log.Error("Parse() invalid packetnumber from " + tBot);
 					}
 				}
 
@@ -358,7 +358,7 @@ namespace XG.Server.Irc
 								tBot.State = Bot.States.Idle;
 							}
 							FireCreateTimer(aServer, tBot, Settings.Instance.CommandWaitTime, false);
-							log.Error("Parse() XDCC denied from " + tBot.Name + ": " + info);
+							log.Error("Parse() XDCC denied from " + tBot + ": " + info);
 						}
 					}
 				}
@@ -538,12 +538,12 @@ namespace XG.Server.Irc
 
 				if (!isParsed)
 				{
-					FireParsingError("[DCC Notice] " + tBot.Name + " : " + aMessage);
+					FireParsingError("[DCC Notice] " + tBot + " : " + aMessage);
 				}
 				else
 				{
 					tBot.LastMessage = aMessage;
-					log.Info("Parse() message from " + tBot.Name + ": " + aMessage);
+					log.Info("Parse() message from " + tBot + ": " + aMessage);
 				}
 
 				tBot.Commit();

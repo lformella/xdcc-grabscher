@@ -80,7 +80,7 @@ namespace XG.Server
 				{
 					if (s.Name == serv.Name && s.Guid != serv.Guid)
 					{
-						Log.Error("Run() removing dupe server " + s.Name);
+						Log.Error("Run() removing dupe " + s);
 						Servers.Remove(s);
 					}
 				}
@@ -91,7 +91,7 @@ namespace XG.Server
 					{
 						if (c.Name == chan.Name && c.Guid != chan.Guid)
 						{
-							Log.Error("Run() removing dupe channel " + c.Name);
+							Log.Error("Run() removing dupe " + c);
 							serv.RemoveChannel(c);
 						}
 					}
@@ -102,7 +102,7 @@ namespace XG.Server
 						{
 							if (b.Name == bot.Name && b.Guid != bot.Guid)
 							{
-								Log.Error("Run() removing dupe bot " + b.Name);
+								Log.Error("Run() removing dupe " + b);
 								chan.RemoveBot(b);
 							}
 						}
@@ -113,7 +113,7 @@ namespace XG.Server
 							{
 								if (p.Id == pack.Id && p.Guid != pack.Guid)
 								{
-									Log.Error("Run() removing dupe Packet " + p.Name);
+									Log.Error("Run() removing dupe " + p);
 									bot.RemovePacket(p);
 								}
 							}
@@ -161,7 +161,7 @@ namespace XG.Server
 					if (file.Enabled)
 					{
 						Files.Remove(file);
-						Log.Info("Run() removing ready file " + file.Name);
+						Log.Info("Run() removing ready " + file);
 					}
 				}
 			}
@@ -177,7 +177,7 @@ namespace XG.Server
 					// lets check if the directory is still on the harddisk
 					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 					{
-						Log.Warn("Run() crash recovery directory " + file.TmpPath + " is missing ");
+						Log.Warn("Run() crash recovery directory " + file + " is missing ");
 						_fileActions.RemoveFile(file);
 						continue;
 					}
@@ -204,15 +204,14 @@ namespace XG.Server
 								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
 								if (part.CurrentSize != part.StartSize + info.Length)
 								{
-									Log.Warn("Run() crash recovery size mismatch of part " + part.StartSize + " from file " + file.TmpPath + " - db:" + part.CurrentSize +
-									          " real:" + info.Length);
+									Log.Warn("Run() crash recovery size mismatch of " + part + " from " + file + " - db:" + part.CurrentSize + " real:" + info.Length);
 									part.CurrentSize = part.StartSize + info.Length;
 									complete = false;
 								}
 							}
 							else
 							{
-								Log.Error("Run() crash recovery part " + part.StartSize + " of file " + file.TmpPath + " is missing");
+								Log.Error("Run() crash recovery " + part + " of " + file + " is missing");
 								_fileActions.RemovePart(file, part);
 								complete = false;
 							}
@@ -359,7 +358,7 @@ namespace XG.Server
 			{
 				var aServer = aObj as Core.Server;
 
-				Log.Info("ServerObjectAdded(" + aServer.Name + ")");
+				Log.Info("ServerObjectAdded(" + aServer + ")");
 				_servers.ServerConnect(aServer);
 			}
 		}
@@ -373,7 +372,7 @@ namespace XG.Server
 				aServer.Enabled = false;
 				aServer.Commit();
 
-				Log.Info("ServerObjectRemoved(" + aServer.Name + ")");
+				Log.Info("ServerObjectRemoved(" + aServer + ")");
 				_servers.ServerDisconnect(aServer);
 			}
 		}

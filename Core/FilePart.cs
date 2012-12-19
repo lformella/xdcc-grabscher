@@ -192,5 +192,14 @@ namespace XG.Core
 		}
 
 		#endregion
+
+		#region HELPER
+
+		public override string ToString()
+		{
+			return base.ToString() + "|" + StartSize + "|" + StopSize;
+		}
+
+		#endregion
 	}
 }

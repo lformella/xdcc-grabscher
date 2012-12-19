@@ -105,7 +105,7 @@ namespace XG.Server.Irc
 									{
 										tBot.State = Bot.States.Idle;
 									}
-									log.Info("Parse() bot " + tBot.Name + " is online");
+									log.Info("Parse() " + tBot + " is online");
 									tBot.Commit();
 									FireRequestFromBot(aServer, tBot);
 								}
@@ -123,7 +123,7 @@ namespace XG.Server.Irc
 						{
 							tChan.ErrorCode = 0;
 							tChan.Connected = true;
-							log.Info("Parse() joined channel " + tChan.Name);
+							log.Info("Parse() joined " + tChan);
 						}
 
 						// statistics
@@ -185,7 +185,7 @@ namespace XG.Server.Irc
 						{
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
-							log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
+							log.Warn("Parse() could not join " + tChan + ": " + tComCode);
 						}
 
 						// statistics
@@ -206,9 +206,8 @@ namespace XG.Server.Irc
 						{
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
-							log.Warn("Parse() could not join channel " + tChan.Name + ": " + tComCode);
-							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong,
-							                false);
+							log.Warn("Parse() could not join " + tChan + ": " + tComCode);
+							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong, false);
 						}
 
 						// statistics

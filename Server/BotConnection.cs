@@ -144,7 +144,7 @@ namespace XG.Server
 			var tFile = FileActions.NewFile(Packet.RealName, Packet.RealSize);
 			if (tFile == null)
 			{
-				Log.Fatal("ConnectionConnected() cant find or create a file to download");
+				Log.Fatal("ConnectionConnected(" + Packet + ") cant find or create a file to download");
 				Connection.Disconnect();
 				return;
 			}
@@ -155,7 +155,7 @@ namespace XG.Server
 				// wtf?
 				if (StartSize == StopSize)
 				{
-					Log.Error("ConnectionConnected() startSize = stopsize (" + StartSize + ")");
+					Log.Error("ConnectionConnected(" + Packet + ") startSize = stopsize (" + StartSize + ")");
 					Connection.Disconnect();
 					return;
 				}
@@ -163,7 +163,7 @@ namespace XG.Server
 				Part.State = FilePart.States.Open;
 				Part.Packet = Packet;
 
-				Log.Info("ConnectionConnected() startet (" + StartSize + " - " + StopSize + ")");
+				Log.Info("ConnectionConnected(" + Packet + ") started (" + StartSize + " - " + StopSize + ")");
 
 #if !UNSAFE
 				try
@@ -195,7 +195,7 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							Log.Fatal("ConnectionConnected() seek", ex);
+							Log.Fatal("ConnectionConnected(" + Packet + ") seek", ex);
 							Connection.Disconnect();
 							return;
 						}
@@ -224,7 +224,7 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("ConnectionConnected()", ex);
+					Log.Fatal("ConnectionConnected(" + Packet + ")", ex);
 					Connection.Disconnect();
 					return;
 				}
@@ -235,7 +235,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("ConnectionConnected() cant find a part to download");
+				Log.Error("ConnectionConnected(" + Packet + ") cant find a part to download");
 				Connection.Disconnect();
 			}
 		}
@@ -267,6 +267,7 @@ namespace XG.Server
 
 				if (RemovePart)
 				{
+					Log.Info("ConnectionDisconnected(" + Packet + ") removing part");
 					Part.State = FilePart.States.Broken;
 					FileActions.RemovePart(File, Part);
 				}
@@ -276,7 +277,7 @@ namespace XG.Server
 					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheckBytes))
 					{
 						Part.State = FilePart.States.Ready;
-						Log.Info("ConnectionDisconnected() ready" + (Part.Checked ? "" : " but unchecked"));
+						Log.Info("ConnectionDisconnected(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
@@ -285,12 +286,12 @@ namespace XG.Server
 					else if (CurrrentSize > StopSize)
 					{
 						Part.State = FilePart.States.Broken;
-						Log.Error("ConnectionDisconnected() size is bigger than excepted: " + CurrrentSize + " > " + StopSize);
+						Log.Error("ConnectionDisconnected(" + Packet + ") size is bigger than excepted: " + CurrrentSize + " > " + StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
 						if (File.Parts.Count() == 1 || Part.StopSize == File.Size)
 						{
 							FileActions.RemoveFile(File);
-							Log.Error("ConnectionDisconnected() removing corupted file " + File.Name);
+							Log.Error("ConnectionDisconnected(" + Packet + ") removing corupted " + File);
 						}
 
 						// statistics
@@ -299,7 +300,7 @@ namespace XG.Server
 						// it did not start
 					else if (_receivedBytes == 0)
 					{
-						Log.Error("ConnectionDisconnected() downloading did not start, disabling packet");
+						Log.Error("ConnectionDisconnected(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
 						Packet.Parent.HasNetworkProblems = true;
 
@@ -309,7 +310,7 @@ namespace XG.Server
 						// it is incomplete
 					else
 					{
-						Log.Error("ConnectionDisconnected() incomplete");
+						Log.Error("ConnectionDisconnected(" + Packet + ") incomplete");
 
 						// statistics
 						Statistic.Instance.Increase(StatisticType.PacketsIncompleted);
@@ -320,7 +321,7 @@ namespace XG.Server
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
-				Log.Error("ConnectionDisconnected() connection did not work, disabling packet");
+				Log.Error("ConnectionDisconnected(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
 				Packet.Parent.HasNetworkProblems = true;
 
@@ -375,7 +376,7 @@ namespace XG.Server
 					// all ok
 					if (_rollbackRefernce.IsEqualWith(_startBuffer))
 					{
-						Log.Info("con_DataReceived() rollback check ok");
+						Log.Info("ConnectionDataReceived(" + Packet + ") rollback check ok");
 						aData = _startBuffer;
 						_startBuffer = null;
 						_streamOk = true;
@@ -383,7 +384,7 @@ namespace XG.Server
 						// data mismatch
 					else
 					{
-						Log.Error("con_DataReceived() rollback check failed");
+						Log.Error("ConnectionDataReceived(" + Packet + ") rollback check failed");
 
 						// unregister from the event because if this is triggered
 						// it will remove the part
@@ -472,14 +473,14 @@ namespace XG.Server
 						// all ok
 						if (stopSize == 0)
 						{
-							Log.Info("con_DataReceived() reference check ok");
+							Log.Info("ConnectionDataReceived(" + Packet + ") reference check ok");
 							Connection.Disconnect();
 							return;
 						}
 						// data mismatch
 						else
 						{
-							Log.Error("con_DataReceived() reference check failed");
+							Log.Error("ConnectionDataReceived(" + Packet + ") reference check failed");
 							aData = _stopBuffer;
 							StopSize = stopSize;
 						}
@@ -524,7 +525,7 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("con_DataReceived() write", ex);
+				Log.Fatal("ConnectionDataReceived(" + Packet + ") write", ex);
 				_streamOk = false;
 				Connection.Disconnect();
 				return;

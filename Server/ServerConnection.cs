@@ -183,7 +183,7 @@ namespace XG.Server
 						                                                 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1)
 						{
-							_log.Warn("RequestFromBot(" + aBot.Name + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
+							_log.Warn("RequestFromBot(" + aBot + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
 							tPacket.Commit();
 							tPacket = aBot.OldestActivePacket();
@@ -196,7 +196,7 @@ namespace XG.Server
 								double time = (_latestPacketRequests[name] - DateTime.Now).TotalSeconds;
 								if (time > 0)
 								{
-									_log.Warn("RequestFromBot(" + aBot.Name + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
+									_log.Warn("RequestFromBot(" + aBot + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
 									CreateTimer(aBot, (int) time + 1, false);
 									return;
 								}
@@ -204,7 +204,7 @@ namespace XG.Server
 
 							if (_server.Connected)
 							{
-								_log.Info("RequestFromBot(" + aBot.Name + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
+								_log.Info("RequestFromBot(" + aBot + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
 								SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC SEND " + tPacket.Id + "\u0001");
 
 								if (_latestPacketRequests.ContainsKey(name))
@@ -230,7 +230,7 @@ namespace XG.Server
 		{
 			if (aBot != null) // && myServer[aBot.Name] != null)
 			{
-				_log.Info("UnregisterFromBot(" + aBot.Name + ")");
+				_log.Info("UnregisterFromBot(" + aBot + ")");
 				SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC REMOVE\u0001");
 				CreateTimer(aBot, Settings.Instance.CommandWaitTime, false);
 
@@ -248,7 +248,7 @@ namespace XG.Server
 			// only join if the channel isnt connected
 			if (aChan != null && _server.Channel(aChan.Name) != null && !aChan.Connected)
 			{
-				_log.Info("JoinChannel(" + aChan.Name + ")");
+				_log.Info("JoinChannel(" + aChan + ")");
 				SendData("JOIN " + aChan.Name);
 
 				// TODO maybe set a time to resend the command if the channel is not connected
@@ -263,7 +263,7 @@ namespace XG.Server
 		{
 			if (aChan != null)
 			{
-				_log.Info("PartChannel(" + aChan.Name + ")");
+				_log.Info("PartChannel(" + aChan + ")");
 				SendData("PART " + aChan.Name);
 
 				// statistics
