@@ -31,11 +31,11 @@ namespace XG.Core.Test
 		[Test]
 		public void ShrinkFileName()
 		{
-			const string fileName = "This_(is).-an_Evil)(File-_-name_[Test].txt";
+			const string fileName = "This_(is).-an_Evil) (F1le-_-name_[T3st].txt";
 			const long fileSize = 440044;
 			string result = Core.Helper.ShrinkFileName(fileName, fileSize);
 
-			Assert.AreEqual("thisisanevilfilenametesttxt.440044/", result);
+			Assert.AreEqual("thisisanevilf1lenamet3sttxt.440044/", result);
 		}
 	}
 }

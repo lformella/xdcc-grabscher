@@ -110,11 +110,7 @@ namespace XG.Core
 		/// <returns> </returns>
 		public static string ShrinkFileName(string aName, Int64 aSize)
 		{
-			if (aName != null)
-			{
-				return Regex.Replace(aName, "(\\(|\\)|\\[|\\]|\\{|\\}|-|_|\\.)", "").ToLower() + "." + aSize + "/";
-			}
-			return "";
+			return aName != null ? Regex.Replace(aName.ToLower(), "[^a-z0-9]", "") + "." + aSize + "/" : "";
 		}
 	}
 }
