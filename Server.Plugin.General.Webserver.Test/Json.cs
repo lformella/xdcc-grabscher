@@ -102,7 +102,7 @@ namespace XG.Server.Plugin.General.Webserver.Test
 			bot.AddPacket(packet);
 
 			Assert.AreEqual(
-				"{\"State\":0,\"LastMessage\":\"Test Message\",\"LastMessageTime\":\"" + JsonDate(bot.LastMessageTime) + "\",\"LastContact\":\"" + JsonDate(bot.LastContact) + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test Bot\",\"Connected\":true,\"Enabled\":true}",
+				"{\"State\":0,\"LastMessage\":\"Test Message\",\"LastMessageTime\":\"" + JsonDate(bot.LastMessageTime) + "\",\"LastContact\":\"" + JsonDate(bot.LastContact) + "\",\"QueuePosition\":16,\"QueueTime\":16,\"InfoSpeedMax\":16,\"InfoSpeedCurrent\":16,\"InfoSlotTotal\":16,\"InfoSlotCurrent\":16,\"InfoQueueTotal\":16,\"InfoQueueCurrent\":16,\"Speed\":0,\"HasNetworkProblems\":false,\"ParentGuid\":\"00000000-0000-0000-0000-000000000000\",\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Name\":\"Test Bot\",\"Connected\":true,\"Enabled\":true}",
 				JsonConvert.SerializeObject(bot, jsonSerializerSettings)
 			);
 		}

@@ -740,6 +740,37 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return tObjects.ToArray();
 		}
 
+		public Int64[][] FilterDuplicateEntries(Int64[][] aEntries)
+		{
+			var list = new List<Int64[]>();
+
+			Int64[] prev = {0, -1};
+			Int64[] stack = null;
+			foreach (Int64[] data in aEntries)
+			{
+				if (prev[1] != data[1])
+				{
+					if (stack != null)
+					{
+						list.Add(stack);
+						stack = null;
+					}
+					list.Add(data);
+					prev = data;
+				}
+				else
+				{
+					stack = data;
+				}
+			}
+			if (stack != null)
+			{
+				list.Add(stack);
+			}
+
+			return list.ToArray();
+		}
+
 		#endregion
 	}
 }
