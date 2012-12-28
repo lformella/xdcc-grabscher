@@ -47,7 +47,8 @@ namespace XG.Server.Helper
 		public bool Run()
 		{
 			bool result = true;
-
+			
+			Log.Info("Run(" + Command + ", " + Arguments + ")");
 			try
 			{
 				var p = new System.Diagnostics.Process
