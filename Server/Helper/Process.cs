@@ -87,11 +87,13 @@ namespace XG.Server.Helper
 			}
 			finally
 			{
-				Log.Info("Run(" + Command + ", " + Arguments + ") Output: " + Output);
-				Log.Info("Run(" + Command + ", " + Arguments + ") Error: " + Error);
-
-				if (!string.IsNullOrEmpty(Error))
+				if (!String.IsNullOrWhiteSpace(Output))
 				{
+					Log.Info("Run(" + Command + ", " + Arguments + ") Output: " + Output);
+				}
+				if (!String.IsNullOrWhiteSpace(Error))
+				{
+					Log.Error("Run(" + Command + ", " + Arguments + ") Error: " + Error);
 					result = false;
 				}
 			}
