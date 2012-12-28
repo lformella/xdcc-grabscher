@@ -82,167 +82,172 @@ namespace XG.Server.Irc
 				Packet tPacket = tBot.OldestActivePacket();
 				if (tPacket != null)
 				{
-					bool isOk = false;
-
-					int tPort = 0;
-					Int64 tChunk = 0;
-
-					string[] tDataList = aMessage.Split(' ');
-					if (tDataList[1] == "SEND")
+					if (tPacket.Connected)
 					{
-						log.Info("Parse() DCC from " + tBot);
+						log.Error("Parse() ignoring dcc from " + tBot + " because " + tPacket + " is already connected");
+					}
+					else
+					{
+						bool isOk = false;
 
-						// if the name of the file contains spaces, we have to replace em
-						if (aMessage.StartsWith("DCC SEND \""))
+						int tPort = 0;
+						Int64 tChunk = 0;
+
+						string[] tDataList = aMessage.Split(' ');
+						if (tDataList[1] == "SEND")
 						{
-							Match tMatch = Regex.Match(aMessage, "DCC SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
-							if (tMatch.Success)
+							log.Info("Parse() DCC from " + tBot);
+
+							// if the name of the file contains spaces, we have to replace em
+							if (aMessage.StartsWith("DCC SEND \""))
 							{
-								aMessage = "DCC SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"];
-								tDataList = aMessage.Split(' ');
+								Match tMatch = Regex.Match(aMessage, "DCC SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
+								if (tMatch.Success)
+								{
+									aMessage = "DCC SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"];
+									tDataList = aMessage.Split(' ');
+								}
 							}
-						}
 
-						#region IP CALCULATING
+							#region IP CALCULATING
 
-						try
-						{
-							// this works not in mono?!
-							tBot.Ip = IPAddress.Parse(tDataList[3]);
-						}
-						catch (FormatException)
-						{
-							#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
-
-							string ip;
 							try
 							{
-								ip = new IPAddress(long.Parse(tDataList[3])).ToString();
+								// this works not in mono?!
+								tBot.Ip = IPAddress.Parse(tDataList[3]);
 							}
-							catch (Exception ex)
+							catch (FormatException)
 							{
-								log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
-								return;
-							}
-							string realIp = "";
-							int pos = ip.LastIndexOf('.');
-							try
-							{
-								realIp += ip.Substring(pos + 1) + ".";
-								ip = ip.Substring(0, pos);
-								pos = ip.LastIndexOf('.');
-								realIp += ip.Substring(pos + 1) + ".";
-								ip = ip.Substring(0, pos);
-								pos = ip.LastIndexOf('.');
-								realIp += ip.Substring(pos + 1) + ".";
-								ip = ip.Substring(0, pos);
-								pos = ip.LastIndexOf('.');
-								realIp += ip.Substring(pos + 1);
-							}
-							catch (Exception ex)
-							{
-								log.Fatal("Parse() " + tBot + " - can not parse bot ip '" + ip + "' from string: " + aMessage, ex);
-								return;
-							}
+								#region WTF - FLIP THE IP BECAUSE ITS REVERSED?!
 
-							log.Info("Parse() IP parsing failed, using this: " + realIp);
-							try
-							{
-								tBot.Ip = IPAddress.Parse(realIp);
-							}
-							catch (Exception ex)
-							{
-								log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
-								return;
+								string ip;
+								try
+								{
+									ip = new IPAddress(long.Parse(tDataList[3])).ToString();
+								}
+								catch (Exception ex)
+								{
+									log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
+									return;
+								}
+								string realIp = "";
+								int pos = ip.LastIndexOf('.');
+								try
+								{
+									realIp += ip.Substring(pos + 1) + ".";
+									ip = ip.Substring(0, pos);
+									pos = ip.LastIndexOf('.');
+									realIp += ip.Substring(pos + 1) + ".";
+									ip = ip.Substring(0, pos);
+									pos = ip.LastIndexOf('.');
+									realIp += ip.Substring(pos + 1) + ".";
+									ip = ip.Substring(0, pos);
+									pos = ip.LastIndexOf('.');
+									realIp += ip.Substring(pos + 1);
+								}
+								catch (Exception ex)
+								{
+									log.Fatal("Parse() " + tBot + " - can not parse bot ip '" + ip + "' from string: " + aMessage, ex);
+									return;
+								}
+
+								log.Info("Parse() IP parsing failed, using this: " + realIp);
+								try
+								{
+									tBot.Ip = IPAddress.Parse(realIp);
+								}
+								catch (Exception ex)
+								{
+									log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
+									return;
+								}
+
+								#endregion
 							}
 
 							#endregion
-						}
 
-						#endregion
-
-						try
-						{
-							tPort = int.Parse(tDataList[4]);
-						}
-						catch (Exception ex)
-						{
-							log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
-							return;
-						}
-						// we cant connect to port <= 0
-						if (tPort <= 0)
-						{
-							log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
-							tPacket.Enabled = false;
-							tPacket.Commit();
-
-							// statistics
-							Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
-						}
-						else
-						{
-							tPacket.RealName = tDataList[2];
 							try
 							{
-								tPacket.RealSize = Int64.Parse(tDataList[5]);
+								tPort = int.Parse(tDataList[4]);
 							}
 							catch (Exception ex)
 							{
-								log.Fatal("Parse() " + tBot + " - can not parse packet size from string: " + aMessage, ex);
+								log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
 								return;
 							}
-
-							tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
-							if (tChunk < 0)
+							// we cant connect to port <= 0
+							if (tPort <= 0)
 							{
-								log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use, disabling packet");
+								log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
 								tPacket.Enabled = false;
-								tPacket.Commit();
-								FireUnRequestFromBot(aServer, tBot);
-							}
-							else if (tChunk > 0)
-							{
-								log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + tChunk);
-								FireSendData(aServer, "PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+
+								// statistics
+								Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 							}
 							else
 							{
-								isOk = true;
+								tPacket.RealName = tDataList[2];
+								try
+								{
+									tPacket.RealSize = Int64.Parse(tDataList[5]);
+								}
+								catch (Exception ex)
+								{
+									log.Fatal("Parse() " + tBot + " - can not parse packet size from string: " + aMessage, ex);
+									return;
+								}
+
+								tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
+								if (tChunk < 0)
+								{
+									log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use, disabling packet");
+									tPacket.Enabled = false;
+									FireUnRequestFromBot(aServer, tBot);
+								}
+								else if (tChunk > 0)
+								{
+									log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + tChunk);
+									FireSendData(aServer, "PRIVMSG " + tBot.Name + " :\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+								}
+								else
+								{
+									isOk = true;
+								}
 							}
 						}
-					}
-					else if (tDataList[1] == "ACCEPT")
-					{
-						log.Info("Parse() DCC resume accepted from " + tBot);
-						try
+						else if (tDataList[1] == "ACCEPT")
 						{
-							tPort = int.Parse(tDataList[3]);
+							log.Info("Parse() DCC resume accepted from " + tBot);
+							try
+							{
+								tPort = int.Parse(tDataList[3]);
+							}
+							catch (Exception ex)
+							{
+								log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
+								return;
+							}
+							try
+							{
+								tChunk = Int64.Parse(tDataList[4]);
+							}
+							catch (Exception ex)
+							{
+								log.Fatal("Parse() " + tBot + " - can not parse packet chunk from string: " + aMessage, ex);
+								return;
+							}
+							isOk = true;
 						}
-						catch (Exception ex)
-						{
-							log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
-							return;
-						}
-						try
-						{
-							tChunk = Int64.Parse(tDataList[4]);
-						}
-						catch (Exception ex)
-						{
-							log.Fatal("Parse() " + tBot + " - can not parse packet chunk from string: " + aMessage, ex);
-							return;
-						}
-						isOk = true;
-					}
 
-					if (isOk)
-					{
-						log.Info("Parse() downloading from " + tBot + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
-						FireAddDownload(tPacket, tChunk, tBot.Ip, tPort);
-					}
+						if (isOk)
+						{
+							log.Info("Parse() downloading from " + tBot + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
+							FireAddDownload(tPacket, tChunk, tBot.Ip, tPort);
+						}
 
-					tPacket.Commit();
+						tPacket.Commit();
+					}
 				}
 				else
 				{
