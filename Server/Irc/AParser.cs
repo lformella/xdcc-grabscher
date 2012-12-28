@@ -181,9 +181,9 @@ namespace XG.Server.Irc
 		{
 			// |\u0031|\u0015)
 			aData = Regex.Replace(aData, "(\u0002|\u0003)(\\d+(,\\d{1,2}|)|)", "");
-			aData = aData.Replace("\u000F", string.Empty);
-			aData = aData.Replace("\uFFFD", string.Empty);
-			aData = aData.Replace("\u0016", string.Empty);
+			aData = aData.Replace("\u000F", String.Empty);
+			aData = aData.Replace("\uFFFD", String.Empty);
+			aData = aData.Replace("\u0016", String.Empty);
 			return aData.Trim();
 		}
 

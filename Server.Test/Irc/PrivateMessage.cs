@@ -50,7 +50,7 @@ namespace XG.Server.Test.Irc
 			Assert.AreEqual(0, Bot.InfoSpeedCurrent);
 			Assert.AreEqual((Int64) (231.4 * 1024), Bot.InfoSpeedMax);
 
-			Assert.AreEqual(true, string.IsNullOrEmpty(EventParsingError));
+			Assert.AreEqual(true, String.IsNullOrEmpty(EventParsingError));
 		}
 
 		[Test]
@@ -74,7 +74,7 @@ namespace XG.Server.Test.Irc
 			Assert.AreEqual(13, Bot.InfoSlotCurrent);
 			Assert.AreEqual(15, Bot.InfoSlotTotal);
 
-			Assert.AreEqual(true, string.IsNullOrEmpty(EventParsingError));
+			Assert.AreEqual(true, String.IsNullOrEmpty(EventParsingError));
 		}
 
 		[Test]
@@ -105,7 +105,7 @@ namespace XG.Server.Test.Irc
 			Assert.AreEqual((Int64) (2.2 * 1024 * 1024 * 1024), tPack.Size);
 			Assert.AreEqual("Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv", tPack.Name);
 
-			Assert.AreEqual(true, string.IsNullOrEmpty(EventParsingError));
+			Assert.AreEqual(true, String.IsNullOrEmpty(EventParsingError));
 		}
 	}
 }

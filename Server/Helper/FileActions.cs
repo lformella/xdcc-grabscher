@@ -642,7 +642,7 @@ namespace XG.Server.Helper
 		/// <param name="aFile"> </param>
 		void HandleFile(string aFile)
 		{
-			if (!string.IsNullOrEmpty(aFile))
+			if (!String.IsNullOrEmpty(aFile))
 			{
 				string folder = Path.GetDirectoryName(aFile);
 				string file = Path.GetFileName(aFile);
@@ -673,7 +673,7 @@ namespace XG.Server.Helper
 
 		void RunFileHandlerProcess(FileHandlerProcess aHandler, string aPath, string aFolder, string aFile, string aFileName, string aFileExtension)
 		{
-			if (aHandler == null || string.IsNullOrEmpty(aHandler.Command) || string.IsNullOrEmpty(aHandler.Arguments))
+			if (aHandler == null || String.IsNullOrEmpty(aHandler.Command) || String.IsNullOrEmpty(aHandler.Arguments))
 			{
 				return;
 			}

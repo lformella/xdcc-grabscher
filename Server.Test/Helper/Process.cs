@@ -21,6 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using System.IO;
 
 using NUnit.Framework;
@@ -52,7 +53,7 @@ namespace XG.Server.Test.Helper
 		bool Compress(string file, string archive, string password)
 		{
 			var p = new Server.Helper.Process
-			        {Command = "rar", Arguments = "a " + (string.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file};
+			        {Command = "rar", Arguments = "a " + (String.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file};
 
 			return p.Run();
 		}

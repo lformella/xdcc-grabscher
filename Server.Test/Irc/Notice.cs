@@ -21,6 +21,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+
 using NUnit.Framework;
 
 namespace XG.Server.Test.Irc
@@ -44,7 +46,7 @@ namespace XG.Server.Test.Irc
 			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT NOTICE xg1_bitpir_at : ** Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now");
 			Assert.AreEqual("JOIN #MG-CHAT", EventData);
 
-			Assert.AreEqual(true, string.IsNullOrEmpty(EventParsingError));
+			Assert.AreEqual(true, String.IsNullOrEmpty(EventParsingError));
 		}
 	}
 }
