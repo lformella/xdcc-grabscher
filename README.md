@@ -12,8 +12,8 @@ A so called killer feature is the multiple download function. Every good XDCC cl
 ## How do i use it?
 If you want to change the settings, create a file named __settings.xml__ using the example. If there is no __settings.xml__ file XG will create one using default values. The settings file must be located in your user folder:
 
-* Windows 7: C:\Users\Benutzername\AppData\Roaming\XG
-* Linux: /home/Benutzername/.config/XG
+* Windows 7: C:\Users\Username\AppData\Roaming\XG
+* Linux: /home/Username/.config/XG
 * Mac: dont know - send me an info if you are successfully running XG on mac :-)
 
 
