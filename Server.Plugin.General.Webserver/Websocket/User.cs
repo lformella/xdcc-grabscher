@@ -36,19 +36,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		public IWebSocketConnection Connection { get; set; }
 
-		public bool IgnoreOfflineBots { get; set; }
-
-		public Guid LastViewedServer { get; set; }
-
-		public List<Channel> LastLoadedChannels { get; set; }
-		
-		public Guid LastSearch { get; set; }
-
-		public List<Bot> LastLoadedBots { get; set; }
-		
-		public Guid LastViewedBot { get; set; }
-
-		public List<Packet> LastLoadedPackets { get; set; }
+		public List<AObject> LoadedObjects { get; set; }
 
 		#endregion
 	}

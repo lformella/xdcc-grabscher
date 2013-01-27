@@ -47,6 +47,22 @@ td
 
 /* XG Elements */
 
+.alignRight
+{
+	text-align: right;
+}
+
+#searchGrid
+{
+	width: 100%;
+}
+
+#serverGrid, #channelGrid
+{
+	width: 400px;
+	height: 400px;
+}
+
 #password_tip
 {
 	padding: 5px 0 10px 0;

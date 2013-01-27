@@ -39,31 +39,45 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		readonly Dictionary<string, string> _dicString;
 		readonly Dictionary<string, byte[]> _dicByte;
 
-		readonly string[] _cssFiles = {"reset", "fontello", "jquery-ui", "ui.jqgrid", "layout-default", "xg"};
+		readonly string[] _cssFiles =
+		{
+			"reset",
+			"fontello",
+			"jquery-ui",
+			"slick.grid",
+			"slick.pager",
+			"layout-default",
+			"xg"};
 
 		readonly string[] _jsFiles =
 		{
 			"external/moment.min",
 			"external/jquery.min",
 			"external/jquery.class",
+			"external/jquery.event.drag-2.0.min",
 			"external/jquery.cookie.min",
 			"external/jquery.flot",
 			"external/jquery.flot.axislabels",
-			"external/jquery.jqGrid.min",
 			"external/jquery-timing.min",
 			"external/jquery-ui.min",
 			"external/jquery.layout.min",
 			"external/json2.min",
 			"external/sha256",
-			"i18n/jqgrid/grid.locale-#LANGUAGE_SHORT#",
+			"external/slick.core",
+			"external/slick.formatters",
+			"external/slick.grid",
+			"external/slick.dataview",
+			"external/slick.pager",
 			"i18n/moment/#LANGUAGE_SHORT#",
 			"i18n/xg/#LANGUAGE_SHORT#",
 			"xg/enum",
 			"xg/cookie",
 			"xg/formatter",
 			"xg/helper",
+			"xg/grid",
 			"xg/main",
 			"xg/password",
+			"xg/dataview",
 			"xg/resize",
 			"xg/statistics",
 			"xg/translate",
@@ -118,7 +132,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						content = new StreamReader(stream).ReadToEnd();
 					}
 #endif
-					if (aFile == "/index.html")
+					if (aFile == "/index.html" || aFile == "/index2.html")
 					{
 						content = content.Replace("#HOST#", aHost);
 						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));

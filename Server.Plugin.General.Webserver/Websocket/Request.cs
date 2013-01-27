@@ -78,9 +78,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		
 		[JsonProperty]
 		public string Name { get; set; }
-		
-		[JsonProperty]
-		public bool IgnoreOfflineBots { get; set; }
 
 		#endregion
 	}

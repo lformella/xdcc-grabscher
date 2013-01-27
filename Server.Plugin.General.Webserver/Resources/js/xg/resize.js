@@ -22,21 +22,21 @@
 
 var XGResize = Class.create(
 {
-	/**
-	 * @param {XGStatistics} statistics
-	 */
-	initialize: function (statistics)
+	initialize: function ()
+	{
+		this.onResize = new Slick.Event();
+	},
+
+	start: function ()
 	{
 		var self = this;
-
-		this.statistics = statistics;
 
 		$("body").layout({
 			onresize: function () {
 				self.resizeMain(innerLayout);
 			}
 		});
-		var innerLayout = $("#layout_objects_container").layout({
+		var innerLayout = $("#layoutObjectsContainer").layout({
 			resizeWithWindow: false,
 			onresize: function () {
 				self.resizeContainer();
@@ -44,7 +44,7 @@ var XGResize = Class.create(
 		});
 
 		// make bot and packet grid height almost equal
-		innerLayout.sizePane("north", $('#layout_objects').height() / 2 - 80);
+		innerLayout.sizePane("north", $('#layoutObjects').height() / 2 - 80);
 
 		// resize after all is visible - twice, because the first run wont change all values :|
 		this.resizeMain(innerLayout);
@@ -56,20 +56,17 @@ var XGResize = Class.create(
 	 */
 	resizeMain: function (innerLayout)
 	{
-		var searchLayout = $('#search_layout');
-		var objectLayout = $('#layout_objects');
+		var self = this;
+
+		var searchLayout = $('#searchLayout');
+		var objectLayout = $('#layoutObjects');
 
 		/* left search tab */
 		// set table
-		$("#search_table")
-			.setGridWidth(searchLayout.width() - 10)
-			.setGridHeight(searchLayout.height() - 28);
-		// patching table
-		$($("#search_table .jqgfirstrow td")[2]).width("");
+		$("#searchGrid")
+			.height(searchLayout.height() - 28);
 		// patch search input
-		$("#search-text").width(searchLayout.width() - 8);
-		// patch divs
-		$("#search_layout div").width("");
+		$("#searchText").width(searchLayout.width() - 8);
 
 		/* main container */
 		var subSize = 68;
@@ -77,16 +74,9 @@ var XGResize = Class.create(
 		{
 			subSize -= 2;
 		}
-		$("#layout_objects_container").height(searchLayout.height() - subSize);
+		$("#layoutObjectsContainer").height(searchLayout.height() - subSize);
 		// bots + packets table
-		$("#bots_table, #packets_table").setGridWidth(objectLayout.width() - 1);
-		// patching table
-		$($("#bots_table .jqgfirstrow td")[2]).width("");
-		$("#bots_table_Name").width("");
-		$($("#packets_table .jqgfirstrow td")[3]).width("");
-		$("#packets_table_Name").width("");
-		// patch divs
-		$("#layout_objects_container div").width("");
+		$("#botGrid, #packetGrid").width(objectLayout.width() - 1);
 
 		/* other container */
 		subSize = 110;
@@ -94,13 +84,9 @@ var XGResize = Class.create(
 		{
 			subSize += 1;
 		}
-		$("#packets_external_table, #files_table")
-			.setGridWidth(objectLayout.width() - 1)
-			.setGridHeight(objectLayout.height() - subSize);
-		$($("#packets_external_table .jqgfirstrow td")[3]).width("");
-		$("#packets_external_table_Name").width("");
-		$($("#files_table .jqgfirstrow td")[2]).width("");
-		$("#files_table_Name").width("");
+		$("#externalGrid, #fileGrid")
+			.width(objectLayout.width() - 1)
+			.height(objectLayout.height() - subSize);
 
 		/* dialog */
 		var width = $(window).width() - 20;
@@ -111,28 +97,25 @@ var XGResize = Class.create(
 			this.width = width;
 			this.height = height;
 
-			$("#dialog_snapshots").dialog("option", {
+			$("#dialogSnapshots").dialog("option", {
 				width: width,
 				height: height
 			});
 			$("#snapshot")
 				.width(width - 240)
 				.height(height - 40);
-			// and update the snapshot plot
-			this.statistics.updateSnapshotPlot();
 		}
 
 		innerLayout.resizeAll();
+
+		this.onResize.notify({}, null, self);
 	},
 
 	resizeContainer: function ()
 	{
-		var subSize = 74;
-		if ($.browser.msie)
-		{
-			subSize -= 3;
-		}
-		$("#bots_table").setGridHeight($('#bots_layout').height() - subSize);
-		$("#packets_table").setGridHeight($('#packets_layout').height() - subSize);
+		$("#botGrid").height($('#botLayout').height());
+		$("#packetGrid").height($('#packetLayout').height());
+
+		this.onResize.notify({}, null, self);
 	}
 });

@@ -40,9 +40,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectRemoved = 2,
 			ObjectChanged = 3,
 
-			BlockStart = 4,
-			BlockStop = 5,
-
 			#endregion
 
 			#region MULTI

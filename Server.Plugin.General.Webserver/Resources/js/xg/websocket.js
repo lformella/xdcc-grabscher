@@ -24,21 +24,25 @@
 var XGWebsocket = Class.create(
 {
 	/**
-	 * @param {XGCookie} cookie
 	 * @param {String} url
 	 * @param {String} port
 	 * @param {String} password
-	 * @param {XGStatistics} statistics
+	 * @param {XGCookie} cookie
 	 */
-	initialize: function(cookie, url, port, password, statistics)
+	initialize: function(url, port, password, cookie)
 	{
-		this.cookie = cookie;
 		this.url = url;
 		this.port = port;
 		this.password = password;
-		this.statistics = statistics;
+		this.cookie = cookie;
 
-		this.connect();
+		this.onAdd = new Slick.Event();
+		this.onRemove = new Slick.Event();
+		this.onUpdate = new Slick.Event();
+		this.onSearchExternal = new Slick.Event();
+		this.onSearches = new Slick.Event();
+		this.onSnapshots = new Slick.Event();
+		this.onStatistics = new Slick.Event();
 	},
 
 	connect: function ()
@@ -156,30 +160,6 @@ var XGWebsocket = Class.create(
 	{
 		if (this.state == WebSocket.OPEN)
 		{
-			switch (request.Type)
-			{
-				case Enum.Request.Search:
-					$("#bots_loading .loading-symbol").show();
-					$("#packets_loading .loading-symbol").show();
-					break;
-				case Enum.Request.SearchExternal:
-					$("#packets_external_loading .loading-symbol").show();
-					break;
-
-				case Enum.Request.Servers:
-					$("#servers_loading .loading-symbol").show();
-					break;
-				case Enum.Request.ChannelsFromServer:
-					$("#channels_loading .loading-symbol").show();
-					break;
-				case Enum.Request.PacketsFromBot:
-					$("#packets_loading .loading-symbol").show();
-					break;
-				case Enum.Request.Files:
-					$("#files_loading .loading-symbol").show();
-					break;
-			}
-
 			try
 			{
 				this.socket.send(JSON.stringify(request));
@@ -187,6 +167,7 @@ var XGWebsocket = Class.create(
 			}
 			catch (exception)
 			{
+				this.onError(exception);
 			}
 		}
 
@@ -208,8 +189,8 @@ var XGWebsocket = Class.create(
 	{
 		this.send(Enum.Request.Searches);
 		this.send(Enum.Request.Servers);
-		this.send(Enum.Request.Files);
-		this.send(Enum.Request.Snapshots);
+		//this.send(Enum.Request.Files);
+		//this.send(Enum.Request.Snapshots);
 	},
 
 	onDisconnected: function ()
@@ -223,187 +204,47 @@ var XGWebsocket = Class.create(
 		{
 			json.DataType = json.Data;
 		}
-	
-		var grid = "";
-		switch (json.DataType)
-		{
-			case "Server":
-				grid = "servers";
-				break;
-			case "Channel":
-				grid = "channels";
-				break;
-			case "Bot":
-				grid = "bots";
-				break;
-			case "Packet":
-				grid = "packets";
-				break;
-			case "Object":
-				grid = "search";
-				break;
-			case "Snapshot":
-				break;
-			case "File":
-				grid = "files";
-				break;
-		}
 
 		switch (json.Type)
 		{
 			case Enum.Response.ObjectAdded:
-				if (grid != "")
-				{
-					this.addGridItem(grid, json.Data);
-					if (grid == "search")
-					{
-						$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
-					}
-				}
+				this.onAdd.notify(json, null, self);
 				break;
+
 			case Enum.Response.ObjectRemoved:
-				if (grid != "")
-				{
-					if (grid == "search")
-					{
-						$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
-					}
-					this.removeGridItem(grid, json.Data);
-				}
+				this.onRemove.notify(json, null, self);
 				break;
+
 			case Enum.Response.ObjectChanged:
-				if (grid != "")
-				{
-					this.updateGridItem(grid, json.Data);
-				}
+				this.onUpdate.notify(json, null, self);
 				break;
 
-			case Enum.Response.BlockStart:
-				var gridElement = $("#" + grid + "_table");
-				gridElement.clearGridData();
-				break;
-
-			case Enum.Response.BlockStop:
-				$("#" + grid + "_loading .loading-symbol").hide();
-				break;
-/*
-			case Enum.Response.SearchPacket:
-				this.setGridData("packets", json.Data);
-				break;
-			case Enum.Response.SearchBot:
-				this.setGridData("bots", json.Data);
-				break;
-*/
 			case Enum.Response.SearchExternal:
-				this.setGridData("packets_external", json.Data);
-				break;
-/*
-			case Enum.Response.Servers:
-				this.setGridData("servers", json.Data);
-				break;
-			case Enum.Response.ChannelsFromServer:
-				this.setGridData("channels", json.Data);
-				break;
-			case Enum.Response.PacketsFromBot:
-				this.setGridData("packets", json.Data);
+				this.onSearchExternal.notify(json.data, null, self);
 				break;
 
-			case Enum.Response.Files:
-				this.setGridData("files", json.Data);
-				break;
-*/
 			case Enum.Response.Searches:
-				this.setGridData("search", json.Data);
+				this.onSearches.notify(json, null, self);
 				break;
 
 			case Enum.Response.Snapshots:
-				this.statistics.setSnapshots(json.Data);
+				this.onSnapshots.notify(json, null, self);
 				break;
+
 			case Enum.Response.Statistics:
-				this.statistics.setStatistics(json.Data);
+				this.onStatistics.notify(json, null, self);
 				break;
 		}
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {Array} data
-	 */
-	setGridData: function (grid, data)
-	{
-		var self = this;
-
-		$("#" + grid + "_loading .loading-symbol").hide();
-		var gridElement = $("#" + grid + "_table");
-		gridElement.clearGridData();
-		$.each(data, function(i, item)
-		{
-			item = self.adjustObjectForJQGrid(item);
-			gridElement.addRowData(item.Guid, item);
-		});
-		gridElement.trigger("reloadGrid");
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {Object} item
-	 */
-	addGridItem: function (grid, item)
-	{
-		var gridElement = $("#" + grid + "_table");
-		item = this.adjustObjectForJQGrid(item);
-		gridElement.addRowData(item.Guid, item);
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {Object} item
-	 */
-	updateGridItem: function (grid, item)
-	{
-		var gridElement = $("#" + grid + "_table");
-		item = this.adjustObjectForJQGrid(item);
-		gridElement.jqGrid("setRowData", item.Guid, item);
-	},
-
-	/**
-	 * @param {String} grid
-	 * @param {Object} item
-	 */
-	removeGridItem: function (grid, item)
-	{
-		var gridElement = $("#" + grid + "_table");
-		gridElement.delRowData(item.Guid);
-	},
-
-	/**
-	 * @param {Object} item
-	 * @return {Object}
-	 */
-	adjustObjectForJQGrid: function (item)
-	{
-		item.Object = JSON.stringify(item);
-		item.Icon = "";
-		if (item.Speed == undefined)
-		{
-			item.Speed = 0;
-		}
-		if (item.TimeMissing == undefined)
-		{
-			item.TimeMissing = 0;
-		}
-		if (item.InfoSpeed == undefined)
-		{
-			item.InfoSpeed = 0;
-		}
-		if (item.InfoSlot == undefined)
-		{
-			item.InfoSlot = 0;
-		}
-		if (item.InfoQueue == undefined)
-		{
-			item.InfoQueue = 0;
-		}
-		return item;
 	}
 });
+
+/*
+if (grid == "search")
+{
+	$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
+}
+if (grid == "search")
+{
+	$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
+}
+*/

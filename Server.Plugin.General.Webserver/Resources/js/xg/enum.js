@@ -62,9 +62,6 @@ Enum.Response =
 	ObjectRemoved: 2,
 	ObjectChanged: 3,
 
-	BlockStart: 4,
-	BlockStop: 5,
-
 	//SearchPacket: 11,
 	//SearchBot: 12,
 	SearchExternal: 13,

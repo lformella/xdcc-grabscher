@@ -42,7 +42,7 @@ var XGPassword = Class.create(
 		};
 
 		// display login
-		$("#dialog_password").dialog({
+		$("#dialogPassword").dialog({
 			bgiframe: true,
 			height: 140,
 			modal: true,
@@ -53,7 +53,7 @@ var XGPassword = Class.create(
 			{
 				if(self.password == "")
 				{
-					$('#dialog_password').dialog('open');
+					$('#dialogPassword').dialog('open');
 				}
 				$("#password").val('').removeClass('ui-state-error');
 			}
@@ -62,7 +62,7 @@ var XGPassword = Class.create(
 		$("#password").keyup(function (e) {
 			if (e.which == 13)
 			{
-				self.buttonConnectClicked($("#dialog_password"));
+				self.buttonConnectClicked($("#dialogPassword"));
 			}
 		});
 	},
@@ -79,7 +79,7 @@ var XGPassword = Class.create(
 			dialog.dialog('close');
 
 			this.password = password;
-			this.loadGrid();
+			this.startMain();
 		}
 		else
 		{
@@ -87,24 +87,25 @@ var XGPassword = Class.create(
 		}
 	},
 
-	loadGrid: function ()
+	startMain: function ()
 	{
+		var dataview = new XGDataView();
 		var cookie = new XGCookie();
 		var helper = new XGHelper(cookie);
 		var formatter = new XGFormatter(helper);
 		var statistics = new XGStatistics(helper);
-		var websocket = new XGWebsocket(cookie, this.host, this.port, this.password, statistics);
+		var websocket = new XGWebsocket(this.host, this.port, this.password, cookie);
+		var grid = new XGGrid(formatter, helper, dataview);
+		var resize = new XGResize();
 
-		// load grid
-		new XGBase(helper, statistics, cookie, formatter, websocket);
-
-		// resize
-		var resize = new XGResize(statistics);
+		// start frontend
+		var main = new XGMain(helper, statistics, cookie, formatter, websocket, dataview, grid, resize);
+		main.start();
 	},
 
 	checkPassword: function (password)
 	{
-		$("#loading_password").show();
+		$("#loadingPassword").show();
 		var res = false;
 		$.ajax({
 			url: "?password=" + password,
@@ -116,7 +117,7 @@ var XGPassword = Class.create(
 		});
 		if (!res)
 		{
-			$("#loading_password").hide();
+			$("#loadingPassword").hide();
 		}
 		return res;
 	}
