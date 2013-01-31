@@ -40,15 +40,34 @@ var XGGrid = Class.create(
 
 		this.onClick = new Slick.Event();
 
-		this.filterArgs = {
-			ParentGuid: "",
-			Name: ""
-		};
-
 		this.sortColumn = {};
+	},
 
-		this.cache = {};
-		this.searchTemplate = this.tmpl("searchTemplate");
+	/**
+	 * @param {string} name
+	 * @return {SlickGrid}
+	 */
+	getGrid: function(name)
+	{
+		switch (name)
+		{
+			case "Server":
+				return this.serverGrid;
+			case "Channel":
+				return this.channelGrid;
+			case "Bot":
+				return this.botGrid;
+			case "Packet":
+				return this.packetGrid;
+			case "Search":
+				return this.searchGrid;
+			case "ExternalSearch":
+				return this.externalGrid;
+			case "File":
+				return this.fileGrid;
+		}
+
+		return undefined;
 	},
 
 	build: function()
@@ -65,9 +84,7 @@ var XGGrid = Class.create(
 			this.buildRow("Name", 214, "", true, $.proxy(self.formatter.formatServerChannelName, self.formatter), false)
 		]);
 		this.serverGrid.onClick.subscribe(function (e, args) {
-			self.filterArgs.ParentGuid = self.serverGrid.getDataItem(args.row).Guid;
-			self.filterArgs.Name = "";
-			this.applyFilter(self.channelGrid.getData());
+			self.applyFilter(self.channelGrid.getData(), { ParentGuid: self.serverGrid.getDataItem(args.row).Guid });
 		}, self.compareServers);
 
 		/**************************************************************************************************************/
@@ -102,9 +119,7 @@ var XGGrid = Class.create(
 			this.buildRow("Queue", 60, "", true, $.proxy(self.formatter.formatBotQueue, self.formatter), true)
 		], self.compareBots);
 		this.botGrid.onClick.subscribe(function (e, args) {
-			self.filterArgs.ParentGuid = self.botGrid.getDataItem(args.row).Guid;
-			self.filterArgs.Name = "";
-			this.applyFilter(self.packetGrid.getData());
+			self.applyFilter(self.packetGrid.getData(), { ParentGuid: self.botGrid.getDataItem(args.row).Guid });
 		});
 
 		/**************************************************************************************************************/
@@ -128,21 +143,44 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.searchGrid = this.searchGrid = this.buildGrid("#searchGrid", this.dataview.getDataView("Search"), [
-			/*this.buildRow("Icon", 26, "icon-cell", false, $.proxy(self.formatter.formatSearchIcon, self.formatter), false),
+			/**/
+			this.buildRow("Icon", 26, "icon-cell", false, $.proxy(self.formatter.formatSearchIcon, self.formatter), false),
 			this.buildRow("Name", 0, "", false, function (obj)
 			{
 				return _(obj.Name);
 			}, false),
-			this.buildRow("Action", 18, "", false, $.proxy(self.formatter.formatSearchAction, self.formatter), false)*/
-			{id: "contact-card", name: "Contacts", formatter: function (row, cell, value, columnDef, obj)
+			this.buildRow("Action", 20, "", false, $.proxy(self.formatter.formatSearchAction, self.formatter), false)
+			/** /
+			{id: "search-cell", name: "Contacts", formatter: function (row, cell, value, columnDef, obj)
 			{
-				return self.searchTemplate(obj);
+				var str = "";
+				str += "<div class='cell-inner'>";
+				str += "<div class='cell-left'>" + self.formatter.formatSearchIcon(obj) + "</div>";
+				str += "<div class='cell-main'><b>" + obj.Name + "</b></div>";
+				str += "<div class='cell-right'>" + self.formatter.formatSearchAction(obj) + "</div>";
+				str += "</div>";
+				return str;
 			}, width: 500, cssClass: "contact-card-cell"}
+			/**/
 		]);
 		this.searchGrid.onClick.subscribe(function (e, args) {
-			self.filterArgs.ParentGuid = "";
-			self.filterArgs.Name = self.searchGrid.getDataItem(args.row).Name;
-			self.applyFilter(self.packetGrid.getData());
+			var obj = self.searchGrid.getDataItem(args.row);
+			var filter = { SearchGuid: obj.Guid, Name: obj.Name };
+			self.applyFilter(self.packetGrid.getData(), filter);
+			self.applyFilter(self.externalGrid.getData(), filter);
+
+			var dataView = self.packetGrid.getData();
+			var length = dataView.getLength();
+			var guids = [];
+			for (var a = 0; a < length; a++)
+			{
+				var item = dataView.getItem(a);
+				if (guids.indexOf(item.ParentGuid) == -1)
+				{
+					guids.push(item.ParentGuid);
+				}
+			}
+			self.applyFilter(self.botGrid.getData(), { Guids: guids });
 		});
 
 		/**************************************************************************************************************/
@@ -183,9 +221,9 @@ var XGGrid = Class.create(
 		], self.compareFiles);
 	},
 
-	applyFilter: function(dataView)
+	applyFilter: function(dataView, filterArgs)
 	{
-		dataView.setFilterArgs(this.filterArgs);
+		dataView.setFilterArgs(filterArgs);
 		dataView.refresh();
 		dataView.reSort();
 	},
@@ -224,7 +262,8 @@ var XGGrid = Class.create(
 		grid.onClick.subscribe(function (e, args) {
 			var obj = {
 				object: grid.getDataItem(args.row),
-				grid: id.substring(1)
+				grid: id.substring(1),
+				cell: $(grid.getCellNode(args.row, args.cell))
 			};
 			self.onClick.notify(obj, null, self);
 		});
@@ -287,36 +326,6 @@ var XGGrid = Class.create(
 			}
 		};
 	},
-
-    tmpl: function (str, data) {
-		var self = this;
-      // Figure out if we're getting a template, or if we need to
-      // load the template - and be sure to cache the result.
-      var fn = !/\W/.test(str) ?
-          self.cache[str] = self.cache[str] ||
-          self.tmpl(document.getElementById(str).innerHTML) :
-
-        // Generate a reusable function that will serve as a template
-        // generator (and which will be cached).
-        new Function("obj",
-            "var p=[],print=function(){p.push.apply(p,arguments);};" +
-
-            // Introduce the data as local variables using with(){}
-            "with(obj){p.push('" +
-
-            // Convert the template into pure JavaScript
-              str
-                  .replace(/[\r\t\n]/g, " ")
-                  .split("<%").join("\t")
-                  .replace(/((^|%>)[^\t]*)'/g, "$1\r")
-                  .replace(/\t=(.*?)%>/g, "',$1,'")
-                  .split("\t").join("');")
-                  .split("%>").join("p.push('")
-                  .split("\r").join("\\'") + "');}return p.join('');");
-
-      // Provide some basic currying to the user
-      return data ? fn(data) : fn;
-    },
 
 	compareServers: function(a, b)
 	{

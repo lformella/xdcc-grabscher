@@ -27,14 +27,12 @@ var XGWebsocket = Class.create(
 	 * @param {String} url
 	 * @param {String} port
 	 * @param {String} password
-	 * @param {XGCookie} cookie
 	 */
-	initialize: function(url, port, password, cookie)
+	initialize: function(url, port, password)
 	{
 		this.url = url;
 		this.port = port;
 		this.password = password;
-		this.cookie = cookie;
 
 		this.onAdd = new Slick.Event();
 		this.onRemove = new Slick.Event();
@@ -95,8 +93,7 @@ var XGWebsocket = Class.create(
 	{
 		return {
 			"Password": this.password,
-			"Type": Type,
-			"IgnoreOfflineBots": this.cookie.getCookie("show_offline_bots", false) == "1"
+			"Type": Type
 		};
 	},
 
@@ -174,17 +171,6 @@ var XGWebsocket = Class.create(
 		return false;
 	},
 
-	/**
-	 * @param {String} grid
-	 * @param {String} guid
-	 * @return {object}
-	 */
-	getRowData: function (grid, guid)
-	{
-		var str = $("#" + grid).getRowData(guid).Object;
-		return JSON.parse(JSON.parse(str).Object);
-	},
-
 	onConnected: function ()
 	{
 		this.send(Enum.Request.Searches);
@@ -198,6 +184,9 @@ var XGWebsocket = Class.create(
 		$("#dialog_error").dialog("open");
 	},
 
+	/**
+	 * @param {Object} json
+	 */
 	onMessageReceived: function (json)
 	{
 		if (json.DataType == "String")
@@ -237,14 +226,3 @@ var XGWebsocket = Class.create(
 		}
 	}
 });
-
-/*
-if (grid == "search")
-{
-	$("#search-text").effect("transfer", { to: $("#" + json.Data.Guid) }, 500);
-}
-if (grid == "search")
-{
-	$("#" + json.Data.Guid).effect("transfer", { to: $("#search-text") }, 500);
-}
-*/

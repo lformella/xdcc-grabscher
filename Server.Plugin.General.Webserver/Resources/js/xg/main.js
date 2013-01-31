@@ -50,6 +50,8 @@ var XGMain = Class.create(
 
 		this.idServer = 0;
 		this.activeTab = 0;
+
+		this.enableSearchTransitions = false;
 	},
 
 	start: function()
@@ -59,8 +61,32 @@ var XGMain = Class.create(
 		// socket
 		this.websocket.onAdd.subscribe(function (e, args) {
 			self.dataview.addItem(args);
+
+			switch (args.DataType)
+			{
+				case "Search":
+				case "Object":
+				case "List`1":
+					if (self.enableSearchTransitions)
+					{
+						$("#searchText").effect("transfer", { to: self.getElementFromGrid("Search", args.Data.Guid) }, 500);
+					}
+					break;
+			}
 		});
 		this.websocket.onRemove.subscribe(function (e, args) {
+			switch (args.DataType)
+			{
+				case "Search":
+				case "Object":
+				case "List`1":
+					if (self.enableSearchTransitions)
+					{
+						self.getElementFromGrid("Search", args.Data.Guid).effect("transfer", { to: $("#searchText") }, 500);
+					}
+					break;
+			}
+
 			self.dataview.removeItem(args);
 		});
 		this.websocket.onUpdate.subscribe(function (e, args) {
@@ -77,19 +103,22 @@ var XGMain = Class.create(
 			self.statistics.updateSnapshotPlot();
 		});
 		this.grid.onClick.subscribe(function (e, args) {
-			switch (args.grid)
+			if (args.object != undefined)
 			{
-				case "serverGrid":
-					self.websocket.sendGuid(Enum.Request.ChannelsFromServer, args.object.Guid);
-					break;
+				switch (args.grid)
+				{
+					case "serverGrid":
+						self.websocket.sendGuid(Enum.Request.ChannelsFromServer, args.object.Guid);
+						break;
 
-				case "botGrid":
-					self.websocket.sendGuid(Enum.Request.PacketsFromBot, args.object.Guid);
-					break;
+					case "botGrid":
+						self.websocket.sendGuid(Enum.Request.PacketsFromBot, args.object.Guid);
+						break;
 
-				case "searchGrid":
-					self.websocket.sendGuid(Enum.Request.Search, args.object.Guid);
-					break;
+					case "searchGrid":
+						self.websocket.sendGuid(Enum.Request.Search, args.object.Guid);
+						break;
+				}
 			}
 		});
 		this.grid.build();
@@ -187,6 +216,13 @@ var XGMain = Class.create(
 	{
 		var self = this;
 
+		$("#searchText").keyup( function (e)
+		{
+			if (e.which == 13)
+			{
+				self.addSearch();
+			}
+		});
 		$("#tabs").tabs({
 			select: function(event, ui)
 			{
@@ -207,9 +243,23 @@ var XGMain = Class.create(
 			});
 	},
 
+	/**
+	 * @param {String} gridName
+	 * @param {String} guid
+	 * @return {jQuery}
+	 */
+	getElementFromGrid: function(gridName, guid)
+	{
+		var grid = this.grid.getGrid(gridName);
+		var dataView = this.dataview.getDataView(gridName);
+		var row = dataView.getRowById(guid);
+		return $(grid.getCellNode(row, 1)).parent();
+	},
+
 	addSearch: function ()
 	{
-		var tbox = $('#search-text');
+		this.enableSearchTransitions = true;
+		var tbox = $('#searchText');
 		if(tbox.val() != "")
 		{
 			this.websocket.sendName(Enum.Request.AddSearch, tbox.val());
@@ -222,7 +272,9 @@ var XGMain = Class.create(
 	 */
 	removeSearch: function (guid)
 	{
+		this.enableSearchTransitions = true;
 		this.websocket.sendGuid(Enum.Request.RemoveSearch, guid);
+		$("#" + guid).effect("transfer", { to: $("#searchText") }, 500);
 	},
 
 	/**
@@ -232,30 +284,30 @@ var XGMain = Class.create(
 	{
 		var self = this;
 
-		var pack = self.websocket.getRowData('packets_table', guid);
+		var pack = self.dataview.getDataView("Packet").getItemById(guid);
 		if(pack)
 		{
+			var elementSearch = self.getElementFromGrid("Search", "00000000-0000-0000-0000-000000000004");
+			var elementPacket = self.getElementFromGrid("Packet", pack.Guid);
 			if(!pack.Enabled)
 			{
-				$("#" + pack.Guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
+				elementPacket.effect("transfer", { to: elementSearch }, 500);
 			}
 			else
 			{
-				$("#00000000-0000-0000-0000-000000000004").effect("transfer", { to: $("#" + pack.Guid) }, 500);
+				elementSearch.effect("transfer", { to: elementPacket }, 500);
 			}
-			self.flipObject(guid, "packets_table");
+			self.flipObject(pack);
 		}
 	},
 
 	/**
-	 * @param {String} guid
-	 * @param {String} grid
+	 * @param {Object} obj
 	 */
-	flipObject: function (guid, grid)
+	flipObject: function (obj)
 	{
 		var self = this;
 
-		var obj = self.websocket.getRowData(grid, guid);
 		if(obj)
 		{
 			if(!obj.Enabled)
@@ -276,9 +328,11 @@ var XGMain = Class.create(
 	{
 		var self = XG;
 
-		$("#" + guid).effect("transfer", { to: $("#00000000-0000-0000-0000-000000000004") }, 500);
+		var elementSearch = self.getElementFromGrid("Search", "00000000-0000-0000-0000-000000000004");
+		var elementPacket = self.getElementFromGrid("ExternalSearch", guid);
+		elementPacket.effect("transfer", { to: elementSearch }, 500);
 
-		var data = self.websocket.getRowData("packets_external_table", guid);
+		var data = self.dataview.getDataView("ExternalSearch").getItemById(guid);
 		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
 	}
 });

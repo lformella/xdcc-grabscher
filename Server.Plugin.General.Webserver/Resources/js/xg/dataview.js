@@ -41,10 +41,10 @@ var XGDataView = Class.create(
 	buildDataView: function()
 	{
 		var self = this;
-		var repository = new Slick.Data.DataView({ inlineFilters: false });
-		repository.setItems([], "Guid");
-		repository.setFilter(self.filterObjects);
-		return repository;
+		var dataView = new Slick.Data.DataView({ inlineFilters: false });
+		dataView.setItems([], "Guid");
+		dataView.setFilter(self.filterObjects);
+		return dataView;
 	},
 
 	/**
@@ -80,37 +80,37 @@ var XGDataView = Class.create(
 
 	addItem: function(json)
 	{
-		var repository = this.getDataView(json.DataType);
-		if (repository != undefined)
+		var dataView = this.getDataView(json.DataType);
+		if (dataView != undefined)
 		{
-			repository.addItem(json.Data);
+			dataView.addItem(json.Data);
 		}
 	},
 
 	removeItem: function(json)
 	{
-		var repository = this.getDataView(json.DataType);
-		if (repository != undefined)
+		var dataView = this.getDataView(json.DataType);
+		if (dataView != undefined)
 		{
-			repository.deleteItem(json.Data);
+			dataView.deleteItem(json.Data.Guid);
 		}
 	},
 
 	updateItem: function(json)
 	{
-		var repository = this.getDataView(json.DataType);
-		if (repository != undefined)
+		var dataView = this.getDataView(json.DataType);
+		if (dataView != undefined)
 		{
-			repository.updateItem(json.Data);
+			dataView.updateItem(json.Data.Guid, json.Data);
 		}
 	},
 
 	setItems: function(json)
 	{
-		var repository = this.getDataView(json.DataType);
-		if (repository != undefined)
+		var dataView = this.getDataView(json.DataType);
+		if (dataView != undefined)
 		{
-			repository.setItems(json.Data);
+			dataView.setItems(json.Data);
 		}
 	},
 
@@ -119,24 +119,60 @@ var XGDataView = Class.create(
 
 		if (args != undefined)
 		{
-			if (args.Name != "")
+			if (args.ParentGuid != undefined)
 			{
-				var names = args.Name.split(" ");
-				$.each(names, function (i, name)
+				if (item.ParentGuid != args.ParentGuid)
 				{
-					if (item.Name.toLowerCase().indexOf(name) == -1)
+					result = false;
+				}
+			}
+
+			if (args.Guids != undefined)
+			{
+				result = false;
+				$.each(args.Guids, function (i, guid)
+				{
+					if (item.Guid == guid)
 					{
-						result = false;
+						result = true;
 						return false;
 					}
 					return true;
 				});
 			}
-			if (args.ParentGuid != "")
+
+			if (args.SearchGuid != undefined)
 			{
-				if (item.ParentGuid != args.ParentGuid)
+				switch (args.SearchGuid)
 				{
-					result = false;
+					case "00000000-0000-0000-0000-000000000001":
+						result = false; // TODO
+						break;
+
+					case "00000000-0000-0000-0000-000000000002":
+						result = false; // TODO
+						break;
+
+					case "00000000-0000-0000-0000-000000000003":
+						result = item.Connected;
+						break;
+
+					case "00000000-0000-0000-0000-000000000004":
+						result = item.Enabled;
+						break;
+
+					default:
+						var names = args.Name.split(" ");
+						$.each(names, function (i, name)
+						{
+							if (item.Name.toLowerCase().indexOf(name) == -1)
+							{
+								result = false;
+								return false;
+							}
+							return true;
+						});
+						break;
 				}
 			}
 		}

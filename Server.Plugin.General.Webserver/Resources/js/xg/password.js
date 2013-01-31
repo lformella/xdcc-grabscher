@@ -94,7 +94,7 @@ var XGPassword = Class.create(
 		var helper = new XGHelper(cookie);
 		var formatter = new XGFormatter(helper);
 		var statistics = new XGStatistics(helper);
-		var websocket = new XGWebsocket(this.host, this.port, this.password, cookie);
+		var websocket = new XGWebsocket(this.host, this.port, this.password);
 		var grid = new XGGrid(formatter, helper, dataview);
 		var resize = new XGResize();
 

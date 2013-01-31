@@ -102,7 +102,6 @@ td
 
 /* Fontello Fixes */
 
-
 [class^="icon-"]:before,
 [class*=" icon-"]:before
 {
@@ -110,7 +109,7 @@ td
 	opacity: 1;
 }
 
-/* JQGrid Fixes */
+/* JQGrid Fixes * /
 
 #gbox_packets_table, #gbox_packets_table .ui-jqgrid-titlebar
 {
