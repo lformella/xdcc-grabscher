@@ -59,7 +59,9 @@ var XGWebsocket = Class.create(
 			};
 			this.socket.onmessage = function (msg)
 			{
-				self.onMessageReceived(JSON.parse(msg.data));
+				var data = JSON.parse(msg.data);
+				data.Data.DataType = data.DataType;
+				self.onMessageReceived(data);
 			};
 			this.socket.onclose = function ()
 			{

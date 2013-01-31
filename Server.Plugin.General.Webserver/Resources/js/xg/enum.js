@@ -126,3 +126,14 @@ Enum.SnapshotValue =
 	PacketsSizeConnected: 25,
 	PacketsSizeDisconnected: 26
 };
+
+Enum.Grid =
+{
+	Server: "Server",
+	Channel: "Channel",
+	Bot: "Bot",
+	Packet: "Packet",
+	Search: "Search",
+	ExternalSearch: "ExternalSearch",
+	File: "File"
+};

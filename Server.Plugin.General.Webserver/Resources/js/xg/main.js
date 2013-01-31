@@ -64,7 +64,7 @@ var XGMain = Class.create(
 
 			switch (args.DataType)
 			{
-				case "Search":
+				case Enum.Grid.Search:
 				case "Object":
 				case "List`1":
 					if (self.enableSearchTransitions)
@@ -77,7 +77,7 @@ var XGMain = Class.create(
 		this.websocket.onRemove.subscribe(function (e, args) {
 			switch (args.DataType)
 			{
-				case "Search":
+				case Enum.Grid.Search:
 				case "Object":
 				case "List`1":
 					if (self.enableSearchTransitions)
@@ -233,7 +233,9 @@ var XGMain = Class.create(
 			.button({icons: { primary: "icon-eye" }})
 			.click( function()
 			{
-				self.cookie.setCookie("showOfflineBots", $("#showOfflineBots").attr('checked') ? "1" : "0" );
+				var checked = $("#showOfflineBots").attr('checked') == "checked";
+				self.cookie.setCookie("showOfflineBots", checked ? "1" : "0" );
+				self.grid.setFilterOfflineBots(checked);
 			});
 		$("#humanDates")
 			.button({icons: { primary: "icon-clock" }})
@@ -284,11 +286,11 @@ var XGMain = Class.create(
 	{
 		var self = this;
 
-		var pack = self.dataview.getDataView("Packet").getItemById(guid);
+		var pack = self.dataview.getDataView(Enum.Grid.Packet).getItemById(guid);
 		if(pack)
 		{
-			var elementSearch = self.getElementFromGrid("Search", "00000000-0000-0000-0000-000000000004");
-			var elementPacket = self.getElementFromGrid("Packet", pack.Guid);
+			var elementSearch = self.getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
+			var elementPacket = self.getElementFromGrid(Enum.Grid.Packet, pack.Guid);
 			if(!pack.Enabled)
 			{
 				elementPacket.effect("transfer", { to: elementSearch }, 500);
@@ -328,11 +330,11 @@ var XGMain = Class.create(
 	{
 		var self = XG;
 
-		var elementSearch = self.getElementFromGrid("Search", "00000000-0000-0000-0000-000000000004");
-		var elementPacket = self.getElementFromGrid("ExternalSearch", guid);
+		var elementSearch = self.getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
+		var elementPacket = self.getElementFromGrid(Enum.Grid.ExternalSearch, guid);
 		elementPacket.effect("transfer", { to: elementSearch }, 500);
 
-		var data = self.dataview.getDataView("ExternalSearch").getItemById(guid);
+		var data = self.dataview.getDataView(Enum.Grid.ExternalSearch).getItemById(guid);
 		self.websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
 	}
 });

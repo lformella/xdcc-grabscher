@@ -55,23 +55,23 @@ var XGDataView = Class.create(
 	{
 		switch (name)
 		{
-			case "Server":
+			case Enum.Grid.Server:
 				return this.servers;
-			case "Channel":
+			case Enum.Grid.Channel:
 				return this.channels;
-			case "Bot":
+			case Enum.Grid.Bot:
 				return this.bots;
-			case "Packet":
+			case Enum.Grid.Packet:
 				return this.packets;
-			case "Search":
+			case Enum.Grid.Search:
 			case "Object":
 			case "List`1":
 				return this.searches;
-			case "ExternalSearch":
+			case Enum.Grid.ExternalSearch:
 				return this.externalSearch;
-			case "Snapshot":
+			case Enum.Grid.Snapshot:
 				return this.snapshots;
-			case "File":
+			case Enum.Grid.File:
 				return this.files;
 		}
 
@@ -114,65 +114,90 @@ var XGDataView = Class.create(
 		}
 	},
 
-	filterObjects: function(item, args) {
+	filterObjects: function(item, args)
+	{
 		var result = true;
 
 		if (args != undefined)
 		{
+			if (args.OfflineBots != undefined && !args.OfflineBots)
+			{
+				switch (item.DataType)
+				{
+					case Enum.Grid.Bot:
+						//result = result && item.Connected;
+						break;
+					case Enum.Grid.Packet:
+						//var parentItem = this.getDataView(Enum.Grid.Bot).getDataItem(item.ParentGuid);
+						//if (parentItem != undefined)
+						{
+							//result = result && parentItem.Connected;
+						}
+						break;
+				}
+			}
+
 			if (args.ParentGuid != undefined)
 			{
 				if (item.ParentGuid != args.ParentGuid)
 				{
-					result = false;
+					result = result && false;
 				}
 			}
 
-			if (args.Guids != undefined)
+			if (item.DataType == Enum.Grid.Bot)
 			{
-				result = false;
-				$.each(args.Guids, function (i, guid)
+				if (args.Guids != undefined)
 				{
-					if (item.Guid == guid)
+					var currentResult = false;
+					$.each(args.Guids, function (i, guid)
 					{
-						result = true;
-						return false;
-					}
-					return true;
-				});
+						if (item.Guid == guid)
+						{
+							currentResult = true;
+							return false;
+						}
+						return true;
+					});
+					result = result && currentResult;
+				}
 			}
 
-			if (args.SearchGuid != undefined)
+			if (item.DataType == Enum.Grid.Packet)
 			{
-				switch (args.SearchGuid)
+				if (args.SearchGuid != undefined)
 				{
-					case "00000000-0000-0000-0000-000000000001":
-						result = false; // TODO
-						break;
+					switch (args.SearchGuid)
+					{
+						case "00000000-0000-0000-0000-000000000001":
+							result = result && false; // TODO
+							break;
 
-					case "00000000-0000-0000-0000-000000000002":
-						result = false; // TODO
-						break;
+						case "00000000-0000-0000-0000-000000000002":
+							result = result && false; // TODO
+							break;
 
-					case "00000000-0000-0000-0000-000000000003":
-						result = item.Connected;
-						break;
+						case "00000000-0000-0000-0000-000000000003":
+							result = result && item.Connected;
+							break;
 
-					case "00000000-0000-0000-0000-000000000004":
-						result = item.Enabled;
-						break;
+						case "00000000-0000-0000-0000-000000000004":
+							result = result && item.Enabled;
+							break;
 
-					default:
-						var names = args.Name.split(" ");
-						$.each(names, function (i, name)
-						{
-							if (item.Name.toLowerCase().indexOf(name) == -1)
+						default:
+							var names = args.Name.split(" ");
+							$.each(names, function (i, name)
 							{
-								result = false;
-								return false;
-							}
-							return true;
-						});
-						break;
+								if (item.Name.toLowerCase().indexOf(name) == -1)
+								{
+									result = result && false;
+									return false;
+								}
+								return true;
+							});
+							break;
+					}
 				}
 			}
 		}
