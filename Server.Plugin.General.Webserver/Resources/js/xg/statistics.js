@@ -113,13 +113,13 @@ var XGStatistics = Class.create(
 	{
 		var self = this;
 
-		var days = parseInt($("input[name='snapshot_time']:checked").val());
+		var days = parseInt($("input[name='snapshotTime']:checked").val());
 		var snapshotsMinDate = days > 0 ? new Date().getTime() - (60 * 60 * 24 * days * 1000) : days;
 
 		var data = [];
 		var currentSnapshots = $.extend(true, [], this.snapshots);
 		$.each(currentSnapshots, function(index, item) {
-			if (index == 0 || $("#snapshot_checkbox_" + (index + 1)).attr('checked'))
+			if (index == 0 || $("#snapshotCheckbox" + (index + 1)).attr('checked'))
 			{
 				var itemData = [];
 				$.each(item.data, function(index2, item2) {

@@ -31,7 +31,6 @@ var XGDataView = Class.create(
 		this.packets = this.buildDataView();
 		this.externalSearch = this.buildDataView();
 		this.searches = this.buildDataView();
-		this.snapshots = this.buildDataView();
 		this.files = this.buildDataView();
 	},
 
@@ -69,8 +68,6 @@ var XGDataView = Class.create(
 				return this.searches;
 			case Enum.Grid.ExternalSearch:
 				return this.externalSearch;
-			case Enum.Grid.Snapshot:
-				return this.snapshots;
 			case Enum.Grid.File:
 				return this.files;
 		}

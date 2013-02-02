@@ -282,7 +282,7 @@ var XGGrid = Class.create(
 	 * @param {Slick.Data.DataView} dataView
 	 * @param {Array} columns
 	 * @param {Function} comparer
-	 * @return {Slick.Grid}
+	 * @return {SlickGrid}
 	 */
 	buildGrid: function(id, dataView, columns, comparer)
 	{
@@ -333,6 +333,14 @@ var XGGrid = Class.create(
 	{
 		this.sortColumn[id.substring(1)] = args.sortCol.id;
 		args.dataView.sort(args.comparer, args.sortAsc);
+	},
+
+	invalidate: function()
+	{
+		$.each(this.grids, function (i, grid)
+		{
+			grid.invalidate();
+		});
 	},
 
 	resize: function()

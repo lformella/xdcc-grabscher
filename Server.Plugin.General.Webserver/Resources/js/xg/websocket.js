@@ -177,8 +177,8 @@ var XGWebsocket = Class.create(
 	{
 		this.send(Enum.Request.Searches);
 		this.send(Enum.Request.Servers);
-		//this.send(Enum.Request.Files);
-		//this.send(Enum.Request.Snapshots);
+		this.send(Enum.Request.Files);
+		this.send(Enum.Request.Snapshots);
 	},
 
 	onDisconnected: function ()
@@ -211,7 +211,7 @@ var XGWebsocket = Class.create(
 				break;
 
 			case Enum.Response.SearchExternal:
-				this.onSearchExternal.notify(json.data, null, self);
+				this.onSearchExternal.notify(json, null, self);
 				break;
 
 			case Enum.Response.Searches:

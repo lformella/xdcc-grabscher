@@ -89,17 +89,19 @@ var XGPassword = Class.create(
 
 	startMain: function ()
 	{
-		var dataview = new XGDataView();
+		var dataView = new XGDataView();
 		var cookie = new XGCookie();
-		var helper = new XGHelper(cookie);
+		var helper = new XGHelper();
+		helper.setHumanDates(cookie.getCookie("humanDates", "0") == "1");
 		var formatter = new XGFormatter(helper);
 		var statistics = new XGStatistics(helper);
 		var websocket = new XGWebsocket(this.host, this.port, this.password);
-		var grid = new XGGrid(formatter, helper, dataview);
+		var grid = new XGGrid(formatter, helper, dataView);
+		//grid.setFilterOfflineBots(cookie.getCookie("filterOfflineBots", "0") == "1");
 		var resize = new XGResize();
 
 		// start frontend
-		var main = new XGMain(helper, statistics, cookie, formatter, websocket, dataview, grid, resize);
+		var main = new XGMain(helper, statistics, cookie, formatter, websocket, dataView, grid, resize);
 		main.start();
 	},
 

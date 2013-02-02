@@ -23,12 +23,9 @@
 
 var XGHelper = Class.create(
 {
-	/**
-	 * @param {XGCookie} cookie
-	 */
-	initialize: function(cookie)
+	initialize: function()
 	{
-		this.cookie = cookie;
+		this.humanDates = false;
 	},
 
 	/**
@@ -92,7 +89,15 @@ var XGHelper = Class.create(
 		{
 			return "";
 		}
-		return this.cookie.getCookie("human_dates", "0") == "1" ? momentDate.fromNow() : momentDate.format("L LT");
+		return this.humanDates ? momentDate.fromNow() : momentDate.format("L LT");
+	},
+
+	/**
+	 * @param {Boolean} humanDates
+	 */
+	setHumanDates: function(humanDates)
+	{
+		this.humanDates = humanDates;
 	},
 
 	/**

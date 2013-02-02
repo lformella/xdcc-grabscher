@@ -95,6 +95,9 @@ var XGMain = Class.create(
 		this.websocket.onSearches.subscribe(function (e, args) {
 			self.dataview.setItems(args);
 		});
+		this.websocket.onSnapshots.subscribe(function (e, args) {
+			self.statistics.setSnapshots(args.Data);
+		});
 		this.websocket.connect();
 
 		// grid
@@ -116,7 +119,7 @@ var XGMain = Class.create(
 						break;
 
 					case "searchGrid":
-						self.websocket.sendGuid(Enum.Request.Search, args.object.Guid);
+						self.websocket.sendGuid(self.activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, args.object.Guid);
 						break;
 				}
 			}
@@ -223,26 +226,34 @@ var XGMain = Class.create(
 				self.addSearch();
 			}
 		});
+
 		$("#tabs").tabs({
 			select: function(event, ui)
 			{
 				self.activeTab = ui.index;
 			}
 		});
+
 		$("#showOfflineBots")
 			.button({icons: { primary: "icon-eye" }})
 			.click( function()
 			{
-				var checked = $("#showOfflineBots").attr('checked') == "checked";
+				var checked = $("#showOfflineBots").attr("checked") == "checked";
 				self.cookie.setCookie("showOfflineBots", checked ? "1" : "0" );
 				self.grid.setFilterOfflineBots(checked);
 			});
+		$("#showOfflineBots").attr("checked", self.cookie.getCookie("showOfflineBots", "0") == "1");
+
 		$("#humanDates")
 			.button({icons: { primary: "icon-clock" }})
 			.click( function()
 			{
-				self.cookie.setCookie("humanDates", $("#humanDates").attr('checked') ? "1" : "0" );
+				var checked = $("#humanDates").attr("checked") == "checked";
+				self.cookie.setCookie("humanDates", checked ? "1" : "0" );
+				self.helper.setHumanDates(checked);
+				self.grid.invalidate();
 			});
+		$("#humanDates").attr("checked", self.cookie.getCookie("humanDates", "0") == "1");
 	},
 
 	/**

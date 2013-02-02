@@ -285,11 +285,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Log.Fatal("OnMessage() cant load external search for " + searchExternal.Name, ex);
 							}
 
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.SearchExternal,
-								Data = results
-							});
+							UnicastOnRequest(currentUser, results);
 						}
 						break;
 
@@ -448,11 +444,31 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			if (aResponse.Data.GetType().IsSubclassOf(typeof(AObject)))
 			{
-				if (aResponse.Type == Response.Types.ObjectAdded && aUser.LoadedObjects.Contains(aResponse.Data))
+				switch (aResponse.Type)
 				{
-					return;
+					case Response.Types.ObjectAdded:
+						if (aUser.LoadedObjects.Contains(aResponse.Data))
+						{
+							return;
+						}
+						aUser.LoadedObjects.Add((AObject)aResponse.Data);
+						break;
+
+					case Response.Types.ObjectChanged:
+						if (!aUser.LoadedObjects.Contains(aResponse.Data))
+						{
+							aResponse.Type = Response.Types.ObjectAdded;
+						}
+						break;
+
+					case Response.Types.ObjectRemoved:
+						if (!aUser.LoadedObjects.Contains(aResponse.Data))
+						{
+							return;
+						}
+						aUser.LoadedObjects.Remove((AObject)aResponse.Data);
+						break;
 				}
-				aUser.LoadedObjects.Add((AObject)aResponse.Data);
 			}
 
 			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);

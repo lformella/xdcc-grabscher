@@ -44,20 +44,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 			#region MULTI
 
-			//SearchPacket = 11,
-			//SearchBot = 12,
-			SearchExternal = 13,
-
-			//Servers = 14,
-			//ChannelsFromServer = 15,
-			//PacketsFromBot = 16,
-
-			//Files = 17,
-			Searches = 18,
-
-			Snapshots = 19,
-
-			Statistics = 20
+			Searches = 11,
+			Snapshots = 12,
+			Statistics = 13
 
 			#endregion
 		}
