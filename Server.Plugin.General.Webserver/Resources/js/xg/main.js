@@ -21,7 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XG;
+var XGMainInstance;
 var XGMain = Class.create(
 {
 	/**
@@ -36,7 +36,7 @@ var XGMain = Class.create(
 	 */
 	initialize: function(helper, statistics, cookie, formatter, websocket, repository, grid, resize)
 	{
-		XG = this;
+		XGMainInstance = this;
 		var self = this;
 
 		this.statistics = statistics;
@@ -228,9 +228,10 @@ var XGMain = Class.create(
 		});
 
 		$("#tabs").tabs({
-			select: function(event, ui)
+			activate: function(event, ui)
 			{
 				self.activeTab = ui.index;
+				self.grid.resize();
 			}
 		});
 

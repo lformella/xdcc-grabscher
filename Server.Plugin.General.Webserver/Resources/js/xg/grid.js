@@ -46,6 +46,7 @@ var XGGrid = Class.create(
 		this.channelFilter = {};
 		this.botFilter = {};
 		this.packetFilter = {};
+		this.externalFilter = {};
 	},
 
 	/**
@@ -82,11 +83,11 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.serverGrid = this.buildGrid("#serverGrid", this.dataview.getDataView(Enum.Grid.Server), [
-			this.buildRow("Icon", 38, "icon-cell", false, function (obj)
+			this.buildRow("Icon", 38, false, function (obj)
 			{
 				return self.formatter.formatServerIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\", \"servers_table\");");
 			}, false),
-			this.buildRow("Name", 214, "", true, $.proxy(self.formatter.formatServerChannelName, self.formatter), false)
+			this.buildRow("Name", 214, true, $.proxy(self.formatter.formatServerChannelName, self.formatter), false)
 		]);
 		this.serverGrid.onClick.subscribe(function (e, args) {
 			this.channelFilter = { ParentGuid: self.serverGrid.getDataItem(args.row).Guid };
@@ -96,33 +97,33 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.channelGrid = this.buildGrid("#channelGrid", this.dataview.getDataView(Enum.Grid.Channel), [
-			this.buildRow("Icon", 40, "icon-cell", false, function (obj)
+			this.buildRow("Icon", 40, false, function (obj)
 			{
 				return self.formatter.formatServerIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\", \"channels_table\");");
 			}, false),
-			this.buildRow("Name", 212, "", true, $.proxy(self.formatter.formatServerChannelName, self.formatter), false)
+			this.buildRow("Name", 212, true, $.proxy(self.formatter.formatServerChannelName, self.formatter), false)
 		], self.compareChannels);
 
 		/**************************************************************************************************************/
 
 		this.botGrid = this.buildGrid("#botGrid", this.dataview.getDataView(Enum.Grid.Bot), [
-			this.buildRow("Icon", 34, "icon-cell", false, $.proxy(self.formatter.formatBotIcon, self.formatter), false),
-			this.buildRow("Name", 0, "", true, $.proxy(self.formatter.formatBotName, self.formatter), false),
-			this.buildRow("Speed", 70, "", true, function (obj)
+			this.buildRow("Icon", 34, false, $.proxy(self.formatter.formatBotIcon, self.formatter), false),
+			this.buildRow("Name", 0, true, $.proxy(self.formatter.formatBotName, self.formatter), false),
+			this.buildRow("Speed", 70, true, function (obj)
 			{
 				return self.helper.speed2Human(obj.Speed);
 			}, true),
-			this.buildRow("Q-Position", 70, "", true, function (obj)
+			this.buildRow("Q-Position", 70, true, function (obj)
 			{
 				return obj.QueuePosition > 0 ? obj.QueuePosition : "&nbsp;"
 			}, true),
-			this.buildRow("Q-Time", 70, "", true, function (obj)
+			this.buildRow("Q-Time", 70, true, function (obj)
 			{
 				return self.helper.time2Human(obj.QueueTime);
 			}, true),
-			this.buildRow("Speed", 100, "", true, $.proxy(self.formatter.formatBotSpeed, self.formatter), true),
-			this.buildRow("Slots", 60, "", true, $.proxy(self.formatter.formatBotSlots, self.formatter), true),
-			this.buildRow("Queue", 60, "", true, $.proxy(self.formatter.formatBotQueue, self.formatter), true)
+			this.buildRow("Speed", 100, true, $.proxy(self.formatter.formatBotSpeed, self.formatter), true),
+			this.buildRow("Slots", 60, true, $.proxy(self.formatter.formatBotSlots, self.formatter), true),
+			this.buildRow("Queue", 60, true, $.proxy(self.formatter.formatBotQueue, self.formatter), true)
 		], self.compareBots);
 		this.botGrid.onClick.subscribe(function (e, args) {
 			self.packetFilter = { ParentGuid: self.botGrid.getDataItem(args.row).Guid };
@@ -132,16 +133,16 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.packetGrid = this.buildGrid("#packetGrid", this.dataview.getDataView(Enum.Grid.Packet), [
-			this.buildRow("Icon", 42, "icon-cell", false, function (obj)
+			this.buildRow("Icon", 42, false, function (obj)
 			{
-				return self.formatter.formatPacketIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\");");
+				return self.formatter.formatPacketIcon(obj, "XGMainInstance.flipPacket(\"" + obj.Guid + "\");");
 			}, false),
-			this.buildRow("#", 40, "", true, $.proxy(self.formatter.formatPacketId, self.formatter), true),
-			this.buildRow("Name", 0, "progress-cell", true, $.proxy(self.formatter.formatPacketName, self.formatter), false),
-			this.buildRow("Size", 70, "", true, $.proxy(self.formatter.formatPacketSize, self.formatter), true),
-			this.buildRow("Speed", 70, "", true, $.proxy(self.formatter.formatPacketSpeed, self.formatter), true),
-			this.buildRow("Time Missing", 90, "", true, $.proxy(self.formatter.formatPacketTimeMissing, self.formatter), true),
-			this.buildRow("Last Updated", 135, "", true, function (obj)
+			this.buildRow("#", 40, true, $.proxy(self.formatter.formatPacketId, self.formatter), true),
+			this.buildRow("Name", 0, true, $.proxy(self.formatter.formatPacketName, self.formatter), false),
+			this.buildRow("Size", 70, true, $.proxy(self.formatter.formatPacketSize, self.formatter), true),
+			this.buildRow("Speed", 70, true, $.proxy(self.formatter.formatPacketSpeed, self.formatter), true),
+			this.buildRow("Time Missing", 90, true, $.proxy(self.formatter.formatPacketTimeMissing, self.formatter), true),
+			this.buildRow("Last Updated", 135, true, function (obj)
 			{
 				return self.helper.date2Human(obj.LastUpdated);
 			}, true)
@@ -150,17 +151,21 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.searchGrid = this.searchGrid = this.buildGrid("#searchGrid", this.dataview.getDataView(Enum.Grid.Search), [
-			this.buildRow("Icon", 28, "icon-cell", false, $.proxy(self.formatter.formatSearchIcon, self.formatter), false),
-			this.buildRow("Name", 0, "", false, function (obj)
+			this.buildRow("Icon", 28, false, $.proxy(self.formatter.formatSearchIcon, self.formatter), false),
+			this.buildRow("Name", 0, false, function (obj)
 			{
 				return _(obj.Name);
 			}, false),
-			this.buildRow("Action", 20, "", false, $.proxy(self.formatter.formatSearchAction, self.formatter), false)
+			this.buildRow("Action", 20, false, $.proxy(self.formatter.formatSearchAction, self.formatter), false)
 		]);
 		this.searchGrid.onClick.subscribe(function (e, args) {
 			var obj = self.searchGrid.getDataItem(args.row);
+
 			self.packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
+			self.applyFilter(Enum.Grid.Packet);
+
 			self.externalFilter = self.packetFilter;
+			self.applyFilter(Enum.Grid.ExternalSearch);
 
 			var dataView = self.packetGrid.getData();
 			var length = dataView.getLength();
@@ -174,9 +179,6 @@ var XGGrid = Class.create(
 				}
 			}
 			self.botFilter = { Guids: guids };
-
-			self.applyFilter(Enum.Grid.Packet);
-			self.applyFilter(Enum.Grid.ExternalSearch);
 			self.applyFilter(Enum.Grid.Bot);
 		});
 		$("#searchGrid .slick-header-columns").css("height", "0px");
@@ -185,25 +187,25 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.externalGrid = this.buildGrid("#externalGrid", this.dataview.getDataView(Enum.Grid.ExternalSearch), [
-			this.buildRow("Icon", 24, "icon-cell", false, function (obj)
+			this.buildRow("Icon", 24, false, function (obj)
 			{
-				return self.formatter.formatPacketIcon(obj, "XG.downloadLink(\"" + obj.Guid + "\");");
+				return self.formatter.formatPacketIcon(obj, "XGMainInstance.downloadLink(\"" + obj.Guid + "\");");
 			}, false),
-			this.buildRow("Id", 40, "", true, $.proxy(self.formatter.formatPacketId, self.formatter), true),
-			this.buildRow("Name", 0, "", true, $.proxy(self.formatter.formatPacketName, self.formatter), false),
-			this.buildRow("LastMentioned", 140, "", true, function (obj)
+			this.buildRow("#", 40, true, $.proxy(self.formatter.formatPacketId, self.formatter), true),
+			this.buildRow("Name", 0, true, $.proxy(self.formatter.formatPacketName, self.formatter), false),
+			this.buildRow("LastMentioned", 140, true, function (obj)
 			{
 				return self.helper.date2Human(obj.LastMentioned);
 			}, true),
-			this.buildRow("Size", 70, "", true, function (obj)
+			this.buildRow("Size", 70, true, function (obj)
 			{
 				return self.helper.size2Human(obj.Size);
 			}, true),
-			this.buildRow("BotName", 160, "", true, function (obj)
+			this.buildRow("BotName", 160, true, function (obj)
 			{
 				return obj.BotName;
 			}, false),
-			this.buildRow("BotSpeed", 70, "", true, function (obj)
+			this.buildRow("BotSpeed", 70, true, function (obj)
 			{
 				return self.helper.speed2Human(obj.BotSpeed);
 			}, true)
@@ -212,11 +214,11 @@ var XGGrid = Class.create(
 		/**************************************************************************************************************/
 
 		this.fileGrid = this.buildGrid("#fileGrid", this.dataview.getDataView(Enum.Grid.File), [
-			this.buildRow("Icon", 24, "icon-cell", false, $.proxy(self.formatter.formatFileIcon, self.formatter), false),
-			this.buildRow("Name", 0, "", true, $.proxy(self.formatter.formatFileName, self.formatter), false),
-			this.buildRow("Size", 70, "", true, $.proxy(self.formatter.formatFileSize, self.formatter), true),
-			this.buildRow("Speed", 70, "", true, $.proxy(self.formatter.formatFileSpeed, self.formatter), true),
-			this.buildRow("TimeMissing", 90, "", true, $.proxy(self.formatter.formatFileTimeMissing, self.formatter), true)
+			this.buildRow("Icon", 24, false, $.proxy(self.formatter.formatFileIcon, self.formatter), false),
+			this.buildRow("Name", 0, true, $.proxy(self.formatter.formatFileName, self.formatter), false),
+			this.buildRow("Size", 70, true, $.proxy(self.formatter.formatFileSize, self.formatter), true),
+			this.buildRow("Speed", 70, true, $.proxy(self.formatter.formatFileSpeed, self.formatter), true),
+			this.buildRow("TimeMissing", 90, true, $.proxy(self.formatter.formatFileTimeMissing, self.formatter), true)
 		], self.compareFiles);
 	},
 
@@ -324,6 +326,7 @@ var XGGrid = Class.create(
 				dataView.sort(comparer, args.sortAsc);
 			});
 		}
+		grid.setSortColumn("Name",true);
 
 		this.grids.push(grid);
 		return grid;
@@ -354,25 +357,20 @@ var XGGrid = Class.create(
 	/**
 	 * @param {String} id
 	 * @param {Integer} width
-	 * @param {String} cssClass
 	 * @param {Boolean} sortable
 	 * @param {Function} formatter
 	 * @param {Boolean} alignRight
 	 * @return {Object}
 	 */
-	buildRow: function (id, width, cssClass, sortable, formatter, alignRight)
+	buildRow: function (id, width, sortable, formatter, alignRight)
 	{
-		if (alignRight)
-		{
-			cssClass = cssClass + " alignRight";
-		}
 		return {
 			name: _(id),
 			id: id,
 			width: width > 0 ? width : undefined,
 			minWidth: width > 0 ? width : undefined,
 			maxWidth: width > 0 ? width : undefined,
-			cssClass: cssClass != "" ? cssClass : undefined,
+			cssClass: alignRight ? "alignRight" : undefined,
 			sortable: sortable,
 			cannotTriggerInsert: id == "Name",
 			autoHeight:true,
@@ -386,23 +384,17 @@ var XGGrid = Class.create(
 
 	compareServers: function(a, b)
 	{
-		var name = XGGridInstance.sortColumn.serverGrid;
-		var x = a[name], y = b[name];
-		return (x == y ? 0 : (x > y ? 1 : -1));
+		return XGGridInstance.compare(a, b, XGGridInstance.sortColumn.serverGrid);
 	},
 
 	compareChannels: function(a, b)
 	{
-		var name = XGGridInstance.sortColumn.channelGrid;
-		var x = a[name], y = b[name];
-		return (x == y ? 0 : (x > y ? 1 : -1));
+		return XGGridInstance.compare(a, b, XGGridInstance.sortColumn.channelGrid);
 	},
 
 	compareBots: function(a, b)
 	{
-		var name = XGGridInstance.sortColumn.botGrid;
-		var x = a[name], y = b[name];
-		return (x == y ? 0 : (x > y ? 1 : -1));
+		return XGGridInstance.compare(a, b, XGGridInstance.sortColumn.botGrid);
 	},
 
 	comparePackets: function(a, b)
@@ -422,20 +414,21 @@ var XGGrid = Class.create(
 				name = "Id";
 				break;
 		}
-		var x = a[name], y = b[name];
-		return (x == y ? 0 : (x > y ? 1 : -1));
+		return XGGridInstance.compare(a, b, name);
 	},
 
 	compareExternals: function(a, b)
 	{
-		var name = XGGridInstance.sortColumn.externalGrid;
-		var x = a[name], y = b[name];
-		return (x == y ? 0 : (x > y ? 1 : -1));
+		return XGGridInstance.compare(a, b, XGGridInstance.sortColumn.externalGrid);
 	},
 
 	compareFiles: function(a, b)
 	{
-		var name = XGGridInstance.sortColumn.fileGrid;
+		return XGGridInstance.compare(a, b, XGGridInstance.sortColumn.fileGrid);
+	},
+
+	compare: function(a, b, name)
+	{
 		var x = a[name], y = b[name];
 		return (x == y ? 0 : (x > y ? 1 : -1));
 	}

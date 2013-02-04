@@ -40,11 +40,6 @@ fieldset label
 	margin: 2px 0 0;
 }
 
-td
-{
-	vertical-align: middle;
-}
-
 /* XG Elements */
 
 .alignRight
@@ -63,7 +58,7 @@ td
 	height: 400px;
 }
 
-#password_tip
+#passwordTip
 {
 	padding: 5px 0 10px 0;
 }
@@ -107,104 +102,6 @@ td
 {
 	margin-right: 0;
 	opacity: 1;
-}
-
-/* JQGrid Fixes * /
-
-#gbox_packets_table, #gbox_packets_table .ui-jqgrid-titlebar
-{
-	border-top: 0;
-}
-
-#gbox_bots_table
-{
-	border-bottom: 0;
-}
-
-#search_layout #search_table tr.jqgfirstrow, #search_layout #search_table .jqgfirstrow td
-{
-	padding: 0;
-	outline: 0;
-}
-
-#search_layout #search_table
-{
-	border-collapse: separate;
-	border-spacing: 0 4px;
-	margin: 0 4px 0 4px;
-}
-
-#search_layout #search_table td
-{
-	background-color: #F5F5F5;
-	border-width: 0;
-	box-shadow: 0 1px 0 white inset;
-}
-
-#search_layout #search_table tr.ui-state-highlight td
-{
-	background-color: #FFFED4;
-}
-
-#search_layout #search_table tr.ui-state-highlight:hover td
-{
-	background-color: #FFFEDE;
-}
-
-#search_layout #search_table tr.ui-state-highlight
-{
-	outline: 1px solid #fce94f;
-}
-
-#search_layout #search_table tr.ui-state-highlight:hover
-{
-	outline: 1px solid #fff066;
-}
-
-#search_layout #search_table .ui-state-hover td
-{
-	background-color: #F8F8F8;
-}
-
-#search_layout #search_table tr, #search_layout #search_table tr.ui-state-hover
-{
-	outline: 1px solid #d3d7cf;
-}
-
-#gview_search_table .ui-jqgrid-hdiv
-{
-	display: none;
-}
-
-#gbox_search_table
-{
-	background: #efefef;
-	border-right: 0;
-}
-
-#layout_objects, #layout_objects .ui-widget-header, #layout_objects .ui-widget-content
-{
-	border-left: 0;
-}
-
-#layout_objects .ui-tabs-nav
-{
-	padding-left: 3px;
-}
-
-#layout_objects .ui-tabs .ui-tabs-nav li
-{
-	margin-right: 3px;
-}
-
-.ui-jqgrid tr.jqgrow td.icon-cell
-{
-	padding: 2px 0 2px 2px;
-}
-
-.ui-jqgrid tr.jqgrow td.progress-cell
-{
-	line-height: 15px;
 }
 
 /* Icons */

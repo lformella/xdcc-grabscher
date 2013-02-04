@@ -1,5 +1,5 @@
 //
-//  xg.locale-de.js
+//  de.js
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -46,6 +46,7 @@ translatedArray =
 	/* GRIDS                                                                                                          */
 	/* ************************************************************************************************************** */
 
+	"Icon": "",
 	"Name": "Name",
 	"Speed": "Geschw.",
 	"Q-Pos": "S-Pos",

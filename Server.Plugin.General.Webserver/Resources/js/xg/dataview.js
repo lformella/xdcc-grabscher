@@ -1,5 +1,5 @@
 // 
-//  helper.js
+//  dataview.js
 //  
 //  Author:
 //       Lars Formella <ich@larsformella.de>
@@ -160,7 +160,7 @@ var XGDataView = Class.create(
 				}
 			}
 
-			if (item.DataType == Enum.Grid.Packet)
+			if (item.DataType == Enum.Grid.Packet || item.DataType == Enum.Grid.ExternalSearch)
 			{
 				if (args.SearchGuid != undefined)
 				{
