@@ -164,6 +164,11 @@ fieldset label
 	border: 2px dotted #888a85;
 }
 
+.ui-layout-pane
+{
+	padding: 0;
+}
+
 /* Flot Fixes */
 
 .tickLabel, .legendLabel

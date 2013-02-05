@@ -30,7 +30,7 @@ body {
 .ui-layout-pane { /* all 'panes' */
 	background:	#FFF; 
 	border:		1px solid #BBB;
-	padding:	0px;
+	padding:	10px; 
 	overflow:	auto;
 	/* DO NOT add scrolling (or padding) to 'panes' that have a content-div,
 	   otherwise you may get double-scrollbars - on the pane AND on the content-div
@@ -85,6 +85,14 @@ body {
 	}
 	.ui-layout-resizer-dragging {	/* CLONED resizer being dragged */
 		border: 	 1px solid #BBB;
+	}
+	.ui-layout-resizer-north-dragging,
+	.ui-layout-resizer-south-dragging {
+		border-width:	1px 0;
+	}
+	.ui-layout-resizer-west-dragging,
+	.ui-layout-resizer-east-dragging {
+		border-width:	0 1px;
 	}
 	/* NOTE: Add a 'dragging-limit' color to provide visual feedback when resizer hits min/max size limits */
 	.ui-layout-resizer-dragging-limit {	/* CLONED resizer at min or max size-limit */
@@ -172,3 +180,45 @@ body {
 div.ui-layout-mask {}		/* standard mask for iframes */
 iframe.ui-layout-mask {}	/* extra mask for objects/applets */
 
+/*
+ *	Default printing styles
+ */
+@media print {
+	/*
+	 *	Unless you want to print the layout as it appears onscreen,
+	 *	these html/body styles are needed to allow the content to 'flow'
+	 */
+	html {
+		height:		auto !important;
+		overflow:	visible !important;
+	}
+	body.ui-layout-container {
+		position:	static !important;
+		top:		auto !important;
+		bottom:		auto !important;
+		left:		auto !important;
+		right:		auto !important;
+		/* only IE6 has container width & height set by Layout */
+		_width:		auto !important;
+		_height:	auto !important;
+	}
+	.ui-layout-resizer, .ui-layout-toggler {
+		display:	none !important;
+	}
+	/*
+	 *	Default pane print styles disables positioning, borders and backgrounds.
+	 *	You can modify these styles however it suit your needs.
+	 */
+	.ui-layout-pane {
+		border:		none !important;
+		background:	 transparent !important;
+		position:	relative !important;
+		top:		auto !important;
+		bottom:		auto !important;
+		left:		auto !important;
+		right:		auto !important;
+		width:		auto !important;
+		height:		auto !important;
+		overflow:	visible !important;
+	}
+}
