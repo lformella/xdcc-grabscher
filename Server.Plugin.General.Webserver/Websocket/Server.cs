@@ -447,7 +447,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				switch (aResponse.Type)
 				{
 					case Response.Types.ObjectAdded:
-						if (aUser.LoadedObjects.Contains(aResponse.Data))
+						if (aUser.LoadedObjects.ToArray().Contains(aResponse.Data))
 						{
 							return;
 						}
@@ -455,14 +455,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Response.Types.ObjectChanged:
-						if (!aUser.LoadedObjects.Contains(aResponse.Data))
+						if (!aUser.LoadedObjects.ToArray().Contains(aResponse.Data))
 						{
 							aResponse.Type = Response.Types.ObjectAdded;
 						}
 						break;
 
 					case Response.Types.ObjectRemoved:
-						if (!aUser.LoadedObjects.Contains(aResponse.Data))
+						if (!aUser.LoadedObjects.ToArray().Contains(aResponse.Data))
 						{
 							return;
 						}
