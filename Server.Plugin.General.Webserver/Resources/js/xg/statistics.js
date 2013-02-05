@@ -21,104 +21,18 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGStatistics = Class.create(
+var XGStatistics = (function()
 {
-	/**
-	 * @param {XGHelper} helper
-	 */
-	initialize: function(helper)
+	var helper;
+	var snapshots = {};
+
+	function updateSnapshotPlot ()
 	{
-		this.helper = helper;
-
-		this.snapshots = {};
-	},
-
-	setStatistics: function (result)
-	{
-		$("#BytesLoaded").html(this.helper.size2Human(result.BytesLoaded));
-
-		$("#PacketsCompleted").html(result.PacketsCompleted);
-		$("#PacketsIncompleted").html(result.PacketsIncompleted);
-		$("#PacketsBroken").html(result.PacketsBroken);
-
-		$("#PacketsRequested").html(result.PacketsRequested);
-		$("#PacketsRemoved").html(result.PacketsRemoved);
-
-		$("#FilesCompleted").html(result.FilesCompleted);
-		$("#FilesBroken").html(result.FilesBroken);
-
-		$("#ServerConnectsOk").html(result.ServerConnectsOk);
-		$("#ServerConnectsFailed").html(result.ServerConnectsFailed);
-
-		$("#ChannelConnectsOk").html(result.ChannelConnectsOk);
-		$("#ChannelConnectsFailed").html(result.ChannelConnectsFailed);
-		$("#ChannelsJoined").html(result.ChannelsJoined);
-		$("#ChannelsParted").html(result.ChannelsParted);
-		$("#ChannelsKicked").html(result.ChannelsKicked);
-
-		$("#BotConnectsOk").html(result.BotConnectsOk);
-		$("#BotConnectsFailed").html(result.BotConnectsFailed);
-
-		$("#SpeedMax").html(this.helper.speed2Human(result.SpeedMax));
-	},
-
-	/* ************************************************************************************************************** */
-	/* SNAPSHOT STUFF                                                                                                 */
-	/* ************************************************************************************************************** */
-
-	setSnapshots: function (result)
-	{
-		$.each(result, function(index, item) {
-			item.color = index;
-			switch (index + 1)
-			{
-				case Enum.SnapshotValue.Bots:
-				case Enum.SnapshotValue.BotsConnected:
-				case Enum.SnapshotValue.BotsDisconnected:
-				case Enum.SnapshotValue.BotsFreeQueue:
-				case Enum.SnapshotValue.BotsFreeSlots:
-					item.yaxis = 2;
-					break;
-
-				case Enum.SnapshotValue.Packets:
-				case Enum.SnapshotValue.PacketsConnected:
-				case Enum.SnapshotValue.PacketsDisconnected:
-					item.yaxis = 3;
-					break;
-
-				case Enum.SnapshotValue.PacketsSize:
-				case Enum.SnapshotValue.PacketsSizeDownloading:
-				case Enum.SnapshotValue.PacketsSizeNotDownloading:
-				case Enum.SnapshotValue.PacketsSizeConnected:
-				case Enum.SnapshotValue.PacketsSizeDisconnected:
-					item.yaxis = 4;
-					break;
-
-				case Enum.SnapshotValue.Speed:
-				case Enum.SnapshotValue.BotsAverageCurrentSpeed:
-				case Enum.SnapshotValue.BotsAverageMaxSpeed:
-					item.yaxis = 5;
-					break;
-
-				default:
-					item.yaxis = 1;
-					break;
-			}
-		});
-
-		this.snapshots = result;
-		this.updateSnapshotPlot();
-	},
-
-	updateSnapshotPlot: function ()
-	{
-		var self = this;
-
 		var days = parseInt($("input[name='snapshotTime']:checked").val());
 		var snapshotsMinDate = days > 0 ? new Date().getTime() - (60 * 60 * 24 * days * 1000) : days;
 
 		var data = [];
-		var currentSnapshots = $.extend(true, [], this.snapshots);
+		var currentSnapshots = $.extend(true, [], snapshots);
 		$.each(currentSnapshots, function(index, item) {
 			if (index == 0 || $("#snapshotCheckbox" + (index + 1)).attr('checked'))
 			{
@@ -275,7 +189,7 @@ var XGStatistics = Class.create(
 						{
 							return "";
 						}
-						return self.helper.size2Human(val);
+						return helper.size2Human(val);
 					}
 				},
 				{
@@ -288,7 +202,7 @@ var XGStatistics = Class.create(
 						{
 							return "";
 						}
-						return self.helper.speed2Human(val);
+						return helper.speed2Human(val);
 					}
 				}
 			],
@@ -298,4 +212,96 @@ var XGStatistics = Class.create(
 
 		$.plot($("#snapshot"), data, snapshotOptions);
 	}
-});
+
+	return {
+		/**
+		 * @param {XGHelper} helper1
+		 */
+		initialize: function(helper1)
+		{
+			helper = helper1;
+		},
+
+		setStatistics: function (result)
+		{
+			$("#BytesLoaded").html(helper.size2Human(result.BytesLoaded));
+
+			$("#PacketsCompleted").html(result.PacketsCompleted);
+			$("#PacketsIncompleted").html(result.PacketsIncompleted);
+			$("#PacketsBroken").html(result.PacketsBroken);
+
+			$("#PacketsRequested").html(result.PacketsRequested);
+			$("#PacketsRemoved").html(result.PacketsRemoved);
+
+			$("#FilesCompleted").html(result.FilesCompleted);
+			$("#FilesBroken").html(result.FilesBroken);
+
+			$("#ServerConnectsOk").html(result.ServerConnectsOk);
+			$("#ServerConnectsFailed").html(result.ServerConnectsFailed);
+
+			$("#ChannelConnectsOk").html(result.ChannelConnectsOk);
+			$("#ChannelConnectsFailed").html(result.ChannelConnectsFailed);
+			$("#ChannelsJoined").html(result.ChannelsJoined);
+			$("#ChannelsParted").html(result.ChannelsParted);
+			$("#ChannelsKicked").html(result.ChannelsKicked);
+
+			$("#BotConnectsOk").html(result.BotConnectsOk);
+			$("#BotConnectsFailed").html(result.BotConnectsFailed);
+
+			$("#SpeedMax").html(helper.speed2Human(result.SpeedMax));
+		},
+
+		/* ************************************************************************************************************** */
+		/* SNAPSHOT STUFF                                                                                                 */
+		/* ************************************************************************************************************** */
+
+		setSnapshots: function (result)
+		{
+			$.each(result, function(index, item) {
+				item.color = index;
+				switch (index + 1)
+				{
+					case Enum.SnapshotValue.Bots:
+					case Enum.SnapshotValue.BotsConnected:
+					case Enum.SnapshotValue.BotsDisconnected:
+					case Enum.SnapshotValue.BotsFreeQueue:
+					case Enum.SnapshotValue.BotsFreeSlots:
+						item.yaxis = 2;
+						break;
+
+					case Enum.SnapshotValue.Packets:
+					case Enum.SnapshotValue.PacketsConnected:
+					case Enum.SnapshotValue.PacketsDisconnected:
+						item.yaxis = 3;
+						break;
+
+					case Enum.SnapshotValue.PacketsSize:
+					case Enum.SnapshotValue.PacketsSizeDownloading:
+					case Enum.SnapshotValue.PacketsSizeNotDownloading:
+					case Enum.SnapshotValue.PacketsSizeConnected:
+					case Enum.SnapshotValue.PacketsSizeDisconnected:
+						item.yaxis = 4;
+						break;
+
+					case Enum.SnapshotValue.Speed:
+					case Enum.SnapshotValue.BotsAverageCurrentSpeed:
+					case Enum.SnapshotValue.BotsAverageMaxSpeed:
+						item.yaxis = 5;
+						break;
+
+					default:
+						item.yaxis = 1;
+						break;
+				}
+			});
+
+			snapshots = result;
+			updateSnapshotPlot();
+		},
+
+		resize: function()
+		{
+			updateSnapshotPlot();
+		}
+	}
+}());

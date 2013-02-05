@@ -21,44 +21,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGResize = Class.create(
+var XGResize = (function()
 {
-	initialize: function ()
-	{
-		this.onResize = new Slick.Event();
-	},
-
-	start: function ()
-	{
-		var self = this;
-
-		$("body").layout({
-			onresize: function () {
-				self.resizeMain(innerLayout);
-			}
-		});
-		var innerLayout = $("#layoutObjectsContainer").layout({
-			resizeWithWindow: false,
-			onresize: function () {
-				self.resizeContainer();
-			}
-		});
-
-		// make bot and packet grid height almost equal
-		innerLayout.sizePane("north", $('#layoutObjects').height() / 2 - 80);
-
-		// resize after all is visible - twice, because the first run wont change all values :|
-		this.resizeMain(innerLayout);
-		setTimeout(function() { self.resizeMain(innerLayout); }, 1000);
-	},
+	var width, height;
 
 	/**
 	 * @param innerLayout
 	 */
-	resizeMain: function (innerLayout)
+	function resizeMain (innerLayout)
 	{
-		var self = this;
-
 		var searchLayout = $('#searchLayout');
 		var objectLayout = $('#layoutObjects');
 
@@ -80,43 +51,70 @@ var XGResize = Class.create(
 		$("#botGrid, #packetGrid").width(objectLayout.width() - 1);
 
 		/* other container */
-		subSize = 110;
+		subSize = 48;
 		if ($.browser.mozilla)
 		{
 			subSize += 1;
 		}
 		$("#externalGrid, #fileGrid")
 			.width(objectLayout.width() - 1)
-			.height(objectLayout.height() - subSize);
+			.height(searchLayout.height() - subSize);
 
 		/* dialog */
-		var width = $(window).width() - 20;
-		var height = $(window).height() - 20;
+		var width1 = $(window).width() - 20;
+		var height1 = $(window).height() - 20;
 		// just resize if necessary
-		if (width != this.width || height != this.height)
+		if (width1 != width || height1 != height)
 		{
-			this.width = width;
-			this.height = height;
+			width = width1;
+			height = height1;
 
 			$("#dialogSnapshots").dialog("option", {
-				width: width,
-				height: height
+				width: width1,
+				height: height1
 			});
 			$("#snapshot")
-				.width(width - 240)
-				.height(height - 40);
+				.width(width1 - 240)
+				.height(height1 - 40);
 		}
 
 		innerLayout.resizeAll();
 
-		this.onResize.notify({}, null, self);
-	},
+		self.onResize.notify({}, null, self);
+	}
 
-	resizeContainer: function ()
+	function resizeContainer ()
 	{
 		$("#botGrid").height($('#botLayout').height());
 		$("#packetGrid").height($('#packetLayout').height());
 
-		this.onResize.notify({}, null, self);
+		self.onResize.notify({}, null, self);
 	}
-});
+
+	var self = {
+		onResize: new Slick.Event(),
+
+		start: function ()
+		{
+			$("body").layout({
+				onresize: function () {
+					resizeMain(innerLayout);
+				}
+			});
+			var innerLayout = $("#layoutObjectsContainer").layout({
+				resizeWithWindow: false,
+				onresize: function () {
+					resizeContainer();
+				}
+			});
+
+			// make bot and packet grid height almost equal
+			innerLayout.sizePane("north", $('#layoutObjects').height() / 2 - 80);
+
+			// resize after all is visible - twice, because the first run wont change all values :|
+			resizeMain(innerLayout);
+			setTimeout(function() { resizeMain(innerLayout); }, 1000);
+		}
+	};
+	return self;
+}());

@@ -53,7 +53,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		{
 			"external/moment.min",
 			"external/jquery.min",
-			"external/jquery.class",
 			"external/jquery.event.drag-2.0.min",
 			"external/jquery.cookie.min",
 			"external/jquery.flot",

@@ -21,175 +21,56 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGWebsocket = Class.create(
+var XGWebsocket = (function()
 {
-	/**
-	 * @param {String} url
-	 * @param {String} port
-	 * @param {String} password
-	 */
-	initialize: function(url, port, password)
-	{
-		this.url = url;
-		this.port = port;
-		this.password = password;
-
-		this.onAdd = new Slick.Event();
-		this.onRemove = new Slick.Event();
-		this.onUpdate = new Slick.Event();
-		this.onSearchExternal = new Slick.Event();
-		this.onSearches = new Slick.Event();
-		this.onSnapshots = new Slick.Event();
-		this.onStatistics = new Slick.Event();
-	},
-
-	connect: function ()
-	{
-		var self = this;
-
-		this.state = WebSocket.CLOSED;
-		try
-		{
-			this.socket = new WebSocket("ws://" + this.url + ":" + this.port);
-			this.socket.onopen = function ()
-			{
-				self.state = self.socket.readyState;
-
-				self.onConnected();
-			};
-			this.socket.onmessage = function (msg)
-			{
-				var data = JSON.parse(msg.data);
-				data.Data.DataType = data.DataType;
-				self.onMessageReceived(data);
-			};
-			this.socket.onclose = function ()
-			{
-				self.state = self.socket.readyState;
-
-				self.onDisconnected();
-			};
-			this.socket.onerror = function ()
-			{
-				self.state = self.socket.readyState;
-
-				self.onError("");
-			};
-		}
-		catch (exception)
-		{
-			if (self.socket != undefined)
-			{
-				self.state = self.socket.readyState;
-			}
-
-			self.onError(exception);
-		}
-	},
+	var url, port, password, state, socket;
 
 	/**
 	 * @param {Enum.Request} Type
 	 * @return {Object}
 	 */
-	buildRequest: function(Type)
+	function buildRequest (Type)
 	{
 		return {
-			"Password": this.password,
+			"Password": password,
 			"Type": Type
 		};
-	},
-
-	/**
-	 * @param {Enum.Request} type
-	 * @return {Boolean}
-	 */
-	send: function(type)
-	{
-		var request = this.buildRequest(type);
-
-		return this.sendRequest(request);
-	},
-
-	/**
-	 * @param {Enum.Request} type
-	 * @param {String} name
-	 * @return {Boolean}
-	 */
-	sendName: function(type, name)
-	{
-		var request = this.buildRequest(type);
-		request.Name = name;
-
-		return this.sendRequest(request);
-	},
-
-	/**
-	 * @param {Enum.Request} type
-	 * @param {String} guid
-	 * @return {Boolean}
-	 */
-	sendGuid: function(type, guid)
-	{
-		var request = this.buildRequest(type);
-		request.Guid = guid;
-
-		return this.sendRequest(request);
-	},
-
-	/**
-	 * @param {Enum.Request} type
-	 * @param {String} name
-	 * @param {String} guid
-	 * @return {Boolean}
-	 */
-	sendNameGuid: function(type, name, guid)
-	{
-		var request = this.buildRequest(type);
-		request.Name = name;
-		request.Guid = guid;
-
-		return this.sendRequest(request);
-	},
+	}
 
 	/**
 	 * @param {Object} request
 	 * @return {Boolean}
 	 */
-	sendRequest: function(request)
+	function sendRequest (request)
 	{
-		if (this.state == WebSocket.OPEN)
+		if (state == WebSocket.OPEN)
 		{
 			try
 			{
-				this.socket.send(JSON.stringify(request));
+				socket.send(JSON.stringify(request));
 				return true;
 			}
 			catch (exception)
 			{
-				this.onError(exception);
+				self.onError(exception);
 			}
 		}
 
 		return false;
-	},
+	}
 
-	onConnected: function ()
+	function onConnected ()
 	{
-		this.send(Enum.Request.Searches);
-		this.send(Enum.Request.Servers);
-		this.send(Enum.Request.Files);
-		this.send(Enum.Request.Snapshots);
-	},
-
-	onDisconnected: function ()
-	{
-		$("#dialog_error").dialog("open");
-	},
+		self.send(Enum.Request.Searches);
+		self.send(Enum.Request.Servers);
+		self.send(Enum.Request.Files);
+		//self.send(Enum.Request.Snapshots);
+	}
 
 	/**
 	 * @param {Object} json
 	 */
-	onMessageReceived: function (json)
+	function onMessageReceived (json)
 	{
 		if (json.DataType == "String")
 		{
@@ -199,32 +80,153 @@ var XGWebsocket = Class.create(
 		switch (json.Type)
 		{
 			case Enum.Response.ObjectAdded:
-				this.onAdd.notify(json, null, self);
+				self.onAdd.notify(json, null, self);
 				break;
 
 			case Enum.Response.ObjectRemoved:
-				this.onRemove.notify(json, null, self);
+				self.onRemove.notify(json, null, self);
 				break;
 
 			case Enum.Response.ObjectChanged:
-				this.onUpdate.notify(json, null, self);
+				self.onUpdate.notify(json, null, self);
 				break;
 
 			case Enum.Response.SearchExternal:
-				this.onSearchExternal.notify(json, null, self);
+				self.onSearchExternal.notify(json, null, self);
 				break;
 
 			case Enum.Response.Searches:
-				this.onSearches.notify(json, null, self);
+				self.onSearches.notify(json, null, self);
 				break;
 
 			case Enum.Response.Snapshots:
-				this.onSnapshots.notify(json, null, self);
+				self.onSnapshots.notify(json, null, self);
 				break;
 
 			case Enum.Response.Statistics:
-				this.onStatistics.notify(json, null, self);
+				self.onStatistics.notify(json, null, self);
 				break;
 		}
 	}
-});
+
+	var self = {
+		onAdd: new Slick.Event(),
+		onRemove: new Slick.Event(),
+		onUpdate: new Slick.Event(),
+		onError: new Slick.Event(),
+		onDisconnected: new Slick.Event(),
+		onSearchExternal: new Slick.Event(),
+		onSearches: new Slick.Event(),
+		onSnapshots: new Slick.Event(),
+		onStatistics: new Slick.Event(),
+
+		/**
+		 * @param {String} url1
+		 * @param {String} port1
+		 * @param {String} password1
+		 */
+		initialize: function(url1, port1, password1)
+		{
+			url = url1;
+			port = port1;
+			password = password1;
+		},
+
+		connect: function ()
+		{
+			var self = this;
+
+			state = WebSocket.CLOSED;
+			try
+			{
+				socket = new WebSocket("ws://" + url + ":" + port);
+				socket.onopen = function ()
+				{
+					state = socket.readyState;
+
+					onConnected();
+				};
+				socket.onmessage = function (msg)
+				{
+					var data = JSON.parse(msg.data);
+					data.Data.DataType = data.DataType;
+					onMessageReceived(data);
+				};
+				socket.onclose = function ()
+				{
+					state = socket.readyState;
+
+					self.onDisconnected.notify({}, null, this);
+				};
+				socket.onerror = function ()
+				{
+					state = socket.readyState;
+
+					self.onError.notify({}, null, this);
+				};
+			}
+			catch (exception)
+			{
+				if (socket != undefined)
+				{
+					state = socket.readyState;
+				}
+
+				self.onError.notify({exception: exception}, null, this);
+			}
+		},
+
+		/**
+		 * @param {Enum.Request} type
+		 * @return {Boolean}
+		 */
+		send: function(type)
+		{
+			var request = buildRequest(type);
+
+			return sendRequest(request);
+		},
+
+		/**
+		 * @param {Enum.Request} type
+		 * @param {String} name
+		 * @return {Boolean}
+		 */
+		sendName: function(type, name)
+		{
+			var request = buildRequest(type);
+			request.Name = name;
+
+			return sendRequest(request);
+		},
+
+		/**
+		 * @param {Enum.Request} type
+		 * @param {String} guid
+		 * @return {Boolean}
+		 */
+		sendGuid: function(type, guid)
+		{
+			var request = buildRequest(type);
+			request.Guid = guid;
+
+			return sendRequest(request);
+		},
+
+		/**
+		 * @param {Enum.Request} type
+		 * @param {String} name
+		 * @param {String} guid
+		 * @return {Boolean}
+		 */
+		sendNameGuid: function(type, name, guid)
+		{
+			var request = buildRequest(type);
+			request.Name = name;
+			request.Guid = guid;
+
+			return sendRequest(request);
+		}
+	};
+	return self;
+}());

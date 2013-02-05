@@ -22,92 +22,56 @@
 //
 
 var password;
-var XGPassword = Class.create(
+var XGPassword = (function()
 {
-	initialize: function (salt, host, port)
-	{
-		var self = this;
-		password = this;
+	var salt, host, port, password;
 
-		this.password = "";
-		this.salt = salt;
-		this.host = host;
-		this.port = port;
-
-		var buttonText = { text: _("Connect") };
-		var buttons = {};
-		buttons[buttonText["text"]] = function()
-		{
-			self.buttonConnectClicked($(this));
-		};
-
-		// display login
-		$("#dialogPassword").dialog({
-			bgiframe: true,
-			height: 140,
-			modal: true,
-			resizable: false,
-			hide: 'explode',
-			buttons: buttons,
-			close: function()
-			{
-				if(self.password == "")
-				{
-					$('#dialogPassword').dialog('open');
-				}
-				$("#password").val('').removeClass('ui-state-error');
-			}
-		});
-
-		$("#password").keyup(function (e) {
-			if (e.which == 13)
-			{
-				self.buttonConnectClicked($("#dialogPassword"));
-			}
-		});
-	},
-
-	buttonConnectClicked: function (dialog)
+	function buttonConnectClicked (dialog)
 	{
 		var passwordElement = $("#password");
-		var saltElement = $("#salt");
-		var password = encodeURIComponent(CryptoJS.SHA256(this.salt + passwordElement.val() + this.salt));
+		password = encodeURIComponent(CryptoJS.SHA256(salt + passwordElement.val() + salt));
 
-		if (this.checkPassword(password))
+		if (checkPassword(password))
 		{
 			passwordElement.removeClass('ui-state-error');
 			dialog.dialog('close');
 
-			this.password = password;
-			this.startMain();
+			startMain();
 		}
 		else
 		{
 			passwordElement.addClass('ui-state-error');
 		}
-	},
+	}
 
-	startMain: function ()
+	function startMain ()
 	{
-		var dataView = new XGDataView();
-		var cookie = new XGCookie();
-		var helper = new XGHelper();
+		var dataView = Object.create(XGDataView);
+		dataView.initialize();
+		var cookie = Object.create(XGCookie);
+		var helper = Object.create(XGHelper);
 		helper.setHumanDates(cookie.getCookie("humanDates", "0") == "1");
-		var formatter = new XGFormatter(helper);
-		var statistics = new XGStatistics(helper);
-		var websocket = new XGWebsocket(this.host, this.port, this.password);
-		var grid = new XGGrid(formatter, helper, dataView);
+		var formatter = Object.create(XGFormatter);
+		formatter.initialize(helper);
+		var statistics = Object.create(XGStatistics);
+		statistics.initialize(helper);
+		var websocket = Object.create(XGWebsocket);
+		websocket.initialize(host, port, password);
+		var grid = Object.create(XGGrid);
+		grid.initialize(formatter, helper, dataView);
 		//grid.setFilterOfflineBots(cookie.getCookie("filterOfflineBots", "0") == "1");
-		var resize = new XGResize();
+		var resize = Object.create(XGResize);
 
 		// start frontend
-		var main = new XGMain(helper, statistics, cookie, formatter, websocket, dataView, grid, resize);
+		var main = Object.create(XGMain);
+		main.initialize(helper, statistics, cookie, formatter, websocket, dataView, grid, resize);
 		main.start();
-	},
+	}
 
-	checkPassword: function (password)
+	function checkPassword (password)
 	{
-		$("#loadingPassword").show();
+		var element = $("#loadingPassword");
+		element.show();
 		var res = false;
 		$.ajax({
 			url: "?password=" + password,
@@ -119,8 +83,54 @@ var XGPassword = Class.create(
 		});
 		if (!res)
 		{
-			$("#loadingPassword").hide();
+			element.hide();
 		}
 		return res;
 	}
-});
+
+	return {
+		/**
+		 * @param {String} salt1
+		 * @param {String} host1
+		 * @param {String} port1
+		 */
+		initialize: function (salt1, host1, port1)
+		{
+			salt = salt1;
+			host = host1;
+			port = port1;
+
+			var buttonText = { text: _("Connect") };
+			var buttons = {};
+			buttons[buttonText["text"]] = function()
+			{
+				buttonConnectClicked($(this));
+			};
+
+			// display login
+			$("#dialogPassword").dialog({
+				bgiframe: true,
+				height: 140,
+				modal: true,
+				resizable: false,
+				hide: 'explode',
+				buttons: buttons,
+				close: function()
+				{
+					if(password == "")
+					{
+						$('#dialogPassword').dialog('open');
+					}
+					$("#password").val('').removeClass('ui-state-error');
+				}
+			});
+
+			$("#password").keyup(function (e) {
+				if (e.which == 13)
+				{
+					buttonConnectClicked($("#dialogPassword"));
+				}
+			});
+		}
+	}
+}());

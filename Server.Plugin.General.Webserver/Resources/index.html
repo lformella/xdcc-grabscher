@@ -45,7 +45,7 @@
 					item.attr("title", _(item.attr("title")));
 				});
 
-				new XGPassword("#SALT#", "#HOST#", "#PORT#");
+				Object.create(XGPassword).initialize("#SALT#", "#HOST#", "#PORT#");
 			});
 		</script>
 	</head>

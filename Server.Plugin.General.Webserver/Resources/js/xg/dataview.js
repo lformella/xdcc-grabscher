@@ -21,97 +21,22 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var XGDataView = Class.create(
+var XGDataView = (function()
 {
-	initialize: function()
-	{
-		this.servers = this.buildDataView();
-		this.channels = this.buildDataView();
-		this.bots = this.buildDataView();
-		this.packets = this.buildDataView();
-		this.externalSearch = this.buildDataView();
-		this.searches = this.buildDataView();
-		this.files = this.buildDataView();
-	},
+	var servers, channels, bots, packets, externalSearch, searches, files;
 
 	/**
 	 * @return {Slick.Data.DataView}
 	 */
-	buildDataView: function()
+	function buildDataView()
 	{
-		var self = this;
 		var dataView = new Slick.Data.DataView({ inlineFilters: false });
 		dataView.setItems([], "Guid");
-		dataView.setFilter(self.filterObjects);
+		dataView.setFilter(filterObjects);
 		return dataView;
-	},
+	}
 
-	/**
-	 * @param {string} name
-	 * @return {Slick.Data.DataView}
-	 */
-	getDataView: function(name)
-	{
-		switch (name)
-		{
-			case Enum.Grid.Server:
-				return this.servers;
-			case Enum.Grid.Channel:
-				return this.channels;
-			case Enum.Grid.Bot:
-				return this.bots;
-			case Enum.Grid.Packet:
-				return this.packets;
-			case Enum.Grid.Search:
-			case "Object":
-			case "List`1":
-				return this.searches;
-			case Enum.Grid.ExternalSearch:
-				return this.externalSearch;
-			case Enum.Grid.File:
-				return this.files;
-		}
-
-		return undefined;
-	},
-
-	addItem: function(json)
-	{
-		var dataView = this.getDataView(json.DataType);
-		if (dataView != undefined)
-		{
-			dataView.addItem(json.Data);
-		}
-	},
-
-	removeItem: function(json)
-	{
-		var dataView = this.getDataView(json.DataType);
-		if (dataView != undefined)
-		{
-			dataView.deleteItem(json.Data.Guid);
-		}
-	},
-
-	updateItem: function(json)
-	{
-		var dataView = this.getDataView(json.DataType);
-		if (dataView != undefined)
-		{
-			dataView.updateItem(json.Data.Guid, json.Data);
-		}
-	},
-
-	setItems: function(json)
-	{
-		var dataView = this.getDataView(json.DataType);
-		if (dataView != undefined)
-		{
-			dataView.setItems(json.Data);
-		}
-	},
-
-	filterObjects: function(item, args)
+	function filterObjects (item, args)
 	{
 		var result = true;
 
@@ -201,4 +126,82 @@ var XGDataView = Class.create(
 
 		return result;
 	}
-});
+
+	return {
+		initialize: function()
+		{
+			servers = buildDataView();
+			channels = buildDataView();
+			bots = buildDataView();
+			packets = buildDataView();
+			externalSearch = buildDataView();
+			searches = buildDataView();
+			files = buildDataView();
+		},
+
+		/**
+		 * @param {string} name
+		 * @return {Slick.Data.DataView}
+		 */
+		getDataView: function(name)
+		{
+			switch (name)
+			{
+				case Enum.Grid.Server:
+					return servers;
+				case Enum.Grid.Channel:
+					return channels;
+				case Enum.Grid.Bot:
+					return bots;
+				case Enum.Grid.Packet:
+					return packets;
+				case Enum.Grid.Search:
+				case "Object":
+				case "List`1":
+					return searches;
+				case Enum.Grid.ExternalSearch:
+					return externalSearch;
+				case Enum.Grid.File:
+					return files;
+			}
+
+			return null;
+		},
+
+		addItem: function(json)
+		{
+			var dataView = this.getDataView(json.DataType);
+			if (dataView != null)
+			{
+				dataView.addItem(json.Data);
+			}
+		},
+
+		removeItem: function(json)
+		{
+			var dataView = this.getDataView(json.DataType);
+			if (dataView != null)
+			{
+				dataView.deleteItem(json.Data.Guid);
+			}
+		},
+
+		updateItem: function(json)
+		{
+			var dataView = this.getDataView(json.DataType);
+			if (dataView != null)
+			{
+				dataView.updateItem(json.Data.Guid, json.Data);
+			}
+		},
+
+		setItems: function(json)
+		{
+			var dataView = this.getDataView(json.DataType);
+			if (dataView != null)
+			{
+				dataView.setItems(json.Data);
+			}
+		}
+	};
+}());

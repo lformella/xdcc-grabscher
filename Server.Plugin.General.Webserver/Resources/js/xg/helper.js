@@ -21,96 +21,100 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var XGHelper = Class.create(
+var XGHelper = (function()
 {
-	initialize: function()
-	{
-		this.humanDates = false;
-	},
+	var humanDates;
 
-	/**
-	 * @param {int} size
-	 * @return {String}
-	 */
-	size2Human: function (size)
-	{
-		if (size == 0)
+	return {
+		initialize: function()
 		{
-			return "&nbsp;";
-		}
-		if (size < 1024)
-		{
-			return size + " B";
-		}
-		else if (size < 1024 * 1024)
-		{
-			return (size / 1024).toFixed(0) + " K";
-		}
-		else if (size < 1024 * 1024 * 1024)
-		{
-			return (size / (1024 * 1024)).toFixed(0) + " M";
-		}
-		else if (size < 1024 * 1024 * 1024 * 1024)
-		{
-			return (size / (1024 * 1024 * 1024)).toFixed(0) + " G";
-		}
-		return (size / (1024 * 1024 * 1024 * 1024)).toFixed((size < 1024 * 1024 * 1024 * 1024 * 10) ? 1 : 0) + " T";
-	},
+			humanDates = false;
+		},
 
-	/**
-	 * @param {int} speed
-	 * @return {String}
-	 */
-	speed2Human: function (speed)
-	{
-		if (speed == 0)
+		/**
+		 * @param {int} size
+		 * @return {String}
+		 */
+		size2Human: function (size)
 		{
-			return "&nbsp;";
-		}
-		if (speed < 1024)
-		{
-			return speed + " B";
-		}
-		else if (speed < 1024 * 1024)
-		{
-			return (speed > 100 * 1024 ? (speed / 1024).toFixed(1) : (speed / 1024).toFixed(2)) + " K";
-		}
-		return (speed > 100 * 1024 * 1024 ? (speed / (1024 * 1024)).toFixed(1) : (speed / (1024 * 1024)).toFixed(2)) + " M";
-	},
+			if (size == 0)
+			{
+				return "&nbsp;";
+			}
+			if (size < 1024)
+			{
+				return size + " B";
+			}
+			else if (size < 1024 * 1024)
+			{
+				return (size / 1024).toFixed(0) + " K";
+			}
+			else if (size < 1024 * 1024 * 1024)
+			{
+				return (size / (1024 * 1024)).toFixed(0) + " M";
+			}
+			else if (size < 1024 * 1024 * 1024 * 1024)
+			{
+				return (size / (1024 * 1024 * 1024)).toFixed(0) + " G";
+			}
+			return (size / (1024 * 1024 * 1024 * 1024)).toFixed((size < 1024 * 1024 * 1024 * 1024 * 10) ? 1 : 0) + " T";
+		},
 
-	/**
-	 * @param {String} date
-	 * @return {String}
-	 */
-	date2Human: function (date)
-	{
-		var momentDate = moment(date);
-		if (momentDate.year() == 1)
+		/**
+		 * @param {int} speed
+		 * @return {String}
+		 */
+		speed2Human: function (speed)
 		{
-			return "";
-		}
-		return this.humanDates ? momentDate.fromNow() : momentDate.format("L LT");
-	},
+			if (speed == 0)
+			{
+				return "&nbsp;";
+			}
+			if (speed < 1024)
+			{
+				return speed + " B";
+			}
+			else if (speed < 1024 * 1024)
+			{
+				return (speed > 100 * 1024 ? (speed / 1024).toFixed(1) : (speed / 1024).toFixed(2)) + " K";
+			}
+			return (speed > 100 * 1024 * 1024 ? (speed / (1024 * 1024)).toFixed(1) : (speed / (1024 * 1024)).toFixed(2)) + " M";
+		},
 
-	/**
-	 * @param {Boolean} humanDates
-	 */
-	setHumanDates: function(humanDates)
-	{
-		this.humanDates = humanDates;
-	},
-
-	/**
-	 * @param {int} time
-	 * @return {String}
-	 */
-	time2Human: function (time)
-	{
-		if(time <= 0 || time >= 106751991167300)
+		/**
+		 * @param {String} date
+		 * @return {String}
+		 */
+		date2Human: function (date)
 		{
-			return "";
+			var momentDate = moment(date);
+			if (momentDate.year() == 1)
+			{
+				return "";
+			}
+			return humanDates ? momentDate.fromNow() : momentDate.format("L LT");
+		},
+
+		/**
+		 * @param {Boolean} humanDates1
+		 */
+		setHumanDates: function(humanDates1)
+		{
+			humanDates = humanDates1;
+		},
+
+		/**
+		 * @param {int} time
+		 * @return {String}
+		 */
+		time2Human: function (time)
+		{
+			if(time <= 0 || time >= 106751991167300)
+			{
+				return "";
+			}
+
+			return moment.humanizeDuration(time, "seconds");
 		}
-	
-		return moment.humanizeDuration(time, "seconds");
 	}
-});
+}());

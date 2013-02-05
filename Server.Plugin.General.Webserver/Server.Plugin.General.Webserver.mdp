@@ -63,7 +63,6 @@
     <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/external" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.class.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.class.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.cookie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.cookie.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.axislabels.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.js" />
