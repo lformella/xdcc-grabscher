@@ -312,19 +312,24 @@ var XGMain = (function()
 					{
 						case "serverGrid":
 							websocket.sendGuid(Enum.Request.ChannelsFromServer, args.object.Guid);
+							grid.getGrid(Enum.Grid.Channel).setSelectedRows([]);
 							break;
 
 						case "botGrid":
 							websocket.sendGuid(Enum.Request.PacketsFromBot, args.object.Guid);
+							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
 							break;
 
 						case "packetGrid":
 							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.object.ParentGuid);
 							grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
+							grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
 							break;
 
 						case "searchGrid":
 							websocket.sendGuid(activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, args.object.Guid);
+							grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
+							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
 							break;
 					}
 				}

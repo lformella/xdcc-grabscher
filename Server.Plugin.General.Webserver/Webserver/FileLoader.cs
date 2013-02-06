@@ -67,6 +67,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/slick.grid",
 			"external/slick.dataview",
 			"external/slick.pager",
+			"external/slick.rowselectionmodel",
 			"i18n/moment/#LANGUAGE_SHORT#",
 			"i18n/xg/#LANGUAGE_SHORT#",
 			"xg/enum",

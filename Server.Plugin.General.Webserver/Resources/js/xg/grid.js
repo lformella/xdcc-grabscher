@@ -38,20 +38,21 @@ var XGGrid = (function()
 	 * @param {String} id
 	 * @param {Slick.Data.DataView} dataView
 	 * @param {Array} columns
+	 * @param {Boolean} enableAdd
 	 * @param {Function} comparer
 	 * @return {Slick.Grid}
 	 */
-	function buildGrid (id, dataView, columns, comparer)
+	function buildGrid (id, dataView, columns, enableAdd, comparer)
 	{
 		var grid = new Slick.Grid(id, dataView, columns,
 			{
 				editable: false,
-				enableAddRow: false,
+				enableAddRow: enableAdd,
 				enableCellNavigation: true,
 				forceFitColumns : true
 			}
 		);
-		//grid.setSelectionModel(new Slick.RowSelectionModel());
+		grid.setSelectionModel(new Slick.RowSelectionModel());
 
 		dataView.onRowCountChanged.subscribe(function (e, args) {
 			grid.updateRowCount();
@@ -296,10 +297,23 @@ var XGGrid = (function()
 					return formatter.formatServerIcon(obj, "Grid.flipServer(\"" + obj.Guid + "\", \"servers_table\");");
 				}, false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
-			], compareServers);
+			], true, compareServers);
 			serverGrid.onClick.subscribe(function (e, args) {
-				channelFilter = { ParentGuid: serverGrid.getDataItem(args.row).Guid };
-				applyFilter(Enum.Grid.Channel);
+				var obj = serverGrid.getDataItem(args.row);
+				if (obj != undefined)
+				{
+					channelFilter = { ParentGuid: obj.Guid };
+					applyFilter(Enum.Grid.Channel);
+				}
+			});
+			 serverGrid.onAddNewRow.subscribe(function (e, args) {
+				var item = args.item;
+				/*
+				serverGrid.invalidateRow(data.length);
+				serverGrid.push(item);
+				serverGrid.updateRowCount();
+				serverGrid.render();
+				*/
 			});
 	
 			/**************************************************************************************************************/
@@ -310,7 +324,7 @@ var XGGrid = (function()
 					return formatter.formatServerIcon(obj, "Grid.flipChannel(\"" + obj.Guid + "\", \"channels_table\");");
 				}, false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
-			], compareChannels);
+			], true, compareChannels);
 	
 			/**************************************************************************************************************/
 	
@@ -332,7 +346,7 @@ var XGGrid = (function()
 				buildRow("Speed", 100, true, $.proxy(formatter.formatBotSpeed, formatter), true),
 				buildRow("Slots", 60, true, $.proxy(formatter.formatBotSlots, formatter), true),
 				buildRow("Queue", 60, true, $.proxy(formatter.formatBotQueue, formatter), true)
-			], compareBots);
+			], false, compareBots);
 			botGrid.onClick.subscribe(function (e, args) {
 				packetFilter = { ParentGuid: botGrid.getDataItem(args.row).Guid };
 				applyFilter(Enum.Grid.Packet);
@@ -354,7 +368,7 @@ var XGGrid = (function()
 				{
 					return helper.date2Human(obj.LastUpdated);
 				}, true)
-			], comparePackets);
+			], false, comparePackets);
 	
 			/**************************************************************************************************************/
 	
@@ -369,7 +383,7 @@ var XGGrid = (function()
 			searchGrid.onClick.subscribe(function (e, args) {
 				var obj = searchGrid.getDataItem(args.row);
 				applySearchFilter(obj);
-			});
+			}, false);
 			$("#searchGrid .slick-header-columns").css("height", "0px");
 			searchGrid.resizeCanvas();
 
@@ -398,7 +412,7 @@ var XGGrid = (function()
 				{
 					return helper.speed2Human(obj.BotSpeed);
 				}, true)
-			], compareExternals);
+			], false, compareExternals);
 	
 			/**************************************************************************************************************/
 	
@@ -408,7 +422,7 @@ var XGGrid = (function()
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
 				buildRow("Speed", 70, true, $.proxy(formatter.formatFileSpeed, formatter), true),
 				buildRow("TimeMissing", 90, true, $.proxy(formatter.formatFileTimeMissing, formatter), true)
-			], compareFiles);
+			], false, compareFiles);
 
 			/**************************************************************************************************************/
 

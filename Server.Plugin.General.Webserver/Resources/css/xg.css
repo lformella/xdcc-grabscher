@@ -142,6 +142,13 @@ fieldset label
 	background-image: url(images/spinner.gif);
 }
 
+/* SlickGrid Fixes */
+
+.slick-cell.selected
+{
+  background-color: beige;
+}
+
 /* JQuery Fixes */
 
 .ui-tabs, .ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-buttonpane
