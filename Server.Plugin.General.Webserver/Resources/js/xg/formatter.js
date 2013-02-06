@@ -190,7 +190,7 @@ var XGFormatter = (function()
 					break;
 
 				default:
-					result = "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='XG.removeSearch(\"" + search.Guid + "\");'></i>";
+					result = "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='Grid.removeSearch(\"" + search.Guid + "\");'></i>";
 					break;
 			}
 

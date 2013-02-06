@@ -154,10 +154,8 @@ var XGMain = (function()
 	 */
 	function getElementFromGrid (gridName, guid)
 	{
-		var grid = grid.getGrid(gridName);
-		var dataView = dataview.getDataView(gridName);
-		var row = dataView.getRowById(guid);
-		return $(grid.getCellNode(row, 1)).parent();
+		var row = dataview.getDataView(gridName).getRowById(guid);
+		return $(grid.getGrid(gridName).getCellNode(row, 1)).parent();
 	}
 
 	function addSearch ()
@@ -172,35 +170,30 @@ var XGMain = (function()
 	}
 
 	/**
-	 * @param {String} guid
+	 * @param {Object} obj
 	 */
-	function removeSearch (guid)
+	function removeSearch (obj)
 	{
 		enableSearchTransitions = true;
-		websocket.sendGuid(Enum.Request.RemoveSearch, guid);
-		$("#" + guid).effect("transfer", { to: $("#searchText") }, 500);
+		websocket.sendGuid(Enum.Request.RemoveSearch, obj.Guid);
 	}
 
 	/**
-	 * @param {String} guid
+	 * @param {Object} obj
 	 */
-	function flipPacket (guid)
+	function flipPacket (obj)
 	{
-		var pack = dataview.getDataView(Enum.Grid.Packet).getItemById(guid);
-		if(pack)
+		var elementSearch = getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
+		var elementPacket = getElementFromGrid(Enum.Grid.Packet, obj.Guid);
+		if(!obj.Enabled)
 		{
-			var elementSearch = getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
-			var elementPacket = getElementFromGrid(Enum.Grid.Packet, pack.Guid);
-			if(!pack.Enabled)
-			{
-				elementPacket.effect("transfer", { to: elementSearch }, 500);
-			}
-			else
-			{
-				elementSearch.effect("transfer", { to: elementPacket }, 500);
-			}
-			flipObject(pack);
+			elementPacket.effect("transfer", { to: elementSearch }, 500);
 		}
+		else
+		{
+			elementSearch.effect("transfer", { to: elementPacket }, 500);
+		}
+		flipObject(obj);
 	}
 
 	/**
@@ -222,16 +215,14 @@ var XGMain = (function()
 	}
 
 	/**
-	 * @param {String} guid
+	 * @param {Object} obj
 	 */
-	function downloadLink (guid)
+	function downloadLink (obj)
 	{
 		var elementSearch = getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
-		var elementPacket = getElementFromGrid(Enum.Grid.ExternalSearch, guid);
+		var elementPacket = getElementFromGrid(Enum.Grid.ExternalSearch, obj.Guid);
 		elementPacket.effect("transfer", { to: elementSearch }, 500);
-
-		var data = dataview.getDataView(Enum.Grid.ExternalSearch).getItemById(guid);
-		websocket.sendName(Enum.Request.ParseXdccLink, data.IrcLink);
+		websocket.sendName(Enum.Request.ParseXdccLink, obj.IrcLink);
 	}
 
 	return {
@@ -330,6 +321,18 @@ var XGMain = (function()
 							break;
 					}
 				}
+			});
+			grid.onRemoveSearch.subscribe(function (e, args) {
+				removeSearch(args);
+			});
+			grid.onFlipObject.subscribe(function (e, args) {
+				flipObject(args);
+			});
+			grid.onFlipPacket.subscribe(function (e, args) {
+				flipPacket(args);
+			});
+			grid.onDownloadLink.subscribe(function (e, args) {
+				downloadLink(args);
 			});
 			grid.build();
 

@@ -21,6 +21,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
+var Grid = null;
 var XGGrid = (function()
 {
 	var formatter, helper, dataview;
@@ -238,6 +239,10 @@ var XGGrid = (function()
 
 	var self = {
 		onClick: new Slick.Event(),
+		onFlipObject: new Slick.Event(),
+		onFlipPacket: new Slick.Event(),
+		onRemoveSearch: new Slick.Event(),
+		onDownloadLink: new Slick.Event(),
 
 		/**
 		 * @param {XGFormatter} formatter1
@@ -249,6 +254,7 @@ var XGGrid = (function()
 			formatter = formatter1;
 			helper = helper1;
 			dataview = dataview1;
+			Grid = this;
 		},
 
 		/**
@@ -287,7 +293,7 @@ var XGGrid = (function()
 			serverGrid = buildGrid("#serverGrid", dataview.getDataView(Enum.Grid.Server), [
 				buildRow("Icon", 38, false, function (obj)
 				{
-					return formatter.formatServerIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\", \"servers_table\");");
+					return formatter.formatServerIcon(obj, "Grid.flipServer(\"" + obj.Guid + "\", \"servers_table\");");
 				}, false),
 				buildRow("Name", 214, true, $.proxy(formatter.formatServerChannelName, formatter), false)
 			], compareServers);
@@ -301,7 +307,7 @@ var XGGrid = (function()
 			channelGrid = buildGrid("#channelGrid", dataview.getDataView(Enum.Grid.Channel), [
 				buildRow("Icon", 40, false, function (obj)
 				{
-					return formatter.formatServerIcon(obj, "XG.flipPacket(\"" + obj.Guid + "\", \"channels_table\");");
+					return formatter.formatServerIcon(obj, "Grid.flipChannel(\"" + obj.Guid + "\", \"channels_table\");");
 				}, false),
 				buildRow("Name", 212, true, $.proxy(formatter.formatServerChannelName, formatter), false)
 			], compareChannels);
@@ -309,7 +315,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			botGrid = buildGrid("#botGrid", dataview.getDataView(Enum.Grid.Bot), [
-				buildRow("Icon", 34, false, $.proxy(formatter.formatBotIcon, formatter), false),
+				buildRow("Icon", 40, false, $.proxy(formatter.formatBotIcon, formatter), false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false),
 				buildRow("Speed", 70, true, function (obj)
 				{
@@ -337,7 +343,7 @@ var XGGrid = (function()
 			packetGrid = buildGrid("#packetGrid", dataview.getDataView(Enum.Grid.Packet), [
 				buildRow("Icon", 42, false, function (obj)
 				{
-					return formatter.formatPacketIcon(obj, "XGMainInstance.flipPacket(\"" + obj.Guid + "\");");
+					return formatter.formatPacketIcon(obj, "Grid.flipPacket(\"" + obj.Guid + "\");");
 				}, false),
 				buildRow("#", 40, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
@@ -372,7 +378,7 @@ var XGGrid = (function()
 			externalGrid = buildGrid("#externalGrid", dataview.getDataView(Enum.Grid.ExternalSearch), [
 				buildRow("Icon", 24, false, function (obj)
 				{
-					return formatter.formatPacketIcon(obj, "XGMainInstance.downloadLink(\"" + obj.Guid + "\");");
+					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
 				}, false),
 				buildRow("#", 40, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
@@ -434,6 +440,36 @@ var XGGrid = (function()
 			{
 				grid.resizeCanvas();
 			});
+		},
+
+		flipServer: function (guid)
+		{
+			var obj = dataview.getDataView(Enum.Grid.Server).getItemById(guid);
+			this.onFlipObject.notify(obj, null, this);
+		},
+
+		flipChannel: function (guid)
+		{
+			var obj = dataview.getDataView(Enum.Grid.Channel).getItemById(guid);
+			this.onFlipObject.notify(obj, null, this);
+		},
+
+		flipPacket: function (guid)
+		{
+			var obj = dataview.getDataView(Enum.Grid.Packet).getItemById(guid);
+			this.onFlipPacket.notify(obj, null, this);
+		},
+
+		removeSearch: function (guid)
+		{
+			var obj = dataview.getDataView(Enum.Grid.Search).getItemById(guid);
+			this.onRemoveSearch.notify(obj, null, this);
+		},
+
+		downloadLink: function (guid)
+		{
+			var obj = dataview.getDataView(Enum.Grid.ExternalSearch).getItemById(guid);
+			this.onDownloadLink.notify(obj, null, this);
 		}
 	};
 	return self;
