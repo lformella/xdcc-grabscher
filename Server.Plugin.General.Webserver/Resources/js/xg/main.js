@@ -318,6 +318,11 @@ var XGMain = (function()
 							websocket.sendGuid(Enum.Request.PacketsFromBot, args.object.Guid);
 							break;
 
+						case "packetGrid":
+							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.object.ParentGuid);
+							grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
+							break;
+
 						case "searchGrid":
 							websocket.sendGuid(activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, args.object.Guid);
 							break;
