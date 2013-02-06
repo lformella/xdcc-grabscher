@@ -444,7 +444,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			if (aResponse.Data.GetType().IsSubclassOf(typeof(AObject)))
 			{
-				// lock loaded objcts to prevent sending out the same object more than once
+				// lock loaded objects to prevent sending out the same object more than once
 				lock (aUser.LoadedObjects)
 				{
 					switch (aResponse.Type)
@@ -461,6 +461,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							if (!aUser.LoadedObjects.Contains(aResponse.Data))
 							{
 								aResponse.Type = Response.Types.ObjectAdded;
+								aUser.LoadedObjects.Add((AObject)aResponse.Data);
 							}
 							break;
 
