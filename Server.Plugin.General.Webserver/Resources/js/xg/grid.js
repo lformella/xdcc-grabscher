@@ -295,7 +295,7 @@ var XGGrid = (function()
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipServer(\"" + obj.Guid + "\", \"servers_table\");");
 				}, false),
-				buildRow("Name", 214, true, $.proxy(formatter.formatServerChannelName, formatter), false)
+				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
 			], compareServers);
 			serverGrid.onClick.subscribe(function (e, args) {
 				channelFilter = { ParentGuid: serverGrid.getDataItem(args.row).Guid };
@@ -309,7 +309,7 @@ var XGGrid = (function()
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipChannel(\"" + obj.Guid + "\", \"channels_table\");");
 				}, false),
-				buildRow("Name", 212, true, $.proxy(formatter.formatServerChannelName, formatter), false)
+				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
 			], compareChannels);
 	
 			/**************************************************************************************************************/
