@@ -119,8 +119,10 @@ var XGMain = (function()
 			select: function(event, ui)
 			{
 				activeTab = ui.index;
-				grid.resize();
 			}
+		});
+		$('#tabs').bind('tabsshow', function(event, ui) {
+			grid.resize();
 		});
 
 		var element1 = $("#showOfflineBots");

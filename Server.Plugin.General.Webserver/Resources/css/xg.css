@@ -169,6 +169,12 @@ fieldset label
 	padding: 0;
 }
 
+.ui-tabs .ui-tabs-hide
+{
+	position: absolute;
+	left: -10000px;
+}
+
 /* Flot Fixes */
 
 .tickLabel, .legendLabel
