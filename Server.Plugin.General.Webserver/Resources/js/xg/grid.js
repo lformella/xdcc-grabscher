@@ -113,6 +113,32 @@ var XGGrid = (function()
 	}
 
 	/**
+	 * @param obj {Object}
+	 */
+	function applySearchFilter (obj)
+	{
+		packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
+		applyFilter(Enum.Grid.Packet);
+
+		externalFilter = packetFilter;
+		applyFilter(Enum.Grid.ExternalSearch);
+
+		var dataView = packetGrid.getData();
+		var length = dataView.getLength();
+		var guids = [];
+		for (var a = 0; a < length; a++)
+		{
+			var item = dataView.getItem(a);
+			if (guids.indexOf(item.ParentGuid) == -1)
+			{
+				guids.push(item.ParentGuid);
+			}
+		}
+		botFilter = { Guids: guids };
+		applyFilter(Enum.Grid.Bot);
+	}
+
+	/**
 	 * @param {String} grid
 	 */
 	function applyFilter (grid)
@@ -336,30 +362,11 @@ var XGGrid = (function()
 			]);
 			searchGrid.onClick.subscribe(function (e, args) {
 				var obj = searchGrid.getDataItem(args.row);
-	
-				packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
-				applyFilter(Enum.Grid.Packet);
-	
-				externalFilter = packetFilter;
-				applyFilter(Enum.Grid.ExternalSearch);
-	
-				var dataView = packetGrid.getData();
-				var length = dataView.getLength();
-				var guids = [];
-				for (var a = 0; a < length; a++)
-				{
-					var item = dataView.getItem(a);
-					if (guids.indexOf(item.ParentGuid) == -1)
-					{
-						guids.push(item.ParentGuid);
-					}
-				}
-				botFilter = { Guids: guids };
-				applyFilter(Enum.Grid.Bot);
+				applySearchFilter(obj);
 			});
 			$("#searchGrid .slick-header-columns").css("height", "0px");
 			searchGrid.resizeCanvas();
-	
+
 			/**************************************************************************************************************/
 	
 			externalGrid = buildGrid("#externalGrid", dataview.getDataView(Enum.Grid.ExternalSearch), [
@@ -396,6 +403,11 @@ var XGGrid = (function()
 				buildRow("Speed", 70, true, $.proxy(formatter.formatFileSpeed, formatter), true),
 				buildRow("TimeMissing", 90, true, $.proxy(formatter.formatFileTimeMissing, formatter), true)
 			], compareFiles);
+
+			/**************************************************************************************************************/
+
+			// default filter
+			applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000004" });
 		},
 
 		/**

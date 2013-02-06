@@ -444,30 +444,34 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			if (aResponse.Data.GetType().IsSubclassOf(typeof(AObject)))
 			{
-				switch (aResponse.Type)
+				// lock loaded objcts to prevent sending out the same object more than once
+				lock (aUser.LoadedObjects)
 				{
-					case Response.Types.ObjectAdded:
-						if (aUser.LoadedObjects.ToArray().Contains(aResponse.Data))
-						{
-							return;
-						}
-						aUser.LoadedObjects.Add((AObject)aResponse.Data);
-						break;
+					switch (aResponse.Type)
+					{
+						case Response.Types.ObjectAdded:
+							if (aUser.LoadedObjects.Contains(aResponse.Data))
+							{
+								return;
+							}
+							aUser.LoadedObjects.Add((AObject)aResponse.Data);
+							break;
 
-					case Response.Types.ObjectChanged:
-						if (!aUser.LoadedObjects.ToArray().Contains(aResponse.Data))
-						{
-							aResponse.Type = Response.Types.ObjectAdded;
-						}
-						break;
+						case Response.Types.ObjectChanged:
+							if (!aUser.LoadedObjects.Contains(aResponse.Data))
+							{
+								aResponse.Type = Response.Types.ObjectAdded;
+							}
+							break;
 
-					case Response.Types.ObjectRemoved:
-						if (!aUser.LoadedObjects.ToArray().Contains(aResponse.Data))
-						{
-							return;
-						}
-						aUser.LoadedObjects.Remove((AObject)aResponse.Data);
-						break;
+						case Response.Types.ObjectRemoved:
+							if (!aUser.LoadedObjects.Contains(aResponse.Data))
+							{
+								return;
+							}
+							aUser.LoadedObjects.Remove((AObject)aResponse.Data);
+							break;
+					}
 				}
 			}
 
