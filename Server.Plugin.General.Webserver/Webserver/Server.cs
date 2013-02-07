@@ -61,7 +61,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 #if WINDOWS
 					if (ex.NativeErrorCode == 5)
 					{
-						Log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
+						Log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:" + Settings.Instance.WebServerPort + @"/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
 					}
 #endif
 					throw;
