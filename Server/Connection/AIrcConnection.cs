@@ -1,6 +1,8 @@
 // 
 //  AIrcConnection.cs
-// 
+//  This file is part of XG - XDCC Grabscher
+//  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
+//
 //  Author:
 //       Lars Formella <ich@larsformella.de>
 // 
