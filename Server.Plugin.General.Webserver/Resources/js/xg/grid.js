@@ -40,16 +40,15 @@ var XGGrid = (function()
 	 * @param {String} id
 	 * @param {Slick.Data.DataView} dataView
 	 * @param {Array} columns
-	 * @param {Boolean} enableAdd
 	 * @param {Function} comparer
 	 * @return {Slick.Grid}
 	 */
-	function buildGrid (id, dataView, columns, enableAdd, comparer)
+	function buildGrid (id, dataView, columns, comparer)
 	{
 		var grid = new Slick.Grid(id, dataView, columns,
 			{
 				editable: false,
-				enableAddRow: enableAdd,
+				enableAddRow: false,
 				enableCellNavigation: true,
 				forceFitColumns : true
 			}
@@ -75,7 +74,7 @@ var XGGrid = (function()
 			self.onClick.notify(obj, null, this);
 		}, this));
 
-		if (comparer != undefined)
+		if (comparer != null)
 		{
 			grid.onSort.subscribe(function (e, args) {
 				sortColumn[id.substring(1)] = args.sortCol.id;
@@ -107,7 +106,7 @@ var XGGrid = (function()
 			cssClass: alignRight ? "alignRight" : undefined,
 			sortable: sortable,
 			cannotTriggerInsert: id == "Name",
-			autoHeight:true,
+			autoHeight: true,
 			//resizable: false,
 			formatter: function (row, cell, value, columnDef, obj)
 			{
@@ -279,26 +278,24 @@ var XGGrid = (function()
 
 		build: function()
 		{
-			var self = this;
-	
 			/**************************************************************************************************************/
-	
+
 			serverGrid = buildGrid("#serverGrid", dataview.getDataView(Enum.Grid.Server), [
 				buildRow("Icon", 38, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipServer(\"" + obj.Guid + "\", \"servers_table\");");
 				}, false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
-			], true, compareServers);
-			serverGrid.onClick.subscribe(function (e, args) {
+			], compareServers);
+			/*serverGrid.onClick.subscribe(function (e, args) {
 				var obj = serverGrid.getDataItem(args.row);
 				if (obj != undefined)
 				{
 					channelFilter = { ParentGuid: obj.Guid };
 					applyFilter(Enum.Grid.Channel);
 				}
-			});
-			 serverGrid.onAddNewRow.subscribe(function (e, args) {
+			});*/
+			serverGrid.onAddNewRow.subscribe(function (e, args) {
 				var item = args.item;
 				/*
 				serverGrid.invalidateRow(data.length);
@@ -316,7 +313,7 @@ var XGGrid = (function()
 					return formatter.formatServerIcon(obj, "Grid.flipChannel(\"" + obj.Guid + "\", \"channels_table\");");
 				}, false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
-			], true, compareChannels);
+			], compareChannels);
 	
 			/**************************************************************************************************************/
 	
@@ -338,7 +335,7 @@ var XGGrid = (function()
 				buildRow("Speed", 100, true, $.proxy(formatter.formatBotSpeed, formatter), true),
 				buildRow("Slots", 60, true, $.proxy(formatter.formatBotSlots, formatter), true),
 				buildRow("Queue", 60, true, $.proxy(formatter.formatBotQueue, formatter), true)
-			], false, compareBots);
+			], compareBots);
 			botGrid.onClick.subscribe(function (e, args) {
 				packetFilter = { ParentGuid: botGrid.getDataItem(args.row).Guid };
 				applyFilter(Enum.Grid.Packet);
@@ -360,7 +357,7 @@ var XGGrid = (function()
 				{
 					return helper.date2Human(obj.LastUpdated);
 				}, true)
-			], false, comparePackets);
+			], comparePackets);
 	
 			/**************************************************************************************************************/
 	
@@ -371,7 +368,7 @@ var XGGrid = (function()
 					return _(obj.Name);
 				}, false),
 				buildRow("Action", 20, false, $.proxy(formatter.formatSearchAction, formatter), false)
-			]);
+			], null);
 			searchGrid.onClick.subscribe(function (e, args) {
 				var obj = searchGrid.getDataItem(args.row);
 				applySearchFilter(obj);
@@ -404,7 +401,7 @@ var XGGrid = (function()
 				{
 					return helper.speed2Human(obj.BotSpeed);
 				}, true)
-			], false, compareExternals);
+			], compareExternals);
 	
 			/**************************************************************************************************************/
 	
@@ -414,7 +411,7 @@ var XGGrid = (function()
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
 				buildRow("Speed", 70, true, $.proxy(formatter.formatFileSpeed, formatter), true),
 				buildRow("TimeMissing", 90, true, $.proxy(formatter.formatFileTimeMissing, formatter), true)
-			], false, compareFiles);
+			], compareFiles);
 
 			/**************************************************************************************************************/
 
