@@ -26,6 +26,7 @@
 var XGDataView = (function()
 {
 	var servers, channels, bots, packets, externalSearch, searches, files;
+	var botFilterGuids = [];
 
 	/**
 	 * @return {Slick.Data.DataView}
@@ -71,20 +72,17 @@ var XGDataView = (function()
 
 			if (item.DataType == Enum.Grid.Bot)
 			{
-				if (args.Guids != undefined)
+				var currentResult = false;
+				$.each(botFilterGuids, function (i, guid)
 				{
-					var currentResult = false;
-					$.each(args.Guids, function (i, guid)
+					if (item.Guid == guid)
 					{
-						if (item.Guid == guid)
-						{
-							currentResult = true;
-							return false;
-						}
-						return true;
-					});
-					result = result && currentResult;
-				}
+						currentResult = true;
+						return false;
+					}
+					return true;
+				});
+				result = result && currentResult;
 			}
 
 			if (item.DataType == Enum.Grid.Packet || item.DataType == Enum.Grid.ExternalSearch)
@@ -121,6 +119,11 @@ var XGDataView = (function()
 								return true;
 							});
 							break;
+					}
+
+					if (item.DataType == Enum.Grid.Packet && result && botFilterGuids.indexOf(item.ParentGuid) == -1)
+					{
+						botFilterGuids.push(item.ParentGuid);
 					}
 				}
 			}
@@ -204,6 +207,11 @@ var XGDataView = (function()
 			{
 				dataView.setItems(json.Data);
 			}
+		},
+
+		resetBotFilter: function ()
+		{
+			botFilterGuids = [];
 		}
 	};
 }());

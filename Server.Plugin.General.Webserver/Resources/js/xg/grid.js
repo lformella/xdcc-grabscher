@@ -121,24 +121,14 @@ var XGGrid = (function()
 	 */
 	function applySearchFilter (obj)
 	{
+		dataview.resetBotFilter();
+
 		packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
 		applyFilter(Enum.Grid.Packet);
 
 		externalFilter = packetFilter;
 		applyFilter(Enum.Grid.ExternalSearch);
 
-		var dataView = packetGrid.getData();
-		var length = dataView.getLength();
-		var guids = [];
-		for (var a = 0; a < length; a++)
-		{
-			var item = dataView.getItem(a);
-			if (guids.indexOf(item.ParentGuid) == -1)
-			{
-				guids.push(item.ParentGuid);
-			}
-		}
-		botFilter = { Guids: guids };
 		applyFilter(Enum.Grid.Bot);
 	}
 
