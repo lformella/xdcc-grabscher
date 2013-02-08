@@ -294,9 +294,6 @@ var XGMain = (function()
 			websocket.onUpdate.subscribe(function (e, args) {
 				dataview.updateItem(args);
 			});
-			websocket.onSearches.subscribe(function (e, args) {
-				dataview.setItems(args);
-			});
 			websocket.onSnapshots.subscribe(function (e, args) {
 				statistics.setSnapshots(args.Data);
 			});

@@ -46,7 +46,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 			#region MULTI
 
-			Searches = 11,
 			Snapshots = 12,
 			Statistics = 13
 

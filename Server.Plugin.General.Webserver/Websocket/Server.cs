@@ -317,11 +317,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						searches.Add(_searchEnabled);
 						searches.AddRange(Searches.All);
 
-						Unicast(currentUser, new Response
+						foreach (var currentSearch in searches)
 						{
-							Type = Response.Types.Searches,
-							Data = searches
-						});
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.ObjectAdded,
+								Data = currentSearch
+							});
+						}
 						break;
 
 					case Request.Types.Servers:

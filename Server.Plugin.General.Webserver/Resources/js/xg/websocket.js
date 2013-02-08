@@ -97,10 +97,6 @@ var XGWebsocket = (function()
 				self.onSearchExternal.notify(json, null, self);
 				break;
 
-			case Enum.Response.Searches:
-				self.onSearches.notify(json, null, self);
-				break;
-
 			case Enum.Response.Snapshots:
 				self.onSnapshots.notify(json, null, self);
 				break;
@@ -118,7 +114,6 @@ var XGWebsocket = (function()
 		onError: new Slick.Event(),
 		onDisconnected: new Slick.Event(),
 		onSearchExternal: new Slick.Event(),
-		onSearches: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
 		onStatistics: new Slick.Event(),
 
