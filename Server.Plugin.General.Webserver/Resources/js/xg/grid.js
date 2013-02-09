@@ -67,9 +67,9 @@ var XGGrid = (function()
 
 		grid.onClick.subscribe($.proxy(function (e, args) {
 			var obj = {
-				object: grid.getDataItem(args.row),
-				grid: gridName,
-				cell: $(grid.getCellNode(args.row, args.cell))
+				Data: grid.getDataItem(args.row),
+				DataType: gridName,
+				Cell: $(grid.getCellNode(args.row, args.cell))
 			};
 			self.onClick.notify(obj, null, this);
 		}, this));
@@ -280,7 +280,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 
 			serverGrid = buildGrid(Enum.Grid.Server, dataview.getDataView(Enum.Grid.Server), [
-				buildRow("Icon", 38, false, function (obj)
+				buildRow("Icon", 36, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
 				}, false),
@@ -302,9 +302,9 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
-				buildRow("Icon", 40, false, function (obj)
+				buildRow("Icon", 38, false, function (obj)
 				{
-					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
+					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
 				}, false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
 				buildRow("", 20, false, function (obj)
@@ -316,7 +316,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
-				buildRow("Icon", 40, false, $.proxy(formatter.formatBotIcon, formatter), false),
+				buildRow("Icon", 38, false, $.proxy(formatter.formatBotIcon, formatter), false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false),
 				buildRow("Speed", 70, true, function (obj)
 				{
@@ -342,7 +342,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
-				buildRow("Icon", 42, false, function (obj)
+				buildRow("Icon", 40, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
 				}, false),
@@ -360,7 +360,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			searchGrid = buildGrid(Enum.Grid.Search, dataview.getDataView(Enum.Grid.Search), [
-				buildRow("Icon", 28, false, $.proxy(formatter.formatSearchIcon, formatter), false),
+				buildRow("Icon", 34, false, $.proxy(formatter.formatSearchIcon, formatter), false),
 				buildRow("Name", 0, false, function (obj)
 				{
 					return _(obj.Name);
@@ -446,13 +446,13 @@ var XGGrid = (function()
 		flipObject: function (grid, guid)
 		{
 			var obj = dataview.getDataView(grid).getItemById(guid);
-			this.onFlipObject.notify({ grid: grid, object: obj }, null, this);
+			this.onFlipObject.notify({ DataType: grid, Data: obj }, null, this);
 		},
 
 		removeObject: function (grid, guid)
 		{
 			var obj = dataview.getDataView(grid).getItemById(guid);
-			this.onRemoveObject.notify({ grid: grid, object: obj }, null, this);
+			this.onRemoveObject.notify({ DataType: grid, Data: obj }, null, this);
 		},
 
 		downloadLink: function (guid)

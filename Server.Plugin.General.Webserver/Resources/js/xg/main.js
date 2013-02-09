@@ -28,6 +28,7 @@ var XGMain = (function()
 	var statistics, cookie, helper, formatter, websocket, dataview, grid, resize;
 	var activeTab = 0, enableSearchTransitions = false;
 	var currentServerGuid = "";
+	var serversActive = [], botsActive = [], searchesActive = [], externalSearchesActive = [];
 
 	function initializeDialogs ()
 	{
@@ -36,7 +37,7 @@ var XGMain = (function()
 		/* ********************************************************************************************************** */
 
 		$("#serverChannelButton")
-			.button({icons: { primary: "icon-globe-1" }})
+			.button({icons: { primary: "icon-globe" }})
 			.click( function()
 			{
 				$("#dialogServerChannels").dialog("open");
@@ -309,6 +310,36 @@ var XGMain = (function()
 			websocket.onSnapshots.subscribe(function (e, args) {
 				statistics.setSnapshots(args.Data);
 			});
+			websocket.onRequestComplete.subscribe(function (e, args) {
+				var newArgs = { Data: null, DataType: Enum.Grid.Search };
+
+				switch (args.Data)
+				{
+					case Enum.Request.ChannelsFromServer:
+						newArgs.DataType = Enum.Grid.Server;
+						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(serversActive.shift());
+						break;
+
+					case Enum.Request.PacketsFromBot:
+						newArgs.DataType = Enum.Grid.Bot;
+						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(botsActive.shift());
+						break;
+
+					case Enum.Request.Search:
+						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(searchesActive.shift());
+						break;
+
+					case Enum.Request.SearchExternal:
+						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(externalSearchesActive.shift());
+						break;
+				}
+
+				if (newArgs.Data != null)
+				{
+					newArgs.Data.Active = false;
+					dataview.updateItem(newArgs);
+				}
+			});
 			websocket.connect();
 
 			// grid
@@ -317,61 +348,74 @@ var XGMain = (function()
 				statistics.resize();
 			});
 			grid.onClick.subscribe(function (e, args) {
-				if (args.object != undefined)
+				if (args.Data != undefined)
 				{
-					switch (args.grid)
+					args.Data.Active = true;
+					dataview.updateItem(args);
+
+					switch (args.DataType)
 					{
 						case Enum.Grid.Server:
-							websocket.sendGuid(Enum.Request.ChannelsFromServer, args.object.Guid);
+							websocket.sendGuid(Enum.Request.ChannelsFromServer, args.Data.Guid);
 							grid.getGrid(Enum.Grid.Channel).setSelectedRows([]);
-							currentServerGuid = args.object.Guid;
+							currentServerGuid = args.Data.Guid;
 							$("#channelPanel").show();
+							serversActive.push(args.Data.Guid);
 							break;
 
 						case Enum.Grid.Bot:
-							websocket.sendGuid(Enum.Request.PacketsFromBot, args.object.Guid);
+							websocket.sendGuid(Enum.Request.PacketsFromBot, args.Data.Guid);
 							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
+							botsActive.push(args.Data.Guid);
 							break;
 
 						case Enum.Grid.Packet:
-							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.object.ParentGuid);
+							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
 							grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
 							grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
 							break;
 
 						case Enum.Grid.Search:
-							websocket.sendGuid(activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, args.object.Guid);
+							websocket.sendGuid(activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, args.Data.Guid);
 							grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
 							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
+							if (activeTab == 0)
+							{
+								searchesActive.push(args.Data.Guid);
+							}
+							else if (activeTab == 1)
+							{
+								externalSearchesActive.push(args.Data.Guid);
+							}
 							break;
 					}
 				}
 			});
 			grid.onRemoveObject.subscribe(function (e, args) {
-				switch (args.grid)
+				switch (args.DataType)
 				{
 					case Enum.Grid.Server:
-						websocket.sendGuid(Enum.Request.RemoveServer, args.object.Guid);
+						websocket.sendGuid(Enum.Request.RemoveServer, args.Data.Guid);
 						break;
 
 					case Enum.Grid.Channel:
-						websocket.sendGuid(Enum.Request.RemoveChannel, args.object.Guid);
+						websocket.sendGuid(Enum.Request.RemoveChannel, args.Data.Guid);
 						break;
 
 					case Enum.Grid.Search:
 						enableSearchTransitions = true;
-						websocket.sendGuid(Enum.Request.RemoveSearch, args.object.Guid);
+						websocket.sendGuid(Enum.Request.RemoveSearch, args.Data.Guid);
 						break;
 				}
 			});
 			grid.onFlipObject.subscribe(function (e, args) {
-				if (args.grid == Enum.Grid.Packet)
+				if (args.DataType == Enum.Grid.Packet)
 				{
-					flipPacket(args.object);
+					flipPacket(args.Data);
 				}
 				else
 				{
-					flipObject(args.object);
+					flipObject(args.Data);
 				}
 			});
 			grid.onDownloadLink.subscribe(function (e, args) {

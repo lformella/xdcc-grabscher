@@ -132,7 +132,7 @@ fieldset label
 [class^="icon-"]:before,
 [class*=" icon-"]:before
 {
-	margin-right: 0;
+	margin: 0;
 	opacity: 1;
 }
 
@@ -140,21 +140,21 @@ fieldset label
 
 .icon-big
 {
-	font-size: 22px;
-}
-
-.icon-medium
-{
-	font-size: 18px;
+	font-size: 20px;
 }
 
 .icon-overlay
 {
-	font-size: 16px;
+	font-size: 14px;
 	float: right;
 }
 
-.icon, .icon-big, .icon-medium, .icon-overlay, .ui-icon
+.icon-small
+{
+	font-size: 10px;
+}
+
+.icon, .icon-big, .icon-overlay, .ui-icon
 {
 	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
 }

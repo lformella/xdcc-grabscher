@@ -259,10 +259,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Search:
 						var packets = FilteredPackets(request.Guid);
-						UnicastOnRequest(currentUser, packets);
-
 						var bots = DistinctBots(packets);
-						UnicastOnRequest(currentUser, bots);
+						var all = new List<AObject>();
+						all.AddRange(packets);
+						all.AddRange(bots);
+						UnicastOnRequest(currentUser, all, request.Type);
 						break;
 
 					case Request.Types.SearchExternal:
@@ -287,7 +288,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Log.Fatal("OnMessage() cant load external search for " + searchExternal.Name, ex);
 							}
 
-							UnicastOnRequest(currentUser, results);
+							UnicastOnRequest(currentUser, results, request.Type);
 						}
 						break;
 
@@ -328,12 +329,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Servers:
-						UnicastOnRequest(currentUser, Servers.All);
+						UnicastOnRequest(currentUser, Servers.All, request.Type);
 						break;
 
 					case Request.Types.ChannelsFromServer:
 						var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
-						UnicastOnRequest(currentUser, channels);
+						UnicastOnRequest(currentUser, channels, request.Type);
 						break;
 
 					case Request.Types.PacketsFromBot:
@@ -343,7 +344,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 										from packet in bot.Packets
 										where packet.ParentGuid == request.Guid
 										select packet).ToList();
-						UnicastOnRequest(currentUser, botPackets);
+						UnicastOnRequest(currentUser, botPackets, request.Type);
 						break;
 
 					case Request.Types.Statistics:
@@ -359,7 +360,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Files:
-						UnicastOnRequest(currentUser, Files.All);
+						UnicastOnRequest(currentUser, Files.All, request.Type);
 						break;
 
 					case Request.Types.CloseServer:
@@ -424,7 +425,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			OnClose(aContext);
 		}
 
-		void UnicastOnRequest(User aUser, IEnumerable<AObject> aObjects)
+		void UnicastOnRequest(User aUser, IEnumerable<AObject> aObjects, Request.Types aRequestType)
 		{
 			foreach (var obj in aObjects)
 			{
@@ -435,6 +436,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				};
 				Unicast(aUser, response);
 			}
+			Unicast(aUser, new Response
+			{
+				Type = Response.Types.RequestComplete,
+				Data = aRequestType
+			});
 		}
 
 		void Broadcast(Response aResponse)

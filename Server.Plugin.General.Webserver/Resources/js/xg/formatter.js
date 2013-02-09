@@ -90,13 +90,20 @@ var XGFormatter = (function()
 			}
 			else if (server.Connected)
 			{
-				overlay = "ok-circle2";
+				overlay = "ok-circle";
 				overlayClass = "ChameleonMiddle";
 			}
 			else if (server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0")
 			{
 				overlay = "attention-circle";
 				overlayClass = "ScarletRedMiddle";
+			}
+
+			if (server.Active)
+			{
+				overlay = "spin";
+				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlayStyle = "";
 			}
 
 			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
@@ -116,7 +123,7 @@ var XGFormatter = (function()
 			}
 			else if (channel.Connected)
 			{
-				overlay = "ok-circle2";
+				overlay = "ok-circle";
 				overlayClass = "ChameleonMiddle";
 			}
 			else if (channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0")
@@ -146,6 +153,9 @@ var XGFormatter = (function()
 		{
 			var icon = "search";
 			var iconClass = "Aluminium2Middle";
+			var overlay = "";
+			var overlayClass = "";
+			var overlayStyle = "";
 
 			switch (search.Guid)
 			{
@@ -160,17 +170,24 @@ var XGFormatter = (function()
 					break;
 
 				case "00000000-0000-0000-0000-000000000003":
-					icon = "down-circle2";
+					icon = "down-circle";
 					iconClass = "SkyBlueMiddle";
 					break;
 
 				case "00000000-0000-0000-0000-000000000004":
-					icon = "ok-circle2";
+					icon = "ok-circle";
 					iconClass = "ChameleonMiddle";
 					break;
 			}
 
-			return formatIcon(icon, iconClass);
+			if (search.Active)
+			{
+				overlay = "spin";
+				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlayStyle = "";
+			}
+
+			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
 		},
 
 		formatSearchAction: function (search)
@@ -222,20 +239,20 @@ var XGFormatter = (function()
 					case 0:
 						if (bot.InfoSlotCurrent > 0)
 						{
-							overlay = "ok-circle2";
+							overlay = "ok-circle";
 							overlayClass = "ChameleonMiddle";
 							overlayStyle = "opacity: 0.6";
 						}
 						else if (bot.InfoSlotCurrent == 0 && bot.InfoSlotCurrent)
 						{
-							overlay = "cancel-circle2";
+							overlay = "cancel-circle";
 							overlayClass = "OrangeMiddle";
 						}
 						break;
 
 					case 1:
 						iconClass = "SkyBlueDark";
-						overlay = "down-circle2";
+						overlay = "down-circle";
 						overlayClass = "SkyBlueMiddle";
 						overlayStyle = "opacity: " + speed2Overlay(bot.Speed);
 						break;
@@ -245,6 +262,13 @@ var XGFormatter = (function()
 						overlayClass = "OrangeMiddle";
 						break;
 				}
+			}
+
+			if (bot.Active)
+			{
+				overlay = "spin";
+				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlayStyle = "";
 			}
 
 			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
@@ -312,7 +336,7 @@ var XGFormatter = (function()
 			var ext = name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
 			{
-				icon = "video-1";
+				icon = "video";
 			}
 			else if (ext == "mp3")
 			{
@@ -320,7 +344,7 @@ var XGFormatter = (function()
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "th";
+				icon = "box";
 			}
 
 			if (!packet.Enabled)
@@ -332,7 +356,7 @@ var XGFormatter = (function()
 				if (packet.Connected)
 				{
 					iconClass = "SkyBlueDark";
-					overlay = "down-circle2";
+					overlay = "down-circle";
 					overlayClass = "SkyBlueMiddle";
 					overlayStyle = "opacity: " + speed2Overlay(packet.Part != null ? packet.Part.Speed : 0);
 				}
@@ -402,7 +426,7 @@ var XGFormatter = (function()
 			var ext = file.Name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
 			{
-				icon = "video-1";
+				icon = "video";
 			}
 			else if (ext == "mp3")
 			{
@@ -442,7 +466,7 @@ var XGFormatter = (function()
 
 		formatRemoveIcon: function (grid, obj)
 		{
-			return "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+			return "<i class='icon-cancel-circle icon-overlay ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
 		}
 	};
 	return self;

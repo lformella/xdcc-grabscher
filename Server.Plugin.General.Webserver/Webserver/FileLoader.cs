@@ -45,6 +45,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		{
 			"reset",
 			"fontello",
+			"animation",
 			"jquery-ui",
 			"slick.grid",
 			"layout-default",

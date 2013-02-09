@@ -104,6 +104,10 @@ var XGWebsocket = (function()
 			case Enum.Response.Statistics:
 				self.onStatistics.notify(json, null, self);
 				break;
+
+			case Enum.Response.RequestComplete:
+				self.onRequestComplete.notify(json, null, self);
+				break;
 		}
 	}
 
@@ -116,6 +120,7 @@ var XGWebsocket = (function()
 		onSearchExternal: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
 		onStatistics: new Slick.Event(),
+		onRequestComplete: new Slick.Event(),
 
 		/**
 		 * @param {String} url1

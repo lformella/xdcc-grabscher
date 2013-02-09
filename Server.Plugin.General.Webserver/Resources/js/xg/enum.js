@@ -63,8 +63,8 @@ Enum.Response =
 	ObjectAdded: 1,
 	ObjectRemoved: 2,
 	ObjectChanged: 3,
+	RequestComplete: 4,
 
-	Searches: 11,
 	Snapshots: 12,
 	Statistics: 23
 };
