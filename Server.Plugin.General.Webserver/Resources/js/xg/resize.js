@@ -37,7 +37,7 @@ var XGResize = (function()
 
 		/* left search tab */
 		// set table
-		$("#searchGrid")
+		$("#" + Enum.Grid.Search + "Grid")
 			.height(searchLayout.height() - 28);
 		// patch search input
 		$("#searchText").width(searchLayout.width() - 8);
@@ -50,7 +50,7 @@ var XGResize = (function()
 		}
 		$("#layoutObjectsContainer").height(searchLayout.height() - subSize);
 		// bots + packets table
-		$("#botGrid, #packetGrid").width(objectLayout.width() - 1);
+		$("#" + Enum.Grid.Bot + "Grid, #" + Enum.Grid.Packet + "Grid").width(objectLayout.width() - 1);
 
 		/* other container */
 		subSize = 48;
@@ -58,7 +58,7 @@ var XGResize = (function()
 		{
 			subSize += 1;
 		}
-		$("#externalGrid, #fileGrid")
+		$("#" + Enum.Grid.ExternalSearch + "Grid, #" + Enum.Grid.File + "Grid")
 			.width(objectLayout.width() - 1)
 			.height(searchLayout.height() - subSize);
 
@@ -87,8 +87,8 @@ var XGResize = (function()
 
 	function resizeContainer ()
 	{
-		$("#botGrid").height($('#botLayout').height());
-		$("#packetGrid").height($('#packetLayout').height());
+		$("#" + Enum.Grid.Bot + "Grid").height($('#botLayout').height());
+		$("#" + Enum.Grid.Packet + "Grid").height($('#packetLayout').height());
 
 		self.onResize.notify({}, null, self);
 	}

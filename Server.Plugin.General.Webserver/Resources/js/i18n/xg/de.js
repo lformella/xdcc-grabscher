@@ -43,6 +43,7 @@ translatedArray =
 	"View Snapshots": "Erweiterte Statistiken anschauen",
 	"Error": "Fehler",
 	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
+	"Add": "Hinzufügen",
 
 	/* ************************************************************************************************************** */
 	/* GRIDS                                                                                                          */

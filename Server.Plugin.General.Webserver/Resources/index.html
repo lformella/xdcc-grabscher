@@ -70,18 +70,22 @@
 
 		<div id="dialogServerChannels" title="Change Servers and Channels" style="display: none;" class="translateTitle">
 
-			<table width="100%">
-				<tr>
-					<td valign="top">
-						<div id="serverGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
-						<div id="serverPanel"></div>
-					</td>
-					<td valign="top">
-						<div id="channelGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
-						<div id="channelPanel"></div>
-					</td>
-				</tr>
-			</table>
+			<div style="float: left; padding: 0 10px 0 0;">
+				<div id="ServerGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
+				<div id="serverPanel" class="panel">
+					<label id="serverLabel" for="server" class="translate">Server</label>
+					<input type="text" name="server" id="server" value="" class="text ui-widget-content ui-corner-all" />
+					<button id="serverButton" class="translate">Add</button>
+				</div>
+			</div>
+			<div>
+				<div id="ChannelGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
+				<div id="channelPanel" class="panel" style="display: none">
+					<label id="channelLabel" for="channel" class="translate">Channel</label>
+					<input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all" />
+					<button id="channelButton" class="translate">Add</button>
+				</div>
+			</div>
 
 		</div>
 
@@ -175,7 +179,7 @@
 		</div>
 
 		<div id="searchLayout" class="ui-layout-west" style="display: none;">
-				<div id="searchGrid"></div>
+				<div id="SearchGrid"></div>
 				<div class="footer">
 					<input type="text" id="searchText" />
 				</div>
@@ -201,10 +205,10 @@
 
 					<div id="layoutObjectsContainer">
 						<div id="botLayout" class="ui-layout-north">
-							<div id="botGrid"></div>
+							<div id="BotGrid"></div>
 						</div>
 						<div id="packetLayout" class="ui-layout-center">
-							<div id="packetGrid"></div>
+							<div id="PacketGrid"></div>
 						</div>
 					</div>
 
@@ -212,13 +216,13 @@
 
 				<div id="tab2" style="padding: 0;">
 
-					<div id="externalGrid"></div>
+					<div id="ExternalSearchGrid"></div>
 
 				</div>
 
 				<div id="tab3" style="padding: 0;">
 
-					<div id="fileGrid"></div>
+					<div id="FileGrid"></div>
 
 				</div>
 

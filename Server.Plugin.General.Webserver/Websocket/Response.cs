@@ -67,7 +67,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			get
 			{
-				return Data.GetType().Name;
+				string name = Data.GetType().Name;
+				return name == "Object" ? "Search" : name;
 			}
 		}
 

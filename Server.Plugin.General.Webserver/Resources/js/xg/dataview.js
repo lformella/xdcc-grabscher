@@ -161,8 +161,6 @@ var XGDataView = (function()
 				case Enum.Grid.Packet:
 					return packets;
 				case Enum.Grid.Search:
-				case "Object":
-				case "List`1":
 					return searches;
 				case Enum.Grid.ExternalSearch:
 					return externalSearch;

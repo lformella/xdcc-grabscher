@@ -31,21 +31,21 @@ var XGGrid = (function()
 	var serverGrid, channelGrid, botGrid, packetGrid, searchGrid, externalGrid, fileGrid;
 	var grids = [];
 
-	var sortColumn = { serverGrid: null, channelGrid: null, botGrid: null, packetGrid: null, externalGrid: null, fileGrid: null };
+	var sortColumn = { Server: null, Channel: null, Bot: null, Packet: null, ExternalSearch: null, File: null };
 	var filterOfflineBots = false;
 
 	var channelFilter = {}, botFilter = {}, packetFilter = {}, externalFilter = {};
 
 	/**
-	 * @param {String} id
+	 * @param {String} gridName
 	 * @param {Slick.Data.DataView} dataView
 	 * @param {Array} columns
 	 * @param {Function} comparer
 	 * @return {Slick.Grid}
 	 */
-	function buildGrid (id, dataView, columns, comparer)
+	function buildGrid (gridName, dataView, columns, comparer)
 	{
-		var grid = new Slick.Grid(id, dataView, columns,
+		var grid = new Slick.Grid("#" + gridName + "Grid", dataView, columns,
 			{
 				editable: false,
 				enableAddRow: false,
@@ -68,7 +68,7 @@ var XGGrid = (function()
 		grid.onClick.subscribe($.proxy(function (e, args) {
 			var obj = {
 				object: grid.getDataItem(args.row),
-				grid: id.substring(1),
+				grid: gridName,
 				cell: $(grid.getCellNode(args.row, args.cell))
 			};
 			self.onClick.notify(obj, null, this);
@@ -77,11 +77,11 @@ var XGGrid = (function()
 		if (comparer != null)
 		{
 			grid.onSort.subscribe(function (e, args) {
-				sortColumn[id.substring(1)] = args.sortCol.id;
+				sortColumn[gridName] = args.sortCol.id;
 				dataView.sort(comparer, args.sortAsc);
 			});
 		}
-		grid.setSortColumn("Name",true);
+		grid.setSortColumn("Name", true);
 
 		grids.push(grid);
 		return grid;
@@ -180,22 +180,22 @@ var XGGrid = (function()
 
 	function compareServers (a, b)
 	{
-		return compare(a, b, sortColumn.serverGrid);
+		return compare(a, b, sortColumn[Enum.Grid.Server]);
 	}
 
 	function compareChannels (a, b)
 	{
-		return compare(a, b, sortColumn.channelGrid);
+		return compare(a, b, sortColumn[Enum.Grid.Channel]);
 	}
 
 	function compareBots (a, b)
 	{
-		return compare(a, b, sortColumn.botGrid);
+		return compare(a, b, sortColumn[Enum.Grid.Bot]);
 	}
 
 	function comparePackets (a, b)
 	{
-		var name = sortColumn.packetGrid;
+		var name = sortColumn[Enum.Grid.Packet];
 		switch (name)
 		{
 			case "Time Missing":
@@ -215,12 +215,12 @@ var XGGrid = (function()
 
 	function compareExternals (a, b)
 	{
-		return compare(a, b, sortColumn.externalGrid);
+		return compare(a, b, sortColumn[Enum.Grid.ExternalSearch]);
 	}
 
 	function compareFiles (a, b)
 	{
-		return compare(a, b, sortColumn.fileGrid);
+		return compare(a, b, sortColumn[Enum.Grid.File]);
 	}
 
 	function compare (a, b, name)
@@ -232,8 +232,7 @@ var XGGrid = (function()
 	var self = {
 		onClick: new Slick.Event(),
 		onFlipObject: new Slick.Event(),
-		onFlipPacket: new Slick.Event(),
-		onRemoveSearch: new Slick.Event(),
+		onRemoveObject: new Slick.Event(),
 		onDownloadLink: new Slick.Event(),
 
 		/**
@@ -280,44 +279,43 @@ var XGGrid = (function()
 		{
 			/**************************************************************************************************************/
 
-			serverGrid = buildGrid("#serverGrid", dataview.getDataView(Enum.Grid.Server), [
+			serverGrid = buildGrid(Enum.Grid.Server, dataview.getDataView(Enum.Grid.Server), [
 				buildRow("Icon", 38, false, function (obj)
 				{
-					return formatter.formatServerIcon(obj, "Grid.flipServer(\"" + obj.Guid + "\", \"servers_table\");");
+					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
 				}, false),
-				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
+				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
+				buildRow("", 20, false, function (obj)
+				{
+					return formatter.formatRemoveIcon(Enum.Grid.Server, obj);
+				}, false)
 			], compareServers);
-			/*serverGrid.onClick.subscribe(function (e, args) {
+			serverGrid.onClick.subscribe(function (e, args) {
 				var obj = serverGrid.getDataItem(args.row);
 				if (obj != undefined)
 				{
 					channelFilter = { ParentGuid: obj.Guid };
 					applyFilter(Enum.Grid.Channel);
 				}
-			});*/
-			serverGrid.onAddNewRow.subscribe(function (e, args) {
-				var item = args.item;
-				/*
-				serverGrid.invalidateRow(data.length);
-				serverGrid.push(item);
-				serverGrid.updateRowCount();
-				serverGrid.render();
-				*/
 			});
 	
 			/**************************************************************************************************************/
 	
-			channelGrid = buildGrid("#channelGrid", dataview.getDataView(Enum.Grid.Channel), [
+			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
 				buildRow("Icon", 40, false, function (obj)
 				{
-					return formatter.formatServerIcon(obj, "Grid.flipChannel(\"" + obj.Guid + "\", \"channels_table\");");
+					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
 				}, false),
-				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false)
+				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
+				buildRow("", 20, false, function (obj)
+				{
+					return formatter.formatRemoveIcon(Enum.Grid.Channel, obj);
+				}, false)
 			], compareChannels);
 	
 			/**************************************************************************************************************/
 	
-			botGrid = buildGrid("#botGrid", dataview.getDataView(Enum.Grid.Bot), [
+			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
 				buildRow("Icon", 40, false, $.proxy(formatter.formatBotIcon, formatter), false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false),
 				buildRow("Speed", 70, true, function (obj)
@@ -343,10 +341,10 @@ var XGGrid = (function()
 
 			/**************************************************************************************************************/
 	
-			packetGrid = buildGrid("#packetGrid", dataview.getDataView(Enum.Grid.Packet), [
+			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
 				buildRow("Icon", 42, false, function (obj)
 				{
-					return formatter.formatPacketIcon(obj, "Grid.flipPacket(\"" + obj.Guid + "\");");
+					return formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
 				}, false),
 				buildRow("#", 40, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
@@ -361,7 +359,7 @@ var XGGrid = (function()
 	
 			/**************************************************************************************************************/
 	
-			searchGrid = buildGrid("#searchGrid", dataview.getDataView(Enum.Grid.Search), [
+			searchGrid = buildGrid(Enum.Grid.Search, dataview.getDataView(Enum.Grid.Search), [
 				buildRow("Icon", 28, false, $.proxy(formatter.formatSearchIcon, formatter), false),
 				buildRow("Name", 0, false, function (obj)
 				{
@@ -373,12 +371,12 @@ var XGGrid = (function()
 				var obj = searchGrid.getDataItem(args.row);
 				applySearchFilter(obj);
 			}, false);
-			$("#searchGrid .slick-header-columns").css("height", "0px");
+			$("#SearchGrid .slick-header-columns").css("height", "0px");
 			searchGrid.resizeCanvas();
 
 			/**************************************************************************************************************/
 	
-			externalGrid = buildGrid("#externalGrid", dataview.getDataView(Enum.Grid.ExternalSearch), [
+			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
 				buildRow("Icon", 24, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
@@ -405,7 +403,7 @@ var XGGrid = (function()
 	
 			/**************************************************************************************************************/
 	
-			fileGrid = buildGrid("#fileGrid", dataview.getDataView(Enum.Grid.File), [
+			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
 				buildRow("Icon", 24, false, $.proxy(formatter.formatFileIcon, formatter), false),
 				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false),
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
@@ -445,28 +443,16 @@ var XGGrid = (function()
 			});
 		},
 
-		flipServer: function (guid)
+		flipObject: function (grid, guid)
 		{
-			var obj = dataview.getDataView(Enum.Grid.Server).getItemById(guid);
-			this.onFlipObject.notify(obj, null, this);
+			var obj = dataview.getDataView(grid).getItemById(guid);
+			this.onFlipObject.notify({ grid: grid, object: obj }, null, this);
 		},
 
-		flipChannel: function (guid)
+		removeObject: function (grid, guid)
 		{
-			var obj = dataview.getDataView(Enum.Grid.Channel).getItemById(guid);
-			this.onFlipObject.notify(obj, null, this);
-		},
-
-		flipPacket: function (guid)
-		{
-			var obj = dataview.getDataView(Enum.Grid.Packet).getItemById(guid);
-			this.onFlipPacket.notify(obj, null, this);
-		},
-
-		removeSearch: function (guid)
-		{
-			var obj = dataview.getDataView(Enum.Grid.Search).getItemById(guid);
-			this.onRemoveSearch.notify(obj, null, this);
+			var obj = dataview.getDataView(grid).getItemById(guid);
+			this.onRemoveObject.notify({ grid: grid, object: obj }, null, this);
 		},
 
 		downloadLink: function (guid)

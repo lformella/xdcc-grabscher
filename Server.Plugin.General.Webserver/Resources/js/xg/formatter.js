@@ -37,13 +37,7 @@ var XGFormatter = (function()
 		return (opacity > 0.4 ? 0.4 : opacity) + 0.6;
 	}
 
-	function formatIcon (icon, iconClass)
-	{
-		iconClass = "icon-medium icon-" + icon + " " + iconClass;
-		return "<i class='" + iconClass + "'></i>";
-	}
-
-	function formatIcon2 (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
+	function formatIcon (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
 	{
 		iconClass = "icon-big icon-" + icon + " " + iconClass;
 		if (onclick != undefined && onclick != "")
@@ -72,7 +66,7 @@ var XGFormatter = (function()
 		return str;
 	}
 
-	return {
+	var self = {
 		initialize: function (helper1)
 		{
 			helper = helper1;
@@ -105,7 +99,7 @@ var XGFormatter = (function()
 				overlayClass = "ScarletRedMiddle";
 			}
 
-			return formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
+			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
 		formatChannelIcon: function (channel, onclick)
@@ -131,7 +125,7 @@ var XGFormatter = (function()
 				overlayClass = "ScarletRedMiddle";
 			}
 
-			return formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
+			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
 		formatServerChannelName: function (obj)
@@ -176,7 +170,7 @@ var XGFormatter = (function()
 					break;
 			}
 
-			return formatIcon2(icon, iconClass);
+			return formatIcon(icon, iconClass);
 		},
 
 		formatSearchAction: function (search)
@@ -192,7 +186,7 @@ var XGFormatter = (function()
 					break;
 
 				default:
-					result = "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='Grid.removeSearch(\"" + search.Guid + "\");'></i>";
+					result = self.formatRemoveIcon(Enum.Grid.Search, search);
 					break;
 			}
 
@@ -253,7 +247,7 @@ var XGFormatter = (function()
 				}
 			}
 
-			return formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
 		},
 
 		formatBotName: function (bot)
@@ -354,7 +348,7 @@ var XGFormatter = (function()
 				}
 			}
 
-			return formatIcon2(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
+			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
 		formatPacketId: function (packet)
@@ -419,7 +413,7 @@ var XGFormatter = (function()
 				icon = "th";
 			}
 
-			return formatIcon2(icon, iconClass);
+			return formatIcon(icon, iconClass);
 		},
 
 		formatFileName: function (file)
@@ -444,6 +438,12 @@ var XGFormatter = (function()
 		formatFileTimeMissing: function (file)
 		{
 			return helper.time2Human(file.TimeMissing);
+		},
+
+		formatRemoveIcon: function (grid, obj)
+		{
+			return "<i class='icon-cancel-circle2 icon-overlay ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
 		}
-	}
+	};
+	return self;
 }());
