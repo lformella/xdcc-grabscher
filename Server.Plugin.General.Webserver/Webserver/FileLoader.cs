@@ -47,9 +47,9 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"fontello",
 			"jquery-ui",
 			"slick.grid",
-			"slick.pager",
 			"layout-default",
-			"xg"};
+			"xg"
+		};
 
 		readonly string[] _jsFiles =
 		{
@@ -68,7 +68,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/slick.formatters",
 			"external/slick.grid",
 			"external/slick.dataview",
-			"external/slick.pager",
 			"external/slick.rowselectionmodel",
 			"i18n/moment/#LANGUAGE_SHORT#",
 			"i18n/xg/#LANGUAGE_SHORT#",

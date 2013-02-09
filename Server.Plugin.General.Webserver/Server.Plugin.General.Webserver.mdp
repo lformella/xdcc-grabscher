@@ -117,23 +117,18 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-cn.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-cn.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/zh-tw.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.zh-tw.js" />
     <File subtype="Code" buildaction="Compile" name="Object/ExternalSearch.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/spinner.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.spinner.gif" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.en.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.en.js" />
     <File subtype="Code" buildaction="Nothing" name="Resources/js/xg/dataview.js" />
     <File subtype="Code" buildaction="Nothing" name="Resources/js/xg/grid.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/jquery.event.drag-2.0.min.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/jquery-timing.min.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.core.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.dataview.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.editors.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.formatters.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.grid.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.groupitemmetadataprovider.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.pager.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/external/slick.remotemodel.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/css/slick.grid.css" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/css/slick.pager.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.event.drag-2.0.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.event.drag-2.0.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-timing.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-timing.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.core.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.core.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.dataview.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.dataview.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.formatters.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.formatters.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.grid.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.grid.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/slick.grid.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.slick.grid.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.rowselectionmodel.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.rowselectionmodel.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

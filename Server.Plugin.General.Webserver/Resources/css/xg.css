@@ -157,16 +157,11 @@ fieldset label
 {
 	text-shadow: none;
 }
-.ui-button-icon-primary, .loading-symbol, .ui-button-icon-primary.ui-icon, .ui-icon.loading-symbol
+.ui-button-icon-primary, .ui-button-icon-primary.ui-icon
 {
 	text-indent: 0;
 	background-image: none;
 	font-size: 12px;
-}
-
-.loading-symbol, .ui-icon.loading-symbol
-{
-	background-image: url(images/spinner.gif);
 }
 
 /* SlickGrid Fixes */

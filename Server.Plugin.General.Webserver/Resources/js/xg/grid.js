@@ -340,7 +340,7 @@ var XGGrid = (function()
 				packetFilter = { ParentGuid: botGrid.getDataItem(args.row).Guid };
 				applyFilter(Enum.Grid.Packet);
 			});
-	
+
 			/**************************************************************************************************************/
 	
 			packetGrid = buildGrid("#packetGrid", dataview.getDataView(Enum.Grid.Packet), [
