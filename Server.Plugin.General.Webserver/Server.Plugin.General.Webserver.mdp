@@ -119,8 +119,8 @@
     <File subtype="Code" buildaction="Compile" name="Object/ExternalSearch.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.en.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.en.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/xg/dataview.js" />
-    <File subtype="Code" buildaction="Nothing" name="Resources/js/xg/grid.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/dataview.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.dataview.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/grid.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.grid.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.event.drag-2.0.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.event.drag-2.0.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-timing.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-timing.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.core.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.core.js" />
