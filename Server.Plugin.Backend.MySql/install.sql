@@ -10,11 +10,11 @@ CREATE  TABLE IF NOT EXISTS `xg`.`servers` (
   `ChannelCount` INT(5) NULL DEFAULT 0 ,
   `BotCount` INT(5) NULL DEFAULT 0 ,
   `PacketCount` INT(5) NULL DEFAULT 0 ,
-  PRIMARY KEY (`Guid`) ,
-  INDEX `index2` (`Name` ASC) )
+  PRIMARY KEY (`Guid`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+CREATE FULLTEXT INDEX index2 ON `xg`.`servers`(Name);
 
 CREATE  TABLE IF NOT EXISTS `xg`.`channels` (
   `Guid` VARCHAR(37) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
@@ -26,7 +26,6 @@ CREATE  TABLE IF NOT EXISTS `xg`.`channels` (
   `BotCount` INT(5) NULL DEFAULT 0 ,
   `PacketCount` INT(5) NULL DEFAULT 0 ,
   PRIMARY KEY (`Guid`) ,
-  INDEX `index2` (`Name` ASC) ,
   INDEX `fk_channel_1` (`ParentGuid` ASC) ,
   CONSTRAINT `fk_channel_1`
     FOREIGN KEY (`ParentGuid` )
@@ -36,6 +35,7 @@ CREATE  TABLE IF NOT EXISTS `xg`.`channels` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+CREATE FULLTEXT INDEX index2 ON `xg`.`channels`(Name);
 
 CREATE  TABLE IF NOT EXISTS `xg`.`bots` (
   `Guid` VARCHAR(37) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
@@ -54,7 +54,6 @@ CREATE  TABLE IF NOT EXISTS `xg`.`bots` (
   `LastMessage` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL ,
   `PacketCount` INT(5) NULL DEFAULT 0 ,
   PRIMARY KEY (`Guid`) ,
-  INDEX `index2` (`Name` ASC) ,
   INDEX `fk_bot_1` (`ParentGuid` ASC) ,
   CONSTRAINT `fk_bot_1`
     FOREIGN KEY (`ParentGuid` )
@@ -64,6 +63,7 @@ CREATE  TABLE IF NOT EXISTS `xg`.`bots` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+CREATE FULLTEXT INDEX index2 ON `xg`.`bots`(Name);
 
 CREATE  TABLE IF NOT EXISTS `xg`.`packets` (
   `Guid` VARCHAR(37) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
@@ -76,7 +76,6 @@ CREATE  TABLE IF NOT EXISTS `xg`.`packets` (
   `Id` INT(4) NOT NULL ,
   `Size` BIGINT(11) NOT NULL ,
   PRIMARY KEY (`Guid`) ,
-  INDEX `index2` (`Name` ASC) ,
   INDEX `fk_packet_1` (`ParentGuid` ASC) ,
   CONSTRAINT `fk_packet_1`
     FOREIGN KEY (`ParentGuid` )
@@ -86,6 +85,7 @@ CREATE  TABLE IF NOT EXISTS `xg`.`packets` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
+CREATE FULLTEXT INDEX index2 ON `xg`.`packets`(Name);
 
 CREATE  TABLE IF NOT EXISTS `xg`.`snapshots` (
   `Timestamp` BIGINT(11) UNSIGNED NOT NULL ,
