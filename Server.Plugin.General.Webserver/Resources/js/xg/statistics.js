@@ -28,193 +28,6 @@ var XGStatistics = (function()
 	var helper;
 	var snapshots = {};
 
-	function updateSnapshotPlot ()
-	{
-		var days = parseInt($("input[name='snapshotTime']:checked").val());
-		var snapshotsMinDate = days > 0 ? new Date().getTime() - (60 * 60 * 24 * days * 1000) : days;
-
-		var data = [];
-		var currentSnapshots = $.extend(true, [], snapshots);
-		$.each(currentSnapshots, function(index, item) {
-			if (index == 0 || $("#snapshotCheckbox" + (index + 1)).attr('checked'))
-			{
-				var itemData = [];
-				$.each(item.data, function(index2, item2) {
-					if (snapshotsMinDate < item2[0])
-					{
-						itemData.push(item2);
-					}
-				});
-				item.data = itemData;
-
-				data.push(item);
-			}
-		});
-
-		var markerFunction;
-		var tickSize;
-		var timeFormat;
-		switch (days)
-		{
-			case 1:
-				timeFormat = "%H:%M";
-				tickSize = [2, "hour"];
-				markerFunction = function (axes) {
-					var markings = [];
-					var d = new Date(axes.xaxis.min);
-					d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
-					d.setUTCSeconds(0);
-					d.setUTCMinutes(0);
-					d.setUTCHours(0);
-					var i = d.getTime();
-					do
-					{
-						markings.push({
-							xaxis: {
-								from: i,
-								to: i + 2 * 60 * 60 * 1000
-							}
-						});
-						i += 4 * 60 * 60 * 1000;
-					} while (i < axes.xaxis.max);
-
-					return markings;
-				};
-				break;
-
-			case 7:
-				timeFormat = "%d. %b";
-				tickSize = [1, "day"];
-				markerFunction = function (axes) {
-					var markings = [];
-					var d = new Date(axes.xaxis.min);
-					d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
-					d.setUTCSeconds(0);
-					d.setUTCMinutes(0);
-					d.setUTCHours(0);
-					var i = d.getTime();
-					do
-					{
-						markings.push({
-							xaxis: {
-								from: i,
-								to: i + 2 * 24 * 60 * 60 * 1000
-							}
-						});
-						i += 7 * 24 * 60 * 60 * 1000;
-					} while (i < axes.xaxis.max);
-
-					return markings;
-				};
-				break;
-
-			case 31:
-				timeFormat = "%d. %b";
-				tickSize = [7, "day"];
-				markerFunction = function (axes) {
-					var markings = [];
-					var d = new Date(axes.xaxis.min);
-					d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
-					d.setUTCSeconds(0);
-					d.setUTCMinutes(0);
-					d.setUTCHours(0);
-					var i = d.getTime();
-					do
-					{
-						markings.push({
-							xaxis: {
-								from: i,
-								to: i + 7 * 24 * 60 * 60 * 1000
-							}
-						});
-						i += 14 * 24 * 60 * 60 * 1000;
-					} while (i < axes.xaxis.max);
-
-					return markings;
-				};
-				break;
-
-			default:
-				timeFormat = "%b %y";
-				tickSize = [1, "month"];
-				markerFunction = function (axes) {
-					var markings = [];
-					var d = new Date(axes.xaxis.min);
-					d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
-					d.setUTCSeconds(0);
-					d.setUTCMinutes(0);
-					d.setUTCHours(0);
-					var i = d.getTime();
-					do
-					{
-						markings.push({
-							xaxis: {
-								from: i,
-								to: i + 7 * 24 * 60 * 60 * 1000
-							}
-						});
-						i += 14 * 24 * 60 * 60 * 1000;
-					} while (i < axes.xaxis.max);
-
-					return markings;
-				};
-				break;
-		}
-
-		var snapshotOptions = {
-			xaxis: {
-				axisLabel: _('Time'),
-				mode: "time",
-				timeformat: timeFormat,
-				minTickSize: tickSize,
-				monthNames: moment.monthsShort
-			},
-			yaxes: [
-				{
-					axisLabel: _('Server / Channels'),
-					min: 0
-				},
-				{
-					axisLabel: _('Bots'),
-					min: 0
-				},
-				{
-					axisLabel: _('Packets'),
-					min: 0
-				},
-				{
-					axisLabel: _('Size'),
-					min: 0,
-					alignTicksWithAxis: 1,
-					tickFormatter: function (val) {
-						if (val <= 1)
-						{
-							return "";
-						}
-						return helper.size2Human(val);
-					}
-				},
-				{
-					axisLabel: _('Speed'),
-					min: 0,
-					alignTicksWithAxis: 1,
-					position: "right",
-					tickFormatter: function (val) {
-						if (val <= 1)
-						{
-							return "";
-						}
-						return helper.speed2Human(val);
-					}
-				}
-			],
-			legend: { position: "sw" },
-			grid: { markings: markerFunction }
-		};
-
-		$.plot($("#snapshot"), data, snapshotOptions);
-	}
-
 	return {
 		/**
 		 * @param {XGHelper} helper1
@@ -298,12 +111,199 @@ var XGStatistics = (function()
 			});
 
 			snapshots = result;
-			updateSnapshotPlot();
+			this.updateSnapshotPlot();
+		},
+
+		updateSnapshotPlot: function ()
+		{
+			var days = parseInt($("input[name='snapshotTime']:checked").val());
+			var snapshotsMinDate = days > 0 ? new Date().getTime() - (60 * 60 * 24 * days * 1000) : days;
+
+			var data = [];
+			var currentSnapshots = $.extend(true, [], snapshots);
+			$.each(currentSnapshots, function(index, item) {
+				if (index == 0 || $("#snapshotCheckbox" + (index + 1)).attr('checked'))
+				{
+					var itemData = [];
+					$.each(item.data, function(index2, item2) {
+						if (snapshotsMinDate < item2[0])
+						{
+							itemData.push(item2);
+						}
+					});
+					item.data = itemData;
+
+					data.push(item);
+				}
+			});
+
+			var markerFunction;
+			var tickSize;
+			var timeFormat;
+			switch (days)
+			{
+				case 1:
+					timeFormat = "%H:%M";
+					tickSize = [2, "hour"];
+					markerFunction = function (axes) {
+						var markings = [];
+						var d = new Date(axes.xaxis.min);
+						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+						d.setUTCSeconds(0);
+						d.setUTCMinutes(0);
+						d.setUTCHours(0);
+						var i = d.getTime();
+						do
+						{
+							markings.push({
+								xaxis: {
+									from: i,
+									to: i + 2 * 60 * 60 * 1000
+								}
+							});
+							i += 4 * 60 * 60 * 1000;
+						} while (i < axes.xaxis.max);
+
+						return markings;
+					};
+					break;
+
+				case 7:
+					timeFormat = "%d. %b";
+					tickSize = [1, "day"];
+					markerFunction = function (axes) {
+						var markings = [];
+						var d = new Date(axes.xaxis.min);
+						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+						d.setUTCSeconds(0);
+						d.setUTCMinutes(0);
+						d.setUTCHours(0);
+						var i = d.getTime();
+						do
+						{
+							markings.push({
+								xaxis: {
+									from: i,
+									to: i + 2 * 24 * 60 * 60 * 1000
+								}
+							});
+							i += 7 * 24 * 60 * 60 * 1000;
+						} while (i < axes.xaxis.max);
+
+						return markings;
+					};
+					break;
+
+				case 31:
+					timeFormat = "%d. %b";
+					tickSize = [7, "day"];
+					markerFunction = function (axes) {
+						var markings = [];
+						var d = new Date(axes.xaxis.min);
+						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+						d.setUTCSeconds(0);
+						d.setUTCMinutes(0);
+						d.setUTCHours(0);
+						var i = d.getTime();
+						do
+						{
+							markings.push({
+								xaxis: {
+									from: i,
+									to: i + 7 * 24 * 60 * 60 * 1000
+								}
+							});
+							i += 14 * 24 * 60 * 60 * 1000;
+						} while (i < axes.xaxis.max);
+
+						return markings;
+					};
+					break;
+
+				default:
+					timeFormat = "%b %y";
+					tickSize = [1, "month"];
+					markerFunction = function (axes) {
+						var markings = [];
+						var d = new Date(axes.xaxis.min);
+						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+						d.setUTCSeconds(0);
+						d.setUTCMinutes(0);
+						d.setUTCHours(0);
+						var i = d.getTime();
+						do
+						{
+							markings.push({
+								xaxis: {
+									from: i,
+									to: i + 7 * 24 * 60 * 60 * 1000
+								}
+							});
+							i += 14 * 24 * 60 * 60 * 1000;
+						} while (i < axes.xaxis.max);
+
+						return markings;
+					};
+					break;
+			}
+
+			var snapshotOptions = {
+				xaxis: {
+					axisLabel: _('Time'),
+					mode: "time",
+					timeformat: timeFormat,
+					minTickSize: tickSize,
+					monthNames: moment.monthsShort
+				},
+				yaxes: [
+					{
+						axisLabel: _('Server / Channels'),
+						min: 0
+					},
+					{
+						axisLabel: _('Bots'),
+						min: 0
+					},
+					{
+						axisLabel: _('Packets'),
+						min: 0
+					},
+					{
+						axisLabel: _('Size'),
+						min: 0,
+						alignTicksWithAxis: 1,
+						tickFormatter: function (val) {
+							if (val <= 1)
+							{
+								return "";
+							}
+							return helper.size2Human(val);
+						}
+					},
+					{
+						axisLabel: _('Speed'),
+						min: 0,
+						alignTicksWithAxis: 1,
+						position: "right",
+						tickFormatter: function (val) {
+							if (val <= 1)
+							{
+								return "";
+							}
+							return helper.speed2Human(val);
+						}
+					}
+				],
+				legend: { position: "sw" },
+				grid: { markings: markerFunction }
+			};
+
+			$.plot($("#snapshot"), data, snapshotOptions);
 		},
 
 		resize: function()
 		{
-			updateSnapshotPlot();
+			this.updateSnapshotPlot();
 		}
 	}
 }());

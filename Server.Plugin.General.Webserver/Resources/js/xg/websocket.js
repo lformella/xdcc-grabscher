@@ -66,7 +66,7 @@ var XGWebsocket = (function()
 		self.send(Enum.Request.Searches);
 		self.send(Enum.Request.Servers);
 		self.send(Enum.Request.Files);
-		//self.send(Enum.Request.Snapshots);
+		self.send(Enum.Request.Snapshots);
 	}
 
 	/**
