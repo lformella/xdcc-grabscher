@@ -107,12 +107,12 @@ fieldset label
 	margin: 11px 0 0 11px;
 }
 
-#tabs, #tabs1, #tabs_2, #tabs_3, #packets_layout, #bots_layout, .footer
+#tabs, #tabs1, #tabs2, #tabs3, #packetLayout, #botLayout, .footer
 {
 	overflow: hidden;
 }
 
-#search_layout
+#searchLayout
 {
 	background: #efefef;
 }
@@ -173,7 +173,23 @@ fieldset label
 
 .slick-cell.selected
 {
-  background-color: beige;
+	background-color: #FFFED4;
+	border-color: transparent silver #fce94f transparent;
+}
+
+.slick-cell
+{
+	line-height: 20px;
+}
+
+.slick-cell.small
+{
+	line-height: 10px;
+}
+
+.slick-cell.medium
+{
+	line-height: 15px;
 }
 
 /* JQuery Fixes */

@@ -93,21 +93,22 @@ var XGGrid = (function()
 	 * @param {Boolean} sortable
 	 * @param {Function} formatter
 	 * @param {Boolean} alignRight
+	 * @param {String} cssClass
 	 * @return {Object}
 	 */
-	function buildRow (id, width, sortable, formatter, alignRight)
+	function buildRow (id, width, sortable, formatter, alignRight, cssClass)
 	{
+		cssClass = cssClass == undefined ? "" : cssClass + " ";
 		return {
 			name: _(id),
 			id: id,
 			width: width > 0 ? width : undefined,
 			minWidth: width > 0 ? width : undefined,
 			maxWidth: width > 0 ? width : undefined,
-			cssClass: alignRight ? "alignRight" : undefined,
+			cssClass: cssClass + (alignRight ? "alignRight" : undefined),
 			sortable: sortable,
 			cannotTriggerInsert: id == "Name",
 			autoHeight: true,
-			//resizable: false,
 			formatter: function (row, cell, value, columnDef, obj)
 			{
 				return formatter(obj);
@@ -283,7 +284,7 @@ var XGGrid = (function()
 				buildRow("Icon", 36, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
-				}, false),
+				}, false, "small"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
 				buildRow("", 20, false, function (obj)
 				{
@@ -305,7 +306,7 @@ var XGGrid = (function()
 				buildRow("Icon", 38, false, function (obj)
 				{
 					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
-				}, false),
+				}, false, "small"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
 				buildRow("", 20, false, function (obj)
 				{
@@ -316,8 +317,8 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
-				buildRow("Icon", 38, false, $.proxy(formatter.formatBotIcon, formatter), false),
-				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false),
+				buildRow("Icon", 38, false, $.proxy(formatter.formatBotIcon, formatter), false, "small"),
+				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false, "small"),
 				buildRow("Speed", 70, true, function (obj)
 				{
 					return helper.speed2Human(obj.Speed);
@@ -345,9 +346,9 @@ var XGGrid = (function()
 				buildRow("Icon", 40, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
-				}, false),
+				}, false, "small"),
 				buildRow("#", 40, true, $.proxy(formatter.formatPacketId, formatter), true),
-				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
+				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false, "medium"),
 				buildRow("Size", 70, true, $.proxy(formatter.formatPacketSize, formatter), true),
 				buildRow("Speed", 70, true, $.proxy(formatter.formatPacketSpeed, formatter), true),
 				buildRow("Time Missing", 90, true, $.proxy(formatter.formatPacketTimeMissing, formatter), true),
@@ -360,7 +361,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			searchGrid = buildGrid(Enum.Grid.Search, dataview.getDataView(Enum.Grid.Search), [
-				buildRow("Icon", 34, false, $.proxy(formatter.formatSearchIcon, formatter), false),
+				buildRow("Icon", 34, false, $.proxy(formatter.formatSearchIcon, formatter), false, "small"),
 				buildRow("Name", 0, false, function (obj)
 				{
 					return _(obj.Name);
@@ -380,7 +381,7 @@ var XGGrid = (function()
 				buildRow("Icon", 24, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
-				}, false),
+				}, false, "small"),
 				buildRow("#", 40, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
 				buildRow("LastMentioned", 140, true, function (obj)
@@ -404,8 +405,8 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
-				buildRow("Icon", 24, false, $.proxy(formatter.formatFileIcon, formatter), false),
-				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false),
+				buildRow("Icon", 24, false, $.proxy(formatter.formatFileIcon, formatter), false, "small"),
+				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false, "medium"),
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
 				buildRow("Speed", 70, true, $.proxy(formatter.formatFileSpeed, formatter), true),
 				buildRow("TimeMissing", 90, true, $.proxy(formatter.formatFileTimeMissing, formatter), true)
