@@ -116,7 +116,7 @@ var XGHelper = (function()
 				return "";
 			}
 
-			return moment.humanizeDuration(time, "seconds");
+			return moment.duration(time, "seconds").humanize(true);
 		}
 	}
 }());
