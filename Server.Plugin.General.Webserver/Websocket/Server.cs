@@ -471,8 +471,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						case Response.Types.ObjectChanged:
 							if (!aUser.LoadedObjects.Contains(aResponse.Data))
 							{
-								aResponse.Type = Response.Types.ObjectAdded;
-								aUser.LoadedObjects.Add((AObject)aResponse.Data);
+								//aResponse.Type = Response.Types.ObjectAdded;
+								//aUser.LoadedObjects.Add((AObject)aResponse.Data);
+								return;
 							}
 							break;
 
