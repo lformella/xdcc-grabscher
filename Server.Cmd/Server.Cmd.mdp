@@ -35,12 +35,12 @@
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../Lib/log4net.dll" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Backend.File" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Backend.MySql" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Jabber" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Webserver" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
   </References>
   <LanguageParameters StartupObject="XG.Server.Cmd.Cmd" ctype="CSharpProjectParameters" />
 </Project>

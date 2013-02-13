@@ -30,6 +30,8 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Server.Cmd.Setup.Win", "Ser
 		{6B448EF6-8B68-4902-AD92-81CAADD93EFC} = {6B448EF6-8B68-4902-AD92-81CAADD93EFC}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.General.Import", "Server.Plugin.General.Import\Server.Plugin.General.Import.csproj", "{B6C773B1-28F4-4627-8BC8-35F90249E73D}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = XG.vsmdi
@@ -173,6 +175,18 @@ Global
 		{57D2E71E-594B-4CE3-98F9-2E4F1405146D}.SingleImage|Any CPU.ActiveCfg = SingleImage
 		{57D2E71E-594B-4CE3-98F9-2E4F1405146D}.SingleImage|Any CPU.Build.0 = SingleImage
 		{57D2E71E-594B-4CE3-98F9-2E4F1405146D}.UnSafe|Any CPU.ActiveCfg = SingleImage
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.UnSafe|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.UnSafe|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -41,7 +41,7 @@ using log4net;
 
 namespace XG.Server.Plugin.General.Webserver.Websocket
 {
-	public class Server : SaltedPassword
+	public class Server : ASaltedPassword
 	{
 		#region VARIABLES
 

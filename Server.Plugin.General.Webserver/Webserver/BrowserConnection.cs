@@ -34,7 +34,7 @@ using log4net;
 
 namespace XG.Server.Plugin.General.Webserver.Webserver
 {
-	public class BrowserConnection : SaltedPassword
+	public class BrowserConnection : ASaltedPassword
 	{
 		#region VARIABLES
 

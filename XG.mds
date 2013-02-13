@@ -82,7 +82,7 @@
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
-      <Entry build="False" name="Server.Plugin.General.Import" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Release" />
@@ -95,7 +95,7 @@
       <Entry build="True" name="Core.Test" configuration="Release" />
       <Entry build="True" name="Server.Test" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Release" />
-      <Entry build="False" name="Server.Plugin.General.Import" configuration="Release" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Unsafe" />
@@ -108,7 +108,7 @@
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
-      <Entry build="False" name="Server.Plugin.General.Import" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Default" />
@@ -121,7 +121,7 @@
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
-      <Entry build="False" name="Server.Plugin.General.Import" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Server.Cmd" single="True">

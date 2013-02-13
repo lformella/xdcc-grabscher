@@ -446,7 +446,7 @@ namespace XG.Server.Helper
 										}
 										else
 										{
-											new Thread(CheckNextReferenceBytes).Start(new PartBytesObject(part, bytes));
+											new Thread(CheckNextReferenceBytes).Start(new PartBytesObject{ Part = part, Bytes = bytes});
 										}
 									}
 								}

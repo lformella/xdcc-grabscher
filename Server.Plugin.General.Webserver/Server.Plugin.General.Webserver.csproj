@@ -72,10 +72,11 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Flot\Object.cs" />
+    <Compile Include="Object\ExternalSearch.cs" />
+    <Compile Include="Object\Flot.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SaltedPassword.cs" />
+    <Compile Include="ASaltedPassword.cs" />
     <Compile Include="Webserver\BrowserConnection.cs" />
     <Compile Include="Webserver\FileLoader.cs" />
     <Compile Include="Webserver\Server.cs" />
@@ -96,13 +97,14 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fleck">
-      <HintPath>Lib\Fleck.dll</HintPath>
+      <HintPath>..\packages\Fleck.0.9.6.16\lib\net40\Fleck.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\Lib\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net">
@@ -136,7 +138,6 @@
     <EmbeddedResource Include="Resources\css\fontello.css" />
     <EmbeddedResource Include="Resources\css\jquery-ui.css" />
     <EmbeddedResource Include="Resources\css\layout-default.css" />
-    <EmbeddedResource Include="Resources\css\ui.jqgrid.css" />
     <EmbeddedResource Include="Resources\favicon.ico" />
     <EmbeddedResource Include="Resources\font\fontello.ttf" />
   </ItemGroup>
@@ -164,54 +165,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\external\jquery-timing.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery-ui.min.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery.class.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.cookie.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.flot.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery.jqGrid.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.layout.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.min.js" />
     <EmbeddedResource Include="Resources\js\external\json2.min.js" />
     <EmbeddedResource Include="Resources\js\external\moment.min.js" />
     <EmbeddedResource Include="Resources\js\external\sha256.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-ar.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-bg.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-bg1251.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-cat.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-cn.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-cs.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-da.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-de.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-el.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-en.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-es.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-fa.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-fi.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-fr.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-gl.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-he.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-hr.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-hr1250.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-hu.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-is.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-it.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-ja.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-lt.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-mne.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-nl.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-no.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-pl.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-pt-br.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-pt.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-ro.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-ru.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-sk.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-sr-latin.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-sr.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-sv.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-th.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-tr.js" />
-    <EmbeddedResource Include="Resources\js\i18n\jqgrid\grid.locale-ua.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\bg.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\ca.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\cv.js" />
@@ -252,10 +213,22 @@
     <EmbeddedResource Include="Resources\js\xg\helper.js" />
     <EmbeddedResource Include="Resources\js\xg\main.js" />
     <EmbeddedResource Include="Resources\js\xg\password.js" />
-    <EmbeddedResource Include="Resources\js\xg\refresh.js" />
     <EmbeddedResource Include="Resources\js\xg\resize.js" />
     <EmbeddedResource Include="Resources\js\xg\translate.js" />
     <EmbeddedResource Include="Resources\js\xg\websocket.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\css\animation.css" />
+    <Content Include="Resources\css\slick.grid.css" />
+    <EmbeddedResource Include="Resources\js\external\jquery.event.drag-2.0.min.js" />
+    <EmbeddedResource Include="Resources\js\external\slick.core.js" />
+    <EmbeddedResource Include="Resources\js\external\slick.dataview.js" />
+    <EmbeddedResource Include="Resources\js\external\slick.formatters.js" />
+    <EmbeddedResource Include="Resources\js\external\slick.grid.js" />
+    <EmbeddedResource Include="Resources\js\external\slick.rowselectionmodel.js" />
+    <EmbeddedResource Include="Resources\js\i18n\xg\en.js" />
+    <EmbeddedResource Include="Resources\js\xg\dataview.js" />
+    <EmbeddedResource Include="Resources\js\xg\grid.js" />
+    <EmbeddedResource Include="Resources\js\xg\statistics.js" />
+  </ItemGroup>
 </Project>

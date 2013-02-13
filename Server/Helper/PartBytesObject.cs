@@ -30,12 +30,7 @@ namespace XG.Server.Helper
 	public class PartBytesObject
 	{
 		public FilePart Part { get; set; }
-		public byte[] Bytes { get; set; }
 
-		public PartBytesObject(FilePart aPart, byte[] aBytes)
-		{
-			Part = aPart;
-			Bytes = aBytes;
-		}
+		public byte[] Bytes { get; set; }
 	}
 }
