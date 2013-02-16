@@ -81,7 +81,6 @@
     <Compile Include="Files.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Attributes.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Packet.cs" />
@@ -92,9 +91,6 @@
     <Compile Include="Snapshots.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>

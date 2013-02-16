@@ -23,14 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 
 namespace XG.Core
 {
 	[Serializable]
-	[JsonObject(MemberSerialization.OptIn)]
 	public class FilePart : AObject
 	{
 		#region ENUMS
@@ -93,8 +90,6 @@ namespace XG.Core
 
 		Int64 _startSize;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 StartSize
 		{
 			get { return _startSize; }
@@ -103,8 +98,6 @@ namespace XG.Core
 
 		Int64 _stopSize;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 StopSize
 		{
 			get { return _stopSize; }
@@ -113,23 +106,17 @@ namespace XG.Core
 
 		Int64 _currentSize;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 CurrentSize
 		{
 			get { return _currentSize; }
 			set { SetProperty(ref _currentSize, value); }
 		}
 
-		[JsonProperty]
-		[MySql]
 		public Int64 MissingSize
 		{
 			get { return _stopSize - _currentSize; }
 		}
 
-		[JsonProperty]
-		[MySql]
 		public Int64 TimeMissing
 		{
 			get
@@ -141,8 +128,6 @@ namespace XG.Core
 
 		Int64 _speed;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 Speed
 		{
 			get { return _speed; }
@@ -151,8 +136,6 @@ namespace XG.Core
 
 		States _state;
 
-		[JsonProperty]
-		[MySql]
 		public States State
 		{
 			get { return _state; }
@@ -176,8 +159,6 @@ namespace XG.Core
 
 		bool _checked;
 
-		[JsonProperty]
-		[MySql]
 		public bool Checked
 		{
 			get { return _checked; }

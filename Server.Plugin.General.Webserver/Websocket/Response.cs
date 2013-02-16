@@ -27,7 +27,7 @@ using Newtonsoft.Json;
 
 namespace XG.Server.Plugin.General.Webserver.Websocket
 {
-	[JsonObject(MemberSerialization.OptIn)]
+	[JsonObject(MemberSerialization.OptOut)]
 	public class Response
 	{
 		#region ENUMS
@@ -57,21 +57,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region VARIABLES
 
-		[JsonProperty]
 		public Types Type { get; set; }
 
-		[JsonProperty]
 		public object Data { get; set; }
 
-		[JsonProperty]
-		public string DataType
-		{
-			get
-			{
-				string name = Data.GetType().Name;
-				return name == "Object" ? "Search" : name;
-			}
-		}
+		public string DataType { get { return Data.GetType().Name; } }
 
 		#endregion
 	}

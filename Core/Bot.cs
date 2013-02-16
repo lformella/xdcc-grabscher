@@ -23,8 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +31,6 @@ using System.Net;
 namespace XG.Core
 {
 	[Serializable]
-	[JsonObject(MemberSerialization.OptIn)]
 	public class Bot : AObjects
 	{
 		#region ENUMS
@@ -65,8 +62,6 @@ namespace XG.Core
 
 		States _state;
 
-		[JsonProperty]
-		[MySql]
 		public States State
 		{
 			get { return _state; }
@@ -92,8 +87,6 @@ namespace XG.Core
 
 		string _lastMessage = "";
 
-		[JsonProperty]
-		[MySql]
 		public string LastMessage
 		{
 			get { return _lastMessage; }
@@ -107,8 +100,6 @@ namespace XG.Core
 
 		DateTime _lastMessageTime = DateTime.MinValue.ToUniversalTime();
 
-		[JsonProperty]
-		[MySql]
 		public DateTime LastMessageTime
 		{
 			get { return _lastMessageTime; }
@@ -117,8 +108,6 @@ namespace XG.Core
 
 		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
 
-		[JsonProperty]
-		[MySql]
 		public DateTime LastContact
 		{
 			get { return _lastContact; }
@@ -127,7 +116,6 @@ namespace XG.Core
 
 		int _queuePosition;
 
-		[JsonProperty]
 		public int QueuePosition
 		{
 			get { return _queuePosition; }
@@ -136,7 +124,6 @@ namespace XG.Core
 
 		int _queueTime;
 
-		[JsonProperty]
 		public int QueueTime
 		{
 			get { return _queueTime; }
@@ -145,8 +132,6 @@ namespace XG.Core
 
 		Int64 _infoSpeedMax;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 InfoSpeedMax
 		{
 			get { return _infoSpeedMax; }
@@ -155,8 +140,6 @@ namespace XG.Core
 
 		Int64 _infoSpeedCurrent;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 InfoSpeedCurrent
 		{
 			get { return _infoSpeedCurrent; }
@@ -165,8 +148,6 @@ namespace XG.Core
 
 		int _infoSlotTotal;
 
-		[JsonProperty]
-		[MySql]
 		public int InfoSlotTotal
 		{
 			get { return _infoSlotTotal; }
@@ -175,8 +156,6 @@ namespace XG.Core
 
 		int _infoSlotCurrent;
 
-		[JsonProperty]
-		[MySql]
 		public int InfoSlotCurrent
 		{
 			get { return _infoSlotCurrent; }
@@ -185,8 +164,6 @@ namespace XG.Core
 
 		int _infoQueueTotal;
 
-		[JsonProperty]
-		[MySql]
 		public int InfoQueueTotal
 		{
 			get { return _infoQueueTotal; }
@@ -195,15 +172,12 @@ namespace XG.Core
 
 		int _infoQueueCurrent;
 
-		[JsonProperty]
-		[MySql]
 		public int InfoQueueCurrent
 		{
 			get { return _infoQueueCurrent; }
 			set { SetProperty(ref _infoQueueCurrent, value); }
 		}
 
-		[JsonProperty]
 		public Int64 Speed
 		{
 			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }
@@ -211,7 +185,6 @@ namespace XG.Core
 
 		bool _hasNetworkProblems;
 
-		[JsonProperty]
 		public bool HasNetworkProblems
 		{
 			get { return _hasNetworkProblems; }
@@ -219,7 +192,7 @@ namespace XG.Core
 		}
 
 		#endregion
-
+		
 		#region CHILDREN
 
 		public IEnumerable<Packet> Packets

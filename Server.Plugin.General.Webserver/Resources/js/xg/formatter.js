@@ -332,7 +332,7 @@ var XGFormatter = (function()
 			var overlayClass = "";
 			var overlayStyle = "";
 
-			var name = packet.RealName != undefined && packet.RealName != "" ? packet.RealName : packet.Name;
+			var name = packet.Name;
 			var ext = name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
 			{
@@ -358,7 +358,7 @@ var XGFormatter = (function()
 					iconClass = "SkyBlueDark";
 					overlay = "down-circle";
 					overlayClass = "SkyBlueMiddle";
-					overlayStyle = "opacity: " + speed2Overlay(packet.Part != null ? packet.Part.Speed : 0);
+					overlayStyle = "opacity: " + speed2Overlay(packet.Speed);
 				}
 				else if (packet.Next)
 				{
@@ -382,7 +382,7 @@ var XGFormatter = (function()
 
 		formatPacketName: function (packet)
 		{
-			var name = packet.RealName != undefined && packet.RealName != "" ? packet.RealName : packet.Name;
+			var name = packet.Name;
 
 			if (name == undefined)
 			{
@@ -391,9 +391,9 @@ var XGFormatter = (function()
 
 			var ret = name;
 
-			if (packet.Connected && packet.Part != null)
+			if (packet.Connected)
 			{
-				ret += "<progress max='" + packet.RealSize + "' value='" + packet.Part.CurrentSize + "'></progress>";
+				ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
 			}
 
 			return ret;
@@ -401,17 +401,17 @@ var XGFormatter = (function()
 
 		formatPacketSpeed: function (packet)
 		{
-			return helper.speed2Human(packet.Part != null ? packet.Part.Speed : 0);
+			return helper.speed2Human(packet.Speed);
 		},
 
 		formatPacketSize: function (packet)
 		{
-			return helper.size2Human(packet.RealSize > 0 ? packet.RealSize : packet.Size);
+			return helper.size2Human(packet.Size);
 		},
 
 		formatPacketTimeMissing: function (packet)
 		{
-			return helper.time2Human(packet.Part != null ? packet.Part.TimeMissing : 0);
+			return helper.time2Human(packet.TimeMissing);
 		},
 
 		/* ************************************************************************************************************** */

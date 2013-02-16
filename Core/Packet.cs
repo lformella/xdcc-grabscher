@@ -23,14 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 
 namespace XG.Core
 {
 	[Serializable]
-	[JsonObject(MemberSerialization.OptIn)]
 	public class Packet : AObject
 	{
 		#region VARIABLES
@@ -44,7 +41,6 @@ namespace XG.Core
 		[NonSerialized]
 		FilePart _part;
 
-		[JsonProperty]
 		public FilePart Part
 		{
 			get { return _part; }
@@ -67,8 +63,6 @@ namespace XG.Core
 
 		int _id = -1;
 
-		[JsonProperty]
-		[MySql]
 		public int Id
 		{
 			get { return _id; }
@@ -77,8 +71,6 @@ namespace XG.Core
 
 		Int64 _size;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 Size
 		{
 			get { return _size; }
@@ -87,7 +79,6 @@ namespace XG.Core
 
 		Int64 _realSize;
 
-		[JsonProperty]
 		public Int64 RealSize
 		{
 			get { return _realSize; }
@@ -96,7 +87,6 @@ namespace XG.Core
 
 		string _realName = "";
 		
-		[JsonProperty]
 		public string RealName
 		{
 			get { return _realName; }
@@ -105,8 +95,6 @@ namespace XG.Core
 
 		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
 
-		[JsonProperty]
-		[MySql]
 		public DateTime LastUpdated
 		{
 			get { return _lastUpdated; }
@@ -115,15 +103,12 @@ namespace XG.Core
 
 		DateTime _lastMentioned = DateTime.MinValue.ToUniversalTime();
 
-		[JsonProperty]
-		[MySql]
 		public DateTime LastMentioned
 		{
 			get { return _lastMentioned; }
 			set { SetProperty(ref _lastMentioned, value); }
 		}
 
-		[JsonProperty]
 		public bool Next
 		{
 			get
@@ -134,7 +119,7 @@ namespace XG.Core
 		}
 
 		#endregion
-
+		
 		#region HELPER
 
 		public override string ToString()

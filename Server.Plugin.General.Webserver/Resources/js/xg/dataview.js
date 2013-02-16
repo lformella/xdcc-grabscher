@@ -45,19 +45,15 @@ var XGDataView = (function()
 
 		if (args != undefined)
 		{
-			if (args.OfflineBots != undefined && !args.OfflineBots)
+			if (args.OfflineBots != undefined && args.OfflineBots)
 			{
 				switch (item.DataType)
 				{
 					case Enum.Grid.Bot:
-						//result = result && item.Connected;
+						result = result && item.Connected;
 						break;
 					case Enum.Grid.Packet:
-						//var parentItem = this.getDataView(Enum.Grid.Bot).getDataItem(item.ParentGuid);
-						//if (parentItem != undefined)
-						{
-							//result = result && parentItem.Connected;
-						}
+						result = result && item.BotConnected;
 						break;
 				}
 			}

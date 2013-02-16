@@ -139,12 +139,9 @@ namespace XG.Server
 			JabberUser = "";
 			JabberPassword = "";
 
-			UseMySqlBackend = false;
-			MySqlBackendServer = "127.0.0.1";
-			MySqlBackendPort = 3306;
-			MySqlBackendDatabase = "xg";
-			MySqlBackendUser = "xg";
-			MySqlBackendPassword = "xg";
+			UseElasticSearch = false;
+			ElasticSearchHost = "";
+			ElasticSearchPort = 0;
 
 			FileHandlers = new FileHandler[0];
 		}
@@ -335,13 +332,10 @@ namespace XG.Server
 		public string JabberUser { get; set; }
 		public string JabberPassword { get; set; }
 
-		public bool UseMySqlBackend { get; set; }
-		public string MySqlBackendServer { get; set; }
-		public int MySqlBackendPort { get; set; }
-		public string MySqlBackendDatabase { get; set; }
-		public string MySqlBackendUser { get; set; }
-		public string MySqlBackendPassword { get; set; }
-
+		public bool UseElasticSearch { get; set; }
+		public string ElasticSearchHost { get; set; }
+		public int ElasticSearchPort { get; set; }
+		
 		public FileHandler[] FileHandlers { get; set; }
 
 		#endregion

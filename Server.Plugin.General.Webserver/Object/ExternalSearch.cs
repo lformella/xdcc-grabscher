@@ -23,24 +23,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 
-using XG.Core;
+using Newtonsoft.Json;
 
 namespace XG.Server.Plugin.General.Webserver.Object
 {
-	[JsonObject(MemberSerialization.OptIn)]
-	public class ExternalSearch : Packet
+	[JsonObject(MemberSerialization.OptOut)]
+	public class ExternalSearch : Core.Packet
 	{
-		[JsonProperty]
 		public string BotName { get; set; }
 
-		[JsonProperty]
 		public Int64 BotSpeed { get; set; }
 
-		[JsonProperty]
 		public string IrcLink { get; set; }
 	}
 }

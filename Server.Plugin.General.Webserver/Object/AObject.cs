@@ -1,5 +1,5 @@
 // 
-//  Channel.cs
+//  AObject.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,68 +24,42 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace XG.Core
+using Newtonsoft.Json;
+
+namespace XG.Server.Plugin.General.Webserver.Object
 {
-	[Serializable]
-	public class Channel : AObjects
+	[JsonObject(MemberSerialization.OptOut)]
+	public class AObject
 	{
-		#region VARIABLES
+		[JsonIgnore]
+		public virtual Core.AObject Object { get; set; }
 
-		public override bool Connected
+		#region PROPERTIES
+
+		public Guid ParentGuid
 		{
-			get { return base.Connected; }
-			set
-			{
-				if (!value)
-				{
-					foreach (AObject obj in All)
-					{
-						obj.Connected = false;
-					}
-				}
-				base.Connected = value;
-			}
+			get { return Object.ParentGuid; }
 		}
 
-		public new Server Parent
+		public Guid Guid
 		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
+			get { return Object.Guid; }
 		}
-
-		int _errorCode;
-
-		public int ErrorCode
-		{
-			get { return _errorCode; }
-			set { SetProperty(ref _errorCode, value); }
-		}
-
-		#endregion
 		
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
+		public virtual string Name
 		{
-			get { return All.Cast<Bot>(); }
+			get { return Object.Name; }
 		}
-
-		public Bot Bot(string aName)
+		
+		public bool Connected
 		{
-			return base.Named(aName) as Bot;
+			get { return Object.Connected; }
 		}
-
-		public void AddBot(Bot aBot)
+		
+		public bool Enabled
 		{
-			Add(aBot);
-		}
-
-		public void RemoveBot(Bot aBot)
-		{
-			Remove(aBot);
+			get { return Object.Enabled; }
 		}
 
 		#endregion

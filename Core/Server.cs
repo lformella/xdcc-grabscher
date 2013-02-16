@@ -23,8 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +30,10 @@ using System.Linq;
 namespace XG.Core
 {
 	[Serializable]
-	[JsonObject(MemberSerialization.OptIn)]
 	public class Server : AObjects
 	{
 		#region VARIABLES
 
-		[JsonProperty]
 		public override bool Connected
 		{
 			get { return base.Connected; }
@@ -63,8 +59,6 @@ namespace XG.Core
 
 		int _port;
 
-		[JsonProperty]
-		[MySql]
 		public int Port
 		{
 			get { return _port; }
@@ -73,8 +67,6 @@ namespace XG.Core
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
 
-		[JsonProperty]
-		[MySql]
 		public SocketErrorCode ErrorCode
 		{
 			get { return _errorCode; }
@@ -82,7 +74,7 @@ namespace XG.Core
 		}
 
 		#endregion
-
+		
 		#region CHILDREN
 
 		public IEnumerable<Channel> Channels

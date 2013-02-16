@@ -29,7 +29,7 @@ using System;
 
 namespace XG.Server.Plugin.General.Webserver.Websocket
 {
-	[JsonObject(MemberSerialization.OptIn)]
+	[JsonObject(MemberSerialization.OptOut)]
 	public class Request
 	{
 		#region ENUMS
@@ -68,17 +68,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		#endregion
 
 		#region VARIABLES
-		
-		[JsonProperty]
+
 		public Types Type { get; set; }
-		
-		[JsonProperty]
+
 		public string Password { get; set; }
-		
-		[JsonProperty]
+
 		public Guid Guid { get; set; }
-		
-		[JsonProperty]
+
 		public string Name { get; set; }
 
 		#endregion

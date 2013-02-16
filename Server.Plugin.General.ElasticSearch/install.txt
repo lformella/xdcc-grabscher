@@ -1,0 +1,98 @@
+curl -XPUT localhost:9200/xg/
+
+curl -s -XPUT localhost:9200/xg/server/_mapping -d '
+{
+    "server" :  {
+        "properties": {
+            "name" :  {
+                "type": "multi_field",
+                    "fields" : {
+                        "name": {
+                            "type" : "string"
+                        },
+                        "raw" : {
+                            "type": "string",
+                            "index" : "not_analyzed"
+                        }
+                    } 
+            }
+        }
+    }
+}'
+
+curl -s -XPUT localhost:9200/xg/channel/_mapping -d '
+{
+    "channel" :  {
+        "properties": {
+            "name" :  {
+                "type": "multi_field",
+                    "fields" : {
+                        "name": {
+                            "type" : "string"
+                        },
+                        "raw" : {
+                            "type": "string",
+                            "index" : "not_analyzed"
+                        }
+                    } 
+            }
+        }
+    }
+}'
+
+curl -s -XPUT localhost:9200/xg/bot/_mapping -d '
+{
+    "bot" :  {
+        "properties": {
+            "name" :  {
+                "type": "multi_field",
+                    "fields" : {
+                        "name": {
+                            "type" : "string"
+                        },
+                        "raw" : {
+                            "type": "string",
+                            "index" : "not_analyzed"
+                        }
+                    } 
+            }
+        }
+    }
+}'
+
+curl -s -XPUT localhost:9200/xg/packet/_mapping -d '
+{
+    "packet" :  {
+        "properties": {
+            "name" :  {
+                "type": "multi_field",
+                    "fields" : {
+                        "name": {
+                            "type" : "string"
+                        },
+                        "raw" : {
+                            "type": "string",
+                            "index" : "not_analyzed"
+                        }
+                    } 
+            }
+        }
+    }
+}'
+
+curl -s -XPUT localhost:9200/xg/search/_mapping -d '
+{
+    "search" :  {
+        "properties": {
+            "search" :  {
+                "type": "string"
+            },
+            "count" :  {
+                "type": "long"
+            },
+            "timestamp" :  {
+                "type": "long"
+            }
+        }
+    }
+}'

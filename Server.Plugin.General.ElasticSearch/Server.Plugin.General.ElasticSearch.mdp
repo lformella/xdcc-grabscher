@@ -1,0 +1,38 @@
+<Project name="Server.Plugin.General.ElasticSearch" fileversion="2.0" DefaultNamespace="Server.Plugin.General.ElasticSearch" language="C#" targetFramework="4.0" ctype="DotNetProject">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="Server.Plugin.General.ElasticSearch" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG;" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="Server.Plugin.General.ElasticSearch" />
+      <Build debugmode="False" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Directory" buildaction="Compile" name="Properties" />
+    <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
+    <File subtype="Code" buildaction="Compile" name="Plugin.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Object" />
+    <File subtype="Directory" buildaction="Compile" name="Object" />
+    <File subtype="Code" buildaction="Compile" name="Object/AObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Bot.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Channel.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Packet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Server.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Snapshot.cs" />
+    <File subtype="Code" buildaction="Nothing" name="install.txt" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Project" localcopy="True" refto="Core" />
+    <ProjectReference type="Project" localcopy="True" refto="Server" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
+    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/NEST.0.9.17.0/lib/NET4/Nest.dll" />
+  </References>
+</Project>

@@ -23,13 +23,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
+
+using Newtonsoft.Json;
 
 namespace XG.Server.Plugin.General.Webserver.Object
 {
-	[JsonObject(MemberSerialization.OptIn)]
+	[JsonObject(MemberSerialization.OptOut)]
 	public class Flot
 	{
 		[JsonProperty(PropertyName = "label")]

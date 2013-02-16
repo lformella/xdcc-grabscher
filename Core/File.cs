@@ -23,8 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +30,6 @@ using System.Linq;
 namespace XG.Core
 {
 	[Serializable]
-	[JsonObject(MemberSerialization.OptIn)]
 	public class File : AObjects
 	{
 		#region VARIABLES
@@ -40,8 +37,6 @@ namespace XG.Core
 		[NonSerialized]
 		public object Lock = new object();
 
-		[JsonProperty]
-		[MySql]
 		public override string Name
 		{
 			get { return base.Name; }
@@ -49,8 +44,6 @@ namespace XG.Core
 
 		readonly string _tmpPath;
 
-		[JsonProperty]
-		[MySql]
 		public string TmpPath
 		{
 			get { return _tmpPath; }
@@ -58,14 +51,11 @@ namespace XG.Core
 
 		readonly Int64 _size;
 
-		[JsonProperty]
-		[MySql]
 		public Int64 Size
 		{
 			get { return _size; }
 		}
 
-		[JsonProperty]
 		public Int64 CurrentSize
 		{
 			get
@@ -81,7 +71,6 @@ namespace XG.Core
 			}
 		}
 
-		[JsonProperty]
 		public Int64 TimeMissing
 		{
 			get
@@ -97,7 +86,6 @@ namespace XG.Core
 			}
 		}
 
-		[JsonProperty]
 		public Int64 Speed
 		{
 			get
@@ -117,7 +105,6 @@ namespace XG.Core
 
 		#region CHILDREN
 
-		[JsonProperty]
 		public IEnumerable<FilePart> Parts
 		{
 			get { return All.Cast<FilePart>(); }

@@ -246,7 +246,7 @@ namespace XG.Server
 
 		#region DISCONNECT
 
-		protected override void ConnectionDisconnected(SocketErrorCode aValue)
+		protected override void ConnectionDisconnected (SocketErrorCode aValue)
 		{
 			// close the writer
 			if (_writer != null)
@@ -331,7 +331,10 @@ namespace XG.Server
 				Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
 			}
 
-			Part.Commit();
+			if (Part != null)
+			{
+				Part.Commit();
+			}
 			Packet.Parent.Commit();
 
 			Disconnected(Packet, this);

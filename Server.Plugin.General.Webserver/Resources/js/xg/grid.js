@@ -409,7 +409,7 @@ var XGGrid = (function()
 				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false, "medium"),
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
 				buildRow("Speed", 70, true, $.proxy(formatter.formatFileSpeed, formatter), true),
-				buildRow("TimeMissing", 90, true, $.proxy(formatter.formatFileTimeMissing, formatter), true)
+				buildRow("Time Missing", 90, true, $.proxy(formatter.formatFileTimeMissing, formatter), true)
 			], compareFiles);
 
 			/**************************************************************************************************************/

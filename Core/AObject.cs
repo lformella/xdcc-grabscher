@@ -23,8 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Newtonsoft.Json;
-
 using System;
 using System.Collections.Generic;
 
@@ -33,7 +31,6 @@ namespace XG.Core
 	public delegate void ObjectDelegate(AObject aObj);
 
 	[Serializable]
-	[JsonObject(MemberSerialization.OptIn)]
 	public class AObject
 	{
 		#region EVENTS
@@ -77,8 +74,6 @@ namespace XG.Core
 
 		Guid _parentGuid;
 
-		[JsonProperty]
-		[MySql]
 		public Guid ParentGuid
 		{
 			get { return _parentGuid; }
@@ -99,14 +94,10 @@ namespace XG.Core
 			}
 		}
 
-		[JsonProperty]
-		[MySql]
 		public Guid Guid { get; set; }
 
 		string _name;
 
-		[JsonProperty]
-		[MySql]
 		public virtual string Name
 		{
 			get { return _name; }
@@ -128,8 +119,6 @@ namespace XG.Core
 
 		bool _connected;
 
-		[JsonProperty]
-		[MySql]
 		public virtual bool Connected
 		{
 			get { return _connected; }
@@ -138,8 +127,6 @@ namespace XG.Core
 
 		bool _enabled;
 
-		[JsonProperty]
-		[MySql]
 		public virtual bool Enabled
 		{
 			get { return _enabled; }

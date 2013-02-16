@@ -77,12 +77,12 @@
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Debug" />
       <Entry build="True" name="Server.Cmd" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Debug" />
-      <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.Backend.File" configuration="Debug" />
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Release" />
@@ -90,12 +90,12 @@
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Release" />
       <Entry build="True" name="Server.Cmd" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Release" />
-      <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Release" />
       <Entry build="True" name="Server.Plugin.Backend.File" configuration="Release" />
       <Entry build="True" name="Core.Test" configuration="Release" />
       <Entry build="True" name="Server.Test" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Release" />
+      <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Unsafe" />
@@ -103,12 +103,12 @@
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Unsafe" />
       <Entry build="True" name="Server.Cmd" configuration="Unsafe" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Unsafe" />
-      <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Unsafe" />
       <Entry build="True" name="Server.Plugin.Backend.File" configuration="Unsafe" />
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Default" />
@@ -116,12 +116,12 @@
       <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Default" />
       <Entry build="True" name="Server.Cmd" configuration="Default" />
       <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Default" />
-      <Entry build="True" name="Server.Plugin.Backend.MySql" configuration="Default" />
       <Entry build="True" name="Server.Plugin.Backend.File" configuration="Default" />
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Server.Cmd" single="True">
@@ -130,12 +130,12 @@
     <Execute type="None" entry="Server.Plugin.General.Webserver" />
     <Execute type="None" entry="Server.Cmd" />
     <Execute type="None" entry="Server.Plugin.General.Jabber" />
-    <Execute type="None" entry="Server.Plugin.Backend.MySql" />
     <Execute type="None" entry="Server.Plugin.Backend.File" />
     <Execute type="None" entry="Core.Test" />
     <Execute type="None" entry="Server.Test" />
     <Execute type="None" entry="Server.Plugin.General.Webserver.Test" />
     <Execute type="None" entry="Server.Plugin.General.Import" />
+    <Execute type="None" entry="Server.Plugin.General.ElasticSearch" />
   </StartMode>
   <Entries>
     <Entry filename="Core/Core.mdp" />
@@ -143,11 +143,11 @@
     <Entry filename="Server.Plugin.General.Webserver/Server.Plugin.General.Webserver.mdp" />
     <Entry filename="Server.Cmd/Server.Cmd.mdp" />
     <Entry filename="Server.Plugin.General.Jabber/Server.Plugin.General.Jabber.mdp" />
-    <Entry filename="Server.Plugin.Backend.MySql/Server.Plugin.Backend.MySql.mdp" />
     <Entry filename="Server.Plugin.Backend.File/Server.Plugin.Backend.File.mdp" />
     <Entry filename="Core.Test/Core.Test.mdp" />
     <Entry filename="Server.Test/Server.Test.mdp" />
     <Entry filename="Server.Plugin.General.Webserver.Test/Server.Plugin.General.Webserver.Test.mdp" />
     <Entry filename="Server.Plugin.General.Import/Server.Plugin.General.Import.mdp" />
+    <Entry filename="Server.Plugin.General.ElasticSearch/Server.Plugin.General.ElasticSearch.mdp" />
   </Entries>
 </Combine>

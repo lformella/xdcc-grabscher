@@ -89,7 +89,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region REPOSITORY EVENTS
 
-		protected override void ObjectAdded(AObject aParent, AObject aObj)
+		protected override void ObjectAdded(Core.AObject aParent, Core.AObject aObj)
 		{
 			var response = new Response
 			{
@@ -99,7 +99,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			Broadcast(response);
 		}
 
-		protected override void ObjectRemoved(AObject aParent, AObject aObj)
+		protected override void ObjectRemoved(Core.AObject aParent, Core.AObject aObj)
 		{
 			var response = new Response
 			{
@@ -109,7 +109,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			Broadcast(response);
 		}
 
-		protected override void ObjectChanged(AObject aObj)
+		protected override void ObjectChanged(Core.AObject aObj)
 		{
 			var response = new Response
 			{
@@ -118,8 +118,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			};
 			Broadcast(response);
 
+			// if a bot changed dispatch the packets, too
+			if (aObj is Core.Bot)
+			{
+				foreach (var pack in (aObj as Core.Bot).Packets)
+				{
+					ObjectChanged(pack);
+				}
+			}
 			// if a part changed dispatch the file, packet and bot, too
-			if (aObj is FilePart)
+			else if (aObj is FilePart)
 			{
 				var part = aObj as FilePart;
 				ObjectChanged(part.Parent);
@@ -131,49 +139,49 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 		}
 
-		protected override void ObjectEnabledChanged(AObject aObj)
+		protected override void ObjectEnabledChanged(Core.AObject aObj)
 		{
 			ObjectChanged(aObj);
 
 			// if a packet changed dispatch the bot, too
-			if (aObj is Packet)
+			if (aObj is Core.Packet)
 			{
-				var part = aObj as Packet;
+				var part = aObj as Core.Packet;
 				ObjectChanged(part.Parent);
 			}
 		}
 
-		protected override void FileAdded(AObject aParent, AObject aObj)
+		protected override void FileAdded(Core.AObject aParent, Core.AObject aObj)
 		{
 			ObjectAdded(aParent, aObj);
 		}
 
-		protected override void FileRemoved(AObject aParent, AObject aObj)
+		protected override void FileRemoved(Core.AObject aParent, Core.AObject aObj)
 		{
 			ObjectRemoved(aParent, aObj);
 		}
 
-		protected override void FileChanged(AObject aObj)
+		protected override void FileChanged(Core.AObject aObj)
 		{
 			ObjectChanged(aObj);
 		}
 
-		protected override void SearchAdded(AObject aParent, AObject aObj)
+		protected override void SearchAdded(Core.AObject aParent, Core.AObject aObj)
 		{
 			ObjectAdded(aParent, aObj);
 		}
 
-		protected override void SearchRemoved(AObject aParent, AObject aObj)
+		protected override void SearchRemoved(Core.AObject aParent, Core.AObject aObj)
 		{
 			ObjectRemoved(aParent, aObj);
 		}
 
-		protected override void SearchChanged(AObject aObj)
+		protected override void SearchChanged(Core.AObject aObj)
 		{
 			ObjectChanged(aObj);
 		}
 
-		protected override void SnapshotAdded(Snapshot aSnap)
+		protected override void SnapshotAdded(Core.Snapshot aSnap)
 		{
 			var response = new Response
 			{
@@ -194,7 +202,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var user = new User
 			{
 				Connection = aContext,
-				LoadedObjects = new List<AObject>()
+				LoadedObjects = new List<Core.AObject>()
 			};
 
 			_users.Add(user);
@@ -260,7 +268,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					case Request.Types.Search:
 						var packets = FilteredPackets(request.Guid);
 						var bots = DistinctBots(packets);
-						var all = new List<AObject>();
+						var all = new List<Core.AObject>();
 						all.AddRange(packets);
 						all.AddRange(bots);
 						UnicastOnRequest(currentUser, all, request.Type);
@@ -383,7 +391,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						serv.Enabled = true;
 
 						// checking channel
-						Channel chan = serv.Channel(channelName);
+						Core.Channel chan = serv.Channel(channelName);
 						if (chan == null)
 						{
 							serv.AddChannel(channelName);
@@ -392,18 +400,18 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						chan.Enabled = true;
 
 						// checking bot
-						Bot tBot = chan.Bot(botName);
+						Core.Bot tBot = chan.Bot(botName);
 						if (tBot == null)
 						{
-							tBot = new Bot {Name = botName};
+							tBot = new Core.Bot {Name = botName};
 							chan.AddBot(tBot);
 						}
 
 						// checking packet
-						Packet pack = tBot.Packet(packetId);
+						Core.Packet pack = tBot.Packet(packetId);
 						if (pack == null)
 						{
-							pack = new Packet {Id = packetId, Name = link[5]};
+							pack = new Core.Packet {Id = packetId, Name = link[5]};
 							tBot.AddPacket(pack);
 						}
 						pack.Enabled = true;
@@ -425,7 +433,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			OnClose(aContext);
 		}
 
-		void UnicastOnRequest(User aUser, IEnumerable<AObject> aObjects, Request.Types aRequestType)
+		void UnicastOnRequest(User aUser, IEnumerable<Core.AObject> aObjects, Request.Types aRequestType)
 		{
 			foreach (var obj in aObjects)
 			{
@@ -453,7 +461,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void Unicast(User aUser, Response aResponse)
 		{
-			if (aResponse.Data.GetType().IsSubclassOf(typeof(AObject)))
+			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
 			{
 				// lock loaded objects to prevent sending out the same object more than once
 				lock (aUser.LoadedObjects)
@@ -465,14 +473,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
-							aUser.LoadedObjects.Add((AObject)aResponse.Data);
+							aUser.LoadedObjects.Add((Core.AObject)aResponse.Data);
 							break;
 
 						case Response.Types.ObjectChanged:
 							if (!aUser.LoadedObjects.Contains(aResponse.Data))
 							{
 								//aResponse.Type = Response.Types.ObjectAdded;
-								//aUser.LoadedObjects.Add((AObject)aResponse.Data);
+								//aUser.LoadedObjects.Add((Core.AObject)aResponse.Data);
 								return;
 							}
 							break;
@@ -482,10 +490,46 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
-							aUser.LoadedObjects.Remove((AObject)aResponse.Data);
+							aUser.LoadedObjects.Remove((Core.AObject)aResponse.Data);
 							break;
 					}
 				}
+			}
+
+			Object.AObject myObj = null;
+
+			if (aResponse.Data is Core.Server)
+			{
+				myObj = new Object.Server { Object = aResponse.Data as Core.Server };
+			}
+			if (aResponse.Data is Core.Channel)
+			{
+				myObj = new Object.Channel { Object = aResponse.Data as Core.Channel };
+			}
+			if (aResponse.Data is Core.Bot)
+			{
+				myObj = new Object.Bot { Object = aResponse.Data as Core.Bot };
+			}
+			if (aResponse.Data is Core.Packet)
+			{
+				myObj = new Object.Packet { Object = aResponse.Data as Core.Packet };
+			}
+			if (aResponse.Data is Core.Object)
+			{
+				myObj = new Search { Object = aResponse.Data as Core.Object };
+			}
+			if (aResponse.Data is Core.File)
+			{
+				myObj = new Object.File { Object = aResponse.Data as Core.File };
+			}
+			if (aResponse.Data is FilePart)
+			{
+				return;
+			}
+
+			if (myObj != null)
+			{
+				aResponse.Data = myObj;
 			}
 
 			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
@@ -509,14 +553,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region Object Searching
 
-		List<Bot> DistinctBots (List<Packet> aPackets)
+		List<Core.Bot> DistinctBots (List<Core.Packet> aPackets)
 		{
 			var tBots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in aPackets on b.Guid equals p.Parent.Guid select b).Distinct();
 
 			return tBots.ToList();
 		}
 
-		List<Packet> FilteredPackets (Guid aGuid)
+		List<Core.Packet> FilteredPackets (Guid aGuid)
 		{
 			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			var allPackets = (from bot in allBots from packet in bot.Packets select packet).ToList();

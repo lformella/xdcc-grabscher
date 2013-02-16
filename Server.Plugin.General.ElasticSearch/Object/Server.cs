@@ -1,5 +1,5 @@
 // 
-//  Channel.cs
+//  Server.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,69 +23,58 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
-namespace XG.Core
-{
-	[Serializable]
-	public class Channel : AObjects
-	{
-		#region VARIABLES
+using Newtonsoft.Json;
 
-		public override bool Connected
+namespace XG.Server.Plugin.General.ElasticSearch.Object
+{
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Server : AObject
+	{
+		[JsonIgnore]
+		public new Core.Server Object
 		{
-			get { return base.Connected; }
+			get
+			{
+				return (Core.Server) base.Object;
+			}
 			set
 			{
-				if (!value)
-				{
-					foreach (AObject obj in All)
-					{
-						obj.Connected = false;
-					}
-				}
-				base.Connected = value;
+				base.Object = value;
 			}
 		}
 
-		public new Server Parent
-		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
-		}
-
-		int _errorCode;
-
-		public int ErrorCode
-		{
-			get { return _errorCode; }
-			set { SetProperty(ref _errorCode, value); }
-		}
-
-		#endregion
+		#region VARIABLES
 		
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
+		public int Port
 		{
-			get { return All.Cast<Bot>(); }
+			get { return Object.Port; }
+		}
+		
+		public XG.Core.SocketErrorCode ErrorCode
+		{
+			get { return Object.ErrorCode; }
 		}
 
-		public Bot Bot(string aName)
+		public int ChannelCount
 		{
-			return base.Named(aName) as Bot;
+			get { return Object.Channels.Count(); }
 		}
 
-		public void AddBot(Bot aBot)
+		public int BotCount
 		{
-			Add(aBot);
+			get { return (from channel in Object.Channels from bot in channel.Bots select bot).Count(); }
 		}
 
-		public void RemoveBot(Bot aBot)
+		public int PacketCount
 		{
-			Remove(aBot);
+			get { return (from channel in Object.Channels from bot in channel.Bots from packet in bot.Packets select packet).Count(); }
+		}
+
+		public string IrcLink
+		{
+			get { return "xdcc://" + Object.Name + ":" + Object.Port + "/"; }
 		}
 
 		#endregion

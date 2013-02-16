@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Cmd", "Server.Cmd\Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.General.Jabber", "Server.Plugin.General.Jabber\Server.Plugin.General.Jabber.csproj", "{4F03468E-E62B-43C2-84D9-98CB23704E0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.Backend.MySql", "Server.Plugin.Backend.MySql\Server.Plugin.Backend.MySql.csproj", "{6B448EF6-8B68-4902-AD92-81CAADD93EFC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.Backend.File", "Server.Plugin.Backend.File\Server.Plugin.Backend.File.csproj", "{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Test", "Core.Test\Core.Test.csproj", "{C7407C70-FCC6-4A98-9855-CB7EF7AEAB68}"
@@ -31,6 +29,8 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Server.Cmd.Setup.Win", "Ser
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.General.Import", "Server.Plugin.General.Import\Server.Plugin.General.Import.csproj", "{B6C773B1-28F4-4627-8BC8-35F90249E73D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.General.ElasticSearch", "Server.Plugin.General.ElasticSearch\Server.Plugin.General.ElasticSearch.csproj", "{2114B736-97E8-4DC8-BA5E-74DC69E1C080}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -105,18 +105,6 @@ Global
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B}.SingleImage|Any CPU.Build.0 = UnSafe|Any CPU
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B}.UnSafe|Any CPU.ActiveCfg = UnSafe|Any CPU
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B}.UnSafe|Any CPU.Build.0 = UnSafe|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.UnSafe|Any CPU.ActiveCfg = Release|Any CPU
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC}.UnSafe|Any CPU.Build.0 = Release|Any CPU
 		{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
 		{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -187,6 +175,18 @@ Global
 		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.UnSafe|Any CPU.ActiveCfg = Release|Any CPU
 		{B6C773B1-28F4-4627-8BC8-35F90249E73D}.UnSafe|Any CPU.Build.0 = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.UnSafe|Any CPU.ActiveCfg = Release|Any CPU
+		{2114B736-97E8-4DC8-BA5E-74DC69E1C080}.UnSafe|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

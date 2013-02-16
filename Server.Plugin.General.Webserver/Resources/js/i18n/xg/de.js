@@ -51,10 +51,10 @@ translatedArray =
 
 	"Icon": "",
 	"Name": "Name",
-	"Speed": "Geschw.",
+	"Speed": "Geschwindigkeit",
 	"Q-Pos": "S-Pos",
 	"Q-Time": "S-Zeit",
-	"max Speed": "max. Geschw.",
+	"max Speed": "max. Geschwindigkeit",
 	"Slots": "Pl&auml;tze",
 	"Queue": "Schlange",
 	"Size": "Gr&ouml;&szlig;e",

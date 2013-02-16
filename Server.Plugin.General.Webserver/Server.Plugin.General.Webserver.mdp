@@ -130,6 +130,14 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.rowselectionmodel.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.rowselectionmodel.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/animation.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.animation.css" />
     <File subtype="Code" buildaction="Compile" name="ASaltedPassword.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/AObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Bot.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Channel.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Packet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Server.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Snapshot.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
+    <File subtype="Code" buildaction="Compile" name="Object/File.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

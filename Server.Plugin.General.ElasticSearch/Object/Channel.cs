@@ -23,69 +23,48 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
-namespace XG.Core
-{
-	[Serializable]
-	public class Channel : AObjects
-	{
-		#region VARIABLES
+using Newtonsoft.Json;
 
-		public override bool Connected
+namespace XG.Server.Plugin.General.ElasticSearch.Object
+{
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Channel : AObject
+	{
+		[JsonIgnore]
+		public new Core.Channel Object
 		{
-			get { return base.Connected; }
+			get
+			{
+				return (Core.Channel) base.Object;
+			}
 			set
 			{
-				if (!value)
-				{
-					foreach (AObject obj in All)
-					{
-						obj.Connected = false;
-					}
-				}
-				base.Connected = value;
+				base.Object = value;
 			}
 		}
 
-		public new Server Parent
-		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
-		}
-
-		int _errorCode;
+		#region VARIABLES
 
 		public int ErrorCode
 		{
-			get { return _errorCode; }
-			set { SetProperty(ref _errorCode, value); }
+			get { return Object.ErrorCode; }
 		}
 
-		#endregion
-		
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
+		public int BotCount
 		{
-			get { return All.Cast<Bot>(); }
+			get { return Object.Bots.Count(); }
 		}
 
-		public Bot Bot(string aName)
+		public int PacketCount
 		{
-			return base.Named(aName) as Bot;
+			get { return (from bot in Object.Bots from packet in bot.Packets select packet).Count(); }
 		}
 
-		public void AddBot(Bot aBot)
+		public string IrcLink
 		{
-			Add(aBot);
-		}
-
-		public void RemoveBot(Bot aBot)
-		{
-			Remove(aBot);
+			get { return Object.Parent != null ? "xdcc://" + Object.Parent.Name + ":" + Object.Parent.Port + "/" + Object.Name : ""; }
 		}
 
 		#endregion

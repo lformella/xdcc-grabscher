@@ -36,7 +36,6 @@
     <File subtype="Code" buildaction="Compile" name="Objects.cs" />
     <File subtype="Code" buildaction="Compile" name="Snapshot.cs" />
     <File subtype="Code" buildaction="Compile" name="Snapshots.cs" />
-    <File subtype="Code" buildaction="Compile" name="Attributes.cs" />
     <File subtype="Code" buildaction="Compile" name="Extensions.cs" />
   </Contents>
   <References>
@@ -44,6 +43,5 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
   </References>
 </Project>

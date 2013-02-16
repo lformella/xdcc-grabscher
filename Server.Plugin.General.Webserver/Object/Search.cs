@@ -1,5 +1,5 @@
 // 
-//  Channel.cs
+//  search.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,71 +23,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json;
 
-namespace XG.Core
+namespace XG.Server.Plugin.General.Webserver.Object
 {
-	[Serializable]
-	public class Channel : AObjects
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Search : AObject
 	{
-		#region VARIABLES
-
-		public override bool Connected
+		[JsonIgnore]
+		public new Core.Object Object
 		{
-			get { return base.Connected; }
+			get
+			{
+				return (Core.Object) base.Object;
+			}
 			set
 			{
-				if (!value)
-				{
-					foreach (AObject obj in All)
-					{
-						obj.Connected = false;
-					}
-				}
-				base.Connected = value;
+				base.Object = value;
 			}
 		}
-
-		public new Server Parent
-		{
-			get { return base.Parent as Server; }
-			set { base.Parent = value; }
-		}
-
-		int _errorCode;
-
-		public int ErrorCode
-		{
-			get { return _errorCode; }
-			set { SetProperty(ref _errorCode, value); }
-		}
-
-		#endregion
-		
-		#region CHILDREN
-
-		public IEnumerable<Bot> Bots
-		{
-			get { return All.Cast<Bot>(); }
-		}
-
-		public Bot Bot(string aName)
-		{
-			return base.Named(aName) as Bot;
-		}
-
-		public void AddBot(Bot aBot)
-		{
-			Add(aBot);
-		}
-
-		public void RemoveBot(Bot aBot)
-		{
-			Remove(aBot);
-		}
-
-		#endregion
 	}
 }

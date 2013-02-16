@@ -32,7 +32,6 @@ using System.IO;
 using System.Threading;
 
 using XG.Server.Plugin;
-using XG.Server.Plugin.Backend.MySql;
 
 using log4net;
 using log4net.Appender;
@@ -45,7 +44,7 @@ namespace XG.Server.Cmd
 {
 	class Cmd
 	{
-		public static void Main(string[] args)
+		public static void Main (string[] args)
 		{
 			if (File.Exists(Settings.Instance.AppDataPath + "log4net"))
 			{
@@ -55,7 +54,7 @@ namespace XG.Server.Cmd
 			else
 			{
 				// build our own, who logs only fatals to console
-				Logger root = ((Hierarchy) LogManager.GetRepository()).Root;
+				Logger root = ((Hierarchy)LogManager.GetRepository()).Root;
 
 				var lAppender = new ConsoleAppender
 				{
@@ -70,27 +69,18 @@ namespace XG.Server.Cmd
 			}
 
 #if !WINDOWS
-			PlatformID id  = Environment.OSVersion.Platform;
+			PlatformID id = Environment.OSVersion.Platform;
 			// Don't allow running as root on Linux or Mac
-			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo (UnixEnvironment.UserName).UserId == 0)
+			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo(UnixEnvironment.UserName).UserId == 0)
 			{
 				LogManager.GetLogger(typeof(Main)).Fatal("Sorry, you can't run XG with these permissions. Safety first!");
-				Environment.Exit (-1);
+				Environment.Exit(-1);
 			}
 #endif
 
 			var instance = new Main();
 
-			ABackendPlugin backend;
-			if (Settings.Instance.UseMySqlBackend)
-			{
-				backend = new BackendPlugin();
-			}
-			else
-			{
-				backend = new Plugin.Backend.File.BackendPlugin();
-			}
-			instance.AddBackendPlugin(backend);
+			instance.AddBackendPlugin(new Plugin.Backend.File.BackendPlugin());
 
 			if (Settings.Instance.UseWebServer)
 			{
@@ -99,6 +89,10 @@ namespace XG.Server.Cmd
 			if (Settings.Instance.UseJabberClient)
 			{
 				instance.AddWorker(new Plugin.General.Jabber.Plugin());
+			}
+			if (Settings.Instance.UseElasticSearch)
+			{
+				instance.AddWorker(new Plugin.General.ElasticSearch.Plugin());
 			}
 
 			instance.Start();
