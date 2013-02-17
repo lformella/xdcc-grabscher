@@ -350,9 +350,7 @@ var XGMain = (function()
 			grid.onClick.subscribe(function (e, args) {
 				if (args.Data != undefined)
 				{
-					args.Data.Active = true;
-					dataview.updateItem(args);
-
+					var active = true;
 					switch (args.DataType)
 					{
 						case Enum.Grid.Server:
@@ -376,18 +374,32 @@ var XGMain = (function()
 							break;
 
 						case Enum.Grid.Search:
-							websocket.sendGuid(activeTab == 0 ? Enum.Request.Search : Enum.Request.SearchExternal, args.Data.Guid);
-							grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
-							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
 							if (activeTab == 0)
 							{
+								grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
+								grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
+								websocket.sendGuid(Enum.Request.Search, args.Data.Guid);
 								searchesActive.push(args.Data.Guid);
 							}
 							else if (activeTab == 1)
 							{
-								externalSearchesActive.push(args.Data.Guid);
+								if (args.Data.Guid != "00000000-0000-0000-0000-000000000001" && args.Data.Guid != "00000000-0000-0000-0000-000000000002" && args.Data.Guid != "00000000-0000-0000-0000-000000000003" && args.Data.Guid != "00000000-0000-0000-0000-000000000004")
+								{
+									websocket.sendGuid(Enum.Request.SearchExternal, args.Data.Guid);
+									externalSearchesActive.push(args.Data.Guid);
+								}
+								else
+								{
+									active = false;
+								}
 							}
 							break;
+					}
+
+					if (active)
+					{
+						args.Data.Active = true;
+						dataview.updateItem(args);
 					}
 				}
 			});
