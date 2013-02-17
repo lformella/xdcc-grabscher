@@ -433,7 +433,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			OnClose(aContext);
 		}
 
-		void UnicastOnRequest(User aUser, IEnumerable<Core.AObject> aObjects, Request.Types aRequestType)
+		void UnicastOnRequest(User aUser, IEnumerable<object> aObjects, Request.Types aRequestType)
 		{
 			foreach (var obj in aObjects)
 			{
