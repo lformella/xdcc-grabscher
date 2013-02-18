@@ -178,22 +178,23 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			{
 				myObj = new Object.Server { Object = aObj as Core.Server };
 			}
-			if (aObj is Channel)
+			else if (aObj is Channel)
 			{
 				myObj = new Object.Channel { Object = aObj as Channel };
 			}
-			if (aObj is Bot)
+			else if (aObj is Bot)
 			{
 				myObj = new Object.Bot { Object = aObj as Bot };
 			}
-			if (aObj is Packet)
+			else if (aObj is Packet)
 			{
 				myObj = new Object.Packet { Object = aObj as Packet };
 			}
 
 			if (myObj != null)
 			{
-				_client.Index(myObj, _index, myObj.GetType().Name.ToLower(), myObj.Guid.ToString());
+				string type = myObj.GetType().Name.ToLower();
+				_client.IndexAsync(myObj, _index, type, myObj.Guid.ToString());
 			}
 		}
 
@@ -201,7 +202,8 @@ namespace XG.Server.Plugin.General.ElasticSearch
 		{
 			if (aObj is Core.Server || aObj is Channel || aObj is Bot || aObj is Packet)
 			{
-				_client.DeleteById(_index, aObj.GetType().Name.ToLower(), aObj.Guid.ToString());
+				string type = aObj.GetType().Name.ToLower();
+				_client.DeleteByIdAsync(_index, type, aObj.Guid.ToString());
 			}
 		}
 
