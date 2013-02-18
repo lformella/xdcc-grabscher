@@ -202,7 +202,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var user = new User
 			{
 				Connection = aContext,
-				LoadedObjects = new List<Core.AObject>()
+				LoadedObjects = new List<Core.AObject>(),
+				LastSearch = Guid.Empty
 			};
 
 			_users.Add(user);
@@ -266,11 +267,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Search:
-						var packets = FilteredPackets(request.Guid);
-						var bots = DistinctBots(packets);
-						var all = new List<Core.AObject>();
-						all.AddRange(packets);
-						all.AddRange(bots);
+						currentUser.LastSearch = request.Guid;
+						var all = FilteredPacketsAndBotsByGuid(request.Guid);
 						UnicastOnRequest(currentUser, all, request.Type);
 						break;
 
@@ -473,14 +471,20 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
+							if ((aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+							{
+								return;
+							}
 							aUser.LoadedObjects.Add((Core.AObject)aResponse.Data);
 							break;
 
 						case Response.Types.ObjectChanged:
 							if (!aUser.LoadedObjects.Contains(aResponse.Data))
 							{
-								//aResponse.Type = Response.Types.ObjectAdded;
-								//aUser.LoadedObjects.Add((Core.AObject)aResponse.Data);
+								return;
+							}
+							if ((aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+							{
 								return;
 							}
 							break;
@@ -553,14 +557,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region Object Searching
 
-		List<Core.Bot> DistinctBots (List<Core.Packet> aPackets)
-		{
-			var tBots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in aPackets on b.Guid equals p.Parent.Guid select b).Distinct();
-
-			return tBots.ToList();
-		}
-
-		List<Core.Packet> FilteredPackets (Guid aGuid)
+		List<Core.AObject> FilteredPacketsAndBotsByGuid (Guid aGuid)
 		{
 			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			var allPackets = (from bot in allBots from packet in bot.Packets select packet).ToList();
@@ -605,7 +602,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				}
 			}
 
-			return allPackets;
+			var bots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in allPackets on b.Guid equals p.Parent.Guid select b).Distinct().ToList();
+			var all = new List<Core.AObject>();
+			all.AddRange(allPackets);
+			all.AddRange(bots);
+			return all;
 		}
 
 		Flot[] Snapshots2Flot(Snapshots aSnapshots)
@@ -623,7 +624,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(value)};
 					list.Add(data);
 				}
-				obj.Data = (list.ToArray());
+				obj.Data = FilterDuplicateEntries(list.ToArray());
 				obj.Label = Enum.GetName(typeof (SnapshotValue), value);
 
 				tObjects.Add(obj);

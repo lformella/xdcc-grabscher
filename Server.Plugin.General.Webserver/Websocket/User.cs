@@ -25,6 +25,7 @@
 
 using Fleck;
 
+using System;
 using System.Collections.Generic;
 
 using XG.Core;
@@ -38,6 +39,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		public IWebSocketConnection Connection { get; set; }
 
 		public List<AObject> LoadedObjects { get; set; }
+
+		public Guid LastSearch { get; set; }
 
 		#endregion
 	}
