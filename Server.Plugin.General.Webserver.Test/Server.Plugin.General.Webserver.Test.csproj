@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Json.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Websocket\Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -73,7 +74,12 @@
       <Project>{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}</Project>
       <Name>Server.Plugin.General.Webserver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Server\Server.csproj">
+      <Project>{6be1e225-a4e5-497b-8eb1-2a70d992fe4c}</Project>
+      <Name>Server</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
