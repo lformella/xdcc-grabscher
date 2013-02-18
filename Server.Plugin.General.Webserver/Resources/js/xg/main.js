@@ -45,7 +45,7 @@ var XGMain = (function()
 
 		$("#dialogServerChannels").dialog({
 			autoOpen: false,
-			width: 635,
+			width: 640,
 			modal: true,
 			resizable: false
 		});
