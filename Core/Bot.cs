@@ -67,7 +67,7 @@ namespace XG.Core
 			get { return _state; }
 			set
 			{
-				SetProperty(ref _state, value);
+				SetProperty(ref _state, value, "State");
 
 				if (value == States.Waiting)
 				{
@@ -82,7 +82,7 @@ namespace XG.Core
 		public IPAddress Ip
 		{
 			get { return _ip; }
-			set { SetProperty(ref _ip, value); }
+			set { SetProperty(ref _ip, value, "Ip"); }
 		}
 
 		string _lastMessage = "";
@@ -92,7 +92,7 @@ namespace XG.Core
 			get { return _lastMessage; }
 			set
 			{
-				SetProperty(ref _lastMessage, value);
+				SetProperty(ref _lastMessage, value, "LastMessage");
 				_lastContact = DateTime.Now;
 				_lastMessageTime = DateTime.Now;
 			}
@@ -103,7 +103,7 @@ namespace XG.Core
 		public DateTime LastMessageTime
 		{
 			get { return _lastMessageTime; }
-			set { SetProperty(ref _lastMessageTime, value); }
+			set { SetProperty(ref _lastMessageTime, value, "LastMessageTime"); }
 		}
 
 		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
@@ -111,7 +111,7 @@ namespace XG.Core
 		public DateTime LastContact
 		{
 			get { return _lastContact; }
-			set { SetProperty(ref _lastContact, value); }
+			set { SetProperty(ref _lastContact, value, "LastContact"); }
 		}
 
 		int _queuePosition;
@@ -119,7 +119,7 @@ namespace XG.Core
 		public int QueuePosition
 		{
 			get { return _queuePosition; }
-			set { SetProperty(ref _queuePosition, value); }
+			set { SetProperty(ref _queuePosition, value, "QueuePosition"); }
 		}
 
 		int _queueTime;
@@ -127,7 +127,7 @@ namespace XG.Core
 		public int QueueTime
 		{
 			get { return _queueTime; }
-			set { SetProperty(ref _queueTime, value); }
+			set { SetProperty(ref _queueTime, value, "QueueTime"); }
 		}
 
 		Int64 _infoSpeedMax;
@@ -135,7 +135,7 @@ namespace XG.Core
 		public Int64 InfoSpeedMax
 		{
 			get { return _infoSpeedMax; }
-			set { SetProperty(ref _infoSpeedMax, value); }
+			set { SetProperty(ref _infoSpeedMax, value, "InfoSpeedMax"); }
 		}
 
 		Int64 _infoSpeedCurrent;
@@ -143,7 +143,7 @@ namespace XG.Core
 		public Int64 InfoSpeedCurrent
 		{
 			get { return _infoSpeedCurrent; }
-			set { SetProperty(ref _infoSpeedCurrent, value); }
+			set { SetProperty(ref _infoSpeedCurrent, value, "InfoSpeedCurrent"); }
 		}
 
 		int _infoSlotTotal;
@@ -151,7 +151,7 @@ namespace XG.Core
 		public int InfoSlotTotal
 		{
 			get { return _infoSlotTotal; }
-			set { SetProperty(ref _infoSlotTotal, value); }
+			set { SetProperty(ref _infoSlotTotal, value, "InfoSlotTotal"); }
 		}
 
 		int _infoSlotCurrent;
@@ -159,7 +159,7 @@ namespace XG.Core
 		public int InfoSlotCurrent
 		{
 			get { return _infoSlotCurrent; }
-			set { SetProperty(ref _infoSlotCurrent, value); }
+			set { SetProperty(ref _infoSlotCurrent, value, "InfoSlotCurrent"); }
 		}
 
 		int _infoQueueTotal;
@@ -167,7 +167,7 @@ namespace XG.Core
 		public int InfoQueueTotal
 		{
 			get { return _infoQueueTotal; }
-			set { SetProperty(ref _infoQueueTotal, value); }
+			set { SetProperty(ref _infoQueueTotal, value, "InfoQueueTotal"); }
 		}
 
 		int _infoQueueCurrent;
@@ -175,7 +175,7 @@ namespace XG.Core
 		public int InfoQueueCurrent
 		{
 			get { return _infoQueueCurrent; }
-			set { SetProperty(ref _infoQueueCurrent, value); }
+			set { SetProperty(ref _infoQueueCurrent, value, "InfoQueueCurrent"); }
 		}
 
 		public Int64 Speed
@@ -188,7 +188,7 @@ namespace XG.Core
 		public bool HasNetworkProblems
 		{
 			get { return _hasNetworkProblems; }
-			set { SetProperty(ref _hasNetworkProblems, value); }
+			set { SetProperty(ref _hasNetworkProblems, value, "HasNetworkProblems"); }
 		}
 
 		#endregion

@@ -29,6 +29,7 @@ using System.Collections.Generic;
 namespace XG.Core
 {
 	public delegate void ObjectDelegate(AObject aObj);
+	public delegate void ObjectFieldsDelegate(AObject aObj, string[] aFields);
 
 	[Serializable]
 	public class AObject
@@ -47,13 +48,13 @@ namespace XG.Core
 		}
 
 		[field: NonSerialized]
-		public event ObjectDelegate Changed;
+		public event ObjectFieldsDelegate Changed;
 
-		protected void FireChanged(AObject aObj)
+		protected void FireChanged(AObject aObj, string[] aFields)
 		{
 			if (Changed != null)
 			{
-				Changed(aObj);
+				Changed(aObj, aFields);
 			}
 		}
 
@@ -61,12 +62,16 @@ namespace XG.Core
 
 		#region PROPERTIES
 
-		protected bool SetProperty<T>(ref T field, T value)
+		protected bool SetProperty<T>(ref T field, T value, string aName)
 		{
 			if (!EqualityComparer<T>.Default.Equals(field, value))
 			{
+				if (_modifiedFields == null)
+				{
+					_modifiedFields = new List<string>();
+				}
+				_modifiedFields.Add(aName);
 				field = value;
-				_modified = true;
 				return true;
 			}
 			return false;
@@ -101,17 +106,17 @@ namespace XG.Core
 		public virtual string Name
 		{
 			get { return _name; }
-			set { SetProperty(ref _name, value); }
+			set { SetProperty(ref _name, value, "Name"); }
 		}
 
-		bool _modified;
+		List<string> _modifiedFields;
 
 		public bool Commit()
 		{
-			if (_modified)
+			if (_modifiedFields != null && _modifiedFields.Count > 0)
 			{
-				FireChanged(this);
-				_modified = false;
+				FireChanged(this, _modifiedFields.ToArray());
+				_modifiedFields = new List<string>();
 				return true;
 			}
 			return false;
@@ -122,7 +127,7 @@ namespace XG.Core
 		public virtual bool Connected
 		{
 			get { return _connected; }
-			set { SetProperty(ref _connected, value); }
+			set { SetProperty(ref _connected, value, "Connected"); }
 		}
 
 		bool _enabled;
@@ -162,6 +167,7 @@ namespace XG.Core
 			_name = "";
 			_connected = false;
 			_enabled = false;
+			_modifiedFields = new List<string>();
 		}
 
 		#endregion

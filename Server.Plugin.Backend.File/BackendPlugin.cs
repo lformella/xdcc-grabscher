@@ -202,7 +202,7 @@ namespace XG.Server.Plugin.Backend.File
 			SaveFiles();
 		}
 
-		protected override void FileChanged(AObject aObj)
+		protected override void FileChanged(AObject aObj, string[] aFields)
 		{
 			if (aObj is Core.File)
 			{

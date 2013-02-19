@@ -61,7 +61,7 @@ namespace XG.Core
 		public int ErrorCode
 		{
 			get { return _errorCode; }
-			set { SetProperty(ref _errorCode, value); }
+			set { SetProperty(ref _errorCode, value, "ErrorCode"); }
 		}
 
 		#endregion

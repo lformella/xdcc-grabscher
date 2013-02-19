@@ -62,7 +62,7 @@ namespace XG.Core
 		public int Port
 		{
 			get { return _port; }
-			set { SetProperty(ref _port, value); }
+			set { SetProperty(ref _port, value, "Port"); }
 		}
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
@@ -70,7 +70,7 @@ namespace XG.Core
 		public SocketErrorCode ErrorCode
 		{
 			get { return _errorCode; }
-			set { SetProperty(ref _errorCode, value); }
+			set { SetProperty(ref _errorCode, value, "ErrorCode"); }
 		}
 
 		#endregion

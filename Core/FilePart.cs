@@ -93,7 +93,7 @@ namespace XG.Core
 		public Int64 StartSize
 		{
 			get { return _startSize; }
-			set { SetProperty(ref _startSize, value); }
+			set { SetProperty(ref _startSize, value, "StartSize"); }
 		}
 
 		Int64 _stopSize;
@@ -101,7 +101,7 @@ namespace XG.Core
 		public Int64 StopSize
 		{
 			get { return _stopSize; }
-			set { SetProperty(ref _stopSize, value); }
+			set { SetProperty(ref _stopSize, value, "StopSize"); }
 		}
 
 		Int64 _currentSize;
@@ -109,7 +109,7 @@ namespace XG.Core
 		public Int64 CurrentSize
 		{
 			get { return _currentSize; }
-			set { SetProperty(ref _currentSize, value); }
+			set { SetProperty(ref _currentSize, value, "CurrentSize"); }
 		}
 
 		public Int64 MissingSize
@@ -131,7 +131,7 @@ namespace XG.Core
 		public Int64 Speed
 		{
 			get { return _speed; }
-			set { SetProperty(ref _speed, value); }
+			set { SetProperty(ref _speed, value, "Speed"); }
 		}
 
 		States _state;
@@ -143,7 +143,7 @@ namespace XG.Core
 			{
 				if (_state != value)
 				{
-					SetProperty(ref _state, value);
+					SetProperty(ref _state, value, "State");
 
 					if (_state != States.Open)
 					{
@@ -162,7 +162,7 @@ namespace XG.Core
 		public bool Checked
 		{
 			get { return _checked; }
-			set { SetProperty(ref _checked, value); }
+			set { SetProperty(ref _checked, value, "Checked"); }
 		}
 
 		[NonSerialized]

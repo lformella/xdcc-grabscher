@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.Collections.Generic;
 
 using XG.Core;
 
@@ -95,16 +96,20 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			}
 		}
 
-		protected override void ObjectChanged(AObject aObj)
+		protected override void ObjectChanged(AObject aObj, string[] aFields)
 		{
 			Index(aObj);
 
 			// reindex all packets if a bot is changed
 			if (aObj is Bot)
 			{
-				foreach (var p in (aObj as Bot).Packets)
+				List<string> fields = new List<string>(aFields);
+				if (fields.Contains("Name") || fields.Contains("InfoSpeedCurrent") || fields.Contains("Connected") || fields.Contains("InfoSlotCurrent") || fields.Contains("InfoSlotCurrent") || fields.Contains("InfoQueueCurrent"))
 				{
-					Index(p);
+					foreach (var p in (aObj as Bot).Packets)
+					{
+						Index(p);
+					}
 				}
 			}
 		}

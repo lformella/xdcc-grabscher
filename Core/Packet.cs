@@ -66,7 +66,7 @@ namespace XG.Core
 		public int Id
 		{
 			get { return _id; }
-			set { SetProperty(ref _id, value); }
+			set { SetProperty(ref _id, value, "Id"); }
 		}
 
 		Int64 _size;
@@ -74,7 +74,7 @@ namespace XG.Core
 		public Int64 Size
 		{
 			get { return _size; }
-			set { SetProperty(ref _size, value); }
+			set { SetProperty(ref _size, value, "Size"); }
 		}
 
 		Int64 _realSize;
@@ -82,7 +82,7 @@ namespace XG.Core
 		public Int64 RealSize
 		{
 			get { return _realSize; }
-			set { SetProperty(ref _realSize, value); }
+			set { SetProperty(ref _realSize, value, "RealSize"); }
 		}
 
 		string _realName = "";
@@ -90,7 +90,7 @@ namespace XG.Core
 		public string RealName
 		{
 			get { return _realName; }
-			set { SetProperty(ref _realName, value); }
+			set { SetProperty(ref _realName, value, "RealName"); }
 		}
 
 		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
@@ -98,7 +98,7 @@ namespace XG.Core
 		public DateTime LastUpdated
 		{
 			get { return _lastUpdated; }
-			set { SetProperty(ref _lastUpdated, value); }
+			set { SetProperty(ref _lastUpdated, value, "LastUpdated"); }
 		}
 
 		DateTime _lastMentioned = DateTime.MinValue.ToUniversalTime();
@@ -106,7 +106,7 @@ namespace XG.Core
 		public DateTime LastMentioned
 		{
 			get { return _lastMentioned; }
-			set { SetProperty(ref _lastMentioned, value); }
+			set { SetProperty(ref _lastMentioned, value, "LastMentioned"); }
 		}
 
 		public bool Next

@@ -109,45 +109,52 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			Broadcast(response);
 		}
 
-		protected override void ObjectChanged(Core.AObject aObj)
+		protected override void ObjectChanged(Core.AObject aObj, string[] aFields)
 		{
-			var response = new Response
-			{
-				Type = Response.Types.ObjectChanged,
-				Data = aObj
-			};
-			Broadcast(response);
+			BroadCastChanged(aObj);
+
+			List<string> fields = new List<string>(aFields);
 
 			// if a bot changed dispatch the packets, too
 			if (aObj is Core.Bot)
 			{
-				foreach (var pack in (aObj as Core.Bot).Packets)
+				if (fields.Contains("Connected"))
 				{
-					ObjectChanged(pack);
+					foreach (var pack in (aObj as Core.Bot).Packets)
+					{
+						BroadCastChanged(pack);
+					}
 				}
 			}
 			// if a part changed dispatch the file, packet and bot, too
 			else if (aObj is FilePart)
 			{
 				var part = aObj as FilePart;
-				ObjectChanged(part.Parent);
+				BroadCastChanged(part.Parent);
+
 				if (part.Packet != null)
 				{
-					ObjectChanged(part.Packet);
-					ObjectChanged(part.Packet.Parent);
+					if (fields.Contains("Speed") || fields.Contains("CurrentSize") || fields.Contains("TimeMissing"))
+					{
+						BroadCastChanged(part.Packet);
+					}
+					if (fields.Contains("Speed"))
+					{
+						BroadCastChanged(part.Packet.Parent);
+					}
 				}
 			}
 		}
 
 		protected override void ObjectEnabledChanged(Core.AObject aObj)
 		{
-			ObjectChanged(aObj);
+			BroadCastChanged(aObj);
 
 			// if a packet changed dispatch the bot, too
 			if (aObj is Core.Packet)
 			{
 				var part = aObj as Core.Packet;
-				ObjectChanged(part.Parent);
+				BroadCastChanged(part.Parent);
 			}
 		}
 
@@ -161,9 +168,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectRemoved(aParent, aObj);
 		}
 
-		protected override void FileChanged(Core.AObject aObj)
+		protected override void FileChanged(Core.AObject aObj, string[] aFields)
 		{
-			ObjectChanged(aObj);
+			ObjectChanged(aObj, aFields);
 		}
 
 		protected override void SearchAdded(Core.AObject aParent, Core.AObject aObj)
@@ -176,9 +183,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectRemoved(aParent, aObj);
 		}
 
-		protected override void SearchChanged(Core.AObject aObj)
+		protected override void SearchChanged(Core.AObject aObj, string[] aFields)
 		{
-			ObjectChanged(aObj);
+			ObjectChanged(aObj, aFields);
 		}
 
 		protected override void SnapshotAdded(Core.Snapshot aSnap)
@@ -429,6 +436,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			Log.Info("OnError(" + aContext.ConnectionInfo.ClientIpAddress + ")", aException);
 
 			OnClose(aContext);
+		}
+
+		void BroadCastChanged (Core.AObject aObj)
+		{
+			var response = new Response
+			{
+				Type = Response.Types.ObjectChanged,
+				Data = aObj
+			};
+			Broadcast(response);
 		}
 
 		void UnicastOnRequest(User aUser, IEnumerable<object> aObjects, Request.Types aRequestType)

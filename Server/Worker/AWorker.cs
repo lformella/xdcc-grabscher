@@ -143,7 +143,7 @@ namespace XG.Server.Worker
 
 		protected virtual void ObjectRemoved(AObject aParent, AObject aObj) {}
 
-		protected virtual void ObjectChanged(AObject aObj) {}
+		protected virtual void ObjectChanged(AObject aObj, string[] aFields) {}
 
 		protected virtual void ObjectEnabledChanged(AObject aObj) {}
 
@@ -151,13 +151,13 @@ namespace XG.Server.Worker
 
 		protected virtual void FileRemoved(AObject aParent, AObject aObj) {}
 
-		protected virtual void FileChanged(AObject aObj) {}
+		protected virtual void FileChanged(AObject aObj, string[] aFields) {}
 
 		protected virtual void SearchAdded(AObject aParent, AObject aObj) {}
 
 		protected virtual void SearchRemoved(AObject aParent, AObject aObj) {}
 
-		protected virtual void SearchChanged(AObject aObj) {}
+		protected virtual void SearchChanged(AObject aObj, string[] aFields) {}
 
 		protected virtual void SnapshotAdded(Snapshot aSnap) {}
 
