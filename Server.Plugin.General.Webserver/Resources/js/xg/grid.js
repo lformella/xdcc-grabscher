@@ -281,11 +281,11 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 
 			serverGrid = buildGrid(Enum.Grid.Server, dataview.getDataView(Enum.Grid.Server), [
-				buildRow("Icon", 36, false, function (obj)
+				buildRow("Icon", 38, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
 				}, false, "small"),
-				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
+				buildRow("Name", 0, true, $.proxy(formatter.formatServerName, formatter), false),
 				buildRow("", 20, false, function (obj)
 				{
 					return formatter.formatRemoveIcon(Enum.Grid.Server, obj);
@@ -303,11 +303,11 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
-				buildRow("Icon", 38, false, function (obj)
+				buildRow("Icon", 40, false, function (obj)
 				{
 					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
 				}, false, "small"),
-				buildRow("Name", 0, true, $.proxy(formatter.formatServerChannelName, formatter), false),
+				buildRow("Name", 0, true, $.proxy(formatter.formatChannelName, formatter), false),
 				buildRow("", 20, false, function (obj)
 				{
 					return formatter.formatRemoveIcon(Enum.Grid.Channel, obj);
@@ -343,7 +343,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
-				buildRow("Icon", 40, false, function (obj)
+				buildRow("Icon", 42, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
 				}, false, "small"),
@@ -378,7 +378,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
-				buildRow("Icon", 24, false, function (obj)
+				buildRow("Icon", 28, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
 				}, false, "small"),
@@ -405,7 +405,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 	
 			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
-				buildRow("Icon", 24, false, $.proxy(formatter.formatFileIcon, formatter), false, "small"),
+				buildRow("Icon", 28, false, $.proxy(formatter.formatFileIcon, formatter), false, "small"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false, "medium"),
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
 				buildRow("Speed", 70, true, $.proxy(formatter.formatFileSpeed, formatter), true),

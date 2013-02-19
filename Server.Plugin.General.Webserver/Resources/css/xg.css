@@ -199,11 +199,6 @@ fieldset label
 	padding: 0;
 }
 
-.ui-jqgrid .ui-jqgrid-htable th, .ui-jqgrid tr.jqgrow td
-{
-	height: 16px;
-}
-
 .ui-layout-pane
 {
 	border: none;

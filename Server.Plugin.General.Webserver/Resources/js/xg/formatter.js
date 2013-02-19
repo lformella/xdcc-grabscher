@@ -98,6 +98,11 @@ var XGFormatter = (function()
 				overlay = "attention-circle";
 				overlayClass = "ScarletRedMiddle";
 			}
+			else
+			{
+				overlay = "clock";
+				overlayClass = "OrangeMiddle";
+			}
 
 			if (server.Active)
 			{
@@ -135,12 +140,22 @@ var XGFormatter = (function()
 			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
-		formatServerChannelName: function (obj)
+		formatServerName: function (obj)
+		{
+			var str = obj.Name; // + ":" + obj.Port;
+			if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
+			{
+				str += " - <small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+			}
+			return str;
+		},
+
+		formatChannelName: function (obj)
 		{
 			var str = obj.Name;
 			if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
 			{
-				str += "<br /><small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+				str += " - <small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
 			}
 			return str;
 		},
