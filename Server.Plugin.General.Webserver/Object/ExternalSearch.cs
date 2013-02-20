@@ -65,6 +65,5 @@ namespace XG.Server.Plugin.General.Webserver.Object
 		public string IrcLink { get; set; }
 
 		#endregion
-
 	}
 }

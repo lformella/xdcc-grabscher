@@ -283,26 +283,53 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						var searchExternal = Searches.WithGuid(request.Guid);
 						if (searchExternal != null)
 						{
-							ExternalSearch[] results = new ExternalSearch[0];
-							try
+							int start = 0;
+							int limit = 25;
+							do
 							{
-								var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&search=" + searchExternal.Name + "&xg=" + Settings.Instance.XgVersion);
-								var req = HttpWebRequest.Create(uri);
+								try
+								{
+									var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start +"&limit=" + limit +"&search=" + searchExternal.Name);
+									var req = HttpWebRequest.Create(uri);
 
-								var response = req.GetResponse();
-								StreamReader sr = new StreamReader(response.GetResponseStream());
-								string text = sr.ReadToEnd();
-								response.Close();
+									var response = req.GetResponse();
+									StreamReader sr = new StreamReader(response.GetResponseStream());
+									string text = sr.ReadToEnd();
+									response.Close();
 
-								results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
-							}
-							catch (Exception ex)
-							{
-								Log.Fatal("OnMessage() cant load external search for " + searchExternal.Name, ex);
-							}
+									ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
 
-							UnicastOnRequest(currentUser, results, request.Type);
+									if (results.Length > 0)
+									{
+										foreach (var result in results)
+										{
+											var currentResponse = new Response
+											{
+												Type = Response.Types.ObjectAdded,
+												Data = result
+											};
+											Unicast(currentUser, currentResponse);
+										}
+									}
+
+									if (results.Length == 0 || results.Length < limit)
+									{
+										break;
+									}
+								}
+								catch (Exception ex)
+								{
+									Log.Fatal("OnMessage() cant load external search for " + searchExternal.Name, ex);
+									break;
+								}
+								start += limit;
+							} while (true);
 						}
+						Unicast(currentUser, new Response
+						{
+							Type = Response.Types.RequestComplete,
+							Data = request.Type
+						});
 						break;
 
 					case Request.Types.AddSearch:
