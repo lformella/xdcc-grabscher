@@ -111,7 +111,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectChanged(Core.AObject aObj, string[] aFields)
 		{
-			BroadCastChanged(aObj);
+			BroadcastChanged(aObj);
 
 			List<string> fields = new List<string>(aFields);
 
@@ -122,7 +122,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				{
 					foreach (var pack in (aObj as Core.Bot).Packets)
 					{
-						BroadCastChanged(pack);
+						BroadcastChanged(pack);
 					}
 				}
 			}
@@ -130,17 +130,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			else if (aObj is FilePart)
 			{
 				var part = aObj as FilePart;
-				BroadCastChanged(part.Parent);
+				BroadcastChanged(part.Parent);
 
 				if (part.Packet != null)
 				{
 					if (fields.Contains("Speed") || fields.Contains("CurrentSize") || fields.Contains("TimeMissing"))
 					{
-						BroadCastChanged(part.Packet);
+						BroadcastChanged(part.Packet);
 					}
 					if (fields.Contains("Speed"))
 					{
-						BroadCastChanged(part.Packet.Parent);
+						BroadcastChanged(part.Packet.Parent);
 					}
 				}
 			}
@@ -148,13 +148,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectEnabledChanged(Core.AObject aObj)
 		{
-			BroadCastChanged(aObj);
+			BroadcastChanged(aObj);
 
 			// if a packet changed dispatch the bot, too
 			if (aObj is Core.Packet)
 			{
 				var part = aObj as Core.Packet;
-				BroadCastChanged(part.Parent);
+				BroadcastChanged(part.Parent);
 			}
 		}
 
@@ -438,7 +438,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			OnClose(aContext);
 		}
 
-		void BroadCastChanged (Core.AObject aObj)
+		void BroadcastChanged (Core.AObject aObj)
 		{
 			var response = new Response
 			{
