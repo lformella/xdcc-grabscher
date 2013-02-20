@@ -92,7 +92,8 @@ namespace XG.Server.Irc
 			Channel tChan = aServer.Channel(tChannelName);
 			Bot tBot = aServer.Bot(tUserName);
 
-			if (tBot != null)
+			// dont hammer plugins with not needed information updates - 60 seconds are enough
+			if (tBot != null && (DateTime.Now - tBot.LastContact).TotalSeconds > 60)
 			{
 				tBot.LastContact = DateTime.Now;
 			}
