@@ -350,7 +350,7 @@ var XGMain = (function()
 			grid.onClick.subscribe(function (e, args) {
 				if (args.Data != undefined)
 				{
-					var active = true;
+					var active = false;
 					switch (args.DataType)
 					{
 						case Enum.Grid.Server:
@@ -359,18 +359,21 @@ var XGMain = (function()
 							currentServerGuid = args.Data.Guid;
 							$("#channelPanel").show();
 							serversActive.push(args.Data.Guid);
+							active = true;
 							break;
 
 						case Enum.Grid.Bot:
 							websocket.sendGuid(Enum.Request.PacketsFromBot, args.Data.Guid);
 							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
 							botsActive.push(args.Data.Guid);
+							active = true;
 							break;
 
 						case Enum.Grid.Packet:
 							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
 							grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
 							grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
+							active = true;
 							break;
 
 						case Enum.Grid.Search:
@@ -380,6 +383,7 @@ var XGMain = (function()
 								grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
 								websocket.sendGuid(Enum.Request.Search, args.Data.Guid);
 								searchesActive.push(args.Data.Guid);
+								active = true;
 							}
 							else if (activeTab == 1)
 							{
@@ -387,10 +391,7 @@ var XGMain = (function()
 								{
 									websocket.sendGuid(Enum.Request.SearchExternal, args.Data.Guid);
 									externalSearchesActive.push(args.Data.Guid);
-								}
-								else
-								{
-									active = false;
+									active = true;
 								}
 							}
 							break;
