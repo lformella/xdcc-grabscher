@@ -70,6 +70,11 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			}
 		}
 
+		protected override void StopRun()
+		{
+			_client = null;
+		}
+
 		#endregion
 
 		#region EVENTHANDLER
@@ -164,11 +169,14 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			var properties = snap.GetType().GetProperties();
 			foreach (var prop in properties)
 			{
-				var snapVal = (SnapshotValue) Enum.Parse(typeof (SnapshotValue), prop.Name);
+				var snapVal = (SnapshotValue)Enum.Parse(typeof(SnapshotValue), prop.Name);
 				prop.SetValue(snap, aSnap.Get(snapVal), null);
 			}
 
-			_client.Index(snap, _index, "snapshot", (int) snap.Timestamp);
+			if (_client != null)
+			{
+				_client.Index(snap, _index, "snapshot", (int)snap.Timestamp);
+			}
 		}
 
 		#endregion
@@ -196,7 +204,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 				myObj = new Object.Packet { Object = aObj as Packet };
 			}
 
-			if (myObj != null)
+			if (_client != null && myObj != null)
 			{
 				string type = myObj.GetType().Name.ToLower();
 				_client.IndexAsync(myObj, _index, type, myObj.Guid.ToString());
@@ -205,7 +213,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 
 		void Remove (AObject aObj)
 		{
-			if (aObj is Core.Server || aObj is Channel || aObj is Bot || aObj is Packet)
+			if (_client != null && (aObj is Core.Server || aObj is Channel || aObj is Bot || aObj is Packet))
 			{
 				string type = aObj.GetType().Name.ToLower();
 				_client.DeleteByIdAsync(_index, type, aObj.Guid.ToString());
