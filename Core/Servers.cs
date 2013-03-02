@@ -47,12 +47,12 @@ namespace XG.Core
 			base.Add(aServer);
 		}
 
-		public void Add(string aServer)
+		public void Add(string aServer, int aPort = 6667)
 		{
 			aServer = aServer.Trim().ToLower();
 			if (Server(aServer) == null)
 			{
-				var tServer = new Server {Name = aServer, Port = 6667, Enabled = true};
+				var tServer = new Server {Name = aServer, Port = aPort, Enabled = true};
 				Add(tServer);
 			}
 		}

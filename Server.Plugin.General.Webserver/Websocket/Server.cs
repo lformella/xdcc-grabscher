@@ -250,7 +250,15 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				switch (request.Type)
 				{
 					case Request.Types.AddServer:
-						AddServer(request.Name);
+						string serverString = request.Name;
+						int port = 6667;
+						if (serverString.Contains(":"))
+						{
+							string[] serverArray = serverString.Split(':');
+							serverString = serverArray[0];
+							port = int.Parse(serverArray[1]);
+						}
+						AddServer(serverString, port);
 						break;
 
 					case Request.Types.RemoveServer:

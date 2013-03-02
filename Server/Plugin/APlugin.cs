@@ -34,9 +34,9 @@ namespace XG.Server.Plugin
 	{
 		#region SERVER
 
-		public void AddServer(string aString)
+		public void AddServer(string aString, int aPort = 6667)
 		{
-			Servers.Add(aString);
+			Servers.Add(aString, aPort);
 		}
 
 		public void RemoveServer(Guid aGuid)
