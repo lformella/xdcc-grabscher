@@ -130,7 +130,15 @@ namespace XG.Server.Plugin.General.Webserver
 							# region SERVER
 
 						case ClientRequest.AddServer:
-							AddServer(HttpUtility.UrlDecode(tDic["name"]));
+							string serverString = HttpUtility.UrlDecode(tDic["name"]);
+							int port = 6667;
+							if (serverString.Contains(":"))
+							{
+								string[] serverArray = serverString.Split(':');
+								serverString = serverArray[0];
+								port = int.Parse(serverArray[1]);
+							}
+							AddServer(serverString, port);
 							break;
 
 						case ClientRequest.RemoveServer:
