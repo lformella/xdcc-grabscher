@@ -554,8 +554,7 @@ namespace XG.Server.Helper
 						return;
 					}
 
-					bool error = true;
-					bool deleteOnError = true;
+					bool buildComplete = false;
 					IEnumerable<FilePart> parts = tFile.Parts;
 					string fileReady = Settings.Instance.ReadyPath + tFile.Name;
 
@@ -579,14 +578,6 @@ namespace XG.Server.Helper
 							catch (Exception ex)
 							{
 								Log.Fatal("JoinCompleteParts(" + tFile + ") handling " + part + "", ex);
-								// dont delete the source if the disk is full!
-								// taken from http://www.dotnetspider.com/forum/101158-Disk-full-C.aspx
-								// TODO this doesnt work :(
-								var hresult = (int) ex.GetType().GetField("_HResult", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ex);
-								if ((hresult & 0xFFFF) == 112L)
-								{
-									deleteOnError = false;
-								}
 								break;
 							}
 						}
@@ -604,7 +595,7 @@ namespace XG.Server.Helper
 
 							// the file is complete and enabled
 							tFile.Enabled = true;
-							error = false;
+							buildComplete = true;
 
 							// clear it
 							RemoveFile(tFile);
@@ -628,11 +619,14 @@ namespace XG.Server.Helper
 						Statistic.Instance.Increase(StatisticType.FilesBroken);
 					}
 
-					if (error && deleteOnError)
+					if (buildComplete)
+					{
+						RemoveFile(tFile);
+					}
+					else
 					{
 						// the creation was not successfull, so delete the files and parts
 						FileSystem.DeleteFile(fileReady);
-						RemoveFile(tFile);
 					}
 				}
 			}
