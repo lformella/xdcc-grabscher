@@ -138,6 +138,8 @@
     <File subtype="Code" buildaction="Compile" name="Object/Snapshot.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/File.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-asc.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-desc.gif" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

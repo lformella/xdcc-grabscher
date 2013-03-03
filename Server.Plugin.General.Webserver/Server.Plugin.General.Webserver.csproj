@@ -150,6 +150,8 @@
     <EmbeddedResource Include="Resources\font\fontello.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\css\images\sort-asc.gif" />
+    <EmbeddedResource Include="Resources\css\images\sort-desc.gif" />
     <EmbeddedResource Include="Resources\css\images\ui-bg_flat_100_ffffff_40x100.png" />
     <EmbeddedResource Include="Resources\css\images\ui-bg_flat_15_cd0a0a_40x100.png" />
     <EmbeddedResource Include="Resources\css\images\ui-bg_flat_70_000000_40x100.png" />
