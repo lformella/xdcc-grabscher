@@ -170,6 +170,10 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 
 		void WriteToStream(byte[] aData)
 		{
+			if (aData == null)
+			{
+				return;
+			}
 			if (Context.Request.Headers["Accept-Encoding"] != null)
 			{
 				using (var ms = new MemoryStream())

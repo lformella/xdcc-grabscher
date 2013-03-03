@@ -492,7 +492,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					Type = Response.Types.ObjectAdded,
 					Data = obj
 				};
-				Unicast(aUser, response);
+				Unicast(aUser, response, false);
 			}
 			Unicast(aUser, new Response
 			{
@@ -509,7 +509,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 		}
 
-		void Unicast(User aUser, Response aResponse)
+		void Unicast(User aUser, Response aResponse, bool advancedVisibilityCheck = true)
 		{
 			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
 			{
@@ -523,7 +523,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
-							if ((aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+                            if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
 							{
 								return;
 							}
@@ -535,7 +535,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
-							if ((aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+                            if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
 							{
 								return;
 							}
@@ -643,10 +643,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				if (search != null)
 				{
 					string[] searches = search.Name.ToLower().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-					foreach (string currentSearch in searches)
-					{
-						allPackets = (from packet in allPackets where packet.Name.ToLower().Contains(currentSearch.ToLower()) select packet).ToList();
-					}
+					allPackets = (from packet in allPackets where packet.Name.ToLower().ContainsAll(searches) select packet).ToList();
 				}
 				else
 				{
