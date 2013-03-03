@@ -206,8 +206,8 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			{
 				Log.Fatal("LoadFile(" + aFile + ")", ex);
 			}
-			return new byte[0];
 #endif
+			return new byte[0];
 		}
 
 		string PatchLanguage(string aContent, string[] aLanguages)

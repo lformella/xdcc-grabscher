@@ -226,8 +226,8 @@
     <EmbeddedResource Include="Resources\js\xg\websocket.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\css\animation.css" />
-    <Content Include="Resources\css\slick.grid.css" />
+    <EmbeddedResource Include="Resources\css\animation.css" />
+    <EmbeddedResource Include="Resources\css\slick.grid.css" />
     <EmbeddedResource Include="Resources\js\external\jquery.event.drag-2.0.min.js" />
     <EmbeddedResource Include="Resources\js\external\slick.core.js" />
     <EmbeddedResource Include="Resources\js\external\slick.dataview.js" />
