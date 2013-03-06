@@ -56,7 +56,7 @@ namespace XG.Server.Plugin.Backend.File
 		const string SearchesBinary = "xgsearches.bin";
 		const string SnapshotsBinary = "xgsnapshots.bin";
 
-		const int BackupDataTime = 900000;
+		const int BackupDataTime = 900;
 
 		bool _allowRunning = true;
 
@@ -276,13 +276,17 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			try
 			{
-				Stream streamWrite = System.IO.File.Create(aFile + ".new");
-				_formatter.Serialize(streamWrite, aObj);
-				streamWrite.Close();
+				using (Stream streamWrite = System.IO.File.Create(aFile + ".new"))
+				{
+					_formatter.Serialize(streamWrite, aObj);
+					streamWrite.Close();
+				}
 				FileSystem.DeleteFile(aFile + ".bak");
 				FileSystem.MoveFile(aFile, aFile + ".bak");
 				FileSystem.MoveFile(aFile + ".new", aFile);
 				Log.Debug("Save(" + aFile + ")");
+
+				GC.Collect();
 			}
 			catch (Exception ex)
 			{
@@ -304,10 +308,14 @@ namespace XG.Server.Plugin.Backend.File
 			{
 				try
 				{
-					Stream streamRead = System.IO.File.OpenRead(aFile);
-					obj = _formatter.Deserialize(streamRead);
-					streamRead.Close();
+					using (Stream streamRead = System.IO.File.OpenRead(aFile))
+					{
+						obj = _formatter.Deserialize(streamRead);
+						streamRead.Close();
+					}
 					Log.Debug("Load(" + aFile + ")");
+
+					GC.Collect();
 				}
 				catch (Exception ex)
 				{
@@ -315,9 +323,11 @@ namespace XG.Server.Plugin.Backend.File
 					// try to load the backup
 					try
 					{
-						Stream streamRead = System.IO.File.OpenRead(aFile + ".bak");
-						obj = _formatter.Deserialize(streamRead);
-						streamRead.Close();
+						using (Stream streamRead = System.IO.File.OpenRead(aFile + ".bak"))
+						{
+							obj = _formatter.Deserialize(streamRead);
+							streamRead.Close();
+						}
 						Log.Debug("Load(" + aFile + ".bak)");
 					}
 					catch (Exception)
