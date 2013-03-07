@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
@@ -77,8 +78,8 @@ namespace XG.Server
 
 		public FileActions FileActions { get; set; }
 
-		readonly Dictionary<Core.Server, ServerConnection> _servers;
-		readonly Dictionary<Packet, BotConnection> _downloads;
+		readonly List<ServerConnection> _servers;
+		readonly List<BotConnection> _downloads;
 
 		public bool AllowRunning { set; get; }
 
@@ -90,8 +91,8 @@ namespace XG.Server
 		{
 			AllowRunning = true;
 
-			_servers = new Dictionary<Core.Server, ServerConnection>();
-			_downloads = new Dictionary<Packet, BotConnection>();
+			_servers = new List<ServerConnection>();
+			_downloads = new List<BotConnection>();
 
 			// create my stuff if its not there
 			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
@@ -111,9 +112,10 @@ namespace XG.Server
 		/// <param name="aServer"> </param>
 		public void ServerConnect(Core.Server aServer)
 		{
-			if (!_servers.ContainsKey(aServer))
+			ServerConnection con = _servers.SingleOrDefault(c => c.Server == aServer);
+			if (con == null)
 			{
-				var con = new ServerConnection
+				con = new ServerConnection
 				{
 					FileActions = FileActions,
 					Server = aServer,
@@ -121,7 +123,7 @@ namespace XG.Server
 					Connection = new Connection.Connection {Hostname = aServer.Name, Port = aServer.Port, MaxData = 0}
 				};
 
-				_servers.Add(aServer, con);
+				_servers.Add(con);
 
 				con.Connected += ServerConnected;
 				con.Disconnected += ServerDisconnected;
@@ -131,7 +133,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("ConnectServer(" + aServer + ") is already in the dictionary");
+				Log.Error("ConnectServer(" + aServer + ") is already in the list");
 			}
 		}
 
@@ -146,10 +148,9 @@ namespace XG.Server
 		/// <param name="aServer"> </param>
 		public void ServerDisconnect(Core.Server aServer)
 		{
-			if (_servers.ContainsKey(aServer))
+			ServerConnection con = _servers.SingleOrDefault(c => c.Server == aServer);
+			if (con != null)
 			{
-				ServerConnection con = _servers[aServer];
-
 				if (con.Connection != null)
 				{
 					con.Connection.Disconnect();
@@ -163,10 +164,9 @@ namespace XG.Server
 
 		void ServerDisconnected(Core.Server aServer, SocketErrorCode aValue)
 		{
-			if (_servers.ContainsKey(aServer))
+			ServerConnection con = _servers.SingleOrDefault(c => c.Server == aServer);
+			if (con != null)
 			{
-				ServerConnection con = _servers[aServer];
-
 				if (aServer.Enabled)
 				{
 					// disable the server if the host was not found
@@ -203,7 +203,7 @@ namespace XG.Server
 					con.Server = null;
 					con.IrcParser = null;
 
-					_servers.Remove(aServer);
+					_servers.Remove(con);
 				}
 
 				con.Connection = null;
@@ -218,10 +218,9 @@ namespace XG.Server
 		{
 			var tServer = aServer as Core.Server;
 
-			if (tServer != null && _servers.ContainsKey(tServer))
+			ServerConnection con = _servers.SingleOrDefault(c => c.Server == aServer);
+			if (con != null)
 			{
-				ServerConnection con = _servers[tServer];
-
 				if (tServer.Enabled)
 				{
 					Log.Error("ReconnectServer(" + tServer + ")");
@@ -250,11 +249,12 @@ namespace XG.Server
 		/// <param name="aPort"> </param>
 		void BotConnect(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
-			if (!_downloads.ContainsKey(aPack))
+            BotConnection con = _downloads.SingleOrDefault(c => c.Packet == aPack);
+			if (con == null)
 			{
 				new Thread(() =>
 				{
-					var con = new BotConnection
+					con = new BotConnection
 					{
 						FileActions = FileActions,
 						Packet = aPack,
@@ -265,7 +265,7 @@ namespace XG.Server
 					con.Connected += BotConnected;
 					con.Disconnected += BotDisconnected;
 
-					_downloads.Add(aPack, con);
+					_downloads.Add(con);
 					con.Connection.Connect();
 				}).Start();
 			}
@@ -276,39 +276,38 @@ namespace XG.Server
 			}
 		}
 
-		void BotConnected(Packet aPack, BotConnection aCon) {}
+		void BotConnected(Packet aPack) {}
 
 		void BotDisconnect(Bot aBot)
 		{
-			foreach (var kvp in _downloads)
+            BotConnection con = _downloads.SingleOrDefault(c => c.Packet.Parent == aBot);
+			if (con != null)
 			{
-				if (kvp.Key.Parent == aBot)
-				{
-					kvp.Value.Connection.Disconnect();
-					break;
-				}
+				con.Connection.Disconnect();
 			}
 		}
 
-		void BotDisconnected(Packet aPacket, BotConnection aCon)
+		void BotDisconnected(Packet aPacket)
 		{
-			aCon.Packet = null;
-			aCon.Connection = null;
 
-			if (_downloads.ContainsKey(aPacket))
-			{
-				aCon.Connected -= BotConnected;
-				aCon.Disconnected -= BotDisconnected;
-				_downloads.Remove(aPacket);
+            BotConnection con = _downloads.SingleOrDefault(c => c.Packet == aPacket);
+            if (con != null)
+            {
+			    con.Packet = null;
+			    con.Connection = null;
+
+				con.Connected -= BotConnected;
+				con.Disconnected -= BotDisconnected;
+				_downloads.Remove(con);
 
 				try
 				{
 					// if the connection never connected, there will be no part!
 					// and if we manually killed stopped the packet there will be no parent of the part
-					if (aCon.Part != null && aCon.Part.Parent != null)
+					if (con.Part != null && con.Part.Parent != null)
 					{
 						// do this here because the bothandler sets the part state and after this we can check the file
-						FileActions.CheckFile(aCon.Part.Parent);
+						FileActions.CheckFile(con.Part.Parent);
 					}
 				}
 				catch (Exception ex)
@@ -318,8 +317,11 @@ namespace XG.Server
 
 				try
 				{
-					ServerConnection sc = _servers[aPacket.Parent.Parent.Parent];
-					sc.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime, false);
+					ServerConnection scon = _servers.SingleOrDefault(c => c.Server == aPacket.Parent.Parent.Parent);
+					if (scon != null)
+					{
+						scon.CreateTimer(aPacket.Parent, Settings.Instance.CommandWaitTime, false);
+					}
 				}
 				catch (Exception ex)
 				{
@@ -339,12 +341,11 @@ namespace XG.Server
 			{
 				if (_last.AddSeconds(Settings.Instance.RunLoopTime) < DateTime.Now)
 				{
-					foreach (var kvp in _servers)
+					foreach (var con in _servers.ToArray())
 					{
-						ServerConnection sc = kvp.Value;
-						if (sc.IsRunning)
+						if (con.IsRunning)
 						{
-							sc.TriggerTimerRun();
+							con.TriggerTimerRun();
 						}
 					}
 				}

@@ -35,8 +35,6 @@ using log4net;
 
 namespace XG.Server
 {
-	public delegate void PacketBotConnectDelegate(Packet aPack, BotConnection aCon);
-
 	/// <summary>
 	/// 	This class describes the connection to a single irc bot
 	/// 	it does the following things
@@ -126,8 +124,8 @@ namespace XG.Server
 
 		#region EVENTS
 
-		public event PacketBotConnectDelegate Connected;
-		public event PacketBotConnectDelegate Disconnected;
+		public event PacketDelegate Connected;
+		public event PacketDelegate Disconnected;
 
 		#endregion
 
@@ -175,7 +173,7 @@ namespace XG.Server
 					FileStream stream = info.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 					// we are connected
-					Connected(Packet, this);
+					Connected(Packet);
 
 					// we seek if it is possible
 					Int64 seekPos = StartSize - Part.StartSize;
@@ -337,7 +335,7 @@ namespace XG.Server
 			}
 			Packet.Parent.Commit();
 
-			Disconnected(Packet, this);
+			Disconnected(Packet);
 		}
 
 		void EnabledChanged(AObject aObj)

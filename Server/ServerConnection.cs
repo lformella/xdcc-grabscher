@@ -54,6 +54,10 @@ namespace XG.Server
 
 		public Core.Server Server
 		{
+			get
+			{
+				return _server;
+			}
 			set
 			{
 				if (_server != null)
@@ -182,7 +186,7 @@ namespace XG.Server
 					while (tPacket != null)
 					{
 						Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name,
-						                                                 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
+																		 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
 						if (tChunk == -1)
 						{
 							_log.Warn("RequestFromBot(" + aBot + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");

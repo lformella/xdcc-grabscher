@@ -98,7 +98,9 @@ namespace XG.Core
 
 	public delegate void ServerChannelDelegate(Server aServer, Channel aChan);
 
-	public delegate void ServerObjectIntBoolDelegate(Server aServer, AObject aObj, int aInt, bool aBool);
+    public delegate void ServerObjectIntBoolDelegate(Server aServer, AObject aObj, int aInt, bool aBool);
+
+    public delegate void PacketDelegate(Packet aPacket);
 
 	#endregion
 
