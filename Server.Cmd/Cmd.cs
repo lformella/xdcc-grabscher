@@ -31,8 +31,6 @@ using System;
 using System.IO;
 using System.Threading;
 
-using XG.Server.Plugin;
-
 using log4net;
 using log4net.Appender;
 using log4net.Config;
@@ -50,6 +48,11 @@ namespace XG.Server.Cmd
 			{
 				// load settings from file
 				XmlConfigurator.Configure(new FileInfo(Settings.Instance.AppDataPath + "log4net"));
+			}
+			else if (File.Exists(Settings.Instance.AppDataPath + "log4net.xml"))
+			{
+				// load settings from file
+				XmlConfigurator.Configure(new FileInfo(Settings.Instance.AppDataPath + "log4net.xml"));
 			}
 			else
 			{
