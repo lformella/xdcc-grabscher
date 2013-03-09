@@ -64,7 +64,7 @@ namespace XG.Server.Plugin.General.ElasticSearch.Object
 
 		public string IrcLink
 		{
-			get { return Object.Parent != null ? "xdcc://" + Object.Parent.Name + ":" + Object.Parent.Port + "/" + Object.Name : ""; }
+			get { return Object.Parent != null ? "irc://" + Object.Parent.Name + ":" + Object.Parent.Port + "/" + Object.Name : ""; }
 		}
 
 		#endregion
