@@ -5,11 +5,11 @@
     <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedFlat" ResourceNamePolicy="FileName" />
     <StandardHeader Text="&#xA; ${FileName}&#xA; &#xA; Author:&#xA;      ${AuthorName} &lt;${AuthorEmail}&gt;&#xA;&#xA; Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This program is free software; you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation; either version 2 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xA; GNU General Public License for more details.&#xA; &#xA; You should have received a copy of the GNU General Public License&#xA; along with this program; if not, write to the Free Software&#xA; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA&#xA;" IncludeInNewFiles="True" />
     <TextStylePolicy FileWidth="160" TabWidth="4" NoTabsAfterNonTabs="True" inheritsSet="Mono" inheritsScope="text/plain" />
-    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
-    <CSharpFormattingPolicy IndentSwitchBody="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" IfElseBraceForcement="AddBraces" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" ElseNewLinePlacement="NewLine" ElseIfNewLinePlacement="SameLine" CatchNewLinePlacement="NewLine" FinallyNewLinePlacement="NewLine" ArrayInitializerWrapping="DoNotWrap" BeforeMethodCallParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" BlankLinesBeforeUsings="1" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+    <TextStylePolicy inheritsSet="null" scope="text/x-csharp" />
+    <CSharpFormattingPolicy IndentSwitchBody="True" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
     <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
-    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/html" />
-    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="application/javascript" />
+    <TextStylePolicy inheritsSet="null" scope="text/html" />
+    <TextStylePolicy inheritsSet="null" scope="application/javascript" />
     <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/css" />
     <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-sql" />
     <NameConventionPolicy>
@@ -65,10 +65,11 @@
         </NamingRule>
       </Rules>
     </NameConventionPolicy>
-    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="image/svg+xml" />
+    <TextStylePolicy inheritsSet="null" scope="image/svg+xml" />
     <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="image/svg+xml" />
-    <TextStylePolicy FileWidth="120" TabsToSpaces="False" NoTabsAfterNonTabs="True" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="application/xml" />
+    <TextStylePolicy inheritsSet="null" scope="application/xml" />
     <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" />
+    <TextStylePolicy inheritsSet="null" scope="application/octet-stream" />
   </Policies>
   <Configurations active="Release">
     <Configuration name="Debug" ctype="CombineConfiguration">
@@ -111,12 +112,12 @@
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
-      <Entry build="True" name="Core" configuration="Default" />
-      <Entry build="True" name="Server" configuration="Default" />
-      <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Default" />
-      <Entry build="True" name="Server.Cmd" configuration="Default" />
-      <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Default" />
-      <Entry build="True" name="Server.Plugin.Backend.File" configuration="Default" />
+      <Entry build="True" name="Core" configuration="Debug" />
+      <Entry build="True" name="Server" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Webserver" configuration="Debug" />
+      <Entry build="True" name="Server.Cmd" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.General.Jabber" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.Backend.File" configuration="Debug" />
       <Entry build="True" name="Core.Test" configuration="Debug" />
       <Entry build="True" name="Server.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
