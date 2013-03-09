@@ -139,7 +139,10 @@ namespace XG.Server
 			_server.ErrorCode = SocketErrorCode.None;
 			_server.Commit();
 
-			Connected(_server);
+			if (Connected != null)
+			{
+				Connected(_server);
+			}
 		}
 
 		protected override void ConnectionDisconnected(SocketErrorCode aValue)
@@ -152,8 +155,11 @@ namespace XG.Server
 
 			_timedObjects.Clear();
 			_latestPacketRequests.Clear();
-
-			Disconnected(_server, aValue);
+			
+			if (Disconnected != null)
+			{
+				Disconnected(_server, aValue);
+			}
 		}
 
 		void SendData(string aData)

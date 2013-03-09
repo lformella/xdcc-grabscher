@@ -173,7 +173,10 @@ namespace XG.Server
 					FileStream stream = info.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 					// we are connected
-					Connected(Packet);
+					if (Connected != null)
+					{
+						Connected(Packet);
+					}
 
 					// we seek if it is possible
 					Int64 seekPos = StartSize - Part.StartSize;
@@ -244,7 +247,7 @@ namespace XG.Server
 
 		#region DISCONNECT
 
-		protected override void ConnectionDisconnected (SocketErrorCode aValue)
+		protected override void ConnectionDisconnected(SocketErrorCode aValue)
 		{
 			// close the writer
 			if (_writer != null)
@@ -270,8 +273,7 @@ namespace XG.Server
 					Log.Info("ConnectionDisconnected(" + Packet + ") removing part");
 					Part.State = FilePart.States.Broken;
 					FileActions.RemovePart(File, Part);
-				}
-				else
+				} else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
 					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheckBytes))
@@ -334,8 +336,11 @@ namespace XG.Server
 				Part.Commit();
 			}
 			Packet.Parent.Commit();
-
-			Disconnected(Packet);
+			
+			if (Disconnected != null)
+			{
+				Disconnected(Packet);
+			}
 		}
 
 		void EnabledChanged(AObject aObj)
