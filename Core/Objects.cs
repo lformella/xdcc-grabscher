@@ -37,14 +37,14 @@ namespace XG.Core
 			get { return base.All.Cast<Object>(); }
 		}
 
-		public void Add(Object aObject)
+		public bool Add(Object aObject)
 		{
-			base.Add(aObject);
+			return base.Add(aObject);
 		}
 
-		public void Remove(Object aObject)
+		public bool Remove(Object aObject)
 		{
-			base.Remove(aObject);
+			return base.Remove(aObject);
 		}
 
 		public new Object Named(string aName)
@@ -57,6 +57,11 @@ namespace XG.Core
 		{
 			AObject tObject = base.WithGuid(aGuid);
 			return tObject != null ? (Object) tObject : null;
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return Named(aObject.Name) != null;
 		}
 	}
 }

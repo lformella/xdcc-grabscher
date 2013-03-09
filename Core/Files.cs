@@ -49,23 +49,29 @@ namespace XG.Core
 			}
 		}
 
-		public void Add(File aFile)
+		public bool Add(File aFile)
 		{
-			base.Add(aFile);
+			return base.Add(aFile);
 		}
 
-		public void Add(string aName, Int64 aSize)
+		public bool Add(string aName, Int64 aSize)
 		{
 			var tFile = new File(aName, aSize);
 			if (File(tFile.TmpPath) == null)
 			{
-				Add(tFile);
+				return Add(tFile);
 			}
+			return false;
 		}
 
-		public void Remove(File aFile)
+		public bool Remove(File aFile)
 		{
-			base.Remove(aFile);
+			return base.Remove(aFile);
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return File((aObject as File).TmpPath) != null;
 		}
 	}
 }

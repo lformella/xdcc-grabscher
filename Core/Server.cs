@@ -105,12 +105,12 @@ namespace XG.Core
 			return tBot;
 		}
 
-		public void AddChannel(Channel aChannel)
+		public bool AddChannel(Channel aChannel)
 		{
-			Add(aChannel);
+			return Add(aChannel);
 		}
 
-		public void AddChannel(string aChannel)
+		public bool AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
 			if (!aChannel.StartsWith("#"))
@@ -120,13 +120,19 @@ namespace XG.Core
 			if (Channel(aChannel) == null)
 			{
 				var tChannel = new Channel {Name = aChannel, Enabled = Enabled};
-				AddChannel(tChannel);
+				return AddChannel(tChannel);
 			}
+			return false;
 		}
 
-		public void RemoveChannel(Channel aChannel)
+		public bool RemoveChannel(Channel aChannel)
 		{
-			Remove(aChannel);
+			return Remove(aChannel);
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return Channel((aObject as Channel).Name) != null;
 		}
 
 		#endregion

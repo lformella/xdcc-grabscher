@@ -64,9 +64,9 @@ namespace XG.Server.Irc
 				return;
 			}
 
-				#endregion
+			#endregion
 
-				#region XGVERSION
+			#region XGVERSION
 
 			if (aMessage == "XGVERSION")
 			{
@@ -75,9 +75,9 @@ namespace XG.Server.Irc
 				return;
 			}
 
-				#endregion
+			#endregion
 
-				#region DCC DOWNLOAD MESSAGE
+			#region DCC DOWNLOAD MESSAGE
 
 			if (aMessage.StartsWith("DCC") && tBot != null)
 			{
@@ -257,9 +257,9 @@ namespace XG.Server.Irc
 				}
 			}
 
-				#endregion
+			#endregion
 
-				#region DCC INFO MESSAGE
+			#region DCC INFO MESSAGE
 
 			else if (tChan != null)
 			{
@@ -445,8 +445,22 @@ namespace XG.Server.Irc
 				{
 					if (isParsed)
 					{
-						tChan.AddBot(tBot);
-						log.Info("Parse() inserted " + tBot);
+						if (tChan.AddBot(tBot))
+						{
+							log.Info("Parse() inserted " + tBot);
+						}
+						else
+						{
+							var duplicateBot = tChan.Bot(tBot.Name);
+							if (duplicateBot != null)
+							{
+								tBot = duplicateBot;
+							}
+							else
+							{
+								log.Error("Parse() cant insert " + tBot + " into " + tChan);
+							}
+						}
 					}
 				}
 				// and insert packet _AFTER_ this

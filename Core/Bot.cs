@@ -212,14 +212,14 @@ namespace XG.Core
 			}
 		}
 
-		public void AddPacket(Packet aPacket)
+		public bool AddPacket(Packet aPacket)
 		{
-			Add(aPacket);
+			return Add(aPacket);
 		}
 
-		public void RemovePacket(Packet aPacket)
+		public bool RemovePacket(Packet aPacket)
 		{
-			Remove(aPacket);
+			return Remove(aPacket);
 		}
 
 		public Packet OldestActivePacket()
@@ -232,6 +232,11 @@ namespace XG.Core
 			{
 				return null;
 			}
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return Packet((aObject as Packet).Id) != null;
 		}
 
 		#endregion

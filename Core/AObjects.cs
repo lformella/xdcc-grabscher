@@ -32,7 +32,7 @@ namespace XG.Core
 	public delegate void ObjectsDelegate(AObjects aObjects, AObject aObject);
 
 	[Serializable]
-	public class AObjects : AObject
+	public abstract class AObjects : AObject
 	{
 		#region EVENTS
 
@@ -89,8 +89,7 @@ namespace XG.Core
 				{
 					if (!_children.Contains(aObject))
 					{
-						AObject tObj = WithGuid(aObject.Guid);
-						if (tObj == null)
+						if (WithGuid(aObject.Guid) == null && !DuplicateChildExists(aObject))
 						{
 							_children.Add(aObject);
 							aObject.Parent = this;
@@ -224,6 +223,8 @@ namespace XG.Core
 			}
 			return null;
 		}
+
+		public abstract bool DuplicateChildExists(AObject aObject);
 
 		#endregion
 

@@ -120,6 +120,11 @@ namespace XG.Core
 			return base.Remove(aPart);
 		}
 
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return false;
+		}
+
 		#endregion
 
 		#region CONSTRUCTOR

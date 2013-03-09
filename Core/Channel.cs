@@ -78,14 +78,19 @@ namespace XG.Core
 			return base.Named(aName) as Bot;
 		}
 
-		public void AddBot(Bot aBot)
+		public bool AddBot(Bot aBot)
 		{
-			Add(aBot);
+			return Add(aBot);
 		}
 
-		public void RemoveBot(Bot aBot)
+		public bool RemoveBot(Bot aBot)
 		{
-			Remove(aBot);
+			return Remove(aBot);
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return Bot((aObject as Bot).Name) != null;
 		}
 
 		#endregion

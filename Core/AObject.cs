@@ -32,7 +32,7 @@ namespace XG.Core
 	public delegate void ObjectFieldsDelegate(AObject aObj, string[] aFields);
 
 	[Serializable]
-	public class AObject
+	public abstract class AObject
 	{
 		#region EVENTS
 

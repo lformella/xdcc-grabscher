@@ -42,24 +42,30 @@ namespace XG.Core
 			return base.Named(aName) as Server;
 		}
 
-		public void Add(Server aServer)
+		public bool Add(Server aServer)
 		{
-			base.Add(aServer);
+			return base.Add(aServer);
 		}
 
-		public void Add(string aServer, int aPort = 6667)
+		public bool Add(string aServer, int aPort = 6667)
 		{
 			aServer = aServer.Trim().ToLower();
 			if (Server(aServer) == null)
 			{
 				var tServer = new Server {Name = aServer, Port = aPort, Enabled = true};
-				Add(tServer);
+				return Add(tServer);
 			}
+			return false;
 		}
 
-		public void Remove(Server aServer)
+		public bool Remove(Server aServer)
 		{
-			base.Remove(aServer);
+			return base.Remove(aServer);
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return Server((aObject as Server).Name) != null;
 		}
 	}
 }
