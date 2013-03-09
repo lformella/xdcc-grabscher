@@ -125,7 +125,6 @@ namespace XG.Server
 
 				_servers.Add(con);
 
-				con.Connected += ServerConnected;
 				con.Disconnected += ServerDisconnected;
 
 				// start a new thread wich connects to the given server
@@ -135,11 +134,6 @@ namespace XG.Server
 			{
 				Log.Error("ConnectServer(" + aServer + ") is already in the list");
 			}
-		}
-
-		void ServerConnected(Core.Server aServer)
-		{
-			// nom nom nom ...
 		}
 
 		/// <summary>
@@ -158,7 +152,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("DisconnectServer(" + aServer + ") is not in the dictionary");
+				Log.Error("DisconnectServer(" + aServer + ") is not in the list");
 			}
 		}
 
@@ -169,35 +163,20 @@ namespace XG.Server
 			{
 				if (aServer.Enabled)
 				{
-					// disable the server if the host was not found
-					// this is also triggered if we have no internet connection and disables all channels
-					/*if(	aValue == SocketErrorCode.HostNotFound ||
-						aValue == SocketErrorCode.HostNotFoundTryAgain)
+					int time = Settings.Instance.ReconnectWaitTime;
+					switch (aValue)
 					{
-						aServer.Enabled = false;
+						case SocketErrorCode.HostIsDown:
+						case SocketErrorCode.HostUnreachable:
+						case SocketErrorCode.ConnectionTimedOut:
+						case SocketErrorCode.ConnectionRefused:
+							time = Settings.Instance.ReconnectWaitTimeLong;
+							break;
 					}
-					else*/
-					{
-						int time = Settings.Instance.ReconnectWaitTime;
-						switch (aValue)
-						{
-							case SocketErrorCode.HostIsDown:
-							case SocketErrorCode.HostUnreachable:
-							case SocketErrorCode.ConnectionTimedOut:
-							case SocketErrorCode.ConnectionRefused:
-								time = Settings.Instance.ReconnectWaitTimeLong;
-								break;
-								//							case SocketErrorCode.HostNotFound:
-								//							case SocketErrorCode.HostNotFoundTryAgain:
-								//								time = Settings.Instance.ReconnectWaitTimeReallyLong;
-								//								break;
-						}
-						new Timer(ServerReconnect, aServer, time * 1000, Timeout.Infinite);
-					}
+					new Timer(ServerReconnect, aServer, time * 1000, Timeout.Infinite);
 				}
 				else
 				{
-					con.Connected -= ServerConnected;
 					con.Disconnected -= ServerDisconnected;
 
 					con.Server = null;
@@ -210,7 +189,7 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("ServerConnectionDisconnected(" + aServer + ", " + aValue + ") is not in the dictionary");
+				Log.Error("ServerConnectionDisconnected(" + aServer + ", " + aValue + ") is not in the list");
 			}
 		}
 
@@ -223,7 +202,7 @@ namespace XG.Server
 			{
 				if (tServer.Enabled)
 				{
-					Log.Error("ReconnectServer(" + tServer + ")");
+					Log.Info("ReconnectServer(" + tServer + ")");
 
 					// TODO do we need a new connection here?
 					con.Connection = new Connection.Connection {Hostname = tServer.Name, Port = tServer.Port, MaxData = 0};
@@ -233,7 +212,7 @@ namespace XG.Server
 			}
 			else if (tServer != null)
 			{
-				Log.Error("ReconnectServer(" + tServer + ") is not in the dictionary");
+				Log.Error("ReconnectServer(" + tServer + ") is not in the list");
 			}
 		}
 
@@ -249,7 +228,7 @@ namespace XG.Server
 		/// <param name="aPort"> </param>
 		void BotConnect(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
-            BotConnection con = _downloads.SingleOrDefault(c => c.Packet == aPack);
+			BotConnection con = _downloads.SingleOrDefault(c => c.Packet == aPack);
 			if (con == null)
 			{
 				new Thread(() =>
@@ -262,7 +241,6 @@ namespace XG.Server
 						Connection = new Connection.Connection {Hostname = aIp.ToString(), Port = aPort, MaxData = aPack.RealSize - aChunk}
 					};
 
-					con.Connected += BotConnected;
 					con.Disconnected += BotDisconnected;
 
 					_downloads.Add(con);
@@ -276,11 +254,9 @@ namespace XG.Server
 			}
 		}
 
-		void BotConnected(Packet aPack) {}
-
 		void BotDisconnect(Bot aBot)
 		{
-            BotConnection con = _downloads.SingleOrDefault(c => c.Packet.Parent == aBot);
+			BotConnection con = _downloads.SingleOrDefault(c => c.Packet.Parent == aBot);
 			if (con != null)
 			{
 				con.Connection.Disconnect();
@@ -290,13 +266,12 @@ namespace XG.Server
 		void BotDisconnected(Packet aPacket)
 		{
 
-            BotConnection con = _downloads.SingleOrDefault(c => c.Packet == aPacket);
-            if (con != null)
-            {
-			    con.Packet = null;
-			    con.Connection = null;
+			BotConnection con = _downloads.SingleOrDefault(c => c.Packet == aPacket);
+			if (con != null)
+			{
+				con.Packet = null;
+				con.Connection = null;
 
-				con.Connected -= BotConnected;
 				con.Disconnected -= BotDisconnected;
 				_downloads.Remove(con);
 
