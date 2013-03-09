@@ -276,6 +276,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			try
 			{
+				FileSystem.DeleteFile(aFile + ".new");
 				using (Stream streamWrite = System.IO.File.Create(aFile + ".new"))
 				{
 					_formatter.Serialize(streamWrite, aObj);
@@ -286,6 +287,7 @@ namespace XG.Server.Plugin.Backend.File
 				FileSystem.MoveFile(aFile + ".new", aFile);
 				Log.Debug("Save(" + aFile + ")");
 
+				// run gc because serializing takes a lot of memory
 				GC.Collect();
 			}
 			catch (Exception ex)
@@ -315,6 +317,7 @@ namespace XG.Server.Plugin.Backend.File
 					}
 					Log.Debug("Load(" + aFile + ")");
 
+					// run gc because deserializing takes a lot of memory
 					GC.Collect();
 				}
 				catch (Exception ex)
