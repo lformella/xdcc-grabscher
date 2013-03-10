@@ -157,8 +157,7 @@ namespace XG.Server.Irc
 						log.Warn("con_DataReceived() " + aRawData);
 						FireJoinChannel(aServer, tChan);
 
-						// statistics
-						Statistic.Instance.Increase(StatisticType.ChannelsKicked);
+						FireNotificationAdded(new Notification(Notification.Types.ChannelKicked, tChan));
 					}
 					else
 					{

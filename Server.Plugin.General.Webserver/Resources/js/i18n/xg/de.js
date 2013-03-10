@@ -95,6 +95,29 @@ translatedArray =
 	"All": "Alles",
 
 	/* ************************************************************************************************************** */
+	/* NOTIFICATIONS                                                                                                  */
+	/* ************************************************************************************************************** */
+
+	"Notification_1": "Packet #Name# is complete",
+	"Notification_2": "Packet #Name# is not complete",
+	"Notification_3": "Packet #Name# is broken",
+	"Notification_4": "Packet #Name# was requested",
+	"Notification_5": "Packet #Name# was removed",
+	"Notification_6": "File #Name# is complete",
+	"Notification_7": "File #Name# has the wrong size",
+	"Notification_8": "File #Name# could not be build",
+	"Notification_9": "Server #Name# is connected",
+	"Notification_10": "Server #Name# could not be connected",
+	"Notification_11": "Channel #Name# joined",
+	"Notification_12": "Channel #Name# could not be joined",
+	"Notification_13": "Channel #Name# is banned",
+	"Notification_14": "Channel #Name# parted",
+	"Notification_15": "Channel #Name# kicked",
+	"Notification_16": "Bot #Name# is connected",
+	"Notification_17": "Bot #Name# could not be connected",
+	"Notification_18": "Bot #Name# submitted wrong download port",
+
+	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 

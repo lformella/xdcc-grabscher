@@ -57,10 +57,10 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		readonly List<User> _users = new List<User>();
 		
-		static readonly Core.Object _search0Day = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "ODay Packets" };
-		static readonly Core.Object _search0Week = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "OWeek Packets" };
-		static readonly Core.Object _searchDownloads = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Downloads" };
-		static readonly Core.Object _searchEnabled = new Core.Object{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000004"), Name = "Enabled Packets" };
+		static readonly Core.Search _search0Day = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "ODay Packets" };
+		static readonly Core.Search _search0Week = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "OWeek Packets" };
+		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Downloads" };
+		static readonly Core.Search _searchEnabled = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000004"), Name = "Enabled Packets" };
 
 		#endregion
 
@@ -186,6 +186,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		protected override void SearchChanged(Core.AObject aObj, string[] aFields)
 		{
 			ObjectChanged(aObj, aFields);
+		}
+
+		protected override void NotificationAdded(Core.AObject aParent, Core.AObject aObj)
+		{
+			ObjectAdded(aParent, aObj);
 		}
 
 		protected override void SnapshotAdded(Core.Snapshot aSnap)
@@ -345,7 +350,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						var obj = Searches.Named(name);
 						if (obj == null)
 						{
-							obj = new Core.Object {Name = name};
+							obj = new Core.Search {Name = name};
 							Searches.Add(obj);
 						}
 						break;
@@ -359,7 +364,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Searches:
-						var searches = new List<Core.Object>();
+						var searches = new List<Core.Search>();
 						searches.Add(_search0Day);
 						searches.Add(_search0Week);
 						searches.Add(_searchDownloads);
@@ -523,7 +528,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
-                            if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+							if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
 							{
 								return;
 							}
@@ -535,7 +540,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								return;
 							}
-                            if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+							if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
 							{
 								return;
 							}
@@ -570,9 +575,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			{
 				myObj = new Object.Packet { Object = aResponse.Data as Core.Packet };
 			}
-			if (aResponse.Data is Core.Object)
+			if (aResponse.Data is Core.Search)
 			{
-				myObj = new Search { Object = aResponse.Data as Core.Object };
+				myObj = new Object.Search { Object = aResponse.Data as Core.Search };
+			}
+			if (aResponse.Data is Core.Notification)
+			{
+				myObj = new Object.Notification { Object = aResponse.Data as Core.Notification };
 			}
 			if (aResponse.Data is Core.File)
 			{

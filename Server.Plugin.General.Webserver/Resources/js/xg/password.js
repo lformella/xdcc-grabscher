@@ -63,10 +63,11 @@ var XGPassword = (function()
 		grid.initialize(formatter, helper, dataView);
 		//grid.setFilterOfflineBots(cookie.getCookie("filterOfflineBots", "0") == "1");
 		var resize = Object.create(XGResize);
+		var notification = Object.create(XGNotification);
 
 		// start frontend
 		var main = Object.create(XGMain);
-		main.initialize(helper, statistics, cookie, formatter, websocket, dataView, grid, resize);
+		main.initialize(helper, statistics, cookie, formatter, websocket, dataView, grid, resize, notification);
 		main.start();
 	}
 

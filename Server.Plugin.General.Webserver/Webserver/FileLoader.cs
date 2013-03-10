@@ -49,6 +49,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"jquery-ui",
 			"slick.grid",
 			"layout-default",
+			"jquery.pnotify.default",
 			"xg"
 		};
 
@@ -63,6 +64,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/jquery-timing.min",
 			"external/jquery-ui.min",
 			"external/jquery.layout.min",
+			"external/jquery.pnotify.min",
 			"external/json2.min",
 			"external/sha256",
 			"external/slick.core",
@@ -78,6 +80,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"xg/helper",
 			"xg/grid",
 			"xg/main",
+			"xg/notification",
 			"xg/password",
 			"xg/dataview",
 			"xg/resize",

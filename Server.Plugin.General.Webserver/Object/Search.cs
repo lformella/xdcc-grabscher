@@ -1,5 +1,5 @@
 // 
-//  search.cs
+//  Search.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -31,11 +31,11 @@ namespace XG.Server.Plugin.General.Webserver.Object
 	public class Search : AObject
 	{
 		[JsonIgnore]
-		public new Core.Object Object
+		public new Core.Search Object
 		{
 			get
 			{
-				return (Core.Object) base.Object;
+				return (Core.Search) base.Object;
 			}
 			set
 			{

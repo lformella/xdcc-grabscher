@@ -25,7 +25,7 @@
 
 var XGDataView = (function()
 {
-	var servers, channels, bots, packets, externalSearch, searches, files;
+	var servers, channels, bots, packets, externalSearch, searches, notifications, files;
 	var botFilterGuids = [];
 
 	/**
@@ -137,6 +137,7 @@ var XGDataView = (function()
 			packets = buildDataView();
 			externalSearch = buildDataView();
 			searches = buildDataView();
+			notifications = buildDataView();
 			files = buildDataView();
 		},
 
@@ -158,6 +159,8 @@ var XGDataView = (function()
 					return packets;
 				case Enum.Grid.Search:
 					return searches;
+				case Enum.Grid.Notification:
+					return notifications;
 				case Enum.Grid.ExternalSearch:
 					return externalSearch;
 				case Enum.Grid.File:

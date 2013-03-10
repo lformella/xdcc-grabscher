@@ -58,13 +58,21 @@ namespace XG.Server
 		public Main()
 		{
 			_fileActions = new FileActions();
+			_fileActions.NotificationAdded += NotificationAdded;
 
 			_ircParser = new Parser {FileActions = _fileActions};
 			_ircParser.ParsingError += IrcParserParsingError;
+			_ircParser.NotificationAdded += NotificationAdded;
 
 			_servers = new Servers {FileActions = _fileActions, IrcParser = _ircParser};
+			_servers.NotificationAdded += NotificationAdded;
 
 			_workers = new Workers();
+		}
+
+		void NotificationAdded (Notification aObj)
+		{
+			Notifications.Add(aObj);
 		}
 
 		#endregion
@@ -321,6 +329,7 @@ namespace XG.Server
 			Files = aPlugin.LoadFiles();
 			_fileActions.Files = Files;
 			Searches = aPlugin.LoadSearches();
+			Notifications = new Notifications();
 			Snapshots = aPlugin.LoadStatistics();
 
 			if (Snapshots.All.Count() > 0)
@@ -344,6 +353,7 @@ namespace XG.Server
 			aWorker.Servers = Servers;
 			aWorker.Files = Files;
 			aWorker.Searches = Searches;
+			aWorker.Notifications = Notifications;
 			aWorker.Snapshots = Snapshots;
 
 			_workers.Add(aWorker);

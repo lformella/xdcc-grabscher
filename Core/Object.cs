@@ -28,5 +28,5 @@ using System;
 namespace XG.Core
 {
 	[Serializable]
-	public class Object : AObject {}
+	public class Object : Search {}
 }

@@ -93,9 +93,9 @@ namespace XG.Server.Worker
 			}
 		}
 
-		Objects _searches;
+		Searches _searches;
 
-		public Objects Searches
+		public Searches Searches
 		{
 			get { return _searches; }
 			set
@@ -112,6 +112,25 @@ namespace XG.Server.Worker
 					_searches.Added += SearchAdded;
 					_searches.Removed += SearchRemoved;
 					_searches.Changed += SearchChanged;
+				}
+			}
+		}
+
+		Notifications _notifications;
+
+		public Notifications Notifications
+		{
+			get { return _notifications; }
+			set
+			{
+				if (_notifications != null)
+				{
+					_notifications.Added -= NotificationAdded;
+				}
+				_notifications = value;
+				if (_notifications != null)
+				{
+					_notifications.Added += NotificationAdded;
 				}
 			}
 		}
@@ -158,6 +177,8 @@ namespace XG.Server.Worker
 		protected virtual void SearchRemoved(AObject aParent, AObject aObj) {}
 
 		protected virtual void SearchChanged(AObject aObj, string[] aFields) {}
+
+		protected virtual void NotificationAdded(AObject aParent, AObject aObj) {}
 
 		protected virtual void SnapshotAdded(Snapshot aSnap) {}
 

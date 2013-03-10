@@ -118,6 +118,33 @@ Enum.SnapshotValue =
 	PacketsSizeDisconnected: 26
 };
 
+Enum.NotificationType =
+{
+	PacketCompleted: 1,
+	PacketIncompleted: 2,
+	PacketBroken: 3,
+
+	PacketRequested: 4,
+	PacketRemoved: 5,
+
+	FileCompleted: 6,
+	FileSizeMismatch: 7,
+	FileBuildFailed: 8,
+
+	ServerConnected: 9,
+	ServerConnectFailed: 10,
+
+	ChannelJoined: 11,
+	ChannelJoinFailed: 12,
+	ChannelBanned: 13,
+	ChannelParted: 14,
+	ChannelKicked: 15,
+
+	BotConnected: 16,
+	BotConnectFailed: 17,
+	BotSubmittedWrongPort: 18
+};
+
 Enum.Grid =
 {
 	Server: "Server",
@@ -125,6 +152,7 @@ Enum.Grid =
 	Bot: "Bot",
 	Packet: "Packet",
 	Search: "Search",
+	Notification: "Notification",
 	ExternalSearch: "ExternalSearch",
 	File: "File"
 };

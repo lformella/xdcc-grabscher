@@ -128,6 +128,16 @@ namespace XG.Server.Irc
 			}
 		}
 
+		public event NotificationDelegate NotificationAdded;
+
+		public void FireNotificationAdded(Notification aObj)
+		{
+			if (NotificationAdded != null)
+			{
+				NotificationAdded(aObj);
+			}
+		}
+
 		#endregion
 
 		#region PARSING
