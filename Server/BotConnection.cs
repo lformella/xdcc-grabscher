@@ -233,7 +233,7 @@ namespace XG.Server
 				}
 #endif
 
-				FireNotificationAdded(new Notification(Notification.Types.BotConnected, Packet.Parent));
+				FireNotificationAdded(new Notification(Notification.Types.BotConnected, Packet));
 			}
 			else
 			{

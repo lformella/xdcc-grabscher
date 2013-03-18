@@ -81,6 +81,14 @@ namespace XG.Core
 			set { SetProperty(ref _object, value, "Object"); }
 		}
 
+		AObject _parent;
+
+		public AObject Parent
+		{
+			get { return _parent; }
+			set { SetProperty(ref _parent, value, "Parent"); }
+		}
+
 		#endregion
 
 		#region CONSTRUCTOR
@@ -89,6 +97,7 @@ namespace XG.Core
 		{
 			_type = aType;
 			_object = aObject;
+			_parent = aObject.Parent;
 		}
 
 		#endregion
