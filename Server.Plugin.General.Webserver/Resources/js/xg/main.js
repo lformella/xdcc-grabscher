@@ -273,7 +273,8 @@ var XGMain = (function()
 		{
 			// socket
 			websocket.onDisconnected.subscribe(function (e, args) {
-				$("#dialogError").dialog("open");
+				//$("#dialogError").dialog("open");
+				websocket.connect();
 			});
 			websocket.onError.subscribe(function (e, args) {
 				$("#dialogError").dialog("open");
