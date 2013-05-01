@@ -192,6 +192,65 @@ fieldset label
 	line-height: 15px;
 }
 
+#SearchGrid .ui-widget-content
+{
+	background: none;
+}
+
+#SearchGrid .slick-cell
+{
+	border-color: transparent !important;
+	line-height: 19px !important;
+}
+
+#SearchGrid .cell-inner
+{
+	margin: 0 2px;
+	padding: 5px;
+	background: #fafafa;
+	border: 1px solid gray;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+#SearchGrid .slick-cell.selected
+{
+	background: none;
+}
+
+#SearchGrid .slick-cell.selected .cell-inner
+{
+	background: #FFFED4;
+}
+
+#SearchGrid .cell-inner:hover
+{
+	background: #ffffe1;
+}
+
+#SearchGrid .slick-cell.selected .cell-inner:hover
+{
+	background: #fffdbd;
+}
+
+#SearchGrid .cell-left
+{
+	width: 25px;
+	height: 100%;
+	float: left;
+}
+
+#SearchGrid .cell-main
+{
+	margin-left: 30px;
+}
+
+#SearchGrid .cell-right
+{
+	float: right;
+}
+
 /* JQuery Fixes */
 
 .ui-tabs, .ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-buttonpane

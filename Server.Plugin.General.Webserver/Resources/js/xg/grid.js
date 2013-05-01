@@ -41,16 +41,18 @@ var XGGrid = (function()
 	 * @param {Slick.Data.DataView} dataView
 	 * @param {Array} columns
 	 * @param {Function} comparer
+	 * @param {Integer} rowHeight
 	 * @return {Slick.Grid}
 	 */
-	function buildGrid (gridName, dataView, columns, comparer)
+	function buildGrid (gridName, dataView, columns, comparer, rowHeight)
 	{
 		var grid = new Slick.Grid("#" + gridName + "Grid", dataView, columns,
 			{
 				editable: false,
 				enableAddRow: false,
 				enableCellNavigation: true,
-				forceFitColumns : true
+				forceFitColumns : true,
+				rowHeight: rowHeight
 			}
 		);
 		grid.setSelectionModel(new Slick.RowSelectionModel());
@@ -272,7 +274,7 @@ var XGGrid = (function()
 				case Enum.Grid.File:
 					return fileGrid;
 			}
-	
+
 			return null;
 		},
 
@@ -299,9 +301,9 @@ var XGGrid = (function()
 					applyFilter(Enum.Grid.Channel);
 				}
 			});
-	
+
 			/**************************************************************************************************************/
-	
+
 			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
 				buildRow("Icon", 40, false, function (obj)
 				{
@@ -313,9 +315,9 @@ var XGGrid = (function()
 					return formatter.formatRemoveIcon(Enum.Grid.Channel, obj);
 				}, false)
 			], compareChannels);
-	
+
 			/**************************************************************************************************************/
-	
+
 			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
 				buildRow("Icon", 38, false, $.proxy(formatter.formatBotIcon, formatter), false, "small"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false, "small"),
@@ -341,7 +343,7 @@ var XGGrid = (function()
 			});
 
 			/**************************************************************************************************************/
-	
+
 			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
 				buildRow("Icon", 42, false, function (obj)
 				{
@@ -357,17 +359,12 @@ var XGGrid = (function()
 					return helper.date2Human(obj.LastUpdated);
 				}, true)
 			], comparePackets);
-	
+
 			/**************************************************************************************************************/
-	
+
 			searchGrid = buildGrid(Enum.Grid.Search, dataview.getDataView(Enum.Grid.Search), [
-				buildRow("Icon", 34, false, $.proxy(formatter.formatSearchIcon, formatter), false, "small"),
-				buildRow("Name", 0, false, function (obj)
-				{
-					return _(obj.Name);
-				}, false),
-				buildRow("Action", 20, false, $.proxy(formatter.formatSearchAction, formatter), false)
-			], null);
+				buildRow("Data", 0, false, $.proxy(formatter.formatSearchCell, formatter))
+			], null, 34);
 			searchGrid.onClick.subscribe(function (e, args) {
 				var obj = searchGrid.getDataItem(args.row);
 				applySearchFilter(obj);
@@ -376,7 +373,7 @@ var XGGrid = (function()
 			searchGrid.resizeCanvas();
 
 			/**************************************************************************************************************/
-	
+
 			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
 				buildRow("Icon", 28, false, function (obj)
 				{
@@ -401,9 +398,9 @@ var XGGrid = (function()
 					return helper.speed2Human(obj.BotSpeed);
 				}, true)
 			], compareExternals);
-	
+
 			/**************************************************************************************************************/
-	
+
 			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
 				buildRow("Icon", 28, false, $.proxy(formatter.formatFileIcon, formatter), false, "small"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false, "medium"),

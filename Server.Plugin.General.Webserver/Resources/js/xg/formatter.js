@@ -225,6 +225,17 @@ var XGFormatter = (function()
 			return result;
 		},
 
+		formatSearchCell: function (search)
+		{
+			var result =
+				"<div class='cell-inner'>" +
+					"<div class='cell-right'>" + this.formatSearchAction(search) + "</div>" +
+					"<div class='cell-left'>" + this.formatSearchIcon(search) + "</div>" +
+					"<div class='cell-main'>" + search.Name + "</div>" +
+				"</div>";
+			return result;
+		},
+
 		/* ************************************************************************************************************** */
 		/* BOT FORMATTER                                                                                                  */
 		/* ************************************************************************************************************** */
