@@ -233,8 +233,7 @@ namespace XG.Server
 				}
 #endif
 
-				// statistics
-				Statistic.Instance.Increase(StatisticType.BotConnectsOk);
+				FireNotificationAdded(new Notification(Notification.Types.BotConnected, Packet));
 			}
 			else
 			{
@@ -281,10 +280,9 @@ namespace XG.Server
 						Part.State = FilePart.States.Ready;
 						Log.Info("ConnectionDisconnected(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
 
-						// statistics
-						Statistic.Instance.Increase(StatisticType.PacketsCompleted);
+						FireNotificationAdded(new Notification(Notification.Types.PacketCompleted, Packet));
 					}
-						// that should not happen
+					// that should not happen
 					else if (CurrrentSize > StopSize)
 					{
 						Part.State = FilePart.States.Broken;
@@ -296,30 +294,27 @@ namespace XG.Server
 							Log.Error("ConnectionDisconnected(" + Packet + ") removing corupted " + File);
 						}
 
-						// statistics
-						Statistic.Instance.Increase(StatisticType.PacketsBroken);
+						FireNotificationAdded(new Notification(Notification.Types.PacketBroken, Packet));
 					}
-						// it did not start
+					// it did not start
 					else if (_receivedBytes == 0)
 					{
 						Log.Error("ConnectionDisconnected(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
 						Packet.Parent.HasNetworkProblems = true;
 
-						// statistics
-						Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
+						FireNotificationAdded(new Notification(Notification.Types.BotConnectFailed, Packet.Parent));
 					}
-						// it is incomplete
+					// it is incomplete
 					else
 					{
 						Log.Error("ConnectionDisconnected(" + Packet + ") incomplete");
 
-						// statistics
-						Statistic.Instance.Increase(StatisticType.PacketsIncompleted);
+						FireNotificationAdded(new Notification(Notification.Types.PacketIncompleted, Packet));
 					}
 				}
 			}
-				// the connection didnt even connected to the given ip and port
+			// the connection didnt even connected to the given ip and port
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
@@ -327,8 +322,7 @@ namespace XG.Server
 				Packet.Enabled = false;
 				Packet.Parent.HasNetworkProblems = true;
 
-				// statistics
-				Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
+				FireNotificationAdded(new Notification(Notification.Types.BotConnectFailed, Packet.Parent));
 			}
 
 			if (Part != null)
@@ -529,7 +523,7 @@ namespace XG.Server
 				Part.CurrentSize += aData.Length;
 
 				// statistics
-				Statistic.Instance.Increase(StatisticType.BytesLoaded, aData.Length);
+				//Statistic.Instance.Increase(StatisticType.BytesLoaded, aData.Length);
 			}
 			catch (Exception ex)
 			{
@@ -550,10 +544,10 @@ namespace XG.Server
 				_speedCalcSize = 0;
 
 				// statistics
-				if (Part.Speed > Statistic.Instance.Get(StatisticType.SpeedMax))
+				/*if (Part.Speed > Statistic.Instance.Get(StatisticType.SpeedMax))
 				{
 					Statistic.Instance.Set(StatisticType.SpeedMax, Part.Speed);
-				}
+				}*/
 			}
 		}
 

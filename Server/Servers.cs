@@ -50,7 +50,7 @@ namespace XG.Server
 	/// 	- writing files to disk
 	/// 	- timering some clean up tasks
 	/// </summary>
-	public class Servers
+	public class Servers : ANotificationSender
 	{
 		#region VARIABLES
 
@@ -112,6 +112,12 @@ namespace XG.Server
 		/// <param name="aServer"> </param>
 		public void ServerConnect(Core.Server aServer)
 		{
+			if (!aServer.Enabled)
+			{
+				Log.Error("ConnectServer(" + aServer + ") is not enabled");
+				return;
+			}
+
 			ServerConnection con = _servers.SingleOrDefault(c => c.Server == aServer);
 			if (con == null)
 			{
@@ -126,6 +132,7 @@ namespace XG.Server
 				_servers.Add(con);
 
 				con.Disconnected += ServerDisconnected;
+				con.NotificationAdded += FireNotificationAdded;
 
 				// start a new thread wich connects to the given server
 				new Thread(() => con.Connection.Connect()).Start();
@@ -178,6 +185,7 @@ namespace XG.Server
 				else
 				{
 					con.Disconnected -= ServerDisconnected;
+					con.NotificationAdded -= FireNotificationAdded;
 
 					con.Server = null;
 					con.IrcParser = null;
@@ -208,6 +216,10 @@ namespace XG.Server
 					con.Connection = new Connection.Connection {Hostname = tServer.Name, Port = tServer.Port, MaxData = 0};
 
 					con.Connection.Connect();
+				}
+				else
+				{
+					ServerDisconnected(tServer, SocketErrorCode.NetworkReset);
 				}
 			}
 			else if (tServer != null)
@@ -242,6 +254,7 @@ namespace XG.Server
 					};
 
 					con.Disconnected += BotDisconnected;
+					con.NotificationAdded += FireNotificationAdded;
 
 					_downloads.Add(con);
 					con.Connection.Connect();
@@ -273,6 +286,7 @@ namespace XG.Server
 				con.Connection = null;
 
 				con.Disconnected -= BotDisconnected;
+				con.NotificationAdded -= FireNotificationAdded;
 				_downloads.Remove(con);
 
 				try

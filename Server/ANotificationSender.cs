@@ -1,5 +1,5 @@
 // 
-//  Objects.cs
+//  ANotificationSender.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,38 +23,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
+using XG.Core;
 
-using NUnit.Framework;
-
-namespace XG.Core.Test
+namespace XG.Server
 {
-	[TestFixture]
-	public class Objects
+	public abstract class ANotificationSender
 	{
-		bool _childAdded;
+		#region EVENTS
 
-		[Test]
-		public void Test()
+		public event NotificationDelegate NotificationAdded;
+
+		public void FireNotificationAdded(Notification aObj)
 		{
-			var parent = new Core.Objects();
-			parent.Added += delegate { _childAdded = true; };
-			parent.Guid = Guid.NewGuid();
-
-			AssertChildAdded(false);
-
-			var obj = new Core.Object();
-			Assert.AreEqual(Guid.Empty, obj.ParentGuid);
-			parent.Add(obj);
-
-			AssertChildAdded(true);
-			Assert.AreEqual(parent.Guid, obj.ParentGuid);
+			if (NotificationAdded != null)
+			{
+				NotificationAdded(aObj);
+			}
 		}
 
-		void AssertChildAdded(bool childAdded)
-		{
-			Assert.AreEqual(_childAdded, childAdded);
-			_childAdded = false;
-		}
+		#endregion
 	}
 }

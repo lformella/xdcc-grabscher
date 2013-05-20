@@ -162,7 +162,7 @@ namespace XG.Server
 			set { _myValuesDouble = value; }
 		}
 
-		public static Statistic Instance
+		public static Statistic Instance2
 		{
 			get
 			{

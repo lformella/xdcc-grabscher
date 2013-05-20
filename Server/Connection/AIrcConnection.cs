@@ -28,8 +28,10 @@ using XG.Server.Helper;
 
 namespace XG.Server.Connection
 {
-	public abstract class AIrcConnection
+	public abstract class AIrcConnection : ANotificationSender
 	{
+		#region VARIABLES
+
 		public FileActions FileActions { set; get; }
 
 		AConnection _connection;
@@ -56,6 +58,8 @@ namespace XG.Server.Connection
 				}
 			}
 		}
+
+		#endregion
 
 		protected virtual void ConnectionConnected() {}
 

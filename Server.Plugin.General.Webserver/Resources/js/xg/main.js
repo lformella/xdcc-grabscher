@@ -256,8 +256,9 @@ var XGMain = (function()
 		 * @param {XGDataView} dataview1
 		 * @param {XGGrid} grid1
 		 * @param {XGResize} resize1
+		 * @param {XGNotification} notification1
 		 */
-		initialize: function(helper1, statistics1, cookie1, formatter1, websocket1, dataview1, grid1, resize1)
+		initialize: function(helper1, statistics1, cookie1, formatter1, websocket1, dataview1, grid1, resize1, notification1)
 		{
 			statistics = statistics1;
 			cookie = cookie1;
@@ -267,6 +268,7 @@ var XGMain = (function()
 			dataview = dataview1;
 			grid = grid1;
 			resize = resize1;
+			notification = notification1;
 		},
 
 		start: function()
@@ -289,6 +291,10 @@ var XGMain = (function()
 						{
 							$("#searchText").effect("transfer", { to: getElementFromGrid(Enum.Grid.Search, args.Data.Guid) }, 500);
 						}
+						break;
+
+					case Enum.Grid.Notification:
+						notification.handleMessage(args.Data);
 						break;
 				}
 			});

@@ -225,8 +225,7 @@ namespace XG.Server
 								}
 								_latestPacketRequests.Add(name, DateTime.Now.AddSeconds(Settings.Instance.SamePacketRequestTime));
 
-								// statistics
-								Statistic.Instance.Increase(StatisticType.PacketsRequested);
+								FireNotificationAdded(new Notification(Notification.Types.PacketRequested, tPacket));
 							}
 
 							// create a timer to re request if the bot didnt recognized the privmsg
@@ -246,8 +245,7 @@ namespace XG.Server
 				SendData("PRIVMSG " + aBot.Name + " :\u0001XDCC REMOVE\u0001");
 				CreateTimer(aBot, Settings.Instance.CommandWaitTime, false);
 
-				// statistics
-				Statistic.Instance.Increase(StatisticType.PacketsRemoved);
+				FireNotificationAdded(new Notification(Notification.Types.PacketRemoved, aBot));
 			}
 		}
 
@@ -266,8 +264,7 @@ namespace XG.Server
 				// TODO maybe set a time to resend the command if the channel is not connected
 				// it happend to me, that some available channels werent joined because no confirm messaes appeared
 
-				// statistics
-				Statistic.Instance.Increase(StatisticType.ChannelsJoined);
+				FireNotificationAdded(new Notification(Notification.Types.ChannelJoined, aChan));
 			}
 		}
 
@@ -278,8 +275,7 @@ namespace XG.Server
 				_log.Info("PartChannel(" + aChan + ")");
 				SendData("PART " + aChan.Name);
 
-				// statistics
-				Statistic.Instance.Increase(StatisticType.ChannelsParted);
+				FireNotificationAdded(new Notification(Notification.Types.ChannelParted, aChan));
 			}
 		}
 

@@ -37,7 +37,7 @@ using log4net;
 
 namespace XG.Server.Helper
 {
-	public class FileActions
+	public class FileActions : ANotificationSender
 	{
 		#region VARIABLES
 
@@ -590,8 +590,7 @@ namespace XG.Server.Helper
 							FileSystem.DeleteDirectory(Settings.Instance.TempPath + tFile.TmpPath);
 							Log.Info("JoinCompleteParts(" + tFile + ") build");
 
-							// statistics
-							Statistic.Instance.Increase(StatisticType.FilesCompleted);
+							FireNotificationAdded(new Notification(Notification.Types.FileCompleted, tFile));
 
 							// the file is complete and enabled
 							tFile.Enabled = true;
@@ -607,16 +606,14 @@ namespace XG.Server.Helper
 						{
 							Log.Error("JoinCompleteParts(" + tFile + ") filesize is not the same: " + size);
 
-							// statistics
-							Statistic.Instance.Increase(StatisticType.FilesBroken);
+							FireNotificationAdded(new Notification(Notification.Types.FileSizeMismatch, tFile));
 						}
 					}
 					catch (Exception ex)
 					{
 						Log.Fatal("JoinCompleteParts(" + tFile + ") make", ex);
 
-						// statistics
-						Statistic.Instance.Increase(StatisticType.FilesBroken);
+						FireNotificationAdded(new Notification(Notification.Types.FileBuildFailed, tFile));
 					}
 
 					if (buildComplete)

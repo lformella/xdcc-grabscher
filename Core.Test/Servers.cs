@@ -1,5 +1,5 @@
 // 
-//  Object.cs
+//  Servers.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -30,42 +30,31 @@ using NUnit.Framework;
 namespace XG.Core.Test
 {
 	[TestFixture]
-	public class Object
+	public class Servers
 	{
-		bool _modified;
+		bool _childAdded;
 
 		[Test]
 		public void Test()
 		{
-			var obj = new Core.Object();
-			obj.Changed += delegate { _modified = true; };
-			AssertModified(obj, false);
+			var parent = new Core.Servers();
+			parent.Added += delegate { _childAdded = true; };
+			parent.Guid = Guid.NewGuid();
 
-			obj.Name = "Test";
-			AssertModified(obj, true);
+			AssertChildAdded(false);
 
-			obj.Guid = Guid.Empty;
-			AssertModified(obj, false);
-
-			obj.Connected = true;
-			AssertModified(obj, true);
-
-			var parent = new Core.Object {Guid = Guid.NewGuid()};
-
+			var obj = new Core.Server();
 			Assert.AreEqual(Guid.Empty, obj.ParentGuid);
-			obj.Parent = parent;
+			parent.Add(obj);
+
+			AssertChildAdded(true);
 			Assert.AreEqual(parent.Guid, obj.ParentGuid);
-			obj.Parent = null;
-			Assert.AreEqual(Guid.Empty, obj.ParentGuid);
-
-			AssertModified(obj, false);
 		}
 
-		void AssertModified(AObject aObject, bool modified)
+		void AssertChildAdded(bool childAdded)
 		{
-			aObject.Commit();
-			Assert.AreEqual(_modified, modified);
-			_modified = false;
+			Assert.AreEqual(_childAdded, childAdded);
+			_childAdded = false;
 		}
 	}
 }

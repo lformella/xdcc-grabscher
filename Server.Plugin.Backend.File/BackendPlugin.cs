@@ -100,11 +100,11 @@ namespace XG.Server.Plugin.Backend.File
 			return new Files();
 		}
 
-		public override Objects LoadSearches()
+		public override Searches LoadSearches()
 		{
 			try
 			{
-				var searches = (Objects) Load(Settings.Instance.AppDataPath + SearchesBinary);
+				var searches = (Searches) Load(Settings.Instance.AppDataPath + SearchesBinary);
 				if (searches != null)
 				{
 					searches.AttachChildEvents();
@@ -115,7 +115,7 @@ namespace XG.Server.Plugin.Backend.File
 			{
 				// skip all errors
 			}
-			return new Objects();
+			return new Searches();
 		}
 
 		public override Snapshots LoadStatistics()
@@ -169,7 +169,7 @@ namespace XG.Server.Plugin.Backend.File
 					if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
 					{
 						timeStats = DateTime.Now;
-						Statistic.Instance.Save();
+						//Statistic.Instance.Save();
 					}
 				}
 

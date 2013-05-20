@@ -184,8 +184,7 @@ namespace XG.Server.Irc
 								log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
 								tPacket.Enabled = false;
 
-								// statistics
-								Statistic.Instance.Increase(StatisticType.BotConnectsFailed);
+								FireNotificationAdded(new Notification(Notification.Types.BotSubmittedWrongPort, tBot));
 							}
 							else
 							{

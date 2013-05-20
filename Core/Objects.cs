@@ -24,44 +24,9 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace XG.Core
 {
 	[Serializable]
-	public class Objects : AObjects
-	{
-		public new IEnumerable<Object> All
-		{
-			get { return base.All.Cast<Object>(); }
-		}
-
-		public bool Add(Object aObject)
-		{
-			return base.Add(aObject);
-		}
-
-		public bool Remove(Object aObject)
-		{
-			return base.Remove(aObject);
-		}
-
-		public new Object Named(string aName)
-		{
-			AObject tObject = base.Named(aName);
-			return tObject != null ? (Object) tObject : null;
-		}
-
-		public new Object WithGuid(Guid aGuid)
-		{
-			AObject tObject = base.WithGuid(aGuid);
-			return tObject != null ? (Object) tObject : null;
-		}
-
-		public override bool DuplicateChildExists(AObject aObject)
-		{
-			return Named(aObject.Name) != null;
-		}
-	}
+	public class Objects : Searches {}
 }

@@ -55,6 +55,7 @@ namespace XG.Server.Plugin.General.Webserver
 				Files = Files,
 				Searches = Searches,
 				Snapshots = Snapshots,
+				Notifications = Notifications,
 				Password = passwortHash,
 				Salt = _salt
 			};
@@ -66,6 +67,7 @@ namespace XG.Server.Plugin.General.Webserver
 				Files = Files,
 				Searches = Searches,
 				Snapshots = Snapshots,
+				Notifications = Notifications,
 				Password = passwortHash,
 				Salt = _salt
 			};

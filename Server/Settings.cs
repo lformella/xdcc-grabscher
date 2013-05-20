@@ -189,7 +189,7 @@ namespace XG.Server
 
 		public int ChannelWaitTimeLong
 		{
-			get { return 900; }
+			get { return 1800; }
 		}
 
 		public int FileRollbackBytes

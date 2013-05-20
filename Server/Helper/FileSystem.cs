@@ -31,7 +31,7 @@ using log4net;
 
 namespace XG.Server.Helper
 {
-	public class FileSystem
+	public class FileSystem : ANotificationSender
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
