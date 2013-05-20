@@ -204,7 +204,7 @@ var XGMain = (function()
 	 */
 	function flipPacket (obj)
 	{
-		var elementSearch = getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
+		var elementSearch = $("#00000000-0000-0000-0000-000000000004");
 		var elementPacket = getElementFromGrid(Enum.Grid.Packet, obj.Guid);
 		if(!obj.Enabled)
 		{
@@ -240,7 +240,7 @@ var XGMain = (function()
 	 */
 	function downloadLink (obj)
 	{
-		var elementSearch = getElementFromGrid(Enum.Grid.Search, "00000000-0000-0000-0000-000000000004");
+		var elementSearch = $("#00000000-0000-0000-0000-000000000004");
 		var elementPacket = getElementFromGrid(Enum.Grid.ExternalSearch, obj.Guid);
 		elementPacket.effect("transfer", { to: elementSearch }, 500);
 		websocket.sendName(Enum.Request.ParseXdccLink, obj.IrcLink);
@@ -289,7 +289,7 @@ var XGMain = (function()
 					case Enum.Grid.Search:
 						if (enableSearchTransitions)
 						{
-							$("#searchText").effect("transfer", { to: getElementFromGrid(Enum.Grid.Search, args.Data.Guid) }, 500);
+							$("#searchText").effect("transfer", { to: $("#" + args.Data.Guid) }, 500);
 						}
 						break;
 
@@ -304,7 +304,7 @@ var XGMain = (function()
 					case Enum.Grid.Search:
 						if (enableSearchTransitions)
 						{
-							getElementFromGrid(Enum.Grid.Search, args.Data.Guid).effect("transfer", { to: $("#searchText") }, 500);
+							$("#" + args.Data.Guid).effect("transfer", { to: $("#searchText") }, 500);
 						}
 						break;
 				}
@@ -443,12 +443,12 @@ var XGMain = (function()
 			});
 			grid.build();
 
-			// resize
-			resize.start();
-
 			// other
 			initializeDialogs();
 			initializeOthers();
+
+			// resize
+			resize.start();
 		}
 	}
 }());

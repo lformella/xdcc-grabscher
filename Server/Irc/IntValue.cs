@@ -126,9 +126,9 @@ namespace XG.Server.Irc
 							tChan.ErrorCode = 0;
 							tChan.Connected = true;
 							log.Info("Parse() joined " + tChan);
-						}
 
-						FireNotificationAdded(new Notification(Notification.Types.ChannelJoined, tChan));
+							FireNotificationAdded(new Notification(Notification.Types.ChannelJoined, tChan));
+						}
 						break;
 
 						#endregion
@@ -186,9 +186,9 @@ namespace XG.Server.Irc
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
 							log.Warn("Parse() could not join " + tChan + ": " + tComCode);
-						}
 
-						FireNotificationAdded(new Notification(Notification.Types.ChannelJoinFailed, tChan));
+							FireNotificationAdded(new Notification(Notification.Types.ChannelJoinFailed, tChan));
+						}
 						break;
 
 						#endregion
@@ -207,9 +207,9 @@ namespace XG.Server.Irc
 							tChan.Connected = false;
 							log.Warn("Parse() could not join " + tChan + ": " + tComCode);
 							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong, false);
-						}
 
-						FireNotificationAdded(new Notification(tComCode == 471 ? Notification.Types.ChannelBanned : Notification.Types.ChannelJoinFailed, tChan));
+							FireNotificationAdded(new Notification(tComCode == 471 ? Notification.Types.ChannelBanned : Notification.Types.ChannelJoinFailed, tChan));
+						}
 						break;
 
 						#endregion

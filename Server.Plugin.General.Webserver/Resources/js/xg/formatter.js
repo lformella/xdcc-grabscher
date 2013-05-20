@@ -228,7 +228,7 @@ var XGFormatter = (function()
 		formatSearchCell: function (search)
 		{
 			var result =
-				"<div class='cell-inner'>" +
+				"<div class='cell-inner' id='" + search.Guid + "'>" +
 					"<div class='cell-right'>" + this.formatSearchAction(search) + "</div>" +
 					"<div class='cell-left'>" + this.formatSearchIcon(search) + "</div>" +
 					"<div class='cell-main'>" + search.Name + "</div>" +
