@@ -289,11 +289,12 @@ namespace XG.Server
 
 			#region WORKERS
 
-			ALoopWorker worker = new SnapshotWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTime};
-			AddWorker(worker);
+			if (Settings.Instance.EnableCollectingSnapshots)
+			{
+				AddWorker(new SnapshotWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTime});
+			}
 
-			worker = new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime};
-			AddWorker(worker);
+			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
 
 			#endregion
 		}
