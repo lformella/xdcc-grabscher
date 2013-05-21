@@ -204,7 +204,7 @@ var XGMain = (function()
 	 */
 	function flipPacket (obj)
 	{
-		var elementSearch = $("#00000000-0000-0000-0000-000000000004");
+		var elementSearch = $("#00000000-0000-0000-0000-000000000002");
 		var elementPacket = getElementFromGrid(Enum.Grid.Packet, obj.Guid);
 		if(!obj.Enabled)
 		{
@@ -240,7 +240,7 @@ var XGMain = (function()
 	 */
 	function downloadLink (obj)
 	{
-		var elementSearch = $("#00000000-0000-0000-0000-000000000004");
+		var elementSearch = $("#00000000-0000-0000-0000-000000000002");
 		var elementPacket = getElementFromGrid(Enum.Grid.ExternalSearch, obj.Guid);
 		elementPacket.effect("transfer", { to: elementSearch }, 500);
 		websocket.sendName(Enum.Request.ParseXdccLink, obj.IrcLink);
@@ -394,7 +394,7 @@ var XGMain = (function()
 							}
 							else if (activeTab == 1)
 							{
-								if (args.Data.Guid != "00000000-0000-0000-0000-000000000001" && args.Data.Guid != "00000000-0000-0000-0000-000000000002" && args.Data.Guid != "00000000-0000-0000-0000-000000000003" && args.Data.Guid != "00000000-0000-0000-0000-000000000004")
+								if (args.Data.Guid != "00000000-0000-0000-0000-000000000001" && args.Data.Guid != "00000000-0000-0000-0000-000000000002")
 								{
 									websocket.sendGuid(Enum.Request.SearchExternal, args.Data.Guid);
 									externalSearchesActive.push(args.Data.Guid);

@@ -56,11 +56,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		};
 
 		readonly List<User> _users = new List<User>();
-		
-		static readonly Core.Search _search0Day = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "ODay Packets" };
-		static readonly Core.Search _search0Week = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "OWeek Packets" };
-		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Downloads" };
-		static readonly Core.Search _searchEnabled = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000004"), Name = "Enabled Packets" };
+
+		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Downloads" };
+		static readonly Core.Search _searchEnabled = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Enabled Packets" };
 
 		#endregion
 
@@ -365,8 +363,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Searches:
 						var searches = new List<Core.Search>();
-						searches.Add(_search0Day);
-						searches.Add(_search0Week);
 						searches.Add(_searchDownloads);
 						searches.Add(_searchEnabled);
 						searches.AddRange(Searches.All);
@@ -577,7 +573,12 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 			if (aResponse.Data is Core.Search)
 			{
-				myObj = new Object.Search { Object = aResponse.Data as Core.Search };
+				var results = FilteredPacketsAndBotsByGuid((aResponse.Data as Core.Search).Guid);
+				myObj = new Object.Search
+				{
+					Object = aResponse.Data as Core.Search,
+					Results = (from obj in results where obj is Core.Packet select obj).ToList().Count
+				};
 			}
 			if (aResponse.Data is Core.Notification)
 			{
@@ -623,22 +624,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			var allPackets = (from bot in allBots from packet in bot.Packets select packet).ToList();
 
-			DateTime init = DateTime.MinValue.ToUniversalTime();
-			DateTime now = DateTime.Now;
-
-			if (aGuid == _search0Day.Guid)
-			{
-				allPackets = (from packet in allPackets
-							where packet.LastUpdated != init && 0 <= (now - packet.LastUpdated).TotalSeconds && 86400 >= (now - packet.LastUpdated).TotalSeconds
-							select packet).ToList();
-			}
-			else if (aGuid == _search0Week.Guid)
-			{
-				allPackets = (from packet in allPackets
-							where packet.LastUpdated != init && 0 <= (now - packet.LastUpdated).TotalSeconds && 604800 >= (now - packet.LastUpdated).TotalSeconds
-							select packet).ToList();
-			}
-			else if (aGuid == _searchDownloads.Guid)
+			if (aGuid == _searchDownloads.Guid)
 			{
 				allPackets = (from packet in allPackets where packet.Connected select packet).ToList();
 			}

@@ -88,18 +88,10 @@ var XGDataView = (function()
 					switch (args.SearchGuid)
 					{
 						case "00000000-0000-0000-0000-000000000001":
-							result = result && moment(item.LastUpdated).isAfter(moment().subtract("days", 1));
-							break;
-
-						case "00000000-0000-0000-0000-000000000002":
-							result = result && moment(item.LastUpdated).isAfter(moment().subtract("days", 7));
-							break;
-
-						case "00000000-0000-0000-0000-000000000003":
 							result = result && item.Connected;
 							break;
 
-						case "00000000-0000-0000-0000-000000000004":
+						case "00000000-0000-0000-0000-000000000002":
 							result = result && item.Enabled;
 							break;
 

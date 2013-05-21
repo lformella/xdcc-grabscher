@@ -175,21 +175,11 @@ var XGFormatter = (function()
 			switch (search.Guid)
 			{
 				case "00000000-0000-0000-0000-000000000001":
-					icon = "clock";
-					iconClass = "OrangeMiddle";
-					break;
-
-				case "00000000-0000-0000-0000-000000000002":
-					icon = "clock";
-					iconClass = "ButterMiddle";
-					break;
-
-				case "00000000-0000-0000-0000-000000000003":
 					icon = "down-circle";
 					iconClass = "SkyBlueMiddle";
 					break;
 
-				case "00000000-0000-0000-0000-000000000004":
+				case "00000000-0000-0000-0000-000000000002":
 					icon = "ok-circle";
 					iconClass = "ChameleonMiddle";
 					break;
@@ -213,8 +203,6 @@ var XGFormatter = (function()
 			{
 				case "00000000-0000-0000-0000-000000000001":
 				case "00000000-0000-0000-0000-000000000002":
-				case "00000000-0000-0000-0000-000000000003":
-				case "00000000-0000-0000-0000-000000000004":
 					break;
 
 				default:
@@ -231,7 +219,7 @@ var XGFormatter = (function()
 				"<div class='cell-inner' id='" + search.Guid + "'>" +
 					"<div class='cell-right'>" + this.formatSearchAction(search) + "</div>" +
 					"<div class='cell-left'>" + this.formatSearchIcon(search) + "</div>" +
-					"<div class='cell-main'>" + search.Name + "</div>" +
+					"<div class='cell-main' title='" + search.Name + " (" + search.Results + ")'>" + search.Name + "</div>" +
 				"</div>";
 			return result;
 		},

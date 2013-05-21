@@ -364,7 +364,7 @@ var XGGrid = (function()
 
 			searchGrid = buildGrid(Enum.Grid.Search, dataview.getDataView(Enum.Grid.Search), [
 				buildRow("Data", 0, false, $.proxy(formatter.formatSearchCell, formatter))
-			], null, 34);
+			], null, 30);
 			searchGrid.onClick.subscribe(function (e, args) {
 				var obj = searchGrid.getDataItem(args.row);
 				applySearchFilter(obj);
@@ -412,7 +412,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 
 			// default filter
-			applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000004" });
+			applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" });
 		},
 
 		/**

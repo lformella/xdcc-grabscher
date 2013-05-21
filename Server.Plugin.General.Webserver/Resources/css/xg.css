@@ -211,12 +211,9 @@ strong
 #SearchGrid .cell-inner
 {
 	margin: 0 2px;
-	padding: 5px;
+	padding: 2px 4px 4px 2px;
 	background: #fafafa;
-	border: 1px solid gray;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+	border: 1px solid #D0D0D0;
 }
 
 #SearchGrid .slick-cell.selected
@@ -248,7 +245,10 @@ strong
 
 #SearchGrid .cell-main
 {
-	margin-left: 30px;
+
+	margin-left: 26px;
+	margin-right: 18px;
+	overflow: hidden;
 }
 
 #SearchGrid .cell-right

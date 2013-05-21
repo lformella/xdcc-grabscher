@@ -23,6 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+
 using Newtonsoft.Json;
 
 namespace XG.Server.Plugin.General.Webserver.Object
@@ -42,5 +44,7 @@ namespace XG.Server.Plugin.General.Webserver.Object
 				base.Object = value;
 			}
 		}
+
+		public Int64 Results { get; set; }
 	}
 }
