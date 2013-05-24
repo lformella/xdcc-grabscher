@@ -120,7 +120,12 @@ var XGDataView = (function()
 		return result;
 	}
 
-	return {
+    var self = {
+        onAdd: new Slick.Event(),
+        onRemove: new Slick.Event(),
+        onUpdate: new Slick.Event(),
+        onSet: new Slick.Event(),
+
 		initialize: function()
 		{
 			servers = buildDataView();
@@ -168,6 +173,7 @@ var XGDataView = (function()
 			if (dataView != null)
 			{
 				dataView.addItem(json.Data);
+                self.onAdd.notify(json, null, self);
 			}
 		},
 
@@ -177,6 +183,7 @@ var XGDataView = (function()
 			if (dataView != null)
 			{
 				dataView.deleteItem(json.Data.Guid);
+                self.onRemove.notify(json, null, self);
 			}
 		},
 
@@ -186,6 +193,7 @@ var XGDataView = (function()
 			if (dataView != null)
 			{
 				dataView.updateItem(json.Data.Guid, json.Data);
+                self.onUpdate.notify(JSON, null, self);
 			}
 		},
 
@@ -195,6 +203,7 @@ var XGDataView = (function()
 			if (dataView != null)
 			{
 				dataView.setItems(json.Data);
+                self.onSet.notify(json, null, self);
 			}
 		},
 
@@ -203,4 +212,5 @@ var XGDataView = (function()
 			botFilterGuids = [];
 		}
 	};
+    return self;
 }());

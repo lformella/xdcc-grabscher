@@ -1,0 +1,54 @@
+/*
+//
+//  xg.css
+//  This file is part of XG - XDCC Grabscher
+//  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
+//
+//  Author:
+//       Lars Formella <ich@larsformella.de>
+//
+//  Copyright (c) 2012 Lars Formella
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//
+*/
+
+.ButterLight { color: #fce94f; }
+.ButterMiddle { color: #edd400; }
+.ButterDark { color: #c4a000; }
+.OrangeLight { color: #fcaf3e; }
+.OrangeMiddle { color: #f57900; }
+.OrangeDark { color: #ce5c00; }
+.ChocolateLight { color: #e9b96e; }
+.ChocolateMiddle { color: #c17d11; }
+.ChocolateDark { color: #8f5902; }
+.ChameleonLight { color: #8ae234; }
+.ChameleonMiddle { color: #73d216; }
+.ChameleonDark { color: #4e9a06; }
+.SkyBlueLight { color: #729fcf; }
+.SkyBlueMiddle { color: #3465a4; }
+.SkyBlueDark { color: #204a87; }
+.PlumLight { color: #ad7fa8; }
+.PlumMiddle { color: #75507b; }
+.PlumDark { color: #5c3566; }
+.ScarletRedLight { color: #ef2929; }
+.ScarletRedMiddle { color: #cc0000; }
+.ScarletRedDark { color: #a40000; }
+.Aluminium1Light { color: #eeeeec; }
+.Aluminium1Middle { color: #d3d7cf; }
+.Aluminium1Dark { color: #babdb6; }
+.Aluminium2Light { color: #888a85; }
+.Aluminium2Middle { color: #555753; }
+.Aluminium2Dark { color: #2e3436; }

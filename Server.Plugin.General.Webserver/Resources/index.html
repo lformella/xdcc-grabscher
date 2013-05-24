@@ -25,209 +25,248 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 -->
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>XG Webfrontend v#XGVERSION#</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>XG Webclient</title>
+	#CSS_FILES#
 
-#CSS_FILES#
+	<link rel="shortcut icon" href="favicon.ico">
+</head>
+
+<body>
+
+<div id="dialogError" class="modal hide fade">
+	<div class="modal-header">
+		<h3 class="translate">Error</h3>
+	</div>
+	<div class="modal-body">
+		<label class="translate">Lost connection to XG server - please reload page!</label>
+	</div>
+</div>
+
+<div id="passwordDialog" class="modal hide fade" data-show="true">
+	<div class="modal-header">
+		<h3 class="translate">Password required</h3>
+	</div>
+	<div class="modal-body">
+		<p id="passwordTip" class="translate">Please enter the password for this webfrontend.</p>
+		<label id="passwordLabel" for="password" class="translate">Password</label>
+		<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all"/>
+		<i id="passwordLoading" class="loading-symbol" style="display: none"></i>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn btn-primary">Save changes</a>
+	</div>
+</div>
+
+<div id="serverChannelsDialog" class="modal hide fade">
+    <div class="modal-header">
+        <h3 class="translate">Change Servers and Channels</h3>
+    </div>
+    <div class="modal-body">
+        <div style="float: left; padding: 0 10px 0 0;">
+            <div id="ServerGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
+            <div id="serverPanel" class="panel">
+                <label id="serverLabel" for="server" class="translate">Server</label>
+                <input type="text" name="server" id="server" value="" class="text ui-widget-content ui-corner-all" />
+                <button id="serverButton" class="translate">Add</button>
+            </div>
+        </div>
+        <div>
+            <div id="ChannelGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
+            <div id="channelPanel" class="panel" style="display: none">
+                <label id="channelLabel" for="channel" class="translate">Channel</label>
+                <input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all" />
+                <button id="channelButton" class="translate">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialogStatistics" class="modal hide fade">
+    <div class="modal-header">
+        <h3 class="translate">View Statistics</h3>
+    </div>
+    <div class="modal-body">
+        BytesLoaded: <span id="BytesLoaded"></span><br /><br />
+
+        PacketsCompleted: <span id="PacketsCompleted"></span><br />
+        PacketsIncompleted: <span id="PacketsIncompleted"></span><br />
+        PacketsBroken: <span id="PacketsBroken"></span><br /><br />
+
+        PacketsRequested: <span id="PacketsRequested"></span><br />
+        PacketsRemoved: <span id="PacketsRemoved"></span><br /><br />
+
+        FilesCompleted: <span id="FilesCompleted"></span><br />
+        FilesBroken: <span id="FilesBroken"></span><br /><br />
+
+        ServerConnectsOk: <span id="ServerConnectsOk"></span><br />
+        ServerConnectsFailed: <span id="ServerConnectsFailed"></span><br />
+
+        ChannelConnectsOk: <span id="ChannelConnectsOk"></span><br />
+        ChannelConnectsFailed: <span id="ChannelConnectsFailed"></span><br />
+        ChannelsJoined: <span id="ChannelsJoined"></span><br />
+        ChannelsParted: <span id="ChannelsParted"></span><br />
+        ChannelsKicked: <span id="ChannelsKicked"></span><br /><br />
+
+        BotConnectsOk: <span id="BotConnectsOk"></span><br />
+        BotConnectsFailed: <span id="BotConnectsFailed"></span><br /><br />
+
+        SpeedMax: <span id="SpeedMax"></span><br /><br />
+    </div>
+</div>
+
+<div id="dialogSnapshots" class="modal hide fade">
+    <div class="modal-header">
+        <h3 class="translate">View Snapshots</h3>
+    </div>
+    <div class="modal-body">
+        <div style="float: left; width: 140px">
+            <fieldset>
+                <div><legend id="snapshotServers">Server</legend></div>
+                <div><input type="checkbox" id="snapshotCheckbox2" class="snapshotCheckbox" /><label for="snapshotCheckbox2" class="translate">All</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox21" class="snapshotCheckbox" /><label for="snapshotCheckbox21" class="translate">Enabled</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox22" class="snapshotCheckbox" /><label for="snapshotCheckbox22" class="translate">Disabled</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox3" class="snapshotCheckbox" /><label for="snapshotCheckbox3" class="translate">Connected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox4" class="snapshotCheckbox" /><label for="snapshotCheckbox4" class="translate">Disconnected</label></div>
+            </fieldset>
+
+            <fieldset>
+                <div><legend id="snapshotChannels">Channels</legend></div>
+                <div><input type="checkbox" id="snapshotCheckbox5" class="snapshotCheckbox" /><label for="snapshotCheckbox5" class="translate">All</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox23" class="snapshotCheckbox" /><label for="snapshotCheckbox23" class="translate">Enabled</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox24" class="snapshotCheckbox" /><label for="snapshotCheckbox24" class="translate">Disabled</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox6" class="snapshotCheckbox" /><label for="snapshotCheckbox6" class="translate">Connected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox7" class="snapshotCheckbox" /><label for="snapshotCheckbox7" class="translate">Disconnected</label></div>
+            </fieldset>
+
+            <fieldset>
+                <div><legend id="snapshotBots">Bots</legend></div>
+                <div><input type="checkbox" id="snapshotCheckbox8" class="snapshotCheckbox" /><label for="snapshotCheckbox8" class="translate">All</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox9" class="snapshotCheckbox" /><label for="snapshotCheckbox9" class="translate">Connected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox10" class="snapshotCheckbox" /><label for="snapshotCheckbox10" class="translate">Disconnected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox11" class="snapshotCheckbox" /><label for="snapshotCheckbox11" class="translate">Free Slots</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox12" class="snapshotCheckbox" /><label for="snapshotCheckbox12" class="translate">Free Queue</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox19" class="snapshotCheckbox" /><label for="snapshotCheckbox19" class="translate">Current Speed</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox20" class="snapshotCheckbox" /><label for="snapshotCheckbox20" class="translate">Max Speed</label></div>
+            </fieldset>
+
+            <fieldset>
+                <div><legend id="snapshotPackets">Packets</legend></div>
+                <div><input type="checkbox" id="snapshotCheckbox13" class="snapshotCheckbox" /><label for="snapshotCheckbox13" class="translate">All</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox14" class="snapshotCheckbox" /><label for="snapshotCheckbox14" class="translate">Connected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox15" class="snapshotCheckbox" /><label for="snapshotCheckbox15" class="translate">Disconnected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox16" class="snapshotCheckbox" /><label for="snapshotCheckbox16" class="translate">Size</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox17" class="snapshotCheckbox" /><label for="snapshotCheckbox17" class="translate">Size Downloading</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox18" class="snapshotCheckbox" /><label for="snapshotCheckbox18" class="translate">Size not Downloading</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox25" class="snapshotCheckbox" /><label for="snapshotCheckbox25" class="translate">Size Connected</label></div>
+                <div><input type="checkbox" id="snapshotCheckbox26" class="snapshotCheckbox" /><label for="snapshotCheckbox26" class="translate">Size Disconnected</label></div>
+            </fieldset>
+
+            <fieldset>
+                <div><legend id="snapshotTimespan" class="translate">Timespan</legend></div>
+                <div><input type="radio" id="time1" name="snapshotTime" value="1"><label id="label1" for="time1" class="translate">1 Day</label></div>
+                <div><input type="radio" id="time7" name="snapshotTime" value="7" checked="checked"><label id="label7" for="time7" class="translate">1 Week</label></div>
+                <div><input type="radio" id="time31" name="snapshotTime" value="31"><label id="label31" for="time31" class="translate">1 Month</label></div>
+                <div><input type="radio" id="time0" name="snapshotTime" value="0"><label id="label0" for="time0" class="translate">All</label></div>
+            </fieldset>
+        </div>
+
+        <div style="float: right; padding-right: 30px">
+            <div id="snapshot" style="height: 550px; width: 1000px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="#">XG v#XGVERSION#</a>
+
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+					<li class="active"><a class="translate carousel-link" href="#" data-slide="0"><span class="icon-gauge"></span> Dashboard</a></li>
+					<li><a class="translate carousel-link" href="#" data-slide="1"><span class="icon-sitemap"></span> IRC View</a></li>
+					<li><a class="translate carousel-link" href="#" data-slide="2"><span class="icon-cloud"></span> External Search via xg.bitpir.at</a></li>
+                    <li><a class="translate carousel-link" href="#" data-slide="3"><span class="icon-doc"></span> Files</a></li>
+					<li>
+						<a id="settingsLink" class="translate" href="#settings"><span class="icon-cog"></span> Settings</a>
+						<div id="settings" class="popover bottom">
+							<div class="arrow"></div>
+							<h3 class="popover-title translate">Settings</h3>
+							<div class="popover-content">
+								<button id="serverChannelButton" class="translate btn"><span class="icon-globe"></span>Server / Channels</button>
+								<button id="showOfflineBots" class="translate btn" data-toggle="button"><span class="icon-eye"></span>Hide offline Bots</button>
+								<button id="statisticsButton" class="translate btn"><span class="icon-chart-bar"></span>Statistics</button>
+								<button id="snapshotsButton" class="translate btn"><span class="icon-chart-bar"></span>Extended Statistics</button>
+								<button id="humanDates" class="translate btn" data-toggle="button"><span class="icon-clock"></span>Human readable dates</button>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<div id="searchButtons" class="pull-right" style="display: none">
+					<a id="searchAdd" href="#"><span class="icon-bookmark-empty OrangeLight"></span></a>
+					<a id="searchRemove" href="#" style="display: none"><span class="icon-bookmark OrangeLight"></span></a>
+				</div>
+				<form id="searchForm" class="dropdown navbar-form pull-right" style="display: none">
+					<input id="search" type="text" class="search-query dropdown-toggle" data-toggle="dropdown" placeholder="Search">
+					<ul id="searches" class="dropdown-menu">
+						<li class="nav-header translate">Predefined</li>
+						<li><a data-guid="00000000-0000-0000-0000-000000000001" data-name="Enabled" href="#" class="translate">Enabled</a></li>
+						<li><a data-guid="00000000-0000-0000-0000-000000000002" data-name="Downloads" href="#" class="translate">Downloads</a></li>
+						<li class="divider"></li>
+						<li class="nav-header translate">Custom</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+
+	<div id="mainCarousel" class="carousel slide" data-interval="">
+		<div class="carousel-inner">
+			<div class="item active">
+				Hello :-)
+			</div>
+			<div class="item">
+				<div id="BotGrid"></div>
+				<div id="PacketGrid"></div>
+			</div>
+			<div class="item">
+				<div id="ExternalSearchGrid"></div>
+			</div>
+			<div class="item">
+				<div id="FileGrid"></div>
+			</div>
+		</div>
+	</div>
+
+</div>
 
 #JS_FILES#
 
-		<script type="text/javascript">
-			$(function()
-			{
-				$(".translate").each(function (i, element) {
-					var item = $(element);
-					item.html(_(item.html()));
-				});
-				$(".translateTitle").each(function (i, element) {
-					var item = $(element);
-					item.attr("title", _(item.attr("title")));
-				});
+<script type="text/javascript">
+	$(document).ready(function ()
+	{
+		$(".translate").each(function (i, element)
+		{
+			var item = $(element);
+			item.html(_(item.html()));
+		});
+		$(".translateTitle").each(function (i, element)
+		{
+			var item = $(element);
+			item.attr("title", _(item.attr("title")));
+		});
 
-				Object.create(XGPassword).initialize("#SALT#", "#HOST#", "#PORT#");
-			});
-		</script>
-	</head>
+		Object.create(XGPassword).initialize("#SALT#", "#HOST#", "#PORT#");
+	});
+</script>
 
-	<body>
-		<div id="dialogError" title="Error" style="display: none;" class="translateTitle">
-
-			<label class="translate">Lost connection to XG server - please reload page!</label>
-
-		</div>
-
-		<div id="dialogPassword" title="Password required" style="display: none;" class="translateTitle">
-
-			<p id="passwordTip" class="translate">Please enter the password for this webfrontend.</p>
-			<label id="passwordLabel" for="password" class="translate">Password</label>
-			<input type="password" name="password" id="password" value="" class="text ui-widget-content ui-corner-all" />
-			<i id="loadingPassword" class="loading-symbol" style="display: none"></i>
-
-		</div>
-
-		<div id="dialogServerChannels" title="Change Servers and Channels" style="display: none;" class="translateTitle">
-
-			<div style="float: left; padding: 0 10px 0 0;">
-				<div id="ServerGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
-				<div id="serverPanel" class="panel">
-					<label id="serverLabel" for="server" class="translate">Server</label>
-					<input type="text" name="server" id="server" value="" class="text ui-widget-content ui-corner-all" />
-					<button id="serverButton" class="translate">Add</button>
-				</div>
-			</div>
-			<div>
-				<div id="ChannelGrid" class="ui-widget-content" style="width: 300px; height: 300px;"></div>
-				<div id="channelPanel" class="panel" style="display: none">
-					<label id="channelLabel" for="channel" class="translate">Channel</label>
-					<input type="text" name="channel" id="channel" value="" class="text ui-widget-content ui-corner-all" />
-					<button id="channelButton" class="translate">Add</button>
-				</div>
-			</div>
-
-		</div>
-
-		<div id="dialogStatistics" title="View Statistics" style="display: none;" class="translateTitle">
-
-			BytesLoaded: <span id="BytesLoaded"></span><br /><br />
-
-			PacketsCompleted: <span id="PacketsCompleted"></span><br />
-			PacketsIncompleted: <span id="PacketsIncompleted"></span><br />
-			PacketsBroken: <span id="PacketsBroken"></span><br /><br />
-
-			PacketsRequested: <span id="PacketsRequested"></span><br />
-			PacketsRemoved: <span id="PacketsRemoved"></span><br /><br />
-
-			FilesCompleted: <span id="FilesCompleted"></span><br />
-			FilesBroken: <span id="FilesBroken"></span><br /><br />
-
-			ServerConnectsOk: <span id="ServerConnectsOk"></span><br />
-			ServerConnectsFailed: <span id="ServerConnectsFailed"></span><br />
-
-			ChannelConnectsOk: <span id="ChannelConnectsOk"></span><br />
-			ChannelConnectsFailed: <span id="ChannelConnectsFailed"></span><br />
-			ChannelsJoined: <span id="ChannelsJoined"></span><br />
-			ChannelsParted: <span id="ChannelsParted"></span><br />
-			ChannelsKicked: <span id="ChannelsKicked"></span><br /><br />
-
-			BotConnectsOk: <span id="BotConnectsOk"></span><br />
-			BotConnectsFailed: <span id="BotConnectsFailed"></span><br /><br />
-
-			SpeedMax: <span id="SpeedMax"></span><br /><br />
-
-		</div>
-
-		<div id="dialogSnapshots" title="View Snapshots" style="display: none;" class="translateTitle">
-
-			<div style="float: left; width: 140px">
-				<fieldset>
-					<div><legend id="snapshotServers">Server</legend></div>
-					<div><input type="checkbox" id="snapshotCheckbox2" class="snapshotCheckbox" /><label for="snapshotCheckbox2" class="translate">All</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox21" class="snapshotCheckbox" /><label for="snapshotCheckbox21" class="translate">Enabled</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox22" class="snapshotCheckbox" /><label for="snapshotCheckbox22" class="translate">Disabled</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox3" class="snapshotCheckbox" /><label for="snapshotCheckbox3" class="translate">Connected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox4" class="snapshotCheckbox" /><label for="snapshotCheckbox4" class="translate">Disconnected</label></div>
-				</fieldset>
-
-				<fieldset>
-					<div><legend id="snapshotChannels">Channels</legend></div>
-					<div><input type="checkbox" id="snapshotCheckbox5" class="snapshotCheckbox" /><label for="snapshotCheckbox5" class="translate">All</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox23" class="snapshotCheckbox" /><label for="snapshotCheckbox23" class="translate">Enabled</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox24" class="snapshotCheckbox" /><label for="snapshotCheckbox24" class="translate">Disabled</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox6" class="snapshotCheckbox" /><label for="snapshotCheckbox6" class="translate">Connected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox7" class="snapshotCheckbox" /><label for="snapshotCheckbox7" class="translate">Disconnected</label></div>
-				</fieldset>
-
-				<fieldset>
-					<div><legend id="snapshotBots">Bots</legend></div>
-					<div><input type="checkbox" id="snapshotCheckbox8" class="snapshotCheckbox" /><label for="snapshotCheckbox8" class="translate">All</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox9" class="snapshotCheckbox" /><label for="snapshotCheckbox9" class="translate">Connected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox10" class="snapshotCheckbox" /><label for="snapshotCheckbox10" class="translate">Disconnected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox11" class="snapshotCheckbox" /><label for="snapshotCheckbox11" class="translate">Free Slots</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox12" class="snapshotCheckbox" /><label for="snapshotCheckbox12" class="translate">Free Queue</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox19" class="snapshotCheckbox" /><label for="snapshotCheckbox19" class="translate">Current Speed</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox20" class="snapshotCheckbox" /><label for="snapshotCheckbox20" class="translate">Max Speed</label></div>
-				</fieldset>
-
-				<fieldset>
-					<div><legend id="snapshotPackets">Packets</legend></div>
-					<div><input type="checkbox" id="snapshotCheckbox13" class="snapshotCheckbox" /><label for="snapshotCheckbox13" class="translate">All</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox14" class="snapshotCheckbox" /><label for="snapshotCheckbox14" class="translate">Connected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox15" class="snapshotCheckbox" /><label for="snapshotCheckbox15" class="translate">Disconnected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox16" class="snapshotCheckbox" /><label for="snapshotCheckbox16" class="translate">Size</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox17" class="snapshotCheckbox" /><label for="snapshotCheckbox17" class="translate">Size Downloading</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox18" class="snapshotCheckbox" /><label for="snapshotCheckbox18" class="translate">Size not Downloading</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox25" class="snapshotCheckbox" /><label for="snapshotCheckbox25" class="translate">Size Connected</label></div>
-					<div><input type="checkbox" id="snapshotCheckbox26" class="snapshotCheckbox" /><label for="snapshotCheckbox26" class="translate">Size Disconnected</label></div>
-				</fieldset>
-
-				<fieldset>
-					<div><legend id="snapshotTimespan" class="translate">Timespan</legend></div>
-					<div><input type="radio" id="time1" name="snapshotTime" value="1"><label id="label1" for="time1" class="translate">1 Day</label></div>
-					<div><input type="radio" id="time7" name="snapshotTime" value="7" checked="checked"><label id="label7" for="time7" class="translate">1 Week</label></div>
-					<div><input type="radio" id="time31" name="snapshotTime" value="31"><label id="label31" for="time31" class="translate">1 Month</label></div>
-					<div><input type="radio" id="time0" name="snapshotTime" value="0"><label id="label0" for="time0" class="translate">All</label></div>
-				</fieldset>
-			</div>
-
-			<div style="float: right; padding-right: 30px">
-				<div id="snapshot" style="height: 550px; width: 1000px;"></div>
-			</div>
-
-		</div>
-
-		<div id="searchLayout" class="ui-layout-west" style="display: none;">
-				<div id="SearchGrid"></div>
-				<div class="footer">
-					<input type="text" id="searchText" />
-				</div>
-		</div>
-
-		<div id="objectLayout" class="ui-layout-center" style="display: none;">
-			<div id="tabs" style="border: none;">
-				<ul style="margin-bottom: 4px;">
-					<li><a id="tab1Link" href="#tab1"><span class="icon icon-home"></span>&nbsp;<span class="translate">IRC View</span></a></li>
-					<li><a id="tab2Link" href="#tab2"><span class="icon icon-cloud"></span>&nbsp;<span class="translate">External Search via xg.bitpir.at</span></a></li>
-					<li><a id="tab3Link" href="#tab3"><span class="icon icon-doc"></span>&nbsp;<span class="translate">Files</span></a></li>
-				</ul>
-
-				<div id="tab1">
-
-					<div id="toolbar" style="margin-bottom: 4px;">
-						<button id="serverChannelButton" class="translate">Server / Channels</button>
-						<input type="checkbox" id="showOfflineBots" /><label for="showOfflineBots" class="translate">Hide offline Bots</label>
-						<button id="statisticsButton" class="translate">Statistics</button>
-						<button id="snapshotsButton" class="translate">Extended Statistics</button>
-						<input type="checkbox" id="humanDates" /><label for="humanDates" class="translate">Human readable dates</label>
-					</div>
-
-					<div id="layoutObjectsContainer">
-						<div id="botLayout" class="ui-layout-north">
-							<div id="BotGrid"></div>
-						</div>
-						<div id="packetLayout" class="ui-layout-center">
-							<div id="PacketGrid"></div>
-						</div>
-					</div>
-
-				</div>
-
-				<div id="tab2" style="padding: 0;">
-
-					<div id="ExternalSearchGrid"></div>
-
-				</div>
-
-				<div id="tab3" style="padding: 0;">
-
-					<div id="FileGrid"></div>
-
-				</div>
-
-			</div>
-		</div>
-
-	</body>
+</body>
 </html>

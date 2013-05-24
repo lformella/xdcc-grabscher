@@ -25,7 +25,7 @@
 
 var XGWebsocket = (function()
 {
-	var url, port, password, state, socket;
+	var dataView, url, port, password, state, socket;
 
 	/**
 	 * @param {Enum.Request} Type
@@ -82,19 +82,15 @@ var XGWebsocket = (function()
 		switch (json.Type)
 		{
 			case Enum.Response.ObjectAdded:
-				self.onAdd.notify(json, null, self);
+				dataView.addItem(json);
 				break;
 
 			case Enum.Response.ObjectRemoved:
-				self.onRemove.notify(json, null, self);
+				dataView.removeItem(json);
 				break;
 
 			case Enum.Response.ObjectChanged:
-				self.onUpdate.notify(json, null, self);
-				break;
-
-			case Enum.Response.SearchExternal:
-				self.onSearchExternal.notify(json, null, self);
+				dataView.updateItem(json);
 				break;
 
 			case Enum.Response.Snapshots:
@@ -112,23 +108,21 @@ var XGWebsocket = (function()
 	}
 
 	var self = {
-		onAdd: new Slick.Event(),
-		onRemove: new Slick.Event(),
-		onUpdate: new Slick.Event(),
 		onError: new Slick.Event(),
 		onDisconnected: new Slick.Event(),
-		onSearchExternal: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
 		onStatistics: new Slick.Event(),
 		onRequestComplete: new Slick.Event(),
 
 		/**
+		 * @param {XGDataView} dataView1
 		 * @param {String} url1
 		 * @param {String} port1
 		 * @param {String} password1
 		 */
-		initialize: function(url1, port1, password1)
+		initialize: function(dataView1, url1, port1, password1)
 		{
+			dataView = dataView1;
 			url = url1;
 			port = port1;
 			password = password1;

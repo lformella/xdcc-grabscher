@@ -50,7 +50,10 @@ var XGPassword = (function()
 	{
 		var dataView = Object.create(XGDataView);
 		dataView.initialize();
+
 		var cookie = Object.create(XGCookie);
+		var gui = Object.create(XGGui);
+		gui.initialize(dataView);
 		var helper = Object.create(XGHelper);
 		helper.setHumanDates(cookie.getCookie("humanDates", "0") == "1");
 		var formatter = Object.create(XGFormatter);
@@ -58,16 +61,17 @@ var XGPassword = (function()
 		var statistics = Object.create(XGStatistics);
 		statistics.initialize(helper);
 		var websocket = Object.create(XGWebsocket);
-		websocket.initialize(host, port, password);
+		websocket.initialize(dataView, host, port, password);
 		var grid = Object.create(XGGrid);
 		grid.initialize(formatter, helper, dataView);
 		//grid.setFilterOfflineBots(cookie.getCookie("filterOfflineBots", "0") == "1");
 		var resize = Object.create(XGResize);
 		var notification = Object.create(XGNotification);
+        notification.initialize(dataView);
 
 		// start frontend
 		var main = Object.create(XGMain);
-		main.initialize(helper, statistics, cookie, formatter, websocket, dataView, grid, resize, notification);
+		main.initialize(helper, statistics, cookie, formatter, websocket, dataView, grid, resize, gui);
 		main.start();
 	}
 
@@ -103,6 +107,9 @@ var XGPassword = (function()
 			host = host1;
 			port = port1;
 
+			password = encodeURIComponent(CryptoJS.SHA256(salt + "xgisgreat" + salt));
+			startMain ();
+/*
 			var buttonText = { text: _("Connect") };
 			var buttons = {};
 			buttons[buttonText["text"]] = function()
@@ -134,6 +141,7 @@ var XGPassword = (function()
 					buttonConnectClicked($("#dialogPassword"));
 				}
 			});
+*/
 		}
 	}
 }());

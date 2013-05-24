@@ -119,22 +119,6 @@ var XGGrid = (function()
 	}
 
 	/**
-	 * @param obj {Object}
-	 */
-	function applySearchFilter (obj)
-	{
-		dataview.resetBotFilter();
-
-		packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
-		applyFilter(Enum.Grid.Packet);
-
-		externalFilter = packetFilter;
-		applyFilter(Enum.Grid.ExternalSearch);
-
-		applyFilter(Enum.Grid.Bot);
-	}
-
-	/**
 	 * @param {String} grid
 	 */
 	function applyFilter (grid)
@@ -361,7 +345,7 @@ var XGGrid = (function()
 			], comparePackets);
 
 			/**************************************************************************************************************/
-
+/*
 			searchGrid = buildGrid(Enum.Grid.Search, dataview.getDataView(Enum.Grid.Search), [
 				buildRow("Data", 0, false, $.proxy(formatter.formatSearchCell, formatter))
 			], null, 30);
@@ -371,7 +355,7 @@ var XGGrid = (function()
 			}, false);
 			$("#SearchGrid .slick-header-columns").css("height", "0px");
 			searchGrid.resizeCanvas();
-
+*/
 			/**************************************************************************************************************/
 
 			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
@@ -412,7 +396,7 @@ var XGGrid = (function()
 			/**************************************************************************************************************/
 
 			// default filter
-			applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" });
+			self.applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" });
 		},
 
 		/**
@@ -457,6 +441,19 @@ var XGGrid = (function()
 		{
 			var obj = dataview.getDataView(Enum.Grid.ExternalSearch).getItemById(guid);
 			this.onDownloadLink.notify(obj, null, this);
+		},
+
+		applySearchFilter: function  (obj)
+		{
+			dataview.resetBotFilter();
+
+			packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
+			applyFilter(Enum.Grid.Packet);
+
+			externalFilter = packetFilter;
+			applyFilter(Enum.Grid.ExternalSearch);
+
+			applyFilter(Enum.Grid.Bot);
 		}
 	};
 	return self;

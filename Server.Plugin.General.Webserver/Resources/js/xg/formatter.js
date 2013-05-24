@@ -358,7 +358,7 @@ var XGFormatter = (function()
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "box";
+				icon = "briefcase";
 			}
 
 			if (!packet.Enabled)

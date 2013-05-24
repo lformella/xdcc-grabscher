@@ -363,8 +363,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Searches:
 						var searches = new List<Core.Search>();
-						searches.Add(_searchDownloads);
-						searches.Add(_searchEnabled);
 						searches.AddRange(Searches.All);
 
 						foreach (var currentSearch in searches)

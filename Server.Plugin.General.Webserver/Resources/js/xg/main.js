@@ -25,8 +25,8 @@
 
 var XGMain = (function()
 {
-	var statistics, cookie, helper, formatter, websocket, dataview, grid, resize;
-	var activeTab = 0, enableSearchTransitions = false;
+	var statistics, cookie, helper, formatter, websocket, dataView, grid, resize, gui;
+	var activeTab = 0;
 	var currentServerGuid = "";
 	var serversActive = [], botsActive = [], searchesActive = [], externalSearchesActive = [];
 
@@ -36,19 +36,10 @@ var XGMain = (function()
 		/* SERVER / CHANNEL DIALOG                                                                                    */
 		/* ********************************************************************************************************** */
 
-		$("#serverChannelButton")
-			.button({icons: { primary: "icon-globe" }})
-			.click( function()
+		$("#serverChannelButton").click( function()
 			{
-				$("#dialogServerChannels").dialog("open");
+				$("#serverChannelsDialog").modal('show');
 			});
-
-		$("#dialogServerChannels").dialog({
-			autoOpen: false,
-			width: 640,
-			modal: true,
-			resizable: false
-		});
 
 		$("#serverButton")
 			.button(/*{icons: { primary: "icon-circle-plus" }}*/)
@@ -78,20 +69,11 @@ var XGMain = (function()
 		/* STATISTICS DIALOG                                                                                          */
 		/* ********************************************************************************************************** */
 
-		$("#statisticsButton")
-			.button({icons: { primary: "icon-chart-bar" }})
-			.click( function()
+		$("#statisticsButton").click( function()
 			{
 				websocket.send(Enum.Request.Statistics);
-				$("#dialogStatistics").dialog("open");
+				$("#dialogStatistics").modal('show');
 			});
-
-		$("#dialogStatistics").dialog({
-			autoOpen: false,
-			width: 545,
-			modal: true,
-			resizable: false
-		});
 
 		/* ********************************************************************************************************** */
 		/* SNAPSHOTS DIALOG                                                                                           */
@@ -103,45 +85,15 @@ var XGMain = (function()
 			statistics.updateSnapshotPlot();
 		});
 
-		$("#snapshotsButton")
-			.button({icons: { primary: "icon-chart-bar" }})
-			.click( function()
+		$("#snapshotsButton").click( function()
 			{
-				$("#dialogSnapshots").dialog("open");
+				$("#dialogSnapshots").modal('show');
 			});
-
-		$("#dialogSnapshots").dialog({
-			autoOpen: false,
-			width: $(window).width() - 20,
-			height: $(window).height() - 20,
-			modal: true,
-			resizable: false
-		});
-
-		/* ********************************************************************************************************** */
-		/* ERROR DIALOG                                                                                               */
-		/* ********************************************************************************************************** */
-
-		$("#dialogError").dialog({
-			autoOpen: false,
-			modal: true,
-			resizable: false,
-			close: function()
-			{
-				$('#dialogError').dialog('open');
-			}
-		});
 	}
 
 	function initializeOthers ()
 	{
-		$("#searchText").keyup( function (e)
-		{
-			if (e.which == 13)
-			{
-				addSearch();
-			}
-		});
+		var element;
 
 		$("#tabs").tabs({
 			select: function(event, ui)
@@ -153,28 +105,34 @@ var XGMain = (function()
 			grid.resize();
 		});
 
-		var element1 = $("#showOfflineBots");
-		element1
-			.button({icons: { primary: "icon-eye" }})
-			.click( function()
+		element = $("#showOfflineBots");
+		var showOfflineBots = cookie.getCookie("showOfflineBots", "0") == "1";
+		element.click( function()
 			{
-				var checked = $("#showOfflineBots").attr("checked") == "checked";
-				cookie.setCookie("showOfflineBots", checked ? "1" : "0" );
-				grid.setFilterOfflineBots(checked);
+				showOfflineBots = !showOfflineBots;
+				cookie.setCookie("showOfflineBots", showOfflineBots ? "1" : "0");
+				grid.setFilterOfflineBots(showOfflineBots);
 			});
-		element1.attr("checked", cookie.getCookie("showOfflineBots", "0") == "1");
+		if (showOfflineBots)
+		{
+			element.button("toggle");
+		}
+		grid.setFilterOfflineBots(showOfflineBots);
 
-		var element2 = $("#humanDates");
-		element2
-			.button({icons: { primary: "icon-clock" }})
-			.click( function()
+		element = $("#humanDates");
+		var humanDates = cookie.getCookie("humanDates", "0") == "1";
+		element.click( function()
 			{
-				var checked = $("#humanDates").attr("checked") == "checked";
-				cookie.setCookie("humanDates", checked ? "1" : "0" );
-				helper.setHumanDates(checked);
+				humanDates = !humanDates;
+				cookie.setCookie("humanDates", humanDates ? "1" : "0");
+				helper.setHumanDates(humanDates);
 				grid.invalidate();
 			});
-		element2.attr("checked", cookie.getCookie("humanDates", "0") == "1");
+		if (humanDates)
+		{
+			element.button("toggle");
+		}
+		helper.setHumanDates(humanDates);
 	}
 
 	/**
@@ -184,19 +142,8 @@ var XGMain = (function()
 	 */
 	function getElementFromGrid (gridName, guid)
 	{
-		var row = dataview.getDataView(gridName).getRowById(guid);
+		var row = dataView.getDataView(gridName).getRowById(guid);
 		return $(grid.getGrid(gridName).getCellNode(row, 1)).parent();
-	}
-
-	function addSearch ()
-	{
-		enableSearchTransitions = true;
-		var tbox = $('#searchText');
-		if(tbox.val() != "")
-		{
-			websocket.sendName(Enum.Request.AddSearch, tbox.val());
-			tbox.val('');
-		}
 	}
 
 	/**
@@ -253,22 +200,22 @@ var XGMain = (function()
 		 * @param {XGCookie} cookie1
 		 * @param {XGFormatter} formatter1
 		 * @param {XGWebsocket} websocket1
-		 * @param {XGDataView} dataview1
+		 * @param {XGDataView} dataView1
 		 * @param {XGGrid} grid1
 		 * @param {XGResize} resize1
-		 * @param {XGNotification} notification1
+		 * @param {XGGui} gui1
 		 */
-		initialize: function(helper1, statistics1, cookie1, formatter1, websocket1, dataview1, grid1, resize1, notification1)
+		initialize: function(helper1, statistics1, cookie1, formatter1, websocket1, dataView1, grid1, resize1, gui1)
 		{
 			statistics = statistics1;
 			cookie = cookie1;
 			helper = helper1;
 			formatter = formatter1;
 			websocket = websocket1;
-			dataview = dataview1;
+			dataView = dataView1;
 			grid = grid1;
 			resize = resize1;
-			notification = notification1;
+			gui = gui1;
 		},
 
 		start: function()
@@ -279,40 +226,7 @@ var XGMain = (function()
 				websocket.connect();
 			});
 			websocket.onError.subscribe(function (e, args) {
-				$("#dialogError").dialog("open");
-			});
-			websocket.onAdd.subscribe(function (e, args) {
-				dataview.addItem(args);
-
-				switch (args.DataType)
-				{
-					case Enum.Grid.Search:
-						if (enableSearchTransitions)
-						{
-							$("#searchText").effect("transfer", { to: $("#" + args.Data.Guid) }, 500);
-						}
-						break;
-
-					case Enum.Grid.Notification:
-						notification.handleMessage(args.Data);
-						break;
-				}
-			});
-			websocket.onRemove.subscribe(function (e, args) {
-				switch (args.DataType)
-				{
-					case Enum.Grid.Search:
-						if (enableSearchTransitions)
-						{
-							$("#" + args.Data.Guid).effect("transfer", { to: $("#searchText") }, 500);
-						}
-						break;
-				}
-
-				dataview.removeItem(args);
-			});
-			websocket.onUpdate.subscribe(function (e, args) {
-				dataview.updateItem(args);
+				$("#dialogError").modal('show');
 			});
 			websocket.onSnapshots.subscribe(function (e, args) {
 				statistics.setSnapshots(args.Data);
@@ -324,27 +238,27 @@ var XGMain = (function()
 				{
 					case Enum.Request.ChannelsFromServer:
 						newArgs.DataType = Enum.Grid.Server;
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(serversActive.shift());
+						newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(serversActive.shift());
 						break;
 
 					case Enum.Request.PacketsFromBot:
 						newArgs.DataType = Enum.Grid.Bot;
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(botsActive.shift());
+						newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(botsActive.shift());
 						break;
 
 					case Enum.Request.Search:
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(searchesActive.shift());
+						newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(searchesActive.shift());
 						break;
 
 					case Enum.Request.SearchExternal:
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(externalSearchesActive.shift());
+						newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(externalSearchesActive.shift());
 						break;
 				}
 
 				if (newArgs.Data != null)
 				{
 					newArgs.Data.Active = false;
-					dataview.updateItem(newArgs);
+					dataView.updateItem(newArgs);
 				}
 			});
 			websocket.connect();
@@ -377,7 +291,7 @@ var XGMain = (function()
 							break;
 
 						case Enum.Grid.Packet:
-							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
+							var row = dataView.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
 							grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
 							grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
 							active = true;
@@ -407,7 +321,7 @@ var XGMain = (function()
 					if (active)
 					{
 						args.Data.Active = true;
-						dataview.updateItem(args);
+						dataView.updateItem(args);
 					}
 				}
 			});
@@ -420,11 +334,6 @@ var XGMain = (function()
 
 					case Enum.Grid.Channel:
 						websocket.sendGuid(Enum.Request.RemoveChannel, args.Data.Guid);
-						break;
-
-					case Enum.Grid.Search:
-						enableSearchTransitions = true;
-						websocket.sendGuid(Enum.Request.RemoveSearch, args.Data.Guid);
 						break;
 				}
 			});
@@ -442,6 +351,37 @@ var XGMain = (function()
 				downloadLink(args);
 			});
 			grid.build();
+
+            // gui
+            gui.onSearch.subscribe(function (e, args) {
+                if (args.Grid != Enum.Grid.ExternalSearch)
+                {
+                    grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
+                    grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
+                    websocket.sendGuid(Enum.Request.Search, args.Guid);
+                    searchesActive.push(args.Guid);
+                    active = true;
+                }
+                else if (activeTab == 1)
+                {
+                    if (args.Guid != "00000000-0000-0000-0000-000000000001" && args.Guid != "00000000-0000-0000-0000-000000000002")
+                    {
+                        websocket.sendGuid(Enum.Request.SearchExternal, args.Guid);
+                        externalSearchesActive.push(args.Guid);
+                        active = true;
+                    }
+                }
+				grid.applySearchFilter(args);
+            });
+            gui.onSearchAdd.subscribe(function (e, args) {
+                websocket.sendName(Enum.Request.AddSearch, args.Name);
+            });
+            gui.onSearchRemove.subscribe(function (e, args) {
+                websocket.sendGuid(Enum.Request.RemoveSearch, args.Guid);
+            });
+            gui.onSlide.subscribe(function (e, args) {
+				grid.resize();
+            });
 
 			// other
 			initializeDialogs();

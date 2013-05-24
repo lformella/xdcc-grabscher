@@ -44,12 +44,14 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		readonly string[] _cssFiles =
 		{
 			"reset",
+			"bootstrap.min",
 			"fontello",
 			"animation",
 			"jquery-ui",
 			"slick.grid",
-			"layout-default",
+			//"layout-default",
 			"jquery.pnotify.default",
+			"tango-colors",
 			"xg"
 		};
 
@@ -72,9 +74,11 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/slick.grid",
 			"external/slick.dataview",
 			"external/slick.rowselectionmodel",
+			"external/bootstrap.min",
 			"i18n/moment/#LANGUAGE_SHORT#",
 			"i18n/xg/#LANGUAGE_SHORT#",
 			"xg/enum",
+			"xg/gui",
 			"xg/cookie",
 			"xg/formatter",
 			"xg/helper",
@@ -137,7 +141,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						content = new StreamReader(stream).ReadToEnd();
 					}
 #endif
-					if (aFile == "/index.html" || aFile == "/index2.html")
+					if (aFile == "/index.html")
 					{
 						content = content.Replace("#HOST#", aHost);
 						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));
@@ -164,6 +168,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						content = content.Replace("#JS_FILES#", js);
 
 						content = content.Replace("#SALT#", Salt);
+						content = content.Replace("#XGVERSION#", Settings.Instance.XgVersion);
 						content = PatchLanguage(content, aLanguages);
 					}
 				}

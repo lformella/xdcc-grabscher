@@ -25,352 +25,96 @@
 //
 */
 
-/* HTML Elements */
-
-html, body
+body
 {
-	font-size: 11px;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	overflow: auto;
+	padding-top: 50px;
+	padding-bottom: 10px;
 }
 
-small
+.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container
 {
-	font-size: 9px;
+    width: calc(100% - 20px);
 }
 
-fieldset
+.carousel
 {
-	margin: 4px 0 10px 0;
-	outline: 2px solid #D3D7CF;
-	padding: 0 4px 2px 4px;
+	margin-bottom: 0;
 }
 
-fieldset input
+.nav-collapse [class^="icon-"]
 {
-	float: left;
-	margin: 0 4px 0 0;
-	padding: 0;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    margin-top: -7px;
+    width: 1.3em;
 }
 
-fieldset div
+#searchRemove [class^="icon-"], #searchAdd [class^="icon-"]
 {
-	padding: 3px 0 3px 0;
-	clear: both;
+	margin-top: 4px;
 }
 
-fieldset label
+#BotGrid
 {
-	margin: 2px 0 0;
+	height: 300px;
+	padding-bottom: 10px;
 }
 
-strong
+#PacketGrid
 {
-	font-weight: bold;
+	height: 300px;
 }
 
-/* XG Elements */
-
-.alignRight
+#serverChannelsDialog
 {
-	text-align: right;
+	width: 660px;
 }
 
-#searchGrid
+#settings
 {
-	width: 100%;
+    left: auto;
+    right: -80px;
+    top: 35px;
+    width: 250px;
+    min-width: 250px;
+	max-width: 250px;
 }
 
-#serverGrid, #channelGrid
+#settings button
 {
-	width: 400px;
-	height: 400px;
+	width: 230px;
 }
 
-#passwordTip
+#settings button [class^="icon-"]
 {
-	padding: 5px 0 10px 0;
+	margin-right: 10px;
 }
 
-#toolbar
-{
-	padding-left: 4px;
-}
 
-.button
+#settingsLink
 {
-	cursor: pointer;
-}
-
-.overlay
-{
-	width: 10px;
-	height: 10px;
-	margin: 11px 0 0 11px;
-}
-
-#tabs, #tabs1, #tabs2, #tabs3, #packetLayout, #botLayout, .footer
-{
-	overflow: hidden;
-}
-
-#searchLayout
-{
-	background: #efefef;
-}
-
-.footer
-{
-	padding: 0 2px 0 2px;
-}
-
-.panel
-{
-	padding: 2px 0 0 0;
-}
-
-/* Fontello Fixes */
-
-[class^="icon-"]:before,
-[class*=" icon-"]:before
-{
-	margin: 0;
-	opacity: 1;
-}
-
-/* Icons */
-
-.icon-big
-{
-	font-size: 20px;
-}
-
-.icon-overlay
-{
-	font-size: 14px;
-	float: right;
-}
-
-.icon-small
-{
-	font-size: 10px;
-}
-
-.icon, .icon-big, .icon-overlay, .ui-icon
-{
-	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
-}
-.ui-state-active .ui-icon, .ui-state-active .icon
-{
-	text-shadow: none;
-}
-.ui-button-icon-primary, .ui-button-icon-primary.ui-icon
-{
-	text-indent: 0;
-	background-image: none;
-	font-size: 12px;
-}
-
-/* SlickGrid Fixes */
-
-.slick-cell.selected
-{
-	background-color: #FFFED4;
-	border-color: transparent silver #fce94f transparent;
+	position: relative;
 }
 
 .slick-cell
 {
-	line-height: 20px;
+	font-size: .8em;
 }
 
-.slick-cell.small
+.slick-cell [class^="icon-"]
 {
-	line-height: 10px;
+    font-size: 1.8em;
+    margin-top: -1px;
 }
 
-.slick-cell.medium
+.slick-cell .icon-overlay
 {
-	line-height: 15px;
-}
-
-#SearchGrid .ui-widget-content
-{
-	background: none;
-}
-
-#SearchGrid .slick-cell
-{
-	border-color: transparent !important;
-	line-height: 19px !important;
-}
-
-#SearchGrid .cell-inner
-{
-	margin: 0 2px;
-	padding: 2px 4px 4px 2px;
-	background: #fafafa;
-	border: 1px solid #D0D0D0;
-}
-
-#SearchGrid .slick-cell.selected
-{
-	background: none;
-}
-
-#SearchGrid .slick-cell.selected .cell-inner
-{
-	background: #FFFED4;
-}
-
-#SearchGrid .cell-inner:hover
-{
-	background: #ffffe1;
-}
-
-#SearchGrid .slick-cell.selected .cell-inner:hover
-{
-	background: #fffdbd;
-}
-
-#SearchGrid .cell-left
-{
-	width: 25px;
-	height: 100%;
-	float: left;
-}
-
-#SearchGrid .cell-main
-{
-
-	margin-left: 26px;
-	margin-right: 18px;
-	overflow: hidden;
-}
-
-#SearchGrid .cell-right
-{
+    font-size: 1.0em;
+    margin-top: -2px;
 	float: right;
 }
 
-/* JQuery Fixes */
-
-.ui-tabs, .ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-buttonpane
+.slick-header-column
 {
-	padding: 0;
-}
-
-.ui-layout-pane
-{
-	border: none;
-}
-
-.ui-effects-transfer
-{
-	border: 2px dotted #888a85;
-}
-
-.ui-layout-pane
-{
-	padding: 0;
-}
-
-.ui-tabs .ui-tabs-hide
-{
-	position: absolute;
-	left: -10000px;
-}
-
-/* Flot Fixes */
-
-.tickLabel, .legendLabel
-{
-	font-size: 11px;
-}
-
-.legendLabel
-{
-	padding: 0 0 0 5px;
-}
-
-/* PNotify Fixes */
-
-.ui-pnotify-text
-{
-	word-wrap: break-word;
-}
-
-/* Tango Colors */
-
-.ButterLight { color: #fce94f; }
-.ButterMiddle { color: #edd400; }
-.ButterDark { color: #c4a000; }
-.OrangeLight { color: #fcaf3e; }
-.OrangeMiddle { color: #f57900; }
-.OrangeDark { color: #ce5c00; }
-.ChocolateLight { color: #e9b96e; }
-.ChocolateMiddle { color: #c17d11; }
-.ChocolateDark { color: #8f5902; }
-.ChameleonLight { color: #8ae234; }
-.ChameleonMiddle { color: #73d216; }
-.ChameleonDark { color: #4e9a06; }
-.SkyBlueLight { color: #729fcf; }
-.SkyBlueMiddle { color: #3465a4; }
-.SkyBlueDark { color: #204a87; }
-.PlumLight { color: #ad7fa8; }
-.PlumMiddle { color: #75507b; }
-.PlumDark { color: #5c3566; }
-.ScarletRedLight { color: #ef2929; }
-.ScarletRedMiddle { color: #cc0000; }
-.ScarletRedDark { color: #a40000; }
-.Aluminium1Light { color: #eeeeec; }
-.Aluminium1Middle { color: #d3d7cf; }
-.Aluminium1Dark { color: #babdb6; }
-.Aluminium2Light { color: #888a85; }
-.Aluminium2Middle { color: #555753; }
-.Aluminium2Dark { color: #2e3436; }
-
-/* Progressbar */
-
-progress, progress[role]
-{
-	appearance: none;
-	-moz-appearance: none;
-	-webkit-appearance: none;
-	background-size: auto;
-	width: 100%;
-	height: 5px;
-	display: block;
-	border: none;
-}
-progress[role]:after
-{
-	background-image: none;
-}
-progress[role] strong
-{
-	display: none;
-}
-
-progress, progress[role][aria-valuenow]
-{
-	background: #eeeeec !important;
-}
-progress::-webkit-progress-bar
-{
-	background: #eeeeec;
-}
-
-progress
-{
-	color: #729fcf;
-}
-progress::-moz-progress-bar,
-progress::-webkit-progress-value,
-progress[aria-valuenow]:before
-{
-	background: #729fcf;
+	font-size: .9em;
 }
