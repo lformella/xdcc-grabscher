@@ -23,9 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGFormatter = (function()
+var XGFormatter = (function ()
 {
-	var helper;
+	var helper, translate;
 
 	/* ************************************************************************************************************** */
 	/* IMAGE FORMATTER                                                                                                */
@@ -67,9 +67,14 @@ var XGFormatter = (function()
 	}
 
 	var self = {
-		initialize: function (helper1)
+		/**
+		 * @param {XGHelper} helper1
+		 * @param {XGTranslate} translate1
+		 */
+		initialize: function (helper1, translate1)
 		{
 			helper = helper1;
+			translate = translate1;
 		},
 
 		/* ************************************************************************************************************** */
@@ -145,7 +150,7 @@ var XGFormatter = (function()
 			var str = obj.Name; // + ":" + obj.Port;
 			if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
 			{
-				str += " - <small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+				str += " - <small>" + translate._("Error") + ": " + obj.ErrorCode + "</small>";
 			}
 			return str;
 		},
@@ -155,7 +160,7 @@ var XGFormatter = (function()
 			var str = obj.Name;
 			if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
 			{
-				str += " - <small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+				str += " - <small>" + translate._("Error") + ": " + obj.ErrorCode + "</small>";
 			}
 			return str;
 		},
@@ -220,7 +225,7 @@ var XGFormatter = (function()
 					"<div class='cell-right'>" + this.formatSearchAction(search) + "</div>" +
 					"<div class='cell-left'>" + this.formatSearchIcon(search) + "</div>" +
 					"<div class='cell-main' title='" + search.Name + " (" + search.Results + ")'>" + search.Name + "</div>" +
-				"</div>";
+					"</div>";
 			return result;
 		},
 
@@ -407,7 +412,20 @@ var XGFormatter = (function()
 
 			if (packet.Connected)
 			{
-				ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
+				var a = ((packet.StartSize) / packet.Size).toFixed(2) * 100;
+				var b = ((packet.CurrentSize - packet.StartSize) / packet.Size).toFixed(2) * 100;
+				var c = ((packet.StopSize - packet.CurrentSize) / packet.Size).toFixed(2) * 100;
+				if (a + b + c > 100)
+				{
+					c = 100 - a - b;
+				}
+
+				ret += "<div class='progress progress-striped'>" +
+					"<div style='width: " + a + "%' class=''></div>" +
+					"<div style='width: " + b + "%' class='bar " + (packet.IsChecked ? "bar-success" : "bar-warning") + "'></div>" +
+					"<div style='width: " + c + "%' class='bar " + (packet.IsChecked ? "bar-success" : "bar-warning") + " bar-light'></div>" +
+					"</div>";
+				//ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
 			}
 
 			return ret;
@@ -448,7 +466,7 @@ var XGFormatter = (function()
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "th";
+				icon = "briefcase";
 			}
 
 			return formatIcon(icon, iconClass);
@@ -458,7 +476,14 @@ var XGFormatter = (function()
 		{
 			var ret = file.Name;
 
-			ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
+			var a = (file.CurrentSize / file.Size).toFixed(2) * 100;
+			var b = 100 - a;
+
+			ret += "<div class='progress progress-striped'>" +
+				"<div style='width: " + a + "%' class='bar bar-success'></div>" +
+				"<div style='width: " + b + "%' class='bar bar-success bar-light'></div>" +
+				"</div>";
+			//ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
 
 			return ret;
 		},
@@ -480,7 +505,7 @@ var XGFormatter = (function()
 
 		formatRemoveIcon: function (grid, obj)
 		{
-			return "<i class='icon-cancel-circle icon-overlay ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+			return "<i class='icon-cancel-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
 		}
 	};
 	return self;

@@ -44,12 +44,11 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		readonly string[] _cssFiles =
 		{
 			"reset",
-			"bootstrap.min",
+			"bootstrap",
 			"fontello",
 			"animation",
-			"jquery-ui",
 			"slick.grid",
-			//"layout-default",
+			"bootstrap-slickgrid",
 			"jquery.pnotify.default",
 			"tango-colors",
 			"xg"
@@ -65,7 +64,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/jquery.flot.axislabels",
 			"external/jquery-timing.min",
 			"external/jquery-ui.min",
-			"external/jquery.layout.min",
 			"external/jquery.pnotify.min",
 			"external/json2.min",
 			"external/sha256",
@@ -75,6 +73,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/slick.dataview",
 			"external/slick.rowselectionmodel",
 			"external/bootstrap.min",
+			"external/bootstrap-slickgrid",
 			"i18n/moment/#LANGUAGE_SHORT#",
 			"i18n/xg/#LANGUAGE_SHORT#",
 			"xg/enum",

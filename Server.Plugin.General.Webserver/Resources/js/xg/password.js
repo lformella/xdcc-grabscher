@@ -23,79 +23,52 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var password;
-var XGPassword = (function()
+var XGPassword = (function ()
 {
 	var salt, host, port, password;
+	var passwordOk = false;
+	var passwordDialog = $("#passwordDialog");
+	var passwordButton = $("#passwordButton");
+	var passwordInput = $("#password");
+	var passwordLoading = $("#passwordLoading");
 
-	function buttonConnectClicked (dialog)
+	function buttonConnectClicked ()
 	{
-		var passwordElement = $("#password");
-		password = encodeURIComponent(CryptoJS.SHA256(salt + passwordElement.val() + salt));
+		password = encodeURIComponent(CryptoJS.SHA256(salt + passwordInput.val() + salt));
 
 		if (checkPassword(password))
 		{
-			passwordElement.removeClass('ui-state-error');
-			dialog.dialog('close');
-
-			startMain();
+			passwordOk = true;
+			$("#passwordDialog .control-group").removeClass('error');
+			passwordDialog.modal('hide');
 		}
 		else
 		{
-			passwordElement.addClass('ui-state-error');
+			$("#passwordDialog .control-group").addClass('error');
 		}
-	}
-
-	function startMain ()
-	{
-		var dataView = Object.create(XGDataView);
-		dataView.initialize();
-
-		var cookie = Object.create(XGCookie);
-		var gui = Object.create(XGGui);
-		gui.initialize(dataView);
-		var helper = Object.create(XGHelper);
-		helper.setHumanDates(cookie.getCookie("humanDates", "0") == "1");
-		var formatter = Object.create(XGFormatter);
-		formatter.initialize(helper);
-		var statistics = Object.create(XGStatistics);
-		statistics.initialize(helper);
-		var websocket = Object.create(XGWebsocket);
-		websocket.initialize(dataView, host, port, password);
-		var grid = Object.create(XGGrid);
-		grid.initialize(formatter, helper, dataView);
-		//grid.setFilterOfflineBots(cookie.getCookie("filterOfflineBots", "0") == "1");
-		var resize = Object.create(XGResize);
-		var notification = Object.create(XGNotification);
-        notification.initialize(dataView);
-
-		// start frontend
-		var main = Object.create(XGMain);
-		main.initialize(helper, statistics, cookie, formatter, websocket, dataView, grid, resize, gui);
-		main.start();
 	}
 
 	function checkPassword (password)
 	{
-		var element = $("#loadingPassword");
-		element.show();
+		passwordButton.attr("disabled", "disabled");
+		passwordLoading.show();
 		var res = false;
 		$.ajax({
 			url: "?password=" + password,
-			success: function()
+			success: function ()
 			{
 				res = true;
 			},
 			async: false
 		});
-		if (!res)
-		{
-			element.hide();
-		}
+		passwordLoading.hide();
+		passwordButton.removeAttr("disabled");
 		return res;
 	}
 
-	return {
+	var self = {
+		onPasswordOk: new Slick.Event(),
+
 		/**
 		 * @param {String} salt1
 		 * @param {String} host1
@@ -107,41 +80,41 @@ var XGPassword = (function()
 			host = host1;
 			port = port1;
 
-			password = encodeURIComponent(CryptoJS.SHA256(salt + "xgisgreat" + salt));
-			startMain ();
-/*
-			var buttonText = { text: _("Connect") };
-			var buttons = {};
-			buttons[buttonText["text"]] = function()
-			{
-				buttonConnectClicked($(this));
-			};
-
-			// display login
-			$("#dialogPassword").dialog({
-				bgiframe: true,
-				height: 140,
-				modal: true,
-				resizable: false,
-				hide: 'explode',
-				buttons: buttons,
-				close: function()
+			passwordDialog.modal("show");
+			passwordDialog.bind('hide',
+				function (e)
 				{
-					if(password == "")
+					if (!passwordOk)
 					{
-						$('#dialogPassword').dialog('open');
+						e.preventDefault();
 					}
-					$("#password").val('').removeClass('ui-state-error');
 				}
+			);
+			passwordDialog.bind('hidden',
+				function ()
+				{
+					if (passwordOk)
+					{
+						self.onPasswordOk.notify({Password: password}, null, this);
+					}
+				}
+			);
+
+			passwordButton.click(function ()
+			{
+				buttonConnectClicked();
 			});
 
-			$("#password").keyup(function (e) {
+			passwordInput.keyup(function (e)
+			{
+				$("#passwordDialog .control-group").removeClass('error');
 				if (e.which == 13)
 				{
-					buttonConnectClicked($("#dialogPassword"));
+					e.preventDefault();
+					buttonConnectClicked();
 				}
 			});
-*/
 		}
-	}
+	};
+	return self;
 }());

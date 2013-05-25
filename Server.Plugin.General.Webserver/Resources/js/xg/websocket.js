@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGWebsocket = (function()
+var XGWebsocket = (function ()
 {
 	var dataView, url, port, password, state, socket;
 
@@ -120,7 +120,7 @@ var XGWebsocket = (function()
 		 * @param {String} port1
 		 * @param {String} password1
 		 */
-		initialize: function(dataView1, url1, port1, password1)
+		initialize: function (dataView1, url1, port1, password1)
 		{
 			dataView = dataView1;
 			url = url1;
@@ -176,7 +176,7 @@ var XGWebsocket = (function()
 		 * @param {Enum.Request} type
 		 * @return {Boolean}
 		 */
-		send: function(type)
+		send: function (type)
 		{
 			var request = buildRequest(type);
 
@@ -188,7 +188,7 @@ var XGWebsocket = (function()
 		 * @param {String} name
 		 * @return {Boolean}
 		 */
-		sendName: function(type, name)
+		sendName: function (type, name)
 		{
 			var request = buildRequest(type);
 			request.Name = name;
@@ -201,7 +201,7 @@ var XGWebsocket = (function()
 		 * @param {String} guid
 		 * @return {Boolean}
 		 */
-		sendGuid: function(type, guid)
+		sendGuid: function (type, guid)
 		{
 			var request = buildRequest(type);
 			request.Guid = guid;
@@ -215,7 +215,7 @@ var XGWebsocket = (function()
 		 * @param {String} guid
 		 * @return {Boolean}
 		 */
-		sendNameGuid: function(type, name, guid)
+		sendNameGuid: function (type, name, guid)
 		{
 			var request = buildRequest(type);
 			request.Name = name;

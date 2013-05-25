@@ -23,26 +23,60 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-if (translatedArray == undefined)
+var XGTranslate = (function ()
 {
-	var translatedArray = {};
-}
+	var translations;
 
-/**
- * @param {String} string
- * @param {Array} replaces
- * @return {String}
- */
-var _ = function (string, replaces)
-{
-	var translated = translatedArray[string];
-	translated = translated != "" && translated != undefined ? translated : string;
-	if (replaces != undefined)
+	function _ (string, replaces)
 	{
-		$.each(replaces, function (i, item)
+		var translated = translations[string];
+		translated = translated != "" && translated != undefined ? translated : string;
+		if (replaces != undefined)
 		{
-			translated = translated.replace("#" + item.Name + "#", item.Value);
-		});
+			$.each(replaces, function (i, item)
+			{
+				translated = translated.replace("#" + item.Name + "#", item.Value);
+			});
+		}
+		return translated;
 	}
-	return translated;
-};
+
+	return {
+		initialize: function (translations1)
+		{
+			translations = translations1;
+
+			$("h1, h2, h3, a, span, button, label, legend, p, input").each(function (i, element)
+			{
+				var item = $(element);
+
+				var original = item.html();
+				var translated = _(item.html());
+				if (original != translated)
+				{
+					item.html(_(item.html()));
+				}
+
+				if (item.attr("title") != undefined && item.attr("title") != "")
+				{
+					item.attr("title", _(item.attr("title")));
+				}
+				if (item.attr("placeholder") != undefined && item.attr("placeholder") != "")
+				{
+					item.attr("placeholder", _(item.attr("placeholder")));
+				}
+				if (item.data("name") != undefined && item.data("name") != "")
+				{
+					item.data("name", _(item.data("name")));
+				}
+			});
+		},
+
+		_: function (text, replaces)
+		{
+			return _(text, replaces);
+		}
+	}
+}());
+
+

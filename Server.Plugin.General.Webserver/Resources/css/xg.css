@@ -25,15 +25,48 @@
 //
 */
 
+/** Base **/
+
 body
 {
 	padding-top: 50px;
 	padding-bottom: 10px;
 }
 
+.button
+{
+	cursor: pointer;
+}
+
+.alignRight
+{
+	text-align: right;
+}
+
+small
+{
+    font-size: 0.8em;
+}
+
+/** Bootstrap **/
+
 .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container
 {
-    width: calc(100% - 20px);
+	width: -webkit-calc(100% - 20px);
+	width: -moz-calc(100% - 20px);
+	width: calc(100% - 20px);
+}
+
+.progress
+{
+	height: 5px;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+.progress .bar-light
+{
+	opacity: 0.3;
 }
 
 .carousel
@@ -41,18 +74,31 @@ body
 	margin-bottom: 0;
 }
 
-.nav-collapse [class^="icon-"]
+legend
 {
-    font-size: 1.5em;
-    line-height: 1.5em;
-    margin-top: -7px;
-    width: 1.3em;
+	line-height: 25px;
+	margin-bottom: 0;
 }
+
+label
+{
+	margin-bottom: 1px;
+}
+
+/** Fontello **/
 
 #searchRemove [class^="icon-"], #searchAdd [class^="icon-"]
 {
 	margin-top: 4px;
+	font-size: 1.5em;
 }
+
+#searchLoading, #searchButtons
+{
+	margin-top: 9px;
+}
+
+/** Grids / Dialogs / Buttons **/
 
 #BotGrid
 {
@@ -65,24 +111,61 @@ body
 	height: 300px;
 }
 
+#ServerGrid, #ChannelGrid
+{
+	width: 320px;
+	height: 320px;
+}
+
 #serverChannelsDialog
 {
-	width: 660px;
+	width: 680px;
+}
+
+#serverChannelsDialog .modal-body > div
+{
+	float: left;
+}
+
+#serverChannelsDialog .modal-body > div:first-child
+{
+	padding: 0 10px 0 0;
+}
+
+.small-panel .control-label
+{
+	width: 60px;
+}
+
+.small-panel .controls
+{
+	margin-left: 70px;
+}
+
+#searchForm .dropdown-menu
+{
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+#searchForm .dropdown-menu .text
+{
+	margin-right: 60px;
 }
 
 #settings
 {
-    left: auto;
-    right: -80px;
-    top: 35px;
-    width: 250px;
-    min-width: 250px;
-	max-width: 250px;
+	left: auto;
+	right: -80px;
+	top: 35px;
+	width: 240px;
+	min-width: 240px;
+	max-width: 240px;
 }
 
 #settings button
 {
-	width: 230px;
+	width: 220px;
 }
 
 #settings button [class^="icon-"]
@@ -90,31 +173,52 @@ body
 	margin-right: 10px;
 }
 
-
 #settingsLink
 {
 	position: relative;
 }
 
-.slick-cell
-{
-	font-size: .8em;
-}
+/** Slick Grid **/
 
 .slick-cell [class^="icon-"]
 {
-    font-size: 1.8em;
-    margin-top: -1px;
+	font-size: 1.5em;
+	margin-left: -5px;
 }
 
 .slick-cell .icon-overlay
 {
-    font-size: 1.0em;
-    margin-top: -2px;
+	font-size: 1.0em;
 	float: right;
+	margin-right: -9px;
+	margin-top: -7px;
+	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
 }
 
-.slick-header-column
+.slick-cell .icon-overlay-middle
 {
-	font-size: .9em;
+	margin-top: 0;
+	margin-right: 0;
+}
+
+.grid .slick-header-columns .slick-header-column.ui-state-default
+{
+	text-shadow: none;
+}
+
+.grid .grid-canvas .active, .grid .grid-canvas .selected
+{
+    background: none repeat scroll 0 0 #fffdbd;
+}
+
+.grid .grid-canvas .small-line
+{
+    line-height: 12px !important;
+}
+
+/** PNotify **/
+
+.ui-pnotify
+{
+	top: auto;
 }

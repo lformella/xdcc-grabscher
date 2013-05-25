@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var XGDataView = (function()
+var XGDataView = (function ()
 {
 	var servers, channels, bots, packets, externalSearch, searches, notifications, files;
 	var botFilterGuids = [];
@@ -31,7 +31,7 @@ var XGDataView = (function()
 	/**
 	 * @return {Slick.Data.DataView}
 	 */
-	function buildDataView()
+	function buildDataView ()
 	{
 		var dataView = new Slick.Data.DataView({ inlineFilters: false });
 		dataView.setItems([], "Guid");
@@ -120,13 +120,13 @@ var XGDataView = (function()
 		return result;
 	}
 
-    var self = {
-        onAdd: new Slick.Event(),
-        onRemove: new Slick.Event(),
-        onUpdate: new Slick.Event(),
-        onSet: new Slick.Event(),
+	var self = {
+		onAdd: new Slick.Event(),
+		onRemove: new Slick.Event(),
+		onUpdate: new Slick.Event(),
+		onSet: new Slick.Event(),
 
-		initialize: function()
+		initialize: function ()
 		{
 			servers = buildDataView();
 			channels = buildDataView();
@@ -142,7 +142,7 @@ var XGDataView = (function()
 		 * @param {string} name
 		 * @return {Slick.Data.DataView}
 		 */
-		getDataView: function(name)
+		getDataView: function (name)
 		{
 			switch (name)
 			{
@@ -167,43 +167,47 @@ var XGDataView = (function()
 			return null;
 		},
 
-		addItem: function(json)
+		addItem: function (json)
 		{
 			var dataView = this.getDataView(json.DataType);
 			if (dataView != null)
 			{
 				dataView.addItem(json.Data);
-                self.onAdd.notify(json, null, self);
+				self.onAdd.notify(json, null, self);
 			}
 		},
 
-		removeItem: function(json)
+		removeItem: function (json)
 		{
 			var dataView = this.getDataView(json.DataType);
 			if (dataView != null)
 			{
 				dataView.deleteItem(json.Data.Guid);
-                self.onRemove.notify(json, null, self);
+				self.onRemove.notify(json, null, self);
 			}
 		},
 
-		updateItem: function(json)
+		updateItem: function (json)
 		{
 			var dataView = this.getDataView(json.DataType);
 			if (dataView != null)
 			{
-				dataView.updateItem(json.Data.Guid, json.Data);
-                self.onUpdate.notify(JSON, null, self);
+				try
+				{
+					dataView.updateItem(json.Data.Guid, json.Data);
+				}
+				catch (e) {}
+				self.onUpdate.notify(json, null, self);
 			}
 		},
 
-		setItems: function(json)
+		setItems: function (json)
 		{
 			var dataView = this.getDataView(json.DataType);
 			if (dataView != null)
 			{
 				dataView.setItems(json.Data);
-                self.onSet.notify(json, null, self);
+				self.onSet.notify(json, null, self);
 			}
 		},
 
@@ -212,5 +216,5 @@ var XGDataView = (function()
 			botFilterGuids = [];
 		}
 	};
-    return self;
+	return self;
 }());

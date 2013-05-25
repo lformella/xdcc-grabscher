@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGResize = (function()
+var XGResize = (function ()
 {
 	var width, height;
 
@@ -39,14 +39,14 @@ var XGResize = (function()
 			width = width1;
 			height = height1;
 
-			$("#" + Enum.Grid.Bot + "Grid, #" + Enum.Grid.Packet + "Grid").width(width);
+			$("#" + Enum.Grid.Bot + "Grid, #" + Enum.Grid.Packet + "Grid, #" + Enum.Grid.ExternalSearch + "Grid, #" + Enum.Grid.File + "Grid").width(width);
 			var botHeight = height * 0.4 - 10;
 			$("#" + Enum.Grid.Bot + "Grid").height(botHeight);
-			$("#" + Enum.Grid.Packet + "Grid").height(height - botHeight - 10);
+			$("#" + Enum.Grid.Packet + "Grid").height(height - botHeight - 20);
+			$("#" + Enum.Grid.ExternalSearch + "Grid, #" + Enum.Grid.File + "Grid").height(height - 10);
 
-			$("#dialogSnapshots")
-				.width(width)
-				.height(height);
+			$("#searchForm .dropdown-menu").css("max-height", (height - 20) + "px");
+
 			$("#snapshot")
 				.width(width - 240)
 				.height(height - 40);
@@ -65,13 +65,17 @@ var XGResize = (function()
 
 		start: function ()
 		{
-			$(window).resize(function() {
+			$(window).resize(function ()
+			{
 				resizeMain();
 			});
 
 			// resize after all is visible - twice, because the first run wont change all values :|
 			resizeMain();
-			setTimeout(function() { resizeMain(); }, 1000);
+			setTimeout(function ()
+			{
+				resizeMain();
+			}, 1000);
 		}
 	};
 	return self;

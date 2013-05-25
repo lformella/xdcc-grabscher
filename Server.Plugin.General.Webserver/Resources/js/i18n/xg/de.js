@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-translatedArray =
+translations =
 {
 	/* ************************************************************************************************************** */
 	/* PASSWORD DIALOG                                                                                                */
@@ -40,16 +40,16 @@ translatedArray =
 
 	"Change Servers and Channels": "Server und Channels &auml;ndern",
 	"View Statistics": "Statistiken anschauen",
-	"View Snapshots": "Erweiterte Statistiken anschauen",
+	"View Snapshots": "Statistiken anschauen",
 	"Error": "Fehler",
 	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
 	"Add": "Hinzufügen",
+	"Settings": "Einstellungen",
 
 	/* ************************************************************************************************************** */
 	/* GRIDS                                                                                                          */
 	/* ************************************************************************************************************** */
 
-	"Icon": "",
 	"Name": "Name",
 	"Speed": "Geschwindigkeit",
 	"Q-Pos": "S-Pos",
@@ -58,6 +58,8 @@ translatedArray =
 	"Slots": "Pl&auml;tze",
 	"Queue": "Schlange",
 	"Size": "Gr&ouml;&szlig;e",
+	"BotName": "Bot",
+	"BotSpeed": "Geschwindigkeit",
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
@@ -125,7 +127,6 @@ translatedArray =
 	"Hide offline Bots": "inaktive Bots ausblenden",
 	"Extended Statistics": "Erweiterte Statistiken",
 	"IRC View": "IRC &Uuml;bersicht",
-	"External Search via xg.bitpir.at": "Externe Suche via xg.bitpir.at",
 	"Files": "Dateien",
 
 	"Connected": "Verbunden",

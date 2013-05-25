@@ -23,18 +23,20 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGStatistics = (function()
+var XGStatistics = (function ()
 {
-	var helper;
+	var helper, translate;
 	var snapshots = {};
 
 	return {
 		/**
 		 * @param {XGHelper} helper1
+		 * @param {XGTranslate} translate1
 		 */
-		initialize: function(helper1)
+		initialize: function (helper1, translate1)
 		{
 			helper = helper1;
+			translate = translate1;
 		},
 
 		setStatistics: function (result)
@@ -72,7 +74,8 @@ var XGStatistics = (function()
 
 		setSnapshots: function (result)
 		{
-			$.each(result, function(index, item) {
+			$.each(result, function (index, item)
+			{
 				item.color = index;
 				switch (index + 1)
 				{
@@ -121,11 +124,13 @@ var XGStatistics = (function()
 
 			var data = [];
 			var currentSnapshots = $.extend(true, [], snapshots);
-			$.each(currentSnapshots, function(index, item) {
+			$.each(currentSnapshots, function (index, item)
+			{
 				if (index == 0 || $("#snapshotCheckbox" + (index + 1)).attr('checked'))
 				{
 					var itemData = [];
-					$.each(item.data, function(index2, item2) {
+					$.each(item.data, function (index2, item2)
+					{
 						if (snapshotsMinDate < item2[0])
 						{
 							itemData.push(item2);
@@ -145,7 +150,8 @@ var XGStatistics = (function()
 				case 1:
 					timeFormat = "%H:%M";
 					tickSize = [2, "hour"];
-					markerFunction = function (axes) {
+					markerFunction = function (axes)
+					{
 						var markings = [];
 						var d = new Date(axes.xaxis.min);
 						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
@@ -171,7 +177,8 @@ var XGStatistics = (function()
 				case 7:
 					timeFormat = "%d. %b";
 					tickSize = [1, "day"];
-					markerFunction = function (axes) {
+					markerFunction = function (axes)
+					{
 						var markings = [];
 						var d = new Date(axes.xaxis.min);
 						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
@@ -197,7 +204,8 @@ var XGStatistics = (function()
 				case 31:
 					timeFormat = "%d. %b";
 					tickSize = [7, "day"];
-					markerFunction = function (axes) {
+					markerFunction = function (axes)
+					{
 						var markings = [];
 						var d = new Date(axes.xaxis.min);
 						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
@@ -223,7 +231,8 @@ var XGStatistics = (function()
 				default:
 					timeFormat = "%b %y";
 					tickSize = [1, "month"];
-					markerFunction = function (axes) {
+					markerFunction = function (axes)
+					{
 						var markings = [];
 						var d = new Date(axes.xaxis.min);
 						d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
@@ -249,7 +258,7 @@ var XGStatistics = (function()
 
 			var snapshotOptions = {
 				xaxis: {
-					axisLabel: _('Time'),
+					axisLabel: translate._('Time'),
 					mode: "time",
 					timeformat: timeFormat,
 					minTickSize: tickSize,
@@ -257,22 +266,23 @@ var XGStatistics = (function()
 				},
 				yaxes: [
 					{
-						axisLabel: _('Server / Channels'),
+						axisLabel: translate._('Server / Channels'),
 						min: 0
 					},
 					{
-						axisLabel: _('Bots'),
+						axisLabel: translate._('Bots'),
 						min: 0
 					},
 					{
-						axisLabel: _('Packets'),
+						axisLabel: translate._('Packets'),
 						min: 0
 					},
 					{
-						axisLabel: _('Size'),
+						axisLabel: translate._('Size'),
 						min: 0,
 						alignTicksWithAxis: 1,
-						tickFormatter: function (val) {
+						tickFormatter: function (val)
+						{
 							if (val <= 1)
 							{
 								return "";
@@ -281,11 +291,12 @@ var XGStatistics = (function()
 						}
 					},
 					{
-						axisLabel: _('Speed'),
+						axisLabel: translate._('Speed'),
 						min: 0,
 						alignTicksWithAxis: 1,
 						position: "right",
-						tickFormatter: function (val) {
+						tickFormatter: function (val)
+						{
 							if (val <= 1)
 							{
 								return "";
@@ -301,7 +312,7 @@ var XGStatistics = (function()
 			$.plot($("#snapshot"), data, snapshotOptions);
 		},
 
-		resize: function()
+		resize: function ()
 		{
 			this.updateSnapshotPlot();
 		}

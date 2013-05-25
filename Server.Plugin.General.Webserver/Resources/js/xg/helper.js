@@ -23,12 +23,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var XGHelper = (function()
+var XGHelper = (function ()
 {
 	var humanDates;
 
 	return {
-		initialize: function()
+		initialize: function ()
 		{
 			humanDates = false;
 		},
@@ -100,7 +100,7 @@ var XGHelper = (function()
 		/**
 		 * @param {Boolean} humanDates1
 		 */
-		setHumanDates: function(humanDates1)
+		setHumanDates: function (humanDates1)
 		{
 			humanDates = humanDates1;
 		},
@@ -111,7 +111,7 @@ var XGHelper = (function()
 		 */
 		time2Human: function (time)
 		{
-			if(time <= 0 || time >= 106751991167300)
+			if (time <= 0 || time >= 106751991167300)
 			{
 				return "";
 			}

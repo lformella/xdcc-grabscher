@@ -286,7 +286,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Search:
 						currentUser.LastSearch = request.Guid;
-						var all = FilteredPacketsAndBotsByGuid(request.Guid);
+						var all = FilteredPacketsAndBotsByGuid(request.Guid, request.Name);
 						UnicastOnRequest(currentUser, all, request.Type);
 						break;
 
@@ -294,48 +294,51 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						var searchExternal = Searches.WithGuid(request.Guid);
 						if (searchExternal != null)
 						{
-							int start = 0;
-							int limit = 25;
-							do
+							request.Name = searchExternal.Name;
+						}
+
+						int start = 0;
+						int limit = 25;
+						do
+						{
+							try
 							{
-								try
+								var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start +"&limit=" + limit +"&search=" + request.Name);
+								var req = HttpWebRequest.Create(uri);
+
+								var response = req.GetResponse();
+								StreamReader sr = new StreamReader(response.GetResponseStream());
+								string text = sr.ReadToEnd();
+								response.Close();
+
+								ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
+
+								if (results.Length > 0)
 								{
-									var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start +"&limit=" + limit +"&search=" + searchExternal.Name);
-									var req = HttpWebRequest.Create(uri);
-
-									var response = req.GetResponse();
-									StreamReader sr = new StreamReader(response.GetResponseStream());
-									string text = sr.ReadToEnd();
-									response.Close();
-
-									ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
-
-									if (results.Length > 0)
+									foreach (var result in results)
 									{
-										foreach (var result in results)
+										var currentResponse = new Response
 										{
-											var currentResponse = new Response
-											{
-												Type = Response.Types.ObjectAdded,
-												Data = result
-											};
-											Unicast(currentUser, currentResponse);
-										}
-									}
-
-									if (results.Length == 0 || results.Length < limit)
-									{
-										break;
+											Type = Response.Types.ObjectAdded,
+											Data = result
+										};
+										Unicast(currentUser, currentResponse);
 									}
 								}
-								catch (Exception ex)
+
+								if (results.Length == 0 || results.Length < limit)
 								{
-									Log.Fatal("OnMessage() cant load external search for " + searchExternal.Name, ex);
 									break;
 								}
-								start += limit;
-							} while (true);
-						}
+							}
+							catch (Exception ex)
+							{
+								Log.Fatal("OnMessage() cant load external search for " + request.Name, ex);
+								break;
+							}
+							start += limit;
+						} while (true);
+
 						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.RequestComplete,
@@ -617,7 +620,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region Object Searching
 
-		List<Core.AObject> FilteredPacketsAndBotsByGuid (Guid aGuid)
+		List<Core.AObject> FilteredPacketsAndBotsByGuid (Guid aGuid, string aName = null)
 		{
 			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			var allPackets = (from bot in allBots from packet in bot.Packets select packet).ToList();
@@ -635,13 +638,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				var search = Searches.WithGuid(aGuid);
 				if (search != null)
 				{
-					string[] searches = search.Name.ToLower().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-					allPackets = (from packet in allPackets where packet.Name.ToLower().ContainsAll(searches) select packet).ToList();
+					aName = search.Name;
 				}
-				else
+				if (string.IsNullOrEmpty(aName))
 				{
+					aName = string.Empty;
 					allPackets.Clear();
 				}
+
+				string[] searches = aName.ToLower().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+				allPackets = (from packet in allPackets where packet.Name.ToLower().ContainsAll(searches) select packet).ToList();
 			}
 
 			var bots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in allPackets on b.Guid equals p.Parent.Guid select b).Distinct().ToList();
