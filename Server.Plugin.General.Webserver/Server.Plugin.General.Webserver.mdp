@@ -45,7 +45,6 @@
     <File subtype="Code" buildaction="Compile" name="Websocket/Response.cs" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/external" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.cookie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.cookie.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.axislabels.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.js" />
@@ -130,6 +129,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.gui.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.bootstrap.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.groupitemmetadataprovider.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

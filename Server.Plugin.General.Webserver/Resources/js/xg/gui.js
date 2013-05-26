@@ -159,7 +159,7 @@ var XGGui = (function ()
 		$("#settingsLink").click(
 			function ()
 			{
-				$("#settings").toggle();
+				$("#settings").toggle("blind", 500);
 			});
 	}
 
@@ -176,11 +176,11 @@ var XGGui = (function ()
 
 				if (currentSlide == 1 || currentSlide == 2)
 				{
-					searchForm.show();
+					searchForm.show("drop", 500);
 				}
 				else
 				{
-					searchForm.hide();
+					searchForm.hide("drop", 500);
 				}
 			});
 		$("#mainCarousel").carousel({ interval: false });
@@ -228,7 +228,7 @@ var XGGui = (function ()
 
 		$("#serverChannelButton").click(function ()
 		{
-			$("#settings").toggle();
+			$("#settings").toggle("blind", 500);
 			$("#serverChannelsDialog").modal('show');
 		});
 
@@ -273,13 +273,14 @@ var XGGui = (function ()
 
 		$("#xdccDialogButton").click(function ()
 		{
+			$("#settings").toggle("blind", 500);
 			xdccDialog.modal('show');
 		});
 
 		$("#statisticsButton").click(function ()
 		{
 			self.onUpdateStatistics.notify({}, null, this);
-			$("#settings").toggle();
+			$("#settings").toggle("blind", 500);
 			$("#statisticsDialog").modal('show');
 		});
 

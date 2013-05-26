@@ -115,6 +115,7 @@ label
 {
 	width: 320px;
 	height: 320px;
+	margin-bottom: 10px;
 }
 
 #serverChannelsDialog

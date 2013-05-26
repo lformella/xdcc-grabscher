@@ -40,7 +40,6 @@ translations =
 
 	"Change Servers and Channels": "Server und Channels &auml;ndern",
 	"View Statistics": "Statistiken anschauen",
-	"View Snapshots": "Statistiken anschauen",
 	"Error": "Fehler",
 	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
 	"Add": "Hinzufügen",
@@ -87,7 +86,7 @@ translations =
 	/* SEARCH GRID                                                                                                    */
 	/* ************************************************************************************************************** */
 
-	"Search via xg.bitpir.at": "Suche via xg.bitpir.at",
+	"External search": "Externe Suche",
 	"Last Mentioned": "Aktualisiert",
 	"Bot Speed": "Geschw.",
 
@@ -127,9 +126,10 @@ translations =
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
+	"Dashboard": "Übersicht",
 	"Statistics": "Statistiken",
+	"Graphs": "Graphen",
 	"Hide offline Bots": "inaktive Bots ausblenden",
-	"Extended Statistics": "Erweiterte Statistiken",
 	"IRC View": "IRC &Uuml;bersicht",
 	"Files": "Dateien",
 
