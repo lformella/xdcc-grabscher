@@ -26,15 +26,16 @@
 var XGResize = (function ()
 {
 	var width, height;
+	var combineBotAndPacketGrid;
 
-	function resizeMain ()
+	function resize (force)
 	{
 		/* dialog */
 		var width1 = $(window).width() - 20;
 		var height1 = $(window).height() - 60;
 
 		// just resize if necessary
-		if (width1 != width || height1 != height)
+		if (force || width1 != width || height1 != height)
 		{
 			width = width1;
 			height = height1;
@@ -42,6 +43,10 @@ var XGResize = (function ()
 			$("#" + Enum.Grid.Bot + "Grid, #" + Enum.Grid.Packet + "Grid, #" + Enum.Grid.ExternalSearch + "Grid, #" + Enum.Grid.File + "Grid").width(width);
 			var botHeight = height * 0.4 - 10;
 			$("#" + Enum.Grid.Bot + "Grid").height(botHeight);
+			if (combineBotAndPacketGrid)
+			{
+				botHeight = -10;
+			}
 			$("#" + Enum.Grid.Packet + "Grid").height(height - botHeight - 20);
 			$("#" + Enum.Grid.ExternalSearch + "Grid, #" + Enum.Grid.File + "Grid").height(height - 10);
 
@@ -63,19 +68,32 @@ var XGResize = (function ()
 	var self = {
 		onResize: new Slick.Event(),
 
+		/**
+		 * @param {Boolean} combineBotAndPacketGrid1
+		 */
+		initialize: function (combineBotAndPacketGrid1)
+		{
+			combineBotAndPacketGrid = combineBotAndPacketGrid1;
+		},
+
 		start: function ()
 		{
 			$(window).resize(function ()
 			{
-				resizeMain();
+				resize();
 			});
 
 			// resize after all is visible - twice, because the first run wont change all values :|
-			resizeMain();
+			resize();
 			setTimeout(function ()
 			{
-				resizeMain();
+				resize();
 			}, 1000);
+		},
+		setCombineBotAndPacketGrid: function (enable)
+		{
+			combineBotAndPacketGrid = enable;
+			resize(true);
 		}
 	};
 	return self;

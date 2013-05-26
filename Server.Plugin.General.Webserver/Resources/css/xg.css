@@ -103,7 +103,7 @@ label
 #BotGrid
 {
 	height: 300px;
-	padding-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 #PacketGrid
@@ -209,6 +209,11 @@ label
 .grid .grid-canvas .active, .grid .grid-canvas .selected
 {
     background: none repeat scroll 0 0 #fffdbd;
+}
+
+.grid .grid-canvas .slick-group
+{
+    background: none repeat scroll 0 0 #f1f1ff;
 }
 
 .grid .grid-canvas .small-line

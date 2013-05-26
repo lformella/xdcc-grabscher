@@ -167,6 +167,29 @@ var XGDataView = (function ()
 			return null;
 		},
 
+		getItem: function (view, guid)
+		{
+			var obj = null;
+
+			var dataView = this.getDataView(view);
+			if (dataView != null)
+			{
+				var items = dataView.getItems();
+				$.each(items, function (i, item)
+				{
+					if (item.Guid == guid)
+					{
+						obj = item;
+						return false;
+					}
+					return true;
+				});
+			}
+
+			return obj;
+		},
+
+
 		addItem: function (json)
 		{
 			var dataView = this.getDataView(json.DataType);

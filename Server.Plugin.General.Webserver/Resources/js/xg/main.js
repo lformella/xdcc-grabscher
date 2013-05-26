@@ -100,6 +100,7 @@ var XGMain = (function ()
 		cookie = Object.create(XGCookie);
 		var humanDates = cookie.getCookie("humanDates", "0") == "1";
 		var showOfflineBots = cookie.getCookie("showOfflineBots", "0") == "1";
+		var combineBotAndPacketGrid = cookie.getCookie("combineBotAndPacketGrid", "0") == "1";
 
 		helper = Object.create(XGHelper);
 		helper.setHumanDates(humanDates);
@@ -114,10 +115,11 @@ var XGMain = (function ()
 		notification.initialize(dataView, translate);
 
 		startWebsocket(host, port, password);
-		startGrid(showOfflineBots);
-		startGui(showOfflineBots, humanDates);
+		startGrid(showOfflineBots, combineBotAndPacketGrid);
+		startGui(showOfflineBots, humanDates, combineBotAndPacketGrid);
 
 		resize = Object.create(XGResize);
+		resize.initialize(combineBotAndPacketGrid);
 		resize.onResize.subscribe(function ()
 		{
 			grid.resize();
@@ -179,10 +181,10 @@ var XGMain = (function ()
 		websocket.connect();
 	}
 
-	function startGrid (showOfflineBots)
+	function startGrid (showOfflineBots, combineBotAndPacketGrid)
 	{
 		grid = Object.create(XGGrid);
-		grid.initialize(formatter, helper, dataView, translate);
+		grid.initialize(formatter, helper, dataView, translate, combineBotAndPacketGrid);
 
 		grid.onClick.subscribe(function (e, args)
 		{
@@ -258,10 +260,10 @@ var XGMain = (function ()
 		grid.setFilterOfflineBots(showOfflineBots);
 	}
 
-	function startGui (showOfflineBots, humanDates)
+	function startGui (showOfflineBots, humanDates, combineBotAndPacketGrid)
 	{
 		gui = Object.create(XGGui);
-		gui.initialize(dataView, showOfflineBots, humanDates);
+		gui.initialize(dataView, showOfflineBots, humanDates, combineBotAndPacketGrid);
 
 		gui.onSearch.subscribe(function (e, args)
 		{
@@ -328,6 +330,13 @@ var XGMain = (function ()
 		gui.onUpdateSnapshotPlot.subscribe(function ()
 		{
 			statistics.updateSnapshotPlot();
+		});
+
+		gui.onCombineBotAndPacketGrid.subscribe(function (e, args)
+		{
+			grid.setCombineBotAndPacketGrid(args.Enable);
+			cookie.setCookie("combineBotAndPacketGrid", args.Enable ? "1" : "0");
+			resize.setCombineBotAndPacketGrid(args.Enable);
 		});
 	}
 

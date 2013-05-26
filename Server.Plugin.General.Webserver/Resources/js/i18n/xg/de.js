@@ -144,5 +144,6 @@ translations =
 	"Disabled": "Deaktiviert",
 	"Count": "Zähler",
 	"Time": "Zeit",
-	"Human readable dates": "Lesbare Zeiten"
+	"Human readable dates": "Lesbare Zeiten",
+	"Combine IRC View": "Kombinierte IRC Übersicht"
 };

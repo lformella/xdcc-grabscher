@@ -35,7 +35,7 @@ var XGGui = (function ()
 	var errorDialog = $("#errorDialog");
 	var currentSearchGuid = undefined;
 	var currentSlide = 0;
-	var showOfflineBots, humanDates;
+	var showOfflineBots, humanDates, combineBotAndPacketGrid;
 
 	function searchClick (element)
 	{
@@ -279,6 +279,17 @@ var XGGui = (function ()
 		{
 			element.button("toggle");
 		}
+
+		element = $("#combineBotAndPacketGrid");
+		element.click(function ()
+		{
+			combineBotAndPacketGrid = !combineBotAndPacketGrid;
+			self.onCombineBotAndPacketGrid.notify({Enable: combineBotAndPacketGrid}, null, this);
+		});
+		if (combineBotAndPacketGrid)
+		{
+			element.button("toggle");
+		}
 	}
 
 	var self = {
@@ -292,17 +303,20 @@ var XGGui = (function ()
 		onUpdateHumanDates: new Slick.Event(),
 		onUpdateStatistics: new Slick.Event(),
 		onUpdateSnapshotPlot: new Slick.Event(),
+		onCombineBotAndPacketGrid: new Slick.Event(),
 
 		/**
 		 * @param {XGDataView} dataView1
 		 * @param {Boolean} showOfflineBots1
 		 * @param {Boolean} humanDates1
+		 * @param {Boolean} combineBotAndPacketGrid1
 		 */
-		initialize: function (dataView1, showOfflineBots1, humanDates1)
+		initialize: function (dataView1, showOfflineBots1, humanDates1, combineBotAndPacketGrid1)
 		{
 			dataView = dataView1;
 			showOfflineBots = showOfflineBots1;
 			humanDates = humanDates1;
+			combineBotAndPacketGrid = combineBotAndPacketGrid1;
 
 			$(".container, .navbar").show();
 
@@ -315,10 +329,7 @@ var XGGui = (function ()
 			errorDialog.bind('hide',
 				function (e)
 				{
-					if (!passwordOk)
-					{
-						e.preventDefault();
-					}
+					e.preventDefault();
 				}
 			);
 		},

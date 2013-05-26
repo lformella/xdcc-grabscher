@@ -33,6 +33,7 @@ var XGGrid = (function ()
 
 	var sortColumn = { Server: null, Channel: null, Bot: null, Packet: null, ExternalSearch: null, File: null };
 	var filterOfflineBots = false;
+	var combineBotAndPacketGrid = false;
 
 	var channelFilter = {}, botFilter = {}, packetFilter = {}, externalFilter = {};
 
@@ -231,13 +232,15 @@ var XGGrid = (function ()
 		 * @param {XGHelper} helper1
 		 * @param {XGDataView} dataview1
 		 * @param {XGTranslate} translate1
+		 * @param {Boolean} combineBotAndPacketGrid1
 		 */
-		initialize: function (formatter1, helper1, dataview1, translate1)
+		initialize: function (formatter1, helper1, dataview1, translate1, combineBotAndPacketGrid1)
 		{
 			formatter = formatter1;
 			helper = helper1;
 			dataview = dataview1;
 			translate = translate1;
+			combineBotAndPacketGrid = combineBotAndPacketGrid1;
 			Grid = this;
 		},
 
@@ -339,7 +342,21 @@ var XGGrid = (function ()
 			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
 				buildRow("", 42, false, function (obj)
 				{
-					return formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
+					if (obj instanceof Slick.Group)
+					{
+						var bot = dataview.getItem(Enum.Grid.Bot, obj.groupingKey);
+						var ret = "";
+						if (bot != undefined)
+						{
+							ret += formatter.formatBotIcon(bot, true);
+							ret += bot.Name;
+						}
+						return ret;
+					}
+					else
+					{
+						return  formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
+					}
 				}, false, "icon"),
 				buildRow("", 55, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
@@ -351,6 +368,7 @@ var XGGrid = (function ()
 					return helper.date2Human(obj.LastUpdated);
 				}, true)
 			], comparePackets);
+			self.setCombineBotAndPacketGrid(combineBotAndPacketGrid);
 
 			/**************************************************************************************************************/
 
@@ -450,6 +468,29 @@ var XGGrid = (function ()
 			applyFilter(Enum.Grid.ExternalSearch);
 
 			applyFilter(Enum.Grid.Bot);
+		},
+
+		setCombineBotAndPacketGrid: function (enable)
+		{
+			var dataView = dataview.getDataView(Enum.Grid.Packet);
+			var grid = $("#" + Enum.Grid.Bot + "Grid").hide();
+			if (enable)
+			{
+				grid.hide();
+				dataView.setGrouping(
+				{
+					getter: "ParentGuid",
+					formatter: function (g)
+					{
+						return g.Value;
+					}
+				});
+			}
+			else
+			{
+				grid.show();
+				dataView.setGrouping([]);
+			}
 		}
 	};
 	return self;

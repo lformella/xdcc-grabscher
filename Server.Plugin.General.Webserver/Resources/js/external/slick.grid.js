@@ -1463,7 +1463,7 @@ if (typeof Slick === "undefined") {
 
     function removeRowFromCache(row) {
       var cacheEntry = rowsCache[row];
-      if (!cacheEntry) {
+      if (!cacheEntry || !cacheEntry.rowNode) {
         return;
       }
       $canvas[0].removeChild(cacheEntry.rowNode);

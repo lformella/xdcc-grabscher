@@ -233,7 +233,7 @@ var XGFormatter = (function ()
 		/* BOT FORMATTER                                                                                                  */
 		/* ************************************************************************************************************** */
 
-		formatBotIcon: function (bot)
+		formatBotIcon: function (bot, skipOverlay)
 		{
 			var icon = "user";
 			var iconClass = "Aluminium2Middle";
@@ -290,7 +290,7 @@ var XGFormatter = (function ()
 				overlayStyle = "";
 			}
 
-			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return formatIcon(icon, iconClass, skipOverlay ? "" : overlay, skipOverlay ? "" : overlayClass, skipOverlay ? "" : overlayStyle);
 		},
 
 		formatBotName: function (bot)
