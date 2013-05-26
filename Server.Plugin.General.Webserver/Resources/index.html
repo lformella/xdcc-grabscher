@@ -70,6 +70,28 @@
 			</div>
 		</div>
 
+		<div id="xdccDialog" class="modal hide fade" data-show="true">
+			<div class="modal-header">
+				<h3>XDCC link input</h3>
+			</div>
+			<div class="modal-body">
+				<p>Please enter a valid XDCC link.</p>
+
+				<div class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="xdccLink">XDCC link</label>
+
+						<div class="controls">
+							<input type="text" name="xdccLink" id="xdccLink" placeholder="XDCC Link" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a id="xdccButton" href="#" class="btn btn-primary icon-download-cloud">Download</a>
+			</div>
+		</div>
+
 		<div id="serverChannelsDialog" class="modal hide fade">
 			<div class="modal-header">
 				<h3>Change Servers and Channels</h3>
@@ -168,6 +190,7 @@
 									<div class="popover-content">
 										<button id="serverChannelButton" class="btn icon-globe">Server / Channels</button>
 										<button id="statisticsButton" class="btn icon-chart-bar" disabled="disabled">Statistics</button>
+										<button id="xdccDialogButton" class="btn icon-download-cloud">XDCC link input</button>
 										<button id="showOfflineBots" class="btn icon-eye" data-toggle="button">Hide offline Bots</button>
 										<button id="humanDates" class="btn icon-clock" data-toggle="button">Human readable dates</button>
 										<button id="combineBotAndPacketGrid" class="btn icon-resize-small" data-toggle="button">Combine IRC View</button>

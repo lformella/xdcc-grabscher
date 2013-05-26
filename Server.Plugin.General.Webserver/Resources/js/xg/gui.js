@@ -33,6 +33,7 @@ var XGGui = (function ()
 	var searchRemove = $("#searchRemove");
 	var searchLoading = $("#searchLoading");
 	var errorDialog = $("#errorDialog");
+	var xdccDialog = $("#xdccDialog");
 	var currentSearchGuid = undefined;
 	var currentSlide = 0;
 	var showOfflineBots, humanDates, combineBotAndPacketGrid;
@@ -210,6 +211,17 @@ var XGGui = (function ()
 		}
 	}
 
+	function addXdccLink ()
+	{
+		var tbox = $("#xdccLink");
+		if (tbox.val() != "")
+		{
+			self.onAddXdccLink.notify({Name: tbox.val()}, null, this);
+			tbox.val("");
+			xdccDialog.modal("hide");
+		}
+	}
+
 	function connectButtons ()
 	{
 		var element;
@@ -244,6 +256,24 @@ var XGGui = (function ()
 				e.preventDefault();
 				addChannel();
 			}
+		});
+
+		$("#xdccButton").click(function ()
+		{
+			addXdccLink();
+		});
+		$("#xdccLink").click(function (e)
+		{
+			if (e.which == 13)
+			{
+				e.preventDefault();
+				addXdccLink();
+			}
+		});
+
+		$("#xdccDialogButton").click(function ()
+		{
+			xdccDialog.modal('show');
 		});
 
 		$("#statisticsButton").click(function ()
@@ -304,6 +334,7 @@ var XGGui = (function ()
 		onUpdateStatistics: new Slick.Event(),
 		onUpdateSnapshotPlot: new Slick.Event(),
 		onCombineBotAndPacketGrid: new Slick.Event(),
+		onAddXdccLink: new Slick.Event(),
 
 		/**
 		 * @param {XGDataView} dataView1

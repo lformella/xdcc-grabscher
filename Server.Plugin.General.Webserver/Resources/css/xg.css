@@ -178,6 +178,11 @@ label
 	position: relative;
 }
 
+#xdccLink, #password
+{
+    width: 336px;
+}
+
 /** Slick Grid **/
 
 .slick-cell [class^="icon-"]

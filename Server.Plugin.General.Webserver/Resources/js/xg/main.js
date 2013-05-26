@@ -338,6 +338,11 @@ var XGMain = (function ()
 			cookie.setCookie("combineBotAndPacketGrid", args.Enable ? "1" : "0");
 			resize.setCombineBotAndPacketGrid(args.Enable);
 		});
+
+		gui.onAddXdccLink.subscribe(function (e, args)
+		{
+			websocket.sendName(Enum.Request.ParseXdccLink, args.Name);
+		});
 	}
 
 	return {

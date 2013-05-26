@@ -45,6 +45,10 @@ translations =
 	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
 	"Add": "Hinzufügen",
 	"Settings": "Einstellungen",
+	"Download": "Runterladen",
+	"XDCC link": "XDCC Link",
+	"XDCC link input": "XDCC Link Eingabe",
+	"Please enter a valid XDCC link.": "Bitte gib einen gültigen XDCC Link ein.",
 
 	/* ************************************************************************************************************** */
 	/* GRIDS                                                                                                          */
