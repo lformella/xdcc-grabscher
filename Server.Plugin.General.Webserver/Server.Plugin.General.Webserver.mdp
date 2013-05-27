@@ -123,9 +123,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-asc.gif" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-desc.gif" />
     <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.pnotify.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.pnotify.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/jquery.pnotify.default.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.jquery.pnotify.default.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/notification.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.notification.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.gui.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.bootstrap.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.groupitemmetadataprovider.js" />
