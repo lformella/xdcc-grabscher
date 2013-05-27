@@ -39,7 +39,7 @@ var XGFormatter = (function ()
 
 	function formatIcon (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
 	{
-		iconClass = "icon-big icon-" + icon + " " + iconClass;
+		iconClass = "icon-" + icon + " " + iconClass;
 		if (onclick != undefined && onclick != "")
 		{
 			iconClass += " button";
@@ -168,55 +168,6 @@ var XGFormatter = (function ()
 		/* ************************************************************************************************************** */
 		/* SEARCH FORMATTER                                                                                               */
 		/* ************************************************************************************************************** */
-
-		formatSearchIcon: function (search)
-		{
-			var icon = "search";
-			var iconClass = "Aluminium2Middle";
-			var overlay = "";
-			var overlayClass = "";
-			var overlayStyle = "";
-
-			switch (search.Guid)
-			{
-				case "00000000-0000-0000-0000-000000000001":
-					icon = "down-circle";
-					iconClass = "SkyBlueMiddle";
-					break;
-
-				case "00000000-0000-0000-0000-000000000002":
-					icon = "ok-circle";
-					iconClass = "ChameleonMiddle";
-					break;
-			}
-
-			if (search.Active)
-			{
-				overlay = "spin";
-				overlayClass = "ScarletRedMiddle animate-spin icon-small";
-				overlayStyle = "";
-			}
-
-			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
-		},
-
-		formatSearchAction: function (search)
-		{
-			var result = "";
-
-			switch (search.Guid)
-			{
-				case "00000000-0000-0000-0000-000000000001":
-				case "00000000-0000-0000-0000-000000000002":
-					break;
-
-				default:
-					result = self.formatRemoveIcon(Enum.Grid.Search, search);
-					break;
-			}
-
-			return result;
-		},
 
 		formatSearchCell: function (search)
 		{
@@ -391,6 +342,13 @@ var XGFormatter = (function ()
 				}
 			}
 
+			if (packet.Active)
+			{
+				overlay = "spin";
+				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlayStyle = "";
+			}
+
 			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
@@ -506,6 +464,98 @@ var XGFormatter = (function ()
 		formatRemoveIcon: function (grid, obj)
 		{
 			return "<i class='icon-cancel-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+		},
+
+		/* ************************************************************************************************************** */
+		/* NOTIFICATION FORMATTER                                                                                         */
+		/* ************************************************************************************************************** */
+
+		formatNotificationIcon: function (notification)
+		{
+			var icon = "";
+			var iconClass = "";
+
+			switch (notification.Type)
+			{
+				case Enum.NotificationType.PacketCompleted:
+				case Enum.NotificationType.FileCompleted:
+					iconClass = "ChameleonMiddle";
+					break;
+
+				case Enum.NotificationType.ServerConnectFailed:
+				case Enum.NotificationType.ChannelJoinFailed:
+				case Enum.NotificationType.ChannelBanned:
+				case Enum.NotificationType.ChannelKicked:
+				case Enum.NotificationType.BotConnectFailed:
+				case Enum.NotificationType.BotSubmittedWrongPort:
+				case Enum.NotificationType.PacketIncompleted:
+				case Enum.NotificationType.PacketBroken:
+				case Enum.NotificationType.FileSizeMismatch:
+				case Enum.NotificationType.FileBuildFailed:
+					iconClass = "ScarletRedMiddle";
+					break;
+
+				case Enum.NotificationType.ServerConnected:
+				case Enum.NotificationType.ChannelParted:
+				case Enum.NotificationType.ChannelJoined:
+				case Enum.NotificationType.BotConnected:
+				case Enum.NotificationType.PacketRequested:
+				case Enum.NotificationType.PacketRemoved:
+					iconClass = "SkyBlueMiddle";
+					break;
+			}
+
+			switch (notification.Type)
+			{
+				case Enum.NotificationType.ServerConnectFailed:
+				case Enum.NotificationType.ServerConnected:
+					icon = "hdd";
+					break;
+
+				case Enum.NotificationType.ChannelJoinFailed:
+				case Enum.NotificationType.ChannelBanned:
+				case Enum.NotificationType.ChannelKicked:
+				case Enum.NotificationType.ChannelParted:
+				case Enum.NotificationType.ChannelJoined:
+					icon = "comment";
+					break;
+
+				case Enum.NotificationType.BotConnected:
+				case Enum.NotificationType.BotConnectFailed:
+				case Enum.NotificationType.BotSubmittedWrongPort:
+					icon = "doc";
+					break;
+
+				case Enum.NotificationType.PacketIncompleted:
+				case Enum.NotificationType.PacketBroken:
+				case Enum.NotificationType.PacketRequested:
+				case Enum.NotificationType.PacketRemoved:
+				case Enum.NotificationType.PacketCompleted:
+					icon = "doc";
+					break;
+
+				case Enum.NotificationType.FileSizeMismatch:
+				case Enum.NotificationType.FileBuildFailed:
+				case Enum.NotificationType.FileCompleted:
+					icon = "doc";
+					break;
+			}
+
+			return formatIcon(icon, iconClass);
+		},
+
+		formatNotificationContent: function (notification)
+		{
+			return translate._("Notification_" + notification.Type,
+			[
+				{ Name: "Name", Value: notification.ObjectName },
+				{ Name: "ParentName", Value: notification.ParentName }
+			]);
+		},
+
+		formatNotificationTime: function (notification)
+		{
+			return helper.date2Human(notification.Time);
 		}
 	};
 	return self;

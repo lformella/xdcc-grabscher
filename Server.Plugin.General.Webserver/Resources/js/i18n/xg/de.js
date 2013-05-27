@@ -63,6 +63,7 @@ translations =
 	"Size": "Gr&ouml;&szlig;e",
 	"BotName": "Bot",
 	"BotSpeed": "Geschwindigkeit",
+	"Content": "Inhalt",
 
 	/* ************************************************************************************************************** */
 	/* PACKET GRID                                                                                                    */
@@ -132,6 +133,7 @@ translations =
 	"Hide offline Bots": "inaktive Bots ausblenden",
 	"IRC View": "IRC &Uuml;bersicht",
 	"Files": "Dateien",
+	"Notifications": "Benachrichtigungen",
 
 	"Connected": "Verbunden",
 	"Disconnected": "Getrennt",

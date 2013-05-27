@@ -26,14 +26,23 @@
 var XGGui = (function ()
 {
 	var dataView;
+
 	var searchForm = $("#searchForm, #searchButtons");
 	var searches = $("#searches");
 	var search = $("#search");
 	var searchAdd = $("#searchAdd");
 	var searchRemove = $("#searchRemove");
 	var searchLoading = $("#searchLoading");
+
+	var settings = $("#settings");
 	var errorDialog = $("#errorDialog");
 	var xdccDialog = $("#xdccDialog");
+
+	var notifications = $("#notifications");
+	var notificationsLink = $("#notificationsLink");
+	var unreadNotificationCounter = 0;
+	var unreadNotifications = $("#unreadNotifications");
+
 	var currentSearchGuid = undefined;
 	var currentSlide = 0;
 	var showOfflineBots, humanDates, combineBotAndPacketGrid;
@@ -86,6 +95,10 @@ var XGGui = (function ()
 						searchClick($(this));
 					}
 				);
+			}
+			else if (args.DataType == Enum.Grid.Notification)
+			{
+				updateUnreadNotifications(1);
 			}
 		});
 
@@ -154,15 +167,6 @@ var XGGui = (function ()
 		);
 	}
 
-	function initializeSettings ()
-	{
-		$("#settingsLink").click(
-			function ()
-			{
-				$("#settings").toggle("blind", 500);
-			});
-	}
-
 	function initializeCarousel ()
 	{
 		$(".carousel-link").click(
@@ -222,13 +226,45 @@ var XGGui = (function ()
 		}
 	}
 
+	function updateUnreadNotifications (counter)
+	{
+		if (counter == 0)
+		{
+			unreadNotificationCounter = 0;
+			unreadNotifications.html("");
+		}
+		else
+		{
+			unreadNotificationCounter += counter;
+			unreadNotifications.html(unreadNotificationCounter);
+		}
+	}
+
 	function connectButtons ()
 	{
 		var element;
 
+		$("#settingsLink").click(function ()
+		{
+			notifications.hide("blind", 500);
+			settings.toggle("blind", 500);
+		});
+
+		notificationsLink.click(function ()
+		{
+			if (notifications.is(":hidden"))
+			{
+				updateUnreadNotifications(0);
+				self.onOpenNotifications.notify({}, null, this);
+			}
+
+			settings.hide("blind", 500);
+			notifications.toggle("blind", 500);
+		});
+
 		$("#serverChannelButton").click(function ()
 		{
-			$("#settings").toggle("blind", 500);
+			settings.toggle("blind", 500);
 			$("#serverChannelsDialog").modal('show');
 		});
 
@@ -273,14 +309,14 @@ var XGGui = (function ()
 
 		$("#xdccDialogButton").click(function ()
 		{
-			$("#settings").toggle("blind", 500);
+			settings.toggle("blind", 500);
 			xdccDialog.modal('show');
 		});
 
 		$("#statisticsButton").click(function ()
 		{
 			self.onUpdateStatistics.notify({}, null, this);
-			$("#settings").toggle("blind", 500);
+			settings.toggle("blind", 500);
 			$("#statisticsDialog").modal('show');
 		});
 
@@ -336,6 +372,7 @@ var XGGui = (function ()
 		onUpdateSnapshotPlot: new Slick.Event(),
 		onCombineBotAndPacketGrid: new Slick.Event(),
 		onAddXdccLink: new Slick.Event(),
+		onOpenNotifications: new Slick.Event(),
 
 		/**
 		 * @param {XGDataView} dataView1
@@ -354,7 +391,6 @@ var XGGui = (function ()
 
 			initializeDataView();
 			initializeSearch();
-			initializeSettings();
 			initializeCarousel();
 			connectButtons();
 

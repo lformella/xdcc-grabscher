@@ -98,6 +98,16 @@ label
 	margin-top: 9px;
 }
 
+.big-icon
+{
+    font-size: 2.5em;
+    vertical-align: bottom;
+}
+.big-icon:before
+{
+    line-height: 0.6em !important;
+}
+
 /** Grids / Dialogs / Buttons **/
 
 #BotGrid
@@ -116,6 +126,12 @@ label
 	width: 320px;
 	height: 320px;
 	margin-bottom: 10px;
+}
+
+#NotificationGrid
+{
+	width: 640px;
+	height: 320px;
 }
 
 #serverChannelsDialog
@@ -157,11 +173,30 @@ label
 #settings
 {
 	left: auto;
-	right: -80px;
+	right: -98px;
 	top: 35px;
 	width: 240px;
 	min-width: 240px;
 	max-width: 240px;
+}
+
+#notifications
+{
+	left: auto;
+	right: -258px;
+	top: 35px;
+	width: 665px;
+	min-width: 660px;
+	max-width: 660px;
+}
+
+#unreadNotifications
+{
+	left: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+    position: absolute;
+    top: 2px;
 }
 
 #settings button
@@ -174,9 +209,12 @@ label
 	margin-right: 10px;
 }
 
-#settingsLink
+#settingsLink, #notificationsLink
 {
 	position: relative;
+	padding-left: 0;
+    padding-right: 0;
+	padding-bottom: 0;
 }
 
 #xdccLink, #password
@@ -225,6 +263,12 @@ label
 .grid .grid-canvas .small-line
 {
     line-height: 12px !important;
+}
+
+.grid .grid-canvas .two-line-text
+{
+    white-space: normal;
+	font-size: 1em;
 }
 
 /** PNotify **/

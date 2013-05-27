@@ -49,7 +49,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"animation",
 			"slick.grid",
 			"bootstrap-slickgrid",
-			"jquery.pnotify.default",
 			"tango-colors",
 			"xg"
 		};
@@ -64,7 +63,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/jquery.flot.axislabels",
 			"external/jquery-timing.min",
 			"external/jquery-ui.min",
-			"external/jquery.pnotify.min",
 			"external/json2.min",
 			"external/sha256",
 			"external/slick.core",

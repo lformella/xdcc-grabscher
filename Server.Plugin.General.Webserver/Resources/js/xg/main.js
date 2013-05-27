@@ -25,7 +25,7 @@
 
 var XGMain = (function ()
 {
-	var statistics, cookie, helper, formatter, websocket, dataView, grid, resize, gui, notification, translate;
+	var statistics, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
 	var currentServerGuid = "";
 	var serversActive = [], botsActive = [];
 
@@ -45,16 +45,8 @@ var XGMain = (function ()
 	 */
 	function flipPacket (obj)
 	{
-		var elementSearch = $("#xgLogo");
-		var elementPacket = getElementFromGrid(Enum.Grid.Packet, obj.Guid);
-		if (!obj.Enabled)
-		{
-			elementPacket.effect("transfer", { to: elementSearch }, 500);
-		}
-		else
-		{
-			elementSearch.effect("transfer", { to: elementPacket }, 500);
-		}
+		obj.Active = true;
+		dataView.updateItem({ Data: obj, DataType: Enum.Grid.Packet });
 		flipObject(obj);
 	}
 
@@ -81,10 +73,14 @@ var XGMain = (function ()
 	 */
 	function downloadLink (obj)
 	{
-		var elementSearch = $("#xgLogo");
-		var elementPacket = getElementFromGrid(Enum.Grid.ExternalSearch, obj.Guid);
-		elementPacket.effect("transfer", { to: elementSearch }, 500);
+		obj.Active = true;
+		dataView.updateItem({ Data: obj, DataType: Enum.Grid.ExternalSearch });
 		websocket.sendName(Enum.Request.ParseXdccLink, obj.IrcLink);
+		setTimeout(function ()
+		{
+			obj.Active = false;
+			dataView.updateItem({ Data: obj, DataType: Enum.Grid.ExternalSearch });
+		}, 1000);
 	}
 
 	/**
@@ -110,9 +106,6 @@ var XGMain = (function ()
 
 		statistics = Object.create(XGStatistics);
 		statistics.initialize(helper, translate);
-
-		notification = Object.create(XGNotification);
-		notification.initialize(dataView, translate);
 
 		startWebsocket(host, port, password);
 		startGrid(showOfflineBots, combineBotAndPacketGrid);
@@ -213,7 +206,6 @@ var XGMain = (function ()
 						var row = dataView.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
 						grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
 						grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
-						active = true;
 						break;
 				}
 
@@ -342,6 +334,11 @@ var XGMain = (function ()
 		gui.onAddXdccLink.subscribe(function (e, args)
 		{
 			websocket.sendName(Enum.Request.ParseXdccLink, args.Name);
+		});
+
+		gui.onOpenNotifications.subscribe(function (e, args)
+		{
+			grid.invalidate(Enum.Grid.Notification);
 		});
 	}
 
