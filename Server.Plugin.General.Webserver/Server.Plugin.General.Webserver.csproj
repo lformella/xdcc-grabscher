@@ -78,6 +78,7 @@
     <Compile Include="Object\ExternalSearch.cs" />
     <Compile Include="Object\File.cs" />
     <Compile Include="Object\Flot.cs" />
+    <Compile Include="Object\Notification.cs" />
     <Compile Include="Object\Packet.cs" />
     <Compile Include="Object\Search.cs" />
     <Compile Include="Object\Server.cs" />
@@ -141,30 +142,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\css\xg.css" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
     <EmbeddedResource Include="Resources\index.html" />
     <EmbeddedResource Include="Resources\css\fontello.css" />
-    <EmbeddedResource Include="Resources\css\jquery-ui.css" />
-    <EmbeddedResource Include="Resources\css\layout-default.css" />
     <EmbeddedResource Include="Resources\favicon.ico" />
     <EmbeddedResource Include="Resources\font\fontello.ttf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\css\images\sort-asc.gif" />
     <EmbeddedResource Include="Resources\css\images\sort-desc.gif" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_flat_100_ffffff_40x100.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_flat_15_cd0a0a_40x100.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_flat_70_000000_40x100.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_glass_100_eeeeee_1x400.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_glass_80_eeeeee_1x400.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_highlight-soft_25_fff7cc_1x100.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-bg_inset-soft_50_999999_1x100.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-icons_777777_256x240.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-icons_888888_256x240.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-icons_949494_256x240.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-icons_969696_256x240.png" />
-    <EmbeddedResource Include="Resources\css\images\ui-icons_ffffff_256x240.png" />
     <EmbeddedResource Include="Resources\font\fontello.eot" />
     <EmbeddedResource Include="Resources\font\fontello.svg" />
     <EmbeddedResource Include="Resources\font\fontello.woff" />
@@ -178,7 +163,6 @@
     <EmbeddedResource Include="Resources\js\external\jquery.cookie.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.flot.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery.layout.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.min.js" />
     <EmbeddedResource Include="Resources\js\external\json2.min.js" />
     <EmbeddedResource Include="Resources\js\external\moment.min.js" />
@@ -240,5 +224,18 @@
     <EmbeddedResource Include="Resources\js\xg\dataview.js" />
     <EmbeddedResource Include="Resources\js\xg\grid.js" />
     <EmbeddedResource Include="Resources\js\xg\statistics.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\xg\gui.js" />
+    <EmbeddedResource Include="Resources\js\xg\notification.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\external\bootstrap.min.js" />
+    <EmbeddedResource Include="Resources\js\external\slick.groupitemmetadataprovider.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\css\bootstrap-slickgrid.css" />
+    <EmbeddedResource Include="Resources\css\bootstrap.css" />
+    <EmbeddedResource Include="Resources\css\tango-colors.css" />
   </ItemGroup>
 </Project>

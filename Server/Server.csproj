@@ -71,6 +71,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ANotificationSender.cs" />
     <Compile Include="BotConnection.cs" />
     <Compile Include="Connection\AConnection.cs" />
     <Compile Include="Connection\AIrcConnection.cs" />
