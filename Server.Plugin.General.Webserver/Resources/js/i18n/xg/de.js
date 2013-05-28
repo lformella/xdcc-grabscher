@@ -134,6 +134,8 @@ translations =
 	"IRC View": "IRC &Uuml;bersicht",
 	"Files": "Dateien",
 	"Notifications": "Benachrichtigungen",
+	"Predefined": "Vorgefertigt",
+	"Custom": "Eigene",
 
 	"Connected": "Verbunden",
 	"Disconnected": "Getrennt",

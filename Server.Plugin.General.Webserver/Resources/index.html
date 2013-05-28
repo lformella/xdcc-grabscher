@@ -160,7 +160,7 @@
 			</div>
 		</div>
 
-		<div class="navbar navbar-inverse navbar-fixed-top" style="display: none">
+		<div class="navbar navbar-inverse" style="display: none">
 			<div class="navbar-inner">
 				<div class="container">
 					<a id="xgLogo" class="brand" href="#">XG v#XGVERSION#</a>
@@ -197,12 +197,12 @@
 									<span>Graphs</span>
 								</a>
 							</li>
-							<li>
-								<a id="notificationsLink" href="#notifications">
+							<li class="dropdown">
+								<a id="notificationsLink" href="#notifications" data-toggle="dropdown" class="dropdown-toggle">
 									<span class="icon-info-circle big-icon" title="Notifications"></span>
 									<span id="unreadNotifications" class="badge badge-warning"></span>
 								</a>
-								<div id="notifications" class="popover bottom">
+								<div class="dropdown-menu">
 									<div class="arrow"></div>
 									<h3 class="popover-title">Notification</h3>
 									<div class="popover-content">
@@ -210,22 +210,31 @@
 									</div>
 								</div>
 							</li>
-							<li>
-								<a id="settingsLink" href="#settings">
+							<li class="dropdown">
+								<a id="settingsLink" href="#settings" data-toggle="dropdown" class="dropdown-toggle">
 									<span class="icon-cog big-icon" title="Settings"></span>
 								</a>
-								<div id="settings" class="popover bottom">
-									<div class="arrow"></div>
-									<h3 class="popover-title">Settings</h3>
-									<div class="popover-content">
+								<ul class="dropdown-menu">
+									<li>
 										<button id="serverChannelButton" class="btn icon-globe">Server / Channels</button>
+									</li>
+									<li>
 										<button id="statisticsButton" class="btn icon-chart-bar" disabled="disabled">Statistics</button>
+									</li>
+									<li>
 										<button id="xdccDialogButton" class="btn icon-download-cloud">XDCC link input</button>
+									</li>
+									<li class="divider"></li>
+									<li>
 										<button id="showOfflineBots" class="btn icon-eye" data-toggle="button">Hide offline Bots</button>
+									</li>
+									<li>
 										<button id="humanDates" class="btn icon-clock" data-toggle="button">Human readable dates</button>
+									</li>
+									<li>
 										<button id="combineBotAndPacketGrid" class="btn icon-resize-small" data-toggle="button">Combine IRC View</button>
-									</div>
-								</div>
+									</li>
+								</ul>
 							</li>
 						</ul>
 						<div id="searchButtons" class="pull-right" style="display: none">

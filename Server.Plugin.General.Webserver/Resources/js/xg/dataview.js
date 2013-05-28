@@ -189,13 +189,19 @@ var XGDataView = (function ()
 			return obj;
 		},
 
-
 		addItem: function (json)
 		{
 			var dataView = this.getDataView(json.DataType);
 			if (dataView != null)
 			{
-				dataView.addItem(json.Data);
+				if (json.DataType == Enum.Grid.Notification)
+				{
+					dataView.insertItem(0, json.Data);
+				}
+				else
+				{
+					dataView.addItem(json.Data);
+				}
 				self.onAdd.notify(json, null, self);
 			}
 		},

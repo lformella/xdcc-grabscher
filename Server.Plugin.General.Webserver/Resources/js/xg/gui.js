@@ -34,12 +34,9 @@ var XGGui = (function ()
 	var searchRemove = $("#searchRemove");
 	var searchLoading = $("#searchLoading");
 
-	var settings = $("#settings");
 	var errorDialog = $("#errorDialog");
 	var xdccDialog = $("#xdccDialog");
 
-	var notifications = $("#notifications");
-	var notificationsLink = $("#notificationsLink");
 	var unreadNotificationCounter = 0;
 	var unreadNotifications = $("#unreadNotifications");
 
@@ -244,27 +241,13 @@ var XGGui = (function ()
 	{
 		var element;
 
-		$("#settingsLink").click(function ()
+		$("#notificationsLink").click(function ()
 		{
-			notifications.hide("blind", 500);
-			settings.toggle("blind", 500);
-		});
-
-		notificationsLink.click(function ()
-		{
-			if (notifications.is(":hidden"))
-			{
-				updateUnreadNotifications(0);
-				self.onOpenNotifications.notify({}, null, this);
-			}
-
-			settings.hide("blind", 500);
-			notifications.toggle("blind", 500);
+			updateUnreadNotifications(0);
 		});
 
 		$("#serverChannelButton").click(function ()
 		{
-			settings.toggle("blind", 500);
 			$("#serverChannelsDialog").modal('show');
 		});
 
@@ -309,14 +292,12 @@ var XGGui = (function ()
 
 		$("#xdccDialogButton").click(function ()
 		{
-			settings.toggle("blind", 500);
 			xdccDialog.modal('show');
 		});
 
 		$("#statisticsButton").click(function ()
 		{
 			self.onUpdateStatistics.notify({}, null, this);
-			settings.toggle("blind", 500);
 			$("#statisticsDialog").modal('show');
 		});
 

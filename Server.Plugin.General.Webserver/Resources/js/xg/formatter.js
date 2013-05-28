@@ -249,7 +249,7 @@ var XGFormatter = (function ()
 			var ret = bot.Name;
 			if (bot.LastMessage != "")
 			{
-				ret += "<br /><small><b>" + helper.date2Human(bot.LastMessageTime) + ":</b> " + bot.LastMessage + "</small>";
+				ret += "<br /><small title='" + bot.LastMessage + "'><b>" + helper.date2Human(bot.LastMessageTime) + ":</b> " + bot.LastMessage + "</small>";
 			}
 			return ret;
 		},
@@ -366,7 +366,7 @@ var XGFormatter = (function ()
 				return "";
 			}
 
-			var ret = name;
+			var ret = "<span title='" + name + "'>" + name + "</span>";
 
 			if (packet.Connected)
 			{

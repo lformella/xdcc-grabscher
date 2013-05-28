@@ -29,7 +29,6 @@
 
 body
 {
-	padding-top: 50px;
 	padding-bottom: 10px;
 }
 
@@ -55,6 +54,11 @@ small
 	width: -webkit-calc(100% - 20px);
 	width: -moz-calc(100% - 20px);
 	width: calc(100% - 20px);
+}
+
+.navbar
+{
+    margin-bottom: 10px;
 }
 
 .progress
@@ -108,7 +112,7 @@ label
     line-height: 0.6em !important;
 }
 
-/** Grids / Dialogs / Buttons **/
+/** Grids **/
 
 #BotGrid
 {
@@ -133,6 +137,8 @@ label
 	width: 640px;
 	height: 320px;
 }
+
+/** Dialogs **/
 
 #serverChannelsDialog
 {
@@ -159,6 +165,8 @@ label
 	margin-left: 70px;
 }
 
+/** Menu **/
+
 #searchForm .dropdown-menu
 {
 	overflow: hidden;
@@ -170,52 +178,49 @@ label
 	margin-right: 60px;
 }
 
-#settings
-{
-	left: auto;
-	right: -98px;
-	top: 35px;
-	width: 240px;
-	min-width: 240px;
-	max-width: 240px;
-}
-
-#notifications
-{
-	left: auto;
-	right: -258px;
-	top: 35px;
-	width: 665px;
-	min-width: 660px;
-	max-width: 660px;
-}
-
 #unreadNotifications
 {
-	left: 5px;
+	left: 0;
     padding-left: 3px;
     padding-right: 3px;
     position: absolute;
     top: 2px;
 }
 
-#settings button
-{
-	width: 220px;
-}
-
-#settings button [class^="icon-"]
-{
-	margin-right: 10px;
-}
-
 #settingsLink, #notificationsLink
 {
-	position: relative;
 	padding-left: 0;
     padding-right: 0;
 	padding-bottom: 0;
 }
+
+#settingsLink + .dropdown-menu:before, #notificationsLink + .dropdown-menu:before {
+    right: 17px;
+	left: auto;
+}
+
+#settingsLink + .dropdown-menu:after, #notificationsLink + .dropdown-menu:after {
+    right: 18px;
+	left: auto;
+}
+
+#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu {
+    right: 0;
+	left: auto;
+}
+
+#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu {
+    top: 2.9em;
+}
+
+#settingsLink + ul button
+{
+	width: 220px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/** Others **/
 
 #xdccLink, #password
 {
@@ -269,11 +274,4 @@ label
 {
     white-space: normal;
 	font-size: 1em;
-}
-
-/** PNotify **/
-
-.ui-pnotify
-{
-	top: auto;
 }
