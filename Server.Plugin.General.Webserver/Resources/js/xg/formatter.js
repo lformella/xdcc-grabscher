@@ -546,11 +546,12 @@ var XGFormatter = (function ()
 
 		formatNotificationContent: function (notification)
 		{
-			return translate._("Notification_" + notification.Type,
+			var msg = translate._("Notification_" + notification.Type,
 			[
 				{ Name: "Name", Value: notification.ObjectName },
 				{ Name: "ParentName", Value: notification.ParentName }
 			]);
+			return "<span title='" + msg + "'>" + msg +"</span>";
 		},
 
 		formatNotificationTime: function (notification)
