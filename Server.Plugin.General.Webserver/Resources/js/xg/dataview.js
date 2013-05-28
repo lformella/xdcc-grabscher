@@ -88,11 +88,11 @@ var XGDataView = (function ()
 					switch (args.SearchGuid)
 					{
 						case "00000000-0000-0000-0000-000000000001":
-							result = result && item.Connected;
+							result = result && item.Enabled;
 							break;
 
 						case "00000000-0000-0000-0000-000000000002":
-							result = result && item.Enabled;
+							result = result && item.Connected;
 							break;
 
 						default:
