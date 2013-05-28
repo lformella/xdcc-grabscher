@@ -304,11 +304,11 @@ var XGFormatter = (function ()
 
 			var name = packet.Name;
 			var ext = name.toLowerCase().substr(-3);
-			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
+			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg" || ext == "mov" || ext == "mp4")
 			{
 				icon = "video";
 			}
-			else if (ext == "mp3")
+			else if (ext == "mp3" || ext == "ogg" || ext == "wav")
 			{
 				icon = "headphones";
 			}
