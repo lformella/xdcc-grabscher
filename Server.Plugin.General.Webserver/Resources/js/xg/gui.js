@@ -162,6 +162,7 @@ var XGGui = (function ()
 				}
 			}
 		);
+		search.focus();
 	}
 
 	function initializeCarousel ()

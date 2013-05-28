@@ -81,6 +81,12 @@ var XGPassword = (function ()
 			port = port1;
 
 			passwordDialog.modal("show");
+			passwordDialog.bind('shown',
+				function ()
+				{
+					passwordInput.focus();
+				}
+			);
 			passwordDialog.bind('hide',
 				function (e)
 				{
