@@ -96,7 +96,7 @@ var XGDataView = (function ()
 							break;
 
 						default:
-							var names = args.Name.split(" ");
+							var names = args.Name.toLowerCase().split(" ");
 							$.each(names, function (i, name)
 							{
 								if (item.Name.toLowerCase().indexOf(name) == -1)
