@@ -36,6 +36,6 @@ namespace XG.Server.Plugin.General.Webserver.Object
 		public string Label { get; set; }
 
 		[JsonProperty(PropertyName = "data")]
-		public Int64[][] Data { get; set; }
+		public double[][] Data { get; set; }
 	}
 }

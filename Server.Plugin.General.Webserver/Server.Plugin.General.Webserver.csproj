@@ -82,13 +82,13 @@
     <Compile Include="Object\Packet.cs" />
     <Compile Include="Object\Search.cs" />
     <Compile Include="Object\Server.cs" />
-    <Compile Include="Object\Snapshot.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ASaltedPassword.cs" />
     <Compile Include="Webserver\BrowserConnection.cs" />
     <Compile Include="Webserver\FileLoader.cs" />
     <Compile Include="Webserver\Server.cs" />
+    <Compile Include="Websocket\DoubleConverter.cs" />
     <Compile Include="Websocket\Request.cs" />
     <Compile Include="Websocket\Response.cs" />
     <Compile Include="Websocket\Server.cs" />
@@ -114,6 +114,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpRobin, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net">
@@ -227,7 +231,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\xg\gui.js" />
-    <EmbeddedResource Include="Resources\js\xg\notification.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\external\bootstrap.min.js" />

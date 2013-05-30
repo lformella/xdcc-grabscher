@@ -81,7 +81,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"xg/helper",
 			"xg/grid",
 			"xg/main",
-			"xg/notification",
 			"xg/password",
 			"xg/dataview",
 			"xg/resize",

@@ -38,6 +38,7 @@ using XG.Core;
 using XG.Server.Plugin.General.Webserver.Object;
 
 using log4net;
+using SharpRobin.Core;
 
 namespace XG.Server.Plugin.General.Webserver.Websocket
 {
@@ -48,19 +49,27 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		WebSocketServer _webSocket;
-		static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
-		{
-			DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
-			DateParseHandling = DateParseHandling.DateTime,
-			DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
-		};
+		JsonSerializerSettings _jsonSerializerSettings;
 
 		readonly List<User> _users = new List<User>();
 
 		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Downloads" };
-		static readonly Core.Search _searchEnabled = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Enabled Packets" };
+		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Enabled Packets" };
+
+		public RrdDb RrdDb { get; set; }
 
 		#endregion
+
+		public Server()
+		{
+			_jsonSerializerSettings = new JsonSerializerSettings
+			{
+				DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
+				DateParseHandling = DateParseHandling.DateTime,
+				DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
+			};
+			_jsonSerializerSettings.Converters.Add(new DoubleConverter());
+		}
 
 		#region AWorker
 
@@ -191,16 +200,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectAdded(aParent, aObj);
 		}
 
-		protected override void SnapshotAdded(Core.Snapshot aSnap)
-		{
-			var response = new Response
-			{
-				Type = Response.Types.ObjectAdded,
-				Data = Snapshots2Flot(Snapshots)
-			};
-			Broadcast(response);
-		}
-
 		#endregion
 
 		#region WebSocket
@@ -303,7 +302,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						{
 							try
 							{
-								var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start +"&limit=" + limit +"&search=" + request.Name);
+								var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start + "&limit=" + limit + "&search=" + request.Name);
 								var req = HttpWebRequest.Create(uri);
 
 								var response = req.GetResponse();
@@ -311,7 +310,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								string text = sr.ReadToEnd();
 								response.Close();
 
-								ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, JsonSerializerSettings);
+								ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, _jsonSerializerSettings);
 
 								if (results.Length > 0)
 								{
@@ -351,7 +350,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						var obj = Searches.Named(name);
 						if (obj == null)
 						{
-							obj = new Core.Search {Name = name};
+							obj = new Core.Search { Name = name };
 							Searches.Add(obj);
 						}
 						break;
@@ -389,11 +388,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.PacketsFromBot:
 						var botPackets = (from server in Servers.All
-										from channel in server.Channels
-										from bot in channel.Bots
-										from packet in bot.Packets
-										where packet.ParentGuid == request.Guid
-										select packet).ToList();
+										  from channel in server.Channels
+										  from bot in channel.Bots
+										  from packet in bot.Packets
+										  where packet.ParentGuid == request.Guid
+										  select packet).ToList();
 						UnicastOnRequest(currentUser, botPackets, request.Type);
 						break;
 
@@ -402,10 +401,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Snapshots:
+						var startTime = DateTime.Now.AddDays(int.Parse(request.Name));
+						var data = GetFlotData(startTime, DateTime.Now);
+
 						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.Snapshots,
-							Data = Snapshots2Flot(Snapshots)
+							Data = data
 						});
 						break;
 
@@ -445,7 +447,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						Core.Bot tBot = chan.Bot(botName);
 						if (tBot == null)
 						{
-							tBot = new Core.Bot {Name = botName};
+							tBot = new Core.Bot { Name = botName };
 							chan.AddBot(tBot);
 						}
 
@@ -453,7 +455,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						Core.Packet pack = tBot.Packet(packetId);
 						if (pack == null)
 						{
-							pack = new Core.Packet {Id = packetId, Name = link[5]};
+							pack = new Core.Packet { Id = packetId, Name = link[5] };
 							tBot.AddPacket(pack);
 						}
 						pack.Enabled = true;
@@ -599,7 +601,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				aResponse.Data = myObj;
 			}
 
-			string message = JsonConvert.SerializeObject(aResponse, JsonSerializerSettings);
+			string message = JsonConvert.SerializeObject(aResponse, _jsonSerializerSettings);
 			
 #if !UNSAFE
 			try
@@ -657,22 +659,26 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return all;
 		}
 
-		Flot[] Snapshots2Flot(Snapshots aSnapshots)
+		Flot[] GetFlotData(DateTime aStart, DateTime aEnd)
 		{
 			var tObjects = new List<Flot>();
+
+			FetchData data = RrdDb.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
+			Int64[] times = data.getTimestamps();
+			double[][] values = data.getValues();
+
 			for (int a = 1; a <= 26; a++)
 			{
 				var value = (SnapshotValue) a;
-
 				var obj = new Flot();
 
-				var list = new List<Int64[]>();
-				foreach (Core.Snapshot snapshot in aSnapshots.All)
+				var list = new List<double[]>();
+				for (int b = 0; b < times.Length; b++)
 				{
-					Int64[] data = {snapshot.Get(SnapshotValue.Timestamp) * 1000, snapshot.Get(value)};
-					list.Add(data);
+					double[] current = { times[b] * 1000, values[a][b] };
+					list.Add(current);
 				}
-				obj.Data = FilterDuplicateEntries(list.ToArray());
+				obj.Data = list.ToArray();
 				obj.Label = Enum.GetName(typeof (SnapshotValue), value);
 
 				tObjects.Add(obj);
@@ -680,38 +686,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 			return tObjects.ToArray();
 		}
-
-		public Int64[][] FilterDuplicateEntries(Int64[][] aEntries)
-		{
-			var list = new List<Int64[]>();
-
-			Int64[] prev = {0, -1};
-			Int64[] stack = null;
-			foreach (Int64[] data in aEntries)
-			{
-				if (prev[1] != data[1])
-				{
-					if (stack != null)
-					{
-						list.Add(stack);
-						stack = null;
-					}
-					list.Add(data);
-					prev = data;
-				}
-				else
-				{
-					stack = data;
-				}
-			}
-			if (stack != null)
-			{
-				list.Add(stack);
-			}
-
-			return list.ToArray();
-		}
-
 		#endregion
 	}
 }

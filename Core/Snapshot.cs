@@ -63,42 +63,4 @@ namespace XG.Core
 		PacketsSizeConnected = 25,
 		PacketsSizeDisconnected = 26
 	}
-
-	[Serializable]
-	public class Snapshot
-	{
-		readonly Dictionary<SnapshotValue, Int64> _dic;
-
-		public Snapshot()
-		{
-			_dic = new Dictionary<SnapshotValue, Int64>();
-
-			// fill with null values
-			for (int a = 0; a < 19; a++)
-			{
-				Set((SnapshotValue) a, 0);
-			}
-		}
-
-		public void Set(SnapshotValue aType, Int64 aValue)
-		{
-			if (_dic.ContainsKey(aType))
-			{
-				_dic[aType] = aValue;
-			}
-			else
-			{
-				_dic.Add(aType, aValue);
-			}
-		}
-
-		public Int64 Get(SnapshotValue aType)
-		{
-			if (_dic.ContainsKey(aType))
-			{
-				return _dic[aType];
-			}
-			return 0;
-		}
-	}
 }

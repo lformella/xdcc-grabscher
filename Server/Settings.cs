@@ -128,7 +128,6 @@ namespace XG.Server
 			TempPath = AppDataPath + "tmp" + Path.DirectorySeparatorChar;
 			ReadyPath = AppDataPath + "dl" + Path.DirectorySeparatorChar;
 			EnableMultiDownloads = false;
-			EnableCollectingSnapshots = false;
 
 			Password = "xgisgreat";
 
@@ -262,9 +261,9 @@ namespace XG.Server
 			get { return 5; }
 		}
 
-		public long TakeSnapshotTime
+		public int TakeSnapshotTimeInMinutes
 		{
-			get { return 600; }
+			get { return 5; }
 		}
 
 		public string ParsingErrorFile
@@ -322,7 +321,6 @@ namespace XG.Server
 		}
 
 		public bool EnableMultiDownloads { get; set; }
-		public bool EnableCollectingSnapshots { get; set; }
 
 		public string Password { get; set; }
 

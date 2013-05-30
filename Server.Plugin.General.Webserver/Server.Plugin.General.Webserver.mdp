@@ -117,7 +117,6 @@
     <File subtype="Code" buildaction="Compile" name="Object/Channel.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Packet.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Server.cs" />
-    <File subtype="Code" buildaction="Compile" name="Object/Snapshot.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Notification.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/File.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-asc.gif" />
@@ -127,6 +126,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.bootstrap.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.groupitemmetadataprovider.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/DoubleConverter.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -139,5 +139,6 @@
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Fleck.0.9.6.16/lib/net40/Fleck.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
   </References>
 </Project>

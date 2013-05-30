@@ -51,10 +51,11 @@
     <File subtype="Code" buildaction="Compile" name="Worker/AWorker.cs" />
     <File subtype="Code" buildaction="Compile" name="Worker/ALoopWorker.cs" />
     <File subtype="Code" buildaction="Compile" name="Worker/Workers.cs" />
-    <File subtype="Code" buildaction="Compile" name="Worker/SnapshotWorker.cs" />
+    <File subtype="Code" buildaction="Compile" name="Worker/RrdWorker.cs" />
     <File subtype="Code" buildaction="Compile" name="Worker/BotWatchdogWorker.cs" />
     <File subtype="Code" buildaction="Compile" name="Irc/Nickserv.cs" />
     <File subtype="Code" buildaction="Compile" name="ANotificationSender.cs" />
+    <File subtype="Code" buildaction="Compile" name="Helper/Rrd.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -62,6 +63,7 @@
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
   </References>
   <LanguageParameters ApplicationIcon="." ctype="CSharpProjectParameters" />
 </Project>

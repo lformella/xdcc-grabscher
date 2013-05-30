@@ -87,7 +87,9 @@ namespace XG.Server.Cmd
 
 			if (Settings.Instance.UseWebServer)
 			{
-				instance.AddWorker(new Plugin.General.Webserver.Plugin());
+				var webServer = new Plugin.General.Webserver.Plugin();
+				webServer.RrdDb = instance.RrdDb;
+				instance.AddWorker(webServer);
 			}
 			if (Settings.Instance.UseJabberClient)
 			{
