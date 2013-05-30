@@ -302,7 +302,7 @@ var XGGui = (function ()
 			$("#statisticsDialog").modal('show');
 		});
 
-		$(".snapshotCheckbox, input[type='checkbox']").click(function ()
+		$("input[name='snapshotTime'], input[id^='snapshotCheckbox']").click(function ()
 		{
 			self.onUpdateSnapshotPlot.notify({}, null, this);
 		});
