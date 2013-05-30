@@ -44,7 +44,7 @@ body
 
 small
 {
-    font-size: 0.8em;
+	font-size: 0.8em;
 }
 
 /** Bootstrap **/
@@ -58,7 +58,7 @@ small
 
 .navbar
 {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .progress
@@ -104,12 +104,13 @@ label
 
 .big-icon
 {
-    font-size: 2.5em;
-    vertical-align: bottom;
+	font-size: 2.5em;
+	vertical-align: bottom;
 }
+
 .big-icon:before
 {
-    line-height: 0.6em !important;
+	line-height: 0.6em !important;
 }
 
 /** Grids **/
@@ -181,36 +182,40 @@ label
 #unreadNotifications
 {
 	left: 0;
-    padding-left: 3px;
-    padding-right: 3px;
-    position: absolute;
-    top: 2px;
+	padding-left: 3px;
+	padding-right: 3px;
+	position: absolute;
+	top: 2px;
 }
 
 #settingsLink, #notificationsLink
 {
 	padding-left: 0;
-    padding-right: 0;
+	padding-right: 0;
 	padding-bottom: 0;
 }
 
-#settingsLink + .dropdown-menu:before, #notificationsLink + .dropdown-menu:before {
-    right: 17px;
+#settingsLink + .dropdown-menu:before, #notificationsLink + .dropdown-menu:before
+{
+	right: 17px;
 	left: auto;
 }
 
-#settingsLink + .dropdown-menu:after, #notificationsLink + .dropdown-menu:after {
-    right: 18px;
+#settingsLink + .dropdown-menu:after, #notificationsLink + .dropdown-menu:after
+{
+	right: 18px;
 	left: auto;
 }
 
-#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu {
-    right: 0;
+#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu
+{
+	right: 0;
 	left: auto;
 }
 
-#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu {
-    top: 2.9em;
+#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu
+{
+	top: 2.9em;
 }
 
 #settingsLink + ul button
@@ -224,7 +229,7 @@ label
 
 #xdccLink, #password
 {
-    width: 336px;
+	width: 336px;
 }
 
 /** Slick Grid **/
@@ -257,21 +262,21 @@ label
 
 .grid .grid-canvas .active, .grid .grid-canvas .selected
 {
-    background: none repeat scroll 0 0 #fffdbd;
+	background: none repeat scroll 0 0 #fffdbd;
 }
 
 .grid .grid-canvas .slick-group
 {
-    background: none repeat scroll 0 0 #f1f1ff;
+	background: none repeat scroll 0 0 #f1f1ff;
 }
 
 .grid .grid-canvas .small-line
 {
-    line-height: 12px !important;
+	line-height: 12px !important;
 }
 
 .grid .grid-canvas .two-line-text
 {
-    white-space: normal;
+	white-space: normal;
 	font-size: 1em;
 }

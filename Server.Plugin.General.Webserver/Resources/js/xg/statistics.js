@@ -77,6 +77,7 @@ var XGStatistics = (function ()
 			$.each(result, function (index, item)
 			{
 				item.color = index;
+				item.label = translate._(item.label);
 				switch (index + 1)
 				{
 					case Enum.SnapshotValue.Bots:
@@ -147,7 +148,7 @@ var XGStatistics = (function ()
 			var timeFormat;
 			switch (days)
 			{
-				case 1:
+				case -1:
 					timeFormat = "%H:%M";
 					tickSize = [2, "hour"];
 					markerFunction = function (axes)
@@ -174,7 +175,7 @@ var XGStatistics = (function ()
 					};
 					break;
 
-				case 7:
+				case -7:
 					timeFormat = "%d. %b";
 					tickSize = [1, "day"];
 					markerFunction = function (axes)
@@ -201,7 +202,7 @@ var XGStatistics = (function ()
 					};
 					break;
 
-				case 31:
+				case -31:
 					timeFormat = "%d. %b";
 					tickSize = [7, "day"];
 					markerFunction = function (axes)

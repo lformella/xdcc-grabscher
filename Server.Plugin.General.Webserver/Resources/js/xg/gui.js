@@ -302,7 +302,12 @@ var XGGui = (function ()
 			$("#statisticsDialog").modal('show');
 		});
 
-		$("input[name='snapshotTime'], input[id^='snapshotCheckbox']").click(function ()
+		$("input[name='snapshotTime']").click(function ()
+		{
+			self.onRequestSnapshotPlot.notify({Value: $(this).val()}, null, this);
+		});
+
+		$("input[id^='snapshotCheckbox']").click(function ()
 		{
 			self.onUpdateSnapshotPlot.notify({}, null, this);
 		});
@@ -355,6 +360,7 @@ var XGGui = (function ()
 		onCombineBotAndPacketGrid: new Slick.Event(),
 		onAddXdccLink: new Slick.Event(),
 		onOpenNotifications: new Slick.Event(),
+		onRequestSnapshotPlot: new Slick.Event(),
 
 		/**
 		 * @param {XGDataView} dataView1

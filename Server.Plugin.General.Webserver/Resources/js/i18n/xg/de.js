@@ -26,18 +26,13 @@
 translations =
 {
 	/* ************************************************************************************************************** */
-	/* PASSWORD DIALOG                                                                                                */
+	/* DIALOGS                                                                                                        */
 	/* ************************************************************************************************************** */
 
 	"Please enter the password for this webfrontend.": "Bitte gib das Passwort f&uuml;r diese Webseite ein.",
 	"Password": "Passwort",
 	"Password required": "Passwort ben&ouml;tigt",
 	"Connect": "Verbinden",
-
-	/* ************************************************************************************************************** */
-	/* OTHER DIALOGS                                                                                                  */
-	/* ************************************************************************************************************** */
-
 	"Change Servers and Channels": "Server und Channels &auml;ndern",
 	"View Statistics": "Statistiken anschauen",
 	"Error": "Fehler",
@@ -64,29 +59,14 @@ translations =
 	"BotName": "Bot",
 	"BotSpeed": "Geschwindigkeit",
 	"Content": "Inhalt",
-
-	/* ************************************************************************************************************** */
-	/* PACKET GRID                                                                                                    */
-	/* ************************************************************************************************************** */
-
 	"Packets": "Pakete",
 	"Time Missing": "Zeit",
 	"Last Updated": "Aktualisiert",
 	"Updated": "Aktualisiert",
-
-	/* ************************************************************************************************************** */
-	/* SEARCH GRID                                                                                                    */
-	/* ************************************************************************************************************** */
-
 	"ODay Packets": "neue Pakete von heute",
 	"OWeek Packets": "neue Pakete dieser Woche",
 	"Downloads": "Downloads",
 	"Enabled Packets": "Aktivierte Pakete",
-
-	/* ************************************************************************************************************** */
-	/* SEARCH GRID                                                                                                    */
-	/* ************************************************************************************************************** */
-
 	"External search": "Externe Suche",
 	"Last Mentioned": "Aktualisiert",
 	"Bot Speed": "Geschw.",
@@ -98,7 +78,31 @@ translations =
 	"1 Day": "1 Tag",
 	"1 Week": "1 Woche",
 	"1 Month": "1 Monat",
-	"All": "Alles",
+
+	"Servers": "Servers",
+	"ServersEnabled": "Server aktiviert",
+	"ServersDisabled": "Server deaktiviert",
+	"ServersConnected": "Server verbunden",
+	"ServersDisconnected": "Server getrennt",
+	"Channels": "Channels",
+	"ChannelsEnabled": "Channel aktiviert",
+	"ChannelsDisabled": "Channel deaktiviert",
+	"ChannelsConnected": "Channel verbunden",
+	"ChannelsDisconnected": "Channel getrennt",
+	"Bots": "Bots",
+	"BotsConnected": "Bots verbunden",
+	"BotsDisconnected": "Bots getrennt",
+	"BotsFreeSlots": "Bots frei Plätze",
+	"BotsFreeQueue": "Bots freie Warteschlange",
+	"BotsAverageCurrentSpeed": "Bots momentane Geschwindigkeit",
+	"BotsAverageMaxSpeed": "Bots maximale Geschwindigkeit",
+	"PacketsConnected": "Pakete verbunden",
+	"PacketsDisconnected": "Packet getrennt",
+	"PacketsSize": "Paketgröße",
+	"PacketsSizeDownloading": "Paketgröße ladend",
+	"PacketsSizeNotDownloading": "Paketgröße nicht ladend",
+	"PacketsSizeConnected": "Paketgröße verbunden",
+	"PacketsSizeDisconnected": "Paketgröße getrennt",
 
 	/* ************************************************************************************************************** */
 	/* NOTIFICATIONS                                                                                                  */

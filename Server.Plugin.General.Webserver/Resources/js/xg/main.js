@@ -319,6 +319,11 @@ var XGMain = (function ()
 			websocket.send(Enum.Request.Statistics);
 		});
 
+		gui.onRequestSnapshotPlot.subscribe(function (e, args)
+		{
+			websocket.sendName(Enum.Request.Snapshots, args.Value);
+		});
+
 		gui.onUpdateSnapshotPlot.subscribe(function ()
 		{
 			statistics.updateSnapshotPlot();
