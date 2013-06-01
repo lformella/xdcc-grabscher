@@ -36,6 +36,7 @@ var XGGui = (function ()
 
 	var errorDialog = $("#errorDialog");
 	var xdccDialog = $("#xdccDialog");
+	var xdccLink = $("#xdccLink");
 
 	var unreadNotificationCounter = 0;
 	var unreadNotifications = $("#unreadNotifications");
@@ -224,12 +225,12 @@ var XGGui = (function ()
 
 	function addXdccLink ()
 	{
-		var tbox = $("#xdccLink");
-		if (tbox.val() != "")
+		if (isXdccLinkValid(xdccLink.val()))
 		{
-			self.onAddXdccLink.notify({Name: tbox.val()}, null, this);
-			tbox.val("");
+			self.onAddXdccLink.notify({Name: xdccLink.val()}, null, this);
+			xdccLink.val("");
 			xdccDialog.modal("hide");
+			$("#xdccDialog .control-group").removeClass('error');
 		}
 	}
 
@@ -291,8 +292,17 @@ var XGGui = (function ()
 		{
 			addXdccLink();
 		});
-		$("#xdccLink").click(function (e)
+		xdccLink.keyup(function (e)
 		{
+			if (isXdccLinkValid(xdccLink.val()))
+			{
+				$("#xdccDialog .control-group").removeClass('error');
+			}
+			else
+			{
+				$("#xdccDialog .control-group").addClass('error');
+			}
+
 			if (e.which == 13)
 			{
 				e.preventDefault();
@@ -347,6 +357,11 @@ var XGGui = (function ()
 		{
 			element.button("toggle");
 		}
+	}
+
+	function isXdccLinkValid (link)
+	{
+		return link.match(/^xdcc:\/\/([^/]+\/){2}#([^/]+\/){2}#[0-9]+\/[^/]+\/$/);
 	}
 
 	var self = {

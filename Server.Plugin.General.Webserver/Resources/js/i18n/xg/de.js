@@ -40,6 +40,7 @@ translations =
 	"Settings": "Einstellungen",
 	"Download": "Runterladen",
 	"XDCC link": "XDCC Link",
+	"Example link": "Beispiel Link",
 	"XDCC link input": "XDCC Link Eingabe",
 	"Please enter a valid XDCC link.": "Bitte gib einen gültigen XDCC Link ein.",
 

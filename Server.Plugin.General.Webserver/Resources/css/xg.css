@@ -89,6 +89,16 @@ label
 	margin-bottom: 1px;
 }
 
+.form-horizontal .control-label
+{
+	width: 90px;
+}
+
+.form-horizontal .controls
+{
+	margin-left: 110px;
+}
+
 /** Fontello **/
 
 #searchRemove [class^="icon-"], #searchAdd [class^="icon-"]
@@ -155,33 +165,38 @@ label
 	margin-left: 70px;
 }
 
+.controls label
+{
+	padding-top: 5px;
+}
+
 /** Menu **/
 
 .navbar .nav > li > a > span[class^="icon-"]
 {
-    font-size: 1.8em;
-    text-align: center;
+	font-size: 1.8em;
+	text-align: center;
 }
 
 .navbar .nav > li > a
 {
-    background: linear-gradient(to bottom, #555 0%, #333 100%) repeat scroll 0 0 transparent;
+	background: linear-gradient(to bottom, #555 0%, #333 100%) repeat scroll 0 0 transparent;
 	border: 1px solid #555;
-    border-radius: 20px;
-    line-height: 2em;
-    margin: 0 10px;
-    padding: 3px 1px 1px 1px;
+	border-radius: 20px;
+	line-height: 2em;
+	margin: 0 10px;
+	padding: 3px 1px 1px 1px;
 }
 
 .navbar .nav > li > a:focus, .navbar .nav > li > a:hover, .navbar .nav > li.active > a
 {
-    background: linear-gradient(to bottom, #777 0%, #555 100%) repeat scroll 0 0 transparent !important;
+	background: linear-gradient(to bottom, #777 0%, #555 100%) repeat scroll 0 0 transparent !important;
 	border: 1px solid #777;
 }
 
 .navbar .nav > li.active > a:hover, .navbar .nav > li.active > a:focus
 {
-    background: linear-gradient(to bottom, #999 0%, #777 100%) repeat scroll 0 0 transparent !important;
+	background: linear-gradient(to bottom, #999 0%, #777 100%) repeat scroll 0 0 transparent !important;
 	border: 1px solid #999;
 }
 
@@ -257,7 +272,7 @@ label
 
 #xdccLink, #password
 {
-	width: 336px;
+	width: 406px;
 }
 
 /** Slick Grid **/
