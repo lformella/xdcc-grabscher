@@ -100,7 +100,6 @@
     <Compile Include="ServerConnection.cs" />
     <Compile Include="Servers.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Statistic.cs" />
     <Compile Include="Worker\ALoopWorker.cs" />
     <Compile Include="Worker\AWorker.cs" />
     <Compile Include="Worker\BotWatchdogWorker.cs" />

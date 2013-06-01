@@ -1,5 +1,5 @@
 //
-//  statistics.js
+//  graph.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGStatistics = (function ()
+var XGGraph = (function ()
 {
 	var helper, translate;
 	var snapshots = {};
@@ -38,39 +38,6 @@ var XGStatistics = (function ()
 			helper = helper1;
 			translate = translate1;
 		},
-
-		setStatistics: function (result)
-		{
-			$("#BytesLoaded").html(helper.size2Human(result.BytesLoaded));
-
-			$("#PacketsCompleted").html(result.PacketsCompleted);
-			$("#PacketsIncompleted").html(result.PacketsIncompleted);
-			$("#PacketsBroken").html(result.PacketsBroken);
-
-			$("#PacketsRequested").html(result.PacketsRequested);
-			$("#PacketsRemoved").html(result.PacketsRemoved);
-
-			$("#FilesCompleted").html(result.FilesCompleted);
-			$("#FilesBroken").html(result.FilesBroken);
-
-			$("#ServerConnectsOk").html(result.ServerConnectsOk);
-			$("#ServerConnectsFailed").html(result.ServerConnectsFailed);
-
-			$("#ChannelConnectsOk").html(result.ChannelConnectsOk);
-			$("#ChannelConnectsFailed").html(result.ChannelConnectsFailed);
-			$("#ChannelsJoined").html(result.ChannelsJoined);
-			$("#ChannelsParted").html(result.ChannelsParted);
-			$("#ChannelsKicked").html(result.ChannelsKicked);
-
-			$("#BotConnectsOk").html(result.BotConnectsOk);
-			$("#BotConnectsFailed").html(result.BotConnectsFailed);
-
-			$("#SpeedMax").html(helper.speed2Human(result.SpeedMax));
-		},
-
-		/* ************************************************************************************************************** */
-		/* SNAPSHOT STUFF                                                                                                 */
-		/* ************************************************************************************************************** */
 
 		setSnapshots: function (result)
 		{

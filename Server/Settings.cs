@@ -276,11 +276,6 @@ namespace XG.Server
 			get { return 50; }
 		}
 
-		public int BackupStatisticTime
-		{
-			get { return 60; }
-		}
-
 		#endregion
 
 		#region PUBLIC

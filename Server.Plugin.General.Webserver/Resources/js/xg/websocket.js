@@ -96,10 +96,6 @@ var XGWebsocket = (function ()
 				self.onSnapshots.notify(json, null, self);
 				break;
 
-			case Enum.Response.Statistics:
-				self.onStatistics.notify(json, null, self);
-				break;
-
 			case Enum.Response.RequestComplete:
 				self.onRequestComplete.notify(json, null, self);
 				break;
@@ -110,7 +106,6 @@ var XGWebsocket = (function ()
 		onError: new Slick.Event(),
 		onDisconnected: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
-		onStatistics: new Slick.Event(),
 		onRequestComplete: new Slick.Event(),
 
 		/**

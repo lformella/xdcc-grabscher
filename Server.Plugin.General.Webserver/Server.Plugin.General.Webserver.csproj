@@ -227,7 +227,7 @@
     <EmbeddedResource Include="Resources\js\i18n\xg\en.js" />
     <EmbeddedResource Include="Resources\js\xg\dataview.js" />
     <EmbeddedResource Include="Resources\js\xg\grid.js" />
-    <EmbeddedResource Include="Resources\js\xg\statistics.js" />
+    <EmbeddedResource Include="Resources\js\xg\graph.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\xg\gui.js" />

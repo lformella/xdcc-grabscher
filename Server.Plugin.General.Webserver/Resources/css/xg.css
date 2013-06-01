@@ -102,17 +102,6 @@ label
 	margin-top: 9px;
 }
 
-.big-icon
-{
-	font-size: 2.5em;
-	vertical-align: bottom;
-}
-
-.big-icon:before
-{
-	line-height: 0.6em !important;
-}
-
 /** Grids **/
 
 #BotGrid
@@ -168,6 +157,34 @@ label
 
 /** Menu **/
 
+.navbar .nav > li > a > span[class^="icon-"]
+{
+    font-size: 1.8em;
+    text-align: center;
+}
+
+.navbar .nav > li > a
+{
+    background: linear-gradient(to bottom, #555 0%, #333 100%) repeat scroll 0 0 transparent;
+	border: 1px solid #555;
+    border-radius: 20px;
+    line-height: 2em;
+    margin: 0 10px;
+    padding: 3px 1px 1px 1px;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover, .navbar .nav > li.active > a
+{
+    background: linear-gradient(to bottom, #777 0%, #555 100%) repeat scroll 0 0 transparent !important;
+	border: 1px solid #777;
+}
+
+.navbar .nav > li.active > a:hover, .navbar .nav > li.active > a:focus
+{
+    background: linear-gradient(to bottom, #999 0%, #777 100%) repeat scroll 0 0 transparent !important;
+	border: 1px solid #999;
+}
+
 #searchForm .dropdown-menu
 {
 	overflow: hidden;
@@ -181,41 +198,52 @@ label
 
 #unreadNotifications
 {
-	left: 0;
+	left: 6px;
 	padding-left: 3px;
 	padding-right: 3px;
 	position: absolute;
 	top: 2px;
+	display: table;
+	font-size: 0.8em;
 }
 
-#settingsLink, #notificationsLink
+#settingsLink + .dropdown-menu:before
 {
-	padding-left: 0;
-	padding-right: 0;
-	padding-bottom: 0;
-}
-
-#settingsLink + .dropdown-menu:before, #notificationsLink + .dropdown-menu:before
-{
-	right: 17px;
+	right: 22px;
 	left: auto;
 }
 
-#settingsLink + .dropdown-menu:after, #notificationsLink + .dropdown-menu:after
+#settingsLink + .dropdown-menu:after
 {
-	right: 18px;
+	right: 22px;
 	left: auto;
 }
 
-#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu
+#settingsLink + .dropdown-menu
 {
+	top: 2.9em;
 	right: 0;
 	left: auto;
 }
 
-#settingsLink + .dropdown-menu, #notificationsLink + .dropdown-menu
+#notificationsLink + .dropdown-menu:before
+{
+	right: 212px;
+	left: auto;
+}
+
+#notificationsLink + .dropdown-menu:after
+{
+	right: 212px;
+	left: auto;
+}
+
+#notificationsLink + .dropdown-menu
 {
 	top: 2.9em;
+	right: 0;
+	left: -422px;
+	width: 670px;
 }
 
 #settingsLink + ul button

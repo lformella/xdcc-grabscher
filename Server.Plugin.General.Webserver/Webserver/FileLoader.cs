@@ -84,7 +84,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"xg/password",
 			"xg/dataview",
 			"xg/resize",
-			"xg/statistics",
+			"xg/graph",
 			"xg/translate",
 			"xg/websocket"
 		};

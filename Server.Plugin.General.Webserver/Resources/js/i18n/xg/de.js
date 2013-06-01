@@ -34,7 +34,6 @@ translations =
 	"Password required": "Passwort ben&ouml;tigt",
 	"Connect": "Verbinden",
 	"Change Servers and Channels": "Server und Channels &auml;ndern",
-	"View Statistics": "Statistiken anschauen",
 	"Error": "Fehler",
 	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
 	"Add": "Hinzufügen",
@@ -132,10 +131,9 @@ translations =
 	/* ************************************************************************************************************** */
 
 	"Dashboard": "Übersicht",
-	"Statistics": "Statistiken",
 	"Graphs": "Graphen",
 	"Hide offline Bots": "inaktive Bots ausblenden",
-	"IRC View": "IRC &Uuml;bersicht",
+	"IRC View": "IRC Übersicht",
 	"Files": "Dateien",
 	"Notifications": "Benachrichtigungen",
 	"Predefined": "Vorgefertigt",

@@ -407,10 +407,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						UnicastOnRequest(currentUser, botPackets, request.Type);
 						break;
 
-					case Request.Types.Statistics:
-						//response = Statistic2Json();
-						break;
-
 					case Request.Types.Snapshots:
 						var startTime = DateTime.Now.AddDays(int.Parse(request.Name));
 						var data = GetFlotData(startTime, DateTime.Now);

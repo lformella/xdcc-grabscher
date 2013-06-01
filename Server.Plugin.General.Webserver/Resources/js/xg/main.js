@@ -25,7 +25,7 @@
 
 var XGMain = (function ()
 {
-	var statistics, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
+	var graph, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
 	var currentServerGuid = "";
 	var serversActive = [], botsActive = [];
 
@@ -104,8 +104,8 @@ var XGMain = (function ()
 		formatter = Object.create(XGFormatter);
 		formatter.initialize(helper, translate);
 
-		statistics = Object.create(XGStatistics);
-		statistics.initialize(helper, translate);
+		graph = Object.create(XGGraph);
+		graph.initialize(helper, translate);
 
 		startWebsocket(host, port, password);
 		startGrid(showOfflineBots, combineBotAndPacketGrid);
@@ -116,7 +116,7 @@ var XGMain = (function ()
 		resize.onResize.subscribe(function ()
 		{
 			grid.resize();
-			statistics.resize();
+			graph.resize();
 		});
 		resize.start();
 	}
@@ -138,7 +138,7 @@ var XGMain = (function ()
 
 		websocket.onSnapshots.subscribe(function (e, args)
 		{
-			statistics.setSnapshots(args.Data);
+			graph.setSnapshots(args.Data);
 		});
 
 		websocket.onRequestComplete.subscribe(function (e, args)
@@ -314,11 +314,6 @@ var XGMain = (function ()
 			cookie.setCookie("humanDates", args.Enable ? "1" : "0");
 		});
 
-		gui.onUpdateStatistics.subscribe(function ()
-		{
-			websocket.send(Enum.Request.Statistics);
-		});
-
 		gui.onRequestSnapshotPlot.subscribe(function (e, args)
 		{
 			websocket.sendName(Enum.Request.Snapshots, args.Value);
@@ -326,7 +321,7 @@ var XGMain = (function ()
 
 		gui.onUpdateSnapshotPlot.subscribe(function ()
 		{
-			statistics.updateSnapshotPlot();
+			graph.updateSnapshotPlot();
 		});
 
 		gui.onCombineBotAndPacketGrid.subscribe(function (e, args)

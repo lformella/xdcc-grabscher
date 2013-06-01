@@ -305,12 +305,6 @@ var XGGui = (function ()
 			xdccDialog.modal('show');
 		});
 
-		$("#statisticsButton").click(function ()
-		{
-			self.onUpdateStatistics.notify({}, null, this);
-			$("#statisticsDialog").modal('show');
-		});
-
 		$("input[name='snapshotTime']").click(function ()
 		{
 			self.onRequestSnapshotPlot.notify({Value: $(this).val()}, null, this);
@@ -364,7 +358,6 @@ var XGGui = (function ()
 		onAddChannel: new Slick.Event(),
 		onUpdateOfflineBotsFilter: new Slick.Event(),
 		onUpdateHumanDates: new Slick.Event(),
-		onUpdateStatistics: new Slick.Event(),
 		onUpdateSnapshotPlot: new Slick.Event(),
 		onCombineBotAndPacketGrid: new Slick.Event(),
 		onAddXdccLink: new Slick.Event(),

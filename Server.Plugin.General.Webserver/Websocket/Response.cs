@@ -47,8 +47,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 			#region MULTI
 
-			Snapshots = 12,
-			Statistics = 13
+			Snapshots = 5
 
 			#endregion
 		}

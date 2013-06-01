@@ -51,11 +51,10 @@ Enum.Request =
 	RemoveSearch: 14,
 	Searches: 15,
 
-	Statistics: 16,
-	Snapshots: 17,
-	ParseXdccLink: 18,
+	Snapshots: 16,
+	ParseXdccLink: 17,
 
-	CloseServer: 19
+	CloseServer: 18
 };
 
 Enum.Response =
@@ -67,8 +66,7 @@ Enum.Response =
 	ObjectChanged: 3,
 	RequestComplete: 4,
 
-	Snapshots: 12,
-	Statistics: 23
+	Snapshots: 5
 };
 
 Enum.TangoColor =

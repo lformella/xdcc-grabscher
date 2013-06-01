@@ -123,7 +123,6 @@ namespace XG.Server.Plugin.Backend.File
 		protected override void StartRun()
 		{
 			DateTime timeIrc = DateTime.Now;
-			DateTime timeStats = DateTime.Now;
 
 			DateTime _last = DateTime.Now;
 			while (_allowRunning)
@@ -144,13 +143,6 @@ namespace XG.Server.Plugin.Backend.File
 					if (_isSaveFile)
 					{
 						SaveFiles();
-					}
-
-					// Statistics
-					if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
-					{
-						timeStats = DateTime.Now;
-						//Statistic.Instance.Save();
 					}
 				}
 
