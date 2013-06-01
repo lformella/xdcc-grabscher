@@ -99,6 +99,15 @@ var XGGui = (function ()
 			}
 		});
 
+		dataView.onUpdate.subscribe(function (e, args)
+		{
+			if (args.DataType == Enum.Grid.Search)
+			{
+				var element = $("a[data-guid='" + args.Data.Guid + "'] .badge");
+				element.html(args.Data.Results);
+			}
+		});
+
 		dataView.onRemove.subscribe(function (e, args)
 		{
 			if (args.DataType == Enum.Grid.Search)

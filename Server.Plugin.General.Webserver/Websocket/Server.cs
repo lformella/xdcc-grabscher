@@ -287,6 +287,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						currentUser.LastSearch = request.Guid;
 						var all = FilteredPacketsAndBotsByGuid(request.Guid, request.Name);
 						UnicastOnRequest(currentUser, all, request.Type);
+
+						// send search again to update search results
+						var searchObj = Searches.WithGuid(request.Guid);
+						if (searchObj != null)
+						{
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.ObjectChanged,
+								Data = searchObj
+							});
+						}
 						break;
 
 					case Request.Types.SearchExternal:
