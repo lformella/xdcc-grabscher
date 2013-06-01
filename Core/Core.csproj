@@ -92,7 +92,6 @@
     <Compile Include="Server.cs" />
     <Compile Include="Servers.cs" />
     <Compile Include="Snapshot.cs" />
-    <Compile Include="Snapshots.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
