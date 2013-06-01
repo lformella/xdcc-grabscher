@@ -206,7 +206,27 @@ namespace XG.Server.Irc
 							tChan.ErrorCode = tComCode;
 							tChan.Connected = false;
 							log.Warn("Parse() could not join " + tChan + ": " + tComCode);
-							FireCreateTimer(aServer, tChan, tComCode == 471 || tComCode == 485 ? Settings.Instance.ChannelWaitTime : Settings.Instance.ChannelWaitTimeLong, false);
+
+							int tWaitTime = 0;
+							switch (tComCode)
+							{
+								case 471:
+									tWaitTime = Settings.Instance.ChannelWaitTimeShort;
+									break;
+
+								case 473:
+								case 485:
+									tWaitTime = Settings.Instance.ChannelWaitTimeMedium;
+									break;
+
+								case 474:
+									tWaitTime = Settings.Instance.ChannelWaitTimeLong;
+									break;
+							}
+							if (tWaitTime > 0)
+							{
+								FireCreateTimer(aServer, tChan, tWaitTime, false);
+							}
 
 							FireNotificationAdded(new Notification(tComCode == 471 ? Notification.Types.ChannelBanned : Notification.Types.ChannelJoinFailed, tChan));
 						}

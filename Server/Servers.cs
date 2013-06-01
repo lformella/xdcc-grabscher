@@ -170,7 +170,7 @@ namespace XG.Server
 			{
 				if (aServer.Enabled)
 				{
-					int time = Settings.Instance.ReconnectWaitTime;
+					int time = Settings.Instance.ReconnectWaitTimeShort;
 					switch (aValue)
 					{
 						case SocketErrorCode.HostIsDown:

@@ -182,14 +182,19 @@ namespace XG.Server
 			get { return 240; }
 		}
 
-		public int ChannelWaitTime
+		public int ChannelWaitTimeShort
 		{
 			get { return 300; }
 		}
 
-		public int ChannelWaitTimeLong
+		public int ChannelWaitTimeMedium
 		{
 			get { return 1800; }
+		}
+
+		public int ChannelWaitTimeLong
+		{
+			get { return 3600; }
 		}
 
 		public int FileRollbackBytes
@@ -242,7 +247,7 @@ namespace XG.Server
 			get { return 60; }
 		}
 
-		public int ReconnectWaitTime
+		public int ReconnectWaitTimeShort
 		{
 			get { return 45; }
 		}
