@@ -83,7 +83,7 @@ namespace XG.Server
 
 		public Int64 StartSize { get; set; }
 
-		Int64 CurrrentSize
+		Int64 CurrentSize
 		{
 			get { return StartSize + _receivedBytes; }
 		}
@@ -275,7 +275,7 @@ namespace XG.Server
 				} else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
-					if (CurrrentSize == StopSize || (!Part.Checked && CurrrentSize == StopSize + Settings.Instance.FileRollbackCheckBytes))
+					if (CurrentSize == StopSize || (!Part.Checked && CurrentSize == StopSize + Settings.Instance.FileRollbackCheckBytes))
 					{
 						Part.State = FilePart.States.Ready;
 						Log.Info("ConnectionDisconnected(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
@@ -283,10 +283,10 @@ namespace XG.Server
 						FireNotificationAdded(new Notification(Notification.Types.PacketCompleted, Packet));
 					}
 					// that should not happen
-					else if (CurrrentSize > StopSize)
+					else if (CurrentSize > StopSize)
 					{
 						Part.State = FilePart.States.Broken;
-						Log.Error("ConnectionDisconnected(" + Packet + ") size is bigger than excepted: " + CurrrentSize + " > " + StopSize);
+						Log.Error("ConnectionDisconnected(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
 						if (File.Parts.Count() == 1 || Part.StopSize == File.Size)
 						{
@@ -521,9 +521,6 @@ namespace XG.Server
 				_receivedBytes += aData.Length;
 				_speedCalcSize += aData.Length;
 				Part.CurrentSize += aData.Length;
-
-				// statistics
-				//Statistic.Instance.Increase(StatisticType.BytesLoaded, aData.Length);
 			}
 			catch (Exception ex)
 			{
@@ -542,12 +539,6 @@ namespace XG.Server
 
 				Part.Commit();
 				_speedCalcSize = 0;
-
-				// statistics
-				/*if (Part.Speed > Statistic.Instance.Get(StatisticType.SpeedMax))
-				{
-					Statistic.Instance.Set(StatisticType.SpeedMax, Part.Speed);
-				}*/
 			}
 		}
 

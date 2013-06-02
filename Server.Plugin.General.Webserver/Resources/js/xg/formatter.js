@@ -23,9 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGFormatter = (function()
+var XGFormatter = (function ()
 {
-	var helper;
+	var helper, translate;
 
 	/* ************************************************************************************************************** */
 	/* IMAGE FORMATTER                                                                                                */
@@ -39,7 +39,7 @@ var XGFormatter = (function()
 
 	function formatIcon (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
 	{
-		iconClass = "icon-big icon-" + icon + " " + iconClass;
+		iconClass = "icon-" + icon + " " + iconClass;
 		if (onclick != undefined && onclick != "")
 		{
 			iconClass += " button";
@@ -67,9 +67,14 @@ var XGFormatter = (function()
 	}
 
 	var self = {
-		initialize: function (helper1)
+		/**
+		 * @param {XGHelper} helper1
+		 * @param {XGTranslate} translate1
+		 */
+		initialize: function (helper1, translate1)
 		{
 			helper = helper1;
+			translate = translate1;
 		},
 
 		/* ************************************************************************************************************** */
@@ -145,7 +150,7 @@ var XGFormatter = (function()
 			var str = obj.Name; // + ":" + obj.Port;
 			if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
 			{
-				str += " - <small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+				str += " - <small>" + translate._("Error") + ": " + obj.ErrorCode + "</small>";
 			}
 			return str;
 		},
@@ -155,7 +160,7 @@ var XGFormatter = (function()
 			var str = obj.Name;
 			if (obj.ErrorCode != "" && obj.ErrorCode != "None" && obj.ErrorCode != "0")
 			{
-				str += " - <small>" + _("Error") + ": " + obj.ErrorCode + "</small>";
+				str += " - <small>" + translate._("Error") + ": " + obj.ErrorCode + "</small>";
 			}
 			return str;
 		},
@@ -164,55 +169,6 @@ var XGFormatter = (function()
 		/* SEARCH FORMATTER                                                                                               */
 		/* ************************************************************************************************************** */
 
-		formatSearchIcon: function (search)
-		{
-			var icon = "search";
-			var iconClass = "Aluminium2Middle";
-			var overlay = "";
-			var overlayClass = "";
-			var overlayStyle = "";
-
-			switch (search.Guid)
-			{
-				case "00000000-0000-0000-0000-000000000001":
-					icon = "down-circle";
-					iconClass = "SkyBlueMiddle";
-					break;
-
-				case "00000000-0000-0000-0000-000000000002":
-					icon = "ok-circle";
-					iconClass = "ChameleonMiddle";
-					break;
-			}
-
-			if (search.Active)
-			{
-				overlay = "spin";
-				overlayClass = "ScarletRedMiddle animate-spin icon-small";
-				overlayStyle = "";
-			}
-
-			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
-		},
-
-		formatSearchAction: function (search)
-		{
-			var result = "";
-
-			switch (search.Guid)
-			{
-				case "00000000-0000-0000-0000-000000000001":
-				case "00000000-0000-0000-0000-000000000002":
-					break;
-
-				default:
-					result = self.formatRemoveIcon(Enum.Grid.Search, search);
-					break;
-			}
-
-			return result;
-		},
-
 		formatSearchCell: function (search)
 		{
 			var result =
@@ -220,7 +176,7 @@ var XGFormatter = (function()
 					"<div class='cell-right'>" + this.formatSearchAction(search) + "</div>" +
 					"<div class='cell-left'>" + this.formatSearchIcon(search) + "</div>" +
 					"<div class='cell-main' title='" + search.Name + " (" + search.Results + ")'>" + search.Name + "</div>" +
-				"</div>";
+					"</div>";
 			return result;
 		},
 
@@ -228,7 +184,7 @@ var XGFormatter = (function()
 		/* BOT FORMATTER                                                                                                  */
 		/* ************************************************************************************************************** */
 
-		formatBotIcon: function (bot)
+		formatBotIcon: function (bot, skipOverlay)
 		{
 			var icon = "user";
 			var iconClass = "Aluminium2Middle";
@@ -285,7 +241,7 @@ var XGFormatter = (function()
 				overlayStyle = "";
 			}
 
-			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return formatIcon(icon, iconClass, skipOverlay ? "" : overlay, skipOverlay ? "" : overlayClass, skipOverlay ? "" : overlayStyle);
 		},
 
 		formatBotName: function (bot)
@@ -293,7 +249,7 @@ var XGFormatter = (function()
 			var ret = bot.Name;
 			if (bot.LastMessage != "")
 			{
-				ret += "<br /><small><b>" + helper.date2Human(bot.LastMessageTime) + ":</b> " + bot.LastMessage + "</small>";
+				ret += "<br /><small title='" + bot.LastMessage + "'><b>" + helper.date2Human(bot.LastMessageTime) + ":</b> " + bot.LastMessage + "</small>";
 			}
 			return ret;
 		},
@@ -348,17 +304,17 @@ var XGFormatter = (function()
 
 			var name = packet.Name;
 			var ext = name.toLowerCase().substr(-3);
-			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
+			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg" || ext == "mov" || ext == "mp4")
 			{
 				icon = "video";
 			}
-			else if (ext == "mp3")
+			else if (ext == "mp3" || ext == "ogg" || ext == "wav")
 			{
 				icon = "headphones";
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "box";
+				icon = "briefcase";
 			}
 
 			if (!packet.Enabled)
@@ -386,6 +342,13 @@ var XGFormatter = (function()
 				}
 			}
 
+			if (packet.Active)
+			{
+				overlay = "spin";
+				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlayStyle = "";
+			}
+
 			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
@@ -403,11 +366,24 @@ var XGFormatter = (function()
 				return "";
 			}
 
-			var ret = name;
+			var ret = "<span title='" + name + "'>" + name + "</span>";
 
 			if (packet.Connected)
 			{
-				ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
+				var a = ((packet.StartSize) / packet.Size).toFixed(2) * 100;
+				var b = ((packet.CurrentSize - packet.StartSize) / packet.Size).toFixed(2) * 100;
+				var c = ((packet.StopSize - packet.CurrentSize) / packet.Size).toFixed(2) * 100;
+				if (a + b + c > 100)
+				{
+					c = 100 - a - b;
+				}
+
+				ret += "<div class='progress progress-striped'>" +
+					"<div style='width: " + a + "%' class=''></div>" +
+					"<div style='width: " + b + "%' class='bar " + (packet.IsChecked ? "bar-success" : "bar-warning") + "'></div>" +
+					"<div style='width: " + c + "%' class='bar " + (packet.IsChecked ? "bar-success" : "bar-warning") + " bar-light'></div>" +
+					"</div>";
+				//ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
 			}
 
 			return ret;
@@ -448,7 +424,7 @@ var XGFormatter = (function()
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "th";
+				icon = "briefcase";
 			}
 
 			return formatIcon(icon, iconClass);
@@ -458,7 +434,14 @@ var XGFormatter = (function()
 		{
 			var ret = file.Name;
 
-			ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
+			var a = (file.CurrentSize / file.Size).toFixed(2) * 100;
+			var b = 100 - a;
+
+			ret += "<div class='progress progress-striped'>" +
+				"<div style='width: " + a + "%' class='bar bar-success'></div>" +
+				"<div style='width: " + b + "%' class='bar bar-success bar-light'></div>" +
+				"</div>";
+			//ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
 
 			return ret;
 		},
@@ -480,7 +463,100 @@ var XGFormatter = (function()
 
 		formatRemoveIcon: function (grid, obj)
 		{
-			return "<i class='icon-cancel-circle icon-overlay ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+			return "<i class='icon-cancel-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+		},
+
+		/* ************************************************************************************************************** */
+		/* NOTIFICATION FORMATTER                                                                                         */
+		/* ************************************************************************************************************** */
+
+		formatNotificationIcon: function (notification)
+		{
+			var icon = "";
+			var iconClass = "";
+
+			switch (notification.Type)
+			{
+				case Enum.NotificationType.PacketCompleted:
+				case Enum.NotificationType.FileCompleted:
+					iconClass = "ChameleonMiddle";
+					break;
+
+				case Enum.NotificationType.ServerConnectFailed:
+				case Enum.NotificationType.ChannelJoinFailed:
+				case Enum.NotificationType.ChannelBanned:
+				case Enum.NotificationType.ChannelKicked:
+				case Enum.NotificationType.BotConnectFailed:
+				case Enum.NotificationType.BotSubmittedWrongPort:
+				case Enum.NotificationType.PacketIncompleted:
+				case Enum.NotificationType.PacketBroken:
+				case Enum.NotificationType.FileSizeMismatch:
+				case Enum.NotificationType.FileBuildFailed:
+					iconClass = "ScarletRedMiddle";
+					break;
+
+				case Enum.NotificationType.ServerConnected:
+				case Enum.NotificationType.ChannelParted:
+				case Enum.NotificationType.ChannelJoined:
+				case Enum.NotificationType.BotConnected:
+				case Enum.NotificationType.PacketRequested:
+				case Enum.NotificationType.PacketRemoved:
+					iconClass = "SkyBlueMiddle";
+					break;
+			}
+
+			switch (notification.Type)
+			{
+				case Enum.NotificationType.ServerConnectFailed:
+				case Enum.NotificationType.ServerConnected:
+					icon = "hdd";
+					break;
+
+				case Enum.NotificationType.ChannelJoinFailed:
+				case Enum.NotificationType.ChannelBanned:
+				case Enum.NotificationType.ChannelKicked:
+				case Enum.NotificationType.ChannelParted:
+				case Enum.NotificationType.ChannelJoined:
+					icon = "comment";
+					break;
+
+				case Enum.NotificationType.BotConnected:
+				case Enum.NotificationType.BotConnectFailed:
+				case Enum.NotificationType.BotSubmittedWrongPort:
+					icon = "doc";
+					break;
+
+				case Enum.NotificationType.PacketIncompleted:
+				case Enum.NotificationType.PacketBroken:
+				case Enum.NotificationType.PacketRequested:
+				case Enum.NotificationType.PacketRemoved:
+				case Enum.NotificationType.PacketCompleted:
+					icon = "doc";
+					break;
+
+				case Enum.NotificationType.FileSizeMismatch:
+				case Enum.NotificationType.FileBuildFailed:
+				case Enum.NotificationType.FileCompleted:
+					icon = "doc";
+					break;
+			}
+
+			return formatIcon(icon, iconClass);
+		},
+
+		formatNotificationContent: function (notification)
+		{
+			var msg = translate._("Notification_" + notification.Type,
+			[
+				{ Name: "Name", Value: notification.ObjectName },
+				{ Name: "ParentName", Value: notification.ParentName }
+			]);
+			return "<span title='" + msg + "'>" + msg +"</span>";
+		},
+
+		formatNotificationTime: function (notification)
+		{
+			return helper.date2Human(notification.Time);
 		}
 	};
 	return self;

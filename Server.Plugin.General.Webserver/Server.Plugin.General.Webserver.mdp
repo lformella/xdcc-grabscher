@@ -24,22 +24,6 @@
     <File subtype="Code" buildaction="Compile" name="Plugin.cs" />
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/index.html" resource_id="XG.Server.Plugin.General.Webserver.Resources.index.html" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/jquery-ui.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.jquery-ui.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/layout-default.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.layout-default.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_diagonals-thick_90_eeeeee_40x40.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_diagonals-thick_90_eeeeee_40x40.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_flat_100_ffffff_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_flat_100_ffffff_40x100.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_flat_15_cd0a0a_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_flat_15_cd0a0a_40x100.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_flat_70_000000_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_flat_70_000000_40x100.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_glass_100_eeeeee_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_glass_100_eeeeee_1x400.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_glass_80_eeeeee_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_glass_80_eeeeee_1x400.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_highlight-soft_25_fff7cc_1x100.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_highlight-soft_25_fff7cc_1x100.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-bg_inset-soft_50_999999_1x100.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-bg_inset-soft_50_999999_1x100.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_777777_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_777777_256x240.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_888888_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_888888_256x240.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_949494_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_949494_256x240.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_969696_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_969696_256x240.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/ui-icons_ffffff_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.ui-icons_ffffff_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/xg.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.xg.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.eot" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.eot" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.svg" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.svg" />
@@ -61,11 +45,9 @@
     <File subtype="Code" buildaction="Compile" name="Websocket/Response.cs" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/external" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.cookie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.cookie.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.axislabels.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.layout.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.layout.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/json2.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.json2.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/moment.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.moment.min.js" />
@@ -79,7 +61,7 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/helper.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.helper.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/main.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.main.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/password.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.password.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/statistics.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.statistics.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/graph.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.graph.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/resize.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.resize.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/translate.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.translate.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/websocket.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.websocket.js" />
@@ -135,15 +117,16 @@
     <File subtype="Code" buildaction="Compile" name="Object/Channel.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Packet.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Server.cs" />
-    <File subtype="Code" buildaction="Compile" name="Object/Snapshot.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Notification.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/File.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-asc.gif" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-desc.gif" />
     <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.pnotify.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.pnotify.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/jquery.pnotify.default.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.jquery.pnotify.default.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/notification.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.notification.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.gui.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.bootstrap.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.groupitemmetadataprovider.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
+    <File subtype="Code" buildaction="Compile" name="Websocket/DoubleConverter.cs" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -156,5 +139,6 @@
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Fleck.0.9.6.16/lib/net40/Fleck.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
   </References>
 </Project>

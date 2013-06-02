@@ -23,159 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGMain = (function()
+var XGMain = (function ()
 {
-	var statistics, cookie, helper, formatter, websocket, dataview, grid, resize;
-	var activeTab = 0, enableSearchTransitions = false;
+	var graph, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
 	var currentServerGuid = "";
-	var serversActive = [], botsActive = [], searchesActive = [], externalSearchesActive = [];
-
-	function initializeDialogs ()
-	{
-		/* ********************************************************************************************************** */
-		/* SERVER / CHANNEL DIALOG                                                                                    */
-		/* ********************************************************************************************************** */
-
-		$("#serverChannelButton")
-			.button({icons: { primary: "icon-globe" }})
-			.click( function()
-			{
-				$("#dialogServerChannels").dialog("open");
-			});
-
-		$("#dialogServerChannels").dialog({
-			autoOpen: false,
-			width: 640,
-			modal: true,
-			resizable: false
-		});
-
-		$("#serverButton")
-			.button(/*{icons: { primary: "icon-circle-plus" }}*/)
-			.click( function()
-			{
-				var tbox = $("#server");
-				if(tbox.val() != "")
-				{
-					websocket.sendName(Enum.Request.AddServer, tbox.val());
-					tbox.val("");
-				}
-			});
-
-		$("#channelButton")
-			.button(/*{icons: { primary: "icon-circle-plus" }}*/)
-			.click( function()
-			{
-				var tbox = $("#channel");
-				if(tbox.val() != "")
-				{
-					websocket.sendNameGuid(Enum.Request.AddChannel, tbox.val(), currentServerGuid);
-					tbox.val("");
-				}
-			});
-
-		/* ********************************************************************************************************** */
-		/* STATISTICS DIALOG                                                                                          */
-		/* ********************************************************************************************************** */
-
-		$("#statisticsButton")
-			.button({icons: { primary: "icon-chart-bar" }})
-			.click( function()
-			{
-				websocket.send(Enum.Request.Statistics);
-				$("#dialogStatistics").dialog("open");
-			});
-
-		$("#dialogStatistics").dialog({
-			autoOpen: false,
-			width: 545,
-			modal: true,
-			resizable: false
-		});
-
-		/* ********************************************************************************************************** */
-		/* SNAPSHOTS DIALOG                                                                                           */
-		/* ********************************************************************************************************** */
-
-		//$(".snapshotCheckbox").button();
-		$(".snapshotCheckbox, input[name='snapshotTime']").click( function()
-		{
-			statistics.updateSnapshotPlot();
-		});
-
-		$("#snapshotsButton")
-			.button({icons: { primary: "icon-chart-bar" }})
-			.click( function()
-			{
-				$("#dialogSnapshots").dialog("open");
-			});
-
-		$("#dialogSnapshots").dialog({
-			autoOpen: false,
-			width: $(window).width() - 20,
-			height: $(window).height() - 20,
-			modal: true,
-			resizable: false
-		});
-
-		/* ********************************************************************************************************** */
-		/* ERROR DIALOG                                                                                               */
-		/* ********************************************************************************************************** */
-
-		$("#dialogError").dialog({
-			autoOpen: false,
-			modal: true,
-			resizable: false,
-			close: function()
-			{
-				$('#dialogError').dialog('open');
-			}
-		});
-	}
-
-	function initializeOthers ()
-	{
-		$("#searchText").keyup( function (e)
-		{
-			if (e.which == 13)
-			{
-				addSearch();
-			}
-		});
-
-		$("#tabs").tabs({
-			select: function(event, ui)
-			{
-				activeTab = ui.index;
-			}
-		});
-		$('#tabs').bind('tabsshow', function(event, ui) {
-			grid.resize();
-		});
-
-		var element1 = $("#showOfflineBots");
-		element1
-			.button({icons: { primary: "icon-eye" }})
-			.click( function()
-			{
-				var checked = $("#showOfflineBots").attr("checked") == "checked";
-				cookie.setCookie("showOfflineBots", checked ? "1" : "0" );
-				grid.setFilterOfflineBots(checked);
-			});
-		element1.attr("checked", cookie.getCookie("showOfflineBots", "0") == "1");
-
-		var element2 = $("#humanDates");
-		element2
-			.button({icons: { primary: "icon-clock" }})
-			.click( function()
-			{
-				var checked = $("#humanDates").attr("checked") == "checked";
-				cookie.setCookie("humanDates", checked ? "1" : "0" );
-				helper.setHumanDates(checked);
-				grid.invalidate();
-			});
-		element2.attr("checked", cookie.getCookie("humanDates", "0") == "1");
-	}
+	var serversActive = [], botsActive = [];
 
 	/**
 	 * @param {String} gridName
@@ -184,19 +36,8 @@ var XGMain = (function()
 	 */
 	function getElementFromGrid (gridName, guid)
 	{
-		var row = dataview.getDataView(gridName).getRowById(guid);
+		var row = dataView.getDataView(gridName).getRowById(guid);
 		return $(grid.getGrid(gridName).getCellNode(row, 1)).parent();
-	}
-
-	function addSearch ()
-	{
-		enableSearchTransitions = true;
-		var tbox = $('#searchText');
-		if(tbox.val() != "")
-		{
-			websocket.sendName(Enum.Request.AddSearch, tbox.val());
-			tbox.val('');
-		}
 	}
 
 	/**
@@ -204,16 +45,8 @@ var XGMain = (function()
 	 */
 	function flipPacket (obj)
 	{
-		var elementSearch = $("#00000000-0000-0000-0000-000000000002");
-		var elementPacket = getElementFromGrid(Enum.Grid.Packet, obj.Guid);
-		if(!obj.Enabled)
-		{
-			elementPacket.effect("transfer", { to: elementSearch }, 500);
-		}
-		else
-		{
-			elementSearch.effect("transfer", { to: elementPacket }, 500);
-		}
+		obj.Active = true;
+		dataView.updateItem({ Data: obj, DataType: Enum.Grid.Packet });
 		flipObject(obj);
 	}
 
@@ -222,9 +55,9 @@ var XGMain = (function()
 	 */
 	function flipObject (obj)
 	{
-		if(obj)
+		if (obj)
 		{
-			if(!obj.Enabled)
+			if (!obj.Enabled)
 			{
 				websocket.sendGuid(Enum.Request.ActivateObject, obj.Guid);
 			}
@@ -240,215 +73,297 @@ var XGMain = (function()
 	 */
 	function downloadLink (obj)
 	{
-		var elementSearch = $("#00000000-0000-0000-0000-000000000002");
-		var elementPacket = getElementFromGrid(Enum.Grid.ExternalSearch, obj.Guid);
-		elementPacket.effect("transfer", { to: elementSearch }, 500);
+		obj.Active = true;
+		dataView.updateItem({ Data: obj, DataType: Enum.Grid.ExternalSearch });
 		websocket.sendName(Enum.Request.ParseXdccLink, obj.IrcLink);
+		setTimeout(function ()
+		{
+			obj.Active = false;
+			dataView.updateItem({ Data: obj, DataType: Enum.Grid.ExternalSearch });
+		}, 1000);
+	}
+
+	/**
+	 * @param {String} host
+	 * @param {String} port
+	 * @param {String} password
+	 */
+	function start (host, port, password)
+	{
+		dataView = Object.create(XGDataView);
+		dataView.initialize();
+
+		cookie = Object.create(XGCookie);
+		var humanDates = cookie.getCookie("humanDates", "0") == "1";
+		var showOfflineBots = cookie.getCookie("showOfflineBots", "0") == "1";
+		var combineBotAndPacketGrid = cookie.getCookie("combineBotAndPacketGrid", "0") == "1";
+
+		helper = Object.create(XGHelper);
+		helper.setHumanDates(humanDates);
+
+		formatter = Object.create(XGFormatter);
+		formatter.initialize(helper, translate);
+
+		graph = Object.create(XGGraph);
+		graph.initialize(helper, translate);
+
+		startWebsocket(host, port, password);
+		startGrid(showOfflineBots, combineBotAndPacketGrid);
+		startGui(showOfflineBots, humanDates, combineBotAndPacketGrid);
+
+		resize = Object.create(XGResize);
+		resize.initialize(combineBotAndPacketGrid);
+		resize.onResize.subscribe(function ()
+		{
+			grid.resize();
+			graph.resize();
+		});
+		resize.start();
+	}
+
+	function startWebsocket (host, port, password)
+	{
+		websocket = Object.create(XGWebsocket);
+		websocket.initialize(dataView, host, port, password);
+
+		websocket.onDisconnected.subscribe(function ()
+		{
+			websocket.connect();
+		});
+
+		websocket.onError.subscribe(function ()
+		{
+			gui.showError();
+		});
+
+		websocket.onSnapshots.subscribe(function (e, args)
+		{
+			graph.setSnapshots(args.Data);
+		});
+
+		websocket.onRequestComplete.subscribe(function (e, args)
+		{
+			var newArgs = { Data: null, DataType: Enum.Grid.Search };
+
+			switch (args.Data)
+			{
+				case Enum.Request.ChannelsFromServer:
+					newArgs.DataType = Enum.Grid.Server;
+					newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(serversActive.shift());
+					break;
+
+				case Enum.Request.PacketsFromBot:
+					newArgs.DataType = Enum.Grid.Bot;
+					newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(botsActive.shift());
+					break;
+
+				case Enum.Request.Search:
+				case Enum.Request.SearchExternal:
+					gui.hideLoading();
+					newArgs.Data = null;
+					break;
+			}
+
+			if (newArgs.Data != null)
+			{
+				newArgs.Data.Active = false;
+				dataView.updateItem(newArgs);
+			}
+		});
+
+		websocket.connect();
+	}
+
+	function startGrid (showOfflineBots, combineBotAndPacketGrid)
+	{
+		grid = Object.create(XGGrid);
+		grid.initialize(formatter, helper, dataView, translate, combineBotAndPacketGrid);
+
+		grid.onClick.subscribe(function (e, args)
+		{
+			if (args.Data != undefined)
+			{
+				var active = false;
+				switch (args.DataType)
+				{
+					case Enum.Grid.Server:
+						websocket.sendGuid(Enum.Request.ChannelsFromServer, args.Data.Guid);
+						grid.getGrid(Enum.Grid.Channel).setSelectedRows([]);
+						currentServerGuid = args.Data.Guid;
+						$("#channelPanel").show();
+						serversActive.push(args.Data.Guid);
+						active = true;
+						break;
+
+					case Enum.Grid.Bot:
+						websocket.sendGuid(Enum.Request.PacketsFromBot, args.Data.Guid);
+						grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
+						botsActive.push(args.Data.Guid);
+						active = true;
+						break;
+
+					case Enum.Grid.Packet:
+						var row = dataView.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
+						grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
+						grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
+						break;
+				}
+
+				if (active)
+				{
+					args.Data.Active = true;
+					dataView.updateItem(args);
+				}
+			}
+		});
+
+		grid.onRemoveObject.subscribe(function (e, args)
+		{
+			switch (args.DataType)
+			{
+				case Enum.Grid.Server:
+					websocket.sendGuid(Enum.Request.RemoveServer, args.Data.Guid);
+					break;
+
+				case Enum.Grid.Channel:
+					websocket.sendGuid(Enum.Request.RemoveChannel, args.Data.Guid);
+					break;
+			}
+		});
+
+		grid.onFlipObject.subscribe(function (e, args)
+		{
+			if (args.DataType == Enum.Grid.Packet)
+			{
+				flipPacket(args.Data);
+			}
+			else
+			{
+				flipObject(args.Data);
+			}
+		});
+
+		grid.onDownloadLink.subscribe(function (e, args)
+		{
+			downloadLink(args);
+		});
+
+		grid.build();
+		grid.setFilterOfflineBots(showOfflineBots);
+	}
+
+	function startGui (showOfflineBots, humanDates, combineBotAndPacketGrid)
+	{
+		gui = Object.create(XGGui);
+		gui.initialize(dataView, showOfflineBots, humanDates, combineBotAndPacketGrid);
+
+		gui.onSearch.subscribe(function (e, args)
+		{
+			if (args.Grid != Enum.Grid.ExternalSearch)
+			{
+				grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
+				grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
+				websocket.sendNameGuid(Enum.Request.Search, args.Name, args.Guid);
+			}
+			else
+			{
+				if (args.Guid != "00000000-0000-0000-0000-000000000001" && args.Guid != "00000000-0000-0000-0000-000000000002")
+				{
+					websocket.sendNameGuid(Enum.Request.SearchExternal, args.Name, args.Guid);
+				}
+			}
+			grid.applySearchFilter(args);
+			gui.showLoading();
+		});
+
+		gui.onSearchAdd.subscribe(function (e, args)
+		{
+			websocket.sendName(Enum.Request.AddSearch, args.Name);
+		});
+
+		gui.onSearchRemove.subscribe(function (e, args)
+		{
+			websocket.sendGuid(Enum.Request.RemoveSearch, args.Guid);
+		});
+
+		gui.onSlide.subscribe(function ()
+		{
+			grid.resize();
+		});
+
+		gui.onAddServer.subscribe(function (e, args)
+		{
+			websocket.sendName(Enum.Request.AddServer, args.Name);
+		});
+
+		gui.onAddChannel.subscribe(function (e, args)
+		{
+			websocket.sendNameGuid(Enum.Request.AddChannel, args.Name, currentServerGuid);
+		});
+
+		gui.onUpdateOfflineBotsFilter.subscribe(function (e, args)
+		{
+			grid.setFilterOfflineBots(args.Enable);
+			cookie.setCookie("showOfflineBots", args.Enable ? "1" : "0");
+		});
+
+		gui.onUpdateHumanDates.subscribe(function (e, args)
+		{
+			helper.setHumanDates(args.Enable);
+			grid.invalidate();
+			cookie.setCookie("humanDates", args.Enable ? "1" : "0");
+		});
+
+		gui.onRequestSnapshotPlot.subscribe(function (e, args)
+		{
+			websocket.sendName(Enum.Request.Snapshots, args.Value);
+		});
+
+		gui.onUpdateSnapshotPlot.subscribe(function ()
+		{
+			graph.updateSnapshotPlot();
+		});
+
+		gui.onCombineBotAndPacketGrid.subscribe(function (e, args)
+		{
+			grid.setCombineBotAndPacketGrid(args.Enable);
+			cookie.setCookie("combineBotAndPacketGrid", args.Enable ? "1" : "0");
+			resize.setCombineBotAndPacketGrid(args.Enable);
+		});
+
+		gui.onAddXdccLink.subscribe(function (e, args)
+		{
+			websocket.sendName(Enum.Request.ParseXdccLink, args.Name);
+		});
+
+		gui.onOpenNotifications.subscribe(function (e, args)
+		{
+			grid.invalidate(Enum.Grid.Notification);
+		});
 	}
 
 	return {
 		/**
-		 * @param {XGHelper} helper1
-		 * @param {XGStatistics} statistics1
-		 * @param {XGCookie} cookie1
-		 * @param {XGFormatter} formatter1
-		 * @param {XGWebsocket} websocket1
-		 * @param {XGDataView} dataview1
-		 * @param {XGGrid} grid1
-		 * @param {XGResize} resize1
-		 * @param {XGNotification} notification1
+		 * @param {String} salt
+		 * @param {String} host
+		 * @param {String} port
 		 */
-		initialize: function(helper1, statistics1, cookie1, formatter1, websocket1, dataview1, grid1, resize1, notification1)
+		initialize: function (salt, host, port)
 		{
-			statistics = statistics1;
-			cookie = cookie1;
-			helper = helper1;
-			formatter = formatter1;
-			websocket = websocket1;
-			dataview = dataview1;
-			grid = grid1;
-			resize = resize1;
-			notification = notification1;
-		},
+			var translations = window.translations;
+			if (translations == undefined)
+			{
+				translations = {};
+			}
+			translate = Object.create(XGTranslate);
+			translate.initialize(translations);
 
-		start: function()
-		{
-			// socket
-			websocket.onDisconnected.subscribe(function (e, args) {
-				//$("#dialogError").dialog("open");
-				websocket.connect();
+			var password = Object.create(XGPassword);
+			password.initialize(salt, host, port);
+			password.onPasswordOk.subscribe(function (e, args)
+			{
+				start(host, port, args.Password);
 			});
-			websocket.onError.subscribe(function (e, args) {
-				$("#dialogError").dialog("open");
-			});
-			websocket.onAdd.subscribe(function (e, args) {
-				dataview.addItem(args);
-
-				switch (args.DataType)
-				{
-					case Enum.Grid.Search:
-						if (enableSearchTransitions)
-						{
-							$("#searchText").effect("transfer", { to: $("#" + args.Data.Guid) }, 500);
-						}
-						break;
-
-					case Enum.Grid.Notification:
-						notification.handleMessage(args.Data);
-						break;
-				}
-			});
-			websocket.onRemove.subscribe(function (e, args) {
-				switch (args.DataType)
-				{
-					case Enum.Grid.Search:
-						if (enableSearchTransitions)
-						{
-							$("#" + args.Data.Guid).effect("transfer", { to: $("#searchText") }, 500);
-						}
-						break;
-				}
-
-				dataview.removeItem(args);
-			});
-			websocket.onUpdate.subscribe(function (e, args) {
-				dataview.updateItem(args);
-			});
-			websocket.onSnapshots.subscribe(function (e, args) {
-				statistics.setSnapshots(args.Data);
-			});
-			websocket.onRequestComplete.subscribe(function (e, args) {
-				var newArgs = { Data: null, DataType: Enum.Grid.Search };
-
-				switch (args.Data)
-				{
-					case Enum.Request.ChannelsFromServer:
-						newArgs.DataType = Enum.Grid.Server;
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(serversActive.shift());
-						break;
-
-					case Enum.Request.PacketsFromBot:
-						newArgs.DataType = Enum.Grid.Bot;
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(botsActive.shift());
-						break;
-
-					case Enum.Request.Search:
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(searchesActive.shift());
-						break;
-
-					case Enum.Request.SearchExternal:
-						newArgs.Data = dataview.getDataView(newArgs.DataType).getItemById(externalSearchesActive.shift());
-						break;
-				}
-
-				if (newArgs.Data != null)
-				{
-					newArgs.Data.Active = false;
-					dataview.updateItem(newArgs);
-				}
-			});
-			websocket.connect();
-
-			// grid
-			resize.onResize.subscribe(function (e, args) {
-				grid.resize();
-				statistics.resize();
-			});
-			grid.onClick.subscribe(function (e, args) {
-				if (args.Data != undefined)
-				{
-					var active = false;
-					switch (args.DataType)
-					{
-						case Enum.Grid.Server:
-							websocket.sendGuid(Enum.Request.ChannelsFromServer, args.Data.Guid);
-							grid.getGrid(Enum.Grid.Channel).setSelectedRows([]);
-							currentServerGuid = args.Data.Guid;
-							$("#channelPanel").show();
-							serversActive.push(args.Data.Guid);
-							active = true;
-							break;
-
-						case Enum.Grid.Bot:
-							websocket.sendGuid(Enum.Request.PacketsFromBot, args.Data.Guid);
-							grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
-							botsActive.push(args.Data.Guid);
-							active = true;
-							break;
-
-						case Enum.Grid.Packet:
-							var row = dataview.getDataView(Enum.Grid.Bot).getRowById(args.Data.ParentGuid);
-							grid.getGrid(Enum.Grid.Bot).scrollRowIntoView(row, false);
-							grid.getGrid(Enum.Grid.Bot).setSelectedRows([row]);
-							active = true;
-							break;
-
-						case Enum.Grid.Search:
-							if (activeTab == 0)
-							{
-								grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
-								grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
-								websocket.sendGuid(Enum.Request.Search, args.Data.Guid);
-								searchesActive.push(args.Data.Guid);
-								active = true;
-							}
-							else if (activeTab == 1)
-							{
-								if (args.Data.Guid != "00000000-0000-0000-0000-000000000001" && args.Data.Guid != "00000000-0000-0000-0000-000000000002")
-								{
-									websocket.sendGuid(Enum.Request.SearchExternal, args.Data.Guid);
-									externalSearchesActive.push(args.Data.Guid);
-									active = true;
-								}
-							}
-							break;
-					}
-
-					if (active)
-					{
-						args.Data.Active = true;
-						dataview.updateItem(args);
-					}
-				}
-			});
-			grid.onRemoveObject.subscribe(function (e, args) {
-				switch (args.DataType)
-				{
-					case Enum.Grid.Server:
-						websocket.sendGuid(Enum.Request.RemoveServer, args.Data.Guid);
-						break;
-
-					case Enum.Grid.Channel:
-						websocket.sendGuid(Enum.Request.RemoveChannel, args.Data.Guid);
-						break;
-
-					case Enum.Grid.Search:
-						enableSearchTransitions = true;
-						websocket.sendGuid(Enum.Request.RemoveSearch, args.Data.Guid);
-						break;
-				}
-			});
-			grid.onFlipObject.subscribe(function (e, args) {
-				if (args.DataType == Enum.Grid.Packet)
-				{
-					flipPacket(args.Data);
-				}
-				else
-				{
-					flipObject(args.Data);
-				}
-			});
-			grid.onDownloadLink.subscribe(function (e, args) {
-				downloadLink(args);
-			});
-			grid.build();
-
-			// other
-			initializeDialogs();
-			initializeOthers();
-
-			// resize
-			resize.start();
 		}
-	}
+	};
 }());

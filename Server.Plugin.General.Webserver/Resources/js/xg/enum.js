@@ -23,7 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-function Enum() {}
+function Enum ()
+{
+}
 
 Enum.Request =
 {
@@ -49,11 +51,10 @@ Enum.Request =
 	RemoveSearch: 14,
 	Searches: 15,
 
-	Statistics: 16,
-	Snapshots: 17,
-	ParseXdccLink: 18,
+	Snapshots: 16,
+	ParseXdccLink: 17,
 
-	CloseServer: 19
+	CloseServer: 18
 };
 
 Enum.Response =
@@ -65,21 +66,20 @@ Enum.Response =
 	ObjectChanged: 3,
 	RequestComplete: 4,
 
-	Snapshots: 12,
-	Statistics: 23
+	Snapshots: 5
 };
 
 Enum.TangoColor =
 {
-	Butter		: { Light: "fce94f", Middle: "edd400", Dark: "c4a000"},
-	Orange		: { Light: "fcaf3e", Middle: "f57900", Dark: "ce5c00"},
-	Chocolate	: { Light: "e9b96e", Middle: "c17d11", Dark: "8f5902"},
-	Chameleon	: { Light: "8ae234", Middle: "73d216", Dark: "4e9a06"},
-	SkyBlue		: { Light: "729fcf", Middle: "3465a4", Dark: "204a87"},
-	Plum		: { Light: "ad7fa8", Middle: "75507b", Dark: "5c3566"},
-	ScarletRed	: { Light: "ef2929", Middle: "cc0000", Dark: "a40000"},
-	Aluminium1	: { Light: "eeeeec", Middle: "d3d7cf", Dark: "babdb6"},
-	Aluminium2	: { Light: "888a85", Middle: "555753", Dark: "2e3436"}
+	Butter: { Light: "fce94f", Middle: "edd400", Dark: "c4a000"},
+	Orange: { Light: "fcaf3e", Middle: "f57900", Dark: "ce5c00"},
+	Chocolate: { Light: "e9b96e", Middle: "c17d11", Dark: "8f5902"},
+	Chameleon: { Light: "8ae234", Middle: "73d216", Dark: "4e9a06"},
+	SkyBlue: { Light: "729fcf", Middle: "3465a4", Dark: "204a87"},
+	Plum: { Light: "ad7fa8", Middle: "75507b", Dark: "5c3566"},
+	ScarletRed: { Light: "ef2929", Middle: "cc0000", Dark: "a40000"},
+	Aluminium1: { Light: "eeeeec", Middle: "d3d7cf", Dark: "babdb6"},
+	Aluminium2: { Light: "888a85", Middle: "555753", Dark: "2e3436"}
 };
 
 Enum.SnapshotValue =

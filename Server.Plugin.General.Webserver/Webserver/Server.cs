@@ -81,7 +81,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 							Servers = Servers,
 							Files = Files,
 							Searches = Searches,
-							Snapshots = Snapshots,
 							FileLoader = fileLoader,
 							Password = Password,
 							Salt = Salt

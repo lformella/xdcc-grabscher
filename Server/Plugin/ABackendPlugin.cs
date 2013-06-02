@@ -34,7 +34,5 @@ namespace XG.Server.Plugin
 		public abstract Files LoadFiles();
 
 		public abstract Searches LoadSearches();
-
-		public abstract Snapshots LoadStatistics();
 	}
 }

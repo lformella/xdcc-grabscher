@@ -23,33 +23,31 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-translatedArray =
+translations =
 {
 	/* ************************************************************************************************************** */
-	/* PASSWORD DIALOG                                                                                                */
+	/* DIALOGS                                                                                                        */
 	/* ************************************************************************************************************** */
 
 	"Please enter the password for this webfrontend.": "Bitte gib das Passwort f&uuml;r diese Webseite ein.",
 	"Password": "Passwort",
 	"Password required": "Passwort ben&ouml;tigt",
 	"Connect": "Verbinden",
-
-	/* ************************************************************************************************************** */
-	/* OTHER DIALOGS                                                                                                  */
-	/* ************************************************************************************************************** */
-
 	"Change Servers and Channels": "Server und Channels &auml;ndern",
-	"View Statistics": "Statistiken anschauen",
-	"View Snapshots": "Erweiterte Statistiken anschauen",
 	"Error": "Fehler",
 	"Lost connection to XG server - please reload page!": "Verbindung zum XG Server verloren - bitte Seite neu laden!",
 	"Add": "Hinzufügen",
+	"Settings": "Einstellungen",
+	"Download": "Runterladen",
+	"XDCC link": "XDCC Link",
+	"Example link": "Beispiel Link",
+	"XDCC link input": "XDCC Link Eingabe",
+	"Please enter a valid XDCC link.": "Bitte gib einen gültigen XDCC Link ein.",
 
 	/* ************************************************************************************************************** */
 	/* GRIDS                                                                                                          */
 	/* ************************************************************************************************************** */
 
-	"Icon": "",
 	"Name": "Name",
 	"Speed": "Geschwindigkeit",
 	"Q-Pos": "S-Pos",
@@ -58,30 +56,18 @@ translatedArray =
 	"Slots": "Pl&auml;tze",
 	"Queue": "Schlange",
 	"Size": "Gr&ouml;&szlig;e",
-
-	/* ************************************************************************************************************** */
-	/* PACKET GRID                                                                                                    */
-	/* ************************************************************************************************************** */
-
+	"BotName": "Bot",
+	"BotSpeed": "Geschwindigkeit",
+	"Content": "Inhalt",
 	"Packets": "Pakete",
 	"Time Missing": "Zeit",
 	"Last Updated": "Aktualisiert",
 	"Updated": "Aktualisiert",
-
-	/* ************************************************************************************************************** */
-	/* SEARCH GRID                                                                                                    */
-	/* ************************************************************************************************************** */
-
 	"ODay Packets": "neue Pakete von heute",
 	"OWeek Packets": "neue Pakete dieser Woche",
 	"Downloads": "Downloads",
 	"Enabled Packets": "Aktivierte Pakete",
-
-	/* ************************************************************************************************************** */
-	/* SEARCH GRID                                                                                                    */
-	/* ************************************************************************************************************** */
-
-	"Search via xg.bitpir.at": "Suche via xg.bitpir.at",
+	"External search": "Externe Suche",
 	"Last Mentioned": "Aktualisiert",
 	"Bot Speed": "Geschw.",
 
@@ -92,41 +78,67 @@ translatedArray =
 	"1 Day": "1 Tag",
 	"1 Week": "1 Woche",
 	"1 Month": "1 Monat",
-	"All": "Alles",
+
+	"Servers": "Servers",
+	"ServersEnabled": "Server aktiviert",
+	"ServersDisabled": "Server deaktiviert",
+	"ServersConnected": "Server verbunden",
+	"ServersDisconnected": "Server getrennt",
+	"Channels": "Channels",
+	"ChannelsEnabled": "Channel aktiviert",
+	"ChannelsDisabled": "Channel deaktiviert",
+	"ChannelsConnected": "Channel verbunden",
+	"ChannelsDisconnected": "Channel getrennt",
+	"Bots": "Bots",
+	"BotsConnected": "Bots verbunden",
+	"BotsDisconnected": "Bots getrennt",
+	"BotsFreeSlots": "Bots frei Plätze",
+	"BotsFreeQueue": "Bots freie Warteschlange",
+	"BotsAverageCurrentSpeed": "Bots momentane Geschwindigkeit",
+	"BotsAverageMaxSpeed": "Bots maximale Geschwindigkeit",
+	"PacketsConnected": "Pakete verbunden",
+	"PacketsDisconnected": "Packet getrennt",
+	"PacketsSize": "Paketgröße",
+	"PacketsSizeDownloading": "Paketgröße ladend",
+	"PacketsSizeNotDownloading": "Paketgröße nicht ladend",
+	"PacketsSizeConnected": "Paketgröße verbunden",
+	"PacketsSizeDisconnected": "Paketgröße getrennt",
 
 	/* ************************************************************************************************************** */
 	/* NOTIFICATIONS                                                                                                  */
 	/* ************************************************************************************************************** */
 
-	"Notification_1": "Packet <strong>#Name#</strong> (#ParentName#) is complete",
-	"Notification_2": "Packet <strong>#Name#</strong> (#ParentName#) is not complete",
-	"Notification_3": "Packet <strong>#Name#</strong> (#ParentName#) is broken",
-	"Notification_4": "Packet <strong>#Name#</strong> (#ParentName#) was requested",
-	"Notification_5": "Packet <strong>#Name#</strong> (#ParentName#) was removed",
-	"Notification_6": "File <strong>#Name#</strong> is complete",
-	"Notification_7": "File <strong>#Name#</strong> has the wrong size",
-	"Notification_8": "File <strong>#Name#</strong> could not be build",
-	"Notification_9": "Server <strong>#Name#</strong> is connected",
-	"Notification_10": "Server <strong>#Name#</strong> could not be connected",
-	"Notification_11": "Channel <strong>#Name#</strong> (#ParentName#) joined",
-	"Notification_12": "Channel <strong>#Name#</strong> (#ParentName#) could not be joined",
-	"Notification_13": "Channel <strong>#Name#</strong> (#ParentName#) is banned",
-	"Notification_14": "Channel <strong>#Name#</strong> (#ParentName#) parted",
-	"Notification_15": "Channel <strong>#Name#</strong> (#ParentName#) kicked",
-	"Notification_16": "Packet <strong>#Name#</strong> (#ParentName#) is downloading",
-	"Notification_17": "Packet <strong>#Name#</strong> (#ParentName#) could not be downloaded",
-	"Notification_18": "Bot #ParentName# submitted wrong download port for packet <strong>#Name#</strong>",
+	"Notification_1": "Paket <strong>#Name#</strong> (#ParentName#) ist fertig",
+	"Notification_2": "Paket <strong>#Name#</strong> (#ParentName#) ist nicht fertig",
+	"Notification_3": "Paket <strong>#Name#</strong> (#ParentName#) ist kaputt",
+	"Notification_4": "Paket <strong>#Name#</strong> (#ParentName#) wurde angefragt",
+	"Notification_5": "Paket <strong>#Name#</strong> (#ParentName#) wurde entfernt",
+	"Notification_6": "Die Datei <strong>#Name#</strong> ist fertig",
+	"Notification_7": "Die Datei <strong>#Name#</strong> hat die falsche Größe",
+	"Notification_8": "Die Datei <strong>#Name#</strong> konnte nicht erstellt werden",
+	"Notification_9": "Server <strong>#Name#</strong> ist verbunden",
+	"Notification_10": "Server <strong>#Name#</strong> konnte nicht verbunden werden",
+	"Notification_11": "Channel <strong>#Name#</strong> (#ParentName#) beigetreten",
+	"Notification_12": "Channel <strong>#Name#</strong> (#ParentName#) konnte nicht beigetreten werden",
+	"Notification_13": "Channel <strong>#Name#</strong> (#ParentName#) ist geblockt",
+	"Notification_14": "Channel <strong>#Name#</strong> (#ParentName#) verlassen",
+	"Notification_15": "Wurde aus Channel <strong>#Name#</strong> (#ParentName#) gekickt",
+	"Notification_16": "Paket <strong>#Name#</strong> (#ParentName#) läd runter",
+	"Notification_17": "Paket <strong>#Name#</strong> (#ParentName#) konnte nicht runtergeladen werden",
+	"Notification_18": "Bot #ParentName# hat einen falschen Port für <strong>#Name#</strong> übermittelt",
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */
 	/* ************************************************************************************************************** */
 
-	"Statistics": "Statistiken",
+	"Dashboard": "Übersicht",
+	"Graphs": "Graphen",
 	"Hide offline Bots": "inaktive Bots ausblenden",
-	"Extended Statistics": "Erweiterte Statistiken",
-	"IRC View": "IRC &Uuml;bersicht",
-	"External Search via xg.bitpir.at": "Externe Suche via xg.bitpir.at",
+	"IRC View": "IRC Übersicht",
 	"Files": "Dateien",
+	"Notifications": "Benachrichtigungen",
+	"Predefined": "Vorgefertigt",
+	"Custom": "Eigene",
 
 	"Connected": "Verbunden",
 	"Disconnected": "Getrennt",
@@ -143,5 +155,6 @@ translatedArray =
 	"Disabled": "Deaktiviert",
 	"Count": "Zähler",
 	"Time": "Zeit",
-	"Human readable dates": "Lesbare Zeiten"
+	"Human readable dates": "Lesbare Zeiten",
+	"Combine IRC View": "Kombinierte IRC Übersicht"
 };

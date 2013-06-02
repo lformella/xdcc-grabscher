@@ -23,6 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+
 using Newtonsoft.Json;
 
 namespace XG.Server.Plugin.General.Webserver.Object
@@ -58,6 +60,11 @@ namespace XG.Server.Plugin.General.Webserver.Object
 		public string ParentName
 		{
 			get { return Object.Object.Parent != null ? Object.Object.Parent.Name : ""; }
+		}
+
+		public DateTime Time
+		{
+			get { return DateTime.Now; }
 		}
 
 		#endregion

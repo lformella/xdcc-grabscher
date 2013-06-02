@@ -135,25 +135,6 @@ namespace XG.Server.Worker
 			}
 		}
 
-		Snapshots _snapshots;
-
-		public Snapshots Snapshots
-		{
-			get { return _snapshots; }
-			set
-			{
-				if (_snapshots != null)
-				{
-					_snapshots.Added -= SnapshotAdded;
-				}
-				_snapshots = value;
-				if (_snapshots != null)
-				{
-					_snapshots.Added += SnapshotAdded;
-				}
-			}
-		}
-
 		#endregion
 
 		#region REPOSITORY EVENTS
@@ -179,8 +160,6 @@ namespace XG.Server.Worker
 		protected virtual void SearchChanged(AObject aObj, string[] aFields) {}
 
 		protected virtual void NotificationAdded(AObject aParent, AObject aObj) {}
-
-		protected virtual void SnapshotAdded(Snapshot aSnap) {}
 
 		#endregion
 

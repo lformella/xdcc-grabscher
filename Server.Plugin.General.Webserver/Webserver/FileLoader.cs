@@ -44,12 +44,12 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		readonly string[] _cssFiles =
 		{
 			"reset",
+			"bootstrap",
 			"fontello",
 			"animation",
-			"jquery-ui",
 			"slick.grid",
-			"layout-default",
-			"jquery.pnotify.default",
+			"bootstrap-slickgrid",
+			"tango-colors",
 			"xg"
 		};
 
@@ -63,8 +63,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/jquery.flot.axislabels",
 			"external/jquery-timing.min",
 			"external/jquery-ui.min",
-			"external/jquery.layout.min",
-			"external/jquery.pnotify.min",
 			"external/json2.min",
 			"external/sha256",
 			"external/slick.core",
@@ -72,19 +70,21 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"external/slick.grid",
 			"external/slick.dataview",
 			"external/slick.rowselectionmodel",
+			"external/slick.groupitemmetadataprovider",
+			"external/bootstrap.min",
 			"i18n/moment/#LANGUAGE_SHORT#",
 			"i18n/xg/#LANGUAGE_SHORT#",
 			"xg/enum",
+			"xg/gui",
 			"xg/cookie",
 			"xg/formatter",
 			"xg/helper",
 			"xg/grid",
 			"xg/main",
-			"xg/notification",
 			"xg/password",
 			"xg/dataview",
 			"xg/resize",
-			"xg/statistics",
+			"xg/graph",
 			"xg/translate",
 			"xg/websocket"
 		};
@@ -137,7 +137,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						content = new StreamReader(stream).ReadToEnd();
 					}
 #endif
-					if (aFile == "/index.html" || aFile == "/index2.html")
+					if (aFile == "/index.html")
 					{
 						content = content.Replace("#HOST#", aHost);
 						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));
@@ -164,6 +164,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						content = content.Replace("#JS_FILES#", js);
 
 						content = content.Replace("#SALT#", Salt);
+						content = content.Replace("#XGVERSION#", Settings.Instance.XgVersion);
 						content = PatchLanguage(content, aLanguages);
 					}
 				}

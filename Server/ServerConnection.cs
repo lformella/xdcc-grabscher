@@ -147,6 +147,10 @@ namespace XG.Server
 
 		protected override void ConnectionDisconnected(SocketErrorCode aValue)
 		{
+			if (!_isRunning)
+			{
+				FireNotificationAdded(new Notification(Notification.Types.ServerConnected, _server));
+			}
 			_isRunning = false;
 
 			_server.ErrorCode = aValue;
@@ -263,8 +267,6 @@ namespace XG.Server
 
 				// TODO maybe set a time to resend the command if the channel is not connected
 				// it happend to me, that some available channels werent joined because no confirm messaes appeared
-
-				FireNotificationAdded(new Notification(Notification.Types.ChannelJoined, aChan));
 			}
 		}
 

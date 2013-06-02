@@ -25,79 +25,11 @@
 //
 */
 
-/* HTML Elements */
+/** Base **/
 
-html, body
+body
 {
-	font-size: 11px;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	overflow: auto;
-}
-
-small
-{
-	font-size: 9px;
-}
-
-fieldset
-{
-	margin: 4px 0 10px 0;
-	outline: 2px solid #D3D7CF;
-	padding: 0 4px 2px 4px;
-}
-
-fieldset input
-{
-	float: left;
-	margin: 0 4px 0 0;
-	padding: 0;
-}
-
-fieldset div
-{
-	padding: 3px 0 3px 0;
-	clear: both;
-}
-
-fieldset label
-{
-	margin: 2px 0 0;
-}
-
-strong
-{
-	font-weight: bold;
-}
-
-/* XG Elements */
-
-.alignRight
-{
-	text-align: right;
-}
-
-#searchGrid
-{
-	width: 100%;
-}
-
-#serverGrid, #channelGrid
-{
-	width: 400px;
-	height: 400px;
-}
-
-#passwordTip
-{
-	padding: 5px 0 10px 0;
-}
-
-#toolbar
-{
-	padding-left: 4px;
+	padding-bottom: 10px;
 }
 
 .button
@@ -105,272 +37,292 @@ strong
 	cursor: pointer;
 }
 
-.overlay
+.alignRight
 {
-	width: 10px;
-	height: 10px;
-	margin: 11px 0 0 11px;
+	text-align: right;
 }
 
-#tabs, #tabs1, #tabs2, #tabs3, #packetLayout, #botLayout, .footer
+small
 {
-	overflow: hidden;
+	font-size: 0.8em;
 }
 
-#searchLayout
+/** Bootstrap **/
+
+.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container
 {
-	background: #efefef;
+	width: -webkit-calc(100% - 20px);
+	width: -moz-calc(100% - 20px);
+	width: calc(100% - 20px);
 }
 
-.footer
+.navbar
 {
-	padding: 0 2px 0 2px;
+	margin-bottom: 10px;
 }
 
-.panel
+.progress
 {
-	padding: 2px 0 0 0;
+	height: 5px;
+	margin-bottom: 0;
+	margin-top: 0;
 }
 
-/* Fontello Fixes */
-
-[class^="icon-"]:before,
-[class*=" icon-"]:before
+.progress .bar-light
 {
-	margin: 0;
-	opacity: 1;
+	opacity: 0.3;
 }
 
-/* Icons */
-
-.icon-big
+.carousel
 {
-	font-size: 20px;
+	margin-bottom: 0;
 }
 
-.icon-overlay
+legend
 {
-	font-size: 14px;
-	float: right;
+	line-height: 25px;
+	margin-bottom: 0;
 }
 
-.icon-small
+label
 {
-	font-size: 10px;
+	margin-bottom: 1px;
 }
 
-.icon, .icon-big, .icon-overlay, .ui-icon
+.form-horizontal .control-label
 {
-	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
-}
-.ui-state-active .ui-icon, .ui-state-active .icon
-{
-	text-shadow: none;
-}
-.ui-button-icon-primary, .ui-button-icon-primary.ui-icon
-{
-	text-indent: 0;
-	background-image: none;
-	font-size: 12px;
+	width: 90px;
 }
 
-/* SlickGrid Fixes */
-
-.slick-cell.selected
+.form-horizontal .controls
 {
-	background-color: #FFFED4;
-	border-color: transparent silver #fce94f transparent;
+	margin-left: 110px;
 }
 
-.slick-cell
+/** Fontello **/
+
+#searchRemove [class^="icon-"], #searchAdd [class^="icon-"]
 {
-	line-height: 20px;
+	margin-top: 4px;
+	font-size: 1.5em;
 }
 
-.slick-cell.small
+#searchLoading, #searchButtons
 {
-	line-height: 10px;
+	margin-top: 9px;
 }
 
-.slick-cell.medium
+/** Grids **/
+
+#BotGrid
 {
-	line-height: 15px;
+	height: 300px;
+	margin-bottom: 10px;
 }
 
-#SearchGrid .ui-widget-content
+#PacketGrid
 {
-	background: none;
+	height: 300px;
 }
 
-#SearchGrid .slick-cell
+#ServerGrid, #ChannelGrid
 {
-	border-color: transparent !important;
-	line-height: 19px !important;
+	width: 320px;
+	height: 320px;
+	margin-bottom: 10px;
 }
 
-#SearchGrid .cell-inner
+#NotificationGrid
 {
-	margin: 0 2px;
-	padding: 2px 4px 4px 2px;
-	background: #fafafa;
-	border: 1px solid #D0D0D0;
+	width: 640px;
+	height: 320px;
 }
 
-#SearchGrid .slick-cell.selected
+/** Dialogs **/
+
+#serverChannelsDialog
 {
-	background: none;
+	width: 680px;
 }
 
-#SearchGrid .slick-cell.selected .cell-inner
+#serverChannelsDialog .modal-body > div
 {
-	background: #FFFED4;
-}
-
-#SearchGrid .cell-inner:hover
-{
-	background: #ffffe1;
-}
-
-#SearchGrid .slick-cell.selected .cell-inner:hover
-{
-	background: #fffdbd;
-}
-
-#SearchGrid .cell-left
-{
-	width: 25px;
-	height: 100%;
 	float: left;
 }
 
-#SearchGrid .cell-main
+#serverChannelsDialog .modal-body > div:first-child
 {
+	padding: 0 10px 0 0;
+}
 
-	margin-left: 26px;
-	margin-right: 18px;
+.small-panel .control-label
+{
+	width: 60px;
+}
+
+.small-panel .controls
+{
+	margin-left: 70px;
+}
+
+.controls label
+{
+	padding-top: 5px;
+}
+
+/** Menu **/
+
+.navbar .nav > li > a > span[class^="icon-"]
+{
+	font-size: 1.8em;
+	text-align: center;
+}
+
+.navbar .nav > li > a
+{
+	background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#333)) repeat scroll 0 0 transparent;
+	background: linear-gradient(to bottom, #555 0%, #333 100%) repeat scroll 0 0 transparent;
+	border: 1px solid #555;
+	border-radius: 20px;
+	line-height: 2em;
+	margin: 0 10px;
+	padding: 3px 1px 1px 1px;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover, .navbar .nav > li.active > a
+{
+	background: -webkit-gradient(linear, left top, left bottom, from(#777), to(#555)) repeat scroll 0 0 transparent !important;
+	background: linear-gradient(to bottom, #777 0%, #555 100%) repeat scroll 0 0 transparent !important;
+	border: 1px solid #777;
+}
+
+.navbar .nav > li.active > a:hover, .navbar .nav > li.active > a:focus
+{
+	background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#777)) repeat scroll 0 0 transparent !important;
+	background: linear-gradient(to bottom, #999 0%, #777 100%) repeat scroll 0 0 transparent !important;
+	border: 1px solid #999;
+}
+
+#searchForm .dropdown-menu
+{
 	overflow: hidden;
+	overflow-y: auto;
 }
 
-#SearchGrid .cell-right
+#searchForm .dropdown-menu .text
 {
-	float: right;
+	margin-right: 60px;
 }
 
-/* JQuery Fixes */
-
-.ui-tabs, .ui-tabs .ui-tabs-panel, .ui-dialog .ui-dialog-buttonpane
-{
-	padding: 0;
-}
-
-.ui-layout-pane
-{
-	border: none;
-}
-
-.ui-effects-transfer
-{
-	border: 2px dotted #888a85;
-}
-
-.ui-layout-pane
-{
-	padding: 0;
-}
-
-.ui-tabs .ui-tabs-hide
-{
-	position: absolute;
-	left: -10000px;
-}
-
-/* Flot Fixes */
-
-.tickLabel, .legendLabel
-{
-	font-size: 11px;
-}
-
-.legendLabel
-{
-	padding: 0 0 0 5px;
-}
-
-/* PNotify Fixes */
-
-.ui-pnotify-text
-{
-	word-wrap: break-word;
-}
-
-/* Tango Colors */
-
-.ButterLight { color: #fce94f; }
-.ButterMiddle { color: #edd400; }
-.ButterDark { color: #c4a000; }
-.OrangeLight { color: #fcaf3e; }
-.OrangeMiddle { color: #f57900; }
-.OrangeDark { color: #ce5c00; }
-.ChocolateLight { color: #e9b96e; }
-.ChocolateMiddle { color: #c17d11; }
-.ChocolateDark { color: #8f5902; }
-.ChameleonLight { color: #8ae234; }
-.ChameleonMiddle { color: #73d216; }
-.ChameleonDark { color: #4e9a06; }
-.SkyBlueLight { color: #729fcf; }
-.SkyBlueMiddle { color: #3465a4; }
-.SkyBlueDark { color: #204a87; }
-.PlumLight { color: #ad7fa8; }
-.PlumMiddle { color: #75507b; }
-.PlumDark { color: #5c3566; }
-.ScarletRedLight { color: #ef2929; }
-.ScarletRedMiddle { color: #cc0000; }
-.ScarletRedDark { color: #a40000; }
-.Aluminium1Light { color: #eeeeec; }
-.Aluminium1Middle { color: #d3d7cf; }
-.Aluminium1Dark { color: #babdb6; }
-.Aluminium2Light { color: #888a85; }
-.Aluminium2Middle { color: #555753; }
-.Aluminium2Dark { color: #2e3436; }
-
-/* Progressbar */
-
-progress, progress[role]
-{
-	appearance: none;
-	-moz-appearance: none;
-	-webkit-appearance: none;
-	background-size: auto;
-	width: 100%;
-	height: 5px;
-	display: block;
-	border: none;
-}
-progress[role]:after
-{
-	background-image: none;
-}
-progress[role] strong
+#unreadNotifications
 {
 	display: none;
+	left: 6px;
+	padding-left: 3px;
+	padding-right: 3px;
+	position: absolute;
+	top: 2px;
+	font-size: 0.8em;
 }
 
-progress, progress[role][aria-valuenow]
+#settingsLink + .dropdown-menu:before
 {
-	background: #eeeeec !important;
-}
-progress::-webkit-progress-bar
-{
-	background: #eeeeec;
+	right: 22px;
+	left: auto;
 }
 
-progress
+#settingsLink + .dropdown-menu:after
 {
-	color: #729fcf;
+	right: 22px;
+	left: auto;
 }
-progress::-moz-progress-bar,
-progress::-webkit-progress-value,
-progress[aria-valuenow]:before
+
+#settingsLink + .dropdown-menu
 {
-	background: #729fcf;
+	top: 2.9em;
+	right: 0;
+	left: auto;
+}
+
+#notificationsLink + .dropdown-menu:before
+{
+	right: 212px;
+	left: auto;
+}
+
+#notificationsLink + .dropdown-menu:after
+{
+	right: 212px;
+	left: auto;
+}
+
+#notificationsLink + .dropdown-menu
+{
+	top: 2.9em;
+	right: 0;
+	left: -422px;
+	width: 670px;
+}
+
+#settingsLink + ul button
+{
+	width: 220px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/** Others **/
+
+#xdccLink, #password
+{
+	width: 406px;
+}
+
+/** Slick Grid **/
+
+.slick-cell [class^="icon-"]
+{
+	font-size: 1.5em;
+	margin-left: -5px;
+}
+
+.slick-cell .icon-overlay
+{
+	font-size: 1.0em;
+	float: right;
+	margin-right: -9px;
+	margin-top: -7px;
+	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
+}
+
+.slick-cell .icon-overlay-middle
+{
+	margin-top: 0;
+	margin-right: 0;
+}
+
+.grid .slick-header-columns .slick-header-column.ui-state-default
+{
+	text-shadow: none;
+}
+
+.grid .grid-canvas .active, .grid .grid-canvas .selected
+{
+	background: none repeat scroll 0 0 #fffdbd;
+}
+
+.grid .grid-canvas .slick-group
+{
+	background: none repeat scroll 0 0 #f1f1ff;
+}
+
+.grid .grid-canvas .small-line
+{
+	line-height: 12px !important;
+}
+
+.grid .grid-canvas .two-line-text
+{
+	white-space: normal;
+	font-size: 1em;
 }

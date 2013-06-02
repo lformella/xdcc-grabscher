@@ -35,6 +35,7 @@ using XG.Server.Plugin;
 using XG.Server.Worker;
 
 using log4net;
+using SharpRobin.Core;
 
 using File = XG.Core.File;
 
@@ -50,6 +51,16 @@ namespace XG.Server
 		readonly Servers _servers;
 		readonly FileActions _fileActions;
 		readonly Workers _workers;
+
+		RrdDb _rrdDb;
+
+		public RrdDb RrdDb
+		{
+			get
+			{
+				return _rrdDb;
+			}
+		}
 
 		#endregion
 
@@ -68,6 +79,8 @@ namespace XG.Server
 			_servers.NotificationAdded += NotificationAdded;
 
 			_workers = new Workers();
+			
+			_rrdDb = new Rrd().GetDb();
 		}
 
 		void NotificationAdded (Notification aObj)
@@ -297,10 +310,9 @@ namespace XG.Server
 
 			#region WORKERS
 
-			if (Settings.Instance.EnableCollectingSnapshots)
-			{
-				AddWorker(new SnapshotWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTime});
-			}
+			var snapShotWorker = new RrdWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60};
+			snapShotWorker.RrdDb = _rrdDb;
+			AddWorker(snapShotWorker);
 
 			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
 
@@ -331,20 +343,6 @@ namespace XG.Server
 			_fileActions.Files = Files;
 			Searches = aPlugin.LoadSearches();
 			Notifications = new Notifications();
-			Snapshots = aPlugin.LoadStatistics();
-
-			if (Snapshots.All.Count() > 0)
-			{
-				// put a empty snapshot on top to nullify values
-				var lasttime = (from snapshot in Snapshots.All orderby snapshot.Get(SnapshotValue.Timestamp) select snapshot).Last().Get(SnapshotValue.Timestamp);
-				var lastSnapshot = new Snapshot();
-				lastSnapshot.Set(SnapshotValue.Timestamp, lasttime + 1);
-				Snapshots.Add(lastSnapshot);
-
-				var firstSnapshot = new Snapshot();
-				firstSnapshot.Set(SnapshotValue.Timestamp, DateTime.Now.ToTimestamp());
-				Snapshots.Add(firstSnapshot);
-			}
 
 			AddWorker(aPlugin);
 		}
@@ -355,7 +353,6 @@ namespace XG.Server
 			aWorker.Files = Files;
 			aWorker.Searches = Searches;
 			aWorker.Notifications = Notifications;
-			aWorker.Snapshots = Snapshots;
 
 			_workers.Add(aWorker);
 			aWorker.Start();

@@ -23,9 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGWebsocket = (function()
+var XGWebsocket = (function ()
 {
-	var url, port, password, state, socket;
+	var dataView, url, port, password, state, socket;
 
 	/**
 	 * @param {Enum.Request} Type
@@ -66,7 +66,6 @@ var XGWebsocket = (function()
 		self.send(Enum.Request.Searches);
 		self.send(Enum.Request.Servers);
 		self.send(Enum.Request.Files);
-		self.send(Enum.Request.Snapshots);
 	}
 
 	/**
@@ -82,27 +81,19 @@ var XGWebsocket = (function()
 		switch (json.Type)
 		{
 			case Enum.Response.ObjectAdded:
-				self.onAdd.notify(json, null, self);
+				dataView.addItem(json);
 				break;
 
 			case Enum.Response.ObjectRemoved:
-				self.onRemove.notify(json, null, self);
+				dataView.removeItem(json);
 				break;
 
 			case Enum.Response.ObjectChanged:
-				self.onUpdate.notify(json, null, self);
-				break;
-
-			case Enum.Response.SearchExternal:
-				self.onSearchExternal.notify(json, null, self);
+				dataView.updateItem(json);
 				break;
 
 			case Enum.Response.Snapshots:
 				self.onSnapshots.notify(json, null, self);
-				break;
-
-			case Enum.Response.Statistics:
-				self.onStatistics.notify(json, null, self);
 				break;
 
 			case Enum.Response.RequestComplete:
@@ -112,23 +103,20 @@ var XGWebsocket = (function()
 	}
 
 	var self = {
-		onAdd: new Slick.Event(),
-		onRemove: new Slick.Event(),
-		onUpdate: new Slick.Event(),
 		onError: new Slick.Event(),
 		onDisconnected: new Slick.Event(),
-		onSearchExternal: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
-		onStatistics: new Slick.Event(),
 		onRequestComplete: new Slick.Event(),
 
 		/**
+		 * @param {XGDataView} dataView1
 		 * @param {String} url1
 		 * @param {String} port1
 		 * @param {String} password1
 		 */
-		initialize: function(url1, port1, password1)
+		initialize: function (dataView1, url1, port1, password1)
 		{
+			dataView = dataView1;
 			url = url1;
 			port = port1;
 			password = password1;
@@ -182,7 +170,7 @@ var XGWebsocket = (function()
 		 * @param {Enum.Request} type
 		 * @return {Boolean}
 		 */
-		send: function(type)
+		send: function (type)
 		{
 			var request = buildRequest(type);
 
@@ -194,7 +182,7 @@ var XGWebsocket = (function()
 		 * @param {String} name
 		 * @return {Boolean}
 		 */
-		sendName: function(type, name)
+		sendName: function (type, name)
 		{
 			var request = buildRequest(type);
 			request.Name = name;
@@ -207,7 +195,7 @@ var XGWebsocket = (function()
 		 * @param {String} guid
 		 * @return {Boolean}
 		 */
-		sendGuid: function(type, guid)
+		sendGuid: function (type, guid)
 		{
 			var request = buildRequest(type);
 			request.Guid = guid;
@@ -221,7 +209,7 @@ var XGWebsocket = (function()
 		 * @param {String} guid
 		 * @return {Boolean}
 		 */
-		sendNameGuid: function(type, name, guid)
+		sendNameGuid: function (type, name, guid)
 		{
 			var request = buildRequest(type);
 			request.Name = name;

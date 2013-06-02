@@ -161,7 +161,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 				}
 			}
 		}
-
+		/*
 		protected override void SnapshotAdded (Snapshot aSnap)
 		{
 			var snap = new Object.Snapshot();
@@ -178,7 +178,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 				_client.Index(snap, _index, "snapshot", (int)snap.Timestamp);
 			}
 		}
-
+		*/
 		#endregion
 
 		#region FUNCTIONS

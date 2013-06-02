@@ -58,11 +58,10 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			RemoveSearch = 14,
 			Searches = 15,
 
-			Statistics = 16,
-			Snapshots = 17,
-			ParseXdccLink = 18,
+			Snapshots = 16,
+			ParseXdccLink = 17,
 
-			CloseServer = 19
+			CloseServer = 18
 		}
 
 		#endregion

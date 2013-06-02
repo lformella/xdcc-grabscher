@@ -49,12 +49,10 @@ namespace XG.Server.Plugin.Backend.File
 		readonly object _saveObjectsLock = new object();
 		readonly object _saveFilesLock = new object();
 		readonly object _saveSearchesLock = new object();
-		readonly object _saveSnapshotsLock = new object();
 
 		const string DataBinary = "xg.bin";
 		const string FilesBinary = "xgfiles.bin";
 		const string SearchesBinary = "xgsearches.bin";
-		const string SnapshotsBinary = "xgsnapshots.bin";
 
 		const int BackupDataTime = 900;
 
@@ -118,23 +116,6 @@ namespace XG.Server.Plugin.Backend.File
 			return new Searches();
 		}
 
-		public override Snapshots LoadStatistics()
-		{
-			try
-			{
-				var snapshots = (Snapshots) Load(Settings.Instance.AppDataPath + SnapshotsBinary);
-				if (snapshots != null)
-				{
-					return snapshots;
-				}
-			}
-			catch (Exception)
-			{
-				// skip all errors
-			}
-			return new Snapshots();
-		}
-
 		#endregion
 
 		#region AWorker
@@ -142,7 +123,6 @@ namespace XG.Server.Plugin.Backend.File
 		protected override void StartRun()
 		{
 			DateTime timeIrc = DateTime.Now;
-			DateTime timeStats = DateTime.Now;
 
 			DateTime _last = DateTime.Now;
 			while (_allowRunning)
@@ -164,13 +144,6 @@ namespace XG.Server.Plugin.Backend.File
 					{
 						SaveFiles();
 					}
-
-					// Statistics
-					if ((DateTime.Now - timeStats).TotalSeconds > Settings.Instance.BackupStatisticTime)
-					{
-						timeStats = DateTime.Now;
-						//Statistic.Instance.Save();
-					}
 				}
 
 				Thread.Sleep(500);
@@ -185,7 +158,6 @@ namespace XG.Server.Plugin.Backend.File
 			SaveFiles();
 			SaveObjects();
 			SaveSearches();
-			SaveSnapshots();
 		}
 
 		#endregion
@@ -256,11 +228,6 @@ namespace XG.Server.Plugin.Backend.File
 			{
 				SaveObjects();
 			}
-		}
-
-		protected override void SnapshotAdded(Snapshot aSnap)
-		{
-			SaveSnapshots();
 		}
 
 		#endregion
@@ -364,14 +331,6 @@ namespace XG.Server.Plugin.Backend.File
 			lock (_saveSearchesLock)
 			{
 				return Save(Searches, Settings.Instance.AppDataPath + SearchesBinary);
-			}
-		}
-
-		bool SaveSnapshots()
-		{
-			lock (_saveSnapshotsLock)
-			{
-				return Save(Snapshots, Settings.Instance.AppDataPath + SnapshotsBinary);
 			}
 		}
 

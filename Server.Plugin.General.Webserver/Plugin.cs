@@ -27,6 +27,8 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
+using SharpRobin.Core;
+
 namespace XG.Server.Plugin.General.Webserver
 {
 	public class Plugin : APlugin
@@ -38,6 +40,8 @@ namespace XG.Server.Plugin.General.Webserver
 		Websocket.Server _socket;
 
 		readonly string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(BitConverter.GetBytes(new Random().Next()))).Replace("-", "");
+
+		public RrdDb RrdDb { get; set; }
 
 		#endregion
 
@@ -54,7 +58,6 @@ namespace XG.Server.Plugin.General.Webserver
 				Servers = Servers,
 				Files = Files,
 				Searches = Searches,
-				Snapshots = Snapshots,
 				Notifications = Notifications,
 				Password = passwortHash,
 				Salt = _salt
@@ -66,10 +69,10 @@ namespace XG.Server.Plugin.General.Webserver
 				Servers = Servers,
 				Files = Files,
 				Searches = Searches,
-				Snapshots = Snapshots,
 				Notifications = Notifications,
 				Password = passwortHash,
-				Salt = _salt
+				Salt = _salt,
+				RrdDb = RrdDb
 			};
 			_socket.Start();
 		}
