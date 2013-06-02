@@ -161,24 +161,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 				}
 			}
 		}
-		/*
-		protected override void SnapshotAdded (Snapshot aSnap)
-		{
-			var snap = new Object.Snapshot();
 
-			var properties = snap.GetType().GetProperties();
-			foreach (var prop in properties)
-			{
-				var snapVal = (SnapshotValue)Enum.Parse(typeof(SnapshotValue), prop.Name);
-				prop.SetValue(snap, aSnap.Get(snapVal), null);
-			}
-
-			if (_client != null)
-			{
-				_client.Index(snap, _index, "snapshot", (int)snap.Timestamp);
-			}
-		}
-		*/
 		#endregion
 
 		#region FUNCTIONS

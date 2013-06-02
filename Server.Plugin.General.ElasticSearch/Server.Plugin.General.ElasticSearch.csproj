@@ -49,7 +49,6 @@
     <Compile Include="Object\Server.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Object\Snapshot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

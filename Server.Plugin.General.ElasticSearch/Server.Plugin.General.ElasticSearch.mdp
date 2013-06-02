@@ -24,7 +24,6 @@
     <File subtype="Code" buildaction="Compile" name="Object/Channel.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Packet.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Server.cs" />
-    <File subtype="Code" buildaction="Compile" name="Object/Snapshot.cs" />
     <File subtype="Code" buildaction="Nothing" name="install.txt" />
   </Contents>
   <References>
