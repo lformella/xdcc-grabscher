@@ -240,11 +240,13 @@ var XGGui = (function ()
 		{
 			unreadNotificationCounter = 0;
 			unreadNotifications.html("");
+			unreadNotifications.hide("drop", 500);
 		}
 		else
 		{
 			unreadNotificationCounter += counter;
 			unreadNotifications.html(unreadNotificationCounter);
+			unreadNotifications.show("drop", 500);
 		}
 	}
 
