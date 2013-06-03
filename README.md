@@ -17,7 +17,7 @@ If you want to change the settings, create a file named __settings.xml__ using t
 * Mac: dont know - send me an info if you are successfully running XG on mac :-)
 
 
-Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__. Because XG uses a websocket to serve the data you need a second port to open. This port will always be your specified port plus one. So the default value will be port _5557_.
+Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__. Because since version 2 XG uses a websocket to serve the data you need a second port to open. This port will always be your specified port plus one. So the default value will be port __5557__.
 
 ![Password Dialog](http://xg.bitpir.at/images/help/password_dialog.png)
 
