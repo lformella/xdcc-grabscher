@@ -175,7 +175,7 @@ Just look at some more examples.
 
 You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the orange bookmark button. Delting a search works the same.
 
-![Search List](http://xg.bitpir.at/images/help/searches.png)
+![Search List](http://xg.bitpir.at/images/help/search_list.png)
 
 The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favourite searches.
 
