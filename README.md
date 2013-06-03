@@ -17,7 +17,7 @@ If you want to change the settings, create a file named __settings.xml__ using t
 * Mac: dont know - send me an info if you are successfully running XG on mac :-)
 
 
-Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__.
+Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__. Because XG uses a websocket to serve the data you need a second port to open. This port will always be your specified port plus one. So the default value will be port _5557_.
 
 ![Password Dialog](http://xg.bitpir.at/images/help/password_dialog.png)
 
@@ -27,7 +27,14 @@ Now you have to add IRC networks and channels. The bots and packets are generate
 
 If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations.
 
-Packet icon = ![Packet Icon](http://xg.bitpir.at/images/help/packet_icon.png)
+The packet icon will match the file ending, so there are different versions: ![Packet Icon](http://xg.bitpir.at/images/help/packet_icons.png)
+
+## If upgrading from XG prior version 2
+
+Because XG changed som internal routines you can safely delete the following files in the config folder:
+* XG/xgsnapshots.bin
+* XG/xgsnapshots.bin.bak
+* XG/statistics.xml
 
 ### If running on Ubuntu with Mono
 
@@ -47,7 +54,7 @@ sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-
 
 ### If running on Windows Vista and greater
 
-If you dont want to run XG with admin rights, you have to execute the following command once using an admin shell: __netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%__ - you have to adjust the port if you changed it before, of course. Otherwise the integrated webserver wont work.
+If you dont want to run XG with admin rights, you have to execute the following command once using an admin shell: __netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%__ and __netsh http add urlacl url=http://*:5557/ user=%USERDOMAIN%\%USERNAME%__ because XG is using websockets. You have to adjust the ports if you changed it before, of course. Otherwise the integrated webserver wont work.
 
 ## Settings
 
@@ -166,9 +173,9 @@ Just look at some more examples.
 ```
 ## Search for packets
 
-You can search for packets by entering a custom search term and just clicking enter. Your search will be added to the search list and by clicking on one of these items the packet list will be updated.
+You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the orange bookmark button. Delting a search works the same.
 
-![Search List](http://xg.bitpir.at/images/help/search_list.png)
+![Search List](http://xg.bitpir.at/images/help/searches.png)
 
 The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favourite searches.
 
