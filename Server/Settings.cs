@@ -268,7 +268,7 @@ namespace XG.Server
 
 		public int TakeSnapshotTimeInMinutes
 		{
-			get { return 5; }
+			get { return 1; }
 		}
 
 		public string ParsingErrorFile
