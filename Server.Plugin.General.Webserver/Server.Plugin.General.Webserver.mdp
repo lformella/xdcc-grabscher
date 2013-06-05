@@ -122,11 +122,14 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-asc.gif" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-desc.gif" />
     <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.gui.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.gui.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.bootstrap.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.groupitemmetadataprovider.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
     <File subtype="Code" buildaction="Compile" name="Websocket/DoubleConverter.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/bootstrap.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.bootstrap.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/bootstrap-slickgrid.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.bootstrap-slickgrid.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/tango-colors.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.tango-colors.css" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
