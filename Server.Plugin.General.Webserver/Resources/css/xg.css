@@ -148,6 +148,8 @@ label
 #serverChannelsDialog
 {
 	width: 860px;
+	left: -webkit-calc((100% - 860px) / 2);
+	left: -moz-calc((100% - 860px) / 2);
 	left: calc((100% - 860px) / 2);
 	margin-left: 0;
 }
