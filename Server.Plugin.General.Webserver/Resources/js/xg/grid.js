@@ -299,7 +299,11 @@ var XGGrid = (function ()
 				{
 					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
 				}, false, "icon"),
-				buildRow("Name", 0, true, $.proxy(formatter.formatChannelName, formatter), false),
+				buildRow("Name", 0, true, $.proxy(formatter.formatChannelName, formatter), false, "small-line"),
+				buildRow("User", 80, false, function (obj)
+				{
+					return obj.UserCount;
+				}, true),
 				buildRow("", 30, false, function (obj)
 				{
 					return formatter.formatRemoveIcon(Enum.Grid.Channel, obj);

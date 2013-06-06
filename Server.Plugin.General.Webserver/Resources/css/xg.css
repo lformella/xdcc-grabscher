@@ -132,6 +132,11 @@ label
 	margin-bottom: 10px;
 }
 
+#ChannelGrid
+{
+	width: 500px;
+}
+
 #NotificationGrid
 {
 	width: 640px;
@@ -142,7 +147,9 @@ label
 
 #serverChannelsDialog
 {
-	width: 680px;
+	width: 860px;
+	left: calc((100% - 860px) / 2);
+	margin-left: 0;
 }
 
 #serverChannelsDialog .modal-body > div

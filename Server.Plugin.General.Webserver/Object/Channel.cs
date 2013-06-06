@@ -50,6 +50,16 @@ namespace XG.Server.Plugin.General.Webserver.Object
 			get { return Object.ErrorCode; }
 		}
 
+		public string Topic
+		{
+			get { return Object.Topic; }
+		}
+
+		public int UserCount
+		{
+			get { return Object.UserCount; }
+		}
+
 		#endregion
 	}
 }

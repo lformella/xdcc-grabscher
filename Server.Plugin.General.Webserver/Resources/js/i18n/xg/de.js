@@ -70,6 +70,7 @@ translations =
 	"External search": "Externe Suche",
 	"Last Mentioned": "Aktualisiert",
 	"Bot Speed": "Geschw.",
+	"User": "Benutzer",
 
 	/* ************************************************************************************************************** */
 	/* SNAPSHOTS                                                                                                      */

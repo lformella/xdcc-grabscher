@@ -162,6 +162,10 @@ var XGFormatter = (function ()
 			{
 				str += " - <small>" + translate._("Error") + ": " + obj.ErrorCode + "</small>";
 			}
+			if (obj.Topic != null)
+			{
+				str += "<br /><small title='" + obj.Topic + "'>" + obj.Topic + "</small>";
+			}
 			return str;
 		},
 

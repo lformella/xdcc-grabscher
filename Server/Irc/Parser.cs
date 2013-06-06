@@ -149,6 +149,8 @@ namespace XG.Server.Irc
 			{
 				if (tChan != null)
 				{
+					tChan.UserCount--;
+
 					tUserName = aCommands[3];
 					if (tUserName == Settings.Instance.IrcNick)
 					{
@@ -203,6 +205,7 @@ namespace XG.Server.Irc
 				tChan = aServer.Channel(tChannelName);
 				if (tChan != null)
 				{
+					tChan.UserCount++;
 					if (tBot != null)
 					{
 						tBot.Connected = true;
@@ -225,6 +228,7 @@ namespace XG.Server.Irc
 			{
 				if (tChan != null)
 				{
+					tChan.UserCount--;
 					if (tBot != null)
 					{
 						tBot.Connected = true;
@@ -240,11 +244,15 @@ namespace XG.Server.Irc
 
 			else if (tComCodeStr == "QUIT")
 			{
-				if (tBot != null)
+				if (tChan != null)
 				{
-					tBot.Connected = false;
-					tBot.LastMessage = "quited";
-					log.Info("con_DataReceived() " + tBot + " quited");
+					tChan.UserCount--;
+					if (tBot != null)
+					{
+						tBot.Connected = false;
+						tBot.LastMessage = "quited";
+						log.Info("con_DataReceived() " + tBot + " quited");
+					}
 				}
 			}
 

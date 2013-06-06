@@ -64,6 +64,22 @@ namespace XG.Core
 			set { SetProperty(ref _errorCode, value, "ErrorCode"); }
 		}
 
+		string _topic;
+
+		public string Topic
+		{
+			get { return _topic; }
+			set { SetProperty(ref _topic, value, "Topic"); }
+		}
+
+		int _userCount;
+
+		public int UserCount
+		{
+			get { return _userCount; }
+			set { SetProperty(ref _userCount, value, "UserCount"); }
+		}
+
 		#endregion
 		
 		#region CHILDREN

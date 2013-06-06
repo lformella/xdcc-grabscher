@@ -88,6 +88,30 @@ namespace XG.Server.Irc
 
 						#endregion
 
+						#region RPL_WHOISCHANNELS
+
+					case 331: // RPL_NOTOPIC
+						tChan = aServer.Channel(aCommands[3]);
+						if (tChan != null)
+						{
+							tChan.Topic = "";
+						}
+						break;
+
+						#endregion
+
+						#region RPL_WHOISCHANNELS
+
+					case 332: // RPL_TOPIC
+						tChan = aServer.Channel(aCommands[3]);
+						if (tChan != null)
+						{
+							tChan.Topic = RemoveSpecialIrcChars(aMessage);
+						}
+						break;
+
+						#endregion
+
 						#region RPL_NAMREPLY
 
 					case 353: // RPL_NAMREPLY
@@ -97,6 +121,7 @@ namespace XG.Server.Irc
 							string[] tUsers = aMessage.Split(' ');
 							foreach (string user in tUsers)
 							{
+								tChan.UserCount++;
 								string tUser = Regex.Replace(user, "^(@|!|%|\\+){1}", "");
 								tBot = tChan.Bot(tUser);
 								if (tBot != null)

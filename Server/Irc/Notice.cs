@@ -548,6 +548,8 @@ namespace XG.Server.Irc
 					log.Info("Parse() message from " + tBot + ": " + aMessage);
 				}
 
+				// set em to connected if it isnt already
+				tBot.Connected = true;
 				tBot.Commit();
 			}
 		}
