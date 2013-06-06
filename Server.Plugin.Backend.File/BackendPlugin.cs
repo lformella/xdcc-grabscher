@@ -26,6 +26,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
@@ -42,7 +43,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		readonly BinaryFormatter _formatter = new BinaryFormatter();
+		BinaryFormatter _formatter;
 
 		bool _isSaveFile;
 
@@ -59,6 +60,12 @@ namespace XG.Server.Plugin.Backend.File
 		bool _allowRunning = true;
 
 		#endregion
+
+		public BackendPlugin()
+		{
+			_formatter = new BinaryFormatter();
+			_formatter.Binder = new Version1ToVersion2DeserializationBinder();
+		}
 
 		#region ABackendPlugin
 
@@ -335,5 +342,26 @@ namespace XG.Server.Plugin.Backend.File
 		}
 
 		#endregion
+	}
+
+	public sealed class Version1ToVersion2DeserializationBinder : SerializationBinder
+	{
+		public override Type BindToType(string assemblyName, string typeName)
+		{
+			Type typeToDeserialize = null;
+
+			if (typeName == "XG.Core.Object")
+			{
+				typeName = "XG.Core.Search";
+			}
+			if (typeName == "XG.Core.Objects")
+			{
+				typeName = "XG.Core.Searches";
+			}
+
+			typeToDeserialize = Type.GetType(String.Format("{0}, {1}", typeName, assemblyName));
+
+			return typeToDeserialize;
+		}
 	}
 }
