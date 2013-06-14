@@ -141,34 +141,9 @@ var XGMain = (function ()
 			graph.setSnapshots(args.Data);
 		});
 
-		websocket.onRequestComplete.subscribe(function (e, args)
+		websocket.onSearchComplete.subscribe(function (e, args)
 		{
-			var newArgs = { Data: null, DataType: Enum.Grid.Search };
-
-			switch (args.Data)
-			{
-				case Enum.Request.ChannelsFromServer:
-					newArgs.DataType = Enum.Grid.Server;
-					newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(serversActive.shift());
-					break;
-
-				case Enum.Request.PacketsFromBot:
-					newArgs.DataType = Enum.Grid.Bot;
-					newArgs.Data = dataView.getDataView(newArgs.DataType).getItemById(botsActive.shift());
-					break;
-
-				case Enum.Request.Search:
-				case Enum.Request.SearchExternal:
-					gui.hideLoading();
-					newArgs.Data = null;
-					break;
-			}
-
-			if (newArgs.Data != null)
-			{
-				newArgs.Data.Active = false;
-				dataView.updateItem(newArgs);
-			}
+			gui.hideLoading();
 		});
 
 		websocket.connect();

@@ -298,6 +298,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = searchObj
 							});
 						}
+						else
+						{
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.SearchComplete,
+								Data = request.Type
+							});
+						}
 						break;
 
 					case Request.Types.SearchExternal:
@@ -351,7 +359,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 						Unicast(currentUser, new Response
 						{
-							Type = Response.Types.RequestComplete,
+							Type = Response.Types.SearchComplete,
 							Data = request.Type
 						});
 						break;
@@ -395,6 +403,15 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 					case Request.Types.ChannelsFromServer:
 						var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
 						UnicastOnRequest(currentUser, channels, request.Type);
+						var tServer = Servers.WithGuid(request.Guid);
+						if (tServer != null)
+						{
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.ObjectChanged,
+								Data = tServer
+							});
+						}
 						break;
 
 					case Request.Types.PacketsFromBot:
@@ -405,6 +422,15 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 										  where packet.ParentGuid == request.Guid
 										  select packet).ToList();
 						UnicastOnRequest(currentUser, botPackets, request.Type);
+						var tCurrentBot = Servers.WithGuid(request.Guid);
+						if (tCurrentBot != null)
+						{
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.ObjectChanged,
+								Data = tCurrentBot
+							});
+						}
 						break;
 
 					case Request.Types.Snapshots:
@@ -505,11 +531,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				};
 				Unicast(aUser, response, false);
 			}
-			Unicast(aUser, new Response
-			{
-				Type = Response.Types.RequestComplete,
-				Data = aRequestType
-			});
 		}
 
 		void Broadcast(Response aResponse)
@@ -608,21 +629,32 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				aResponse.Data = myObj;
 			}
 
-			string message = JsonConvert.SerializeObject(aResponse, _jsonSerializerSettings);
-			
-#if !UNSAFE
+			string message = null;
 			try
 			{
-#endif
-				aUser.Connection.Send(message);
-				Log.Info("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + message + ")");
-#if !UNSAFE
+				message = JsonConvert.SerializeObject(aResponse, _jsonSerializerSettings);
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + message + ")", ex);
+				Log.Fatal("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + aResponse.Type + "|" + aResponse.DataType + ")", ex);
 			}
+
+			if (message != null)
+			{
+#if !UNSAFE
+				try
+				{
 #endif
+					aUser.Connection.Send(message);
+					Log.Info("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + message + ")");
+#if !UNSAFE
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Unicast(" + aUser.Connection.ConnectionInfo.ClientIpAddress + ", " + message + ")", ex);
+				}
+#endif
+			}
 		}
 
 		#endregion

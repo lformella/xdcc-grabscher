@@ -96,8 +96,8 @@ var XGWebsocket = (function ()
 				self.onSnapshots.notify(json, null, self);
 				break;
 
-			case Enum.Response.RequestComplete:
-				self.onRequestComplete.notify(json, null, self);
+			case Enum.Response.SearchComplete:
+			    self.onSearchComplete.notify(json, null, self);
 				break;
 		}
 	}
@@ -106,7 +106,7 @@ var XGWebsocket = (function ()
 		onError: new Slick.Event(),
 		onDisconnected: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
-		onRequestComplete: new Slick.Event(),
+		onSearchComplete: new Slick.Event(),
 
 		/**
 		 * @param {XGDataView} dataView1

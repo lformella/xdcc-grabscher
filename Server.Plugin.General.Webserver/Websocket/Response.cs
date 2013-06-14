@@ -41,7 +41,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectAdded = 1,
 			ObjectRemoved = 2,
 			ObjectChanged = 3,
-			RequestComplete = 4,
+			SearchComplete = 4,
 
 			#endregion
 
