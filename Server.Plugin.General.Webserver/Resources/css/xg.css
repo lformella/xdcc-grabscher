@@ -99,11 +99,22 @@ label
 	margin-left: 110px;
 }
 
+[class^="icon-"], [class*=" icon-"]
+{
+    background-position: initial;
+	background-image: none !important;
+    height: auto;
+    margin-top: inherit;
+    width: auto;
+	display: normal;
+	line-height: inherit;
+	vertical-align: inherit;
+}
+
 /** Fontello **/
 
 #searchRemove [class^="icon-"], #searchAdd [class^="icon-"]
 {
-	margin-top: 4px;
 	font-size: 1.5em;
 }
 

@@ -45,6 +45,8 @@ var XGGui = (function ()
 	var currentSlide = 0;
 	var showOfflineBots, humanDates, combineBotAndPacketGrid;
 
+	var showEffect = { effect: "drop", duration: 500 };
+
 	function searchClick (element)
 	{
 		setCurrentSearchGuid(element.data("guid"));
@@ -188,11 +190,11 @@ var XGGui = (function ()
 
 				if (currentSlide == 1 || currentSlide == 2)
 				{
-					searchForm.show("drop", 500);
+				    searchForm.show(showEffect);
 				}
 				else
 				{
-					searchForm.hide("drop", 500);
+				    searchForm.hide(showEffect);
 				}
 			});
 		$("#mainCarousel").carousel({ interval: false });
@@ -240,13 +242,13 @@ var XGGui = (function ()
 		{
 			unreadNotificationCounter = 0;
 			unreadNotifications.html("");
-			unreadNotifications.hide("drop", 500);
+			unreadNotifications.hide(showEffect);
 		}
 		else
 		{
 			unreadNotificationCounter += counter;
 			unreadNotifications.html(unreadNotificationCounter);
-			unreadNotifications.show("drop", 500);
+			unreadNotifications.show(showEffect);
 		}
 	}
 

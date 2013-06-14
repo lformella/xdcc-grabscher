@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>jquery.event.drag</id>
+    <version>2.2.0</version>
+    <title>jquery.event.drag</title>
+    <authors>Three Dub Media</authors>
+    <owners>Three Dub Media</owners>
+    <licenseUrl>http://threedubmedia.com/code/license</licenseUrl>
+    <projectUrl>http://threedubmedia.com/code/event/drag</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The plugin works by using standard DOM events, and simulating custom events to create a drag interaction. It simplifies a recurring pattern of event interaction that can be fairly complex to design in a consistent, cross-browser manner. The drag interaction, while simple in most basic form, gets quite complex when introduced with issues of distance, handles, text selection, proxy elements, click suppression, and dropping.
+
+This plugin is focused on correctly simulating the drag events in a very usable way. This plugin does not add classnames, does not alter the position or appearance of any elements, and does not alter the DOM. This plugin only provides the essential callbacks at the correct points in the interaction model to enable developers to have complete control over the interactions that they create. This reduces the file size, eliminates dependencies, and increases performance.</description>
+    <summary>A jquery special event plugin that makes the task of adding complex drag interactions, to any element, simple and powerful.</summary>
+    <copyright>2010 Three Dub Media</copyright>
+    <tags>jquery event drag</tags>
+    <dependencies>
+      <dependency id="jQuery" version="1.7" />
+    </dependencies>
+    <references />
+  </metadata>
+</package>

@@ -43,50 +43,50 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 
 		readonly string[] _cssFiles =
 		{
-			"reset",
-			"bootstrap",
-			"fontello",
-			"animation",
-			"slick.grid",
-			"bootstrap-slickgrid",
-			"tango-colors",
-			"xg"
+			"Content/normalize",
+			"Content/bootstrap.min",
+			"Content/slick.grid",
+			"Resources/css/fontello",
+			"Resources/css/animation",
+			"Resources/css/bootstrap-slickgrid",
+			"Resources/css/tango-colors",
+			"Resources/css/xg"
 		};
 
 		readonly string[] _jsFiles =
 		{
-			"external/moment.min",
-			"external/jquery.min",
-			"external/jquery.event.drag-2.0.min",
-			"external/jquery.cookie.min",
-			"external/jquery.flot",
-			"external/jquery.flot.axislabels",
-			"external/jquery-timing.min",
-			"external/jquery-ui.min",
-			"external/json2.min",
-			"external/sha256",
-			"external/slick.core",
-			"external/slick.formatters",
-			"external/slick.grid",
-			"external/slick.dataview",
-			"external/slick.rowselectionmodel",
-			"external/slick.groupitemmetadataprovider",
-			"external/bootstrap.min",
-			"i18n/moment/#LANGUAGE_SHORT#",
-			"i18n/xg/#LANGUAGE_SHORT#",
-			"xg/enum",
-			"xg/gui",
-			"xg/cookie",
-			"xg/formatter",
-			"xg/helper",
-			"xg/grid",
-			"xg/main",
-			"xg/password",
-			"xg/dataview",
-			"xg/resize",
-			"xg/graph",
-			"xg/translate",
-			"xg/websocket"
+			"Scripts/moment.min",
+			"Scripts/jquery-2.0.2.min",
+			"Scripts/jquery-ui-1.10.3.min",
+			"Scripts/jquery.event.drag.min",
+			"Scripts/jquery.cookie",
+			"Scripts/flot/jquery.flot.min",
+			"Scripts/flot/jquery.flot.time.min",
+			"Scripts/json2.min",
+			"Scripts/SlickGrid/slick.core",
+			"Scripts/SlickGrid/slick.formatters",
+			"Scripts/SlickGrid/slick.grid",
+			"Scripts/SlickGrid/slick.dataview",
+			"Scripts/SlickGrid/Plugins/slick.rowselectionmodel",
+			"Scripts/SlickGrid/slick.groupitemmetadataprovider",
+			"Scripts/bootstrap.min",
+			"Resources/js/external/jquery.flot.axislabels",
+			"Resources/js/external/sha256",
+			"Resources/js/i18n/moment/#LANGUAGE_SHORT#",
+			"Resources/js/i18n/xg/#LANGUAGE_SHORT#",
+			"Resources/js/xg/enum",
+			"Resources/js/xg/gui",
+			"Resources/js/xg/cookie",
+			"Resources/js/xg/formatter",
+			"Resources/js/xg/helper",
+			"Resources/js/xg/grid",
+			"Resources/js/xg/main",
+			"Resources/js/xg/password",
+			"Resources/js/xg/dataview",
+			"Resources/js/xg/resize",
+			"Resources/js/xg/graph",
+			"Resources/js/xg/translate",
+			"Resources/js/xg/websocket"
 		};
 
 		public string Salt;
@@ -110,56 +110,56 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			{
 #endif
 				string content = "";
-				if (aFile == "/js/all.js")
+				if (aFile == "/Resources/js/all.js")
 				{
 					foreach (string file in _jsFiles)
 					{
-						content += LoadFile("/js/" + PatchLanguage(file, aLanguages) + ".js", aHost, aLanguages) + "\n";
+						content += LoadFile("/" + PatchLanguage(file, aLanguages) + ".js", aHost, aLanguages) + "\n";
 					}
 				}
-				else if (aFile == "/css/all.css")
+				else if (aFile == "/Resources/css/all.css")
 				{
 					foreach (string file in _cssFiles)
 					{
-						content += LoadFile("/css/" + file + ".css", aHost, aLanguages) + "\n";
+						content += LoadFile("/" + file + ".css", aHost, aLanguages) + "\n";
 					}
 				}
 				else
 				{
 #if DEBUG && !WINDOWS
-					content = File.OpenText("./Resources" + aFile).ReadToEnd();
+					content = File.OpenText("." + aFile).ReadToEnd();
 #else
 					Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
-					string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+					string name = "XG." + assembly.GetName().Name + aFile.Replace('/', '.');
 					Stream stream = assembly.GetManifestResourceStream(name);
 					if (stream != null)
 					{
 						content = new StreamReader(stream).ReadToEnd();
 					}
 #endif
-					if (aFile == "/index.html")
+					if (aFile == "/Resources/index.html")
 					{
 						content = content.Replace("#HOST#", aHost);
 						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));
-#if DEBUG
+//#if DEBUG
 						string css = "";
 						foreach (string cssFile in _cssFiles)
 						{
-							css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/" + cssFile + ".css\" />\n";
+							css += "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"" + cssFile + ".css\" />\n";
 						}
-#else
-						string css = "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"css/all.css\" />\n";
-#endif
+/*#else
+						string css = "\t\t<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"Resources/css/all.css\" />\n";
+#endif*/
 						content = content.Replace("#CSS_FILES#", css);
 
 						//#if DEBUG
 						string js = "";
 						foreach (string jsFile in _jsFiles)
 						{
-							js += "\t\t<script type=\"text/javascript\" src=\"js/" + jsFile + ".js\"></script>\n";
+							js += "\t\t<script type=\"text/javascript\" src=\"" + jsFile + ".js\"></script>\n";
 						}
 						//#else
-						//	string js = "\t\t<script type=\"text/javascript\" src=\"js/all.js\"></script>\n";
+						//	string js = "\t\t<script type=\"text/javascript\" src=\"Resources/js/all.js\"></script>\n";
 						//#endif 
 						content = content.Replace("#JS_FILES#", js);
 
@@ -193,10 +193,10 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			{
 #endif
 #if DEBUG && !WINDOWS
-				return File.ReadAllBytes("./Resources" + aFile);
+				return File.ReadAllBytes("." + aFile);
 #else
 				Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
-				string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+				string name = "XG." + assembly.GetName().Name + aFile.Replace('/', '.');
 				Stream stream = assembly.GetManifestResourceStream(name);
 				if (stream != null)
 				{
@@ -231,7 +231,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			{
 #endif
 				Assembly assembly = Assembly.GetAssembly(typeof (FileLoader));
-				string name = "XG." + assembly.GetName().Name + ".Resources" + aFile.Replace('/', '.');
+				string name = "XG." + assembly.GetName().Name + aFile.Replace('/', '.');
 				Stream stream = assembly.GetManifestResourceStream(name);
 				if (stream != null)
 				{

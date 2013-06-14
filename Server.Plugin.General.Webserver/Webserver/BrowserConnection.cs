@@ -84,7 +84,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 					}
 					if (str == "/")
 					{
-						str = "/index.html";
+						str = "/Resources/index.html";
 					}
 
 					if (str.EndsWith(".png"))

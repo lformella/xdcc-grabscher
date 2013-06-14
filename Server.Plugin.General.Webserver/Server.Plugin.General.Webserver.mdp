@@ -33,7 +33,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
     <File subtype="Directory" buildaction="Compile" name="Object" />
     <File subtype="Code" buildaction="Compile" name="Object/Flot.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/reset.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.reset.css" />
     <File subtype="Directory" buildaction="Compile" name="Websocket" />
     <File subtype="Code" buildaction="Compile" name="Websocket/Request.cs" />
     <File subtype="Code" buildaction="Compile" name="Websocket/Server.cs" />
@@ -45,12 +44,7 @@
     <File subtype="Code" buildaction="Compile" name="Websocket/Response.cs" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/i18n" />
     <File subtype="Directory" buildaction="Compile" name="Resources/js/external" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.cookie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.cookie.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.axislabels.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.axislabels.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.flot.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/json2.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.json2.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/moment.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.moment.min.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/sha256.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.sha256.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/moment/de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.moment.de.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg/de.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.de.js" />
@@ -102,14 +96,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/i18n/xg/en.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.i18n.xg.en.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/dataview.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.dataview.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/grid.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.grid.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.event.drag-2.0.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.event.drag-2.0.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-timing.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-timing.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.core.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.core.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.dataview.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.dataview.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.formatters.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.formatters.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.grid.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.grid.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/slick.grid.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.slick.grid.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.rowselectionmodel.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.rowselectionmodel.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/animation.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.animation.css" />
     <File subtype="Code" buildaction="Compile" name="ASaltedPassword.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/AObject.cs" />
@@ -119,17 +105,161 @@
     <File subtype="Code" buildaction="Compile" name="Object/Server.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/Notification.cs" />
     <File subtype="Code" buildaction="Compile" name="Object/File.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-asc.gif" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.images.sort-desc.gif" />
     <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.gui.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.bootstrap.min.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.slick.groupitemmetadataprovider.js" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery-ui.min.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery-ui.min.js" />
     <File subtype="Code" buildaction="Compile" name="Websocket/DoubleConverter.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/bootstrap.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.bootstrap.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/bootstrap-slickgrid.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.bootstrap-slickgrid.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/tango-colors.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.tango-colors.css" />
+    <File subtype="Directory" buildaction="Compile" name="Scripts" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/bootstrap.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/bootstrap.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.bootstrap.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery-2.0.2.intellisense.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery-2.0.2.intellisense.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery-2.0.2.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery-2.0.2.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery-2.0.2.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery-2.0.2.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery-2.0.2.min.map" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery-2.0.2.min.map" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery-ui-1.10.3.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery-ui-1.10.3.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery-ui-1.10.3.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery-ui-1.10.3.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery.cookie.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery.cookie.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery.event.drag.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery.event.drag.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery.event.drag.live.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery.event.drag.live.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery.event.drag.live.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery.event.drag.live.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/jquery.event.drag.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.jquery.event.drag.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/json2.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.json2.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/json2.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.json2.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/moment.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.moment.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/moment.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.moment.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.core.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.core.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.dataview.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.dataview.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.editors.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.editors.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.formatters.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.formatters.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.grid.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.grid.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.groupitemmetadataprovider.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.groupitemmetadataprovider.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/slick.remotemodel.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.slick.remotemodel.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Controls/slick.columnpicker.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Controls.slick.columnpicker.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Controls/slick.pager.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Controls.slick.pager.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.autotooltips.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.autotooltips.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.cellcopymanager.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.cellcopymanager.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.cellrangedecorator.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.cellrangedecorator.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.cellrangeselector.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.cellrangeselector.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.cellselectionmodel.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.cellselectionmodel.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.checkboxselectcolumn.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.checkboxselectcolumn.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.headerbuttons.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.headerbuttons.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.headermenu.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.headermenu.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.rowmovemanager.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.rowmovemanager.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/SlickGrid/Plugins/slick.rowselectionmodel.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.SlickGrid.Plugins.slick.rowselectionmodel.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/excanvas.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.excanvas.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/excanvas.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.excanvas.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.colorhelpers.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.colorhelpers.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.colorhelpers.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.colorhelpers.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.canvas.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.canvas.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.canvas.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.canvas.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.categories.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.categories.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.categories.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.categories.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.crosshair.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.crosshair.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.crosshair.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.crosshair.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.errorbars.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.errorbars.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.errorbars.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.errorbars.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.fillbetween.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.fillbetween.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.fillbetween.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.fillbetween.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.image.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.image.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.image.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.image.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.navigate.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.navigate.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.navigate.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.navigate.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.pie.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.pie.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.pie.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.pie.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.resize.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.resize.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.resize.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.resize.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.selection.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.selection.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.selection.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.selection.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.stack.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.stack.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.stack.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.stack.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.symbol.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.symbol.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.symbol.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.symbol.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.threshold.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.threshold.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.threshold.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.threshold.min.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.time.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.time.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.time.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.time.min.js" />
+    <File subtype="Directory" buildaction="Compile" name="Content" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap-responsive.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap-responsive.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap-responsive.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap-responsive.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/normalize.css" resource_id="XG.Server.Plugin.General.Webserver.Content.normalize.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.columnpicker.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.columnpicker.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.grid.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.grid.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.headerbuttons.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.headerbuttons.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.headermenu.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.headermenu.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.pager.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.pager.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/down.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.down.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/glyphicons-halflings-white.png" resource_id="XG.Server.Plugin.General.Webserver.Content.images.glyphicons-halflings-white.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/glyphicons-halflings.png" resource_id="XG.Server.Plugin.General.Webserver.Content.images.glyphicons-halflings.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/header-columns-bg.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.header-columns-bg.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.sort-asc.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.sort-desc.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery-ui.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery-ui.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.accordion.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.accordion.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.all.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.all.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.autocomplete.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.autocomplete.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.base.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.base.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.button.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.button.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.core.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.core.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.datepicker.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.datepicker.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.dialog.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.dialog.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.menu.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.menu.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.progressbar.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.progressbar.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.resizable.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.resizable.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.selectable.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.selectable.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.slider.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.slider.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.spinner.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.spinner.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.tabs.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.tabs.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.theme.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.theme.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/jquery.ui.tooltip.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.jquery.ui.tooltip.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/animated-overlay.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.animated-overlay.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_flat_0_aaaaaa_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_flat_75_ffffff_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_flat_75_ffffff_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_glass_55_fbf9ee_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_glass_65_ffffff_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_glass_65_ffffff_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_glass_75_dadada_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_glass_75_dadada_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_glass_75_e6e6e6_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_glass_95_fef1ec_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-icons_222222_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-icons_222222_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-icons_2e83ff_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-icons_2e83ff_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-icons_454545_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-icons_454545_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-icons_888888_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-icons_888888_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/images/ui-icons_cd0a0a_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.images.ui-icons_cd0a0a_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery-ui.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery-ui.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.accordion.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.accordion.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.autocomplete.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.autocomplete.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.button.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.button.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.core.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.core.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.datepicker.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.datepicker.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.dialog.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.dialog.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.menu.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.menu.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.progressbar.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.progressbar.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.resizable.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.resizable.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.selectable.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.selectable.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.slider.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.slider.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.spinner.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.spinner.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.tabs.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.tabs.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.theme.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.theme.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/jquery.ui.tooltip.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.jquery.ui.tooltip.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/animated-overlay.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.animated-overlay.gif" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_flat_0_aaaaaa_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_flat_0_aaaaaa_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_flat_75_ffffff_40x100.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_flat_75_ffffff_40x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_glass_55_fbf9ee_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_glass_55_fbf9ee_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_glass_65_ffffff_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_glass_75_dadada_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_glass_75_dadada_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_glass_75_e6e6e6_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_glass_75_e6e6e6_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_glass_95_fef1ec_1x400.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-bg_highlight-soft_75_cccccc_1x100.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_222222_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_222222_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_2e83ff_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_2e83ff_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_454545_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_454545_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_888888_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_888888_256x240.png" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_cd0a0a_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_cd0a0a_256x240.png" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -139,9 +269,9 @@
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Fleck.0.9.6.16/lib/net40/Fleck.dll" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Fleck.0.9.6.19/lib/net40/Fleck.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
   </References>
 </Project>

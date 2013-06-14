@@ -45,7 +45,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 
 		protected override void StartRun()
 		{
-			var setting = new ConnectionSettings(Settings.Instance.ElasticSearchHost, Settings.Instance.ElasticSearchPort);
+			var setting = new ConnectionSettings(new Uri(Settings.Instance.ElasticSearchHost + ":" + Settings.Instance.ElasticSearchPort));
 			_client = new ElasticClient(setting);
 
 			// reindex all

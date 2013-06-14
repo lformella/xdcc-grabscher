@@ -49,6 +49,7 @@ var XGGrid = (function ()
 	{
 		var grid = new Slick.Grid("#" + gridName + "Grid", dataView, columns,
 			{
+			    enableColumnReorder: false,
 				editable: false,
 				enableAddRow: false,
 				enableCellNavigation: true,

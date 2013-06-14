@@ -30,8 +30,8 @@
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
     <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/NEST.0.9.17.0/lib/NET4/Nest.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/NEST.0.11.0.0/lib/NET4/Nest.dll" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.5.0.6/lib/net40/Newtonsoft.Json.dll" />
   </References>
 </Project>

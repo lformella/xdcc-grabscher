@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>flot</id>
+    <version>0.8.1</version>
+    <title>flot</title>
+    <authors>Ole Laursen,  David Schnur</authors>
+    <owners>Ole Laursen,  David Schnur</owners>
+    <licenseUrl>https://github.com/flot/flot/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>http://www.flotcharts.org/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Attractive JavaScript charts for jQuery. This NuGet package is managed from https://github.com/blachniet/flot-nuget.</description>
+    <summary>Attractive JavaScript charts for jQuery.</summary>
+    <releaseNotes>Bug fix release.
+
+# Bug Fixes
+
+ - Fixed a regression in the time plugin, introduced in 0.8, that caused dates
+   to align to the minute rather than to the highest appropriate unit. This
+   caused many x-axes in 0.8 to have different ticks than they did in 0.7.
+   (reported by Tom Sheppard, patch by Daniel Shapiro, issue #1017, pull
+   request #1023) +Fix
+
+ - Fixed a regression in text rendering, introduced in 0.8, that caused axis
+   labels with the same text as another label on the same axis to disappear.
+   More generally, it's again possible to have the same text in two locations.
+   (issue #1032) +Fix
+
+ - Fixed a regression in text rendering, introduced in 0.8, where axis labels
+   were no longer assigned an explicit width, and their text could not wrap.
+   (reported by sabregreen, issue #1019) +Fix
+
+ - Fixed a regression in the pie plugin, introduced in 0.8, that prevented it
+   from accepting data in the format '[[x, y]]'.
+   (patch by Nicolas Morel, pull request #1024) +Fix
+
+ - The 'zero' series option and 'autoscale' format option are no longer
+   ignored when the series contains a null value.
+   (reported by Daniel Shapiro, issue #1033) +Fix
+
+ - Avoid triggering the time-mode plugin exception when there are zero series.
+   (reported by Daniel Rothig, patch by Mark Raymond, issue #1016) +Fix
+
+ - When a custom color palette has fewer colors than the default palette, Flot
+   no longer fills out the colors with the remainder of the default.
+   (patch by goorpy, issue #1031, pull request #1034) +Fix
+
+ - Fixed missing update for bar highlights after a zoom or other redraw.
+   (reported by Paolo Valleri, issue #1030) +Fix
+
+ - Fixed compatibility with jQuery versions earlier than 1.7.
+   (patch by Lee Willis, issue #1027, pull request #1027) +Fix
+
+ - The mouse wheel no longer scrolls the page when using the navigate plugin.
+   (patch by vird, pull request #1020) +Fix
+
+ - Fixed missing semicolons in the core library.
+   (reported by Michal Zglinski) +Fix</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <language />
+    <tags>chart graph javascript jquery</tags>
+    <dependencies>
+      <dependency id="jQuery" />
+    </dependencies>
+    <references />
+  </metadata>
+</package>

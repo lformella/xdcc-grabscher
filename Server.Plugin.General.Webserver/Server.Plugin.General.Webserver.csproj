@@ -105,15 +105,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Fleck">
-      <HintPath>..\packages\Fleck.0.9.6.16\lib\net40\Fleck.dll</HintPath>
+    <Reference Include="Fleck, Version=0.9.6.19, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Fleck.0.9.6.19\lib\net40\Fleck.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpRobin, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -152,24 +154,12 @@
     <EmbeddedResource Include="Resources\font\fontello.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\css\images\sort-asc.gif" />
-    <EmbeddedResource Include="Resources\css\images\sort-desc.gif" />
     <EmbeddedResource Include="Resources\font\fontello.eot" />
     <EmbeddedResource Include="Resources\font\fontello.svg" />
     <EmbeddedResource Include="Resources\font\fontello.woff" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\css\reset.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\external\jquery-timing.min.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery-ui.min.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery.cookie.min.js" />
     <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery.flot.js" />
-    <EmbeddedResource Include="Resources\js\external\jquery.min.js" />
-    <EmbeddedResource Include="Resources\js\external\json2.min.js" />
-    <EmbeddedResource Include="Resources\js\external\moment.min.js" />
     <EmbeddedResource Include="Resources\js\external\sha256.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\bg.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\ca.js" />
@@ -217,13 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\css\animation.css" />
-    <EmbeddedResource Include="Resources\css\slick.grid.css" />
-    <EmbeddedResource Include="Resources\js\external\jquery.event.drag-2.0.min.js" />
-    <EmbeddedResource Include="Resources\js\external\slick.core.js" />
-    <EmbeddedResource Include="Resources\js\external\slick.dataview.js" />
-    <EmbeddedResource Include="Resources\js\external\slick.formatters.js" />
-    <EmbeddedResource Include="Resources\js\external\slick.grid.js" />
-    <EmbeddedResource Include="Resources\js\external\slick.rowselectionmodel.js" />
     <EmbeddedResource Include="Resources\js\i18n\xg\en.js" />
     <EmbeddedResource Include="Resources\js\xg\dataview.js" />
     <EmbeddedResource Include="Resources\js\xg\grid.js" />
@@ -233,12 +216,162 @@
     <EmbeddedResource Include="Resources\js\xg\gui.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\js\external\bootstrap.min.js" />
-    <EmbeddedResource Include="Resources\js\external\slick.groupitemmetadataprovider.js" />
+    <EmbeddedResource Include="Resources\css\bootstrap-slickgrid.css" />
+    <EmbeddedResource Include="Resources\css\tango-colors.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\css\bootstrap-slickgrid.css" />
-    <EmbeddedResource Include="Resources\css\bootstrap.css" />
-    <EmbeddedResource Include="Resources\css\tango-colors.css" />
+    <None Include="packages.config" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap-responsive.css" />
+    <EmbeddedResource Include="Content\bootstrap-responsive.min.css" />
+    <EmbeddedResource Include="Content\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap.min.css" />
+    <EmbeddedResource Include="Content\images\down.gif" />
+    <EmbeddedResource Include="Content\images\glyphicons-halflings-white.png" />
+    <EmbeddedResource Include="Content\images\glyphicons-halflings.png" />
+    <EmbeddedResource Include="Content\images\header-columns-bg.gif" />
+    <EmbeddedResource Include="Content\images\sort-asc.gif" />
+    <EmbeddedResource Include="Content\images\sort-desc.gif" />
+    <EmbeddedResource Include="Content\normalize.css" />
+    <EmbeddedResource Include="Content\slick.columnpicker.css" />
+    <EmbeddedResource Include="Content\slick.grid.css" />
+    <EmbeddedResource Include="Content\slick.headerbuttons.css" />
+    <EmbeddedResource Include="Content\slick.headermenu.css" />
+    <EmbeddedResource Include="Content\slick.pager.css" />
+    <EmbeddedResource Include="Scripts\bootstrap.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.intellisense.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.cookie.js" />
+    <EmbeddedResource Include="Scripts\json2.js" />
+    <EmbeddedResource Include="Scripts\json2.min.js" />
+    <EmbeddedResource Include="Scripts\moment.js" />
+    <EmbeddedResource Include="Scripts\moment.min.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.columnpicker.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.pager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.autotooltips.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellcopymanager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangedecorator.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangeselector.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellselectionmodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.checkboxselectcolumn.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headerbuttons.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headermenu.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowmovemanager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowselectionmodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.core.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.dataview.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.editors.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.formatters.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.grid.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.groupitemmetadataprovider.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.remotemodel.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\jquery.event.drag.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.live.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.live.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.min.js" />
+    <EmbeddedResource Include="Content\themes\base\images\animated-overlay.gif" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\jquery-ui.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.accordion.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.all.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.base.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.button.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.core.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.dialog.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.menu.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.resizable.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.selectable.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.slider.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.spinner.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.tabs.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.theme.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\animated-overlay.gif" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="Scripts\jquery-ui-1.10.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
   </ItemGroup>
 </Project>
