@@ -298,14 +298,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = searchObj
 							});
 						}
-						else
+						Unicast(currentUser, new Response
 						{
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.SearchComplete,
-								Data = request.Type
-							});
-						}
+							Type = Response.Types.SearchComplete,
+							Data = request.Type
+						});
 						break;
 
 					case Request.Types.SearchExternal:

@@ -305,6 +305,10 @@ var XGGrid = (function ()
 				{
 					return obj.UserCount;
 				}, true),
+				buildRow("Bots", 80, false, function (obj)
+				{
+					return obj.BotCount;
+				}, true),
 				buildRow("", 30, false, function (obj)
 				{
 					return formatter.formatRemoveIcon(Enum.Grid.Channel, obj);

@@ -23,6 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System.Linq;
+
 using Newtonsoft.Json;
 
 namespace XG.Server.Plugin.General.Webserver.Object
@@ -58,6 +60,11 @@ namespace XG.Server.Plugin.General.Webserver.Object
 		public int UserCount
 		{
 			get { return Object.UserCount; }
+		}
+
+		public int BotCount
+		{
+			get { return Object.Bots.Count(); }
 		}
 
 		#endregion
