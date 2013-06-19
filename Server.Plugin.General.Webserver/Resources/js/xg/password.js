@@ -50,7 +50,7 @@ var XGPassword = (function ()
 
 	function checkPassword (password)
 	{
-		passwordButton.attr("disabled", "disabled");
+		passwordButton.prop("disabled", true);
 		passwordLoading.show();
 		var res = false;
 		$.ajax({
@@ -62,7 +62,7 @@ var XGPassword = (function ()
 			async: false
 		});
 		passwordLoading.hide();
-		passwordButton.removeAttr("disabled");
+		passwordButton.prop("disabled", false);
 		return res;
 	}
 

@@ -128,7 +128,8 @@ var XGMain = (function ()
 
 		websocket.onDisconnected.subscribe(function ()
 		{
-			websocket.connect();
+			//websocket.connect();
+			gui.showError();
 		});
 
 		websocket.onError.subscribe(function ()

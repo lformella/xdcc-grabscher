@@ -87,14 +87,14 @@ var XGGraph = (function ()
 
 		updateSnapshotPlot: function ()
 		{
-			var days = parseInt($("input[name='snapshotTime']:checked").val());
+			var days = parseInt($("input[name='snapshotTime']:checked").val()) * -1;
 			var snapshotsMinDate = days > 0 ? new Date().getTime() - (60 * 60 * 24 * days * 1000) : days;
 
 			var data = [];
 			var currentSnapshots = $.extend(true, [], snapshots);
 			$.each(currentSnapshots, function (index, item)
 			{
-				if (index == 0 || $("#snapshotCheckbox" + (index + 1)).attr('checked'))
+				if (index == 0 || $("#snapshotCheckbox" + (index + 1)).prop('checked'))
 				{
 					var itemData = [];
 					$.each(item.data, function (index2, item2)
@@ -115,7 +115,7 @@ var XGGraph = (function ()
 			var timeFormat;
 			switch (days)
 			{
-				case -1:
+				case 1:
 					timeFormat = "%H:%M";
 					tickSize = [2, "hour"];
 					markerFunction = function (axes)
@@ -142,7 +142,7 @@ var XGGraph = (function ()
 					};
 					break;
 
-				case -7:
+				case 7:
 					timeFormat = "%d. %b";
 					tickSize = [1, "day"];
 					markerFunction = function (axes)
@@ -169,7 +169,7 @@ var XGGraph = (function ()
 					};
 					break;
 
-				case -31:
+				case 31:
 					timeFormat = "%d. %b";
 					tickSize = [7, "day"];
 					markerFunction = function (axes)
