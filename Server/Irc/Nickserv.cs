@@ -33,7 +33,7 @@ namespace XG.Server.Irc
 {
 	public class Nickserv : AParser
 	{
-		readonly List<Core.Server> _authenticatedServer = new List<Core.Server>();
+		readonly HashSet<Core.Server> _authenticatedServer = new HashSet<Core.Server>();
 
 		#region PARSING
 

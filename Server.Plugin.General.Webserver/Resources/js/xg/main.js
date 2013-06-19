@@ -26,7 +26,7 @@
 var XGMain = (function ()
 {
 	var graph, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
-	var currentServerGuid = "";
+	var currentServerGuid = "", lastSearch;
 	var serversActive = [], botsActive = [];
 
 	/**
@@ -143,6 +143,17 @@ var XGMain = (function ()
 
 		websocket.onSearchComplete.subscribe(function (e, args)
 		{
+			if (args.Data == Enum.Request.Search)
+			{
+				dataView.endUpdate(Enum.Grid.Packet);
+				dataView.endUpdate(Enum.Grid.Bot);
+			}
+			else
+			{
+				dataView.endUpdate(Enum.Grid.ExternalSearch);
+			}
+
+			grid.applySearchFilter(lastSearch, args.Data == Enum.Request.Search ? Enum.Grid.Bot : Enum.Grid.ExternalSearch);
 			gui.hideLoading();
 		});
 
@@ -236,6 +247,9 @@ var XGMain = (function ()
 		{
 			if (args.Grid != Enum.Grid.ExternalSearch)
 			{
+				dataView.beginUpdate(Enum.Grid.Bot);
+				dataView.beginUpdate(Enum.Grid.Packet);
+
 				grid.getGrid(Enum.Grid.Bot).setSelectedRows([]);
 				grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
 				websocket.sendNameGuid(Enum.Request.Search, args.Name, args.Guid);
@@ -244,10 +258,13 @@ var XGMain = (function ()
 			{
 				if (args.Guid != "00000000-0000-0000-0000-000000000001" && args.Guid != "00000000-0000-0000-0000-000000000002")
 				{
+					dataView.beginUpdate(Enum.Grid.ExternalSearch);
+
 					websocket.sendNameGuid(Enum.Request.SearchExternal, args.Name, args.Guid);
 				}
 			}
-			grid.applySearchFilter(args);
+
+			lastSearch = args;
 			gui.showLoading();
 		});
 

@@ -78,8 +78,8 @@ namespace XG.Server
 
 		public FileActions FileActions { get; set; }
 
-		readonly List<ServerConnection> _servers;
-		readonly List<BotConnection> _downloads;
+		readonly HashSet<ServerConnection> _servers;
+		readonly HashSet<BotConnection> _downloads;
 
 		public bool AllowRunning { set; get; }
 
@@ -91,8 +91,8 @@ namespace XG.Server
 		{
 			AllowRunning = true;
 
-			_servers = new List<ServerConnection>();
-			_downloads = new List<BotConnection>();
+			_servers = new HashSet<ServerConnection>();
+			_downloads = new HashSet<BotConnection>();
 
 			// create my stuff if its not there
 			new DirectoryInfo(Settings.Instance.ReadyPath).Create();

@@ -251,7 +251,12 @@ namespace XG.Server
 								// check the file for safety
 								if (part.Checked && part.State == FilePart.States.Ready)
 								{
-									var next = file.Next(part) as FilePart;
+									FilePart next = null;
+									try
+									{
+										next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
+									}
+									catch (Exception) {}
 									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
 									{
 										complete = false;

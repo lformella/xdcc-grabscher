@@ -70,7 +70,7 @@ namespace XG.Core
 			get { return _objectLock ?? (_objectLock = new object()); }
 		}
 
-		readonly List<AObject> _children;
+		readonly ICollection<AObject> _children;
 
 		protected AObject[] All
 		{
@@ -204,26 +204,6 @@ namespace XG.Core
 			}
 		}
 
-		public AObject Next(AObject aObject)
-		{
-			if (_children.Contains(aObject))
-			{
-				bool next = false;
-				foreach (AObject tObj in All)
-				{
-					if (tObj == aObject)
-					{
-						next = true;
-					}
-					else if (next)
-					{
-						return tObj;
-					}
-				}
-			}
-			return null;
-		}
-
 		public abstract bool DuplicateChildExists(AObject aObject);
 
 		#endregion
@@ -232,7 +212,7 @@ namespace XG.Core
 
 		public AObjects()
 		{
-			_children = new List<AObject>();
+			_children = new HashSet<AObject>();
 		}
 
 		#endregion

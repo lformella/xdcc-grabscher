@@ -109,6 +109,7 @@ namespace XG.Core
 			set { SetProperty(ref _name, value, "Name"); }
 		}
 
+		[NonSerialized]
 		List<string> _modifiedFields;
 
 		public bool Commit()
@@ -177,6 +178,11 @@ namespace XG.Core
 		public override string ToString()
 		{
 			return GetType().Name + "|" + Name;
+		}
+
+		public override int GetHashCode()
+		{
+			return Guid.GetHashCode();
 		}
 
 		#endregion

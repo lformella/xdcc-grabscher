@@ -108,7 +108,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			// reindex all packets if a bot is changed
 			if (aObj is Bot)
 			{
-				List<string> fields = new List<string>(aFields);
+				HashSet<string> fields = new HashSet<string>(aFields);
 				if (fields.Contains("Name") || fields.Contains("InfoSpeedCurrent") || fields.Contains("Connected") || fields.Contains("InfoSlotCurrent") || fields.Contains("InfoSlotCurrent") || fields.Contains("InfoQueueCurrent"))
 				{
 					foreach (var p in (aObj as Bot).Packets)

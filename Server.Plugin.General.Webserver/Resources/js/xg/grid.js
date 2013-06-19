@@ -423,7 +423,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			// default filter
-			self.applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" });
+			self.applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" }, Enum.Grid.Bot);
 		},
 
 		/**
@@ -477,17 +477,21 @@ var XGGrid = (function ()
 			this.onDownloadLink.notify(obj, null, this);
 		},
 
-		applySearchFilter: function (obj)
+		applySearchFilter: function (obj, grid)
 		{
-			dataview.resetBotFilter();
+			if (grid == Enum.Grid.Bot)
+			{
+				dataview.resetBotFilter();
+				packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
+				applyFilter(Enum.Grid.Packet);
+				applyFilter(Enum.Grid.Bot);
+			}
 
-			packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
-			applyFilter(Enum.Grid.Packet);
-
-			externalFilter = packetFilter;
-			applyFilter(Enum.Grid.ExternalSearch);
-
-			applyFilter(Enum.Grid.Bot);
+			if (grid == Enum.Grid.ExternalSearch)
+			{
+				externalFilter = { SearchGuid: obj.Guid, Name: obj.Name };
+				applyFilter(Enum.Grid.ExternalSearch);
+			}
 		},
 
 		setCombineBotAndPacketGrid: function (enable)

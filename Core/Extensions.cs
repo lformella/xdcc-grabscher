@@ -65,20 +65,20 @@ namespace XG.Core
 		}
 
 
-        public static bool ContainsAll(this string str, params string[] values)
-        {
-            if (!string.IsNullOrEmpty(str) && values.Length > 0)
-            {
-                foreach (string value in values)
-                {
-                    if (!str.Contains(value))
-                    {
-                        return false;
-                    }
-                }
-            }
+		public static bool ContainsAll(this string str, params string[] values)
+		{
+			if (!string.IsNullOrEmpty(str) && values.Length > 0)
+			{
+				foreach (string value in values)
+				{
+					if (!str.Contains(value))
+					{
+						return false;
+					}
+				}
+			}
 
-            return true;
-        }
+			return true;
+		}
 	}
 }

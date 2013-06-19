@@ -31,7 +31,7 @@ namespace XG.Server.Worker
 	{
 		#region VARIABLES
 
-		readonly List<AWorker> _workers;
+		readonly HashSet<AWorker> _workers;
 
 		#endregion
 
@@ -39,7 +39,7 @@ namespace XG.Server.Worker
 
 		public Workers()
 		{
-			_workers = new List<AWorker>();
+			_workers = new HashSet<AWorker>();
 		}
 
 		public void Add(AWorker aWorker)

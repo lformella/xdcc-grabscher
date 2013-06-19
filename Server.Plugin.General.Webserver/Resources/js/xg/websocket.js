@@ -97,7 +97,7 @@ var XGWebsocket = (function ()
 				break;
 
 			case Enum.Response.SearchComplete:
-			    self.onSearchComplete.notify(json, null, self);
+				self.onSearchComplete.notify(json, null, self);
 				break;
 		}
 	}

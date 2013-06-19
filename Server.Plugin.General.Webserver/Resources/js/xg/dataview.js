@@ -243,6 +243,24 @@ var XGDataView = (function ()
 		resetBotFilter: function ()
 		{
 			botFilterGuids = [];
+		},
+		
+		beginUpdate: function (type)
+		{
+			var dataView = this.getDataView(type);
+			if (dataView != null)
+			{
+				dataView.beginUpdate();
+			}
+		},
+		
+		endUpdate: function (type)
+		{
+			var dataView = this.getDataView(type);
+			if (dataView != null)
+			{
+				dataView.endUpdate();
+			}
 		}
 	};
 	return self;

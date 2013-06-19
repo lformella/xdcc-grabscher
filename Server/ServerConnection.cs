@@ -408,7 +408,7 @@ namespace XG.Server
 		/// </summary>
 		public void TriggerTimerRun()
 		{
-			var remove = new List<AObject>();
+			var remove = new HashSet<AObject>();
 			foreach (var kvp in _timedObjects)
 			{
 				DateTime time = kvp.Value;

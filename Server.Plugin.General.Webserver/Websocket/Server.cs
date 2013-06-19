@@ -51,7 +51,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		WebSocketServer _webSocket;
 		JsonSerializerSettings _jsonSerializerSettings;
 
-		readonly List<User> _users = new List<User>();
+		readonly HashSet<User> _users = new HashSet<User>();
 
 		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Downloads" };
 		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Enabled Packets" };
@@ -120,7 +120,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			BroadcastChanged(aObj);
 
-			List<string> fields = new List<string>(aFields);
+			HashSet<string> fields = new HashSet<string>(aFields);
 
 			// if a bot changed dispatch the packets, too
 			if (aObj is Core.Bot)
@@ -211,7 +211,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var user = new User
 			{
 				Connection = aContext,
-				LoadedObjects = new List<Core.AObject>(),
+				LoadedObjects = new HashSet<Core.AObject>(),
 				LastSearch = Guid.Empty
 			};
 
@@ -287,6 +287,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						currentUser.LastSearch = request.Guid;
 						var all = FilteredPacketsAndBotsByGuid(request.Guid, request.Name);
 						UnicastOnRequest(currentUser, all, request.Type);
+						Unicast(currentUser, new Response
+						{
+							Type = Response.Types.SearchComplete,
+							Data = request.Type
+						});
 
 						// send search again to update search results
 						var searchObj = Searches.WithGuid(request.Guid);
@@ -298,11 +303,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = searchObj
 							});
 						}
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.SearchComplete,
-							Data = request.Type
-						});
 						break;
 
 					case Request.Types.SearchExternal:
@@ -697,7 +697,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		Flot[] GetFlotData(DateTime aStart, DateTime aEnd)
 		{
-			var tObjects = new List<Flot>();
+			var tObjects = new HashSet<Flot>();
 
 			FetchData data = RrdDb.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
 			Int64[] times = data.getTimestamps();
@@ -708,7 +708,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				var value = (SnapshotValue) a;
 				var obj = new Flot();
 
-				var list = new List<double[]>();
+				var list = new HashSet<double[]>();
 				for (int b = 0; b < times.Length; b++)
 				{
 					double[] current = { times[b] * 1000, values[a][b] };
