@@ -74,6 +74,16 @@ namespace XG.Server.Connection
 					_errorCode = (SocketErrorCode) ex.ErrorCode;
 					_log.Error("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") : " + ((SocketErrorCode) ex.ErrorCode), ex);
 				}
+				catch (IOException ex)
+				{
+					if (ex.InnerException is SocketException)
+					{
+						var iEx = (SocketException) ex.InnerException;
+
+						_errorCode = (SocketErrorCode) iEx.ErrorCode;
+						_log.Error("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ")", iEx);
+					}
+				}
 				catch (Exception ex)
 				{
 					_log.Fatal("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ")", ex);
@@ -127,8 +137,8 @@ namespace XG.Server.Connection
 										{
 											if (ex.InnerException is SocketException)
 											{
-												var exi = (SocketException) ex.InnerException;
-												_errorCode = (SocketErrorCode) exi.ErrorCode;
+												var iEx = (SocketException) ex.InnerException;
+												_errorCode = (SocketErrorCode) iEx.ErrorCode;
 												_log.Fatal("Connect(" + (MaxData > 0 ? "" + MaxData : "") + ") reading: " + (_errorCode), ex);
 											}
 											else
