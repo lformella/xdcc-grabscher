@@ -45,7 +45,8 @@ namespace XG.Server.Plugin.General.ElasticSearch
 
 		protected override void StartRun()
 		{
-			var setting = new ConnectionSettings(new Uri(Settings.Instance.ElasticSearchHost + ":" + Settings.Instance.ElasticSearchPort));
+			var uri = new Uri("http://" + Settings.Instance.ElasticSearchHost + ":" + Settings.Instance.ElasticSearchPort + "/");
+			var setting = new ConnectionSettings(uri);
 			_client = new ElasticClient(setting);
 
 			// reindex all
@@ -86,18 +87,18 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			// reindex all parents if a child is added
 			if (aObj is Channel)
 			{
-				Index ((aObj as Channel).Parent);
+				Index (aObj.Parent);
 			}
 			if (aObj is Bot)
 			{
-				Index ((aObj as Bot).Parent);
-				Index ((aObj as Bot).Parent.Parent);
+				Index (aObj.Parent);
+				Index (aObj.Parent.Parent);
 			}
 			if (aObj is Packet)
 			{
-				Index ((aObj as Packet).Parent);
-				Index ((aObj as Packet).Parent.Parent);
-				Index ((aObj as Packet).Parent.Parent.Parent);
+				Index (aObj.Parent);
+				Index (aObj.Parent.Parent);
+				Index (aObj.Parent.Parent.Parent);
 			}
 		}
 
@@ -190,7 +191,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			if (_client != null && myObj != null)
 			{
 				string type = myObj.GetType().Name.ToLower();
-				_client.IndexAsync(myObj, _index, type, myObj.Guid.ToString());
+				_client.Index(myObj, _index, type, myObj.Guid.ToString());
 			}
 		}
 
@@ -199,7 +200,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			if (_client != null && (aObj is Core.Server || aObj is Channel || aObj is Bot || aObj is Packet))
 			{
 				string type = aObj.GetType().Name.ToLower();
-				_client.DeleteByIdAsync(_index, type, aObj.Guid.ToString());
+				_client.DeleteById(_index, type, aObj.Guid.ToString());
 			}
 		}
 

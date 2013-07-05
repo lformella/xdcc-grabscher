@@ -136,5 +136,14 @@ namespace XG.Core
 		}
 
 		#endregion
+		
+		#region HELPER
+		
+		public override string ToString()
+		{
+			return base.ToString() + "|" + Port;
+		}
+		
+		#endregion
 	}
 }

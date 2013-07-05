@@ -23,6 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using System.Linq;
 
 using Newtonsoft.Json;
@@ -62,14 +63,39 @@ namespace XG.Server.Plugin.General.ElasticSearch.Object
 			get { return Object.Channels.Count(); }
 		}
 
+		public int ChannelCountConnected
+		{
+			get { return (from channel in Object.Channels where channel.Connected select channel).Count(); }
+		}
+
 		public int BotCount
 		{
 			get { return (from channel in Object.Channels from bot in channel.Bots select bot).Count(); }
 		}
 
+		public int BotCountConnected
+		{
+			get { return (from channel in Object.Channels from bot in channel.Bots where bot.Connected select bot).Count(); }
+		}
+
 		public int PacketCount
 		{
 			get { return (from channel in Object.Channels from bot in channel.Bots from packet in bot.Packets select packet).Count(); }
+		}
+
+		public int PacketCountConnected
+		{
+			get { return (from channel in Object.Channels from bot in channel.Bots where bot.Connected from packet in bot.Packets select packet).Count(); }
+		}
+		
+		public Int64 PacketSize
+		{
+			get { return (from channel in Object.Channels from bot in channel.Bots from packet in bot.Packets select packet.Size).Sum(); }
+		}
+		
+		public Int64 PacketSizeConnected
+		{
+			get { return (from channel in Object.Channels from bot in channel.Bots where bot.Connected from packet in bot.Packets select packet.Size).Sum(); }
 		}
 
 		public string IrcLink
