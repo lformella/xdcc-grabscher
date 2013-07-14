@@ -25,16 +25,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 using XG.Core;
 
 using Nest;
+
+using log4net;
 
 namespace XG.Server.Plugin.General.ElasticSearch
 {
 	public class Plugin : APlugin
 	{
 		#region VARIABLES
+		
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		ElasticClient _client;
 		string _index = "xg";
@@ -191,7 +196,15 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			if (_client != null && myObj != null)
 			{
 				string type = myObj.GetType().Name.ToLower();
-				_client.Index(myObj, _index, type, myObj.Guid.ToString());
+
+				try
+				{
+					_client.Index(myObj, _index, type, myObj.Guid.ToString());
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Index(" + aObj + ")", ex);
+				}
 			}
 		}
 
@@ -200,7 +213,15 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			if (_client != null && (aObj is Core.Server || aObj is Channel || aObj is Bot || aObj is Packet))
 			{
 				string type = aObj.GetType().Name.ToLower();
-				_client.DeleteById(_index, type, aObj.Guid.ToString());
+
+				try
+				{
+					_client.DeleteById(_index, type, aObj.Guid.ToString());
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Remove(" + aObj + ")", ex);
+				}
 			}
 		}
 
