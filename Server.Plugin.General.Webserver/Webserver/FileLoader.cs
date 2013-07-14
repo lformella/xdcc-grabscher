@@ -164,7 +164,11 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 						content = content.Replace("#JS_FILES#", js);
 
 						content = content.Replace("#SALT#", Salt);
+#if DEBUG
+						content = content.Replace("#XGVERSION#", Settings.Instance.XgVersion + " (beta)");
+#else
 						content = content.Replace("#XGVERSION#", Settings.Instance.XgVersion);
+#endif
 						content = PatchLanguage(content, aLanguages);
 					}
 				}
