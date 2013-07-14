@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.Linq;
 
 using XG.Core;
 using XG.Server.Worker;
@@ -91,6 +92,19 @@ namespace XG.Server.Plugin
 			{
 				tObj.Enabled = false;
 				tObj.Commit();
+			}
+			else
+			{
+				var file = Files.WithGuid(aGuid) as File;
+				if (file != null)
+				{
+					var parts = (from part in file.Parts where part.Packet != null select part).ToArray();
+					foreach (var part in parts)
+					{
+						part.Packet.Enabled = false;
+						part.Packet.Commit();
+					}
+				}
 			}
 		}
 

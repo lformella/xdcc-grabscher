@@ -43,6 +43,16 @@ var XGMain = (function ()
 	/**
 	 * @param {Object} obj
 	 */
+	function flipFile (obj)
+	{
+		obj.Active = true;
+		dataView.updateItem({ Data: obj, DataType: Enum.Grid.File });
+		flipObject(obj);
+	}
+
+	/**
+	 * @param {Object} obj
+	 */
 	function flipPacket (obj)
 	{
 		obj.Active = true;
@@ -220,13 +230,19 @@ var XGMain = (function ()
 
 		grid.onFlipObject.subscribe(function (e, args)
 		{
-			if (args.DataType == Enum.Grid.Packet)
+			switch (args.DataType)
 			{
-				flipPacket(args.Data);
-			}
-			else
-			{
-				flipObject(args.Data);
+				case Enum.Grid.Packet:
+					flipPacket(args.Data);
+					break;
+
+				case Enum.Grid.File:
+					flipFile(args.Data);
+					break;
+
+				default:
+					flipObject(args.Data);
+					break;
 			}
 		});
 

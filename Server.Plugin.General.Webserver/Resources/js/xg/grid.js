@@ -405,7 +405,10 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
-				buildRow("", 28, false, $.proxy(formatter.formatFileIcon, formatter), false, "icon"),
+				buildRow("", 28, false, function (obj)
+				{
+					return formatter.formatFileIcon(obj, "Grid.flipObject(\"" + Enum.Grid.File + "\", \"" + obj.Guid + "\");");
+				}, false, "icon"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatFileName, formatter), false),
 				buildRow("Size", 70, true, $.proxy(formatter.formatFileSize, formatter), true),
 				buildRow("Speed", 80, true, $.proxy(formatter.formatFileSpeed, formatter), true),

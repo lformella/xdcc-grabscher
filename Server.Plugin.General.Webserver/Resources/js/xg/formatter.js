@@ -412,7 +412,7 @@ var XGFormatter = (function ()
 		/* FILE FORMATTER                                                                                                 */
 		/* ************************************************************************************************************** */
 
-		formatFileIcon: function (file)
+		formatFileIcon: function (file, onclick)
 		{
 			var icon = "doc";
 			var iconClass = "Aluminium2Middle";
@@ -431,7 +431,7 @@ var XGFormatter = (function ()
 				icon = "briefcase";
 			}
 
-			return formatIcon(icon, iconClass);
+			return formatIcon(icon, iconClass, undefined, undefined, undefined, onclick);
 		},
 
 		formatFileName: function (file)
