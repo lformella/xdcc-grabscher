@@ -26,7 +26,7 @@
 var XGMain = (function ()
 {
 	var graph, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
-	var currentServerGuid = "", lastSearch;
+	var currentServerGuid = "", lastSearch, currentTab = 0;
 	var serversActive = [], botsActive = [];
 
 	/**
@@ -129,12 +129,22 @@ var XGMain = (function ()
 			graph.resize();
 		});
 		resize.start();
+
+		loop();
 	}
 
 	function startWebsocket (host, port, password)
 	{
 		websocket = Object.create(XGWebsocket);
 		websocket.initialize(dataView, host, port, password);
+
+		websocket.onConnected.subscribe(function ()
+		{
+			websocket.send(Enum.Request.LiveSnapshot);
+			websocket.send(Enum.Request.Searches);
+			websocket.send(Enum.Request.Servers);
+			websocket.send(Enum.Request.Files);
+		});
 
 		websocket.onDisconnected.subscribe(function ()
 		{
@@ -150,6 +160,11 @@ var XGMain = (function ()
 		websocket.onSnapshots.subscribe(function (e, args)
 		{
 			graph.setSnapshots(args.Data);
+		});
+
+		websocket.onLiveSnapshot.subscribe(function (e, args)
+		{
+			graph.setLiveSnapshot(args.Data);
 		});
 
 		websocket.onSearchComplete.subscribe(function (e, args)
@@ -295,9 +310,21 @@ var XGMain = (function ()
 			websocket.sendGuid(Enum.Request.RemoveSearch, args.Guid);
 		});
 
-		gui.onSlide.subscribe(function ()
+		gui.onSlide.subscribe(function (e, args)
 		{
-			grid.resize();
+			currentTab = args.slide;
+			switch (currentTab)
+			{
+				case 0:
+					websocket.send(Enum.Request.LiveSnapshot);
+					break;
+
+				case 1:
+				case 2:
+				case 3:
+					grid.resize();
+					break;
+			}
 		});
 
 		gui.onAddServer.subscribe(function (e, args)
@@ -349,6 +376,19 @@ var XGMain = (function ()
 		{
 			grid.invalidate(Enum.Grid.Notification);
 		});
+	}
+
+	function loop()
+	{
+		if (currentTab == 0)
+		{
+			websocket.send(Enum.Request.LiveSnapshot);
+		}
+
+		setTimeout(function ()
+		{
+			loop();
+		}, 10000);
 	}
 
 	return {

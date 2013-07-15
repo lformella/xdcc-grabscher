@@ -82,14 +82,9 @@ var XGResize = (function ()
 			{
 				resize();
 			});
-
-			// resize after all is visible - twice, because the first run wont change all values :|
 			resize();
-			setTimeout(function ()
-			{
-				resize();
-			}, 1000);
 		},
+
 		setCombineBotAndPacketGrid: function (enable)
 		{
 			combineBotAndPacketGrid = enable;

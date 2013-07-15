@@ -37,8 +37,12 @@ var XGHelper = (function ()
 		 * @param {int} size
 		 * @return {String}
 		 */
-		size2Human: function (size)
+		size2Human: function (size, decimal)
 		{
+			if (decimal == undefined)
+			{
+				decimal = 0;
+			}
 			if (size == 0)
 			{
 				return "&nbsp;";
@@ -49,17 +53,17 @@ var XGHelper = (function ()
 			}
 			else if (size < 1024 * 1024)
 			{
-				return (size / 1024).toFixed(0) + " K";
+				return (size / 1024).toFixed(decimal) + " K";
 			}
 			else if (size < 1024 * 1024 * 1024)
 			{
-				return (size / (1024 * 1024)).toFixed(0) + " M";
+				return (size / (1024 * 1024)).toFixed(decimal) + " M";
 			}
 			else if (size < 1024 * 1024 * 1024 * 1024)
 			{
-				return (size / (1024 * 1024 * 1024)).toFixed(0) + " G";
+				return (size / (1024 * 1024 * 1024)).toFixed(decimal) + " G";
 			}
-			return (size / (1024 * 1024 * 1024 * 1024)).toFixed((size < 1024 * 1024 * 1024 * 1024 * 10) ? 1 : 0) + " T";
+			return (size / (1024 * 1024 * 1024 * 1024)).toFixed((size < 1024 * 1024 * 1024 * 1024 * 10) ? 1 : decimal) + " T";
 		},
 
 		/**
@@ -111,7 +115,7 @@ var XGHelper = (function ()
 		 */
 		time2Human: function (time)
 		{
-			if (time <= 0 || time >= 106751991167300)
+			if (time <= 0 || time >= 106751991167300 || time == undefined || time == null)
 			{
 				return "";
 			}

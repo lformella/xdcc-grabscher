@@ -384,7 +384,7 @@ var XGGrid = (function ()
 				}, false, "icon"),
 				buildRow("", 55, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
-				buildRow("LastMentioned", 155, true, function (obj)
+				buildRow("Last Updated", 155, true, function (obj)
 				{
 					return helper.date2Human(obj.LastMentioned);
 				}, true),

@@ -33,6 +33,46 @@ using SharpRobin.Core;
 
 namespace XG.Server.Worker
 {
+	public enum SnapshotValue
+	{
+		Timestamp = 0,
+
+		Speed = 1,
+
+		Servers = 2,
+		ServersEnabled = 21,
+		ServersDisabled = 22,
+		ServersConnected = 3,
+		ServersDisconnected = 4,
+
+		Channels = 5,
+		ChannelsEnabled = 23,
+		ChannelsDisabled = 24,
+		ChannelsConnected = 6,
+		ChannelsDisconnected = 7,
+
+		Bots = 8,
+		BotsConnected = 9,
+		BotsDisconnected = 10,
+		BotsFreeSlots = 11,
+		BotsFreeQueue = 12,
+		BotsAverageCurrentSpeed = 19,
+		BotsAverageMaxSpeed = 20,
+
+		Packets = 13,
+		PacketsConnected = 14,
+		PacketsDisconnected = 15,
+		PacketsSize = 16,
+		PacketsSizeDownloading = 17,
+		PacketsSizeNotDownloading = 18,
+		PacketsSizeConnected = 25,
+		PacketsSizeDisconnected = 26,
+
+		FileSizeDownloaded = 27,
+		FileSizeMissing = 28,
+		FileTimeMissing = 29
+	}
+
 	public class RrdWorker : ALoopWorker
 	{
 		public RrdDb RrdDb { get; set; }
@@ -45,6 +85,7 @@ namespace XG.Server.Worker
 			Channel[] channels = (from server in servers from channel in server.Channels select channel).ToArray();
 			Bot[] bots = (from channel in channels from bot in channel.Bots select bot).ToArray();
 			Packet[] packets = (from bot in bots from packet in bot.Packets select packet).ToArray();
+			Core.File[] files = (from file in Files.All select file).ToArray();
 
 			Sample sample = RrdDb.createSample(DateTime.Now.ToTimestamp());
 
@@ -57,8 +98,8 @@ namespace XG.Server.Worker
 			sample.setValue((int)SnapshotValue.ServersDisconnected + "", (from server in servers where !server.Connected select server).Count());
 
 			sample.setValue((int)SnapshotValue.Channels + "", (from channel in channels select channel).Count());
-			sample.setValue((int)SnapshotValue.ChannelsEnabled + "", (from channel in channels where channel.Enabled select channel).Count());
-			sample.setValue((int)SnapshotValue.ChannelsDisabled + "", (from channel in channels where !channel.Enabled select channel).Count());
+			sample.setValue((int)SnapshotValue.ChannelsEnabled + "", (from channel in channels where channel.Parent.Enabled && channel.Enabled select channel).Count());
+			sample.setValue((int)SnapshotValue.ChannelsDisabled + "", (from channel in channels where !channel.Parent.Enabled || !channel.Enabled select channel).Count());
 			sample.setValue((int)SnapshotValue.ChannelsConnected + "", (from channel in channels where channel.Connected select channel).Count());
 			sample.setValue((int)SnapshotValue.ChannelsDisconnected + "", (from channel in channels where !channel.Connected select channel).Count());
 
@@ -94,6 +135,17 @@ namespace XG.Server.Worker
 			sample.setValue((int)SnapshotValue.PacketsSizeNotDownloading + "", (from packet in packets where !packet.Connected select packet.Size).Sum());
 			sample.setValue((int)SnapshotValue.PacketsSizeConnected + "", (from packet in packets where packet.Parent.Connected select packet.Size).Sum());
 			sample.setValue((int)SnapshotValue.PacketsSizeDisconnected + "", (from packet in packets where !packet.Parent.Connected select packet.Size).Sum());
+
+			sample.setValue((int)SnapshotValue.FileSizeDownloaded + "", (from file in files from part in file.Parts select part.DownloadedSize).Sum());
+			sample.setValue((int)SnapshotValue.FileSizeMissing + "", (from file in files from part in file.Parts select part.MissingSize).Sum());
+			try
+			{
+				sample.setValue((int)SnapshotValue.FileTimeMissing + "", (from file in files from part in file.Parts select part.TimeMissing).Max());
+			}
+			catch (Exception)
+			{
+				sample.setValue((int)SnapshotValue.FileTimeMissing + "", 0);
+			}
 
 			sample.update();
 		}

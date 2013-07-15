@@ -111,6 +111,11 @@ namespace XG.Core
 			get { return _currentSize; }
 			set { SetProperty(ref _currentSize, value, "CurrentSize"); }
 		}
+		
+		public Int64 DownloadedSize
+		{
+			get { return _currentSize - _startSize; }
+		}
 
 		public Int64 MissingSize
 		{

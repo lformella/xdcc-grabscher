@@ -36,6 +36,7 @@ using System.Reflection;
 
 using XG.Core;
 using XG.Server.Plugin.General.Webserver.Object;
+using XG.Server.Worker;
 
 using log4net;
 using SharpRobin.Core;
@@ -312,47 +313,16 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							request.Name = searchExternal.Name;
 						}
 
-						int start = 0;
-						int limit = 25;
-						do
+						var results = SearchExternal(request.Name);
+						foreach (var result in results)
 						{
-							try
+							var currentResponse = new Response
 							{
-								var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start + "&limit=" + limit + "&search=" + request.Name);
-								var req = HttpWebRequest.Create(uri);
-
-								var response = req.GetResponse();
-								StreamReader sr = new StreamReader(response.GetResponseStream());
-								string text = sr.ReadToEnd();
-								response.Close();
-
-								ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, _jsonSerializerSettings);
-
-								if (results.Length > 0)
-								{
-									foreach (var result in results)
-									{
-										var currentResponse = new Response
-										{
-											Type = Response.Types.ObjectAdded,
-											Data = result
-										};
-										Unicast(currentUser, currentResponse);
-									}
-								}
-
-								if (results.Length == 0 || results.Length < limit)
-								{
-									break;
-								}
-							}
-							catch (Exception ex)
-							{
-								Log.Fatal("OnMessage() cant load external search for " + request.Name, ex);
-								break;
-							}
-							start += limit;
-						} while (true);
+								Type = Response.Types.ObjectAdded,
+								Data = result
+							};
+							Unicast(currentUser, currentResponse);
+						}
 
 						Unicast(currentUser, new Response
 						{
@@ -428,6 +398,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Data = tCurrentBot
 							});
 						}
+						break;
+
+					case Request.Types.LiveSnapshot:
+						Unicast(currentUser, new Response
+						{
+							Type = Response.Types.LiveSnapshot,
+							Data = GetLatestSnapshot()
+						});
 						break;
 
 					case Request.Types.Snapshots:
@@ -656,7 +634,71 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#endregion
 
-		#region Object Searching
+		#region Functions
+
+		private IEnumerable<Flot> GetLatestSnapshot ()
+		{
+			var flots = GetFlotData(DateTime.Now.AddMinutes(-15), DateTime.Now);
+			foreach (var flot in flots)
+			{
+				double lastTime = 0;
+				double lastValue = 0;
+				foreach (var values in flot.Data)
+				{
+					if (values[1] >= 0)
+					{
+						if (values[0] > lastTime)
+						{
+							lastTime = values[0];
+							lastValue = values[1];
+						}
+					}
+				}
+				flot.Data = new double[][] {new double[]{lastTime, lastValue}};
+			}
+			return flots;
+		}
+
+		private IEnumerable<ExternalSearch> SearchExternal (string search)
+		{
+			var objects = new List<ExternalSearch>();
+
+			int start = 0;
+			int limit = 25;
+			do
+			{
+				try
+				{
+					var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Instance.XgVersion + "&start=" + start + "&limit=" + limit + "&search=" + search);
+					var req = HttpWebRequest.Create(uri);
+
+					var response = req.GetResponse();
+					StreamReader sr = new StreamReader(response.GetResponseStream());
+					string text = sr.ReadToEnd();
+					response.Close();
+
+					ExternalSearch[] results = JsonConvert.DeserializeObject<ExternalSearch[]>(text, _jsonSerializerSettings);
+
+					if (results.Length > 0)
+					{
+						objects.AddRange(results);
+					}
+
+					if (results.Length == 0 || results.Length < limit)
+					{
+						break;
+					}
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("SearchExternal(" + search + ") cant load external search", ex);
+					break;
+				}
+				start += limit;
+			} while (true);
+
+			return objects;
+		}
 
 		List<Core.AObject> FilteredPacketsAndBotsByGuid (Guid aGuid, string aName = null)
 		{
@@ -697,18 +739,18 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		Flot[] GetFlotData(DateTime aStart, DateTime aEnd)
 		{
-			var tObjects = new HashSet<Flot>();
+			var tObjects = new List<Flot>();
 
 			FetchData data = RrdDb.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
 			Int64[] times = data.getTimestamps();
 			double[][] values = data.getValues();
 
-			for (int a = 1; a <= 26; a++)
+			for (int a = 1; a <= 29; a++)
 			{
 				var value = (SnapshotValue) a;
 				var obj = new Flot();
 
-				var list = new HashSet<double[]>();
+				var list = new List<double[]>();
 				for (int b = 0; b < times.Length; b++)
 				{
 					double[] current = { times[b] * 1000, values[a][b] };

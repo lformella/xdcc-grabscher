@@ -346,3 +346,52 @@ label
 	white-space: normal;
 	font-size: 1em;
 }
+
+/* Dasboard */
+
+.dashboardPie
+{
+	/*float: left;*/
+	margin-left: 20px;
+}
+
+.dashboardPie, .dashboardPie > div:nth-child(1), .dashboardPie > div:nth-child(2)
+{
+	width: 300px;
+}
+
+.dashboardPie > div:nth-child(1), .dashboardPie > div:nth-child(2)
+{
+	height: 100px;
+}
+
+.dashboardPie > div:nth-child(1)
+{
+	float: left;
+}
+
+.dashboardPie > div:nth-child(2)
+{
+	width: 179px;
+}
+
+.dashboardPie > div:nth-child(3)
+{
+	padding-top: 5px;
+	clear: both;
+}
+
+.dashboardPie .legendLabel
+{
+	width: 100px;
+}
+
+.dashboardPie .pieLabel div
+{
+	font-size: 8pt;
+	text-align: center;
+	padding: 4px 2px 2px 2px;
+	color: white;
+	z-index: 99999;
+}
+

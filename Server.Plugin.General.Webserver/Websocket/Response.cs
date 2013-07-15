@@ -42,6 +42,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			ObjectRemoved = 2,
 			ObjectChanged = 3,
 			SearchComplete = 4,
+			LiveSnapshot = 6,
 
 			#endregion
 

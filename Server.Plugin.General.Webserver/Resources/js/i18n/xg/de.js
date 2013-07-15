@@ -104,6 +104,9 @@ translations =
 	"PacketsSizeNotDownloading": "Paketgröße nicht ladend",
 	"PacketsSizeConnected": "Paketgröße verbunden",
 	"PacketsSizeDisconnected": "Paketgröße getrennt",
+	"FileSizeDownloaded": "Dateigröße fertig",
+	"FileSizeMissing": "Dateigröße fehlend",
+	"FileTimeMissing": "Zeit bis fertig",
 
 	/* ************************************************************************************************************** */
 	/* NOTIFICATIONS                                                                                                  */
@@ -140,6 +143,7 @@ translations =
 	"Notifications": "Benachrichtigungen",
 	"Predefined": "Vorgefertigt",
 	"Custom": "Eigene",
+	"Ready": "Fertig",
 
 	"Connected": "Verbunden",
 	"Disconnected": "Getrennt",

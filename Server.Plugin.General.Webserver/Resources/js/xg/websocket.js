@@ -47,9 +47,11 @@ var XGWebsocket = (function ()
 	{
 		if (state == WebSocket.OPEN)
 		{
+			request = JSON.stringify(request);
+			debug(request);
 			try
 			{
-				socket.send(JSON.stringify(request));
+				socket.send(request);
 				return true;
 			}
 			catch (exception)
@@ -59,13 +61,6 @@ var XGWebsocket = (function ()
 		}
 
 		return false;
-	}
-
-	function onConnected ()
-	{
-		self.send(Enum.Request.Searches);
-		self.send(Enum.Request.Servers);
-		self.send(Enum.Request.Files);
 	}
 
 	/**
@@ -81,32 +76,49 @@ var XGWebsocket = (function ()
 		switch (json.Type)
 		{
 			case Enum.Response.ObjectAdded:
+				debug("+ " + json.DataType + " " + json.Data.Name);
 				dataView.addItem(json);
 				break;
 
 			case Enum.Response.ObjectRemoved:
+				debug("- " + json.DataType + " " + json.Data.Name);
 				dataView.removeItem(json);
 				break;
 
 			case Enum.Response.ObjectChanged:
+				debug("~ " + json.DataType + " " + json.Data.Name);
 				dataView.updateItem(json);
 				break;
 
 			case Enum.Response.Snapshots:
+				debug("snapshots");
 				self.onSnapshots.notify(json, null, self);
 				break;
 
+			case Enum.Response.LiveSnapshot:
+				debug("livesnapshot");
+				self.onLiveSnapshot.notify(json, null, self);
+				break;
+
 			case Enum.Response.SearchComplete:
+				debug("search complete");
 				self.onSearchComplete.notify(json, null, self);
 				break;
 		}
 	}
 
+	function debug (msg)
+	{
+		console.log("WEBSOCKET " + msg);
+	}
+
 	var self = {
 		onError: new Slick.Event(),
+		onConnected: new Slick.Event(),
 		onDisconnected: new Slick.Event(),
 		onSnapshots: new Slick.Event(),
 		onSearchComplete: new Slick.Event(),
+		onLiveSnapshot: new Slick.Event(),
 
 		/**
 		 * @param {XGDataView} dataView1
@@ -134,7 +146,7 @@ var XGWebsocket = (function ()
 				{
 					state = socket.readyState;
 
-					onConnected();
+					self.onConnected.notify({}, null, this);
 				};
 				socket.onmessage = function (msg)
 				{

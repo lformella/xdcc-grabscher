@@ -62,6 +62,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"Scripts/jquery.cookie",
 			"Scripts/flot/jquery.flot.min",
 			"Scripts/flot/jquery.flot.time.min",
+			"Scripts/flot/jquery.flot.pie.min",
 			"Scripts/json2.min",
 			"Scripts/SlickGrid/slick.core",
 			"Scripts/SlickGrid/slick.formatters",

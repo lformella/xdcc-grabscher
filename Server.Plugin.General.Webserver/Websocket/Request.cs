@@ -59,6 +59,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			Searches = 15,
 
 			Snapshots = 16,
+			LiveSnapshot = 19,
 			ParseXdccLink = 17,
 
 			CloseServer = 18

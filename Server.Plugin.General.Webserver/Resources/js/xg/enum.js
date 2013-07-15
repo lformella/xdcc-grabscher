@@ -52,6 +52,7 @@ Enum.Request =
 	Searches: 15,
 
 	Snapshots: 16,
+	LiveSnapshot: 19,
 	ParseXdccLink: 17,
 
 	CloseServer: 18
@@ -65,6 +66,7 @@ Enum.Response =
 	ObjectRemoved: 2,
 	ObjectChanged: 3,
 	SearchComplete: 4,
+	LiveSnapshot: 6,
 
 	Snapshots: 5
 };
@@ -115,7 +117,11 @@ Enum.SnapshotValue =
 	PacketsSizeDownloading: 17,
 	PacketsSizeNotDownloading: 18,
 	PacketsSizeConnected: 25,
-	PacketsSizeDisconnected: 26
+	PacketsSizeDisconnected: 26,
+
+	FileSizeDownloaded: 27,
+	FileSizeMissing: 28,
+	FileTimeMissing: 29
 };
 
 Enum.NotificationType =

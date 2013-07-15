@@ -25,8 +25,56 @@
 
 var XGGraph = (function ()
 {
-	var helper, translate;
-	var snapshots = {};
+	var dataView, helper, translate;
+	var snapshots, liveSnapshot = {};
+
+	function updateDashboardItem (element, values)
+	{
+		var data, options = [];
+
+		options =  {
+			series: {
+				pie: {
+					radius: 1,
+					innerRadius: 0.6,
+					show: true,
+					label: {
+						show: true,
+						formatter: 	function labelFormatter(label, series) {
+							return "<div>" + Math.round(series.percent) + "%</div>";
+						},
+						background: {
+							opacity: 0.5,
+							color: '#000'
+						}
+					}
+				}
+			}
+		};
+		data = [
+			{color: "#73d216", label: translate._(element + "Connected"), data: values.connected},
+			{color: "#cc0000", label: translate._(element + "Disconnected"), data: values.disconnected}
+		];
+		$.plot("#dashboard" + element + " > div:nth-child(1)", data, options);
+
+		if (values.enabled != undefined && values.disabled != undefined)
+		{
+			options =  {
+				series: {
+					pie: {
+						radius: 0.6,
+						innerRadius: 0.5,
+						show: true
+					}
+				}
+			};
+			data = [
+				{color: "#8ae234", label: "", data: values.enabled},
+				{color: "#ef2929", label: "", data: values.disabled}
+			];
+			$.plot("#dashboard" + element + " > div:nth-child(2)", data, options);
+		}
+	}
 
 	return {
 		/**
@@ -280,9 +328,82 @@ var XGGraph = (function ()
 			$.plot($("#snapshot"), data, snapshotOptions);
 		},
 
+		setLiveSnapshot: function (snapshot)
+		{
+			liveSnapshot = {};
+
+			$.each(snapshot, function (index, item)
+			{
+				liveSnapshot[item.label] = item.data[0][1];
+			});
+
+			this.updateDashboard();
+		},
+
+		updateDashboard: function ()
+		{
+			updateDashboardItem("Servers", {
+				"enabled": liveSnapshot.ServersEnabled,
+				"disabled": liveSnapshot.ServersDisabled,
+				"connected": liveSnapshot.ServersConnected,
+				"disconnected": liveSnapshot.ServersDisconnected
+			});
+
+			updateDashboardItem("Channels", {
+				"enabled": liveSnapshot.ChannelsEnabled,
+				"disabled": liveSnapshot.ChannelsDisabled,
+				"connected": liveSnapshot.ChannelsConnected,
+				"disconnected": liveSnapshot.ChannelsDisconnected
+			});
+
+			updateDashboardItem("Bots", {
+				"connected": liveSnapshot.BotsConnected,
+				"disconnected": liveSnapshot.BotsDisconnected
+			});
+
+			var data, options = [];
+
+			if (liveSnapshot.FileTimeMissing > 0)
+			{
+				$("#dashboardFiles").show();
+
+				options =  {
+					series: {
+						pie: {
+							radius: 1,
+							innerRadius: 0.6,
+							show: true,
+							label: {
+								show: true,
+								formatter: 	function labelFormatter(label, series) {
+									return "<div>" + helper.size2Human(series.data[0][1], 2) + "</div>";
+								},
+								background: {
+									opacity: 0.5,
+									color: '#000'
+								}
+							}
+						}
+					}
+				};
+				data = [
+					{color: "#73d216", label: translate._("FileSizeDownloaded"), data: liveSnapshot.FileSizeDownloaded},
+					{color: "#cc0000", label: translate._("FileSizeMissing"), data: liveSnapshot.FileSizeMissing}
+				];
+
+				$.plot("#dashboardFiles > div:nth-child(1)", data, options);
+				$("#timeMissing").html(helper.time2Human(liveSnapshot.FileTimeMissing));
+			}
+			else
+			{
+				$("#dashboardFiles").hide();
+			}
+		},
+
 		resize: function ()
 		{
 			this.updateSnapshotPlot();
+			this.updateDashboard();
 		}
 	}
 }());

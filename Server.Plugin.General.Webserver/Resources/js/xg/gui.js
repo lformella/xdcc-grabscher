@@ -201,7 +201,7 @@ var XGGui = (function ()
 		$("#mainCarousel").bind('slid',
 			function ()
 			{
-				self.onSlide.notify({}, null, this);
+				self.onSlide.notify({ "slide": currentSlide}, null, this);
 			});
 	}
 
