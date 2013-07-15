@@ -71,55 +71,67 @@ namespace XG.Server.Plugin.Backend.File
 
 		public override Core.Servers LoadServers()
 		{
+#if !UNSAFE
 			try
 			{
+#endif
 				var servers = (Core.Servers) Load(Settings.Instance.AppDataPath + DataBinary);
 				if (servers != null)
 				{
 					servers.AttachChildEvents();
 					return servers;
 				}
+#if !UNSAFE
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				// skip all errors
+				Log.Fatal("LoadServers", ex);
 			}
+#endif
 			return new Core.Servers();
 		}
 
 		public override Files LoadFiles()
 		{
+#if !UNSAFE
 			try
 			{
+#endif
 				var files = (Files) Load(Settings.Instance.AppDataPath + FilesBinary);
 				if (files != null)
 				{
 					files.AttachChildEvents();
 					return files;
 				}
+#if !UNSAFE
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				// skip all errors
+				Log.Fatal("LoadFiles", ex);
 			}
+#endif
 			return new Files();
 		}
 
 		public override Searches LoadSearches()
 		{
+#if !UNSAFE
 			try
 			{
+#endif
 				var searches = (Searches) Load(Settings.Instance.AppDataPath + SearchesBinary);
 				if (searches != null)
 				{
 					searches.AttachChildEvents();
 					return searches;
 				}
+#if !UNSAFE
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				// skip all errors
+				Log.Fatal("LoadSearches", ex);
 			}
+#endif
 			return new Searches();
 		}
 

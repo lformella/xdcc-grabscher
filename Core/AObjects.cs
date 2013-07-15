@@ -146,6 +146,12 @@ namespace XG.Core
 		{
 			foreach (AObject tObject in All)
 			{
+				if (tObject == null)
+				{
+					_children.Remove(tObject);
+					continue;
+				}
+
 				tObject.EnabledChanged += FireEnabledChanged;
 				tObject.Changed += FireChanged;
 
