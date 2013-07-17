@@ -1,0 +1,49 @@
+<CombineEntry name="Server.Cmd.Setup" fileversion="2.0" ctype="PackagingProject">
+  <Packages>
+    <Package name="Linux Binärdateien">
+      <Builder rootEntry="../XG.mds" targetFile="../XG.tar.gz" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
+        <ExcludedFiles>
+          <File>Core,Linux.PkgConfig,core.pc</File>
+          <File>Core.Test,Linux.PkgConfig,core.test.pc</File>
+          <File>Server,Linux.PkgConfig,server.pc</File>
+          <File>Server.Plugin.Backend.File,Linux.PkgConfig,server.plugin.backend.file.pc</File>
+          <File>Server.Plugin.General.ElasticSearch,Linux.PkgConfig,server.plugin.general.elasticsearch.pc</File>
+          <File>Server.Plugin.General.Import,Linux.PkgConfig,server.plugin.general.import.pc</File>
+          <File>Server.Plugin.General.Jabber,Linux.PkgConfig,server.plugin.general.jabber.pc</File>
+          <File>Server.Plugin.General.Webserver,Linux.PkgConfig,server.plugin.general.webserver.pc</File>
+          <File>Server.Plugin.General.Webserver.Test,Linux.PkgConfig,server.plugin.general.webserver.test.pc</File>
+          <File>Server.Test,Linux.PkgConfig,server.test.pc</File>
+          <File>Server.Cmd,Binaries,server.cmd</File>
+          <File>Core.Test,ProgramFiles,Core.Test.dll</File>
+          <File>Core.Test,ProgramFiles,Core.dll</File>
+          <File>Server.Test,ProgramFiles,Server.dll</File>
+          <File>Server.Test,ProgramFiles,SharpRobin.dll</File>
+          <File>Server.Test,ProgramFiles,log4net.dll</File>
+          <File>Server.Test,ProgramFiles,Core.dll</File>
+          <File>Server.Test,ProgramFiles,Server.Test.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Server.Plugin.General.Webserver.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Server.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,SharpRobin.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Newtonsoft.Json.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,log4net.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Fleck.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Core.dll</File>
+          <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Server.Plugin.General.Webserver.Test.dll</File>
+        </ExcludedFiles>
+        <ChildEntries>
+          <Entry>../Core/Core.mdp</Entry>
+          <Entry>../Server/Server.mdp</Entry>
+          <Entry>../Server.Plugin.General.Webserver/Server.Plugin.General.Webserver.mdp</Entry>
+          <Entry>../Server.Cmd/Server.Cmd.mdp</Entry>
+          <Entry>../Server.Plugin.General.Jabber/Server.Plugin.General.Jabber.mdp</Entry>
+          <Entry>../Server.Plugin.Backend.File/Server.Plugin.Backend.File.mdp</Entry>
+          <Entry>../Core.Test/Core.Test.mdp</Entry>
+          <Entry>../Server.Test/Server.Test.mdp</Entry>
+          <Entry>../Server.Plugin.General.Webserver.Test/Server.Plugin.General.Webserver.Test.mdp</Entry>
+          <Entry>../Server.Plugin.General.Import/Server.Plugin.General.Import.mdp</Entry>
+          <Entry>../Server.Plugin.General.ElasticSearch/Server.Plugin.General.ElasticSearch.mdp</Entry>
+        </ChildEntries>
+      </Builder>
+    </Package>
+  </Packages>
+</CombineEntry>

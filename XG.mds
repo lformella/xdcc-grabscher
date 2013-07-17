@@ -84,6 +84,7 @@
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
+      <Entry build="False" name="Server.Cmd.Setup" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Release" />
@@ -97,6 +98,7 @@
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Release" />
+      <Entry build="False" name="Server.Cmd.Setup" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Unsafe" />
@@ -110,6 +112,7 @@
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
+      <Entry build="False" name="Server.Cmd.Setup" configuration="Unsafe" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Debug" />
@@ -123,6 +126,7 @@
       <Entry build="True" name="Server.Plugin.General.Webserver.Test" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
+      <Entry build="False" name="Server.Cmd.Setup" configuration="Default" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Server.Cmd" single="True">
@@ -137,6 +141,7 @@
     <Execute type="None" entry="Server.Plugin.General.Webserver.Test" />
     <Execute type="None" entry="Server.Plugin.General.Import" />
     <Execute type="None" entry="Server.Plugin.General.ElasticSearch" />
+    <Execute type="None" entry="Server.Cmd.Setup" />
   </StartMode>
   <Entries>
     <Entry filename="Core/Core.mdp" />
@@ -150,5 +155,6 @@
     <Entry filename="Server.Plugin.General.Webserver.Test/Server.Plugin.General.Webserver.Test.mdp" />
     <Entry filename="Server.Plugin.General.Import/Server.Plugin.General.Import.mdp" />
     <Entry filename="Server.Plugin.General.ElasticSearch/Server.Plugin.General.ElasticSearch.mdp" />
+    <Entry filename="Server.Cmd.Setup.Linux/Server.Cmd.Setup.mdse" />
   </Entries>
 </Combine>
