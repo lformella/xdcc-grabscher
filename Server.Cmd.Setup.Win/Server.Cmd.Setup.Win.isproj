@@ -44,10 +44,6 @@
 			<Name>Server.Plugin.Backend.File</Name>
 			<Project>{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}</Project>
 		</ProjectReference>
-		<ProjectReference Include="..\Server.Plugin.Backend.MySql\Server.Plugin.Backend.MySql.csproj">
-			<Name>Server.Plugin.Backend.MySql</Name>
-			<Project>{6B448EF6-8B68-4902-AD92-81CAADD93EFC}</Project>
-		</ProjectReference>
 		<ProjectReference Include="..\Server.Plugin.General.Jabber\Server.Plugin.General.Jabber.csproj">
 			<Name>Server.Plugin.General.Jabber</Name>
 			<Project>{4F03468E-E62B-43C2-84D9-98CB23704E0B}</Project>

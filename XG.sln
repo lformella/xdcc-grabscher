@@ -25,7 +25,6 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "Server.Cmd.Setup.Win", "Ser
 		{4F03468E-E62B-43C2-84D9-98CB23704E0B} = {4F03468E-E62B-43C2-84D9-98CB23704E0B}
 		{B6ACFEB4-C001-44AB-8F59-8ABBF134C7C2} = {B6ACFEB4-C001-44AB-8F59-8ABBF134C7C2}
 		{E84F51EE-E324-4A99-A4C1-76F53CC4F08D} = {E84F51EE-E324-4A99-A4C1-76F53CC4F08D}
-		{6B448EF6-8B68-4902-AD92-81CAADD93EFC} = {6B448EF6-8B68-4902-AD92-81CAADD93EFC}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Plugin.General.Import", "Server.Plugin.General.Import\Server.Plugin.General.Import.csproj", "{B6C773B1-28F4-4627-8BC8-35F90249E73D}"
@@ -190,8 +189,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
