@@ -47,7 +47,7 @@ var XGMain = (function ()
 	{
 		obj.Active = true;
 		dataView.updateItem({ Data: obj, DataType: Enum.Grid.File });
-		flipObject(obj);
+		websocket.sendGuid(Enum.Request.DeactivateObject, obj.Guid);
 	}
 
 	/**

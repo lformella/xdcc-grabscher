@@ -405,7 +405,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
-				buildRow("", 28, false, function (obj)
+				buildRow("", 42, false, function (obj)
 				{
 					return formatter.formatFileIcon(obj, "Grid.flipObject(\"" + Enum.Grid.File + "\", \"" + obj.Guid + "\");");
 				}, false, "icon"),
