@@ -53,9 +53,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		JsonSerializerSettings _jsonSerializerSettings;
 
 		readonly HashSet<User> _users = new HashSet<User>();
-
-		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Downloads" };
-		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Enabled Packets" };
+		
+		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Enabled Packets" };
+		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Downloads" };
 
 		public RrdDb RrdDb { get; set; }
 
@@ -156,13 +156,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectEnabledChanged(Core.AObject aObj)
 		{
-			BroadcastChanged(aObj);
+			BroadcastChanged(aObj, false);
 
 			// if a packet changed dispatch the bot, too
 			if (aObj is Core.Packet)
 			{
 				var part = aObj as Core.Packet;
-				BroadcastChanged(part.Parent);
+				BroadcastChanged(part.Parent, false);
 			}
 		}
 
@@ -485,14 +485,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			OnClose(aContext);
 		}
 
-		void BroadcastChanged (Core.AObject aObj)
+		void BroadcastChanged (Core.AObject aObj, bool advancedVisibilityCheck = true)
 		{
 			var response = new Response
 			{
 				Type = Response.Types.ObjectChanged,
 				Data = aObj
 			};
-			Broadcast(response);
+			Broadcast(response, advancedVisibilityCheck);
 		}
 
 		void UnicastOnRequest(User aUser, IEnumerable<object> aObjects, Request.Types aRequestType)
@@ -508,11 +508,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 		}
 
-		void Broadcast(Response aResponse)
+		void Broadcast(Response aResponse, bool advancedVisibilityCheck = true)
 		{
 			foreach (var user in _users.ToArray())
 			{
-				Unicast(user, aResponse);
+				Unicast(user, aResponse, advancedVisibilityCheck);
 			}
 		}
 

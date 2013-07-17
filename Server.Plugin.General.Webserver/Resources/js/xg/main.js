@@ -144,11 +144,11 @@ var XGMain = (function ()
 			websocket.send(Enum.Request.Searches);
 			websocket.send(Enum.Request.Servers);
 			websocket.send(Enum.Request.Files);
+			websocket.sendName(Enum.Request.Snapshots, -1);
 		});
 
 		websocket.onDisconnected.subscribe(function ()
 		{
-			//websocket.connect();
 			gui.showError();
 		});
 

@@ -385,7 +385,6 @@ namespace XG.Server.Helper
 							{
 								Log.Warn("CheckNextReferenceBytes(" + tFile + ", " + aPart + ") removing next " + part);
 								part.Packet.Enabled = false;
-								part.Packet.Commit();
 								RemovePart(tFile, part);
 								return part.StopSize;
 							}
@@ -539,7 +538,6 @@ namespace XG.Server.Helper
 										{
 											Log.Info("JoinCompleteParts(" + tFile + ") disabling " + tPack + " from " + tPack.Parent);
 											tPack.Enabled = false;
-											tPack.Commit();
 										}
 									}
 								}

@@ -81,7 +81,6 @@ namespace XG.Server.Plugin
 			if (tObj != null)
 			{
 				tObj.Enabled = true;
-				tObj.Commit();
 			}
 		}
 
@@ -91,7 +90,6 @@ namespace XG.Server.Plugin
 			if (tObj != null)
 			{
 				tObj.Enabled = false;
-				tObj.Commit();
 			}
 			else
 			{
@@ -102,7 +100,6 @@ namespace XG.Server.Plugin
 					foreach (var part in parts)
 					{
 						part.Packet.Enabled = false;
-						part.Packet.Commit();
 					}
 				}
 			}

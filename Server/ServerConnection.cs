@@ -201,7 +201,6 @@ namespace XG.Server
 						{
 							_log.Warn("RequestFromBot(" + aBot + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
 							tPacket.Enabled = false;
-							tPacket.Commit();
 							tPacket = aBot.OldestActivePacket();
 						}
 						else
@@ -309,7 +308,6 @@ namespace XG.Server
 					foreach (Packet tPack in tBot.Packets)
 					{
 						tPack.Enabled = false;
-						tPack.Commit();
 					}
 				}
 

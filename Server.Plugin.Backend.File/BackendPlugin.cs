@@ -48,6 +48,7 @@ namespace XG.Server.Plugin.Backend.File
 		bool _isSaveFile;
 
 		readonly object _saveObjectsLock = new object();
+		DateTime _lastObjectsSave = DateTime.Now;
 		readonly object _saveFilesLock = new object();
 		readonly object _saveSearchesLock = new object();
 
@@ -141,8 +142,6 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void StartRun()
 		{
-			DateTime timeIrc = DateTime.Now;
-
 			DateTime _last = DateTime.Now;
 			while (_allowRunning)
 			{
@@ -151,10 +150,8 @@ namespace XG.Server.Plugin.Backend.File
 					_last = DateTime.Now;
 
 					// Objects
-					if ((DateTime.Now - timeIrc).TotalSeconds > BackupDataTime)
+					if ((DateTime.Now - _lastObjectsSave).TotalSeconds > BackupDataTime)
 					{
-						timeIrc = DateTime.Now;
-
 						SaveObjects();
 					}
 
@@ -207,7 +204,7 @@ namespace XG.Server.Plugin.Backend.File
 				{
 					SaveFiles();
 				}
-					// the data saving can be scheduled
+				// the data saving can be scheduled
 				else
 				{
 					_isSaveFile = true;
@@ -341,6 +338,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (_saveObjectsLock)
 			{
+				_lastObjectsSave = DateTime.Now;
 				return Save(Servers, Settings.Instance.AppDataPath + DataBinary);
 			}
 		}

@@ -385,7 +385,6 @@ namespace XG.Server
 				var aServer = aObj as Core.Server;
 
 				aServer.Enabled = false;
-				aServer.Commit();
 
 				Log.Info("ServerObjectRemoved(" + aServer + ")");
 				_servers.ServerDisconnect(aServer);

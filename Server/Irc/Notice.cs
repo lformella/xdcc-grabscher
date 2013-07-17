@@ -152,7 +152,6 @@ namespace XG.Server.Irc
 							foreach (Packet pack in tPackets)
 							{
 								pack.Enabled = false;
-								pack.Commit();
 								tBot.RemovePacket(pack);
 							}
 						}
@@ -349,7 +348,6 @@ namespace XG.Server.Irc
 								if (tPacket.Enabled)
 								{
 									tPacket.Enabled = false;
-									tPacket.Commit();
 								}
 							}
 						}

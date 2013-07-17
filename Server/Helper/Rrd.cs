@@ -17,7 +17,6 @@ namespace XG.Server.Helper
 			try
 			{
 				var db = new RrdDb(_dbPath);
-				var def = db.getRrdDef();
 				HashSet<int> sourcesToAdd = new HashSet<int>();
 
 				for (int a = 0; a <= dataSourceCount; a++)
