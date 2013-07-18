@@ -62,14 +62,6 @@ namespace XG.Core
 
 		#region PROPERTIES
 
-		[NonSerialized]
-		object _objectLock = new object();
-
-		protected object ObjectLock
-		{
-			get { return _objectLock ?? (_objectLock = new object()); }
-		}
-
 		readonly ICollection<AObject> _children;
 
 		protected AObject[] All
@@ -85,7 +77,7 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				lock (ObjectLock)
+				lock (_children)
 				{
 					if (!_children.Contains(aObject))
 					{
@@ -117,7 +109,7 @@ namespace XG.Core
 		{
 			if (aObject != null)
 			{
-				lock (ObjectLock)
+				lock (_children)
 				{
 					if (_children.Contains(aObject))
 					{

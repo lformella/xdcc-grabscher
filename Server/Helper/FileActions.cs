@@ -477,7 +477,7 @@ namespace XG.Server.Helper
 		/// <param name="aFile"> </param>
 		public void CheckFile(Core.File aFile)
 		{
-			lock (aFile.Lock)
+			lock (aFile)
 			{
 				Log.Info("CheckFile(" + aFile + ")");
 				if (!aFile.Parts.Any())
@@ -514,7 +514,7 @@ namespace XG.Server.Helper
 			var tFile = aObject as Core.File;
 			if (tFile != null)
 			{
-				lock (tFile.Lock)
+				lock (tFile)
 				{
 					Log.Info("JoinCompleteParts(" + tFile + ") starting");
 

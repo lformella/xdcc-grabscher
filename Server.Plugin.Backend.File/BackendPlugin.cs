@@ -47,10 +47,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		bool _isSaveFile;
 
-		readonly object _saveObjectsLock = new object();
 		DateTime _lastObjectsSave = DateTime.Now;
-		readonly object _saveFilesLock = new object();
-		readonly object _saveSearchesLock = new object();
 
 		const string DataBinary = "xg.bin";
 		const string FilesBinary = "xgfiles.bin";
@@ -327,7 +324,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		bool SaveFiles()
 		{
-			lock (_saveFilesLock)
+			lock (FilesBinary)
 			{
 				_isSaveFile = false;
 				return Save(Files, Settings.Instance.AppDataPath + FilesBinary);
@@ -336,7 +333,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		bool SaveObjects()
 		{
-			lock (_saveObjectsLock)
+			lock (DataBinary)
 			{
 				_lastObjectsSave = DateTime.Now;
 				return Save(Servers, Settings.Instance.AppDataPath + DataBinary);
@@ -345,7 +342,7 @@ namespace XG.Server.Plugin.Backend.File
 
 		bool SaveSearches()
 		{
-			lock (_saveSearchesLock)
+			lock (SearchesBinary)
 			{
 				return Save(Searches, Settings.Instance.AppDataPath + SearchesBinary);
 			}

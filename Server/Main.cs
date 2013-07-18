@@ -205,8 +205,6 @@ namespace XG.Server
 						continue;
 					}
 
-					file.Lock = new object();
-
 					if (!file.Enabled)
 					{
 						bool complete = true;

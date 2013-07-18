@@ -34,9 +34,6 @@ namespace XG.Core
 	{
 		#region VARIABLES
 
-		[NonSerialized]
-		public object Lock = new object();
-
 		public override string Name
 		{
 			get { return base.Name; }
