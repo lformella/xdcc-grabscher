@@ -404,7 +404,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.LiveSnapshot,
-							Data = GetLatestSnapshot()
+							Data = GetFlotSnapshot()
 						});
 						break;
 
@@ -636,27 +636,22 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region Functions
 
-		private IEnumerable<Flot> GetLatestSnapshot ()
+		private IEnumerable<Flot> GetFlotSnapshot ()
 		{
-			var flots = GetFlotData(DateTime.Now.AddMinutes(-15), DateTime.Now);
-			foreach (var flot in flots)
+			var tObjects = new List<Flot>();
+
+			var snapshot = CollectSnapshot();
+			for (int a = 1; a <= Snapshot.SnapshotCount; a++)
 			{
-				double lastTime = 0;
-				double lastValue = 0;
-				foreach (var values in flot.Data)
-				{
-					if (values[1] >= 0)
-					{
-						if (values[0] > lastTime)
-						{
-							lastTime = values[0];
-							lastValue = values[1];
-						}
-					}
-				}
-				flot.Data = new double[][] {new double[]{lastTime, lastValue}};
+				var value = (SnapshotValue) a;
+				var obj = new Flot();
+				obj.Data = new double[][]{ new double[]{snapshot.Get(SnapshotValue.Timestamp), snapshot.Get(value)}};
+				obj.Label = Enum.GetName(typeof (SnapshotValue), value);
+
+				tObjects.Add(obj);
 			}
-			return flots;
+
+			return tObjects.ToArray();
 		}
 
 		private IEnumerable<ExternalSearch> SearchExternal (string search)
@@ -700,7 +695,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return objects;
 		}
 
-		List<Core.AObject> FilteredPacketsAndBotsByGuid (Guid aGuid, string aName = null)
+		IEnumerable<Core.AObject> FilteredPacketsAndBotsByGuid(Guid aGuid, string aName = null)
 		{
 			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
 			var allPackets = (from bot in allBots from packet in bot.Packets select packet).ToList();
@@ -737,7 +732,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return all;
 		}
 
-		Flot[] GetFlotData(DateTime aStart, DateTime aEnd)
+		IEnumerable<Flot> GetFlotData(DateTime aStart, DateTime aEnd)
 		{
 			var tObjects = new List<Flot>();
 
@@ -745,7 +740,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			Int64[] times = data.getTimestamps();
 			double[][] values = data.getValues();
 
-			for (int a = 1; a <= 29; a++)
+			for (int a = 1; a <= Snapshot.SnapshotCount; a++)
 			{
 				var value = (SnapshotValue) a;
 				var obj = new Flot();
@@ -764,6 +759,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 			return tObjects.ToArray();
 		}
+
 		#endregion
 	}
 }

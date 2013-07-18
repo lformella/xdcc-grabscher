@@ -41,6 +41,8 @@
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Webserver" />
     <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.ElasticSearch" />
+    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
   </References>
   <LanguageParameters StartupObject="XG.Server.Cmd.Cmd" ctype="CSharpProjectParameters" />
 </Project>

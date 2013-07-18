@@ -103,6 +103,7 @@
     <Compile Include="Worker\ALoopWorker.cs" />
     <Compile Include="Worker\AWorker.cs" />
     <Compile Include="Worker\BotWatchdogWorker.cs" />
+    <Compile Include="Worker\Snapshot.cs" />
     <Compile Include="Worker\RrdWorker.cs" />
     <Compile Include="Worker\Workers.cs" />
   </ItemGroup>

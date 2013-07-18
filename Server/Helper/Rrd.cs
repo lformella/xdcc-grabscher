@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using XG.Server.Worker;
+
 using SharpRobin.Core;
 
 namespace XG.Server.Helper
@@ -10,7 +12,6 @@ namespace XG.Server.Helper
 	{
 		public RrdDb GetDb ()
 		{
-			int dataSourceCount = 29;
 			int heartBeat = 5 * 60; // * 1000
 
 			string _dbPath = Settings.Instance.AppDataPath + Path.DirectorySeparatorChar + "xgsnapshots.db";
@@ -19,7 +20,7 @@ namespace XG.Server.Helper
 				var db = new RrdDb(_dbPath);
 				HashSet<int> sourcesToAdd = new HashSet<int>();
 
-				for (int a = 0; a <= dataSourceCount; a++)
+				for (int a = 0; a <= Snapshot.SnapshotCount; a++)
 				{
 					if (!db.containsDs(a + ""))
 					{
@@ -45,7 +46,7 @@ namespace XG.Server.Helper
 			catch (FileNotFoundException)
 			{
 				RrdDef rrdDef = new RrdDef(_dbPath, heartBeat);
-				for (int a = 0; a <= dataSourceCount; a++)
+				for (int a = 0; a <= Snapshot.SnapshotCount; a++)
 				{
 					rrdDef.addDatasource(a + "", DsTypes.DT_GAUGE, heartBeat * 2, 0, Double.MaxValue);
 				}

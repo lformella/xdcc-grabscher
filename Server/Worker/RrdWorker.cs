@@ -24,55 +24,11 @@
 //  
 
 using System;
-using System.IO;
-using System.Linq;
-
-using XG.Core;
 
 using SharpRobin.Core;
 
 namespace XG.Server.Worker
 {
-	public enum SnapshotValue
-	{
-		Timestamp = 0,
-
-		Speed = 1,
-
-		Servers = 2,
-		ServersEnabled = 21,
-		ServersDisabled = 22,
-		ServersConnected = 3,
-		ServersDisconnected = 4,
-
-		Channels = 5,
-		ChannelsEnabled = 23,
-		ChannelsDisabled = 24,
-		ChannelsConnected = 6,
-		ChannelsDisconnected = 7,
-
-		Bots = 8,
-		BotsConnected = 9,
-		BotsDisconnected = 10,
-		BotsFreeSlots = 11,
-		BotsFreeQueue = 12,
-		BotsAverageCurrentSpeed = 19,
-		BotsAverageMaxSpeed = 20,
-
-		Packets = 13,
-		PacketsConnected = 14,
-		PacketsDisconnected = 15,
-		PacketsSize = 16,
-		PacketsSizeDownloading = 17,
-		PacketsSizeNotDownloading = 18,
-		PacketsSizeConnected = 25,
-		PacketsSizeDisconnected = 26,
-
-		FileSizeDownloaded = 27,
-		FileSizeMissing = 28,
-		FileTimeMissing = 29
-	}
-
 	public class RrdWorker : ALoopWorker
 	{
 		public RrdDb RrdDb { get; set; }
@@ -81,72 +37,13 @@ namespace XG.Server.Worker
 
 		protected override void LoopRun()
 		{
-			Core.Server[] servers = (from server in Servers.All select server).ToArray();
-			Channel[] channels = (from server in servers from channel in server.Channels select channel).ToArray();
-			Bot[] bots = (from channel in channels from bot in channel.Bots select bot).ToArray();
-			Packet[] packets = (from bot in bots from packet in bot.Packets select packet).ToArray();
-			Core.File[] files = (from file in Files.All select file).ToArray();
+			var snapshot = CollectSnapshot();
 
-			Sample sample = RrdDb.createSample(DateTime.Now.ToTimestamp());
-
-			sample.setValue((int)SnapshotValue.Speed + "", (from file in Files.All from part in file.Parts select part.Speed).Sum());
-
-			sample.setValue((int)SnapshotValue.Servers + "", (from server in servers select server).Count());
-			sample.setValue((int)SnapshotValue.ServersEnabled + "", (from server in servers where server.Enabled select server).Count());
-			sample.setValue((int)SnapshotValue.ServersDisabled + "", (from server in servers where !server.Enabled select server).Count());
-			sample.setValue((int)SnapshotValue.ServersConnected + "", (from server in servers where server.Connected select server).Count());
-			sample.setValue((int)SnapshotValue.ServersDisconnected + "", (from server in servers where !server.Connected select server).Count());
-
-			sample.setValue((int)SnapshotValue.Channels + "", (from channel in channels select channel).Count());
-			sample.setValue((int)SnapshotValue.ChannelsEnabled + "", (from channel in channels where channel.Parent.Enabled && channel.Enabled select channel).Count());
-			sample.setValue((int)SnapshotValue.ChannelsDisabled + "", (from channel in channels where !channel.Parent.Enabled || !channel.Enabled select channel).Count());
-			sample.setValue((int)SnapshotValue.ChannelsConnected + "", (from channel in channels where channel.Connected select channel).Count());
-			sample.setValue((int)SnapshotValue.ChannelsDisconnected + "", (from channel in channels where !channel.Connected select channel).Count());
-
-			sample.setValue((int)SnapshotValue.Bots + "", (from bot in bots select bot).Count());
-			sample.setValue((int)SnapshotValue.BotsConnected + "", (from bot in bots where bot.Connected select bot).Count());
-			sample.setValue((int)SnapshotValue.BotsDisconnected + "", (from bot in bots where !bot.Connected select bot).Count());
-			sample.setValue((int)SnapshotValue.BotsFreeSlots + "", (from bot in bots where bot.InfoSlotCurrent > 0 select bot).Count());
-			sample.setValue((int)SnapshotValue.BotsFreeQueue + "", (from bot in bots where bot.InfoQueueCurrent > 0 select bot).Count());
-			try
+			Sample sample = RrdDb.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
+			for (int a = 1; a < Snapshot.SnapshotCount; a++)
 			{
-				sample.setValue((int)SnapshotValue.BotsAverageCurrentSpeed + "",
-				         ((from bot in bots select bot.InfoSpeedCurrent).Sum() / (from bot in bots where bot.InfoSpeedCurrent > 0 select bot).Count()));
+				sample.setValue(a + "", snapshot.Get((SnapshotValue)a));
 			}
-			catch (DivideByZeroException)
-			{
-				sample.setValue((int)SnapshotValue.BotsAverageCurrentSpeed + "", 0);
-			}
-			try
-			{
-				sample.setValue((int)SnapshotValue.BotsAverageMaxSpeed + "",
-				         ((from bot in bots select bot.InfoSpeedMax).Sum() / (from bot in bots where bot.InfoSpeedMax > 0 select bot).Count()));
-			}
-			catch (DivideByZeroException)
-			{
-				sample.setValue((int)SnapshotValue.BotsAverageMaxSpeed + "", 0);
-			}
-
-			sample.setValue((int)SnapshotValue.Packets + "", (from packet in packets select packet).Count());
-			sample.setValue((int)SnapshotValue.PacketsConnected + "", (from packet in packets where packet.Connected select packet).Count());
-			sample.setValue((int)SnapshotValue.PacketsDisconnected + "", (from packet in packets where !packet.Connected select packet).Count());
-			sample.setValue((int)SnapshotValue.PacketsSize + "", (from packet in packets select packet.Size).Sum());
-			sample.setValue((int)SnapshotValue.PacketsSizeDownloading + "", (from packet in packets where packet.Connected select packet.Size).Sum());
-			sample.setValue((int)SnapshotValue.PacketsSizeNotDownloading + "", (from packet in packets where !packet.Connected select packet.Size).Sum());
-			sample.setValue((int)SnapshotValue.PacketsSizeConnected + "", (from packet in packets where packet.Parent.Connected select packet.Size).Sum());
-			sample.setValue((int)SnapshotValue.PacketsSizeDisconnected + "", (from packet in packets where !packet.Parent.Connected select packet.Size).Sum());
-
-			sample.setValue((int)SnapshotValue.FileSizeDownloaded + "", (from file in files from part in file.Parts select part.DownloadedSize).Sum());
-			sample.setValue((int)SnapshotValue.FileSizeMissing + "", (from file in files from part in file.Parts select part.MissingSize).Sum());
-			try
-			{
-				sample.setValue((int)SnapshotValue.FileTimeMissing + "", (from file in files from part in file.Parts select part.TimeMissing).Max());
-			}
-			catch (Exception)
-			{
-				sample.setValue((int)SnapshotValue.FileTimeMissing + "", 0);
-			}
-
 			sample.update();
 		}
 
