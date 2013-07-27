@@ -229,6 +229,19 @@ var XGMain = (function ()
 			}
 		});
 
+		grid.onDblClick.subscribe(function (e, args)
+		{
+			if (args.Data != undefined)
+			{
+				switch (args.DataType)
+				{
+					case Enum.Grid.Packet:
+						gui.showInfo(args.Data.Name);
+						break;
+				}
+			}
+		});
+
 		grid.onRemoveObject.subscribe(function (e, args)
 		{
 			switch (args.DataType)

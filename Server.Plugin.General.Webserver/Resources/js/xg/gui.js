@@ -424,6 +424,12 @@ var XGGui = (function ()
 		showError: function ()
 		{
 			errorDialog.modal('show');
+		},
+
+		showInfo: function (text)
+		{
+			$("#infoLabel").html(text);
+			$("#infoDialog").modal('show');
 		}
 	};
 	return self;

@@ -81,6 +81,16 @@ var XGGrid = (function ()
 			self.onClick.notify(obj, null, this);
 		}, this));
 
+		grid.onDblClick.subscribe($.proxy(function (e, args)
+		{
+			var obj = {
+				Data: grid.getDataItem(args.row),
+				DataType: gridName,
+				Cell: $(grid.getCellNode(args.row, args.cell))
+			};
+			self.onDblClick.notify(obj, null, this);
+		}, this));
+
 		if (comparer != null)
 		{
 			grid.onSort.subscribe(function (e, args)
@@ -220,6 +230,7 @@ var XGGrid = (function ()
 
 	var self = {
 		onClick: new Slick.Event(),
+		onDblClick: new Slick.Event(),
 		onFlipObject: new Slick.Event(),
 		onRemoveObject: new Slick.Event(),
 		onDownloadLink: new Slick.Event(),
