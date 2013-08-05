@@ -260,18 +260,19 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_454545_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_454545_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_888888_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_888888_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_cd0a0a_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_cd0a0a_256x240.png" />
+    <File subtype="Code" buildaction="Nothing" name="packages.config" />
   </Contents>
   <References>
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" localcopy="True" refto="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Runtime.Serialization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Fleck.0.9.6.19/lib/net40/Fleck.dll" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/Fleck.0.9.7.22/lib/net40/Fleck.dll" />
   </References>
 </Project>
