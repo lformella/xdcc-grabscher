@@ -161,3 +161,7 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+.idea
+XG_*.tar.gz
+XG_*.exe

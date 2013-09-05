@@ -31,13 +31,13 @@ namespace XG.Server
 	{
 		#region EVENTS
 
-		public event NotificationDelegate NotificationAdded;
+		public event NotificationDelegate OnNotificationAdded;
 
 		public void FireNotificationAdded(Notification aObj)
 		{
-			if (NotificationAdded != null)
+			if (OnNotificationAdded != null)
 			{
-				NotificationAdded(aObj);
+				OnNotificationAdded(aObj);
 			}
 		}
 

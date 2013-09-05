@@ -286,7 +286,7 @@ var XGMain = (function ()
 	function startGui (showOfflineBots, humanDates, combineBotAndPacketGrid)
 	{
 		gui = Object.create(XGGui);
-		gui.initialize(dataView, showOfflineBots, humanDates, combineBotAndPacketGrid);
+		gui.initialize(dataView, formatter, showOfflineBots, humanDates, combineBotAndPacketGrid);
 
 		gui.onSearch.subscribe(function (e, args)
 		{

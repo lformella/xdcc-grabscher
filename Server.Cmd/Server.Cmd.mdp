@@ -33,16 +33,17 @@
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference type="Gac" localcopy="True" refto="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" localcopy="True" refto="Mono.Posix, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Backend.File" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Jabber" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.Webserver" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
     <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.General.ElasticSearch" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
+    <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Core.Irc" />
   </References>
   <LanguageParameters StartupObject="XG.Server.Cmd.Cmd" ctype="CSharpProjectParameters" />
 </Project>

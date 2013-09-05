@@ -65,7 +65,7 @@ namespace XG.Server.Plugin.General.Jabber
 
 		#region EVENTHANDLER
 
-        protected new void FileChanged(AObject aObj, string[] aFields)
+		protected new void FileChanged(AObject aObj, string[] aFields)
 		{
 			if (aObj is FilePart && aFields.Contains("Speed"))
 			{

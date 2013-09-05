@@ -30,11 +30,11 @@ using NUnit.Framework;
 
 using XG.Core;
 
-namespace XG.Server.Test.Irc
+namespace XG.Server.Plugin.Core.Irc.Parser.Test
 {
 	public abstract class AParser
 	{
-		protected Core.Server Server;
+		protected XG.Core.Server Server;
 		protected Channel Channel;
 		protected Bot Bot;
 
@@ -50,62 +50,15 @@ namespace XG.Server.Test.Irc
 		protected Int64 EventTime;
 		protected bool EventOverride;
 
-		protected Server.Irc.AParser IrcParser;
-
 		protected AParser()
 		{
-			Server = new Core.Server {Name = "test.bitpir.at"};
+			Server = new XG.Core.Server {Name = "test.bitpir.at"};
 
 			Channel = new Channel {Name = "#test"};
 			Server.AddChannel(Channel);
 
 			Bot = new Bot {Name = "[XG]TestBot"};
 			Channel.AddBot(Bot);
-		}
-
-		public void RegisterParser(Server.Irc.AParser aParser)
-		{
-			IrcParser = aParser;
-
-			IrcParser.ParsingError += delegate(string aData) { EventParsingError = aData; };
-
-			IrcParser.AddDownload += delegate(Packet aPack, long aChunk, IPAddress aIp, int aPort)
-			{
-				EventPacket = aPack;
-				EventChunk = aChunk;
-				EventIp = aIp;
-				EventPort = aPort;
-			};
-			IrcParser.RemoveDownload += delegate(Bot aBot) { EventBot = aBot; };
-
-			IrcParser.SendData += delegate(Core.Server aServer, string aData)
-			{
-				Assert.AreEqual(Server, aServer);
-				EventData = aData;
-			};
-			IrcParser.JoinChannel += delegate(Core.Server aServer, Channel aChannel)
-			{
-				Assert.AreEqual(Server, aServer);
-				EventChannel = aChannel;
-			};
-			IrcParser.CreateTimer += delegate(Core.Server aServer, AObject aObject, int aTime, bool aOverride)
-			{
-				Assert.AreEqual(Server, aServer);
-				EventObject = aObject;
-				EventTime = aTime;
-				EventOverride = aOverride;
-			};
-
-			IrcParser.RequestFromBot += delegate(Core.Server aServer, Bot aBot)
-			{
-				Assert.AreEqual(Server, aServer);
-				EventBot = aBot;
-			};
-			IrcParser.UnRequestFromBot += delegate(Core.Server aServer, Bot aBot)
-			{
-				Assert.AreEqual(Server, aServer);
-				EventBot = aBot;
-			};
 		}
 	}
 }

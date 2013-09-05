@@ -76,30 +76,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ANotificationSender.cs" />
-    <Compile Include="BotConnection.cs" />
-    <Compile Include="Connection\AConnection.cs" />
-    <Compile Include="Connection\AIrcConnection.cs" />
-    <Compile Include="Connection\Connection.cs" />
     <Compile Include="Helper\Process.cs" />
     <Compile Include="Helper\FileActions.cs" />
     <Compile Include="Helper\FileHandler.cs" />
     <Compile Include="Helper\FileHandlerProcess.cs" />
     <Compile Include="Helper\Filesystem.cs" />
-    <Compile Include="Irc\AParser.cs" />
-    <Compile Include="Irc\Parser.cs" />
-    <Compile Include="Irc\Notice.cs" />
-    <Compile Include="Irc\Nickserv.cs" />
-    <Compile Include="Irc\PrivateMessage.cs" />
-    <Compile Include="Irc\IntValue.cs" />
     <Compile Include="Helper\PartBytesObject.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Plugin\ABackendPlugin.cs" />
     <Compile Include="Plugin\APlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helper\Rrd.cs" />
-    <Compile Include="ServerConnection.cs" />
-    <Compile Include="Servers.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Worker\ADataWorker.cs" />
     <Compile Include="Worker\ALoopWorker.cs" />
     <Compile Include="Worker\AWorker.cs" />
     <Compile Include="Worker\BotWatchdogWorker.cs" />

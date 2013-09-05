@@ -64,14 +64,13 @@ namespace XG.Core
 			return Regex.Replace(aStr, @"[^a-z0-9,.;:_\(\)\[\]\s-]", "", RegexOptions.IgnoreCase).Trim();
 		}
 
-
 		public static bool ContainsAll(this string str, params string[] values)
 		{
 			if (!string.IsNullOrEmpty(str) && values.Length > 0)
 			{
 				foreach (string value in values)
 				{
-					if (!str.Contains(value))
+					if (str.IndexOf(value, StringComparison.OrdinalIgnoreCase) < 0)
 					{
 						return false;
 					}

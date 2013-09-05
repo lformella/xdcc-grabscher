@@ -30,7 +30,6 @@ using System.Reflection;
 
 using XG.Core;
 using XG.Server.Helper;
-using XG.Server.Irc;
 using XG.Server.Plugin;
 using XG.Server.Worker;
 
@@ -41,14 +40,12 @@ using File = XG.Core.File;
 
 namespace XG.Server
 {
-	public class Main : AWorker
+	public class Main : ADataWorker
 	{
 		#region VARIABLES
 
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		readonly Parser _ircParser;
-		readonly Servers _servers;
 		readonly FileActions _fileActions;
 		readonly Workers _workers;
 
@@ -68,15 +65,11 @@ namespace XG.Server
 
 		public Main()
 		{
+			new DirectoryInfo(Settings.Instance.ReadyPath).Create();
+			new DirectoryInfo(Settings.Instance.TempPath).Create();
+
 			_fileActions = new FileActions();
-			_fileActions.NotificationAdded += NotificationAdded;
-
-			_ircParser = new Parser {FileActions = _fileActions};
-			_ircParser.ParsingError += IrcParserParsingError;
-			_ircParser.NotificationAdded += NotificationAdded;
-
-			_servers = new Servers {FileActions = _fileActions, IrcParser = _ircParser};
-			_servers.NotificationAdded += NotificationAdded;
+			_fileActions.OnNotificationAdded += NotificationAdded;
 
 			_workers = new Workers();
 			
@@ -295,22 +288,6 @@ namespace XG.Server
 
 			#endregion
 
-			#region CONNECT ALL ENABLED SERVERS
-
-			foreach (Core.Server serv in Servers.All)
-			{
-				// TODO check this
-				serv.Parent = null;
-				serv.Parent = Servers;
-
-				if (serv.Enabled)
-				{
-					_servers.ServerConnect(serv);
-				}
-			}
-
-			#endregion
-
 			#region WORKERS
 
 			var snapShotWorker = new RrdWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60};
@@ -319,18 +296,13 @@ namespace XG.Server
 
 			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
 
+			_workers.StartAll();
+
 			#endregion
 		}
 
 		protected override void StopRun()
 		{
-			_servers.AllowRunning = false;
-
-			foreach (Core.Server serv in Servers.All)
-			{
-				_servers.ServerDisconnect(serv);
-			}
-
 			_workers.StopAll();
 		}
 
@@ -347,10 +319,17 @@ namespace XG.Server
 			Searches = aPlugin.LoadSearches();
 			Notifications = new Notifications();
 
+			AddPlugin(aPlugin);
+		}
+
+		public void AddPlugin(APlugin aPlugin)
+		{
+			aPlugin.FileActions = _fileActions;
+
 			AddWorker(aPlugin);
 		}
 
-		public void AddWorker(AWorker aWorker)
+		void AddWorker(ADataWorker aWorker)
 		{
 			aWorker.Servers = Servers;
 			aWorker.Files = Files;
@@ -358,70 +337,6 @@ namespace XG.Server
 			aWorker.Notifications = Notifications;
 
 			_workers.Add(aWorker);
-			aWorker.Start();
-		}
-
-		#endregion
-
-		#region EVENTHANDLER
-
-		protected override void ObjectAdded(AObject aParent, AObject aObj)
-		{
-			if (aObj is Core.Server)
-			{
-				var aServer = aObj as Core.Server;
-
-				Log.Info("ServerObjectAdded(" + aServer + ")");
-				_servers.ServerConnect(aServer);
-			}
-		}
-
-		protected override void ObjectRemoved(AObject aParent, AObject aObj)
-		{
-			if (aObj is Core.Server)
-			{
-				var aServer = aObj as Core.Server;
-
-				aServer.Enabled = false;
-
-				Log.Info("ServerObjectRemoved(" + aServer + ")");
-				_servers.ServerDisconnect(aServer);
-			}
-		}
-
-		protected override void ObjectEnabledChanged(AObject aObj)
-		{
-			if (aObj is Core.Server)
-			{
-				var aServer = aObj as Core.Server;
-
-				if (aObj.Enabled)
-				{
-					_servers.ServerConnect(aServer);
-				}
-				else
-				{
-					_servers.ServerDisconnect(aServer);
-				}
-			}
-		}
-
-		void IrcParserParsingError(string aData)
-		{
-			lock (this)
-			{
-				try
-				{
-					var sw = new StreamWriter(System.IO.File.OpenWrite(Settings.Instance.ParsingErrorFile));
-					sw.BaseStream.Seek(0, SeekOrigin.End);
-					sw.WriteLine(aData.Normalize());
-					sw.Close();
-				}
-				catch (Exception)
-				{
-					// just ignore
-				}
-			}
 		}
 
 		#endregion

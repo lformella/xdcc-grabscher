@@ -28,27 +28,23 @@ using System;
 using NUnit.Framework;
 
 using XG.Core;
+using Meebey.SmartIrc4net;
 
-namespace XG.Server.Test.Irc
+namespace XG.Server.Plugin.Core.Irc.Parser.Test
 {
 	[TestFixture]
-	public class PrivateMessage : AParser
+	public class Message : AParser
 	{
-		public PrivateMessage()
-		{
-			RegisterParser(new Server.Irc.PrivateMessage());
-		}
+		Parser.Message _message = new Parser.Message();
 
 		[Test]
 		public void ParseBandwidth()
 		{
-			EventParsingError = "";
-
-			IrcParser.ParseData(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s");
+			//_message.Parse(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s");
 			Assert.AreEqual((Int64) (12.7 * 1024), Bot.InfoSpeedCurrent);
 			Assert.AreEqual((Int64) (139.5 * 1024), Bot.InfoSpeedMax);
 
-			IrcParser.ParseData(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** Bandwidth Usage ** Current: 0.0KB/s, Record: 231.4KB/s");
+			//_message.Parse(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** Bandwidth Usage ** Current: 0.0KB/s, Record: 231.4KB/s");
 			Assert.AreEqual(0, Bot.InfoSpeedCurrent);
 			Assert.AreEqual((Int64) (231.4 * 1024), Bot.InfoSpeedMax);
 
@@ -60,19 +56,19 @@ namespace XG.Server.Test.Irc
 		{
 			EventParsingError = "";
 
-			IrcParser.ParseData(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** 9 packs **  1 of 1 slot open, Min: 5.0kB/s, Record: 59.3kB/s");
+			//_message.Parse(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :** 9 packs **  1 of 1 slot open, Min: 5.0kB/s, Record: 59.3kB/s");
 			Assert.AreEqual(1, Bot.InfoSlotCurrent);
 			Assert.AreEqual(1, Bot.InfoSlotTotal);
 
-			IrcParser.ParseData(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 1 Pack <-  10 Of 10 Slots Open Min: 15.0KB/s Record: 691.8KB/s");
+			//_message.Parse(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 1 Pack <-  10 Of 10 Slots Open Min: 15.0KB/s Record: 691.8KB/s");
 			Assert.AreEqual(10, Bot.InfoSlotCurrent);
 			Assert.AreEqual(10, Bot.InfoSlotTotal);
 
-			IrcParser.ParseData(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :**[EWG]*   packs **  12 of 12 slots open, Record: 1736.8kB/s");
+			//_message.Parse(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :**[EWG]*   packs **  12 of 12 slots open, Record: 1736.8kB/s");
 			Assert.AreEqual(12, Bot.InfoSlotCurrent);
 			Assert.AreEqual(12, Bot.InfoSlotTotal);
 
-			IrcParser.ParseData(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 18 PackS <-  13 Of 15 Slots Open Min: 15.0KB/s Record: 99902.4KB/s");
+			//_message.Parse(Server, ":[XG]TestBot!~ROOT@local.host PRIVMSG #test :-> 18 PackS <-  13 Of 15 Slots Open Min: 15.0KB/s Record: 99902.4KB/s");
 			Assert.AreEqual(13, Bot.InfoSlotCurrent);
 			Assert.AreEqual(15, Bot.InfoSlotTotal);
 
@@ -84,25 +80,22 @@ namespace XG.Server.Test.Irc
 		{
 			EventParsingError = "";
 
-			IrcParser.ParseData(Server,
-			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
+			//_message.Parse(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#5   90x [181M] 6,9 Serie 9,6 The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar ");
 			Packet tPack = Bot.Packet(5);
 			Assert.AreEqual(181 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("Serie The.Big.Bang.Theory.S05E05.Ab.nach.Baikonur.GERMAN.DUBBED.HDTVRiP.XviD-SOF.rar", tPack.Name);
 
-			IrcParser.ParseData(Server,
-			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
+			//_message.Parse(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#3  54x [150M] 2,11 [ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar ");
 			tPack = Bot.Packet(3);
 			Assert.AreEqual(150 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar", tPack.Name);
 
-			IrcParser.ParseData(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#1� 0x [� 5M] 5meg");
+			//_message.Parse(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#1� 0x [� 5M] 5meg");
 			tPack = Bot.Packet(1);
 			Assert.AreEqual(5 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("5meg", tPack.Name);
 
-			IrcParser.ParseData(Server,
-			                     ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
+			//_message.Parse(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT PRIVMSG #test :#18  5x [2.2G] Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv");
 			tPack = Bot.Packet(18);
 			Assert.AreEqual((Int64) (2.2 * 1024 * 1024 * 1024), tPack.Size);
 			Assert.AreEqual("Payback.Heute.ist.Zahltag.2011.German.DL.1080p.BluRay.x264-LeechOurStuff.mkv", tPack.Name);

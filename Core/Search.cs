@@ -28,5 +28,14 @@ using System;
 namespace XG.Core
 {
 	[Serializable]
-	public class Search : AObject {}
+	public class Search : AObject
+	{
+		#region CONSTRUCTOR
+
+		public Search() {}
+
+		public Search(Search aObject) : base(aObject) {}
+
+		#endregion
+	}
 }

@@ -27,12 +27,28 @@ using System;
 using System.Linq;
 
 using XG.Core;
+using XG.Server.Helper;
 using XG.Server.Worker;
 
 namespace XG.Server.Plugin
 {
-	public abstract class APlugin : AWorker
+	public abstract class APlugin : ADataWorker
 	{
+		#region VARIABLES
+
+		FileActions _fileActions;
+
+		public FileActions FileActions
+		{
+			get { return _fileActions; }
+			set
+			{
+				_fileActions = value;
+			}
+		}
+
+		#endregion
+
 		#region SERVER
 
 		public void AddServer(string aString, int aPort = 6667)

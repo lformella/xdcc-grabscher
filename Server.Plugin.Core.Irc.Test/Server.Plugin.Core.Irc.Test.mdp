@@ -1,0 +1,31 @@
+<Project name="Server.Plugin.Core.Irc.Test" fileversion="2.0" DefaultNamespace="XG.Server.Plugin.Core.Irc.Test" language="C#" targetFramework="4.0" ctype="DotNetProject">
+  <Configurations active="Release">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assembly="Server.Plugin.Core.Irc.Test" />
+      <Build debugmode="True" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" definesymbols="DEBUG;" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="Server.Plugin.Core.Irc.Test" />
+      <Build debugmode="False" target="Library" />
+      <Execution consolepause="False" runwithwarnings="True" runtime="MsNet" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Directory" buildaction="Compile" name="Parser" />
+    <File subtype="Code" buildaction="Compile" name="Parser/AParser.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Notice.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Message.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Parser" />
+  </Contents>
+  <References>
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="nunit.framework" />
+    <ProjectReference type="Project" localcopy="True" refto="Core" />
+    <ProjectReference type="Project" localcopy="True" refto="Server.Plugin.Core.Irc" />
+    <ProjectReference type="Project" localcopy="True" refto="Server" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/smartirc4net.0.4.5/Meebey.SmartIrc4net.dll" />
+  </References>
+</Project>

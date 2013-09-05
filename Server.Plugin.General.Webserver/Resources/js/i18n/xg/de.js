@@ -48,6 +48,7 @@ translations =
 	/* GRIDS                                                                                                          */
 	/* ************************************************************************************************************** */
 
+	"Id": "",
 	"Name": "Name",
 	"Speed": "Geschwindigkeit",
 	"Q-Pos": "S-Pos",
@@ -112,24 +113,24 @@ translations =
 	/* NOTIFICATIONS                                                                                                  */
 	/* ************************************************************************************************************** */
 
-	"Notification_1": "Paket <strong>#Name#</strong> (#ParentName#) ist fertig",
-	"Notification_2": "Paket <strong>#Name#</strong> (#ParentName#) ist nicht fertig",
-	"Notification_3": "Paket <strong>#Name#</strong> (#ParentName#) ist kaputt",
-	"Notification_4": "Paket <strong>#Name#</strong> (#ParentName#) wurde angefragt",
-	"Notification_5": "Paket <strong>#Name#</strong> (#ParentName#) wurde entfernt",
-	"Notification_6": "Die Datei <strong>#Name#</strong> ist fertig",
-	"Notification_7": "Die Datei <strong>#Name#</strong> hat die falsche Größe",
-	"Notification_8": "Die Datei <strong>#Name#</strong> konnte nicht erstellt werden",
-	"Notification_9": "Server <strong>#Name#</strong> ist verbunden",
-	"Notification_10": "Server <strong>#Name#</strong> konnte nicht verbunden werden",
-	"Notification_11": "Channel <strong>#Name#</strong> (#ParentName#) beigetreten",
-	"Notification_12": "Channel <strong>#Name#</strong> (#ParentName#) konnte nicht beigetreten werden",
-	"Notification_13": "Channel <strong>#Name#</strong> (#ParentName#) ist geblockt",
-	"Notification_14": "Channel <strong>#Name#</strong> (#ParentName#) verlassen",
-	"Notification_15": "Wurde aus Channel <strong>#Name#</strong> (#ParentName#) gekickt",
-	"Notification_16": "Paket <strong>#Name#</strong> (#ParentName#) läd runter",
-	"Notification_17": "Paket <strong>#Name#</strong> (#ParentName#) konnte nicht runtergeladen werden",
-	"Notification_18": "Bot #ParentName# hat einen falschen Port für <strong>#Name#</strong> übermittelt",
+	"Notification_1": "Paket #Name# (#ParentName#) ist fertig",
+	"Notification_2": "Paket #Name# (#ParentName#) ist nicht fertig",
+	"Notification_3": "Paket #Name# (#ParentName#) ist kaputt",
+	"Notification_4": "Paket #Name# (#ParentName#) wurde angefragt",
+	"Notification_5": "Paket #Name# (#ParentName#) wurde entfernt",
+	"Notification_6": "Die Datei #Name# ist fertig",
+	"Notification_7": "Die Datei #Name# hat die falsche Größe",
+	"Notification_8": "Die Datei #Name# konnte nicht erstellt werden",
+	"Notification_9": "Server #Name# ist verbunden",
+	"Notification_10": "Server #Name# konnte nicht verbunden werden",
+	"Notification_11": "Channel #Name# (#ParentName#) beigetreten",
+	"Notification_12": "Channel #Name# (#ParentName#) konnte nicht beigetreten werden",
+	"Notification_13": "Channel #Name# (#ParentName#) ist geblockt",
+	"Notification_14": "Channel #Name# (#ParentName#) verlassen",
+	"Notification_15": "Wurde aus Channel #Name# (#ParentName#) gekickt",
+	"Notification_16": "Paket #Name# (#ParentName#) läd runter",
+	"Notification_17": "Paket #Name# (#ParentName#) konnte nicht runtergeladen werden",
+	"Notification_18": "Bot #ParentName# hat einen falschen Port für #Name# übermittelt",
 
 	/* ************************************************************************************************************** */
 	/* OTHERS                                                                                                         */

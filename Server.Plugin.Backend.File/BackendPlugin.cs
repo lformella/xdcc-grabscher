@@ -24,7 +24,9 @@
 //  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -55,8 +57,6 @@ namespace XG.Server.Plugin.Backend.File
 
 		const int BackupDataTime = 900;
 
-		bool _allowRunning = true;
-
 		#endregion
 
 		public BackendPlugin()
@@ -67,17 +67,16 @@ namespace XG.Server.Plugin.Backend.File
 
 		#region ABackendPlugin
 
-		public override Core.Servers LoadServers()
+		public override Servers LoadServers()
 		{
 #if !UNSAFE
 			try
 			{
 #endif
-				var servers = (Core.Servers) Load(Settings.Instance.AppDataPath + DataBinary);
+				var servers = (Servers) Load(Settings.Instance.AppDataPath + DataBinary);
 				if (servers != null)
 				{
-					servers.AttachChildEvents();
-					return servers;
+					return Copy(servers);
 				}
 #if !UNSAFE
 			}
@@ -86,7 +85,49 @@ namespace XG.Server.Plugin.Backend.File
 				Log.Fatal("LoadServers", ex);
 			}
 #endif
-			return new Core.Servers();
+			return new Servers();
+		}
+
+		Servers Copy(Servers aServers, bool useHashset = true)
+		{
+			var servers = new Servers(useHashset);
+			foreach (var aServer in aServers.All)
+			{
+				if (aServer == null)
+				{
+					continue;
+				}
+				var server = new Core.Server(aServer, useHashset);
+				foreach (var aChannel in aServer.Channels)
+				{
+					if (aChannel == null)
+					{
+						continue;
+					}
+					var channel = new Channel(aChannel, useHashset);
+					foreach (var aBot in aChannel.Bots)
+					{
+						if (aBot == null)
+						{
+							continue;
+						}
+						var bot = new Bot(aBot, useHashset);
+						foreach (var aPacket in aBot.Packets)
+						{
+							if (aPacket == null)
+							{
+								continue;
+							}
+							var packet = new Packet(aPacket);
+							bot.AddPacket(packet);
+						}
+						channel.AddBot(bot);
+					}
+					server.AddChannel(channel);
+				}
+				servers.Add(server);
+			}
+			return servers;
 		}
 
 		public override Files LoadFiles()
@@ -98,8 +139,7 @@ namespace XG.Server.Plugin.Backend.File
 				var files = (Files) Load(Settings.Instance.AppDataPath + FilesBinary);
 				if (files != null)
 				{
-					files.AttachChildEvents();
-					return files;
+					return Copy(files);
 				}
 #if !UNSAFE
 			}
@@ -111,6 +151,30 @@ namespace XG.Server.Plugin.Backend.File
 			return new Files();
 		}
 
+		Files Copy(Files aFiles, bool useHashset = true)
+		{
+			var files = new Files(useHashset);
+			foreach (var aFile in aFiles.All)
+			{
+				if (aFile == null)
+				{
+					continue;
+				}
+				var file = new Core.File(aFile, useHashset);
+				foreach (var aFilePart in aFile.Parts)
+				{
+					if (aFilePart == null)
+					{
+						continue;
+					}
+					var filePart = new FilePart(aFilePart);
+					file.Add(filePart);
+				}
+				files.Add(file);
+			}
+			return files;
+		}
+
 		public override Searches LoadSearches()
 		{
 #if !UNSAFE
@@ -120,8 +184,7 @@ namespace XG.Server.Plugin.Backend.File
 				var searches = (Searches) Load(Settings.Instance.AppDataPath + SearchesBinary);
 				if (searches != null)
 				{
-					searches.AttachChildEvents();
-					return searches;
+					return Copy(searches);
 				}
 #if !UNSAFE
 			}
@@ -133,6 +196,21 @@ namespace XG.Server.Plugin.Backend.File
 			return new Searches();
 		}
 
+		Searches Copy(Searches aSearches, bool useHashset = true)
+		{
+			var searches = new Searches(useHashset);
+			foreach (var aSearch in aSearches.All)
+			{
+				if (aSearch == null)
+				{
+					continue;
+				}
+				var search = new Search(aSearch);
+				searches.Add(search);
+			}
+			return searches;
+		}
+
 		#endregion
 
 		#region AWorker
@@ -140,7 +218,7 @@ namespace XG.Server.Plugin.Backend.File
 		protected override void StartRun()
 		{
 			DateTime _last = DateTime.Now;
-			while (_allowRunning)
+			while (AllowRunning)
 			{
 				if (_last.AddSeconds(Settings.Instance.RunLoopTime) < DateTime.Now)
 				{
@@ -165,8 +243,6 @@ namespace XG.Server.Plugin.Backend.File
 
 		protected override void StopRun()
 		{
-			_allowRunning = false;
-
 			// sync all to disk
 			SaveFiles();
 			SaveObjects();
@@ -327,7 +403,7 @@ namespace XG.Server.Plugin.Backend.File
 			lock (FilesBinary)
 			{
 				_isSaveFile = false;
-				return Save(Files, Settings.Instance.AppDataPath + FilesBinary);
+				return Save(Copy(Files, false), Settings.Instance.AppDataPath + FilesBinary);
 			}
 		}
 
@@ -336,7 +412,12 @@ namespace XG.Server.Plugin.Backend.File
 			lock (DataBinary)
 			{
 				_lastObjectsSave = DateTime.Now;
-				return Save(Servers, Settings.Instance.AppDataPath + DataBinary);
+				bool ret = true;
+
+				//var servers = (from server in Servers select server)
+				ret = ret && Save(Copy(Servers, false), Settings.Instance.AppDataPath + DataBinary);
+
+				return ret;
 			}
 		}
 
@@ -344,7 +425,7 @@ namespace XG.Server.Plugin.Backend.File
 		{
 			lock (SearchesBinary)
 			{
-				return Save(Searches, Settings.Instance.AppDataPath + SearchesBinary);
+				return Save(Copy(Searches, false), Settings.Instance.AppDataPath + SearchesBinary);
 			}
 		}
 

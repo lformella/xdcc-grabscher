@@ -56,11 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\Filesystem.cs" />
-    <Compile Include="Irc\AParser.cs" />
-    <Compile Include="Irc\Notice.cs" />
-    <Compile Include="Irc\Parser.cs" />
     <Compile Include="Helper\Process.cs" />
-    <Compile Include="Irc\PrivateMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -86,8 +86,6 @@ namespace XG.Core
 
 	public delegate void SocketErrorDelegate(SocketErrorCode aValue);
 
-	public delegate void DataTextDelegate(string aData);
-
 	public delegate void ServerDataTextDelegate(Server aServer, string aData);
 
 	public delegate void DataBinaryDelegate(byte[] aData);
@@ -98,9 +96,7 @@ namespace XG.Core
 
 	public delegate void ServerChannelDelegate(Server aServer, Channel aChan);
 
-    public delegate void ServerObjectIntBoolDelegate(Server aServer, AObject aObj, int aInt, bool aBool);
-
-    public delegate void PacketDelegate(Packet aPacket);
+	public delegate void PacketDelegate(Packet aPacket);
 
 	#endregion
 

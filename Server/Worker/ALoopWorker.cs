@@ -31,7 +31,7 @@ using log4net;
 
 namespace XG.Server.Worker
 {
-	public abstract class ALoopWorker : AWorker
+	public abstract class ALoopWorker : ADataWorker
 	{
 		#region VARIABLES
 
@@ -39,7 +39,6 @@ namespace XG.Server.Worker
 
 		public Int64 SecondsToSleep { get; set; }
 		DateTime _last;
-		bool _allowRun;
 
 		#endregion
 
@@ -48,12 +47,11 @@ namespace XG.Server.Worker
 		protected ALoopWorker()
 		{
 			_last = DateTime.MinValue.ToUniversalTime();
-			_allowRun = true;
 		}
 
 		protected override void StartRun()
 		{
-			while (_allowRun)
+			while (AllowRunning)
 			{
 				if (_last.AddSeconds(SecondsToSleep) < DateTime.Now)
 				{
@@ -75,8 +73,6 @@ namespace XG.Server.Worker
 
 		protected override void StopRun()
 		{
-			_allowRun = false;
-
 			Thread.Sleep(2000);
 		}
 

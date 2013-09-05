@@ -25,11 +25,11 @@
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/agsXMPP.1.1.1.0/lib/agsXMPP.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/agsXMPP.1.1.1.0/lib/agsXMPP.dll" />
   </References>
 </Project>

@@ -51,5 +51,11 @@ namespace XG.Core
 		{
 			return false;
 		}
+
+		#region CONSTRUCTOR
+
+		public Notifications(bool useHashset = true) : base(null, useHashset) {}
+
+		#endregion
 	}
 }

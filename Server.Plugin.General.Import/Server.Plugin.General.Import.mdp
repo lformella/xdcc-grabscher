@@ -19,11 +19,11 @@
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
   </Contents>
   <References>
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
     <ProjectReference type="Project" localcopy="True" refto="Server" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
-    <ProjectReference specificVersion="False" type="Assembly" localcopy="True" refto="../packages/HtmlAgilityPack.1.4.6/lib/Net40/HtmlAgilityPack.dll" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/HtmlAgilityPack.1.4.6/lib/Net40/HtmlAgilityPack.dll" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
 </Project>

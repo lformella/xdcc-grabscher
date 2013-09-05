@@ -170,21 +170,6 @@ var XGFormatter = (function ()
 		},
 
 		/* ************************************************************************************************************** */
-		/* SEARCH FORMATTER                                                                                               */
-		/* ************************************************************************************************************** */
-
-		formatSearchCell: function (search)
-		{
-			var result =
-				"<div class='cell-inner' id='" + search.Guid + "'>" +
-					"<div class='cell-right'>" + this.formatSearchAction(search) + "</div>" +
-					"<div class='cell-left'>" + this.formatSearchIcon(search) + "</div>" +
-					"<div class='cell-main' title='" + search.Name + " (" + search.Results + ")'>" + search.Name + "</div>" +
-					"</div>";
-			return result;
-		},
-
-		/* ************************************************************************************************************** */
 		/* BOT FORMATTER                                                                                                  */
 		/* ************************************************************************************************************** */
 
@@ -548,14 +533,14 @@ var XGFormatter = (function ()
 			return formatIcon(icon, iconClass);
 		},
 
-		formatNotificationContent: function (notification)
+		formatNotificationContent: function (notification, noSpan)
 		{
 			var msg = translate._("Notification_" + notification.Type,
 			[
 				{ Name: "Name", Value: notification.ObjectName },
 				{ Name: "ParentName", Value: notification.ParentName }
 			]);
-			return "<span title='" + msg + "'>" + msg +"</span>";
+			return noSpan ? msg : "<span title='" + msg + "'>" + msg +"</span>";
 		},
 
 		formatNotificationTime: function (notification)

@@ -123,7 +123,6 @@ namespace XG.Server
 			IrcPasswort = "password123";
 			IrcRegisterEmail = "anon@ymous.org";
 			AutoRegisterNickserv = false;
-			AutoJoinOnInvite = true;
 
 			TempPath = AppDataPath + "tmp" + Path.DirectorySeparatorChar;
 			ReadyPath = AppDataPath + "dl" + Path.DirectorySeparatorChar;
@@ -271,11 +270,6 @@ namespace XG.Server
 			get { return 1; }
 		}
 
-		public string ParsingErrorFile
-		{
-			get { return AppDataPath + "parsing_errors.txt"; }
-		}
-
 		public int MaxNoDataReceived
 		{
 			get { return 50; }
@@ -289,7 +283,6 @@ namespace XG.Server
 		public string IrcPasswort { get; set; }
 		public string IrcRegisterEmail { get; set; }
 		public bool AutoRegisterNickserv { get; set; }
-		public bool AutoJoinOnInvite { get; set; }
 
 		string _tempPath;
 

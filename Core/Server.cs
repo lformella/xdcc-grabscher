@@ -74,7 +74,7 @@ namespace XG.Core
 		}
 
 		#endregion
-		
+
 		#region CHILDREN
 
 		public IEnumerable<Channel> Channels
@@ -84,7 +84,7 @@ namespace XG.Core
 
 		public Channel Channel(string aName)
 		{
-			if (!aName.StartsWith("#"))
+			if (aName != null && !aName.StartsWith("#"))
 			{
 				aName = "#" + aName;
 			}
@@ -136,7 +136,20 @@ namespace XG.Core
 		}
 
 		#endregion
-		
+
+		#region CONSTRUCTOR
+
+		public Server(Server aObject = null, bool useHashset = true) : base(aObject, useHashset)
+		{
+			if (aObject != null)
+			{
+				_port = aObject._port;
+				_errorCode = aObject._errorCode;
+			}
+		}
+
+		#endregion
+
 		#region HELPER
 		
 		public override string ToString()

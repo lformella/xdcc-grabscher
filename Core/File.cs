@@ -126,9 +126,15 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		File() {}
+		public File() {}
 
-		public File(string aName, Int64 aSize) : this()
+		public File(File aObject, bool useHashset = true) : base(aObject, useHashset)
+		{
+			_size = aObject._size;
+			_tmpPath = aObject._tmpPath;
+		}
+
+		public File(string aName, Int64 aSize)
 		{
 			base.Name = aName;
 			_size = aSize;

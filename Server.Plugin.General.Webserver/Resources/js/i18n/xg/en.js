@@ -26,25 +26,31 @@
 translations =
 {
 	/* ************************************************************************************************************** */
+	/* GRIDS                                                                                                          */
+	/* ************************************************************************************************************** */
+
+	"Id": "",
+
+	/* ************************************************************************************************************** */
 	/* NOTIFICATIONS                                                                                                  */
 	/* ************************************************************************************************************** */
 
-	"Notification_1": "Packet <strong>#Name#</strong> (#ParentName#) is complete",
-	"Notification_2": "Packet <strong>#Name#</strong> (#ParentName#) is not complete",
-	"Notification_3": "Packet <strong>#Name#</strong> (#ParentName#) is broken",
-	"Notification_4": "Packet <strong>#Name#</strong> (#ParentName#) was requested",
-	"Notification_5": "Packet <strong>#Name#</strong> (#ParentName#) was removed",
-	"Notification_6": "File <strong>#Name#</strong> is complete",
-	"Notification_7": "File <strong>#Name#</strong> has the wrong size",
-	"Notification_8": "File <strong>#Name#</strong> could not be build",
-	"Notification_9": "Server <strong>#Name#</strong> is connected",
-	"Notification_10": "Server <strong>#Name#</strong> could not be connected",
-	"Notification_11": "Channel <strong>#Name#</strong> (#ParentName#) joined",
-	"Notification_12": "Channel <strong>#Name#</strong> (#ParentName#) could not be joined",
-	"Notification_13": "Channel <strong>#Name#</strong> (#ParentName#) is banned",
-	"Notification_14": "Channel <strong>#Name#</strong> (#ParentName#) parted",
-	"Notification_15": "Channel <strong>#Name#</strong> (#ParentName#) kicked",
-	"Notification_16": "Packet <strong>#Name#</strong> (#ParentName#) is downloading",
-	"Notification_17": "Packet <strong>#Name#</strong> (#ParentName#) could not be downloaded",
-	"Notification_18": "Bot #ParentName# submitted wrong download port for packet <strong>#Name#</strong>"
+	"Notification_1": "Packet #Name# (#ParentName#) is complete",
+	"Notification_2": "Packet #Name# (#ParentName#) is not complete",
+	"Notification_3": "Packet #Name# (#ParentName#) is broken",
+	"Notification_4": "Packet #Name# (#ParentName#) was requested",
+	"Notification_5": "Packet #Name# (#ParentName#) was removed",
+	"Notification_6": "File #Name# is complete",
+	"Notification_7": "File #Name# has the wrong size",
+	"Notification_8": "File #Name# could not be build",
+	"Notification_9": "Server #Name# is connected",
+	"Notification_10": "Server #Name# could not be connected",
+	"Notification_11": "Channel #Name# (#ParentName#) joined",
+	"Notification_12": "Channel #Name# (#ParentName#) could not be joined",
+	"Notification_13": "Channel #Name# (#ParentName#) is banned",
+	"Notification_14": "Channel #Name# (#ParentName#) parted",
+	"Notification_15": "Channel #Name# (#ParentName#) kicked",
+	"Notification_16": "Packet #Name# (#ParentName#) is downloading",
+	"Notification_17": "Packet #Name# (#ParentName#) could not be downloaded",
+	"Notification_18": "Bot #ParentName# submitted wrong download port for packet #Name#"
 };

@@ -83,6 +83,10 @@
       <Project>{5EC5F78A-645A-4DA8-AFE9-4D9BE12F7A35}</Project>
       <Name>Server.Plugin.Backend.File</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Server.Plugin.Core.Irc\Server.Plugin.Core.Irc.csproj">
+      <Project>{22e24c0d-a524-4e37-9750-3ee7eb755a85}</Project>
+      <Name>Server.Plugin.Core.Irc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Server.Plugin.General.ElasticSearch\Server.Plugin.General.ElasticSearch.csproj">
       <Project>{2114b736-97e8-4dc8-ba5e-74dc69e1c080}</Project>
       <Name>Server.Plugin.General.ElasticSearch</Name>

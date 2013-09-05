@@ -55,7 +55,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		readonly HashSet<User> _users = new HashSet<User>();
 		
 		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Enabled Packets" };
-		static readonly Core.Search _searchDownloads = new Core.Search{ Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Downloads" };
+		static readonly Core.Search _searchDownloads = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Downloads" };
 
 		public RrdDb RrdDb { get; set; }
 
@@ -99,27 +99,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectAdded(Core.AObject aParent, Core.AObject aObj)
 		{
-			var response = new Response
-			{
-				Type = Response.Types.ObjectAdded,
-				Data = aObj
-			};
-			Broadcast(response);
+			Broadcast(Response.Types.ObjectAdded, aObj, true);
 		}
 
 		protected override void ObjectRemoved(Core.AObject aParent, Core.AObject aObj)
 		{
-			var response = new Response
-			{
-				Type = Response.Types.ObjectRemoved,
-				Data = aObj
-			};
-			Broadcast(response);
+			Broadcast(Response.Types.ObjectRemoved, aObj, true);
 		}
 
 		protected override void ObjectChanged(Core.AObject aObj, string[] aFields)
 		{
-			BroadcastChanged(aObj);
+			Broadcast(Response.Types.ObjectChanged, aObj, true);
 
 			HashSet<string> fields = new HashSet<string>(aFields);
 
@@ -130,7 +120,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				{
 					foreach (var pack in (aObj as Core.Bot).Packets)
 					{
-						BroadcastChanged(pack);
+						Broadcast(Response.Types.ObjectChanged, pack, true);
 					}
 				}
 			}
@@ -138,17 +128,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			else if (aObj is FilePart)
 			{
 				var part = aObj as FilePart;
-				BroadcastChanged(part.Parent);
+				Broadcast(Response.Types.ObjectChanged, part.Parent, false);
 
 				if (part.Packet != null)
 				{
 					if (fields.Contains("Speed") || fields.Contains("CurrentSize") || fields.Contains("TimeMissing"))
 					{
-						BroadcastChanged(part.Packet);
+						Broadcast(Response.Types.ObjectChanged, part.Packet, false);
 					}
 					if (fields.Contains("Speed"))
 					{
-						BroadcastChanged(part.Packet.Parent);
+						Broadcast(Response.Types.ObjectChanged, part.Packet.Parent, false);
 					}
 				}
 			}
@@ -156,13 +146,13 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		protected override void ObjectEnabledChanged(Core.AObject aObj)
 		{
-			BroadcastChanged(aObj, false);
+			Broadcast(Response.Types.ObjectChanged, aObj, false);
 
 			// if a packet changed dispatch the bot, too
 			if (aObj is Core.Packet)
 			{
 				var part = aObj as Core.Packet;
-				BroadcastChanged(part.Parent, false);
+				Broadcast(Response.Types.ObjectChanged, part.Parent, false);
 			}
 		}
 
@@ -212,8 +202,8 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			var user = new User
 			{
 				Connection = aContext,
-				LoadedObjects = new HashSet<Core.AObject>(),
-				LastSearch = Guid.Empty
+				LoadedObjects = new HashSet<Guid>(),
+				LastSearchRequest = null
 			};
 
 			_users.Add(user);
@@ -285,24 +275,39 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.Search:
-						currentUser.LastSearch = request.Guid;
-						var all = FilteredPacketsAndBotsByGuid(request.Guid, request.Name);
-						UnicastOnRequest(currentUser, all, request.Type);
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.SearchComplete,
-							Data = request.Type
-						});
+					case Request.Types.PacketsFromBot:
+						currentUser.LastSearchRequest = request;
 
-						// send search again to update search results
-						var searchObj = Searches.WithGuid(request.Guid);
-						if (searchObj != null)
+						var allPackets = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where IsVisible(packet, request) select packet;
+						var all = new List<Core.AObject>();
+						all.AddRange(allPackets);
+						all.AddRange(from packet in allPackets select packet.Parent);
+
+						UnicastAdded(currentUser, all);
+
+						Core.AObject update = null;
+						if (request.Type == Request.Types.Search)
+						{
+							Unicast(currentUser, new Response
+							{
+								Type = Response.Types.SearchComplete,
+								Data = request.Type
+							}, false);
+							// send search again to update search results
+							update = Searches.WithGuid(request.Guid);
+						}
+						else if (request.Type == Request.Types.PacketsFromBot)
+						{
+							update = Servers.WithGuid(request.Guid) as Core.Bot;
+						}
+
+						if (update != null)
 						{
 							Unicast(currentUser, new Response
 							{
 								Type = Response.Types.ObjectChanged,
-								Data = searchObj
-							});
+								Data = update
+							}, false);
 						}
 						break;
 
@@ -321,14 +326,14 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 								Type = Response.Types.ObjectAdded,
 								Data = result
 							};
-							Unicast(currentUser, currentResponse);
+							Unicast(currentUser, currentResponse, false);
 						}
 
 						Unicast(currentUser, new Response
 						{
 							Type = Response.Types.SearchComplete,
 							Data = request.Type
-						});
+						}, false);
 						break;
 
 					case Request.Types.AddSearch:
@@ -359,17 +364,17 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								Type = Response.Types.ObjectAdded,
 								Data = currentSearch
-							});
+							}, false);
 						}
 						break;
 
 					case Request.Types.Servers:
-						UnicastOnRequest(currentUser, Servers.All, request.Type);
+						UnicastAdded(currentUser, Servers.All);
 						break;
 
 					case Request.Types.ChannelsFromServer:
 						var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
-						UnicastOnRequest(currentUser, channels, request.Type);
+						UnicastAdded(currentUser, channels);
 						var tServer = Servers.WithGuid(request.Guid);
 						if (tServer != null)
 						{
@@ -377,26 +382,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 							{
 								Type = Response.Types.ObjectChanged,
 								Data = tServer
-							});
-						}
-						break;
-
-					case Request.Types.PacketsFromBot:
-						var botPackets = (from server in Servers.All
-										  from channel in server.Channels
-										  from bot in channel.Bots
-										  from packet in bot.Packets
-										  where packet.ParentGuid == request.Guid
-										  select packet).ToList();
-						UnicastOnRequest(currentUser, botPackets, request.Type);
-						var tCurrentBot = Servers.WithGuid(request.Guid);
-						if (tCurrentBot != null)
-						{
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.ObjectChanged,
-								Data = tCurrentBot
-							});
+							}, false);
 						}
 						break;
 
@@ -405,7 +391,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						{
 							Type = Response.Types.LiveSnapshot,
 							Data = GetFlotSnapshot()
-						});
+						}, false);
 						break;
 
 					case Request.Types.Snapshots:
@@ -416,11 +402,11 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						{
 							Type = Response.Types.Snapshots,
 							Data = data
-						});
+						}, false);
 						break;
 
 					case Request.Types.Files:
-						UnicastOnRequest(currentUser, Files.All, request.Type);
+						UnicastAdded(currentUser, Files.All);
 						break;
 
 					case Request.Types.CloseServer:
@@ -485,17 +471,25 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			OnClose(aContext);
 		}
 
-		void BroadcastChanged (Core.AObject aObj, bool advancedVisibilityCheck = true)
+		#endregion
+
+		#region Websocket Write
+
+		void Broadcast(Response.Types aType, Core.AObject aObject, bool aOnlySendVisibleObjects)
 		{
 			var response = new Response
 			{
-				Type = Response.Types.ObjectChanged,
-				Data = aObj
+				Type = aType,
+				Data = aObject
 			};
-			Broadcast(response, advancedVisibilityCheck);
+
+			foreach (var user in _users.ToArray())
+			{
+				Unicast(user, response, aOnlySendVisibleObjects);
+			}
 		}
 
-		void UnicastOnRequest(User aUser, IEnumerable<object> aObjects, Request.Types aRequestType)
+		void UnicastAdded(User aUser, IEnumerable<object> aObjects)
 		{
 			foreach (var obj in aObjects)
 			{
@@ -508,52 +502,60 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 		}
 
-		void Broadcast(Response aResponse, bool advancedVisibilityCheck = true)
+		void Unicast(User aUser, Response aResponse, bool aOnlySendVisibleObjects)
 		{
-			foreach (var user in _users.ToArray())
+			if (aOnlySendVisibleObjects)
 			{
-				Unicast(user, aResponse, advancedVisibilityCheck);
+				if (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet)
+				{
+					switch (aResponse.Type)
+					{
+						case Response.Types.ObjectAdded:
+						case Response.Types.ObjectChanged:
+							var bot = aResponse.Data as Core.Bot;
+							if (bot != null && !IsVisible(bot, aUser.LastSearchRequest))
+							{
+								return;
+							}
+							var packet = aResponse.Data as Core.Packet;
+							if (packet != null && !IsVisible(packet, aUser.LastSearchRequest))
+							{
+								return;
+							}
+							break;
+					}
+				}
 			}
-		}
 
-		void Unicast(User aUser, Response aResponse, bool advancedVisibilityCheck = true)
-		{
 			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
 			{
+				Core.AObject data = (Core.AObject)aResponse.Data;
 				// lock loaded objects to prevent sending out the same object more than once
 				lock (aUser.LoadedObjects)
 				{
 					switch (aResponse.Type)
 					{
 						case Response.Types.ObjectAdded:
-							if (aUser.LoadedObjects.Contains(aResponse.Data))
+							if (aUser.LoadedObjects.Contains(data.Guid))
 							{
 								return;
 							}
-							if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
-							{
-								return;
-							}
-							aUser.LoadedObjects.Add((Core.AObject)aResponse.Data);
+							aUser.LoadedObjects.Add(data.Guid);
 							break;
 
 						case Response.Types.ObjectChanged:
-							if (!aUser.LoadedObjects.Contains(aResponse.Data))
-							{
-								return;
-							}
-							if (advancedVisibilityCheck && (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet) && !FilteredPacketsAndBotsByGuid(aUser.LastSearch).Contains(aResponse.Data))
+							if (!aUser.LoadedObjects.Contains(data.Guid))
 							{
 								return;
 							}
 							break;
 
 						case Response.Types.ObjectRemoved:
-							if (!aUser.LoadedObjects.Contains(aResponse.Data))
+							if (!aUser.LoadedObjects.Contains(data.Guid))
 							{
 								return;
 							}
-							aUser.LoadedObjects.Remove((Core.AObject)aResponse.Data);
+							aUser.LoadedObjects.Remove(data.Guid);
 							break;
 					}
 				}
@@ -579,11 +581,18 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 			if (aResponse.Data is Core.Search)
 			{
-				var results = FilteredPacketsAndBotsByGuid((aResponse.Data as Core.Search).Guid);
+				var search = aResponse.Data as Core.Search;
+				var request = new Request {
+					Type = Request.Types.Search,
+					Guid = search.Guid,
+					Name = search.Name
+				};
+				var results = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where IsVisible(packet, request) select packet;
 				myObj = new Object.Search
 				{
 					Object = aResponse.Data as Core.Search,
-					Results = (from obj in results where obj is Core.Packet select obj).ToList().Count
+					ResultsOnline = (from obj in results where obj is Core.Packet && obj.Parent.Connected select obj).Count(),
+					ResultsOffline = (from obj in results where obj is Core.Packet && !obj.Parent.Connected select obj).Count()
 				};
 			}
 			if (aResponse.Data is Core.Notification)
@@ -635,6 +644,62 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		#endregion
 
 		#region Functions
+
+		bool IsVisible(Core.Bot aBot, Request aRequest)
+		{
+			if (aRequest == null)
+			{
+				return false;
+			}
+
+			foreach (var packet in aBot.Packets)
+			{
+				if (IsVisible(packet, aRequest))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		bool IsVisible(Core.Packet aPacket, Request aRequest)
+		{
+			if (aRequest == null)
+			{
+				return false;
+			}
+
+			if (aRequest.Type == Request.Types.Search)
+			{
+				if (aRequest.Guid == Server._searchDownloads.Guid)
+				{
+					return aPacket.Connected;
+				}
+
+				if (aRequest.Guid == Server._searchEnabled.Guid)
+				{
+					return aPacket.Enabled;
+				}
+
+				var str = aRequest.Name;
+
+				var search = Searches.WithGuid(aRequest.Guid);
+				if (search != null)
+				{
+					str = search.Name;
+				}
+
+				return aPacket.Name.ContainsAll(str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+			}
+
+			if (aRequest.Type == Request.Types.PacketsFromBot)
+			{
+				return aPacket.ParentGuid == aRequest.Guid;
+			}
+
+			return false;
+		}
 
 		private IEnumerable<Flot> GetFlotSnapshot ()
 		{
@@ -695,43 +760,6 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return objects;
 		}
 
-		IEnumerable<Core.AObject> FilteredPacketsAndBotsByGuid(Guid aGuid, string aName = null)
-		{
-			var allBots = from server in Servers.All from channel in server.Channels from bot in channel.Bots select bot;
-			var allPackets = (from bot in allBots from packet in bot.Packets select packet).ToList();
-
-			if (aGuid == _searchDownloads.Guid)
-			{
-				allPackets = (from packet in allPackets where packet.Connected select packet).ToList();
-			}
-			else if (aGuid == _searchEnabled.Guid)
-			{
-				allPackets = (from packet in allPackets where packet.Enabled select packet).ToList();
-			}
-			else 
-			{
-				var search = Searches.WithGuid(aGuid);
-				if (search != null)
-				{
-					aName = search.Name;
-				}
-				if (string.IsNullOrEmpty(aName))
-				{
-					aName = string.Empty;
-					allPackets.Clear();
-				}
-
-				string[] searches = aName.ToLower().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-				allPackets = (from packet in allPackets where packet.Name.ToLower().ContainsAll(searches) select packet).ToList();
-			}
-
-			var bots = (from s in Servers.All from c in s.Channels from b in c.Bots join p in allPackets on b.Guid equals p.Parent.Guid select b).Distinct().ToList();
-			var all = new List<Core.AObject>();
-			all.AddRange(allPackets);
-			all.AddRange(bots);
-			return all;
-		}
-
 		IEnumerable<Flot> GetFlotData(DateTime aStart, DateTime aEnd)
 		{
 			var tObjects = new List<Flot>();
@@ -763,4 +791,3 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		#endregion
 	}
 }
-

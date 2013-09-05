@@ -41,7 +41,7 @@ namespace XG.Core
 		{
 			try
 			{
-				return All.First(file => file.TmpPath == tmpPath);
+				return All.FirstOrDefault(file => file.TmpPath == tmpPath);
 			}
 			catch (Exception)
 			{
@@ -73,5 +73,11 @@ namespace XG.Core
 		{
 			return File((aObject as File).TmpPath) != null;
 		}
+
+		#region CONSTRUCTOR
+
+		public Files(bool useHashset = true) : base(null, useHashset) {}
+
+		#endregion
 	}
 }

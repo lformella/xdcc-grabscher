@@ -1,5 +1,5 @@
 // 
-//  BotConnection.cs
+//  Download.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -26,28 +26,49 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 
 using XG.Core;
-using XG.Server.Connection;
+using XG.Server.Helper;
+using XG.Server.Worker;
 
 using log4net;
 
-namespace XG.Server
+namespace XG.Server.Plugin.Core.Irc
 {
-	/// <summary>
-	/// 	This class describes the connection to a single irc bot
-	/// 	it does the following things
-	/// 	- receiving all data comming from the bot
-	/// 	- writing the data into the file
-	/// 	- checking if the data matches the given file (rollback check)
-	/// </summary>
-	public class BotConnection : AIrcConnection
+	public class Download : AWorker
 	{
 		#region VARIABLES
 
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		ILog _log;
 
+		Packet _packet;
+
+		public Packet Packet
+		{
+			get { return _packet; }
+			set
+			{
+				if (_packet != null)
+				{
+					_packet.OnEnabledChanged -= EnabledChanged;
+				}
+				_packet = value;
+				if (_packet != null)
+				{
+					_packet.OnEnabledChanged += EnabledChanged;
+				}
+			}
+		}
+
+		public Int64 StartSize { get; set; }
+		public string Hostname { get; set; }
+		public int Port { get; set; }
+		public Int64 MaxData { get; set; }
+		public FileActions FileActions { get; set; }
+
+		TcpClient _tcpClient;
 		BinaryWriter _writer;
 		BinaryReader _reader;
 
@@ -60,28 +81,7 @@ namespace XG.Server
 		byte[] _stopBuffer;
 
 		bool _streamOk;
-		public bool RemovePart { get; set; }
-
-		Packet _packet;
-
-		public Packet Packet
-		{
-			get { return _packet; }
-			set
-			{
-				if (_packet != null)
-				{
-					_packet.EnabledChanged -= EnabledChanged;
-				}
-				_packet = value;
-				if (_packet != null)
-				{
-					_packet.EnabledChanged += EnabledChanged;
-				}
-			}
-		}
-
-		public Int64 StartSize { get; set; }
+		bool _removePart;
 
 		Int64 CurrentSize
 		{
@@ -94,14 +94,14 @@ namespace XG.Server
 			set
 			{
 				Part.StopSize = value;
-				Log.Info("StopSize.set(" + value + ")");
+				_log.Info("StopSize.set(" + value + ")");
 				Part.Commit();
 			}
 		}
 
 		public FilePart Part { get; set; }
 
-		Core.File File
+		XG.Core.File File
 		{
 			get { return Part.Parent; }
 		}
@@ -115,7 +115,7 @@ namespace XG.Server
 					return Settings.Instance.TempPath + File.TmpPath + Part.StartSize;
 				}
 				// damn this should not happen
-				Log.Error("Filename find no part or file");
+				_log.Error("Filename find no part or file");
 				return "";
 			}
 		}
@@ -124,14 +124,83 @@ namespace XG.Server
 
 		#region EVENTS
 
-		public event PacketDelegate Connected;
-		public event PacketDelegate Disconnected;
+		public event PacketDelegate OnConnected;
+		public event PacketDelegate OnDisconnected;
+
+		#endregion
+
+		#region AWorker
+
+		protected override void StartRun()
+		{
+			_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + Hostname + ":" + Port + ")");
+
+			using (_tcpClient = new TcpClient())
+			{
+				_tcpClient.SendTimeout = Settings.Instance.DownloadTimeoutTime * 1000;
+				_tcpClient.ReceiveTimeout = Settings.Instance.DownloadTimeoutTime * 1000;
+				//_tcpClient.ReceiveBufferSize = Settings.Instance.DownloadPerReadBytes;
+
+				try
+				{
+					_tcpClient.Connect(Hostname, Port);
+					_log.Info("StartRun() connected");
+
+					using (NetworkStream stream = _tcpClient.GetStream())
+					{
+						StartWriting();
+
+						using (var reader = new BinaryReader(stream))
+						{
+							Int64 missing = MaxData;
+							Int64 max = Settings.Instance.DownloadPerReadBytes;
+							byte[] data = null;
+							do
+							{
+								data = reader.ReadBytes((int) (missing < max ? missing : max));
+
+								if (data != null && data.Length != 0)
+								{
+									SaveData(data);
+									missing -= data.Length;
+								}
+								else
+								{
+									_log.Warn("StartRun() no data received");
+									break;
+								}
+							} while (AllowRunning && missing > 0);
+						}
+
+						_log.Info("StartRun() end");
+					}
+				}
+				catch (ObjectDisposedException) {}
+				catch (Exception ex)
+				{
+					_log.Fatal("StartRun()", ex);
+				}
+
+				StopWriting();
+			}
+
+			_tcpClient = null;
+			_writer = null;
+		}
+
+		protected override void StopRun()
+		{
+			if (_tcpClient != null)
+			{
+				_tcpClient.Close();
+			}
+		}
 
 		#endregion
 
 		#region CONNECT
 
-		protected override void ConnectionConnected()
+		protected void StartWriting()
 		{
 			_speedCalcTime = DateTime.Now;
 			_speedCalcSize = 0;
@@ -144,8 +213,8 @@ namespace XG.Server
 			var tFile = FileActions.NewFile(Packet.RealName, Packet.RealSize);
 			if (tFile == null)
 			{
-				Log.Fatal("ConnectionConnected(" + Packet + ") cant find or create a file to download");
-				Connection.Disconnect();
+				_log.Fatal("StartWriting(" + Packet + ") cant find or create a file to download");
+				_tcpClient.Close();
 				return;
 			}
 
@@ -155,15 +224,15 @@ namespace XG.Server
 				// wtf?
 				if (StartSize == StopSize)
 				{
-					Log.Error("ConnectionConnected(" + Packet + ") startSize = stopsize (" + StartSize + ")");
-					Connection.Disconnect();
+					_log.Error("StartWriting(" + Packet + ") startSize = stopsize (" + StartSize + ")");
+					_tcpClient.Close();
 					return;
 				}
 
 				Part.State = FilePart.States.Open;
 				Part.Packet = Packet;
 
-				Log.Info("ConnectionConnected(" + Packet + ") started (" + StartSize + " - " + StopSize + ")");
+				_log.Info("StartWriting(" + Packet + ") started (" + StartSize + " - " + StopSize + ")");
 
 #if !UNSAFE
 				try
@@ -173,9 +242,9 @@ namespace XG.Server
 					FileStream stream = info.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 					// we are connected
-					if (Connected != null)
+					if (OnConnected != null)
 					{
-						Connected(Packet);
+						OnConnected(Packet);
 					}
 
 					// we seek if it is possible
@@ -198,8 +267,8 @@ namespace XG.Server
 						}
 						catch (Exception ex)
 						{
-							Log.Fatal("ConnectionConnected(" + Packet + ") seek", ex);
-							Connection.Disconnect();
+							_log.Fatal("StartWriting(" + Packet + ") seek", ex);
+							_tcpClient.Close();
 							return;
 						}
 					}
@@ -227,8 +296,8 @@ namespace XG.Server
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("ConnectionConnected(" + Packet + ")", ex);
-					Connection.Disconnect();
+					_log.Fatal("StartWriting(" + Packet + ")", ex);
+					_tcpClient.Close();
 					return;
 				}
 #endif
@@ -237,16 +306,12 @@ namespace XG.Server
 			}
 			else
 			{
-				Log.Error("ConnectionConnected(" + Packet + ") cant find a part to download");
-				Connection.Disconnect();
+				_log.Error("StartWriting(" + Packet + ") cant find a part to download");
+				_tcpClient.Close();
 			}
 		}
 
-		#endregion
-
-		#region DISCONNECT
-
-		protected override void ConnectionDisconnected(SocketErrorCode aValue)
+		protected void StopWriting()
 		{
 			// close the writer
 			if (_writer != null)
@@ -267,18 +332,19 @@ namespace XG.Server
 				Part.Packet = null;
 				Part.State = FilePart.States.Closed;
 
-				if (RemovePart)
+				if (_removePart)
 				{
-					Log.Info("ConnectionDisconnected(" + Packet + ") removing part");
+					_log.Info("StopWriting(" + Packet + ") removing part");
 					Part.State = FilePart.States.Broken;
 					FileActions.RemovePart(File, Part);
-				} else
+				}
+				else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
 					if (CurrentSize == StopSize || (!Part.Checked && CurrentSize == StopSize + Settings.Instance.FileRollbackCheckBytes))
 					{
 						Part.State = FilePart.States.Ready;
-						Log.Info("ConnectionDisconnected(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
+						_log.Info("StopWriting(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
 
 						FireNotificationAdded(new Notification(Notification.Types.PacketCompleted, Packet));
 					}
@@ -286,12 +352,12 @@ namespace XG.Server
 					else if (CurrentSize > StopSize)
 					{
 						Part.State = FilePart.States.Broken;
-						Log.Error("ConnectionDisconnected(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + StopSize);
+						_log.Error("StopWriting(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + StopSize);
 						// this mostly happens on the last part of a file - so lets remove the file and load the package again
 						if (File.Parts.Count() == 1 || Part.StopSize == File.Size)
 						{
 							FileActions.RemoveFile(File);
-							Log.Error("ConnectionDisconnected(" + Packet + ") removing corupted " + File);
+							_log.Error("StopWriting(" + Packet + ") removing corupted " + File);
 						}
 
 						FireNotificationAdded(new Notification(Notification.Types.PacketBroken, Packet));
@@ -299,7 +365,7 @@ namespace XG.Server
 					// it did not start
 					else if (_receivedBytes == 0)
 					{
-						Log.Error("ConnectionDisconnected(" + Packet + ") downloading did not start, disabling packet");
+						_log.Error("StopWriting(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
 						Packet.Parent.HasNetworkProblems = true;
 
@@ -308,7 +374,7 @@ namespace XG.Server
 					// it is incomplete
 					else
 					{
-						Log.Error("ConnectionDisconnected(" + Packet + ") incomplete");
+						_log.Error("StopWriting(" + Packet + ") incomplete");
 
 						FireNotificationAdded(new Notification(Notification.Types.PacketIncompleted, Packet));
 					}
@@ -318,7 +384,7 @@ namespace XG.Server
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
-				Log.Error("ConnectionDisconnected(" + Packet + ") connection did not work, disabling packet");
+				_log.Error("StopWriting(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
 				Packet.Parent.HasNetworkProblems = true;
 
@@ -331,9 +397,9 @@ namespace XG.Server
 			}
 			Packet.Parent.Commit();
 			
-			if (Disconnected != null)
+			if (OnDisconnected != null)
 			{
-				Disconnected(Packet);
+				OnDisconnected(Packet);
 			}
 		}
 
@@ -341,16 +407,12 @@ namespace XG.Server
 		{
 			if (!aObj.Enabled)
 			{
-				RemovePart = true;
-				Connection.Disconnect();
+				_removePart = true;
+				_tcpClient.Close();
 			}
 		}
 
-		#endregion
-
-		#region DATA
-
-		protected override void ConnectionDataReceived(byte[] aData)
+		void SaveData(byte[] aData)
 		{
 			#region ROLLBACKCHECK
 
@@ -378,7 +440,7 @@ namespace XG.Server
 					// all ok
 					if (_rollbackRefernce.IsEqualWith(_startBuffer))
 					{
-						Log.Info("ConnectionDataReceived(" + Packet + ") rollback check ok");
+						_log.Info("SaveData(" + Packet + ") rollback check ok");
 						aData = _startBuffer;
 						_startBuffer = null;
 						_streamOk = true;
@@ -386,13 +448,13 @@ namespace XG.Server
 						// data mismatch
 					else
 					{
-						Log.Error("ConnectionDataReceived(" + Packet + ") rollback check failed");
+						_log.Error("SaveData(" + Packet + ") rollback check failed");
 
 						// unregister from the event because if this is triggered
 						// it will remove the part
-						Packet.EnabledChanged -= EnabledChanged;
+						Packet.OnEnabledChanged -= EnabledChanged;
 						Packet.Enabled = false;
-						Connection.Disconnect();
+						_tcpClient.Close();
 						return;
 					}
 				}
@@ -445,9 +507,9 @@ namespace XG.Server
 					Int64 length = StopSize - (StartSize + _receivedBytes);
 					if (length < 0)
 					{
-						// this is bad and should not happen	  
+						// this is bad and should not happen
 						length = 0;
-						Connection.Disconnect();
+						_tcpClient.Close();
 					}
 					_stopBuffer = new byte[aData.Length - length];
 					// copy the overlapping data into the buffer
@@ -475,14 +537,14 @@ namespace XG.Server
 						// all ok
 						if (stopSize == 0)
 						{
-							Log.Info("ConnectionDataReceived(" + Packet + ") reference check ok");
-							Connection.Disconnect();
+							_log.Info("SaveData(" + Packet + ") reference check ok");
+							_tcpClient.Close();
 							return;
 						}
 						// data mismatch
 						else
 						{
-							Log.Error("ConnectionDataReceived(" + Packet + ") reference check failed");
+							_log.Error("SaveData(" + Packet + ") reference check failed");
 							aData = _stopBuffer;
 							StopSize = stopSize;
 						}
@@ -500,7 +562,7 @@ namespace XG.Server
 						_writer.Flush();
 						_receivedBytes += _stopBuffer.Length;
 
-						Connection.Disconnect();
+						_tcpClient.Close();
 						return;
 					}
 				}
@@ -524,9 +586,9 @@ namespace XG.Server
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("ConnectionDataReceived(" + Packet + ") write", ex);
+				_log.Fatal("SaveData(" + Packet + ") write", ex);
 				_streamOk = false;
-				Connection.Disconnect();
+				_tcpClient.Close();
 				return;
 			}
 

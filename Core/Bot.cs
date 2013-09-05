@@ -42,6 +42,14 @@ namespace XG.Core
 			Waiting
 		}
 
+		public enum Rights : byte
+		{
+			None,
+			Voice,
+			HalfOp,
+			Op
+		}
+
 		#endregion
 
 		#region VARIABLES
@@ -192,7 +200,7 @@ namespace XG.Core
 		}
 
 		#endregion
-		
+
 		#region CHILDREN
 
 		public IEnumerable<Packet> Packets
@@ -204,7 +212,7 @@ namespace XG.Core
 		{
 			try
 			{
-				return Packets.First(pack => pack.Id == aId);
+				return Packets.FirstOrDefault(pack => pack.Id == aId);
 			}
 			catch (Exception)
 			{
@@ -226,7 +234,7 @@ namespace XG.Core
 		{
 			try
 			{
-				return Packets.OrderBy(packet => packet.EnabledTime).First(pack => pack.Enabled);
+				return Packets.OrderBy(packet => packet.EnabledTime).FirstOrDefault(pack => pack.Enabled);
 			}
 			catch (InvalidOperationException)
 			{
@@ -237,6 +245,30 @@ namespace XG.Core
 		public override bool DuplicateChildExists(AObject aObject)
 		{
 			return Packet((aObject as Packet).Id) != null;
+		}
+
+		#endregion
+
+		#region CONSTRUCTOR
+
+		public Bot(Bot aObject = null, bool useHashset = true) : base(aObject, useHashset)
+		{
+			if (aObject != null)
+			{
+				_state = aObject._state;
+				_lastMessage = aObject._lastMessage;
+				_lastMessageTime = aObject._lastMessageTime;
+				_lastContact = aObject._lastContact;
+				_queuePosition = aObject._queuePosition;
+				_queueTime = aObject._queueTime;
+				_infoSpeedMax = aObject._infoSpeedMax;
+				_infoSpeedCurrent = aObject._infoSpeedCurrent;
+				_infoSlotTotal = aObject._infoSlotTotal;
+				_infoSlotCurrent = aObject._infoSlotCurrent;
+				_infoQueueTotal = aObject._infoQueueTotal;
+				_infoQueueCurrent = aObject._infoQueueCurrent;
+				_hasNetworkProblems = aObject._hasNetworkProblems;
+			}
 		}
 
 		#endregion

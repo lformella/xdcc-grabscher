@@ -85,6 +85,8 @@
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
       <Entry build="False" name="Server.Cmd.Setup" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.Core.Irc" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.Core.Irc.Test" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Release" />
@@ -99,6 +101,8 @@
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Release" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Release" />
       <Entry build="False" name="Server.Cmd.Setup" configuration="Release" />
+      <Entry build="True" name="Server.Plugin.Core.Irc" configuration="Release" />
+      <Entry build="True" name="Server.Plugin.Core.Irc.Test" configuration="Release" />
     </Configuration>
     <Configuration name="Unsafe" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Unsafe" />
@@ -113,6 +117,8 @@
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
       <Entry build="False" name="Server.Cmd.Setup" configuration="Unsafe" />
+      <Entry build="True" name="Server.Plugin.Core.Irc" configuration="Release" />
+      <Entry build="True" name="Server.Plugin.Core.Irc.Test" configuration="Release" />
     </Configuration>
     <Configuration name="Default" ctype="CombineConfiguration">
       <Entry build="True" name="Core" configuration="Debug" />
@@ -127,6 +133,8 @@
       <Entry build="True" name="Server.Plugin.General.Import" configuration="Debug" />
       <Entry build="True" name="Server.Plugin.General.ElasticSearch" configuration="Debug" />
       <Entry build="False" name="Server.Cmd.Setup" configuration="Default" />
+      <Entry build="True" name="Server.Plugin.Core.Irc" configuration="Debug" />
+      <Entry build="True" name="Server.Plugin.Core.Irc.Test" configuration="Debug" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Server.Cmd" single="True">
@@ -142,6 +150,8 @@
     <Execute type="None" entry="Server.Plugin.General.Import" />
     <Execute type="None" entry="Server.Plugin.General.ElasticSearch" />
     <Execute type="None" entry="Server.Cmd.Setup" />
+    <Execute type="None" entry="Server.Plugin.Core.Irc" />
+    <Execute type="None" entry="Server.Plugin.Core.Irc.Test" />
   </StartMode>
   <Entries>
     <Entry filename="Core/Core.mdp" />
@@ -156,5 +166,7 @@
     <Entry filename="Server.Plugin.General.Import/Server.Plugin.General.Import.mdp" />
     <Entry filename="Server.Plugin.General.ElasticSearch/Server.Plugin.General.ElasticSearch.mdp" />
     <Entry filename="Server.Cmd.Setup.Linux/Server.Cmd.Setup.mdse" />
+    <Entry filename="Server.Plugin.Core.Irc/Server.Plugin.Core.Irc.mdp" />
+    <Entry filename="Server.Plugin.Core.Irc.Test/Server.Plugin.Core.Irc.Test.mdp" />
   </Entries>
 </Combine>

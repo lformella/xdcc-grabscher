@@ -45,6 +45,8 @@ namespace XG.Server.Plugin.General.Webserver.Object
 			}
 		}
 
-		public Int64 Results { get; set; }
+		public Int64 ResultsOnline { get; set; }
+
+		public Int64 ResultsOffline { get; set; }
 	}
 }

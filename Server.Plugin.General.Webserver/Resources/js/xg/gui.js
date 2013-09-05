@@ -25,7 +25,7 @@
 
 var XGGui = (function ()
 {
-	var dataView;
+	var dataView, formatter;
 
 	var searchForm = $("#searchForm, #searchButtons");
 	var searches = $("#searches");
@@ -86,7 +86,8 @@ var XGGui = (function ()
 				}
 
 				searches.append("<li><a href='#' data-guid='" + args.Data.Guid + "' data-name='" + args.Data.Name + "'>" +
-					"<span class='badge badge-info pull-right'>" + args.Data.Results + "</span>" +
+					"<span class='resultsOnline badge badge-success pull-right'>" + args.Data.ResultsOnline + "</span>" +
+					"<span class='resultsOffline badge pull-right'>" + args.Data.ResultsOffline + "</span>" +
 					"<span class='text' title='" + args.Data.Name + "'>" + args.Data.Name + "</span>" +
 					"</a></li>");
 				$("a[data-guid='" + args.Data.Guid + "']").click(
@@ -99,6 +100,16 @@ var XGGui = (function ()
 			else if (args.DataType == Enum.Grid.Notification)
 			{
 				updateUnreadNotifications(1);
+
+				if ("Notification" in window && Notification.permission === "granted")
+				{
+					var options = {
+						body: "",
+						tag: args.Data.Guid,
+						icon: ""
+					};
+					new Notification(formatter.formatNotificationContent(args.Data, true), options);
+				}
 			}
 		});
 
@@ -106,8 +117,11 @@ var XGGui = (function ()
 		{
 			if (args.DataType == Enum.Grid.Search)
 			{
-				var element = $("a[data-guid='" + args.Data.Guid + "'] .badge");
-				element.html(args.Data.Results);
+				var element = $("a[data-guid='" + args.Data.Guid + "'] .resultsOnline");
+				element.html(args.Data.ResultsOnline);
+
+				element = $("a[data-guid='" + args.Data.Guid + "'] .resultsOffline");
+				element.html(args.Data.ResultsOffline)
 			}
 		});
 
@@ -124,6 +138,17 @@ var XGGui = (function ()
 				element.parent().remove();
 			}
 		});
+
+		if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== 'denied')
+		{
+			Notification.requestPermission(function (permission)
+			{
+				if(!('permission' in Notification))
+				{
+					Notification.permission = permission;
+				}
+			});
+		}
 	}
 
 	function initializeSearch ()
@@ -385,13 +410,15 @@ var XGGui = (function ()
 
 		/**
 		 * @param {XGDataView} dataView1
+		 * @param {XGFormatter} formatter1
 		 * @param {Boolean} showOfflineBots1
 		 * @param {Boolean} humanDates1
 		 * @param {Boolean} combineBotAndPacketGrid1
 		 */
-		initialize: function (dataView1, showOfflineBots1, humanDates1, combineBotAndPacketGrid1)
+		initialize: function (dataView1, formatter1, showOfflineBots1, humanDates1, combineBotAndPacketGrid1)
 		{
 			dataView = dataView1;
+			formatter = formatter1;
 			showOfflineBots = showOfflineBots1;
 			humanDates = humanDates1;
 			combineBotAndPacketGrid = combineBotAndPacketGrid1;

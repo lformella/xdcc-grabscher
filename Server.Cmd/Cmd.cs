@@ -38,6 +38,8 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 
+using XG.Server.Helper;
+
 namespace XG.Server.Cmd
 {
 	class Cmd
@@ -89,16 +91,17 @@ namespace XG.Server.Cmd
 			{
 				var webServer = new Plugin.General.Webserver.Plugin();
 				webServer.RrdDb = instance.RrdDb;
-				instance.AddWorker(webServer);
+				instance.AddPlugin(webServer);
 			}
 			if (Settings.Instance.UseJabberClient)
 			{
-				instance.AddWorker(new Plugin.General.Jabber.Plugin());
+				instance.AddPlugin(new Plugin.General.Jabber.Plugin());
 			}
 			if (Settings.Instance.UseElasticSearch)
 			{
-				instance.AddWorker(new Plugin.General.ElasticSearch.Plugin());
+				instance.AddPlugin(new Plugin.General.ElasticSearch.Plugin());
 			}
+			instance.AddPlugin(new Plugin.Core.Irc.Plugin());
 
 			instance.Start();
 
@@ -107,14 +110,7 @@ namespace XG.Server.Cmd
 			{
 				if (File.Exists(shutdownFile))
 				{
-					try
-					{
-						File.Delete(shutdownFile);
-					}
-					catch (Exception ex)
-					{
-						LogManager.GetLogger(typeof (Main)).Fatal("Cant delete shutdown file", ex);
-					}
+					FileSystem.DeleteFile(shutdownFile);
 					instance.Stop();
 					break;
 				}

@@ -38,7 +38,7 @@ namespace XG.Core.Test
 		public void Test()
 		{
 			var obj = new Core.Server();
-			obj.Changed += delegate { _modified = true; };
+			obj.OnChanged += delegate { _modified = true; };
 			AssertModified(obj, false);
 
 			obj.Name = "Test";

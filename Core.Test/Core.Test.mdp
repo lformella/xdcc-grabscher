@@ -19,8 +19,8 @@
     <File subtype="Code" buildaction="Compile" name="Server.cs" />
   </Contents>
   <References>
-    <ProjectReference type="Gac" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-    <ProjectReference specificVersion="False" type="Gac" localcopy="False" refto="nunit.framework" />
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="nunit.framework" />
     <ProjectReference type="Project" localcopy="True" refto="Core" />
   </References>
 </Project>

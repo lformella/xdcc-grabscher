@@ -38,7 +38,7 @@ namespace XG.Core.Test
 		public void Test()
 		{
 			var parent = new Core.Servers();
-			parent.Added += delegate { _childAdded = true; };
+			parent.OnAdded += delegate { _childAdded = true; };
 			parent.Guid = Guid.NewGuid();
 
 			AssertChildAdded(false);

@@ -38,9 +38,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		public IWebSocketConnection Connection { get; set; }
 
-		public HashSet<AObject> LoadedObjects { get; set; }
+		public HashSet<Guid> LoadedObjects { get; set; }
 
-		public Guid LastSearch { get; set; }
+		public Request LastSearchRequest { get; set; }
 
 		#endregion
 	}

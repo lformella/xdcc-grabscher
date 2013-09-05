@@ -47,6 +47,14 @@ namespace XG.Server.Worker
 			_workers.Add(aWorker);
 		}
 
+		public void StartAll()
+		{
+			foreach (AWorker worker in _workers)
+			{
+				worker.Start();
+			}
+		}
+
 		public void StopAll()
 		{
 			foreach (AWorker worker in _workers)

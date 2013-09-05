@@ -44,6 +44,7 @@ namespace XG.Core
 					foreach (AObject obj in All)
 					{
 						obj.Connected = false;
+						obj.Commit();
 					}
 				}
 				base.Connected = value;
@@ -71,7 +72,8 @@ namespace XG.Core
 			get { return _topic; }
 			set { SetProperty(ref _topic, value, "Topic"); }
 		}
-
+		
+		[field: NonSerialized]
 		int _userCount;
 
 		public int UserCount
@@ -81,7 +83,7 @@ namespace XG.Core
 		}
 
 		#endregion
-		
+
 		#region CHILDREN
 
 		public IEnumerable<Bot> Bots
@@ -107,6 +109,20 @@ namespace XG.Core
 		public override bool DuplicateChildExists(AObject aObject)
 		{
 			return Bot((aObject as Bot).Name) != null;
+		}
+
+		#endregion
+
+		#region CONSTRUCTOR
+
+		public Channel(Channel aObject = null, bool useHashset = true) : base(aObject, useHashset)
+		{
+			if (aObject != null)
+			{
+				_topic = aObject._topic;
+				_errorCode = aObject._errorCode;
+				_userCount = aObject._userCount;
+			}
 		}
 
 		#endregion

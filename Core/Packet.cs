@@ -119,7 +119,24 @@ namespace XG.Core
 		}
 
 		#endregion
-		
+
+		#region CONSTRUCTOR
+
+		public Packet(Packet aObject = null) : base(aObject)
+		{
+			if (aObject != null)
+			{
+				_id = aObject._id;
+				_size = aObject._size;
+				_realSize = aObject._realSize;
+				_realName = aObject._realName;
+				_lastUpdated = aObject._lastUpdated;
+				_lastMentioned = aObject._lastMentioned;
+			}
+		}
+
+		#endregion
+
 		#region HELPER
 
 		public override string ToString()

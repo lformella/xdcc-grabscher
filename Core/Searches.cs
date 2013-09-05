@@ -63,5 +63,11 @@ namespace XG.Core
 		{
 			return Named(aObject.Name) != null;
 		}
+
+		#region CONSTRUCTOR
+
+		public Searches(bool useHashset = true) : base(null, useHashset) {}
+
+		#endregion
 	}
 }

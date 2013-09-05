@@ -37,24 +37,24 @@ namespace XG.Core
 		#region EVENTS
 
 		[field: NonSerialized]
-		public event ObjectsDelegate Added;
+		public event ObjectsDelegate OnAdded;
 
 		protected void FireAdded(AObjects aObjects, AObject aObject)
 		{
-			if (Added != null)
+			if (OnAdded != null)
 			{
-				Added(aObjects, aObject);
+				OnAdded(aObjects, aObject);
 			}
 		}
 
 		[field: NonSerialized]
-		public event ObjectsDelegate Removed;
+		public event ObjectsDelegate OnRemoved;
 
 		protected void FireRemoved(AObjects aObjects, AObject aObject)
 		{
-			if (Removed != null)
+			if (OnRemoved != null)
 			{
-				Removed(aObjects, aObject);
+				OnRemoved(aObjects, aObject);
 			}
 		}
 
@@ -75,6 +75,7 @@ namespace XG.Core
 
 		protected bool Add(AObject aObject)
 		{
+			bool result = false;
 			if (aObject != null)
 			{
 				lock (_children)
@@ -84,29 +85,33 @@ namespace XG.Core
 						if (WithGuid(aObject.Guid) == null && !DuplicateChildExists(aObject))
 						{
 							_children.Add(aObject);
-							aObject.Parent = this;
-
-							aObject.EnabledChanged += FireEnabledChanged;
-							aObject.Changed += FireChanged;
-
-							var aObjects = aObject as AObjects;
-							if (aObjects != null)
-							{
-								aObjects.Added += FireAdded;
-								aObjects.Removed += FireRemoved;
-							}
-							FireAdded(this, aObject);
-
-							return true;
+							result = true;
 						}
 					}
 				}
+
+				if (result)
+				{
+					aObject.Parent = this;
+
+					aObject.OnEnabledChanged += FireEnabledChanged;
+					aObject.OnChanged += FireChanged;
+
+					var aObjects = aObject as AObjects;
+					if (aObjects != null)
+					{
+						aObjects.OnAdded += FireAdded;
+						aObjects.OnRemoved += FireRemoved;
+					}
+					FireAdded(this, aObject);
+				}
 			}
-			return false;
+			return result;
 		}
 
 		protected bool Remove(AObject aObject)
 		{
+			bool result = false;
 			if (aObject != null)
 			{
 				lock (_children)
@@ -114,48 +119,27 @@ namespace XG.Core
 					if (_children.Contains(aObject))
 					{
 						_children.Remove(aObject);
-						aObject.Parent = null;
-
-						aObject.EnabledChanged -= FireEnabledChanged;
-						aObject.Changed -= FireChanged;
-
-						var aObjects = aObject as AObjects;
-						if (aObjects != null)
-						{
-							aObjects.Added -= FireAdded;
-							aObjects.Removed -= FireRemoved;
-						}
-						FireRemoved(this, aObject);
-
-						return true;
+						result = true;
 					}
 				}
-			}
-			return false;
-		}
 
-		public void AttachChildEvents()
-		{
-			foreach (AObject tObject in All)
-			{
-				if (tObject == null)
+				if (result)
 				{
-					_children.Remove(tObject);
-					continue;
-				}
+					aObject.Parent = null;
 
-				tObject.EnabledChanged += FireEnabledChanged;
-				tObject.Changed += FireChanged;
+					aObject.OnEnabledChanged -= FireEnabledChanged;
+					aObject.OnChanged -= FireChanged;
 
-				var tObjects = tObject as AObjects;
-				if (tObjects != null)
-				{
-					tObjects.Added += FireAdded;
-					tObjects.Removed += FireRemoved;
-
-					tObjects.AttachChildEvents();
+					var aObjects = aObject as AObjects;
+					if (aObjects != null)
+					{
+						aObjects.OnAdded -= FireAdded;
+						aObjects.OnRemoved -= FireRemoved;
+					}
+					FireRemoved(this, aObject);
 				}
 			}
+			return result;
 		}
 
 		public virtual AObject WithGuid(Guid aGuid)
@@ -194,7 +178,7 @@ namespace XG.Core
 		{
 			try
 			{
-				return All.First(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
+				return All.FirstOrDefault(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
 			}
 			catch (Exception)
 			{
@@ -208,9 +192,16 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public AObjects()
+		public AObjects(AObjects aObject = null, bool useHashset = true) : base(aObject)
 		{
-			_children = new HashSet<AObject>();
+			if (useHashset)
+			{
+				_children = new HashSet<AObject>();
+			}
+			else
+			{
+				_children = new List<AObject>();
+			}
 		}
 
 		#endregion

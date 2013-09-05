@@ -37,24 +37,24 @@ namespace XG.Core
 		#region EVENTS
 
 		[field: NonSerialized]
-		public event ObjectDelegate EnabledChanged;
+		public event ObjectDelegate OnEnabledChanged;
 
 		protected void FireEnabledChanged(AObject aObj)
 		{
-			if (EnabledChanged != null)
+			if (OnEnabledChanged != null)
 			{
-				EnabledChanged(aObj);
+				OnEnabledChanged(aObj);
 			}
 		}
 
 		[field: NonSerialized]
-		public event ObjectFieldsDelegate Changed;
+		public event ObjectFieldsDelegate OnChanged;
 
 		protected void FireChanged(AObject aObj, string[] aFields)
 		{
-			if (Changed != null)
+			if (OnChanged != null)
 			{
-				Changed(aObj, aFields);
+				OnChanged(aObj, aFields);
 			}
 		}
 
@@ -128,7 +128,22 @@ namespace XG.Core
 		public virtual bool Connected
 		{
 			get { return _connected; }
-			set { SetProperty(ref _connected, value, "Connected"); }
+			set
+			{
+				SetProperty(ref _connected, value, "Connected");
+
+				if (_connected)
+				{
+					_connectedTime = DateTime.Now;
+				}
+			}
+		}
+
+		DateTime _connectedTime = DateTime.MinValue.ToUniversalTime();
+
+		public DateTime ConnectedTime
+		{
+			get { return _connectedTime; }
 		}
 
 		bool _enabled;
@@ -162,12 +177,23 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public AObject()
+		public AObject(AObject aObject = null)
 		{
-			Guid = Guid.NewGuid();
-			_name = "";
-			_connected = false;
-			_enabled = false;
+			if (aObject != null)
+			{
+				Guid = aObject.Guid;
+				_name = aObject._name;
+				_connected = aObject._connected;
+				_enabled = aObject._enabled;
+				_enabledTime = aObject._enabledTime;
+			}
+			else
+			{
+				Guid = Guid.NewGuid();
+				_name = "";
+				_connected = false;
+				_enabled = false;
+			}
 			_modifiedFields = new List<string>();
 		}
 

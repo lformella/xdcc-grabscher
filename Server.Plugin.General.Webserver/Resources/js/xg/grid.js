@@ -49,7 +49,7 @@ var XGGrid = (function ()
 	{
 		var grid = new Slick.Grid("#" + gridName + "Grid", dataView, columns,
 			{
-			    enableColumnReorder: false,
+				enableColumnReorder: false,
 				editable: false,
 				enableAddRow: false,
 				enableCellNavigation: true,
@@ -374,7 +374,7 @@ var XGGrid = (function ()
 						return  formatter.formatPacketIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Packet + "\", \"" + obj.Guid + "\");");
 					}
 				}, false, "icon"),
-				buildRow("", 55, true, $.proxy(formatter.formatPacketId, formatter), true),
+				buildRow("Id", 60, true, $.proxy(formatter.formatPacketId, formatter), true),
 				buildRow("Name", 0, true, $.proxy(formatter.formatPacketName, formatter), false),
 				buildRow("Size", 70, true, $.proxy(formatter.formatPacketSize, formatter), true),
 				buildRow("Speed", 80, true, $.proxy(formatter.formatPacketSpeed, formatter), true),

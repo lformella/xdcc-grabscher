@@ -67,5 +67,11 @@ namespace XG.Core
 		{
 			return Server((aObject as Server).Name) != null;
 		}
+
+		#region CONSTRUCTOR
+
+		public Servers(bool useHashset = true) : base(null, useHashset) {}
+
+		#endregion
 	}
 }
