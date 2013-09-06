@@ -272,7 +272,7 @@
     <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
     <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/SharpRobin/SharpRobin.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/Fleck.0.9.7.22/lib/net40/Fleck.dll" />
     <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
-    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/Fleck.0.9.6.19/lib/net40/Fleck.dll" />
   </References>
 </Project>

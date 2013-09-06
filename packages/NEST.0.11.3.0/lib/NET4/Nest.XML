@@ -4,203 +4,68 @@
         <name>Nest</name>
     </assembly>
     <members>
-        <member name="M:Nest.BaseBulkOperation.GetBody">
+        <member name="T:Nest.IReindexResponse`1">
             <summary>
-            Only used for bulk update operations but in the future might come in handy for other complex bulk ops.
+            POCO representing the reindex response for a each step
             </summary>
+        </member>
+        <member name="P:Nest.IReindexResponse`1.BulkResponse">
+            <summary>
+            The bulk result indexing the search results into the new index.
+            </summary>
+        </member>
+        <member name="P:Nest.IReindexResponse`1.QueryResponse">
+            <summary>
+            The scroll result
+            </summary>
+        </member>
+        <member name="P:Nest.IReindexResponse`1.Scroll">
+            <summary>
+            The no of scroll this result represents
+            </summary>
+        </member>
+        <member name="P:Nest.IReindexResponse`1.IsValid">
+            <summary>
+            Whether both the scroll and reindex result are valid
+            </summary>
+        </member>
+        <member name="M:Nest.ReindexDescriptor`1.ToIndex(System.String)">
+            <summary>
+            The index into which we're indexing
+            </summary>
+        </member>
+        <member name="M:Nest.ReindexDescriptor`1.FromIndex(System.String)">
+            <summary>
+            The index from which we're reindexing 
+            </summary>
+        </member>
+        <member name="M:Nest.ReindexDescriptor`1.Scroll(System.String)">
+            <summary>
+            A search request can be scrolled by specifying the scroll parameter. The scroll parameter is a time value parameter (for example: scroll=5m), indicating for how long the nodes that participate in the search will maintain relevant resources in order to continue and support it. This is very similar in its idea to opening a cursor against a database.
+            </summary>
+            <param name="scrollTime">The scroll parameter is a time value parameter (for example: scroll=5m)</param>
             <returns></returns>
         </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Index(System.String)">
+        <member name="M:Nest.ReindexDescriptor`1.Query(System.Func{Nest.QueryDescriptor{`0},Nest.BaseQuery})">
             <summary>
-            Manually set the index, default to the default index or the fixed index set on the bulk operation
+            A query to optionally limit the documents to use for the reindex operation.  
             </summary>
         </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Type(System.String)">
+        <member name="M:Nest.ReindexDescriptor`1.NewIndexName(System.String)">
             <summary>
-            Manualy set the type to get the object from, default to whatever
-            T will be inferred to if not passed or the fixed type set on the parent bulk operation
+            The new index name to reindex too. 
             </summary>
         </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Type(System.Type)">
+        <member name="M:Nest.ReindexDescriptor`1.CreateIndex(System.Func{Nest.CreateIndexDescriptor,Nest.CreateIndexDescriptor})">
             <summary>
-            Manually set the type of which a typename will be inferred
+            CreateIndex selector, will be passed the a descriptor initialized with the settings from
+            the index we're reindexing from
             </summary>
         </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Id(System.Int32)">
+        <member name="T:Nest.ReindexResponse`1">
             <summary>
-            Manually set the id for the newly created object
+            POCO representing the reindex response for a each step
             </summary>
-        </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Id(System.String)">
-            <summary>
-            Manually set the id for the newly created object
-            </summary>
-        </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Object(`0)">
-            <summary>
-            The object to update, if id is not manually set it will be inferred from the object.
-            Used ONLY to infer the ID see Document() to apply a partial object merge.
-            </summary>
-        </member>
-        <member name="M:Nest.BulkUpdateDescriptor`2.Document(`1)">
-            <summary>
-            The partial update document to be merged on to the existing object.
-            </summary>
-        </member>
-        <member name="M:Nest.PercolatorDescriptor`1.Index(System.String)">
-            <summary>
-            Explicitly specify an index, otherwise the default index for T is used.
-            </summary>
-        </member>
-        <member name="M:Nest.PercolatorDescriptor`1.Name(System.String)">
-            <summary>
-            Explicitly specify an type, otherwise the default type for T is used.
-            </summary>
-        </member>
-        <member name="M:Nest.PercolatorDescriptor`1.Add(System.String,System.Object)">
-            <summary>
-            Add metadata associated with this percolator query document
-            </summary>
-        </member>
-        <member name="M:Nest.PercolatorDescriptor`1.Query(System.Func{Nest.QueryDescriptor{`0},Nest.BaseQuery})">
-            <summary>
-            Optionally specify more search options such as facets, from/to etcetera.
-            </summary>
-        </member>
-        <member name="M:Nest.PercolateDescriptor`1.Index(System.String)">
-            <summary>
-            Explicitly specify an index, otherwise the default index for T is used.
-            </summary>
-        </member>
-        <member name="M:Nest.PercolateDescriptor`1.Type(System.String)">
-            <summary>
-            Explicitly specify an type, otherwise the default type for T is used.
-            </summary>
-        </member>
-        <member name="M:Nest.PercolateDescriptor`1.Object(`0)">
-            <summary>
-            The object to perculate
-            </summary>
-        </member>
-        <member name="M:Nest.PercolateDescriptor`1.Query(System.Func{Nest.QueryDescriptor{`0},Nest.BaseQuery})">
-            <summary>
-            Optionally specify more search options such as facets, from/to etcetera.
-            </summary>
-        </member>
-        <member name="P:Nest.IElasticPropertyAttribute.NumericType">
-            <summary>
-            Defaults to float so be sure to set this correctly!
-            </summary>
-        </member>
-        <member name="P:Nest.IElasticPropertyAttribute.DateFormat">
-            <summary>
-            http://www.elasticsearch.org/guide/reference/mapping/date-format.html
-            </summary>
-        </member>
-        <member name="M:Nest.DSL.Descriptors.RescoreQueryDescriptor`1.Query(Nest.BaseQuery)">
-            <summary>
-            Describe the query to perform using the static Query class
-            </summary>
-        </member>
-        <member name="M:Nest.DSL.Descriptors.RescoreQueryDescriptor`1.QueryRaw(System.String)">
-            <summary>
-            Describe the query to perform as a raw json string
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:Nest.DSL.Descriptors.RescoreQueryDescriptor`1.Strict(System.Boolean)" -->
-        <member name="P:Nest.DSL.Descriptors.RescoreQueryDescriptor`1._Strict">
-            <summary>
-            Whether conditionless queries are allowed or not
-            </summary>
-        </member>
-        <member name="M:Nest.CreateWarmerDescriptor.WarmerName(System.String)">
-            <summary>
-            The name of the warmer
-            </summary>
-        </member>
-        <member name="M:Nest.PutWarmerDescriptor.WarmerName(System.String)">
-            <summary>
-            The name of the warmer
-            </summary>
-        </member>
-        <member name="M:Nest.PutWarmerDescriptor.Index(System.String)">
-            <summary>
-            Set the index.
-            </summary>
-        </member>
-        <member name="M:Nest.PutWarmerDescriptor.Indices(System.String[])">
-            <summary>
-            Set multiple indices
-            </summary>
-        </member>
-        <member name="M:Nest.PutWarmerDescriptor.Indices(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Set multiple indices
-            </summary>
-        </member>
-        <member name="M:Nest.PutWarmerDescriptor.IndexFromType``1">
-            <summary>
-            Sets the index which is derived from the type T
-            </summary>
-        </member>
-        <member name="M:Nest.PutWarmerDescriptor.IndexFromType(System.Type)">
-            <summary>
-            Sets the index which is derived from the type
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.WamerWildcard(System.String)">
-            <summary>
-            A wildcard like: "warm*"
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.WarmerName(System.String)">
-            <summary>
-            The name of the warmer
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.AllIndices">
-            <summary>
-            Gets the warmer from all the indices, this is the default.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.Index(System.String)">
-            <summary>
-            Set the index.
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.Indices(System.String[])">
-            <summary>
-            Set multiple indices
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.Indices(System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-            Set multiple indices
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.IndexFromType``1">
-            <summary>
-            Sets the index which is derived from the type T
-            </summary>
-        </member>
-        <member name="M:Nest.GetWarmerDescriptor.IndexFromType(System.Type)">
-            <summary>
-            Sets the index which is derived from the type
-            </summary>
-        </member>
-        <member name="T:Nest.MatchPhrasePrefixQueryDescriptor`1">
-            <summary>
-            A Query that matches documents containing a particular sequence of terms.
-            It allows for prefix matches on the last term in the text.
-            </summary>
-            <typeparam name="T">Type of document</typeparam>
-        </member>
-        <member name="T:Nest.MatchPhraseQueryDescriptor`1">
-            <summary>
-            A Query that matches documents containing a particular sequence of terms. A PhraseQuery is built by QueryParser for input like "new york".
-            </summary>
-            <typeparam name="T">Type of document</typeparam>
         </member>
         <member name="M:Nest.IElasticClient.Serialize(System.Object)">
             <summary>
@@ -211,6 +76,16 @@
         <member name="M:Nest.IElasticClient.SerializeCamelCase(System.Object)">
             <summary>
             Serialize an object using the default camelCasing used while indexing objects
+            </summary>
+        </member>
+        <member name="M:Nest.ElasticClient.Reindex``1(System.Func{Nest.ReindexDescriptor{``0},Nest.ReindexDescriptor{``0}})">
+            <summary>
+            Index object to the default index and the inferred type name for T
+            </summary>
+        </member>
+        <member name="M:Nest.ElasticClient.ClusterState(Nest.ClusterStateInfo,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Gets the health status of the cluster.
             </summary>
         </member>
         <member name="M:Nest.ElasticClient.GetWarmer(System.Func{Nest.GetWarmerDescriptor,Nest.GetWarmerDescriptor})">
@@ -548,6 +423,16 @@
         <member name="M:Nest.ElasticClient.MultiGet``1(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Gets multiple documents of T by id in the default index and the inferred typename for T
+            </summary>
+        </member>
+        <member name="M:Nest.ElasticClient.MultiGet``1(System.String,System.Collections.Generic.IEnumerable{System.Int32})">
+            <summary>
+            Gets multiple documents of T by id in the specified index
+            </summary>
+        </member>
+        <member name="M:Nest.ElasticClient.MultiGet``1(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Gets multiple documents of T by id in the specified index
             </summary>
         </member>
         <member name="M:Nest.ElasticClient.MultiGet``1(System.String,System.String,System.Collections.Generic.IEnumerable{System.Int32})">
@@ -1505,6 +1390,204 @@
             Return the version info that was set when NEST did its one off sanity checks
             </summary>
         </member>
+        <member name="M:Nest.BaseBulkOperation.GetBody">
+            <summary>
+            Only used for bulk update operations but in the future might come in handy for other complex bulk ops.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Index(System.String)">
+            <summary>
+            Manually set the index, default to the default index or the fixed index set on the bulk operation
+            </summary>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Type(System.String)">
+            <summary>
+            Manualy set the type to get the object from, default to whatever
+            T will be inferred to if not passed or the fixed type set on the parent bulk operation
+            </summary>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Type(System.Type)">
+            <summary>
+            Manually set the type of which a typename will be inferred
+            </summary>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Id(System.Int32)">
+            <summary>
+            Manually set the id for the newly created object
+            </summary>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Id(System.String)">
+            <summary>
+            Manually set the id for the newly created object
+            </summary>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Object(`0)">
+            <summary>
+            The object to update, if id is not manually set it will be inferred from the object.
+            Used ONLY to infer the ID see Document() to apply a partial object merge.
+            </summary>
+        </member>
+        <member name="M:Nest.BulkUpdateDescriptor`2.Document(`1)">
+            <summary>
+            The partial update document to be merged on to the existing object.
+            </summary>
+        </member>
+        <member name="M:Nest.PercolatorDescriptor`1.Index(System.String)">
+            <summary>
+            Explicitly specify an index, otherwise the default index for T is used.
+            </summary>
+        </member>
+        <member name="M:Nest.PercolatorDescriptor`1.Name(System.String)">
+            <summary>
+            Explicitly specify an type, otherwise the default type for T is used.
+            </summary>
+        </member>
+        <member name="M:Nest.PercolatorDescriptor`1.Add(System.String,System.Object)">
+            <summary>
+            Add metadata associated with this percolator query document
+            </summary>
+        </member>
+        <member name="M:Nest.PercolatorDescriptor`1.Query(System.Func{Nest.QueryDescriptor{`0},Nest.BaseQuery})">
+            <summary>
+            Optionally specify more search options such as facets, from/to etcetera.
+            </summary>
+        </member>
+        <member name="M:Nest.PercolateDescriptor`1.Index(System.String)">
+            <summary>
+            Explicitly specify an index, otherwise the default index for T is used.
+            </summary>
+        </member>
+        <member name="M:Nest.PercolateDescriptor`1.Type(System.String)">
+            <summary>
+            Explicitly specify an type, otherwise the default type for T is used.
+            </summary>
+        </member>
+        <member name="M:Nest.PercolateDescriptor`1.Object(`0)">
+            <summary>
+            The object to perculate
+            </summary>
+        </member>
+        <member name="M:Nest.PercolateDescriptor`1.Query(System.Func{Nest.QueryDescriptor{`0},Nest.BaseQuery})">
+            <summary>
+            Optionally specify more search options such as facets, from/to etcetera.
+            </summary>
+        </member>
+        <member name="P:Nest.IElasticPropertyAttribute.NumericType">
+            <summary>
+            Defaults to float so be sure to set this correctly!
+            </summary>
+        </member>
+        <member name="P:Nest.IElasticPropertyAttribute.DateFormat">
+            <summary>
+            http://www.elasticsearch.org/guide/reference/mapping/date-format.html
+            </summary>
+        </member>
+        <member name="M:Nest.DSL.Descriptors.RescoreQueryDescriptor`1.Query(Nest.BaseQuery)">
+            <summary>
+            Describe the query to perform using the static Query class
+            </summary>
+        </member>
+        <member name="M:Nest.DSL.Descriptors.RescoreQueryDescriptor`1.QueryRaw(System.String)">
+            <summary>
+            Describe the query to perform as a raw json string
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Nest.DSL.Descriptors.RescoreQueryDescriptor`1.Strict(System.Boolean)" -->
+        <member name="P:Nest.DSL.Descriptors.RescoreQueryDescriptor`1._Strict">
+            <summary>
+            Whether conditionless queries are allowed or not
+            </summary>
+        </member>
+        <member name="M:Nest.CreateWarmerDescriptor.WarmerName(System.String)">
+            <summary>
+            The name of the warmer
+            </summary>
+        </member>
+        <member name="M:Nest.PutWarmerDescriptor.WarmerName(System.String)">
+            <summary>
+            The name of the warmer
+            </summary>
+        </member>
+        <member name="M:Nest.PutWarmerDescriptor.Index(System.String)">
+            <summary>
+            Set the index.
+            </summary>
+        </member>
+        <member name="M:Nest.PutWarmerDescriptor.Indices(System.String[])">
+            <summary>
+            Set multiple indices
+            </summary>
+        </member>
+        <member name="M:Nest.PutWarmerDescriptor.Indices(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Set multiple indices
+            </summary>
+        </member>
+        <member name="M:Nest.PutWarmerDescriptor.IndexFromType``1">
+            <summary>
+            Sets the index which is derived from the type T
+            </summary>
+        </member>
+        <member name="M:Nest.PutWarmerDescriptor.IndexFromType(System.Type)">
+            <summary>
+            Sets the index which is derived from the type
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.WamerWildcard(System.String)">
+            <summary>
+            A wildcard like: "warm*"
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.WarmerName(System.String)">
+            <summary>
+            The name of the warmer
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.AllIndices">
+            <summary>
+            Gets the warmer from all the indices, this is the default.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.Index(System.String)">
+            <summary>
+            Set the index.
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.Indices(System.String[])">
+            <summary>
+            Set multiple indices
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.Indices(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Set multiple indices
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.IndexFromType``1">
+            <summary>
+            Sets the index which is derived from the type T
+            </summary>
+        </member>
+        <member name="M:Nest.GetWarmerDescriptor.IndexFromType(System.Type)">
+            <summary>
+            Sets the index which is derived from the type
+            </summary>
+        </member>
+        <member name="T:Nest.MatchPhrasePrefixQueryDescriptor`1">
+            <summary>
+            A Query that matches documents containing a particular sequence of terms.
+            It allows for prefix matches on the last term in the text.
+            </summary>
+            <typeparam name="T">Type of document</typeparam>
+        </member>
+        <member name="T:Nest.MatchPhraseQueryDescriptor`1">
+            <summary>
+            A Query that matches documents containing a particular sequence of terms. A PhraseQuery is built by QueryParser for input like "new york".
+            </summary>
+            <typeparam name="T">Type of document</typeparam>
+        </member>
         <member name="P:Nest.BulkIndexResponseItem.Matches">
             <summary>
             Null if Percolation was not requested while indexing this doc, otherwise returns the percolator _ids that matched (if any)
@@ -2335,6 +2418,13 @@
             </summary>
             <typeparam name="K">Type of the child</typeparam>
         </member>
+        <member name="M:Nest.QueryDescriptor`1.HasParent``1(System.Action{Nest.HasParentQueryDescriptor{``0}})">
+            <summary>
+            The has_child query works the same as the has_child filter, by automatically wrapping the filter with a 
+            constant_score.
+            </summary>
+            <typeparam name="K">Type of the child</typeparam>
+        </member>
         <member name="M:Nest.QueryDescriptor`1.TopChildren``1(System.Action{Nest.TopChildrenQueryDescriptor{``0}})">
             <summary>
             The top_children query runs the child query with an estimated hits size, and out of the hit docs, aggregates 
@@ -2631,6 +2721,13 @@
             </summary>
         </member>
         <member name="M:Nest.FilterDescriptor`1.Type(System.String)">
+            <summary>
+            Filters documents matching the provided document / mapping type. 
+            Note, this filter can work even when the _type field is not indexed 
+            (using the _uid field).
+            </summary>
+        </member>
+        <member name="M:Nest.FilterDescriptor`1.Type(System.Type)">
             <summary>
             Filters documents matching the provided document / mapping type. 
             Note, this filter can work even when the _type field is not indexed 
@@ -3830,6 +3927,7 @@
             Only set when search type = scan and scroll specified
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:Nest.QueryResponse`1.Highlights" -->
         <member name="T:Nest.CustomAnalyzer">
             <summary>
             An analyzer of type custom that allows to combine a Tokenizer with zero or more Token Filters, and zero or more Char Filters. 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NEST</id>
-    <version>0.11.0.0</version>
+    <version>0.11.3.0</version>
     <title>NEST - Elasticsearch Client</title>
     <authors>Martijn Laarman and contributors</authors>
     <owners>Martijn Laarman and contributors</owners>
@@ -16,8 +16,5 @@
     <dependencies>
       <dependency id="Newtonsoft.Json" />
     </dependencies>
-    <references>
-      <reference file="Nest.dll" />
-    </references>
   </metadata>
 </package>

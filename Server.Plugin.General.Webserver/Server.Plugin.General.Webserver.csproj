@@ -105,9 +105,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Fleck, Version=0.9.6.19, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Fleck, Version=0.9.7.22, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Fleck.0.9.6.19\lib\net40\Fleck.dll</HintPath>
+      <HintPath>..\packages\Fleck.0.9.7.22\lib\net40\Fleck.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

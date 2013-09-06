@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Fleck</id>
-    <version>0.9.6.19</version>
+    <version>0.9.7.22</version>
+    <title>Fleck</title>
     <authors>statenjason</authors>
     <owners>statenjason</owners>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
     <projectUrl>https://github.com/statianzo/Fleck</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>C# WebSocket Implementation</description>
+    <releaseNotes />
+    <copyright />
     <language>en-US</language>
     <tags>websockets server html5 events</tags>
-    <references>
-      <reference file="Fleck.dll" />
-    </references>
   </metadata>
 </package>
