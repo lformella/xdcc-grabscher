@@ -39,12 +39,12 @@ var XGPassword = (function ()
 		if (checkPassword(password))
 		{
 			passwordOk = true;
-			$("#passwordDialog .control-group").removeClass('error');
+			$("#passwordDialog .form-group").removeClass('has-error');
 			passwordDialog.modal('hide');
 		}
 		else
 		{
-			$("#passwordDialog .control-group").addClass('error');
+		    $("#passwordDialog .form-group").addClass('has-error');
 		}
 	}
 
@@ -81,13 +81,13 @@ var XGPassword = (function ()
 			port = port1;
 
 			passwordDialog.modal("show");
-			passwordDialog.bind('shown',
+			passwordDialog.bind('shown.bs.modal',
 				function ()
 				{
 					passwordInput.focus();
 				}
 			);
-			passwordDialog.bind('hide',
+			passwordDialog.bind('hide.bs.modal',
 				function (e)
 				{
 					if (!passwordOk)
@@ -96,7 +96,7 @@ var XGPassword = (function ()
 					}
 				}
 			);
-			passwordDialog.bind('hidden',
+			passwordDialog.bind('hidden.bs.modal',
 				function ()
 				{
 					if (passwordOk)
@@ -113,7 +113,7 @@ var XGPassword = (function ()
 
 			passwordInput.keyup(function (e)
 			{
-				$("#passwordDialog .control-group").removeClass('error');
+			    $("#passwordDialog .form-group").removeClass('has-error');
 				if (e.which == 13)
 				{
 					e.preventDefault();

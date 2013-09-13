@@ -284,7 +284,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			serverGrid = buildGrid(Enum.Grid.Server, dataview.getDataView(Enum.Grid.Server), [
-				buildRow("", 38, false, function (obj)
+				buildRow("", 46, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
 				}, false, "icon"),
@@ -307,7 +307,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
-				buildRow("", 40, false, function (obj)
+				buildRow("", 46, false, function (obj)
 				{
 					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
 				}, false, "icon"),
@@ -329,7 +329,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
-				buildRow("", 38, false, $.proxy(formatter.formatBotIcon, formatter), false, "icon"),
+				buildRow("", 42, false, $.proxy(formatter.formatBotIcon, formatter), false, "icon"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false, "small-line"),
 				buildRow("Speed", 80, true, function (obj)
 				{
@@ -356,7 +356,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
-				buildRow("", 42, false, function (obj)
+				buildRow("", 46, false, function (obj)
 				{
 					if (obj instanceof Slick.Group)
 					{
@@ -389,7 +389,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
-				buildRow("", 42, false, function (obj)
+				buildRow("", 44, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
 				}, false, "icon"),
@@ -429,7 +429,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			notificationsGrid = buildGrid(Enum.Grid.Notification, dataview.getDataView(Enum.Grid.Notification), [
-				buildRow("", 28, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
+				buildRow("", 30, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
 				buildRow("Content", 0, true, $.proxy(formatter.formatNotificationContent, formatter), false, "two-line-text"),
 				buildRow("Time", 155, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
 			], null, 48);

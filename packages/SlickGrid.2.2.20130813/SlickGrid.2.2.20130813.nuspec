@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>SlickGrid</id>
+    <version>2.2.20130813</version>
+    <title>SlickGrid</title>
+    <authors>Michael Leibman</authors>
+    <owners>Michael Leibman</owners>
+    <licenseUrl>https://github.com/mleibman/SlickGrid/blob/master/MIT-LICENSE.txt</licenseUrl>
+    <projectUrl>http://github.com/mleibman/slickgrid</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Quite simply, SlickGrid is a JavaScript grid/spreadsheet component.
+It is an advanced component and is going to be a bit more difficult to learn and configure, but once you realize its full potential, it will blow your mind!
+
+Some highlights:
+
+- Adaptive virtual scrolling (handle hundreds of thousands of rows with extreme responsiveness)
+- Extremely fast rendering speed
+- Supports jQuery UI Themes
+- Background post-rendering for richer cells
+- Configurable &amp; customizable
+- Full keyboard navigation
+- Column resize/reorder/show/hide
+- Column autosizing &amp; force-fit
+- Pluggable cell formatters &amp; editors
+- Support for editing and creating new rows.
+- Grouping, filtering, custom aggregators, and more!
+- Advanced detached &amp; multi-field editors with undo/redo support.
+- “GlobalEditorLock” to manage concurrent edits in cases where multiple Views on a page can edit the same data.</description>
+    <summary>A lightning fast JavaScript grid/spreadsheet.</summary>
+    <releaseNotes>https://github.com/mleibman/SlickGrid/commits/master</releaseNotes>
+    <copyright>2010 Michael Leibman</copyright>
+    <tags>jquery slickgrid plugins widgets grid javascript spreedsheet</tags>
+    <dependencies>
+      <dependency id="jQuery" version="1.7" />
+      <dependency id="jquery.event.drag" version="2.0.0" />
+    </dependencies>
+  </metadata>
+</package>

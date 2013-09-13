@@ -39,12 +39,12 @@ var XGFormatter = (function ()
 
 	function formatIcon (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
 	{
-		iconClass = "icon-" + icon + " " + iconClass;
+	    iconClass = "glyphicon glyphicon-" + icon + " " + iconClass;
 		if (onclick != undefined && onclick != "")
 		{
 			iconClass += " button";
 		}
-		overlayClass = "icon-overlay icon-" + overlay + " " + overlayClass;
+		overlayClass = "icon-overlay glyphicon glyphicon-" + overlay + " " + overlayClass;
 
 		var str = "";
 		if (overlay != undefined && overlay != "")
@@ -83,7 +83,7 @@ var XGFormatter = (function ()
 
 		formatServerIcon: function (server, onclick)
 		{
-			var icon = "hdd";
+			var icon = "globe";
 			var iconClass = "Aluminium2Middle";
 			var overlay = "";
 			var overlayClass = "";
@@ -100,19 +100,19 @@ var XGFormatter = (function ()
 			}
 			else if (server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0")
 			{
-				overlay = "attention-circle";
+			    overlay = "warning-sign";
 				overlayClass = "ScarletRedMiddle";
 			}
 			else
 			{
-				overlay = "clock";
+				overlay = "time";
 				overlayClass = "OrangeMiddle";
 			}
 
 			if (server.Active)
 			{
-				overlay = "spin";
-				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlay = "asterisk";
+				overlayClass = "ScarletRedMiddle animate-spin";
 				overlayStyle = "";
 			}
 
@@ -138,8 +138,15 @@ var XGFormatter = (function ()
 			}
 			else if (channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0")
 			{
-				overlay = "attention-circle";
+			    overlay = "warning-sign";
 				overlayClass = "ScarletRedMiddle";
+			}
+
+			if (channel.Active)
+			{
+				overlay = "asterisk";
+				overlayClass = "ScarletRedMiddle animate-spin";
+				overlayStyle = "";
 			}
 
 			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
@@ -187,7 +194,7 @@ var XGFormatter = (function ()
 
 				if (bot.HasNetworkProblems)
 				{
-					overlay = "attention-circle";
+				    overlay = "warning-sign";
 					overlayClass = "ScarletRedMiddle";
 				}
 			}
@@ -204,20 +211,20 @@ var XGFormatter = (function ()
 						}
 						else if (bot.InfoSlotCurrent == 0 && bot.InfoSlotCurrent)
 						{
-							overlay = "cancel-circle";
+							overlay = "remove-circle";
 							overlayClass = "OrangeMiddle";
 						}
 						break;
 
 					case 1:
 						iconClass = "SkyBlueDark";
-						overlay = "down-circle";
+						overlay = "download";
 						overlayClass = "SkyBlueMiddle";
 						overlayStyle = "opacity: " + speed2Overlay(bot.Speed);
 						break;
 
 					case 2:
-						overlay = "clock";
+						overlay = "time";
 						overlayClass = "OrangeMiddle";
 						break;
 				}
@@ -225,8 +232,8 @@ var XGFormatter = (function ()
 
 			if (bot.Active)
 			{
-				overlay = "spin";
-				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlay = "asterisk";
+				overlayClass = "ScarletRedMiddle animate-spin";
 				overlayStyle = "";
 			}
 
@@ -285,7 +292,7 @@ var XGFormatter = (function ()
 
 		formatPacketIcon: function (packet, onclick, skipOverlay)
 		{
-			var icon = "doc";
+			var icon = "file";
 			var iconClass = "Aluminium2Middle";
 			var overlay = "";
 			var overlayClass = "";
@@ -295,7 +302,7 @@ var XGFormatter = (function ()
 			var ext = name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg" || ext == "mov" || ext == "mp4")
 			{
-				icon = "video";
+				icon = "film";
 			}
 			else if (ext == "mp3" || ext == "ogg" || ext == "wav")
 			{
@@ -303,7 +310,7 @@ var XGFormatter = (function ()
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "briefcase";
+				icon = "compressed";
 			}
 
 			if (!packet.Enabled)
@@ -315,26 +322,26 @@ var XGFormatter = (function ()
 				if (packet.Connected)
 				{
 					iconClass = "SkyBlueDark";
-					overlay = "down-circle";
+					overlay = "download";
 					overlayClass = "SkyBlueMiddle";
 					overlayStyle = "opacity: " + speed2Overlay(packet.Speed);
 				}
 				else if (packet.Next)
 				{
-					overlay = "clock";
+					overlay = "time";
 					overlayClass = "OrangeMiddle";
 				}
 				else
 				{
-					overlay = "clock";
+					overlay = "time";
 					overlayClass = "ButterMiddle";
 				}
 			}
 
 			if (packet.Active)
 			{
-				overlay = "spin";
-				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlay = "asterisk";
+				overlayClass = "ScarletRedMiddle animate-spin";
 				overlayStyle = "";
 			}
 
@@ -399,13 +406,13 @@ var XGFormatter = (function ()
 
 		formatFileIcon: function (file, onclick)
 		{
-			var icon = "doc";
+			var icon = "file";
 			var iconClass = "Aluminium2Middle";
 
 			var ext = file.Name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
 			{
-				icon = "video";
+				icon = "film";
 			}
 			else if (ext == "mp3")
 			{
@@ -413,7 +420,7 @@ var XGFormatter = (function ()
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "briefcase";
+				icon = "compressed";
 			}
 
 			return formatIcon(icon, iconClass, undefined, undefined, undefined, onclick);
@@ -452,7 +459,7 @@ var XGFormatter = (function ()
 
 		formatRemoveIcon: function (grid, obj)
 		{
-			return "<i class='icon-cancel-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+		    return "<i class='glyphicon glyphicon-remove-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
 		},
 
 		/* ************************************************************************************************************** */
@@ -512,7 +519,7 @@ var XGFormatter = (function ()
 				case Enum.NotificationType.BotConnected:
 				case Enum.NotificationType.BotConnectFailed:
 				case Enum.NotificationType.BotSubmittedWrongPort:
-					icon = "doc";
+					icon = "user";
 					break;
 
 				case Enum.NotificationType.PacketIncompleted:
@@ -520,13 +527,13 @@ var XGFormatter = (function ()
 				case Enum.NotificationType.PacketRequested:
 				case Enum.NotificationType.PacketRemoved:
 				case Enum.NotificationType.PacketCompleted:
-					icon = "doc";
+					icon = "file";
 					break;
 
 				case Enum.NotificationType.FileSizeMismatch:
 				case Enum.NotificationType.FileBuildFailed:
 				case Enum.NotificationType.FileCompleted:
-					icon = "doc";
+					icon = "file";
 					break;
 			}
 

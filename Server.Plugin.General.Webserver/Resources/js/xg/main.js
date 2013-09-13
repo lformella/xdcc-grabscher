@@ -205,6 +205,10 @@ var XGMain = (function ()
 						active = true;
 						break;
 
+					case Enum.Grid.Channel:
+						active = true;
+						break;
+
 					case Enum.Grid.Bot:
 						websocket.sendGuid(Enum.Request.PacketsFromBot, args.Data.Guid);
 						grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);

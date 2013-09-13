@@ -157,6 +157,8 @@ namespace XG.Server
 					{
 						tBot.Connected = false;
 						tBot.State = Bot.States.Idle;
+						tBot.QueuePosition = 0;
+						tBot.QueueTime = 0;
 
 						foreach (Packet pack in tBot.Packets)
 						{
