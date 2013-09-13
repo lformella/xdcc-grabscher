@@ -234,6 +234,11 @@ label
 	margin-right: 60px;
 }
 
+#searchForm .badge
+{
+	margin-left: 3px;
+}
+
 #unreadNotifications
 {
 	display: none;

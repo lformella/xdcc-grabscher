@@ -27,7 +27,6 @@ var XGMain = (function ()
 {
 	var graph, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
 	var currentServerGuid = "", lastSearch, currentTab = 0;
-	var serversActive = [], botsActive = [];
 
 	/**
 	 * @param {String} gridName
@@ -203,14 +202,12 @@ var XGMain = (function ()
 						grid.getGrid(Enum.Grid.Channel).setSelectedRows([]);
 						currentServerGuid = args.Data.Guid;
 						$("#channelPanel").show();
-						serversActive.push(args.Data.Guid);
 						active = true;
 						break;
 
 					case Enum.Grid.Bot:
 						websocket.sendGuid(Enum.Request.PacketsFromBot, args.Data.Guid);
 						grid.getGrid(Enum.Grid.Packet).setSelectedRows([]);
-						botsActive.push(args.Data.Guid);
 						active = true;
 						break;
 
