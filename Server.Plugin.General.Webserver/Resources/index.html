@@ -211,7 +211,6 @@
 							<span id="unreadNotifications" class="label label-danger"></span>
 						</a>
 						<div class="dropdown-menu">
-							<div class="arrow"></div>
 							<h3 class="popover-title">Notifications</h3>
 							<div class="popover-content">
 								<div id="NotificationGrid" class="grid"></div>
@@ -321,114 +320,165 @@
 						<div id="FileGrid" class="grid"></div>
 					</div>
 					<div class="item">
-						<div style="float: left; width: 160px">
-							<fieldset>
-								<legend id="snapshotServers">Server</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox2" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox21" /><span>Enabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox22" /><span>Disabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox3" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox4" /><span>Disconnected</span>
-								</label>
-							</fieldset>
+						<div class="row">
+							<div class="col-md-2">
+								<div class="panel-group">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												Timespan
+											</h4>
+										</div>
+										<div class="panel-collapse collapse in">
+											<div class="panel-body">
+												<label class="radio">
+													<input type="radio" id="time1" name="snapshotTime" value="-1" checked="checked"><span>1 Day</span>
+												</label>
+												<label class="radio">
+													<input type="radio" id="time7" name="snapshotTime" value="-7"><span>1 Week</span>
+												</label>
+												<label class="radio">
+													<input type="radio" id="time31" name="snapshotTime" value="-31"><span>1 Month</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseServer">
+													Server
+												</a>
+											</h4>
+										</div>
+										<div id="collapseServer" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox2" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox21" /><span>Enabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox22" /><span>Disabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox3" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox4" /><span>Disconnected</span>
+												</label>
+											</div>
+										</div>
+									</div>
 
-							<fieldset>
-								<legend id="snapshotChannels">Channel</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox5" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox23" /><span>Enabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox24" /><span>Disabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox6" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox7" /><span>Disconnected</span>
-								</label>
-							</fieldset>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseChannel">
+													Channel
+												</a>
+											</h4>
+										</div>
+										<div id="collapseChannel" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox5" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox23" /><span>Enabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox24" /><span>Disabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox6" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox7" /><span>Disconnected</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseBots">
+													Bots
+												</a>
+											</h4>
+										</div>
+										<div id="collapseBots" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox8" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox9" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox10" /><span>Disconnected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox11" /><span>Free Slots</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox12" /><span>Free Queue</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox19" /><span>Current Speed</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox20" /><span>Max Speed</span>
+												</label>
+											</div>
+										</div>
+									</div>
 
-							<fieldset>
-								<legend id="snapshotBots">Bots</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox8" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox9" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox10" /><span>Disconnected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox11" /><span>Free Slots</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox12" /><span>Free Queue</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox19" /><span>Current Speed</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox20" /><span>Max Speed</span>
-								</label>
-							</fieldset>
-
-							<fieldset>
-								<legend id="snapshotPackets">Packets</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox13" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox14" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox15" /><span>Disconnected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox16" /><span>Size</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox17" /><span>Size Downloading</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox18" /><span>Size not Downloading</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox25" /><span>Size Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox26" /><span>Size Disconnected</span>
-								</label>
-							</fieldset>
-
-							<fieldset>
-								<legend id="snapshotTimespan">Timespan</legend>
-								<label class="radio">
-									<input type="radio" id="time1" name="snapshotTime" value="-1" checked="checked"><span>1 Day</span>
-								</label>
-								<label class="radio">
-									<input type="radio" id="time7" name="snapshotTime" value="-7"><span>1 Week</span>
-								</label>
-								<label class="radio">
-									<input type="radio" id="time31" name="snapshotTime" value="-31"><span>1 Month</span>
-								</label>
-							</fieldset>
-						</div>
-
-						<div style="float: right; padding-right: 30px">
-							<div id="snapshot" style="height: 550px; width: 1000px;"></div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapsePackets">
+													Packets
+												</a>
+											</h4>
+										</div>
+										<div id="collapsePackets" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox13" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox14" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox15" /><span>Disconnected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox16" /><span>Size</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox17" /><span>Size Downloading</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox18" /><span>Size not Downloading</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox25" /><span>Size Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox26" /><span>Size Disconnected</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-10">
+								<div id="snapshot" style="height: 550px; width: 1000px;"></div>
+							</div>
 						</div>
 					</div>
 				</div>

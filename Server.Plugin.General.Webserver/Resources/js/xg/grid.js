@@ -123,7 +123,7 @@ var XGGrid = (function ()
 			width: width > 0 ? width : undefined,
 			minWidth: width > 0 ? width : undefined,
 			maxWidth: width > 0 ? width : undefined,
-			cssClass: cssClass + (alignRight ? "alignRight" : undefined),
+			cssClass: cssClass + (alignRight ? "alignRight" : ""),
 			sortable: sortable,
 			cannotTriggerInsert: id == "Name",
 			autoHeight: true,
@@ -343,9 +343,9 @@ var XGGrid = (function ()
 				{
 					return helper.time2Human(obj.QueueTime);
 				}, true),
-				buildRow("Speed", 130, true, $.proxy(formatter.formatBotSpeed, formatter), true),
-				buildRow("Slots", 60, true, $.proxy(formatter.formatBotSlots, formatter), true),
-				buildRow("Queue", 80, true, $.proxy(formatter.formatBotQueue, formatter), true)
+				buildRow("Speed", 140, true, $.proxy(formatter.formatBotSpeed, formatter), true),
+				buildRow("Slots", 70, true, $.proxy(formatter.formatBotSlots, formatter), true),
+				buildRow("Queue", 90, true, $.proxy(formatter.formatBotQueue, formatter), true)
 			], compareBots);
 			botGrid.onClick.subscribe(function (e, args)
 			{
@@ -429,7 +429,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			notificationsGrid = buildGrid(Enum.Grid.Notification, dataview.getDataView(Enum.Grid.Notification), [
-				buildRow("", 30, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
+				buildRow("", 40, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
 				buildRow("Content", 0, true, $.proxy(formatter.formatNotificationContent, formatter), false, "two-line-text"),
 				buildRow("Time", 155, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
 			], null, 48);

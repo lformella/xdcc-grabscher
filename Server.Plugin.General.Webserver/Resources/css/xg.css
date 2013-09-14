@@ -25,18 +25,12 @@
 //
 */
 
-/** Base ** /
-
-body
-{
-	padding-bottom: 10px;
-}
+/** Base **/
 
 .alignRight
 {
 	text-align: right;
 }
-*/
 
 .btn, .button
 {
@@ -47,6 +41,7 @@ small
 {
 	font-size: 0.7em;
 }
+
 
 /** Bootstrap **/
 
@@ -62,19 +57,6 @@ small
 	padding-right: 0;
 }
 
-legend
-{
-	line-height: 25px;
-	margin-bottom: 0;
-}
-
-fieldset label.checkbox
-{
-	margin-bottom: 0;
-	margin-top: 0;
-	font-weight: normal;
-}
-
 .progress
 {
 	height: 5px;
@@ -87,61 +69,37 @@ fieldset label.checkbox
 	opacity: 0.3;
 }
 
-/*
-.navbar
+.panel-heading
 {
-	margin-bottom: 10px;
+    padding: 3px 9px;
 }
 
-.carousel
+.panel-body
 {
-	margin-bottom: 0;
+    padding: 0 5px;
 }
 
-label
+.panel-body .checkbox
 {
-	margin-bottom: 1px;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
-.form-horizontal .control-label
+.panel-body label.checkbox
 {
-	width: 90px;
+    font-weight: normal;
 }
 
-.form-horizontal .controls
+#accordion
 {
-	margin-left: 110px;
+	margin-top: 5px;
 }
-
-[class^="icon-"], [class*=" icon-"]
-{
-	background-position: initial;
-	background-image: none !important;
-	height: auto;
-	margin-top: inherit;
-	width: auto;
-	display: normal;
-	line-height: inherit;
-	vertical-align: inherit;
-}
-
-/** Fontello **/
 
 .glyphiconBig
 {
 	font-size: 2em;
 }
 
-/*
-#searchRemove [class^="glyphicon-"], #searchAdd [class^="glyphicon-"]
-{
-	font-size: 1.5em;
-}
-
-#searchLoading, #searchButtons
-{
-	margin-top: 9px;
-}
 
 /** Grids **/
 
@@ -174,6 +132,7 @@ label
 	height: 320px;
 }
 
+
 /** Dialogs **/
 
 #serverChannelsDialog .modal-dialog
@@ -181,41 +140,6 @@ label
 	width: 940px;
 }
 
-/*
-#serverChannelsDialog
-{
-	width: 940px;
-	left: -webkit-calc((100% - 940px) / 2);
-	left: -moz-calc((100% - 940px) / 2);
-	left: calc((100% - 940px) / 2);
-	margin-left: 0;
-}
-
-/*
-#serverChannelsDialog .modal-body > div
-{
-	float: left;
-}
-
-#serverChannelsDialog .modal-body > div:first-child
-{
-	padding: 0 10px 0 0;
-}
-
-.small-panel .control-label
-{
-	width: 60px;
-}
-
-.small-panel .controls
-{
-	margin-left: 70px;
-}
-
-.controls label
-{
-	padding-top: 5px;
-}
 
 /** Menu **/
 
@@ -280,33 +204,6 @@ label
 	font-size: 0.8em;
 }
 
-/*
-#notificationsLink + .dropdown-menu:before
-{
-	right: 212px;
-	left: auto;
-}
-
-#notificationsLink + .dropdown-menu:after
-{
-	right: 212px;
-	left: auto;
-}
-
-#notificationsLink + .dropdown-menu
-{
-	top: 2.9em;
-	right: 0;
-	left: -422px;
-	width: 670px;
-}
-
-/** Others ** /
-
-#xdccLink, #password
-{
-	width: 406px;
-}
 
 /** Slick Grid **/
 
@@ -320,6 +217,13 @@ label
 	font-size: 1.5em;
 	margin-left: -3px;
 	margin-top: -3px;
+}
+
+#NotificationGrid .slick-cell .glyphicon
+{
+	font-size: 2em;
+	margin-left: 0;
+	margin-top: 0;
 }
 
 .slick-cell .glyphicon.icon-overlay
@@ -347,25 +251,6 @@ label
 	white-space: normal;
 	font-size: 1em;
 }
-
-/*
-
-.grid .slick-header-columns .slick-header-column.ui-state-default
-{
-	text-shadow: none;
-}
-
-.grid .grid-canvas .active, .grid .grid-canvas .selected
-{
-	background: none repeat scroll 0 0 #fffdbd;
-}
-
-.grid .grid-canvas .slick-group
-{
-	background: none repeat scroll 0 0 #f1f1ff;
-}
-	
-*/
 
 .grid
 {
@@ -422,10 +307,16 @@ label
     background: #FBEED5;
 }
 
+.grid .grid-canvas .slick-row.active .slick-cell.selected, .grid .grid-canvas .slick-row.active .slick-cell.selected:hover
+{
+    background: none;
+}
+
 .slick-sort-indicator
 {
 	float: none;
 }
+
 
 /* Dasboard */
 
