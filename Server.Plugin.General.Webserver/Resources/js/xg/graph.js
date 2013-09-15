@@ -32,7 +32,7 @@ var XGGraph = (function ()
 	{
 		var data, options = [];
 
-		options =  {
+		options = {
 			series: {
 				pie: {
 					radius: 1,
@@ -40,7 +40,8 @@ var XGGraph = (function ()
 					show: true,
 					label: {
 						show: true,
-						formatter: 	function labelFormatter(label, series) {
+						formatter: function labelFormatter (label, series)
+						{
 							return "<div>" + Math.round(series.percent) + "%</div>";
 						},
 						background: {
@@ -59,7 +60,7 @@ var XGGraph = (function ()
 
 		if (values.enabled != undefined && values.disabled != undefined)
 		{
-			options =  {
+			options = {
 				series: {
 					pie: {
 						radius: 0.6,
@@ -367,7 +368,7 @@ var XGGraph = (function ()
 			{
 				$("#dashboardFiles").show();
 
-				options =  {
+				options = {
 					series: {
 						pie: {
 							radius: 1,
@@ -375,7 +376,8 @@ var XGGraph = (function ()
 							show: true,
 							label: {
 								show: true,
-								formatter: 	function labelFormatter(label, series) {
+								formatter: function labelFormatter (label, series)
+								{
 									return "<div>" + helper.size2Human(series.data[0][1], 2) + "</div>";
 								},
 								background: {

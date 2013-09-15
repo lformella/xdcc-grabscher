@@ -40,6 +40,9 @@ var XGGui = (function ()
 
 	var unreadNotificationCounter = 0;
 	var unreadNotifications = $("#unreadNotifications");
+	var favicon = new Favico({
+		animation:'none'
+	});
 
 	var currentSearchGuid = undefined;
 	var currentSlide = 0;
@@ -143,7 +146,7 @@ var XGGui = (function ()
 		{
 			Notification.requestPermission(function (permission)
 			{
-				if(!('permission' in Notification))
+				if (!('permission' in Notification))
 				{
 					Notification.permission = permission;
 				}
@@ -275,6 +278,7 @@ var XGGui = (function ()
 			unreadNotifications.html(unreadNotificationCounter);
 			unreadNotifications.show(showEffect);
 		}
+		favicon.badge(counter);
 	}
 
 	function connectButtons ()
@@ -283,14 +287,14 @@ var XGGui = (function ()
 
 		$("#notificationsLink").click(function ()
 		{
-		    updateUnreadNotifications(0);
+			updateUnreadNotifications(0);
 		});
 
 		$("#serverChannelButton").click(function ()
 		{
 			$("#serverChannelsDialog").modal('show');
 		});
-	    // hook on dialog events to optimize the height because slickgrid will corrupt the viewport
+		// hook on dialog events to optimize the height because slickgrid will corrupt the viewport
 		$("#serverChannelsDialog").bind('shown.bs.modal',
 			function ()
 			{
@@ -300,7 +304,7 @@ var XGGui = (function ()
 		$("#serverChannelsDialog").bind('hidden.bs.modal',
 			function ()
 			{
-			    $("#" + Enum.Grid.Server + "Grid, #" + Enum.Grid.Channel + "Grid").height("320");
+				$("#" + Enum.Grid.Server + "Grid, #" + Enum.Grid.Channel + "Grid").height("320");
 			}
 		);
 
@@ -395,7 +399,7 @@ var XGGui = (function ()
 		updateFlipableVar("combineBotAndPacketGrid", combineBotAndPacketGrid);
 	}
 
-	function updateFlipableVar(variable, value)
+	function updateFlipableVar (variable, value)
 	{
 		var element = $("#" + variable + " span");
 		if (value)

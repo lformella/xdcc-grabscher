@@ -42,7 +42,6 @@ small
 	font-size: 0.7em;
 }
 
-
 /** Bootstrap **/
 
 .container
@@ -71,23 +70,23 @@ small
 
 .panel-heading
 {
-    padding: 3px 9px;
+	padding: 3px 9px;
 }
 
 .panel-body
 {
-    padding: 0 5px;
+	padding: 0 5px;
 }
 
 .panel-body .checkbox
 {
-    margin-bottom: 0;
-    margin-top: 0;
+	margin-bottom: 0;
+	margin-top: 0;
 }
 
 .panel-body label.checkbox
 {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 #accordion
@@ -99,7 +98,6 @@ small
 {
 	font-size: 2em;
 }
-
 
 /** Grids **/
 
@@ -132,14 +130,12 @@ small
 	height: 320px;
 }
 
-
 /** Dialogs **/
 
 #serverChannelsDialog .modal-dialog
 {
 	width: 940px;
 }
-
 
 /** Menu **/
 
@@ -185,7 +181,7 @@ small
 
 #searchLoading
 {
-    margin-top: 12px;
+	margin-top: 12px;
 }
 
 #notificationsLink + .dropdown-menu
@@ -203,7 +199,6 @@ small
 	top: 2px;
 	font-size: 0.8em;
 }
-
 
 /** Slick Grid **/
 
@@ -232,7 +227,7 @@ small
 	float: right;
 	margin-right: -4px;
 	margin-top: -4px;
-	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
+	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
 }
 
 .slick-cell .glyphicon.icon-overlay-middle
@@ -254,18 +249,18 @@ small
 
 .grid
 {
-	border-bottom: 1px solid #DDDDDD;
+	border-bottom: 1px solid #ddd;
 }
 
 .grid .slick-viewport
 {
-	border-top: 1px solid #DDDDDD;
+	border-top: 1px solid #ddd;
 }
 
 .grid .grid-canvas .slick-cell, .grid .grid-canvas .slick-headerrow-column
 {
-	 border-color: -moz-use-text-color -moz-use-text-color #DDDDDD;
-	 border-width: 0 0 1px;
+	border-color: -moz-use-text-color -moz-use-text-color #ddd;
+	border-width: 0 0 1px;
 }
 
 .grid .slick-header-columns .slick-header-column
@@ -284,39 +279,38 @@ small
 
 .grid .grid-canvas .slick-row.odd:hover
 {
-    background: #fcfcfc;
+	background: #fcfcfc;
 }
 
 .grid .grid-canvas .slick-row.even
 {
-    background: #f9f9f9;
+	background: #f9f9f9;
 }
 
 .grid .grid-canvas .slick-row.even:hover
 {
-    background: #f5f5f5;
+	background: #f5f5f5;
 }
 
 .grid .grid-canvas .slick-row.active, .grid .grid-canvas .slick-cell.selected
 {
-    background: #FCF8E3;
+	background: #fcf8e3;
 }
 
 .grid .grid-canvas .slick-row.active:hover, .grid .grid-canvas .slick-cell.selected:hover
 {
-    background: #FBEED5;
+	background: #fbeed5;
 }
 
 .grid .grid-canvas .slick-row.active .slick-cell.selected, .grid .grid-canvas .slick-row.active .slick-cell.selected:hover
 {
-    background: none;
+	background: none;
 }
 
 .slick-sort-indicator
 {
 	float: none;
 }
-
 
 /* Dasboard */
 
@@ -370,4 +364,3 @@ small
 	color: white;
 	z-index: 99999;
 }
-

@@ -39,7 +39,7 @@ var XGFormatter = (function ()
 
 	function formatIcon (icon, iconClass, overlay, overlayClass, overlayStyle, onclick)
 	{
-	    iconClass = "glyphicon glyphicon-" + icon + " " + iconClass;
+		iconClass = "glyphicon glyphicon-" + icon + " " + iconClass;
 		if (onclick != undefined && onclick != "")
 		{
 			iconClass += " button";
@@ -100,7 +100,7 @@ var XGFormatter = (function ()
 			}
 			else if (server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0")
 			{
-			    overlay = "warning-sign";
+				overlay = "warning-sign";
 				overlayClass = "ScarletRedMiddle";
 			}
 			else
@@ -138,7 +138,7 @@ var XGFormatter = (function ()
 			}
 			else if (channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0")
 			{
-			    overlay = "warning-sign";
+				overlay = "warning-sign";
 				overlayClass = "ScarletRedMiddle";
 			}
 
@@ -194,7 +194,7 @@ var XGFormatter = (function ()
 
 				if (bot.HasNetworkProblems)
 				{
-				    overlay = "warning-sign";
+					overlay = "warning-sign";
 					overlayClass = "ScarletRedMiddle";
 				}
 			}
@@ -459,7 +459,7 @@ var XGFormatter = (function ()
 
 		formatRemoveIcon: function (grid, obj)
 		{
-		    return "<i class='glyphicon glyphicon-remove-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
+			return "<i class='glyphicon glyphicon-remove-circle icon-overlay icon-overlay-middle ScarletRedMiddle button' onclick='Grid.removeObject(\"" + grid + "\", \"" + obj.Guid + "\");'></i>";
 		},
 
 		/* ************************************************************************************************************** */
@@ -543,11 +543,11 @@ var XGFormatter = (function ()
 		formatNotificationContent: function (notification, noSpan)
 		{
 			var msg = translate._("Notification_" + notification.Type,
-			[
-				{ Name: "Name", Value: notification.ObjectName },
-				{ Name: "ParentName", Value: notification.ParentName }
-			]);
-			return noSpan ? msg : "<span title='" + msg + "'>" + msg +"</span>";
+				[
+					{ Name: "Name", Value: notification.ObjectName },
+					{ Name: "ParentName", Value: notification.ParentName }
+				]);
+			return noSpan ? msg : "<span title='" + msg + "'>" + msg + "</span>";
 		},
 
 		formatNotificationTime: function (notification)

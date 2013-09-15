@@ -44,7 +44,7 @@ var XGPassword = (function ()
 		}
 		else
 		{
-		    $("#passwordDialog .form-group").addClass('has-error');
+			$("#passwordDialog .form-group").addClass('has-error');
 		}
 	}
 
@@ -113,7 +113,7 @@ var XGPassword = (function ()
 
 			passwordInput.keyup(function (e)
 			{
-			    $("#passwordDialog .form-group").removeClass('has-error');
+				$("#passwordDialog .form-group").removeClass('has-error');
 				if (e.which == 13)
 				{
 					e.preventDefault();

@@ -392,7 +392,7 @@ var XGMain = (function ()
 		});
 	}
 
-	function loop()
+	function loop ()
 	{
 		if (currentTab == 0)
 		{

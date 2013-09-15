@@ -72,6 +72,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"Scripts/bootstrap.min",
 			"Resources/js/external/jquery.flot.axislabels",
 			"Resources/js/external/sha256",
+			"Resources/js/external/favicon",
 			"Resources/js/i18n/moment/#LANGUAGE_SHORT#",
 			"Resources/js/i18n/xg/#LANGUAGE_SHORT#",
 			"Resources/js/xg/enum",

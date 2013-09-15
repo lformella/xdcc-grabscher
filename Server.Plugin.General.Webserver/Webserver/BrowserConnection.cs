@@ -73,6 +73,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 				// serve the favicon
 				else if (str == "/favicon.ico")
 				{
+					str = "/Resources/favicon.ico";
 					WriteToStream(FileLoader.LoadImage(str));
 				}
 				// load a file

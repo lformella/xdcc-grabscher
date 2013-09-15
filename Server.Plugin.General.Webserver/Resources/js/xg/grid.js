@@ -431,12 +431,12 @@ var XGGrid = (function ()
 			notificationsGrid = buildGrid(Enum.Grid.Notification, dataview.getDataView(Enum.Grid.Notification), [
 				buildRow("", 40, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
 				buildRow("Content", 0, true, $.proxy(formatter.formatNotificationContent, formatter), false, "two-line-text"),
-				buildRow("Time", 155, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
+				buildRow("Time", 160, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
 			], null, 48);
 
 			/**************************************************************************************************************/
 
-			// default filter
+				// default filter
 			self.applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" }, Enum.Grid.Bot);
 		},
 
@@ -516,13 +516,13 @@ var XGGrid = (function ()
 			{
 				grid.hide();
 				dataView.setGrouping(
-				{
-					getter: "ParentGuid",
-					formatter: function (g)
 					{
-						return g.Value;
-					}
-				});
+						getter: "ParentGuid",
+						formatter: function (g)
+						{
+							return g.Value;
+						}
+					});
 			}
 			else
 			{
