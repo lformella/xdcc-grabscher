@@ -37,7 +37,7 @@ namespace XG.Server.Test.Helper
 		public void Run()
 		{
 			const string file = "test.txt";
-			const string archive = "test.rar";
+			const string archive = "test.zip";
 			File.Create(file).Close();
 
 			Assert.AreEqual(true, Compress(file, archive, "test"));
@@ -54,15 +54,14 @@ namespace XG.Server.Test.Helper
 
 		bool Compress(string file, string archive, string password)
 		{
-			var p = new Server.Helper.Process
-			        {Command = "rar", Arguments = "a " + (String.IsNullOrEmpty(password) ? "" : "-p" + password + " ") + archive + " " + file};
+			var p = new Server.Helper.Process {Command = "zip", Arguments = (String.IsNullOrEmpty(password) ? "" : "-e" + password + " ") + archive + " " + file};
 
 			return p.Run();
 		}
 
 		bool DeCompress(string archive)
 		{
-			var p = new Server.Helper.Process {Command = "unrar", Arguments = "e -p- " + archive};
+			var p = new Server.Helper.Process {Command = "unzip", Arguments = "-x " + archive};
 
 			return p.Run();
 		}
