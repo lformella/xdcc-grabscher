@@ -181,23 +181,6 @@ namespace XG.Core
 
 		#endregion
 
-		#region CONSTRUCTOR
-
-		public FilePart(FilePart aObject = null) : base(aObject)
-		{
-			if (aObject != null)
-			{
-				_startSize = aObject._startSize;
-				_stopSize = aObject._stopSize;
-				_currentSize = aObject._currentSize;
-				_speed = aObject._speed;
-				_state = aObject._state;
-				_checked = aObject._checked;
-			}
-		}
-
-		#endregion
-
 		#region HELPER
 
 		public override string ToString()

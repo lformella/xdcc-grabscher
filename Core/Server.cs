@@ -137,19 +137,6 @@ namespace XG.Core
 
 		#endregion
 
-		#region CONSTRUCTOR
-
-		public Server(Server aObject = null, bool useHashset = true) : base(aObject, useHashset)
-		{
-			if (aObject != null)
-			{
-				_port = aObject._port;
-				_errorCode = aObject._errorCode;
-			}
-		}
-
-		#endregion
-
 		#region HELPER
 		
 		public override string ToString()

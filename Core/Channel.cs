@@ -112,19 +112,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public Channel(Channel aObject = null, bool useHashset = true) : base(aObject, useHashset)
-		{
-			if (aObject != null)
-			{
-				_topic = aObject._topic;
-				_errorCode = aObject._errorCode;
-				_userCount = aObject._userCount;
-			}
-		}
-
-		#endregion
 	}
 }

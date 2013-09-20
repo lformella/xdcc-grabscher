@@ -34,8 +34,6 @@ namespace XG.Core
 
 		public Search() {}
 
-		public Search(Search aObject) : base(aObject) {}
-
 		#endregion
 	}
 }

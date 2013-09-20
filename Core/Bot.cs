@@ -240,29 +240,5 @@ namespace XG.Core
 		}
 
 		#endregion
-
-		#region CONSTRUCTOR
-
-		public Bot(Bot aObject = null, bool useHashset = true) : base(aObject, useHashset)
-		{
-			if (aObject != null)
-			{
-				_state = aObject._state;
-				_lastMessage = aObject._lastMessage;
-				_lastMessageTime = aObject._lastMessageTime;
-				_lastContact = aObject._lastContact;
-				_queuePosition = aObject._queuePosition;
-				_queueTime = aObject._queueTime;
-				_infoSpeedMax = aObject._infoSpeedMax;
-				_infoSpeedCurrent = aObject._infoSpeedCurrent;
-				_infoSlotTotal = aObject._infoSlotTotal;
-				_infoSlotCurrent = aObject._infoSlotCurrent;
-				_infoQueueTotal = aObject._infoQueueTotal;
-				_infoQueueCurrent = aObject._infoQueueCurrent;
-				_hasNetworkProblems = aObject._hasNetworkProblems;
-			}
-		}
-
-		#endregion
 	}
 }
