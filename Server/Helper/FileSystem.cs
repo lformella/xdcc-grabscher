@@ -136,28 +136,18 @@ namespace XG.Server.Helper
 			return files;
 		}
 
-		public static BinaryWriter OpenFileWritable(string aFile)
-		{
-			FileStream stream = File.Open(aFile, FileMode.Create, FileAccess.Write);
-			return new BinaryWriter(stream);
-		}
-
-		public static BinaryReader OpenFileReadable(string aFile)
-		{
-			FileStream stream = File.Open(aFile, FileMode.Open, FileAccess.Read);
-			return new BinaryReader(stream);
-		}
-
 		public static string ReadFile(string aFile)
 		{
 			if (File.Exists(aFile))
 			{
 				try
 				{
-					var reader = new StreamReader(aFile);
-					string str = reader.ReadToEnd();
-					reader.Close();
-					return str;
+					using (var reader = new StreamReader(aFile))
+					{
+						string str = reader.ReadToEnd();
+						reader.Close();
+						return str;
+					}
 				}
 				catch (Exception)
 				{

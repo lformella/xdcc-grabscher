@@ -192,7 +192,7 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public AObjects(AObjects aObject = null, bool useHashset = true) : base(aObject)
+		protected AObjects(AObjects aObject = null, bool useHashset = true) : base(aObject)
 		{
 			if (useHashset)
 			{

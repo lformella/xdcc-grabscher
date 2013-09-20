@@ -90,7 +90,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"Resources/js/xg/websocket"
 		};
 
-		public string Salt;
+		public string Salt { get; set; }
 
 		#endregion
 

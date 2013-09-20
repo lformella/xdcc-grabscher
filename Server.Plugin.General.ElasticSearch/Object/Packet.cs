@@ -59,7 +59,7 @@ namespace XG.Server.Plugin.General.ElasticSearch.Object
 
 		public new string Name
 		{
-			get { return (Object.RealName != "" ? Object.RealName : Object.Name).Trim(); }
+			get { return (!String.IsNullOrWhiteSpace(Object.RealName) ? Object.RealName : Object.Name).Trim(); }
 		}
 
 		public DateTime LastUpdated

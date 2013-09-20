@@ -42,14 +42,6 @@ namespace XG.Core
 			Waiting
 		}
 
-		public enum Rights : byte
-		{
-			None,
-			Voice,
-			HalfOp,
-			Op
-		}
-
 		#endregion
 
 		#region VARIABLES

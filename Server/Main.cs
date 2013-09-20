@@ -254,13 +254,15 @@ namespace XG.Server
 										try
 										{
 											Log.Fatal("Run() crash recovery checking " + next.Name);
-											FileStream fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite);
-											var fileReader = new BinaryReader(fileStream);
-											// extract the needed refernce bytes
-											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
-											byte[] bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
-											fileReader.Close();
-
+											byte[] bytes = null;
+											using (var fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite))
+											{
+												var fileReader = new BinaryReader(fileStream);
+												// extract the needed refernce bytes
+												fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
+												bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
+												fileReader.Close();
+											}
 											_fileActions.CheckNextReferenceBytes(part, bytes);
 										}
 										catch (Exception ex)

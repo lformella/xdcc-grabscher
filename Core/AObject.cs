@@ -177,7 +177,7 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public AObject(AObject aObject = null)
+		protected AObject(AObject aObject = null)
 		{
 			if (aObject != null)
 			{

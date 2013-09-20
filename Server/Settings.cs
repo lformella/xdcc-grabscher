@@ -84,10 +84,13 @@ namespace XG.Server
 			{
 				try
 				{
+					Settings settings = null;
 					var ser = new XmlSerializer(typeof (Settings));
-					var sr = new StreamReader(AppDataPathStatic + "settings.xml");
-					var settings = (Settings) ser.Deserialize(sr);
-					sr.Close();
+					using (var sr = new StreamReader(AppDataPathStatic + "settings.xml"))
+					{
+						settings = (Settings)ser.Deserialize(sr);
+						sr.Close();
+					}
 					return settings;
 				}
 				catch (Exception ex)
@@ -107,9 +110,11 @@ namespace XG.Server
 			try
 			{
 				var ser = new XmlSerializer(typeof (Settings));
-				var sw = new StreamWriter(AppDataPathStatic + "settings.xml");
-				ser.Serialize(sw, _instance);
-				sw.Close();
+				using (var sw = new StreamWriter(AppDataPathStatic + "settings.xml"))
+				{
+					ser.Serialize(sw, _instance);
+					sw.Close();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -238,21 +243,6 @@ namespace XG.Server
 		public int DownloadTimeoutTime
 		{
 			get { return 30; }
-		}
-
-		public int ServerTimeoutTime
-		{
-			get { return 60; }
-		}
-
-		public int ReconnectWaitTimeShort
-		{
-			get { return 45; }
-		}
-
-		public int ReconnectWaitTimeLong
-		{
-			get { return 900; }
 		}
 
 		public int MutliDownloadMinimumTime

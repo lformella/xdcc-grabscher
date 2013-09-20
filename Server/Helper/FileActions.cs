@@ -408,9 +408,13 @@ namespace XG.Server.Helper
 						string fileName = CompletePath(part);
 						try
 						{
-							BinaryReader reader = FileSystem.OpenFileReadable(fileName);
-							byte[] bytes = reader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
-							reader.Close();
+							byte[] bytes = null;
+							using (var stream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read))
+							{
+								var reader = new BinaryReader(stream);
+								bytes = reader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
+								reader.Close();
+							}
 
 							if (!bytes.IsEqualWith(aBytes))
 							{
@@ -428,15 +432,17 @@ namespace XG.Server.Helper
 									// file is not the last, so check the next one
 									if (part.StopSize < tFile.Size)
 									{
-										FileStream fileStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.ReadWrite);
-										var fileReader = new BinaryReader(fileStream);
-										// extract the needed refernce bytes
-										fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
-										bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
-										// and truncate the file
-										//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheckBytes);
-										fileStream.SetLength(part.StopSize - part.StartSize);
-										fileReader.Close();
+										using (FileStream fileStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.ReadWrite))
+										{
+											var fileReader = new BinaryReader(fileStream);
+											// extract the needed refernce bytes
+											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
+											bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
+											// and truncate the file
+											//fileStream.SetLength(fileStream.Length - Settings.Instance.FileRollbackCheckBytes);
+											fileStream.SetLength(part.StopSize - part.StartSize);
+											fileReader.Close();
+										}
 
 										// dont open a new thread if we are already threaded
 										if (aThreaded)
@@ -558,29 +564,34 @@ namespace XG.Server.Helper
 
 					try
 					{
-						FileStream stream = System.IO.File.Open(fileReady, FileMode.Create, FileAccess.Write);
-						var writer = new BinaryWriter(stream);
-						foreach (FilePart part in parts)
+						using (var stream = System.IO.File.Open(fileReady, FileMode.Create, FileAccess.Write))
 						{
-							try
+							var writer = new BinaryWriter(stream);
+							foreach (FilePart part in parts)
 							{
-								BinaryReader reader = FileSystem.OpenFileReadable(CompletePath(part));
-								byte[] data;
-								while ((data = reader.ReadBytes(Settings.Instance.DownloadPerReadBytes)).Length > 0)
+								try
 								{
-									writer.Write(data);
-									writer.Flush();
+									using (var stream2 = System.IO.File.Open(CompletePath(part), FileMode.Open, FileAccess.Read))
+									{
+										var reader = new BinaryReader(stream2);
+										byte[] data;
+										while ((data = reader.ReadBytes(Settings.Instance.DownloadPerReadBytes)).Length > 0)
+										{
+											writer.Write(data);
+											writer.Flush();
+										}
+										reader.Close();
+									}
 								}
-								reader.Close();
+								catch (Exception ex)
+								{
+									Log.Fatal("JoinCompleteParts(" + tFile + ") handling " + part + "", ex);
+									break;
+								}
 							}
-							catch (Exception ex)
-							{
-								Log.Fatal("JoinCompleteParts(" + tFile + ") handling " + part + "", ex);
-								break;
-							}
+							writer.Close();
+							stream.Close();
 						}
-						writer.Close();
-						stream.Close();
 
 						Int64 size = new FileInfo(fileReady).Length;
 						if (size == tFile.Size)
