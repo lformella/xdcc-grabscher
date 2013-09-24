@@ -23,6 +23,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("XG.Server.Plugin.Backend.ElasticSearch")]
 [assembly: AssemblyDescription("")]
@@ -35,3 +36,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyVersion("2.1.1.0")]
 [assembly: AssemblyFileVersion("2.1.1.0")]
+[assembly: ComVisibleAttribute(false)]

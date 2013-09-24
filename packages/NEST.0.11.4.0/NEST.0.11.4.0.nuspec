@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>NEST</id>
@@ -12,6 +12,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Elasticsearch client, focuses on a strongly typed interface to elasticsearch but works well with dynamic use cases too.</description>
     <summary>Elasticsearch client, focuses on a strongly typed interface to elasticsearch but works well with dynamic use cases too.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
     <tags>elasticsearch elastic search lucene nest</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" />

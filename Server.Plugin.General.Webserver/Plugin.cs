@@ -41,7 +41,7 @@ namespace XG.Server.Plugin.General.Webserver
 
 		Websocket.Server _socket;
 
-		public RrdDb RrdDb { get; set; }
+		public RrdDb RrdDB { get; set; }
 
 		#endregion
 
@@ -77,7 +77,7 @@ namespace XG.Server.Plugin.General.Webserver
 				Notifications = Notifications,
 				Password = passwortHash,
 				Salt = salt,
-				RrdDb = RrdDb
+				RrdDB = RrdDB
 			};
 			_socket.Start();
 		}

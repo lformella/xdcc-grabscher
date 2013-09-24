@@ -79,10 +79,10 @@ namespace XG.Core
 		[NonSerialized]
 		IPAddress _ip = IPAddress.None;
 
-		public IPAddress Ip
+		public IPAddress IP
 		{
 			get { return _ip; }
-			set { SetProperty(ref _ip, value, "Ip"); }
+			set { SetProperty(ref _ip, value, "IP"); }
 		}
 
 		string _lastMessage = "";

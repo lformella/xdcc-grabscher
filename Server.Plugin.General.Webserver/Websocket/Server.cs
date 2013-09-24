@@ -57,7 +57,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Enabled Packets" };
 		static readonly Core.Search _searchDownloads = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Downloads" };
 
-		public RrdDb RrdDb { get; set; }
+		public RrdDb RrdDB { get; set; }
 
 		#endregion
 
@@ -363,61 +363,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void Unicast(User aUser, Response aResponse, bool aOnlySendVisibleObjects)
 		{
-			if (aOnlySendVisibleObjects)
+			if (!ShouldResponseSended(aUser, aResponse, aOnlySendVisibleObjects))
 			{
-				if (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet)
-				{
-					switch (aResponse.Type)
-					{
-						case Response.Types.ObjectAdded:
-						case Response.Types.ObjectChanged:
-							var bot = aResponse.Data as Core.Bot;
-							if (bot != null && !IsVisible(bot, aUser.LastSearchRequest))
-							{
-								return;
-							}
-							var packet = aResponse.Data as Core.Packet;
-							if (packet != null && !IsVisible(packet, aUser.LastSearchRequest))
-							{
-								return;
-							}
-							break;
-					}
-				}
-			}
-
-			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
-			{
-				Core.AObject data = (Core.AObject)aResponse.Data;
-				// lock loaded objects to prevent sending out the same object more than once
-				lock (aUser.LoadedObjects)
-				{
-					switch (aResponse.Type)
-					{
-						case Response.Types.ObjectAdded:
-							if (aUser.LoadedObjects.Contains(data.Guid))
-							{
-								return;
-							}
-							aUser.LoadedObjects.Add(data.Guid);
-							break;
-
-						case Response.Types.ObjectChanged:
-							if (!aUser.LoadedObjects.Contains(data.Guid))
-							{
-								return;
-							}
-							break;
-
-						case Response.Types.ObjectRemoved:
-							if (!aUser.LoadedObjects.Contains(data.Guid))
-							{
-								return;
-							}
-							aUser.LoadedObjects.Remove(data.Guid);
-							break;
-					}
-				}
+				return;
 			}
 
 			Object.AObject myObj = null;
@@ -503,6 +451,68 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		#endregion
 
 		#region Functions
+
+		bool ShouldResponseSended(User aUser, Response aResponse, bool aOnlySendVisibleObjects)
+		{
+			if (aOnlySendVisibleObjects)
+			{
+				if (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet)
+				{
+					switch (aResponse.Type)
+					{
+						case Response.Types.ObjectAdded:
+						case Response.Types.ObjectChanged:
+							var bot = aResponse.Data as Core.Bot;
+							if (bot != null && !IsVisible(bot, aUser.LastSearchRequest))
+							{
+								return false;
+							}
+							var packet = aResponse.Data as Core.Packet;
+							if (packet != null && !IsVisible(packet, aUser.LastSearchRequest))
+							{
+								return false;
+							}
+							break;
+					}
+				}
+			}
+
+			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
+			{
+				Core.AObject data = (Core.AObject)aResponse.Data;
+				// lock loaded objects to prevent sending out the same object more than once
+				lock (aUser.LoadedObjects)
+				{
+					switch (aResponse.Type)
+					{
+						case Response.Types.ObjectAdded:
+							if (aUser.LoadedObjects.Contains(data.Guid))
+							{
+								return false;
+							}
+							aUser.LoadedObjects.Add(data.Guid);
+							break;
+
+						case Response.Types.ObjectChanged:
+							if (!aUser.LoadedObjects.Contains(data.Guid))
+							{
+								return false;
+							}
+							break;
+
+						case Response.Types.ObjectRemoved:
+							if (!aUser.LoadedObjects.Contains(data.Guid))
+							{
+								return false;
+							}
+							aUser.LoadedObjects.Remove(data.Guid);
+							break;
+					}
+				}
+			}
+
+			return true;
+		}
 
 		void OnLiveSnapshot(User currentUser)
 		{
@@ -798,7 +808,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			var tObjects = new List<Flot>();
 
-			FetchData data = RrdDb.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
+			FetchData data = RrdDB.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
 			Int64[] times = data.getTimestamps();
 			double[][] values = data.getValues();
 

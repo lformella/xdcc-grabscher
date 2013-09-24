@@ -81,111 +81,8 @@ namespace XG.Server
 			Notifications.Add(aObj);
 		}
 
-		#endregion
-
-		#region AWorker
-
-		protected override void StartRun()
+		void TryToRecoverOpenFiles()
 		{
-			#region DUPE CHECK
-
-			// check if there are some dupes in our database
-			foreach (Core.Server serv in Servers.All)
-			{
-				foreach (Core.Server s in Servers.All)
-				{
-					if (s.Name == serv.Name && s.Guid != serv.Guid)
-					{
-						Log.Error("Run() removing dupe " + s);
-						Servers.Remove(s);
-					}
-				}
-
-				foreach (Channel chan in serv.Channels)
-				{
-					foreach (Channel c in serv.Channels)
-					{
-						if (c.Name == chan.Name && c.Guid != chan.Guid)
-						{
-							Log.Error("Run() removing dupe " + c);
-							serv.RemoveChannel(c);
-						}
-					}
-
-					foreach (Bot bot in chan.Bots)
-					{
-						foreach (Bot b in chan.Bots)
-						{
-							if (b.Name == bot.Name && b.Guid != bot.Guid)
-							{
-								Log.Error("Run() removing dupe " + b);
-								chan.RemoveBot(b);
-							}
-						}
-
-						foreach (Packet pack in bot.Packets)
-						{
-							foreach (Packet p in bot.Packets)
-							{
-								if (p.Id == pack.Id && p.Guid != pack.Guid)
-								{
-									Log.Error("Run() removing dupe " + p);
-									bot.RemovePacket(p);
-								}
-							}
-						}
-					}
-				}
-			}
-
-			#endregion
-
-			#region RESET
-
-			// reset all objects if the server crashed
-			foreach (Core.Server tServer in Servers.All)
-			{
-				tServer.Connected = false;
-				tServer.ErrorCode = SocketErrorCode.None;
-
-				foreach (Channel tChannel in tServer.Channels)
-				{
-					tChannel.Connected = false;
-					tChannel.ErrorCode = 0;
-
-					foreach (Bot tBot in tChannel.Bots)
-					{
-						tBot.Connected = false;
-						tBot.State = Bot.States.Idle;
-
-						foreach (Packet pack in tBot.Packets)
-						{
-							pack.Connected = false;
-						}
-					}
-				}
-			}
-
-			#endregion
-
-			#region CLEAR OLD DL
-
-			if (Files.All.Any())
-			{
-				foreach (File file in Files.All)
-				{
-					if (file.Enabled)
-					{
-						Files.Remove(file);
-						Log.Info("Run() removing ready " + file);
-					}
-				}
-			}
-
-			#endregion
-
-			#region CRASH RECOVERY
-
 			if (Files.All.Any())
 			{
 				foreach (File file in Files.All)
@@ -236,7 +133,7 @@ namespace XG.Server
 								part.State = FilePart.States.Closed;
 								complete = false;
 							}
-								// the file is closed, so do smt
+							// the file is closed, so do smt
 							else
 							{
 								// check the file for safety
@@ -247,7 +144,7 @@ namespace XG.Server
 									{
 										next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
 									}
-									catch (Exception) {}
+									catch (Exception) { }
 									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
 									{
 										complete = false;
@@ -287,20 +184,122 @@ namespace XG.Server
 					}
 				}
 			}
+		}
 
-			#endregion
-
-			#region WORKERS
-
-			var snapShotWorker = new RrdWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60};
-			snapShotWorker.RrdDb = _rrdDb;
+		void StartWorkers()
+		{
+			var snapShotWorker = new RrdWorker { SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60 };
+			snapShotWorker.RrdDB = _rrdDb;
 			AddWorker(snapShotWorker);
 
-			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
+			AddWorker(new BotWatchdogWorker { SecondsToSleep = Settings.Instance.BotOfflineCheckTime });
 
 			_workers.StartAll();
+		}
 
-			#endregion
+		void ClearOldDownloads()
+		{
+			if (Files.All.Any())
+			{
+				foreach (File file in Files.All)
+				{
+					if (file.Enabled)
+					{
+						Files.Remove(file);
+						Log.Info("Run() removing ready " + file);
+					}
+				}
+			}
+		}
+
+		void ResetObjects()
+		{
+			foreach (Core.Server tServer in Servers.All)
+			{
+				tServer.Connected = false;
+				tServer.ErrorCode = SocketErrorCode.None;
+
+				foreach (Channel tChannel in tServer.Channels)
+				{
+					tChannel.Connected = false;
+					tChannel.ErrorCode = 0;
+
+					foreach (Bot tBot in tChannel.Bots)
+					{
+						tBot.Connected = false;
+						tBot.State = Bot.States.Idle;
+
+						foreach (Packet pack in tBot.Packets)
+						{
+							pack.Connected = false;
+						}
+					}
+				}
+			}
+		}
+
+		void CheckForDuplicates()
+		{
+			foreach (Core.Server serv in Servers.All)
+			{
+				foreach (Core.Server s in Servers.All)
+				{
+					if (s.Name == serv.Name && s.Guid != serv.Guid)
+					{
+						Log.Error("Run() removing dupe " + s);
+						Servers.Remove(s);
+					}
+				}
+
+				foreach (Channel chan in serv.Channels)
+				{
+					foreach (Channel c in serv.Channels)
+					{
+						if (c.Name == chan.Name && c.Guid != chan.Guid)
+						{
+							Log.Error("Run() removing dupe " + c);
+							serv.RemoveChannel(c);
+						}
+					}
+
+					foreach (Bot bot in chan.Bots)
+					{
+						foreach (Bot b in chan.Bots)
+						{
+							if (b.Name == bot.Name && b.Guid != bot.Guid)
+							{
+								Log.Error("Run() removing dupe " + b);
+								chan.RemoveBot(b);
+							}
+						}
+
+						foreach (Packet pack in bot.Packets)
+						{
+							foreach (Packet p in bot.Packets)
+							{
+								if (p.Id == pack.Id && p.Guid != pack.Guid)
+								{
+									Log.Error("Run() removing dupe " + p);
+									bot.RemovePacket(p);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		#endregion
+
+		#region AWorker
+
+		protected override void StartRun()
+		{
+			CheckForDuplicates();
+			ResetObjects();
+			ClearOldDownloads();
+			TryToRecoverOpenFiles();
+			StartWorkers();
 		}
 
 		protected override void StopRun()

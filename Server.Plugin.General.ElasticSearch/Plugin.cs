@@ -85,7 +85,7 @@ namespace XG.Server.Plugin.General.ElasticSearch
 
 		#region EVENTHANDLER
 
-		protected override void ObjectAdded(AObject aParentObj, AObject aObj)
+		protected override void ObjectAdded(AObject aParent, AObject aObj)
 		{
 			Index(aObj);
 
@@ -125,12 +125,12 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			}
 		}
 
-		protected override void ObjectRemoved(AObject aParentObj, AObject aObj)
+		protected override void ObjectRemoved(AObject aParent, AObject aObj)
 		{
 			Remove(aObj);
 
 			// reindex parent object
-			Index(aParentObj);
+			Index(aParent);
 
 			// drop all children
 			if (aObj is Core.Server)

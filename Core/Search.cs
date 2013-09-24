@@ -30,10 +30,5 @@ namespace XG.Core
 	[Serializable]
 	public class Search : AObject
 	{
-		#region CONSTRUCTOR
-
-		public Search() {}
-
-		#endregion
 	}
 }

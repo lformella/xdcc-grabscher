@@ -258,9 +258,6 @@ namespace XG.Server.Plugin.Backend.File
 				FileSystem.MoveFile(aFile, aFile + ".bak");
 				FileSystem.MoveFile(aFile + ".new", aFile);
 				Log.Debug("Save(" + aFile + ")");
-
-				// run gc because serializing takes a lot of memory
-				GC.Collect();
 			}
 			catch (Exception ex)
 			{
@@ -288,9 +285,6 @@ namespace XG.Server.Plugin.Backend.File
 						streamRead.Close();
 					}
 					Log.Debug("Load(" + aFile + ")");
-
-					// run gc because deserializing takes a lot of memory
-					GC.Collect();
 				}
 				catch (Exception ex)
 				{
