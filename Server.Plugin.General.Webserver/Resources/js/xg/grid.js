@@ -518,9 +518,15 @@ var XGGrid = (function ()
 				dataView.setGrouping(
 					{
 						getter: "ParentGuid",
-						formatter: function (g)
+						formatter: function (dataItem)
 						{
-							return g.Value;
+							var bot = dataview.getItem(Enum.Grid.Bot, dataItem.value);
+							var ret = "";
+							if (bot != null)
+							{
+								ret = /*formatter.formatBotIcon(bot, true) + */bot.Name;
+							}
+							return ret;
 						}
 					});
 			}
