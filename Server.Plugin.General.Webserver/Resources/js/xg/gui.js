@@ -278,7 +278,7 @@ var XGGui = (function ()
 			unreadNotifications.html(unreadNotificationCounter);
 			unreadNotifications.show(showEffect);
 		}
-		favicon.badge(counter);
+		favicon.badge(unreadNotificationCounter);
 	}
 
 	function connectButtons ()
@@ -288,6 +288,7 @@ var XGGui = (function ()
 		$("#notificationsLink").click(function ()
 		{
 			updateUnreadNotifications(0);
+			$("#" + Enum.Grid.Notification + "Grid").height("auto");
 		});
 
 		$("#serverChannelButton").click(function ()
@@ -325,7 +326,7 @@ var XGGui = (function ()
 		{
 			addChannel();
 		});
-		$("#channel").click(function (e)
+		$("#channel").keyup(function (e)
 		{
 			if (e.which == 13)
 			{
