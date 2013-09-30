@@ -31,7 +31,7 @@ namespace XG.Server.Worker
 {
 	public class RrdWorker : ALoopWorker
 	{
-		public RrdDb RrdDb { get; set; }
+		public RrdDb RrdDB { get; set; }
 
 		#region AWorker
 
@@ -39,7 +39,7 @@ namespace XG.Server.Worker
 		{
 			var snapshot = CollectSnapshot();
 
-			Sample sample = RrdDb.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
+			Sample sample = RrdDB.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
 			for (int a = 1; a < Snapshot.SnapshotCount; a++)
 			{
 				sample.setValue(a + "", snapshot.Get((SnapshotValue)a));

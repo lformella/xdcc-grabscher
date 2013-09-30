@@ -112,11 +112,7 @@ namespace XG.Server.Plugin
 				var file = Files.WithGuid(aGuid) as File;
 				if (file != null)
 				{
-					var parts = (from part in file.Parts where part.Packet != null select part).ToArray();
-					foreach (var part in parts)
-					{
-						part.Packet.Enabled = false;
-					}
+					FileActions.RemoveFile(file);
 				}
 			}
 		}

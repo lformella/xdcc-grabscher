@@ -36,6 +36,7 @@ namespace XG.Core
 
 		public enum Types
 		{
+			None = 0,
 			PacketCompleted = 1,
 			PacketIncompleted = 2,
 			PacketBroken = 3,

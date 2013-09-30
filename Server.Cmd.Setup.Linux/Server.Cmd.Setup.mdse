@@ -29,6 +29,8 @@
           <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Fleck.dll</File>
           <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Core.dll</File>
           <File>Server.Plugin.General.Webserver.Test,ProgramFiles,Server.Plugin.General.Webserver.Test.dll</File>
+          <File>Core.Test,ProgramFiles,Newtonsoft.Json.dll</File>
+          <File>Server.Plugin.Core.Irc,Linux.PkgConfig,server.plugin.core.irc.pc</File>
         </ExcludedFiles>
         <ChildEntries>
           <Entry>../Core/Core.mdp</Entry>
@@ -37,11 +39,9 @@
           <Entry>../Server.Cmd/Server.Cmd.mdp</Entry>
           <Entry>../Server.Plugin.General.Jabber/Server.Plugin.General.Jabber.mdp</Entry>
           <Entry>../Server.Plugin.Backend.File/Server.Plugin.Backend.File.mdp</Entry>
-          <Entry>../Core.Test/Core.Test.mdp</Entry>
-          <Entry>../Server.Test/Server.Test.mdp</Entry>
-          <Entry>../Server.Plugin.General.Webserver.Test/Server.Plugin.General.Webserver.Test.mdp</Entry>
           <Entry>../Server.Plugin.General.Import/Server.Plugin.General.Import.mdp</Entry>
           <Entry>../Server.Plugin.General.ElasticSearch/Server.Plugin.General.ElasticSearch.mdp</Entry>
+          <Entry>../Server.Plugin.Core.Irc/Server.Plugin.Core.Irc.mdp</Entry>
         </ChildEntries>
       </Builder>
     </Package>

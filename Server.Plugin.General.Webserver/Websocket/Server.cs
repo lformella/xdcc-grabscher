@@ -57,7 +57,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		static readonly Core.Search _searchEnabled = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Enabled Packets" };
 		static readonly Core.Search _searchDownloads = new Core.Search { Guid = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Downloads" };
 
-		public RrdDb RrdDb { get; set; }
+		public RrdDb RrdDB { get; set; }
 
 		#endregion
 
@@ -243,15 +243,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				switch (request.Type)
 				{
 					case Request.Types.AddServer:
-						string serverString = request.Name;
-						int port = 6667;
-						if (serverString.Contains(":"))
-						{
-							string[] serverArray = serverString.Split(':');
-							serverString = serverArray[0];
-							port = int.Parse(serverArray[1]);
-						}
-						AddServer(serverString, port);
+						OnAddServer(request.Name);
 						break;
 
 					case Request.Types.RemoveServer:
@@ -276,96 +268,23 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 					case Request.Types.Search:
 					case Request.Types.PacketsFromBot:
-						currentUser.LastSearchRequest = request;
-
-						var allPackets = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where IsVisible(packet, request) select packet;
-						var all = new List<Core.AObject>();
-						all.AddRange(allPackets);
-						all.AddRange(from packet in allPackets select packet.Parent);
-
-						UnicastAdded(currentUser, all);
-
-						Core.AObject update = null;
-						if (request.Type == Request.Types.Search)
-						{
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.SearchComplete,
-								Data = request.Type
-							}, false);
-							// send search again to update search results
-							update = Searches.WithGuid(request.Guid);
-						}
-						else if (request.Type == Request.Types.PacketsFromBot)
-						{
-							update = Servers.WithGuid(request.Guid) as Core.Bot;
-						}
-
-						if (update != null)
-						{
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.ObjectChanged,
-								Data = update
-							}, false);
-						}
+						OnSearch(currentUser, request);
 						break;
 
 					case Request.Types.SearchExternal:
-						var searchExternal = Searches.WithGuid(request.Guid);
-						if (searchExternal != null)
-						{
-							request.Name = searchExternal.Name;
-						}
-
-						var results = SearchExternal(request.Name);
-						foreach (var result in results)
-						{
-							var currentResponse = new Response
-							{
-								Type = Response.Types.ObjectAdded,
-								Data = result
-							};
-							Unicast(currentUser, currentResponse, false);
-						}
-
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.SearchComplete,
-							Data = request.Type
-						}, false);
+						OnSearchExternal(currentUser, request);
 						break;
 
 					case Request.Types.AddSearch:
-						string name = request.Name;
-						var obj = Searches.Named(name);
-						if (obj == null)
-						{
-							obj = new Core.Search { Name = name };
-							Searches.Add(obj);
-						}
+						OnAddSearch(request.Name);
 						break;
 
 					case Request.Types.RemoveSearch:
-						var search = Searches.WithGuid(request.Guid);
-						if (search != null)
-						{
-							Searches.Remove(search);
-						}
+						OnRemoveSearch(request.Guid);
 						break;
 
 					case Request.Types.Searches:
-						var searches = new List<Core.Search>();
-						searches.AddRange(Searches.All);
-
-						foreach (var currentSearch in searches)
-						{
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.ObjectAdded,
-								Data = currentSearch
-							}, false);
-						}
+						UnicastAdded(currentUser, Searches.All);
 						break;
 
 					case Request.Types.Servers:
@@ -373,36 +292,15 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.ChannelsFromServer:
-						var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
-						UnicastAdded(currentUser, channels);
-						var tServer = Servers.WithGuid(request.Guid);
-						if (tServer != null)
-						{
-							Unicast(currentUser, new Response
-							{
-								Type = Response.Types.ObjectChanged,
-								Data = tServer
-							}, false);
-						}
+						OnChannelsFromServer(currentUser, request);
 						break;
 
 					case Request.Types.LiveSnapshot:
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.LiveSnapshot,
-							Data = GetFlotSnapshot()
-						}, false);
+						OnLiveSnapshot(currentUser);
 						break;
 
 					case Request.Types.Snapshots:
-						var startTime = DateTime.Now.AddDays(int.Parse(request.Name));
-						var data = GetFlotData(startTime, DateTime.Now);
-
-						Unicast(currentUser, new Response
-						{
-							Type = Response.Types.Snapshots,
-							Data = data
-						}, false);
+						OnSnapshots(currentUser, request);
 						break;
 
 					case Request.Types.Files:
@@ -413,46 +311,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 						break;
 
 					case Request.Types.ParseXdccLink:
-						string[] link = request.Name.Substring(7).Split('/');
-						string serverName = link[0];
-						string channelName = link[2];
-						string botName = link[3];
-						int packetId = int.Parse(link[4].Substring(1));
-
-						// checking server
-						Core.Server serv = Servers.Server(serverName);
-						if (serv == null)
-						{
-							Servers.Add(serverName);
-							serv = Servers.Server(serverName);
-						}
-						serv.Enabled = true;
-
-						// checking channel
-						Core.Channel chan = serv.Channel(channelName);
-						if (chan == null)
-						{
-							serv.AddChannel(channelName);
-							chan = serv.Channel(channelName);
-						}
-						chan.Enabled = true;
-
-						// checking bot
-						Core.Bot tBot = chan.Bot(botName);
-						if (tBot == null)
-						{
-							tBot = new Core.Bot { Name = botName };
-							chan.AddBot(tBot);
-						}
-
-						// checking packet
-						Core.Packet pack = tBot.Packet(packetId);
-						if (pack == null)
-						{
-							pack = new Core.Packet { Id = packetId, Name = link[5] };
-							tBot.AddPacket(pack);
-						}
-						pack.Enabled = true;
+						OnParseXdccLink(request.Name);
 						break;
 				}
 #if !UNSAFE
@@ -504,61 +363,9 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		void Unicast(User aUser, Response aResponse, bool aOnlySendVisibleObjects)
 		{
-			if (aOnlySendVisibleObjects)
+			if (!ShouldResponseSended(aUser, aResponse, aOnlySendVisibleObjects))
 			{
-				if (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet)
-				{
-					switch (aResponse.Type)
-					{
-						case Response.Types.ObjectAdded:
-						case Response.Types.ObjectChanged:
-							var bot = aResponse.Data as Core.Bot;
-							if (bot != null && !IsVisible(bot, aUser.LastSearchRequest))
-							{
-								return;
-							}
-							var packet = aResponse.Data as Core.Packet;
-							if (packet != null && !IsVisible(packet, aUser.LastSearchRequest))
-							{
-								return;
-							}
-							break;
-					}
-				}
-			}
-
-			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
-			{
-				Core.AObject data = (Core.AObject)aResponse.Data;
-				// lock loaded objects to prevent sending out the same object more than once
-				lock (aUser.LoadedObjects)
-				{
-					switch (aResponse.Type)
-					{
-						case Response.Types.ObjectAdded:
-							if (aUser.LoadedObjects.Contains(data.Guid))
-							{
-								return;
-							}
-							aUser.LoadedObjects.Add(data.Guid);
-							break;
-
-						case Response.Types.ObjectChanged:
-							if (!aUser.LoadedObjects.Contains(data.Guid))
-							{
-								return;
-							}
-							break;
-
-						case Response.Types.ObjectRemoved:
-							if (!aUser.LoadedObjects.Contains(data.Guid))
-							{
-								return;
-							}
-							aUser.LoadedObjects.Remove(data.Guid);
-							break;
-					}
-				}
+				return;
 			}
 
 			Object.AObject myObj = null;
@@ -645,6 +452,243 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region Functions
 
+		bool ShouldResponseSended(User aUser, Response aResponse, bool aOnlySendVisibleObjects)
+		{
+			if (aOnlySendVisibleObjects)
+			{
+				if (aResponse.Data is Core.Bot || aResponse.Data is Core.Packet)
+				{
+					switch (aResponse.Type)
+					{
+						case Response.Types.ObjectAdded:
+						case Response.Types.ObjectChanged:
+							var bot = aResponse.Data as Core.Bot;
+							if (bot != null && !IsVisible(bot, aUser.LastSearchRequest))
+							{
+								return false;
+							}
+							var packet = aResponse.Data as Core.Packet;
+							if (packet != null && !IsVisible(packet, aUser.LastSearchRequest))
+							{
+								return false;
+							}
+							break;
+					}
+				}
+			}
+
+			if (aResponse.Data.GetType().IsSubclassOf(typeof(Core.AObject)))
+			{
+				Core.AObject data = (Core.AObject)aResponse.Data;
+				// lock loaded objects to prevent sending out the same object more than once
+				lock (aUser.LoadedObjects)
+				{
+					switch (aResponse.Type)
+					{
+						case Response.Types.ObjectAdded:
+							if (aUser.LoadedObjects.Contains(data.Guid))
+							{
+								return false;
+							}
+							aUser.LoadedObjects.Add(data.Guid);
+							break;
+
+						case Response.Types.ObjectChanged:
+							if (!aUser.LoadedObjects.Contains(data.Guid))
+							{
+								return false;
+							}
+							break;
+
+						case Response.Types.ObjectRemoved:
+							if (!aUser.LoadedObjects.Contains(data.Guid))
+							{
+								return false;
+							}
+							aUser.LoadedObjects.Remove(data.Guid);
+							break;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		void OnLiveSnapshot(User currentUser)
+		{
+			Unicast(currentUser, new Response
+			{
+				Type = Response.Types.LiveSnapshot,
+				Data = GetFlotSnapshot()
+			}, false);
+		}
+
+		void OnSnapshots(User currentUser, Request request)
+		{
+			var startTime = DateTime.Now.AddDays(int.Parse(request.Name));
+			var data = GetFlotData(startTime, DateTime.Now);
+
+			Unicast(currentUser, new Response
+			{
+				Type = Response.Types.Snapshots,
+				Data = data
+			}, false);
+		}
+
+		void OnChannelsFromServer(User currentUser, Request request)
+		{
+			var channels = (from server in Servers.All from channel in server.Channels where channel.ParentGuid == request.Guid select channel).ToList();
+			UnicastAdded(currentUser, channels);
+			var tServer = Servers.WithGuid(request.Guid);
+			if (tServer != null)
+			{
+				Unicast(currentUser, new Response
+				{
+					Type = Response.Types.ObjectChanged,
+					Data = tServer
+				}, false);
+			}
+		}
+
+		void OnAddSearch(string aSearch)
+		{
+			var obj = Searches.Named(aSearch);
+			if (obj == null)
+			{
+				obj = new Core.Search { Name = aSearch };
+				Searches.Add(obj);
+			}
+		}
+
+		void OnRemoveSearch(Guid aGuid)
+		{
+			var search = Searches.WithGuid(aGuid);
+			if (search != null)
+			{
+				Searches.Remove(search);
+			}
+		}
+
+		void OnSearchExternal(User currentUser, Request request)
+		{
+			var searchExternal = Searches.WithGuid(request.Guid);
+			if (searchExternal != null)
+			{
+				request.Name = searchExternal.Name;
+			}
+
+			var results = SearchExternal(request.Name);
+			foreach (var result in results)
+			{
+				var currentResponse = new Response
+				{
+					Type = Response.Types.ObjectAdded,
+					Data = result
+				};
+				Unicast(currentUser, currentResponse, false);
+			}
+
+			Unicast(currentUser, new Response
+			{
+				Type = Response.Types.SearchComplete,
+				Data = request.Type
+			}, false);
+		}
+
+		void OnSearch(User currentUser, Request request)
+		{
+			currentUser.LastSearchRequest = request;
+
+			var allPackets = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where IsVisible(packet, request) select packet;
+			var all = new List<Core.AObject>();
+			all.AddRange(allPackets);
+			all.AddRange(from packet in allPackets select packet.Parent);
+
+			UnicastAdded(currentUser, all);
+
+			Core.AObject update = null;
+			if (request.Type == Request.Types.Search)
+			{
+				Unicast(currentUser, new Response
+				{
+					Type = Response.Types.SearchComplete,
+					Data = request.Type
+				}, false);
+				// send search again to update search results
+				update = Searches.WithGuid(request.Guid);
+			}
+			else if (request.Type == Request.Types.PacketsFromBot)
+			{
+				update = Servers.WithGuid(request.Guid) as Core.Bot;
+			}
+
+			if (update != null)
+			{
+				Unicast(currentUser, new Response
+				{
+					Type = Response.Types.ObjectChanged,
+					Data = update
+				}, false);
+			}
+		}
+
+		void OnAddServer(String aName)
+		{
+			string serverString = aName;
+			int port = 6667;
+			if (serverString.Contains(":"))
+			{
+				string[] serverArray = serverString.Split(':');
+				serverString = serverArray[0];
+				port = int.Parse(serverArray[1]);
+			}
+			AddServer(serverString, port);
+		}
+
+		void OnParseXdccLink(String aLink)
+		{
+			string[] link = aLink.Substring(7).Split('/');
+			string serverName = link[0];
+			string channelName = link[2];
+			string botName = link[3];
+			int packetId = int.Parse(link[4].Substring(1));
+
+			// checking server
+			Core.Server serv = Servers.Server(serverName);
+			if (serv == null)
+			{
+				Servers.Add(serverName);
+				serv = Servers.Server(serverName);
+			}
+			serv.Enabled = true;
+
+			// checking channel
+			Core.Channel chan = serv.Channel(channelName);
+			if (chan == null)
+			{
+				serv.AddChannel(channelName);
+				chan = serv.Channel(channelName);
+			}
+			chan.Enabled = true;
+
+			// checking bot
+			Core.Bot tBot = chan.Bot(botName);
+			if (tBot == null)
+			{
+				tBot = new Core.Bot { Name = botName };
+				chan.AddBot(tBot);
+			}
+
+			// checking packet
+			Core.Packet pack = tBot.Packet(packetId);
+			if (pack == null)
+			{
+				pack = new Core.Packet { Id = packetId, Name = link[5] };
+				tBot.AddPacket(pack);
+			}
+			pack.Enabled = true;
+		}
+
 		bool IsVisible(Core.Bot aBot, Request aRequest)
 		{
 			if (aRequest == null)
@@ -701,7 +745,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return false;
 		}
 
-		private IEnumerable<Flot> GetFlotSnapshot ()
+		IEnumerable<Flot> GetFlotSnapshot ()
 		{
 			var tObjects = new List<Flot>();
 
@@ -719,7 +763,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			return tObjects.ToArray();
 		}
 
-		private IEnumerable<ExternalSearch> SearchExternal (string search)
+		IEnumerable<ExternalSearch> SearchExternal (string search)
 		{
 			var objects = new List<ExternalSearch>();
 
@@ -751,7 +795,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("SearchExternal(" + search + ") cant load external search", ex);
+					Log.Fatal("OnSearchExternal(" + search + ") cant load external search", ex);
 					break;
 				}
 				start += limit;
@@ -764,7 +808,7 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 		{
 			var tObjects = new List<Flot>();
 
-			FetchData data = RrdDb.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
+			FetchData data = RrdDB.createFetchRequest(ConsolFuns.CF_AVERAGE, aStart.ToTimestamp(), aEnd.ToTimestamp(), 1).fetchData();
 			Int64[] times = data.getTimestamps();
 			double[][] values = data.getValues();
 

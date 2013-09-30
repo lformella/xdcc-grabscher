@@ -42,7 +42,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 
 		public HttpListenerContext Context { get; set; }
 
-		public FileLoader FileLoader;
+		public FileLoader FileLoader { get; set; }
 
 		#endregion
 

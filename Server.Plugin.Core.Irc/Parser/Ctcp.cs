@@ -100,7 +100,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 							try
 							{
 								// this works not in mono?!
-								tBot.Ip = IPAddress.Parse(tDataList[2]);
+								tBot.IP = IPAddress.Parse(tDataList[2]);
 								tBot.Commit();
 							}
 							catch (FormatException)
@@ -141,7 +141,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 								log.Info("Parse() IP parsing failed, using this: " + realIp);
 								try
 								{
-									tBot.Ip = IPAddress.Parse(realIp);
+									tBot.IP = IPAddress.Parse(realIp);
 									tBot.Commit();
 								}
 								catch (Exception ex)
@@ -231,7 +231,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 						if (isOk)
 						{
 							log.Info("Parse() downloading from " + tBot + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
-							OnAddDownload(tPacket, tChunk, tBot.Ip, tPort);
+							OnAddDownload(tPacket, tChunk, tBot.IP, tPort);
 						}
 					}
 				}

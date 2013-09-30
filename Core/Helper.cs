@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace XG.Core
@@ -110,7 +111,7 @@ namespace XG.Core
 		/// <returns> </returns>
 		public static string ShrinkFileName(string aName, Int64 aSize)
 		{
-			return aName != null ? Regex.Replace(aName.ToLower(), "[^a-z0-9]", "") + "." + aSize + "/" : "";
+			return aName != null ? Regex.Replace(aName.ToLower(), "[^a-z0-9]", "") + "." + aSize + Path.DirectorySeparatorChar : "";
 		}
 	}
 }

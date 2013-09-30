@@ -90,7 +90,7 @@ namespace XG.Server.Cmd
 			if (Settings.Instance.UseWebServer)
 			{
 				var webServer = new Plugin.General.Webserver.Plugin();
-				webServer.RrdDb = instance.RrdDb;
+				webServer.RrdDB = instance.RrdDb;
 				instance.AddPlugin(webServer);
 			}
 			if (Settings.Instance.UseJabberClient)

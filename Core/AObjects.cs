@@ -25,7 +25,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace XG.Core
 {
@@ -62,11 +64,14 @@ namespace XG.Core
 
 		#region PROPERTIES
 
-		readonly ICollection<AObject> _children;
+		ICollection<AObject> _children;
 
-		protected AObject[] All
+		[field: NonSerialized]
+		ConcurrentDictionary<Guid, AObject> _realChildren;
+
+		protected ICollection<AObject> All
 		{
-			get { return _children.ToArray(); }
+			get { return _realChildren.Values; }
 		}
 
 		#endregion
@@ -78,16 +83,9 @@ namespace XG.Core
 			bool result = false;
 			if (aObject != null)
 			{
-				lock (_children)
+				if (!_realChildren.ContainsKey(aObject.Guid) && !DuplicateChildExists(aObject))
 				{
-					if (!_children.Contains(aObject))
-					{
-						if (WithGuid(aObject.Guid) == null && !DuplicateChildExists(aObject))
-						{
-							_children.Add(aObject);
-							result = true;
-						}
-					}
+					result = _realChildren.TryAdd(aObject.Guid, aObject);
 				}
 
 				if (result)
@@ -114,13 +112,10 @@ namespace XG.Core
 			bool result = false;
 			if (aObject != null)
 			{
-				lock (_children)
+				if (_realChildren.ContainsKey(aObject.Guid))
 				{
-					if (_children.Contains(aObject))
-					{
-						_children.Remove(aObject);
-						result = true;
-					}
+					AObject obj = null;
+					result = _realChildren.TryRemove(aObject.Guid, out obj);
 				}
 
 				if (result)
@@ -188,20 +183,48 @@ namespace XG.Core
 
 		public abstract bool DuplicateChildExists(AObject aObject);
 
+		[OnDeserialized]
+		void OnDeserialized(StreamingContext context)
+		{
+			_realChildren = new ConcurrentDictionary<Guid, AObject>();
+			if (_children == null)
+			{
+				return;
+			}
+
+			foreach (AObject tObject in _children)
+			{
+				if (tObject == null)
+				{
+					continue;
+				}
+				_realChildren.TryAdd(tObject.Guid, tObject);
+
+				tObject.OnEnabledChanged += FireEnabledChanged;
+				tObject.OnChanged += FireChanged;
+
+				var tObjects = tObject as AObjects;
+				if (tObjects != null)
+				{
+					tObjects.OnAdded += FireAdded;
+					tObjects.OnRemoved += FireRemoved;
+				}
+			}
+		}
+
+		[OnSerializing]
+		void OnSerializing(StreamingContext context)
+		{
+			_children = All.ToArray();
+		}
+
 		#endregion
 
 		#region CONSTRUCTOR
 
-		public AObjects(AObjects aObject = null, bool useHashset = true) : base(aObject)
+		protected AObjects()
 		{
-			if (useHashset)
-			{
-				_children = new HashSet<AObject>();
-			}
-			else
-			{
-				_children = new List<AObject>();
-			}
+			_realChildren = new ConcurrentDictionary<Guid, AObject>();
 		}
 
 		#endregion

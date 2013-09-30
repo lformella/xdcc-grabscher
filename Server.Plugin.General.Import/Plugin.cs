@@ -47,7 +47,7 @@ namespace XG.Server.Plugin.General.Import
 		{
 			// import routine
 			string str = FileSystem.ReadFile(Settings.Instance.AppDataPath + "import");
-			if(str == "")
+			if(String.IsNullOrWhiteSpace(str))
 			{
 				return;
 			}

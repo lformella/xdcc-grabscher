@@ -73,11 +73,5 @@ namespace XG.Core
 		{
 			return File((aObject as File).TmpPath) != null;
 		}
-
-		#region CONSTRUCTOR
-
-		public Files(bool useHashset = true) : base(null, useHashset) {}
-
-		#endregion
 	}
 }

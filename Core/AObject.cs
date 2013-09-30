@@ -177,23 +177,12 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public AObject(AObject aObject = null)
+		protected AObject()
 		{
-			if (aObject != null)
-			{
-				Guid = aObject.Guid;
-				_name = aObject._name;
-				_connected = aObject._connected;
-				_enabled = aObject._enabled;
-				_enabledTime = aObject._enabledTime;
-			}
-			else
-			{
-				Guid = Guid.NewGuid();
-				_name = "";
-				_connected = false;
-				_enabled = false;
-			}
+			Guid = Guid.NewGuid();
+			_name = "";
+			_connected = false;
+			_enabled = false;
 			_modifiedFields = new List<string>();
 		}
 

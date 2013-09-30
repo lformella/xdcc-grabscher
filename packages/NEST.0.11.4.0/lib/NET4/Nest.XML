@@ -3030,6 +3030,12 @@
             Forces the 'From()' to be exclusive (which is inclusive by default).
             </summary>
         </member>
+        <member name="M:Nest.RangeQueryDescriptor`1.Boost(System.Double)">
+            <summary>
+            Boosts the range query by the specified boost factor
+            </summary>
+            <param name="boost">Boost factor</param>
+        </member>
         <member name="M:Nest.RangeQueryDescriptor`1.To(System.Nullable{System.Int32})">
             <summary>
             The upper bound. Defaults to unbounded.

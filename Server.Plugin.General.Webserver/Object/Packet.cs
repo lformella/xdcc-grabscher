@@ -64,7 +64,7 @@ namespace XG.Server.Plugin.General.Webserver.Object
 
 		public new string Name
 		{
-			get { return Object.RealName != "" ? Object.RealName : Object.Name; }
+			get { return !String.IsNullOrWhiteSpace(Object.RealName) ? Object.RealName : Object.Name; }
 		}
 
 		public DateTime LastUpdated

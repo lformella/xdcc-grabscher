@@ -35,23 +35,28 @@ namespace XG.Server.Plugin.General.Webserver
 	{
 		#region VARIABLES
 
+		SHA256Managed _sha256 = new SHA256Managed();
+
 		Webserver.Server _server;
 
 		Websocket.Server _socket;
 
-		readonly string _salt = BitConverter.ToString(new SHA256Managed().ComputeHash(BitConverter.GetBytes(new Random().Next()))).Replace("-", "");
-
-		public RrdDb RrdDb { get; set; }
+		public RrdDb RrdDB { get; set; }
 
 		#endregion
+
+		string Hash(string aStr = null)
+		{
+			byte[] bytes = aStr == null ? BitConverter.GetBytes(new Random().Next()) : Encoding.UTF8.GetBytes(aStr);
+			return BitConverter.ToString(_sha256.ComputeHash(bytes)).Replace("-", "").ToLowerInvariant();
+		}
 
 		#region AWorker
 
 		protected override void StartRun()
 		{
-			byte[] inputBytes = Encoding.UTF8.GetBytes(_salt + Settings.Instance.Password + _salt);
-			byte[] hashedBytes = new SHA256Managed().ComputeHash(inputBytes);
-			string passwortHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+			string salt = Hash();
+			string passwortHash = Hash(salt + Settings.Instance.Password + salt);
 
 			_server = new Webserver.Server
 			{
@@ -60,7 +65,8 @@ namespace XG.Server.Plugin.General.Webserver
 				Searches = Searches,
 				Notifications = Notifications,
 				Password = passwortHash,
-				Salt = _salt
+				Salt = salt,
+				FileActions = FileActions
 			};
 			_server.Start();
 
@@ -71,8 +77,9 @@ namespace XG.Server.Plugin.General.Webserver
 				Searches = Searches,
 				Notifications = Notifications,
 				Password = passwortHash,
-				Salt = _salt,
-				RrdDb = RrdDb
+				Salt = salt,
+				RrdDB = RrdDB,
+				FileActions = FileActions
 			};
 			_socket.Start();
 		}

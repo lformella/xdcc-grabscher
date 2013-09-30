@@ -34,6 +34,6 @@
     <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-client/log4net.dll" />
     <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/Newtonsoft.Json.4.5.11/lib/net40/Newtonsoft.Json.dll" />
-    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/NEST.0.11.3.0/lib/NET4/Nest.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/NEST.0.11.4.0/lib/NET4/Nest.dll" />
   </References>
 </Project>

@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -81,15 +82,173 @@ namespace XG.Server
 			Notifications.Add(aObj);
 		}
 
-		#endregion
-
-		#region AWorker
-
-		protected override void StartRun()
+		void TryToRecoverOpenFiles()
 		{
-			#region DUPE CHECK
+			foreach (File file in Files.All)
+			{
+				// lets check if the directory is still on the harddisk
+				if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
+				{
+					Log.Warn("Run() crash recovery directory " + file + " is missing ");
+					_fileActions.RemoveFile(file);
+					continue;
+				}
 
-			// check if there are some dupes in our database
+				if (!file.Enabled)
+				{
+					bool complete = true;
+					string tmpPath = Settings.Instance.TempPath + file.TmpPath;
+
+					foreach (FilePart part in file.Parts)
+					{
+						// first part is always checked!
+						if (part.StartSize == 0)
+						{
+							part.Checked = true;
+						}
+
+						// check if the real file and the part is actual the same
+						var info = new FileInfo(tmpPath + part.StartSize);
+						if (info.Exists)
+						{
+							// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
+							if (part.CurrentSize != part.StartSize + info.Length)
+							{
+								Log.Warn("Run() crash recovery size mismatch of " + part + " from " + file + " - db:" + part.CurrentSize + " real:" + info.Length);
+								part.CurrentSize = part.StartSize + info.Length;
+								complete = false;
+							}
+						}
+						else
+						{
+							Log.Error("Run() crash recovery " + part + " of " + file + " is missing");
+							_fileActions.RemovePart(file, part);
+							complete = false;
+						}
+
+						// uhh, this is bad - close it and hope it works again
+						if (part.State == FilePart.States.Open)
+						{
+							part.State = FilePart.States.Closed;
+							complete = false;
+						}
+						// the file is closed, so do smt
+						else
+						{
+							// check the file for safety
+							if (part.Checked && part.State == FilePart.States.Ready)
+							{
+								FilePart next = null;
+								try
+								{
+									next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
+								}
+								catch (Exception) {}
+								if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
+								{
+									complete = false;
+									try
+									{
+										Log.Fatal("Run() crash recovery checking " + next.Name);
+										byte[] bytes = null;
+										using (var fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite))
+										{
+											var fileReader = new BinaryReader(fileStream);
+											// extract the needed refernce bytes
+											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
+											bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
+											fileReader.Close();
+										}
+										_fileActions.CheckNextReferenceBytes(part, bytes);
+									}
+									catch (Exception ex)
+									{
+										Log.Fatal("Run() crash recovery", ex);
+									}
+								}
+							}
+							else
+							{
+								complete = false;
+							}
+						}
+					}
+
+					// check and maybee join the files if something happend the last run
+					// for exaple the disk was full or the rights were not there
+					if (complete && file.Parts.Any())
+					{
+						_fileActions.CheckFile(file);
+					}
+				}
+			}
+		}
+
+		void StartWorkers()
+		{
+			var snapShotWorker = new RrdWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60};
+			snapShotWorker.RrdDB = _rrdDb;
+			AddWorker(snapShotWorker);
+
+			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
+
+			_workers.StartAll();
+		}
+
+		void ClearOldDownloads()
+		{
+			List<string> dirs = Directory.GetDirectories(Settings.Instance.TempPath).ToList();
+
+			foreach (File file in Files.All)
+			{
+				if (file.Enabled)
+				{
+					Files.Remove(file);
+					Log.Info("Run() removing ready " + file);
+				}
+				else
+				{
+					string dir = Settings.Instance.TempPath + file.TmpPath;
+					dirs.Remove(dir.Substring(0, dir.Length - 1));
+				}
+			}
+
+			foreach (string dir in dirs)
+			{
+				FileSystem.DeleteDirectory(dir);
+			}
+		}
+
+		void ResetObjects()
+		{
+			foreach (Core.Server tServer in Servers.All)
+			{
+				tServer.Connected = false;
+				tServer.ErrorCode = SocketErrorCode.None;
+
+				foreach (Channel tChannel in tServer.Channels)
+				{
+					tChannel.Connected = false;
+					tChannel.ErrorCode = 0;
+
+					foreach (Bot tBot in tChannel.Bots)
+					{
+						tBot.Connected = false;
+						tBot.State = Bot.States.Idle;
+						tBot.QueuePosition = 0;
+						tBot.QueueTime = 0;
+
+						foreach (Packet pack in tBot.Packets)
+						{
+							pack.Connected = false;
+						}
+					}
+				}
+			}
+		}
+
+		void CheckForDuplicates()
+		{
 			foreach (Core.Server serv in Servers.All)
 			{
 				foreach (Core.Server s in Servers.All)
@@ -137,170 +296,19 @@ namespace XG.Server
 					}
 				}
 			}
+		}
 
-			#endregion
+		#endregion
 
-			#region RESET
+		#region AWorker
 
-			// reset all objects if the server crashed
-			foreach (Core.Server tServer in Servers.All)
-			{
-				tServer.Connected = false;
-				tServer.ErrorCode = SocketErrorCode.None;
-
-				foreach (Channel tChannel in tServer.Channels)
-				{
-					tChannel.Connected = false;
-					tChannel.ErrorCode = 0;
-
-					foreach (Bot tBot in tChannel.Bots)
-					{
-						tBot.Connected = false;
-						tBot.State = Bot.States.Idle;
-						tBot.QueuePosition = 0;
-						tBot.QueueTime = 0;
-
-						foreach (Packet pack in tBot.Packets)
-						{
-							pack.Connected = false;
-						}
-					}
-				}
-			}
-
-			#endregion
-
-			#region CLEAR OLD DL
-
-			if (Files.All.Any())
-			{
-				foreach (File file in Files.All)
-				{
-					if (file.Enabled)
-					{
-						Files.Remove(file);
-						Log.Info("Run() removing ready " + file);
-					}
-				}
-			}
-
-			#endregion
-
-			#region CRASH RECOVERY
-
-			if (Files.All.Any())
-			{
-				foreach (File file in Files.All)
-				{
-					// lets check if the directory is still on the harddisk
-					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
-					{
-						Log.Warn("Run() crash recovery directory " + file + " is missing ");
-						_fileActions.RemoveFile(file);
-						continue;
-					}
-
-					if (!file.Enabled)
-					{
-						bool complete = true;
-						string tmpPath = Settings.Instance.TempPath + file.TmpPath;
-
-						foreach (FilePart part in file.Parts)
-						{
-							// first part is always checked!
-							if (part.StartSize == 0)
-							{
-								part.Checked = true;
-							}
-
-							// check if the real file and the part is actual the same
-							var info = new FileInfo(tmpPath + part.StartSize);
-							if (info.Exists)
-							{
-								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
-								if (part.CurrentSize != part.StartSize + info.Length)
-								{
-									Log.Warn("Run() crash recovery size mismatch of " + part + " from " + file + " - db:" + part.CurrentSize + " real:" + info.Length);
-									part.CurrentSize = part.StartSize + info.Length;
-									complete = false;
-								}
-							}
-							else
-							{
-								Log.Error("Run() crash recovery " + part + " of " + file + " is missing");
-								_fileActions.RemovePart(file, part);
-								complete = false;
-							}
-
-							// uhh, this is bad - close it and hope it works again
-							if (part.State == FilePart.States.Open)
-							{
-								part.State = FilePart.States.Closed;
-								complete = false;
-							}
-								// the file is closed, so do smt
-							else
-							{
-								// check the file for safety
-								if (part.Checked && part.State == FilePart.States.Ready)
-								{
-									FilePart next = null;
-									try
-									{
-										next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
-									}
-									catch (Exception) {}
-									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
-									{
-										complete = false;
-										try
-										{
-											Log.Fatal("Run() crash recovery checking " + next.Name);
-											FileStream fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite);
-											var fileReader = new BinaryReader(fileStream);
-											// extract the needed refernce bytes
-											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
-											byte[] bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
-											fileReader.Close();
-
-											_fileActions.CheckNextReferenceBytes(part, bytes);
-										}
-										catch (Exception ex)
-										{
-											Log.Fatal("Run() crash recovery", ex);
-										}
-									}
-								}
-								else
-								{
-									complete = false;
-								}
-							}
-						}
-
-						// check and maybee join the files if something happend the last run
-						// for exaple the disk was full or the rights were not there
-						if (complete && file.Parts.Any())
-						{
-							_fileActions.CheckFile(file);
-						}
-					}
-				}
-			}
-
-			#endregion
-
-			#region WORKERS
-
-			var snapShotWorker = new RrdWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60};
-			snapShotWorker.RrdDb = _rrdDb;
-			AddWorker(snapShotWorker);
-
-			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
-
-			_workers.StartAll();
-
-			#endregion
+		protected override void StartRun()
+		{
+			CheckForDuplicates();
+			ResetObjects();
+			ClearOldDownloads();
+			TryToRecoverOpenFiles();
+			StartWorkers();
 		}
 
 		protected override void StopRun()
