@@ -288,7 +288,7 @@ var XGGui = (function ()
 		$("#notificationsLink").click(function ()
 		{
 			updateUnreadNotifications(0);
-			$("#" + Enum.Grid.Notification + "Grid").height("auto");
+			//$("#" + Enum.Grid.Notification + "Grid").height("auto");
 		});
 
 		$("#serverChannelButton").click(function ()

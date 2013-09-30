@@ -375,9 +375,9 @@ var XGFormatter = (function ()
 				}
 
 				ret += "<div class='progress progress-striped'>" +
-					"<div style='width: " + a + "%' class=''></div>" +
-					"<div style='width: " + b + "%' class='bar " + (packet.IsChecked ? "bar-success" : "bar-warning") + "'></div>" +
-					"<div style='width: " + c + "%' class='bar " + (packet.IsChecked ? "bar-success" : "bar-warning") + " bar-light'></div>" +
+					"<div style='width: " + a + "%' class='progress-bar'></div>" +
+					"<div style='width: " + b + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + "'></div>" +
+					"<div style='width: " + c + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + " bar-light'></div>" +
 					"</div>";
 				//ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
 			}
