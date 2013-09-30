@@ -126,12 +126,6 @@ namespace XG.Core
 
 		#region CONSTRUCTOR
 
-		public File(File aObject)
-		{
-			_size = aObject._size;
-			_tmpPath = aObject._tmpPath;
-		}
-
 		public File(string aName, Int64 aSize)
 		{
 			base.Name = aName;

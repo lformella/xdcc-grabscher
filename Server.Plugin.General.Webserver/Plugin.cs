@@ -65,7 +65,8 @@ namespace XG.Server.Plugin.General.Webserver
 				Searches = Searches,
 				Notifications = Notifications,
 				Password = passwortHash,
-				Salt = salt
+				Salt = salt,
+				FileActions = FileActions
 			};
 			_server.Start();
 
@@ -77,7 +78,8 @@ namespace XG.Server.Plugin.General.Webserver
 				Notifications = Notifications,
 				Password = passwortHash,
 				Salt = salt,
-				RrdDB = RrdDB
+				RrdDB = RrdDB,
+				FileActions = FileActions
 			};
 			_socket.Start();
 		}

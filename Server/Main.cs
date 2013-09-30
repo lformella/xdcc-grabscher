@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -83,104 +84,101 @@ namespace XG.Server
 
 		void TryToRecoverOpenFiles()
 		{
-			if (Files.All.Any())
+			foreach (File file in Files.All)
 			{
-				foreach (File file in Files.All)
+				// lets check if the directory is still on the harddisk
+				if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
 				{
-					// lets check if the directory is still on the harddisk
-					if (!Directory.Exists(Settings.Instance.TempPath + file.TmpPath))
-					{
-						Log.Warn("Run() crash recovery directory " + file + " is missing ");
-						_fileActions.RemoveFile(file);
-						continue;
-					}
+					Log.Warn("Run() crash recovery directory " + file + " is missing ");
+					_fileActions.RemoveFile(file);
+					continue;
+				}
 
-					if (!file.Enabled)
-					{
-						bool complete = true;
-						string tmpPath = Settings.Instance.TempPath + file.TmpPath;
+				if (!file.Enabled)
+				{
+					bool complete = true;
+					string tmpPath = Settings.Instance.TempPath + file.TmpPath;
 
-						foreach (FilePart part in file.Parts)
+					foreach (FilePart part in file.Parts)
+					{
+						// first part is always checked!
+						if (part.StartSize == 0)
 						{
-							// first part is always checked!
-							if (part.StartSize == 0)
-							{
-								part.Checked = true;
-							}
+							part.Checked = true;
+						}
 
-							// check if the real file and the part is actual the same
-							var info = new FileInfo(tmpPath + part.StartSize);
-							if (info.Exists)
+						// check if the real file and the part is actual the same
+						var info = new FileInfo(tmpPath + part.StartSize);
+						if (info.Exists)
+						{
+							// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
+							if (part.CurrentSize != part.StartSize + info.Length)
 							{
-								// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
-								if (part.CurrentSize != part.StartSize + info.Length)
+								Log.Warn("Run() crash recovery size mismatch of " + part + " from " + file + " - db:" + part.CurrentSize + " real:" + info.Length);
+								part.CurrentSize = part.StartSize + info.Length;
+								complete = false;
+							}
+						}
+						else
+						{
+							Log.Error("Run() crash recovery " + part + " of " + file + " is missing");
+							_fileActions.RemovePart(file, part);
+							complete = false;
+						}
+
+						// uhh, this is bad - close it and hope it works again
+						if (part.State == FilePart.States.Open)
+						{
+							part.State = FilePart.States.Closed;
+							complete = false;
+						}
+						// the file is closed, so do smt
+						else
+						{
+							// check the file for safety
+							if (part.Checked && part.State == FilePart.States.Ready)
+							{
+								FilePart next = null;
+								try
 								{
-									Log.Warn("Run() crash recovery size mismatch of " + part + " from " + file + " - db:" + part.CurrentSize + " real:" + info.Length);
-									part.CurrentSize = part.StartSize + info.Length;
-									complete = false;
+									next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
 								}
-							}
-							else
-							{
-								Log.Error("Run() crash recovery " + part + " of " + file + " is missing");
-								_fileActions.RemovePart(file, part);
-								complete = false;
-							}
-
-							// uhh, this is bad - close it and hope it works again
-							if (part.State == FilePart.States.Open)
-							{
-								part.State = FilePart.States.Closed;
-								complete = false;
-							}
-							// the file is closed, so do smt
-							else
-							{
-								// check the file for safety
-								if (part.Checked && part.State == FilePart.States.Ready)
+								catch (Exception) { }
+								if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
 								{
-									FilePart next = null;
+									complete = false;
 									try
 									{
-										next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
+										Log.Fatal("Run() crash recovery checking " + next.Name);
+										byte[] bytes = null;
+										using (var fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite))
+										{
+											var fileReader = new BinaryReader(fileStream);
+											// extract the needed refernce bytes
+											fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
+											bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
+											fileReader.Close();
+										}
+										_fileActions.CheckNextReferenceBytes(part, bytes);
 									}
-									catch (Exception) { }
-									if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
+									catch (Exception ex)
 									{
-										complete = false;
-										try
-										{
-											Log.Fatal("Run() crash recovery checking " + next.Name);
-											byte[] bytes = null;
-											using (var fileStream = System.IO.File.Open(_fileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite))
-											{
-												var fileReader = new BinaryReader(fileStream);
-												// extract the needed refernce bytes
-												fileStream.Seek(-Settings.Instance.FileRollbackCheckBytes, SeekOrigin.End);
-												bytes = fileReader.ReadBytes(Settings.Instance.FileRollbackCheckBytes);
-												fileReader.Close();
-											}
-											_fileActions.CheckNextReferenceBytes(part, bytes);
-										}
-										catch (Exception ex)
-										{
-											Log.Fatal("Run() crash recovery", ex);
-										}
+										Log.Fatal("Run() crash recovery", ex);
 									}
-								}
-								else
-								{
-									complete = false;
 								}
 							}
+							else
+							{
+								complete = false;
+							}
 						}
+					}
 
-						// check and maybee join the files if something happend the last run
-						// for exaple the disk was full or the rights were not there
-						if (complete && file.Parts.Any())
-						{
-							_fileActions.CheckFile(file);
-						}
+					// check and maybee join the files if something happend the last run
+					// for exaple the disk was full or the rights were not there
+					if (complete && file.Parts.Any())
+					{
+						_fileActions.CheckFile(file);
 					}
 				}
 			}
@@ -199,16 +197,25 @@ namespace XG.Server
 
 		void ClearOldDownloads()
 		{
-			if (Files.All.Any())
+			List<string> dirs = Directory.GetDirectories(Settings.Instance.TempPath).ToList();
+
+			foreach (File file in Files.All)
 			{
-				foreach (File file in Files.All)
+				if (file.Enabled)
 				{
-					if (file.Enabled)
-					{
-						Files.Remove(file);
-						Log.Info("Run() removing ready " + file);
-					}
+					Files.Remove(file);
+					Log.Info("Run() removing ready " + file);
 				}
+				else
+				{
+					string dir = Settings.Instance.TempPath + file.TmpPath;
+					dirs.Remove(dir.Substring(0, dir.Length - 1));
+				}
+			}
+
+			foreach (string dir in dirs)
+			{
+				FileSystem.DeleteDirectory(dir);
 			}
 		}
 

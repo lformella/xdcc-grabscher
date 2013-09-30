@@ -401,6 +401,9 @@ var XGFormatter = (function ()
 		{
 			var icon = "doc";
 			var iconClass = "Aluminium2Middle";
+			var overlay = "";
+			var overlayClass = "";
+			var overlayStyle = "";
 
 			var ext = file.Name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg")
@@ -416,7 +419,14 @@ var XGFormatter = (function ()
 				icon = "briefcase";
 			}
 
-			return formatIcon(icon, iconClass, undefined, undefined, undefined, onclick);
+			if (file.Active)
+			{
+				overlay = "spin";
+				overlayClass = "ScarletRedMiddle animate-spin icon-small";
+				overlayStyle = "";
+			}
+
+			return formatIcon(icon, iconClass, overlay, overlayClass, overlayStyle, onclick);
 		},
 
 		formatFileName: function (file)
