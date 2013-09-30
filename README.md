@@ -14,7 +14,7 @@ If you want to change the settings, create a file named __settings.xml__ using t
 
 * Windows 7: C:\Users\Username\AppData\Roaming\XG
 * Linux: /home/Username/.config/XG
-* Mac: dont know - send me an info if you are successfully running XG on mac :-)
+* Mac: /Users/Username/.config/XG
 
 
 Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__. Because since version 2 XG uses a websocket to serve the data you need a second port to open. This port will always be your specified port plus one. So the default value will be port __5557__.
@@ -54,7 +54,7 @@ sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-
 
 ### If running on Windows Vista and greater
 
-If you dont want to run XG with admin rights, you have to execute the following command once using an admin shell: __netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%__ and __netsh http add urlacl url=http://*:5557/ user=%USERDOMAIN%\%USERNAME%__ because XG is using websockets. You have to adjust the ports if you changed it before, of course. Otherwise the integrated webserver wont work.
+If you dont want to run XG with admin rights, you have to execute the following command once using an admin shell: __netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%__ and __netsh http add urlacl url=http://*:5557/ user=%USERDOMAIN%\%USERNAME%__ because XG is using two ports. You have to adjust the ports if you changed it before, of course. Otherwise the integrated webserver wont work.
 
 ## Settings
 
