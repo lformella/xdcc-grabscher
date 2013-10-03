@@ -56,7 +56,7 @@ var XGGraph = (function ()
 			{color: "#73d216", label: translate._(element + "Connected"), data: values.connected},
 			{color: "#cc0000", label: translate._(element + "Disconnected"), data: values.disconnected}
 		];
-		$.plot("#dashboard" + element + " > div:nth-child(1)", data, options);
+		$.plot("#dashboard" + element + " .panel-body > div:nth-child(1)", data, options);
 
 		if (values.enabled != undefined && values.disabled != undefined)
 		{
@@ -73,7 +73,7 @@ var XGGraph = (function ()
 				{color: "#8ae234", label: "", data: values.enabled},
 				{color: "#ef2929", label: "", data: values.disabled}
 			];
-			$.plot("#dashboard" + element + " > div:nth-child(2)", data, options);
+			$.plot("#dashboard" + element + " .panel-body > div:nth-child(2)", data, options);
 		}
 	}
 
@@ -393,7 +393,7 @@ var XGGraph = (function ()
 					{color: "#cc0000", label: translate._("FileSizeMissing"), data: liveSnapshot.FileSizeMissing}
 				];
 
-				$.plot("#dashboardFiles > div:nth-child(1)", data, options);
+				$.plot("#dashboardFiles .panel-body > div:nth-child(1)", data, options);
 				$("#timeMissing").html(helper.time2Human(liveSnapshot.FileTimeMissing));
 			}
 			else

@@ -63,17 +63,17 @@ small
 	margin-top: 0;
 }
 
-.progress .bar-light
+.progress .progress-bar-light
 {
 	opacity: 0.3;
 }
 
-.panel-heading
+.panel-group .panel-heading
 {
 	padding: 3px 9px;
 }
 
-.panel-body
+.panel-group .panel-body
 {
 	padding: 0 5px;
 }
@@ -314,49 +314,55 @@ small
 
 /* Dasboard */
 
-.dashboardPie
+.dashboardItem
 {
-	/*float: left;*/
-	margin-left: 20px;
+	float: left;
+	width: 330px;
+	margin-right: 20px;
 }
 
-.dashboardPie, .dashboardPie *, .dashboardPie *:before, .dashboardPie *:after
+.dashboardItem .glyphicon
+{
+	margin-right: 10px;
+}
+
+.panel-body, .panel-body *, .panel-body *:before, .panel-body *:after
 {
 	-moz-box-sizing: content-box;
 }
 
-.dashboardPie, .dashboardPie > div:nth-child(1), .dashboardPie > div:nth-child(2)
+.panel-body, .panel-body > div:nth-child(1), .panel-body > div:nth-child(2)
 {
 	width: 300px;
 }
 
-.dashboardPie > div:nth-child(1), .dashboardPie > div:nth-child(2)
+.panel-body > div:nth-child(1), .panel-body > div:nth-child(2)
 {
 	height: 100px;
 }
 
-.dashboardPie > div:nth-child(1)
+.panel-body > div:nth-child(1)
 {
 	float: left;
 }
 
-.dashboardPie > div:nth-child(2)
+.panel-body > div:nth-child(2)
 {
 	width: 179px;
 }
 
-.dashboardPie > div:nth-child(3)
+.panel-body > div:nth-child(3)
 {
 	padding-top: 5px;
 	clear: both;
 }
 
-.dashboardPie .legendLabel
+.panel-body .legendLabel
 {
 	width: 100px;
 }
 
-.dashboardPie .pieLabel div
+.panel-body .pieLabel div
 {
 	font-size: 8pt;
 	text-align: center;

@@ -146,6 +146,7 @@ translations =
 	"Custom": "Eigene",
 	"Ready": "Fertig",
 
+	"All": "Alle",
 	"Connected": "Verbunden",
 	"Disconnected": "Getrennt",
 	"Size Connected": "Gr&ouml;&szlig;e verbunden",

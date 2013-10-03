@@ -377,7 +377,7 @@ var XGFormatter = (function ()
 				ret += "<div class='progress progress-striped'>" +
 					"<div style='width: " + a + "%' class='progress-bar'></div>" +
 					"<div style='width: " + b + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + "'></div>" +
-					"<div style='width: " + c + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + " bar-light'></div>" +
+					"<div style='width: " + c + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + " progress-bar-light'></div>" +
 					"</div>";
 				//ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
 			}
@@ -444,8 +444,8 @@ var XGFormatter = (function ()
 			var b = 100 - a;
 
 			ret += "<div class='progress progress-striped'>" +
-				"<div style='width: " + a + "%' class='bar bar-success'></div>" +
-				"<div style='width: " + b + "%' class='bar bar-success bar-light'></div>" +
+				"<div style='width: " + a + "%' class='progress-bar progress-bar-success'></div>" +
+				"<div style='width: " + b + "%' class='progress-bar progress-bar-success progress-bar-light'></div>" +
 				"</div>";
 			//ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
 
