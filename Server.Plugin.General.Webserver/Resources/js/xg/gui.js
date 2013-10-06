@@ -40,6 +40,9 @@ var XGGui = (function ()
 
 	var unreadNotificationCounter = 0;
 	var unreadNotifications = $("#unreadNotifications");
+	var favicon = new Favico({
+		animation:'none'
+	});
 
 	var currentSearchGuid = undefined;
 	var currentSlide = 0;
@@ -86,8 +89,8 @@ var XGGui = (function ()
 				}
 
 				searches.append("<li><a href='#' data-guid='" + args.Data.Guid + "' data-name='" + args.Data.Name + "'>" +
-					"<span class='resultsOnline badge badge-success pull-right'>" + args.Data.ResultsOnline + "</span>" +
-					"<span class='resultsOffline badge pull-right'>" + args.Data.ResultsOffline + "</span>" +
+					"<span class='resultsOnline label label-success pull-right'>" + args.Data.ResultsOnline + "</span>" +
+					"<span class='resultsOffline label label-default pull-right'>" + args.Data.ResultsOffline + "</span>" +
 					"<span class='text' title='" + args.Data.Name + "'>" + args.Data.Name + "</span>" +
 					"</a></li>");
 				$("a[data-guid='" + args.Data.Guid + "']").click(
@@ -143,7 +146,7 @@ var XGGui = (function ()
 		{
 			Notification.requestPermission(function (permission)
 			{
-				if(!('permission' in Notification))
+				if (!('permission' in Notification))
 				{
 					Notification.permission = permission;
 				}
@@ -215,15 +218,15 @@ var XGGui = (function ()
 
 				if (currentSlide == 1 || currentSlide == 2)
 				{
-				    searchForm.show(showEffect);
+					searchForm.show(showEffect);
 				}
 				else
 				{
-				    searchForm.hide(showEffect);
+					searchForm.hide(showEffect);
 				}
 			});
 		$("#mainCarousel").carousel({ interval: false });
-		$("#mainCarousel").bind('slid',
+		$("#mainCarousel").bind('slid.bs.carousel',
 			function ()
 			{
 				self.onSlide.notify({ "slide": currentSlide}, null, this);
@@ -257,7 +260,7 @@ var XGGui = (function ()
 			self.onAddXdccLink.notify({Name: xdccLink.val()}, null, this);
 			xdccLink.val("");
 			xdccDialog.modal("hide");
-			$("#xdccDialog .control-group").removeClass('error');
+			$("#xdccDialog .form-group").removeClass('has-error');
 		}
 	}
 
@@ -275,6 +278,7 @@ var XGGui = (function ()
 			unreadNotifications.html(unreadNotificationCounter);
 			unreadNotifications.show(showEffect);
 		}
+		favicon.badge(unreadNotificationCounter);
 	}
 
 	function connectButtons ()
@@ -284,12 +288,26 @@ var XGGui = (function ()
 		$("#notificationsLink").click(function ()
 		{
 			updateUnreadNotifications(0);
+			//$("#" + Enum.Grid.Notification + "Grid").height("auto");
 		});
 
 		$("#serverChannelButton").click(function ()
 		{
 			$("#serverChannelsDialog").modal('show');
 		});
+		// hook on dialog events to optimize the height because slickgrid will corrupt the viewport
+		$("#serverChannelsDialog").bind('shown.bs.modal',
+			function ()
+			{
+				$("#" + Enum.Grid.Server + "Grid, #" + Enum.Grid.Channel + "Grid").height("auto");
+			}
+		);
+		$("#serverChannelsDialog").bind('hidden.bs.modal',
+			function ()
+			{
+				$("#" + Enum.Grid.Server + "Grid, #" + Enum.Grid.Channel + "Grid").height("320");
+			}
+		);
 
 		$("#serverButton").click(function ()
 		{
@@ -308,7 +326,7 @@ var XGGui = (function ()
 		{
 			addChannel();
 		});
-		$("#channel").click(function (e)
+		$("#channel").keyup(function (e)
 		{
 			if (e.which == 13)
 			{
@@ -325,11 +343,11 @@ var XGGui = (function ()
 		{
 			if (isXdccLinkValid(xdccLink.val()))
 			{
-				$("#xdccDialog .control-group").removeClass('error');
+				$("#xdccDialog .form-group").removeClass('has-error');
 			}
 			else
 			{
-				$("#xdccDialog .control-group").addClass('error');
+				$("#xdccDialog .form-group").addClass('has-error');
 			}
 
 			if (e.which == 13)
@@ -358,33 +376,40 @@ var XGGui = (function ()
 		element.click(function ()
 		{
 			showOfflineBots = !showOfflineBots;
-			self.onUpdateOfflineBotsFilter.notify({Enable: showOfflineBots}, null, this);
+			self.onUpdateOfflineBotsFilter.notify({ Enable: showOfflineBots }, null, this);
+			updateFlipableVar("showOfflineBots", showOfflineBots);
 		});
-		if (showOfflineBots)
-		{
-			element.button("toggle");
-		}
+		updateFlipableVar("showOfflineBots", showOfflineBots);
 
 		element = $("#humanDates");
 		element.click(function ()
 		{
 			humanDates = !humanDates;
-			self.onUpdateHumanDates.notify({Enable: humanDates}, null, this);
+			self.onUpdateHumanDates.notify({ Enable: humanDates }, null, this);
+			updateFlipableVar("humanDates", humanDates);
 		});
-		if (humanDates)
-		{
-			element.button("toggle");
-		}
+		updateFlipableVar("humanDates", humanDates);
 
 		element = $("#combineBotAndPacketGrid");
 		element.click(function ()
 		{
 			combineBotAndPacketGrid = !combineBotAndPacketGrid;
-			self.onCombineBotAndPacketGrid.notify({Enable: combineBotAndPacketGrid}, null, this);
+			self.onCombineBotAndPacketGrid.notify({ Enable: combineBotAndPacketGrid }, null, this);
+			updateFlipableVar("combineBotAndPacketGrid", combineBotAndPacketGrid);
 		});
-		if (combineBotAndPacketGrid)
+		updateFlipableVar("combineBotAndPacketGrid", combineBotAndPacketGrid);
+	}
+
+	function updateFlipableVar (variable, value)
+	{
+		var element = $("#" + variable + " span");
+		if (value)
 		{
-			element.button("toggle");
+			element.addClass("ScarletRedDark");
+		}
+		else
+		{
+			element.removeClass("ScarletRedDark");
 		}
 	}
 
@@ -423,14 +448,14 @@ var XGGui = (function ()
 			humanDates = humanDates1;
 			combineBotAndPacketGrid = combineBotAndPacketGrid1;
 
-			$(".container, .navbar").show();
+			$("div.container, nav.navbar").show();
 
 			initializeDataView();
 			initializeSearch();
 			initializeCarousel();
 			connectButtons();
 
-			errorDialog.bind('hide',
+			errorDialog.bind('hide.bs.modal',
 				function (e)
 				{
 					e.preventDefault();

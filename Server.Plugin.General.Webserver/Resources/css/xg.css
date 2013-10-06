@@ -27,38 +27,33 @@
 
 /** Base **/
 
-body
-{
-	padding-bottom: 10px;
-}
-
-.button
-{
-	cursor: pointer;
-}
-
 .alignRight
 {
 	text-align: right;
 }
 
+.btn, .button
+{
+	cursor: pointer;
+}
+
 small
 {
-	font-size: 0.8em;
+	font-size: 0.7em;
 }
 
 /** Bootstrap **/
 
-.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container
+.container
 {
 	width: -webkit-calc(100% - 20px);
 	width: -moz-calc(100% - 20px);
 	width: calc(100% - 20px);
-}
-
-.navbar
-{
-	margin-bottom: 10px;
+	max-width: -webkit-calc(100% - 20px);
+	max-width: -moz-calc(100% - 20px);
+	max-width: calc(100% - 20px);
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .progress
@@ -68,59 +63,40 @@ small
 	margin-top: 0;
 }
 
-.progress .bar-light
+.progress .progress-bar-light
 {
 	opacity: 0.3;
 }
 
-.carousel
+.panel-group .panel-heading
+{
+	padding: 3px 9px;
+}
+
+.panel-group .panel-body
+{
+	padding: 0 5px;
+}
+
+.panel-body .checkbox
 {
 	margin-bottom: 0;
+	margin-top: 0;
 }
 
-legend
+.panel-body label.checkbox
 {
-	line-height: 25px;
-	margin-bottom: 0;
+	font-weight: normal;
 }
 
-label
+#accordion
 {
-	margin-bottom: 1px;
+	margin-top: 5px;
 }
 
-.form-horizontal .control-label
+.glyphiconBig
 {
-	width: 90px;
-}
-
-.form-horizontal .controls
-{
-	margin-left: 110px;
-}
-
-[class^="icon-"], [class*=" icon-"]
-{
-    background-position: initial;
-	background-image: none !important;
-    height: auto;
-    margin-top: inherit;
-    width: auto;
-	display: normal;
-	line-height: inherit;
-	vertical-align: inherit;
-}
-
-/** Fontello **/
-
-#searchRemove [class^="icon-"], #searchAdd [class^="icon-"]
-{
-	font-size: 1.5em;
-}
-
-#searchLoading, #searchButtons
-{
-	margin-top: 9px;
+	font-size: 2em;
 }
 
 /** Grids **/
@@ -138,14 +114,14 @@ label
 
 #ServerGrid, #ChannelGrid
 {
-	width: 320px;
+	width: 348px;
 	height: 320px;
 	margin-bottom: 10px;
 }
 
 #ChannelGrid
 {
-	width: 580px;
+	width: 500px;
 }
 
 #NotificationGrid
@@ -156,71 +132,40 @@ label
 
 /** Dialogs **/
 
-#serverChannelsDialog
+#serverChannelsDialog .modal-dialog
 {
 	width: 940px;
-	left: -webkit-calc((100% - 940px) / 2);
-	left: -moz-calc((100% - 940px) / 2);
-	left: calc((100% - 940px) / 2);
-	margin-left: 0;
-}
-
-#serverChannelsDialog .modal-body > div
-{
-	float: left;
-}
-
-#serverChannelsDialog .modal-body > div:first-child
-{
-	padding: 0 10px 0 0;
-}
-
-.small-panel .control-label
-{
-	width: 60px;
-}
-
-.small-panel .controls
-{
-	margin-left: 70px;
-}
-
-.controls label
-{
-	padding-top: 5px;
 }
 
 /** Menu **/
 
-.navbar .nav > li > a > span[class^="icon-"]
+.navbar
 {
-	font-size: 1.8em;
-	text-align: center;
+	margin-bottom: 10px;
+	min-height: 40px;
+}
+
+.navbar-brand
+{
+	padding: 10px 15px;
 }
 
 .navbar .nav > li > a
 {
-	background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#333)) repeat scroll 0 0 transparent;
-	background: linear-gradient(to bottom, #555 0%, #333 100%) repeat scroll 0 0 transparent;
-	border: 1px solid #555;
-	border-radius: 20px;
-	line-height: 2em;
-	margin: 0 10px;
-	padding: 3px 1px 1px 1px;
+	padding: 3px 15px;
 }
 
-.navbar .nav > li > a:focus, .navbar .nav > li > a:hover, .navbar .nav > li.active > a
+.navbar .navbar-form
 {
-	background: -webkit-gradient(linear, left top, left bottom, from(#777), to(#555)) repeat scroll 0 0 transparent !important;
-	background: linear-gradient(to bottom, #777 0%, #555 100%) repeat scroll 0 0 transparent !important;
-	border: 1px solid #777;
+	margin-top: 4px;
+	margin-bottom: 4px;
 }
 
-.navbar .nav > li.active > a:hover, .navbar .nav > li.active > a:focus
+#search
 {
-	background: -webkit-gradient(linear, left top, left bottom, from(#999), to(#777)) repeat scroll 0 0 transparent !important;
-	background: linear-gradient(to bottom, #999 0%, #777 100%) repeat scroll 0 0 transparent !important;
-	border: 1px solid #999;
+	height: 32px;
+	padding: 3px;
+	width: 200px;
 }
 
 #searchForm .dropdown-menu
@@ -234,9 +179,14 @@ label
 	margin-right: 60px;
 }
 
-#searchForm .badge
+#searchLoading
 {
-	margin-left: 3px;
+	margin-top: 12px;
+}
+
+#notificationsLink + .dropdown-menu
+{
+	left: -440px;
 }
 
 #unreadNotifications
@@ -250,95 +200,40 @@ label
 	font-size: 0.8em;
 }
 
-#settingsLink + .dropdown-menu:before
-{
-	right: 22px;
-	left: auto;
-}
-
-#settingsLink + .dropdown-menu:after
-{
-	right: 22px;
-	left: auto;
-}
-
-#settingsLink + .dropdown-menu
-{
-	top: 2.9em;
-	right: 0;
-	left: auto;
-}
-
-#notificationsLink + .dropdown-menu:before
-{
-	right: 212px;
-	left: auto;
-}
-
-#notificationsLink + .dropdown-menu:after
-{
-	right: 212px;
-	left: auto;
-}
-
-#notificationsLink + .dropdown-menu
-{
-	top: 2.9em;
-	right: 0;
-	left: -422px;
-	width: 670px;
-}
-
-#settingsLink + ul button
-{
-	width: 220px;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
-/** Others **/
-
-#xdccLink, #password
-{
-	width: 406px;
-}
-
 /** Slick Grid **/
 
-.slick-cell [class^="icon-"]
+.grid *, .grid *:before, .grid *:after
 {
-	font-size: 1.5em;
-	margin-left: -5px;
+	-moz-box-sizing: content-box;
 }
 
-.slick-cell .icon-overlay
+.slick-cell .glyphicon
+{
+	font-size: 1.5em;
+	margin-left: -3px;
+	margin-top: -3px;
+}
+
+#NotificationGrid .slick-cell .glyphicon
+{
+	font-size: 2em;
+	margin-left: 0;
+	margin-top: 0;
+}
+
+.slick-cell .glyphicon.icon-overlay
 {
 	font-size: 1.0em;
 	float: right;
-	margin-right: -9px;
-	margin-top: -7px;
-	text-shadow: #FFFFFF -2px -2px, #FFFFFF -2px 2px, #FFFFFF 2px -2px, #FFFFFF 2px 2px;
+	margin-right: -4px;
+	margin-top: -4px;
+	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
 }
 
-.slick-cell .icon-overlay-middle
+.slick-cell .glyphicon.icon-overlay-middle
 {
-	margin-top: 0;
+	margin-top: 3px;
 	margin-right: 0;
-}
-
-.grid .slick-header-columns .slick-header-column.ui-state-default
-{
-	text-shadow: none;
-}
-
-.grid .grid-canvas .active, .grid .grid-canvas .selected
-{
-	background: none repeat scroll 0 0 #fffdbd;
-}
-
-.grid .grid-canvas .slick-group
-{
-	background: none repeat scroll 0 0 #f1f1ff;
 }
 
 .grid .grid-canvas .small-line
@@ -352,46 +247,122 @@ label
 	font-size: 1em;
 }
 
-/* Dasboard */
-
-.dashboardPie
+.grid
 {
-	/*float: left;*/
-	margin-left: 20px;
+	border-bottom: 1px solid #ddd;
 }
 
-.dashboardPie, .dashboardPie > div:nth-child(1), .dashboardPie > div:nth-child(2)
+.grid .slick-viewport
+{
+	border-top: 1px solid #ddd;
+}
+
+.grid .grid-canvas .slick-cell, .grid .grid-canvas .slick-headerrow-column
+{
+	border-color: -moz-use-text-color -moz-use-text-color #ddd;
+	border-width: 0 0 1px;
+}
+
+.grid .slick-header-columns .slick-header-column
+{
+	height: 20px;
+	line-height: 14px;
+	border: none;
+	font-weight: bold;
+}
+
+.grid .grid-canvas .slick-cell, .grid .slick-header-columns .slick-header-column.ui-state-default
+{
+	padding: 5px 7.5834px;
+	line-height: 20px;
+}
+
+.grid .grid-canvas .slick-row.odd:hover
+{
+	background: #fcfcfc;
+}
+
+.grid .grid-canvas .slick-row.even
+{
+	background: #f9f9f9;
+}
+
+.grid .grid-canvas .slick-row.even:hover
+{
+	background: #f5f5f5;
+}
+
+.grid .grid-canvas .slick-row.active, .grid .grid-canvas .slick-cell.selected
+{
+	background: #fcf8e3;
+}
+
+.grid .grid-canvas .slick-row.active:hover, .grid .grid-canvas .slick-cell.selected:hover
+{
+	background: #fbeed5;
+}
+
+.grid .grid-canvas .slick-row.active .slick-cell.selected, .grid .grid-canvas .slick-row.active .slick-cell.selected:hover
+{
+	background: none;
+}
+
+.slick-sort-indicator
+{
+	float: none;
+}
+
+/* Dasboard */
+
+.dashboardItem
+{
+	float: left;
+	width: 330px;
+	margin-right: 20px;
+}
+
+.dashboardItem .glyphicon
+{
+	margin-right: 10px;
+}
+
+.panel-body, .panel-body *, .panel-body *:before, .panel-body *:after
+{
+	-moz-box-sizing: content-box;
+}
+
+.panel-body, .panel-body > div:nth-child(1), .panel-body > div:nth-child(2)
 {
 	width: 300px;
 }
 
-.dashboardPie > div:nth-child(1), .dashboardPie > div:nth-child(2)
+.panel-body > div:nth-child(1), .panel-body > div:nth-child(2)
 {
 	height: 100px;
 }
 
-.dashboardPie > div:nth-child(1)
+.panel-body > div:nth-child(1)
 {
 	float: left;
 }
 
-.dashboardPie > div:nth-child(2)
+.panel-body > div:nth-child(2)
 {
 	width: 179px;
 }
 
-.dashboardPie > div:nth-child(3)
+.panel-body > div:nth-child(3)
 {
 	padding-top: 5px;
 	clear: both;
 }
 
-.dashboardPie .legendLabel
+.panel-body .legendLabel
 {
 	width: 100px;
 }
 
-.dashboardPie .pieLabel div
+.panel-body .pieLabel div
 {
 	font-size: 8pt;
 	text-align: center;
@@ -399,4 +370,3 @@ label
 	color: white;
 	z-index: 99999;
 }
-

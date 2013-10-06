@@ -44,11 +44,10 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 		readonly string[] _cssFiles =
 		{
 			"Content/normalize",
-			"Content/bootstrap.min",
+			"Content/bootstrap/bootstrap.min",
+			"Content/bootstrap/bootstrap-theme.min",
 			"Content/slick.grid",
-			"Resources/css/fontello",
 			"Resources/css/animation",
-			"Resources/css/bootstrap-slickgrid",
 			"Resources/css/tango-colors",
 			"Resources/css/xg"
 		};
@@ -73,6 +72,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"Scripts/bootstrap.min",
 			"Resources/js/external/jquery.flot.axislabels",
 			"Resources/js/external/sha256",
+			"Resources/js/external/favicon",
 			"Resources/js/i18n/moment/#LANGUAGE_SHORT#",
 			"Resources/js/i18n/xg/#LANGUAGE_SHORT#",
 			"Resources/js/xg/enum",

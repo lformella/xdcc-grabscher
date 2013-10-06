@@ -38,236 +38,300 @@
 
 	<body>
 
-		<div id="errorDialog" class="modal hide fade">
-			<div class="modal-header">
-				<h3>Error</h3>
-			</div>
-			<div class="modal-body">
-				<label>Lost connection to XG server - please reload page!</label>
-			</div>
-		</div>
-
-		<div id="infoDialog" class="modal hide fade">
-			<div class="modal-header">
-				<h3>Info</h3>
-			</div>
-			<div class="modal-body">
-				<label id="infoLabel"></label>
-			</div>
-		</div>
-
-		<div id="passwordDialog" class="modal hide fade" data-show="true">
-			<div class="modal-header">
-				<h3>Password required</h3>
-			</div>
-			<div class="modal-body">
-				<p>Please enter the password for this webfrontend.</p>
-
-				<div class="form-horizontal">
-					<div class="control-group">
-						<label class="control-label" for="password">Password</label>
-
-						<div class="controls">
-							<input type="password" name="password" id="password" placeholder="Password" tabindex=1 />
-						</div>
+		<div id="errorDialog" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Error</h4>
+					</div>
+					<div class="modal-body">
+						<p>Lost connection to XG server - please reload page!</p>
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<span id="passwordLoading" class="icon-spin animate-spin" style="display: none"></span>
-				<a id="passwordButton" href="#" class="btn btn-primary icon-login">Connect</a>
-			</div>
 		</div>
 
-		<div id="xdccDialog" class="modal hide fade" data-show="true">
-			<div class="modal-header">
-				<h3>XDCC link input</h3>
-			</div>
-			<div class="modal-body">
-				<p>Please enter a valid XDCC link.</p>
-
-				<div class="form-horizontal">
-					<div class="control-group">
-						<label class="control-label" for="xdccLink">XDCC link</label>
-						<div class="controls">
-							<input type="text" name="xdccLink" id="xdccLink" placeholder="XDCC Link" />
-						</div>
+		<div id="infoDialog" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Info</h4>
 					</div>
-					<div class="control-group">
-						<label class="control-label" for="xdccLink">Example link</label>
-						<div class="controls">
-							<label>xdcc://irc.server.net/servername/#channel/bot/#3/Test.avi/</label>
-						</div>
+					<div class="modal-body">
+						<p id="infoLabel"></p>
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer">
-				<a id="xdccButton" href="#" class="btn btn-primary icon-download-cloud">Download</a>
-			</div>
 		</div>
 
-		<div id="serverChannelsDialog" class="modal hide fade">
-			<div class="modal-header">
-				<h3>Change Servers and Channels</h3>
-			</div>
-			<div class="modal-body">
-				<div>
-					<div id="ServerGrid" class="grid"></div>
-					<div id="serverPanel" class="small-panel form-horizontal">
-						<div class="control-group">
-							<label class="control-label" id="serverLabel" for="server">Server</label>
-							<div class="controls">
-								<div class="input-append">
-									<input class="span2" type="text" name="server" id="server" />
-									<button id="serverButton" class="btn">Add</button>
+		<div id="passwordDialog" class="modal fade" data-show="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Password required</h4>
+					</div>
+					<div class="modal-body">
+						<p>Please enter the password for this webfrontend.</p>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-2 control-label" for="password">Password</label>
+								<div class="col-lg-10">
+									<input type="password" name="password" id="password" class="form-control" placeholder="Password" tabindex=1 />
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div>
-					<div id="ChannelGrid" class="grid"></div>
-					<div id="channelPanel" class="small-panel form-horizontal" style="display: none">
-						<div class="control-group">
-							<label class="control-label" id="channelLabel" for="channel">Channel</label>
-							<div class="controls">
-								<div class="input-append">
-									<input class="span2" type="text" name="channel" id="channel" />
-									<button id="channelButton" class="btn">Add</button>
-								</div>
-							</div>
-						</div>
+					<div class="modal-footer">
+						<span id="passwordLoading" class="glyphicon glyphicon-asterisk animate-spin" style="display: none"></span>
+						<a id="passwordButton" href="#" class="btn btn-primary">
+							<span class="glyphicon glyphicon-log-in"></span> Connect
+						</a>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="navbar navbar-inverse" style="display: none">
-			<div class="navbar-inner">
-				<div class="container">
-					<a id="xgLogo" class="brand" href="#">XG v#XGVERSION#</a>
+		<div id="xdccDialog" class="modal fade" data-show="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">XDCC link input</h4>
+					</div>
+					<div class="modal-body">
+						<p>Please enter a valid XDCC link.</p>
 
-					<div class="nav-collapse collapse">
-						<ul class="nav">
-							<li class="active">
-								<a class="carousel-link" href="#" data-slide="0">
-									<span class="icon-gauge" title="Dashboard"></span>
-								</a>
-							</li>
-							<li>
-								<a class="carousel-link" href="#" data-slide="1">
-									<span class="icon-sitemap" title="IRC View"></span>
-								</a>
-							</li>
-							<li>
-								<a class="carousel-link" href="#" data-slide="2">
-									<span class="icon-cloud" title="External search"></span>
-								</a>
-							</li>
-							<li>
-								<a class="carousel-link" href="#" data-slide="3">
-									<span class="icon-doc" title="Files"></span>
-								</a>
-							</li>
-							<li>
-								<a class="carousel-link" href="#" data-slide="4">
-									<span class="icon-stethoscope" title="Graphs"></span>
-								</a>
-							</li>
-							<li class="dropdown">
-								<a id="notificationsLink" href="#" data-toggle="dropdown" class="dropdown-toggle">
-									<span class="icon-info-circle" title="Notifications"></span>
-									<span id="unreadNotifications" class="badge badge-warning"></span>
-								</a>
-								<div class="dropdown-menu">
-									<div class="arrow"></div>
-									<h3 class="popover-title">Notifications</h3>
-									<div class="popover-content">
-										<div id="NotificationGrid" class="grid"></div>
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" for="xdccLink">XDCC link</label>
+								<div class="col-lg-9">
+									<input type="text" name="xdccLink" id="xdccLink" class="form-control" placeholder="XDCC Link" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-3 control-label" for="xdccLink">Example link</label>
+								<div class="col-lg-9">
+									<p class="form-control-static">xdcc://irc.server.net/servername/#channel/bot/#3/Test.avi/</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<a id="xdccButton" href="#" class="btn btn-primary">
+							<span class="glyphicon glyphicon-cloud-download"></span> Download
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="serverChannelsDialog" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Change Servers and Channels</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-5">
+								<div id="ServerGrid" class="grid"></div>
+								<div id="serverPanel" class="form-horizontal">
+									<div class="form-group">
+										<label class="col-lg-2 control-label" id="serverLabel" for="server">Server</label>
+										<div class="col-lg-10">
+											<div class="input-group">
+												<input class="form-control" type="text" name="server" id="server" />
+												<span class="input-group-btn">
+													<button id="serverButton" class="btn">Add</button>
+												</span>
+											</div>
+										</div>
 									</div>
 								</div>
-							</li>
-							<li class="dropdown">
-								<a id="settingsLink" href="#" data-toggle="dropdown" class="dropdown-toggle">
-									<span class="icon-cog" title="Settings"></span>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<button id="serverChannelButton" class="btn icon-globe">Server / Channels</button>
-									</li>
-									<li>
-										<button id="xdccDialogButton" class="btn icon-download-cloud">XDCC link input</button>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<button id="showOfflineBots" class="btn icon-eye" data-toggle="button">Hide offline Bots</button>
-									</li>
-									<li>
-										<button id="humanDates" class="btn icon-clock" data-toggle="button">Human readable dates</button>
-									</li>
-									<li>
-										<button id="combineBotAndPacketGrid" class="btn icon-resize-small" data-toggle="button">Combine IRC View</button>
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<div id="searchButtons" class="pull-right" style="display: none">
-							<a id="searchAdd" href="#"><span class="icon-bookmark-empty OrangeLight"></span></a>
-							<a id="searchRemove" href="#" style="display: none"><span class="icon-bookmark OrangeLight"></span></a>
+							</div>
+							<div id="channelPanel" class="col-md-7" style="display: none">
+								<div id="ChannelGrid" class="grid"></div>
+								<div class="form-horizontal">
+									<div class="form-group">
+										<label class="col-lg-2 control-label" id="channelLabel" for="channel">Channel</label>
+										<div class="col-lg-10">
+											<div class="input-group">
+												<input class="form-control" type="text" name="channel" id="channel" />
+												<span class="input-group-btn">
+													<button id="channelButton" class="btn">Add</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div id="searchForm" class="dropdown navbar-form pull-right" style="display: none">
-							<input id="search" type="text" class="search-query dropdown-toggle" data-toggle="dropdown" placeholder="Search" tabindex=2 />
-							<ul id="searches" class="dropdown-menu">
-								<li class="nav-header">Predefined</li>
-								<li>
-									<a data-guid="00000000-0000-0000-0000-000000000001" data-name="Enabled" href="#">
-										<span class="resultsOnline badge badge-success pull-right"></span>
-										<span class="resultsOffline badge pull-right"></span>
-										<span class="text" title="Enabled">Enabled</span>
-									</a>
-								</li>
-								<li>
-									<a data-guid="00000000-0000-0000-0000-000000000002" data-name="Downloads" href="#">
-										<span class="resultsOnline badge badge-success pull-right"></span>
-										<span class="resultsOffline badge pull-right"></span>
-										<span class="text" title="Downloads">Downloads</span>
-									</a>
-								</li>
-								<li class="divider"></li>
-								<li class="nav-header">Custom</li>
-							</ul>
-						</div>
-						<span id="searchLoading" class="icon-spin animate-spin ButterLight pull-right" style="display: none"></span>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<nav class="navbar navbar-inverse" role="navigation" style="display: none">
+			<div class="navbar-header">
+				<a id="xgLogo" class="navbar-brand" href="#">XG v#XGVERSION#</a>
+			</div>
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						<a class="carousel-link" href="#" data-slide="0">
+							<span class="glyphicon glyphicon-dashboard glyphiconBig" title="Dashboard"></span>
+						</a>
+					</li>
+					<li>
+						<a class="carousel-link" href="#" data-slide="1">
+							<span class="glyphicon glyphicon-list-alt glyphiconBig" title="IRC View"></span>
+						</a>
+					</li>
+					<li>
+						<a class="carousel-link" href="#" data-slide="2">
+							<span class="glyphicon glyphicon-cloud-download glyphiconBig" title="External search"></span>
+						</a>
+					</li>
+					<li>
+						<a class="carousel-link" href="#" data-slide="3">
+							<span class="glyphicon glyphicon-hdd glyphiconBig" title="Files"></span>
+						</a>
+					</li>
+					<li>
+						<a class="carousel-link" href="#" data-slide="4">
+							<span class="glyphicon glyphicon-stats glyphiconBig" title="Graphs"></span>
+						</a>
+					</li>
+					<li class="dropdown">
+						<a id="notificationsLink" href="#" data-toggle="dropdown" class="dropdown-toggle">
+							<span class="glyphicon glyphicon-exclamation-sign glyphiconBig" title="Notifications"></span>
+							<span id="unreadNotifications" class="label label-danger"></span>
+						</a>
+						<div class="dropdown-menu">
+							<h3 class="popover-title">Notifications</h3>
+							<div class="popover-content">
+								<div id="NotificationGrid" class="grid"></div>
+							</div>
+						</div>
+					</li>
+					<li class="dropdown">
+						<a id="settingsLink" href="#" data-toggle="dropdown" class="dropdown-toggle">
+							<span class="glyphicon glyphicon-cog glyphiconBig" title="Settings"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a id="serverChannelButton" href="#">
+									<span class="glyphicon glyphicon-globe"></span> Server / Channels
+								</a>
+							</li>
+							<li>
+								<a id="xdccDialogButton" href="#">
+									<span class="glyphicon glyphicon-cloud-download"></span> XDCC link input
+								</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a id="showOfflineBots" href="#" data-toggle="button">
+									<span class="glyphicon glyphicon-eye-open"></span> Hide offline Bots
+								</a>
+							</li>
+							<li>
+								<a id="humanDates" href="#" data-toggle="button">
+									<span class="glyphicon glyphicon-time"></span> Human readable dates
+								</a>
+							</li>
+							<li>
+								<a id="combineBotAndPacketGrid" href="#" data-toggle="button">
+									<span class="glyphicon glyphicon-fullscreen"></span> Combine IRC View
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<div id="searchButtons" class="navbar-right" style="display: none">
+					<a id="searchAdd" href="#"><span class="glyphicon glyphicon-heart-empty glyphiconBig OrangeLight"></span></a>
+					<a id="searchRemove" href="#" style="display: none"><span class="glyphicon glyphicon-heart glyphiconBig OrangeLight"></span></a>
+				</div>
+				<div id="searchForm" class="dropdown navbar-form navbar-right" style="display: none">
+					<div class="form-group dropdown-toggle" data-toggle="dropdown">
+						<input id="search" type="text" class="search-query form-control" placeholder="Search" tabindex=2 />
+					</div>
+					<ul id="searches" class="dropdown-menu">
+						<li class="dropdown-header">Predefined</li>
+						<li>
+							<a data-guid="00000000-0000-0000-0000-000000000001" data-name="Enabled" href="#">
+								<span class="resultsOnline label label-success pull-right"></span>
+								<span class="resultsOffline label label-default pull-right"></span>
+								<span class="text" title="Enabled">Enabled</span>
+							</a>
+						</li>
+						<li>
+							<a data-guid="00000000-0000-0000-0000-000000000002" data-name="Downloads" href="#">
+								<span class="resultsOnline label label-success pull-right"></span>
+								<span class="resultsOffline label label-default pull-right"></span>
+								<span class="text" title="Downloads">Downloads</span>
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li class="dropdown-header">Custom</li>
+					</ul>
+				</div>
+				<span id="searchLoading" class="glyphicon glyphicon-asterisk animate-spin ButterLight navbar-right" style="display: none"></span>
+			</div>
+		</nav>
 
 		<div class="container" style="display: none">
 
 			<div id="mainCarousel" class="carousel slide" data-interval="">
 				<div class="carousel-inner">
 					<div class="item active">
-						<div id="dashboardServers" class="dashboardPie well well-small">
-							<div></div>
-							<div></div>
+
+						<div id="dashboardServers" class="panel panel-default dashboardItem">
+							<div class="panel-heading">
+								<h3 class="panel-title"><span class="glyphicon glyphicon-globe"></span><span>Servers</span></h3>
+							</div>
+							<div class="panel-body">
+								<div></div>
+								<div></div>
+							</div>
 						</div>
 
-						<div id="dashboardChannels" class="dashboardPie well well-small">
-							<div></div>
-							<div></div>
+						<div id="dashboardChannels" class="panel panel-default dashboardItem">
+							<div class="panel-heading">
+								<h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span><span>Channels</span></h3>
+							</div>
+							<div class="panel-body">
+								<div></div>
+								<div></div>
+							</div>
 						</div>
 
-						<div id="dashboardBots" class="dashboardPie well well-small">
-							<div></div>
-							<div></div>
+						<div id="dashboardBots" class="panel panel-default dashboardItem">
+							<div class="panel-heading">
+								<h3 class="panel-title"><span class="glyphicon glyphicon-user"></span><span>Bots</span></h3>
+							</div>
+							<div class="panel-body">
+								<div></div>
+								<div></div>
+							</div>
 						</div>
 
-						<div id="dashboardFiles" class="dashboardPie well well-small">
-							<div></div>
-							<div></div>
-							<div><span>Ready</span>: <span id="timeMissing"></span></div>
+						<div id="dashboardFiles" class="panel panel-default dashboardItem">
+							<div class="panel-heading">
+								<h3 class="panel-title"><span class="glyphicon glyphicon-file"></span><span>Files</span></h3>
+							</div>
+							<div class="panel-body">
+								<div></div>
+								<div></div>
+							</div>
+							<div class="panel-footer">
+								<span>Ready</span>: <span id="timeMissing"></span>
+							</div>
 						</div>
+
 					</div>
 					<div class="item">
 						<div id="BotGrid" class="grid"></div>
@@ -280,114 +344,165 @@
 						<div id="FileGrid" class="grid"></div>
 					</div>
 					<div class="item">
-						<div style="float: left; width: 160px">
-							<fieldset>
-								<legend id="snapshotServers">Server</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox2" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox21" /><span>Enabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox22" /><span>Disabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox3" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox4" /><span>Disconnected</span>
-								</label>
-							</fieldset>
+						<div class="row">
+							<div class="col-md-2">
+								<div class="panel-group">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												Timespan
+											</h4>
+										</div>
+										<div class="panel-collapse collapse in">
+											<div class="panel-body">
+												<label class="radio">
+													<input type="radio" id="time1" name="snapshotTime" value="-1" checked="checked"><span>1 Day</span>
+												</label>
+												<label class="radio">
+													<input type="radio" id="time7" name="snapshotTime" value="-7"><span>1 Week</span>
+												</label>
+												<label class="radio">
+													<input type="radio" id="time31" name="snapshotTime" value="-31"><span>1 Month</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseServer">
+													Server
+												</a>
+											</h4>
+										</div>
+										<div id="collapseServer" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox2" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox21" /><span>Enabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox22" /><span>Disabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox3" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox4" /><span>Disconnected</span>
+												</label>
+											</div>
+										</div>
+									</div>
 
-							<fieldset>
-								<legend id="snapshotChannels">Channel</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox5" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox23" /><span>Enabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox24" /><span>Disabled</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox6" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox7" /><span>Disconnected</span>
-								</label>
-							</fieldset>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseChannel">
+													Channel
+												</a>
+											</h4>
+										</div>
+										<div id="collapseChannel" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox5" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox23" /><span>Enabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox24" /><span>Disabled</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox6" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox7" /><span>Disconnected</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseBots">
+													Bots
+												</a>
+											</h4>
+										</div>
+										<div id="collapseBots" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox8" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox9" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox10" /><span>Disconnected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox11" /><span>Free Slots</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox12" /><span>Free Queue</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox19" /><span>Current Speed</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox20" /><span>Max Speed</span>
+												</label>
+											</div>
+										</div>
+									</div>
 
-							<fieldset>
-								<legend id="snapshotBots">Bots</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox8" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox9" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox10" /><span>Disconnected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox11" /><span>Free Slots</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox12" /><span>Free Queue</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox19" /><span>Current Speed</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox20" /><span>Max Speed</span>
-								</label>
-							</fieldset>
-
-							<fieldset>
-								<legend id="snapshotPackets">Packets</legend>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox13" /><span>All</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox14" /><span>Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox15" /><span>Disconnected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox16" /><span>Size</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox17" /><span>Size Downloading</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox18" /><span>Size not Downloading</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox25" /><span>Size Connected</span>
-								</label>
-								<label class="checkbox">
-									<input type="checkbox" id="snapshotCheckbox26" /><span>Size Disconnected</span>
-								</label>
-							</fieldset>
-
-							<fieldset>
-								<legend id="snapshotTimespan">Timespan</legend>
-								<label class="radio">
-									<input type="radio" id="time1" name="snapshotTime" value="-1" checked="checked"><span>1 Day</span>
-								</label>
-								<label class="radio">
-									<input type="radio" id="time7" name="snapshotTime" value="-7"><span>1 Week</span>
-								</label>
-								<label class="radio">
-									<input type="radio" id="time31" name="snapshotTime" value="-31"><span>1 Month</span>
-								</label>
-							</fieldset>
-						</div>
-
-						<div style="float: right; padding-right: 30px">
-							<div id="snapshot" style="height: 550px; width: 1000px;"></div>
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapsePackets">
+													Packets
+												</a>
+											</h4>
+										</div>
+										<div id="collapsePackets" class="panel-collapse collapse">
+											<div class="panel-body">
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox13" /><span>All</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox14" /><span>Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox15" /><span>Disconnected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox16" /><span>Size</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox17" /><span>Size Downloading</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox18" /><span>Size not Downloading</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox25" /><span>Size Connected</span>
+												</label>
+												<label class="checkbox">
+													<input type="checkbox" id="snapshotCheckbox26" /><span>Size Disconnected</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-10">
+								<div id="snapshot" style="height: 550px; width: 1000px;"></div>
+							</div>
 						</div>
 					</div>
 				</div>

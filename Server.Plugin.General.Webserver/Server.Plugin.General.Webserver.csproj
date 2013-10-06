@@ -220,6 +220,9 @@
     <EmbeddedResource Include="Resources\css\tango-colors.css" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Scripts\jquery-2.0.2.min.map" />
   </ItemGroup>
@@ -264,47 +267,11 @@
     <EmbeddedResource Include="Scripts\json2.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap-responsive.css" />
-    <EmbeddedResource Include="Content\bootstrap-responsive.min.css" />
-    <EmbeddedResource Include="Content\bootstrap.css" />
-    <EmbeddedResource Include="Content\bootstrap.min.css" />
-    <EmbeddedResource Include="Content\images\down.gif" />
-    <EmbeddedResource Include="Content\images\glyphicons-halflings-white.png" />
-    <EmbeddedResource Include="Content\images\glyphicons-halflings.png" />
-    <EmbeddedResource Include="Content\images\header-columns-bg.gif" />
-    <EmbeddedResource Include="Content\images\sort-asc.gif" />
-    <EmbeddedResource Include="Content\images\sort-desc.gif" />
-    <EmbeddedResource Include="Content\slick.columnpicker.css" />
-    <EmbeddedResource Include="Content\slick.grid.css" />
-    <EmbeddedResource Include="Content\slick.headerbuttons.css" />
-    <EmbeddedResource Include="Content\slick.headermenu.css" />
-    <EmbeddedResource Include="Content\slick.pager.css" />
-    <EmbeddedResource Include="Scripts\bootstrap.js" />
-    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
     <EmbeddedResource Include="Scripts\jquery-2.0.2.intellisense.js" />
     <EmbeddedResource Include="Scripts\jquery-2.0.2.js" />
     <EmbeddedResource Include="Scripts\jquery-2.0.2.min.js" />
     <EmbeddedResource Include="Scripts\moment.js" />
     <EmbeddedResource Include="Scripts\moment.min.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.columnpicker.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.pager.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.autotooltips.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellcopymanager.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangedecorator.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangeselector.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellselectionmodel.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.checkboxselectcolumn.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headerbuttons.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headermenu.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowmovemanager.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowselectionmodel.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.core.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.dataview.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.editors.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.formatters.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.grid.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.groupitemmetadataprovider.js" />
-    <EmbeddedResource Include="Scripts\SlickGrid\slick.remotemodel.js" />
     <EmbeddedResource Include="Scripts\jquery.event.drag.js" />
     <EmbeddedResource Include="Scripts\jquery.event.drag.live.js" />
     <EmbeddedResource Include="Scripts\jquery.event.drag.live.min.js" />
@@ -373,5 +340,45 @@
     <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <EmbeddedResource Include="Scripts\jquery-ui-1.10.3.js" />
     <EmbeddedResource Include="Scripts\jquery-ui-1.10.3.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap\bootstrap-theme.css" />
+    <EmbeddedResource Include="Content\bootstrap\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="Content\bootstrap\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap\bootstrap.min.css" />
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="Scripts\bootstrap.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\images\down.gif" />
+    <Content Include="Content\images\header-columns-bg.gif" />
+    <Content Include="Content\images\sort-asc.gif" />
+    <Content Include="Content\images\sort-desc.gif" />
+    <EmbeddedResource Include="Content\slick-default-theme.css" />
+    <EmbeddedResource Include="Content\slick.columnpicker.css" />
+    <EmbeddedResource Include="Content\slick.grid.css" />
+    <EmbeddedResource Include="Content\slick.headerbuttons.css" />
+    <EmbeddedResource Include="Content\slick.headermenu.css" />
+    <EmbeddedResource Include="Content\slick.pager.css" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.columnpicker.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.pager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.autotooltips.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellcopymanager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangedecorator.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangeselector.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellselectionmodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.checkboxselectcolumn.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headerbuttons.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headermenu.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowmovemanager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowselectionmodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.core.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.dataview.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.editors.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.formatters.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.grid.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.groupitemmetadataprovider.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.remotemodel.js" />
   </ItemGroup>
 </Project>

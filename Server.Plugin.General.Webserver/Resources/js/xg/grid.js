@@ -123,7 +123,7 @@ var XGGrid = (function ()
 			width: width > 0 ? width : undefined,
 			minWidth: width > 0 ? width : undefined,
 			maxWidth: width > 0 ? width : undefined,
-			cssClass: cssClass + (alignRight ? "alignRight" : undefined),
+			cssClass: cssClass + (alignRight ? "alignRight" : ""),
 			sortable: sortable,
 			cannotTriggerInsert: id == "Name",
 			autoHeight: true,
@@ -284,7 +284,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			serverGrid = buildGrid(Enum.Grid.Server, dataview.getDataView(Enum.Grid.Server), [
-				buildRow("", 38, false, function (obj)
+				buildRow("", 46, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
 				}, false, "icon"),
@@ -307,7 +307,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
-				buildRow("", 40, false, function (obj)
+				buildRow("", 46, false, function (obj)
 				{
 					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
 				}, false, "icon"),
@@ -329,7 +329,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
-				buildRow("", 38, false, $.proxy(formatter.formatBotIcon, formatter), false, "icon"),
+				buildRow("", 42, false, $.proxy(formatter.formatBotIcon, formatter), false, "icon"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false, "small-line"),
 				buildRow("Speed", 80, true, function (obj)
 				{
@@ -343,9 +343,9 @@ var XGGrid = (function ()
 				{
 					return helper.time2Human(obj.QueueTime);
 				}, true),
-				buildRow("Speed", 130, true, $.proxy(formatter.formatBotSpeed, formatter), true),
-				buildRow("Slots", 60, true, $.proxy(formatter.formatBotSlots, formatter), true),
-				buildRow("Queue", 80, true, $.proxy(formatter.formatBotQueue, formatter), true)
+				buildRow("Speed", 140, true, $.proxy(formatter.formatBotSpeed, formatter), true),
+				buildRow("Slots", 70, true, $.proxy(formatter.formatBotSlots, formatter), true),
+				buildRow("Queue", 90, true, $.proxy(formatter.formatBotQueue, formatter), true)
 			], compareBots);
 			botGrid.onClick.subscribe(function (e, args)
 			{
@@ -356,7 +356,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
-				buildRow("", 42, false, function (obj)
+				buildRow("", 46, false, function (obj)
 				{
 					if (obj instanceof Slick.Group)
 					{
@@ -389,7 +389,7 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
-				buildRow("", 42, false, function (obj)
+				buildRow("", 44, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
 				}, false, "icon"),
@@ -429,14 +429,14 @@ var XGGrid = (function ()
 			/**************************************************************************************************************/
 
 			notificationsGrid = buildGrid(Enum.Grid.Notification, dataview.getDataView(Enum.Grid.Notification), [
-				buildRow("", 28, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
+				buildRow("", 40, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
 				buildRow("Content", 0, true, $.proxy(formatter.formatNotificationContent, formatter), false, "two-line-text"),
-				buildRow("Time", 155, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
+				buildRow("Time", 160, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
 			], null, 48);
 
 			/**************************************************************************************************************/
 
-			// default filter
+				// default filter
 			self.applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" }, Enum.Grid.Bot);
 		},
 
@@ -516,13 +516,19 @@ var XGGrid = (function ()
 			{
 				grid.hide();
 				dataView.setGrouping(
-				{
-					getter: "ParentGuid",
-					formatter: function (g)
 					{
-						return g.Value;
-					}
-				});
+						getter: "ParentGuid",
+						formatter: function (dataItem)
+						{
+							var bot = dataview.getItem(Enum.Grid.Bot, dataItem.value);
+							var ret = "";
+							if (bot != null)
+							{
+								ret = /*formatter.formatBotIcon(bot, true) + */bot.Name;
+							}
+							return ret;
+						}
+					});
 			}
 			else
 			{

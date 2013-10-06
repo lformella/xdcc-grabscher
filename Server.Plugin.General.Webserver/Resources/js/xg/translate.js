@@ -46,7 +46,7 @@ var XGTranslate = (function ()
 		{
 			translations = translations1;
 
-			$("h1, h2, h3, a, span, button, label, legend, p, input, li").each(function (i, element)
+			$("h1, h2, h3, h4, a, span, button, label, legend, p, input, li").each(function (i, element)
 			{
 				var item = $(element);
 

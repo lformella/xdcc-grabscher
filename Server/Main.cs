@@ -143,7 +143,7 @@ namespace XG.Server
 								{
 									next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
 								}
-								catch (Exception) { }
+								catch (Exception) {}
 								if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Instance.FileRollbackCheckBytes)
 								{
 									complete = false;
@@ -186,11 +186,11 @@ namespace XG.Server
 
 		void StartWorkers()
 		{
-			var snapShotWorker = new RrdWorker { SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60 };
+			var snapShotWorker = new RrdWorker {SecondsToSleep = Settings.Instance.TakeSnapshotTimeInMinutes * 60};
 			snapShotWorker.RrdDB = _rrdDb;
 			AddWorker(snapShotWorker);
 
-			AddWorker(new BotWatchdogWorker { SecondsToSleep = Settings.Instance.BotOfflineCheckTime });
+			AddWorker(new BotWatchdogWorker {SecondsToSleep = Settings.Instance.BotOfflineCheckTime});
 
 			_workers.StartAll();
 		}
@@ -235,6 +235,8 @@ namespace XG.Server
 					{
 						tBot.Connected = false;
 						tBot.State = Bot.States.Idle;
+						tBot.QueuePosition = 0;
+						tBot.QueueTime = 0;
 
 						foreach (Packet pack in tBot.Packets)
 						{

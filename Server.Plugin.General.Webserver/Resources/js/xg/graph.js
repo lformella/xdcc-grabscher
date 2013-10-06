@@ -32,7 +32,7 @@ var XGGraph = (function ()
 	{
 		var data, options = [];
 
-		options =  {
+		options = {
 			series: {
 				pie: {
 					radius: 1,
@@ -40,7 +40,8 @@ var XGGraph = (function ()
 					show: true,
 					label: {
 						show: true,
-						formatter: 	function labelFormatter(label, series) {
+						formatter: function labelFormatter (label, series)
+						{
 							return "<div>" + Math.round(series.percent) + "%</div>";
 						},
 						background: {
@@ -55,11 +56,11 @@ var XGGraph = (function ()
 			{color: "#73d216", label: translate._(element + "Connected"), data: values.connected},
 			{color: "#cc0000", label: translate._(element + "Disconnected"), data: values.disconnected}
 		];
-		$.plot("#dashboard" + element + " > div:nth-child(1)", data, options);
+		$.plot("#dashboard" + element + " .panel-body > div:nth-child(1)", data, options);
 
 		if (values.enabled != undefined && values.disabled != undefined)
 		{
-			options =  {
+			options = {
 				series: {
 					pie: {
 						radius: 0.6,
@@ -72,7 +73,7 @@ var XGGraph = (function ()
 				{color: "#8ae234", label: "", data: values.enabled},
 				{color: "#ef2929", label: "", data: values.disabled}
 			];
-			$.plot("#dashboard" + element + " > div:nth-child(2)", data, options);
+			$.plot("#dashboard" + element + " .panel-body > div:nth-child(2)", data, options);
 		}
 	}
 
@@ -367,7 +368,7 @@ var XGGraph = (function ()
 			{
 				$("#dashboardFiles").show();
 
-				options =  {
+				options = {
 					series: {
 						pie: {
 							radius: 1,
@@ -375,7 +376,8 @@ var XGGraph = (function ()
 							show: true,
 							label: {
 								show: true,
-								formatter: 	function labelFormatter(label, series) {
+								formatter: function labelFormatter (label, series)
+								{
 									return "<div>" + helper.size2Human(series.data[0][1], 2) + "</div>";
 								},
 								background: {
@@ -391,7 +393,7 @@ var XGGraph = (function ()
 					{color: "#cc0000", label: translate._("FileSizeMissing"), data: liveSnapshot.FileSizeMissing}
 				];
 
-				$.plot("#dashboardFiles > div:nth-child(1)", data, options);
+				$.plot("#dashboardFiles .panel-body > div:nth-child(1)", data, options);
 				$("#timeMissing").html(helper.time2Human(liveSnapshot.FileTimeMissing));
 			}
 			else

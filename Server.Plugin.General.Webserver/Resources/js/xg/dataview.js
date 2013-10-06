@@ -196,6 +196,7 @@ var XGDataView = (function ()
 			{
 				if (json.DataType == Enum.Grid.Notification)
 				{
+					json.Data.Time = new Date();
 					dataView.insertItem(0, json.Data);
 				}
 				else
@@ -225,7 +226,9 @@ var XGDataView = (function ()
 				{
 					dataView.updateItem(json.Data.Guid, json.Data);
 				}
-				catch (e) {}
+				catch (e)
+				{
+				}
 				self.onUpdate.notify(json, null, self);
 			}
 		},
@@ -244,7 +247,7 @@ var XGDataView = (function ()
 		{
 			botFilterGuids = [];
 		},
-		
+
 		beginUpdate: function (type)
 		{
 			var dataView = this.getDataView(type);
@@ -253,7 +256,7 @@ var XGDataView = (function ()
 				dataView.beginUpdate();
 			}
 		},
-		
+
 		endUpdate: function (type)
 		{
 			var dataView = this.getDataView(type);

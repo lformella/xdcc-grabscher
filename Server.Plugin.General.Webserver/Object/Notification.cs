@@ -62,11 +62,6 @@ namespace XG.Server.Plugin.General.Webserver.Object
 			get { return Object.Object.Parent != null ? Object.Object.Parent.Name : ""; }
 		}
 
-		public DateTime Time
-		{
-			get { return DateTime.Now; }
-		}
-
 		#endregion
 	}
 }

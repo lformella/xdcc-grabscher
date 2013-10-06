@@ -25,11 +25,6 @@
     <File subtype="Code" buildaction="Compile" name="Properties/AssemblyInfo.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/index.html" resource_id="XG.Server.Plugin.General.Webserver.Resources.index.html" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/xg.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.xg.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.eot" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.eot" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.svg" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.svg" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.ttf" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.ttf" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/font/fontello.woff" resource_id="XG.Server.Plugin.General.Webserver.Resources.font.fontello.woff" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/fontello.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.fontello.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/favicon.ico" resource_id="XG.Server.Plugin.General.Webserver.Resources.favicon.ico" />
     <File subtype="Directory" buildaction="Compile" name="Object" />
     <File subtype="Code" buildaction="Compile" name="Object/Flot.cs" />
@@ -108,7 +103,6 @@
     <File subtype="Code" buildaction="Compile" name="Object/Search.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/xg/gui.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.xg.gui.js" />
     <File subtype="Code" buildaction="Compile" name="Websocket/DoubleConverter.cs" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/bootstrap-slickgrid.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.bootstrap-slickgrid.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/css/tango-colors.css" resource_id="XG.Server.Plugin.General.Webserver.Resources.css.tango-colors.css" />
     <File subtype="Directory" buildaction="Compile" name="Scripts" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/bootstrap.js" />
@@ -182,10 +176,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.time.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.time.js" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Scripts/flot/jquery.flot.time.min.js" resource_id="XG.Server.Plugin.General.Webserver.Scripts.flot.jquery.flot.time.min.js" />
     <File subtype="Directory" buildaction="Compile" name="Content" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap-responsive.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap-responsive.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap-responsive.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap-responsive.min.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.css" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.min.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/normalize.css" resource_id="XG.Server.Plugin.General.Webserver.Content.normalize.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.columnpicker.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.columnpicker.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.grid.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.grid.css" />
@@ -193,8 +183,6 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.headermenu.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.headermenu.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick.pager.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick.pager.css" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/down.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.down.gif" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/glyphicons-halflings-white.png" resource_id="XG.Server.Plugin.General.Webserver.Content.images.glyphicons-halflings-white.png" />
-    <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/glyphicons-halflings.png" resource_id="XG.Server.Plugin.General.Webserver.Content.images.glyphicons-halflings.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/header-columns-bg.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.header-columns-bg.gif" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/sort-asc.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.sort-asc.gif" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/images/sort-desc.gif" resource_id="XG.Server.Plugin.General.Webserver.Content.images.sort-desc.gif" />
@@ -261,6 +249,19 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_888888_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_888888_256x240.png" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/themes/base/minified/images/ui-icons_cd0a0a_256x240.png" resource_id="XG.Server.Plugin.General.Webserver.Content.themes.base.minified.images.ui-icons_cd0a0a_256x240.png" />
     <File subtype="Code" buildaction="Nothing" name="packages.config" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/slick-default-theme.css" resource_id="XG.Server.Plugin.General.Webserver.Content.slick-default-theme.css" />
+    <File subtype="Directory" buildaction="Compile" name="Content/bootstrap" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap/bootstrap-theme.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.bootstrap-theme.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap/bootstrap-theme.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.bootstrap-theme.min.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap/bootstrap.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.bootstrap.css" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/bootstrap/bootstrap.min.css" resource_id="XG.Server.Plugin.General.Webserver.Content.bootstrap.bootstrap.min.css" />
+    <File subtype="Directory" buildaction="Compile" name="Content/fonts" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/fonts/glyphicons-halflings-regular.eot" resource_id="XG.Server.Plugin.General.Webserver.Content.fonts.glyphicons-halflings-regular.eot" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/fonts/glyphicons-halflings-regular.svg" resource_id="XG.Server.Plugin.General.Webserver.Content.fonts.glyphicons-halflings-regular.svg" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/fonts/glyphicons-halflings-regular.ttf" resource_id="XG.Server.Plugin.General.Webserver.Content.fonts.glyphicons-halflings-regular.ttf" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Content/fonts/glyphicons-halflings-regular.woff" resource_id="XG.Server.Plugin.General.Webserver.Content.fonts.glyphicons-halflings-regular.woff" />
+    <File subtype="Directory" buildaction="Compile" name="Resources" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/favicon.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.favicon.js" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
