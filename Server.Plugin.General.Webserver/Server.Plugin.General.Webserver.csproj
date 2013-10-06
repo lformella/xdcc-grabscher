@@ -149,14 +149,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\css\xg.css" />
     <EmbeddedResource Include="Resources\index.html" />
-    <EmbeddedResource Include="Resources\css\fontello.css" />
     <EmbeddedResource Include="Resources\favicon.ico" />
-    <EmbeddedResource Include="Resources\font\fontello.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\font\fontello.eot" />
-    <EmbeddedResource Include="Resources\font\fontello.svg" />
-    <EmbeddedResource Include="Resources\font\fontello.woff" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />
@@ -216,7 +209,6 @@
     <EmbeddedResource Include="Resources\js\xg\gui.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\css\bootstrap-slickgrid.css" />
     <EmbeddedResource Include="Resources\css\tango-colors.css" />
   </ItemGroup>
   <ItemGroup>
@@ -355,6 +347,7 @@
     <Content Include="Content\images\header-columns-bg.gif" />
     <Content Include="Content\images\sort-asc.gif" />
     <Content Include="Content\images\sort-desc.gif" />
+    <EmbeddedResource Include="Resources\js\external\favicon.js" />
     <EmbeddedResource Include="Content\slick-default-theme.css" />
     <EmbeddedResource Include="Content\slick.columnpicker.css" />
     <EmbeddedResource Include="Content\slick.grid.css" />
