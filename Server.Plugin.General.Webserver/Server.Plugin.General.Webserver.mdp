@@ -262,6 +262,8 @@
     <File subtype="Code" buildaction="EmbedAsResource" name="Content/fonts/glyphicons-halflings-regular.woff" resource_id="XG.Server.Plugin.General.Webserver.Content.fonts.glyphicons-halflings-regular.woff" />
     <File subtype="Directory" buildaction="Compile" name="Resources" />
     <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/favicon.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.favicon.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/css_browser_selector.js" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="Resources/js/external/jquery.knob.js" resource_id="XG.Server.Plugin.General.Webserver.Resources.js.external.jquery.knob.js" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

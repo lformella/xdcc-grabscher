@@ -73,6 +73,8 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"Resources/js/external/jquery.flot.axislabels",
 			"Resources/js/external/sha256",
 			"Resources/js/external/favicon",
+			"Resources/js/external/css_browser_selector",
+			"Resources/js/external/jquery.knob",
 			"Resources/js/i18n/moment/#LANGUAGE_SHORT#",
 			"Resources/js/i18n/xg/#LANGUAGE_SHORT#",
 			"Resources/js/xg/enum",

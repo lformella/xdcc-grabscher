@@ -265,7 +265,7 @@ small
 
 .grid .slick-header-columns .slick-header-column
 {
-	height: 20px;
+	height: auto;
 	line-height: 14px;
 	border: none;
 	font-weight: bold;
@@ -312,12 +312,19 @@ small
 	float: none;
 }
 
+/* Webkit Fix */
+
+.webkit .grid .grid-canvas .slick-row .slick-cell
+{
+	height: 32px;
+}
+
 /* Dasboard */
 
 .dashboardItem
 {
 	float: left;
-	width: 330px;
+	width: 300px;
 	margin-right: 20px;
 }
 
@@ -326,47 +333,25 @@ small
 	margin-right: 10px;
 }
 
-.panel-body, .panel-body *, .panel-body *:before, .panel-body *:after
+.dashboardItem .panel-body
 {
-	-moz-box-sizing: content-box;
+	height: 110px;
+	position: relative;
 }
 
-.panel-body, .panel-body > div:nth-child(1), .panel-body > div:nth-child(2)
+.dashboardItem .panel-body > div
 {
-	width: 300px;
+	position: absolute;
 }
 
-.panel-body > div:nth-child(1), .panel-body > div:nth-child(2)
+.dashboardItem .panel-body > div:nth-child(2)
 {
-	height: 100px;
+	left: 30px;
+	top: 30px;
 }
 
-.panel-body > div:nth-child(1)
+.dashboardItem .panel-body > div:nth-child(3)
 {
-	float: left;
-}
-
-.panel-body > div:nth-child(2)
-{
-	width: 179px;
-}
-
-.panel-body > div:nth-child(3)
-{
-	padding-top: 5px;
-	clear: both;
-}
-
-.panel-body .legendLabel
-{
-	width: 100px;
-}
-
-.panel-body .pieLabel div
-{
-	font-size: 8pt;
-	text-align: center;
-	padding: 4px 2px 2px 2px;
-	color: white;
-	z-index: 99999;
+	position: inherit;
+	padding-left: 120px;
 }

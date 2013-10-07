@@ -28,53 +28,29 @@ var XGGraph = (function ()
 	var dataView, helper, translate;
 	var snapshots, liveSnapshot = {};
 
-	function updateDashboardItem (element, values)
+	function updateDashboardItem (element, values, formatter)
 	{
-		var data, options = [];
-
-		options = {
-			series: {
-				pie: {
-					radius: 1,
-					innerRadius: 0.6,
-					show: true,
-					label: {
-						show: true,
-						formatter: function labelFormatter (label, series)
-						{
-							return "<div>" + Math.round(series.percent) + "%</div>";
-						},
-						background: {
-							opacity: 0.5,
-							color: '#000'
-						}
-					}
-				}
-			}
-		};
-		data = [
-			{color: "#73d216", label: translate._(element + "Connected"), data: values.connected},
-			{color: "#cc0000", label: translate._(element + "Disconnected"), data: values.disconnected}
-		];
-		$.plot("#dashboard" + element + " .panel-body > div:nth-child(1)", data, options);
-
-		if (values.enabled != undefined && values.disabled != undefined)
+		updateDashboardInput($("#dashboard" + element + " .first.knob"), values.max, values.connected);
+		if (values.enabled != undefined)
 		{
-			options = {
-				series: {
-					pie: {
-						radius: 0.6,
-						innerRadius: 0.5,
-						show: true
-					}
-				}
-			};
-			data = [
-				{color: "#8ae234", label: "", data: values.enabled},
-				{color: "#ef2929", label: "", data: values.disabled}
-			];
-			$.plot("#dashboard" + element + " .panel-body > div:nth-child(2)", data, options);
+			updateDashboardInput($("#dashboard" + element + " .second.knob"), values.max, values.enabled);
+			$("#dashboard" + element + " .value").html(formatter(values.connected) + " " + translate._("of") + " " + formatter(values.enabled));
 		}
+		else
+		{
+			$("#dashboard" + element + " .value").html(formatter(values.connected) + " " + translate._("of") + " " + formatter(values.max));
+		}
+	}
+
+	function updateDashboardInput (element, max, current)
+	{
+		element.trigger(
+			'configure',
+			{
+				max: max
+			}
+		);
+		element.val(current).trigger("change");
 	}
 
 	return {
@@ -86,6 +62,41 @@ var XGGraph = (function ()
 		{
 			helper = helper1;
 			translate = translate1;
+
+			$(".first.knob").knob(
+			{
+				min: 0,
+				max: 100,
+				readOnly: true,
+				bgColor: "#eeeeec",
+				fgColor: "#4e9a06",
+				displayInput: false,
+				thickness: .25,
+				angleOffset: -125,
+				angleArc: 250
+			});
+
+			$(".second.knob").knob(
+			{
+				min: 0,
+				max: 100,
+				readOnly: true,
+				bgColor: "#eeeeec",
+				fgColor: "#4e9a06",
+				displayInput: false,
+				thickness: .1,
+				angleOffset: -125,
+				angleArc: 250
+			});
+
+			$("#dashboardFiles .first.knob").trigger(
+				'configure',
+				{
+					draw : function () {
+						$(this.i).val(helper.size2Human(this.cv));
+					}
+				}
+			);
 		},
 
 		setSnapshots: function (result)
@@ -343,57 +354,37 @@ var XGGraph = (function ()
 
 		updateDashboard: function ()
 		{
+			var defaultFormatter = function (value) {
+				return value;
+			};
+			var sizeFormatter = function (value) {
+				return helper.size2Human(value, 2);
+			};
+
 			updateDashboardItem("Servers", {
+				"max": liveSnapshot.Servers,
 				"enabled": liveSnapshot.ServersEnabled,
-				"disabled": liveSnapshot.ServersDisabled,
-				"connected": liveSnapshot.ServersConnected,
-				"disconnected": liveSnapshot.ServersDisconnected
-			});
+				"connected": liveSnapshot.ServersConnected
+			}, defaultFormatter);
 
 			updateDashboardItem("Channels", {
+				"max": liveSnapshot.Channels,
 				"enabled": liveSnapshot.ChannelsEnabled,
-				"disabled": liveSnapshot.ChannelsDisabled,
-				"connected": liveSnapshot.ChannelsConnected,
-				"disconnected": liveSnapshot.ChannelsDisconnected
-			});
+				"connected": liveSnapshot.ChannelsConnected
+			}, defaultFormatter);
 
 			updateDashboardItem("Bots", {
-				"connected": liveSnapshot.BotsConnected,
-				"disconnected": liveSnapshot.BotsDisconnected
-			});
-
-			var data, options = [];
+				"max": liveSnapshot.Bots,
+				"connected": liveSnapshot.BotsConnected
+			}, defaultFormatter);
 
 			if (liveSnapshot.FileTimeMissing > 0)
 			{
 				$("#dashboardFiles").show();
-
-				options = {
-					series: {
-						pie: {
-							radius: 1,
-							innerRadius: 0.6,
-							show: true,
-							label: {
-								show: true,
-								formatter: function labelFormatter (label, series)
-								{
-									return "<div>" + helper.size2Human(series.data[0][1], 2) + "</div>";
-								},
-								background: {
-									opacity: 0.5,
-									color: '#000'
-								}
-							}
-						}
-					}
-				};
-				data = [
-					{color: "#73d216", label: translate._("FileSizeDownloaded"), data: liveSnapshot.FileSizeDownloaded},
-					{color: "#cc0000", label: translate._("FileSizeMissing"), data: liveSnapshot.FileSizeMissing}
-				];
-
-				$.plot("#dashboardFiles .panel-body > div:nth-child(1)", data, options);
+				updateDashboardItem("Files", {
+					"max": liveSnapshot.FileSizeMissing + liveSnapshot.FileSizeDownloaded,
+					"connected": liveSnapshot.FileSizeDownloaded
+				}, sizeFormatter);
 				$("#timeMissing").html(helper.time2Human(liveSnapshot.FileTimeMissing));
 			}
 			else

@@ -146,6 +146,9 @@ translations =
 	"Custom": "Eigene",
 	"Ready": "Fertig",
 
+	"of": "von",
+	"connected": "verbunden",
+	"downloaded": "herunter geladen",
 	"All": "Alle",
 	"Connected": "Verbunden",
 	"Disconnected": "Getrennt",

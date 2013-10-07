@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -154,6 +154,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />
     <EmbeddedResource Include="Resources\js\external\sha256.js" />
+    <EmbeddedResource Include="Resources\js\external\css_browser_selector.js" />
+    <EmbeddedResource Include="Resources\js\external\jquery.knob.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\bg.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\ca.js" />
     <EmbeddedResource Include="Resources\js\i18n\moment\cv.js" />
