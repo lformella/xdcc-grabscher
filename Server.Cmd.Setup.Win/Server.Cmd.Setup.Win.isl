@@ -344,6 +344,9 @@
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{ECD92E47-339F-4899-A3F9-2D4F3CA75551}</td><td>AppDataFolder</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Server.Cmd.Primary_output</td><td>{8299BE0F-481C-43DF-808B-FFD15DC9317E}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.cmd.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Server.Plugin.Backend.File.Primary_output</td><td>{5B99769A-0AF6-4FAA-BBED-966D11FD6779}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.plugin.backend.file.p</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Server.Plugin.Core.Irc.Primary_output</td><td>{76D2E620-1B36-423B-9494-06D690A20D7A}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.plugin.core.irc.prima</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Server.Plugin.General.ElasticSearch.Primary_output</td><td>{AF63E534-A5C6-4F20-8374-3EA2058AAFE0}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.plugin.general.elasti</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Server.Plugin.General.Import.Primary_output</td><td>{E036F3A6-9CBF-47E7-865D-3CC6A1DEACF5}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.plugin.general.import</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Server.Plugin.General.Jabber.Primary_output</td><td>{9C320A75-C7C5-4302-A628-E1032ECDCA07}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.plugin.general.jabber</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Server.Plugin.General.Webserver.Primary_output</td><td>{DDF789E7-201D-4979-93B1-EDDBD6D6567C}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.plugin.general.webser</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Server.Primary_output</td><td>{40872868-C8BF-4207-B6E7-21B7C84279DD}</td><td>INSTALLDIR</td><td>2</td><td/><td>server.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1868,6 +1871,9 @@
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>AlwaysInstall</td><td>Server.Cmd.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>Server.Plugin.Backend.File.Primary_output</td></row>
+		<row><td>AlwaysInstall</td><td>Server.Plugin.Core.Irc.Primary_output</td></row>
+		<row><td>AlwaysInstall</td><td>Server.Plugin.General.ElasticSearch.Primary_output</td></row>
+		<row><td>AlwaysInstall</td><td>Server.Plugin.General.Import.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>Server.Plugin.General.Jabber.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>Server.Plugin.General.Webserver.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>Server.Primary_output</td></row>
@@ -1889,6 +1895,9 @@
 		<row><td>log4net.example</td><td>ISX_DEFAULTCOMPONENT</td><td>LOG4NE~1.EXA|log4net.example</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Lars\Documents\GitHub\xdcc-grabscher\log4net.example</td><td>1</td><td/></row>
 		<row><td>server.cmd.primary_output</td><td>Server.Cmd.Primary_output</td><td>Server.Cmd.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Cmd&gt;|Built</td><td>3</td><td/></row>
 		<row><td>server.plugin.backend.file.p</td><td>Server.Plugin.Backend.File.Primary_output</td><td>Server.Plugin.Backend.File.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Plugin.Backend.File&gt;|Built</td><td>3</td><td/></row>
+		<row><td>server.plugin.core.irc.prima</td><td>Server.Plugin.Core.Irc.Primary_output</td><td>Server.Plugin.Core.Irc.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Plugin.Core.Irc&gt;|Built</td><td>3</td><td/></row>
+		<row><td>server.plugin.general.elasti</td><td>Server.Plugin.General.ElasticSearch.Primary_output</td><td>Server.Plugin.General.ElasticSearch.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Plugin.General.ElasticSearch&gt;|Built</td><td>3</td><td/></row>
+		<row><td>server.plugin.general.import</td><td>Server.Plugin.General.Import.Primary_output</td><td>Server.Plugin.General.Import.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Plugin.General.Import&gt;|Built</td><td>3</td><td/></row>
 		<row><td>server.plugin.general.jabber</td><td>Server.Plugin.General.Jabber.Primary_output</td><td>Server.Plugin.General.Jabber.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Plugin.General.Jabber&gt;|Built</td><td>3</td><td/></row>
 		<row><td>server.plugin.general.webser</td><td>Server.Plugin.General.Webserver.Primary_output</td><td>Server.Plugin.General.Webserver.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server.Plugin.General.Webserver&gt;|Built</td><td>3</td><td/></row>
 		<row><td>server.primary_output</td><td>Server.Primary_output</td><td>Server.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Server&gt;|Built</td><td>3</td><td/></row>
@@ -2153,6 +2162,9 @@
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_DA8DBCED_8153_47ED_9A17_8D091A560FC4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Server.Cmd.Primary_output</td><td/><td/><td>_480397C7_D1C1_409B_A8E5_349D21C36834_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Server.Plugin.Backend.File.Primary_output</td><td/><td/><td>_877C4BC4_46E5_4FBD_BFDE_3C7C67E2A644_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Server.Plugin.Core.Irc.Primary_output</td><td/><td/><td>_255D2288_DCD0_49D7_BC38_4FF04964A3A6_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Server.Plugin.General.ElasticSearch.Primary_output</td><td/><td/><td>_40A42682_CA20_47B6_9DA4_A388644CF970_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Server.Plugin.General.Import.Primary_output</td><td/><td/><td>_C59F40AA_D768_4C7F_B25F_0ACD8CB7BCE8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Server.Plugin.General.Jabber.Primary_output</td><td/><td/><td>_D4FF79C5_BCC1_4670_A0CD_44B4ACAE65D9_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Server.Plugin.General.Webserver.Primary_output</td><td/><td/><td>_B1E76837_5DD1_4616_88D8_2DF6A9B0427B_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Server.Primary_output</td><td/><td/><td>_A836BA01_6C45_42A8_870E_6E424C427743_FILTER</td><td/><td/><td/><td/></row>
@@ -2478,6 +2490,9 @@
 		<row><td>Server.Cmd</td><td>Server.Cmd\Server.Cmd.csproj</td><td/><td>2</td></row>
 		<row><td>Server.Plugin.Backend.File</td><td>Server.Plugin.Backend.File\Server.Plugin.Backend.File.csproj</td><td/><td>2</td></row>
 		<row><td>Server.Plugin.Backend.MySql</td><td>Server.Plugin.Backend.MySql\Server.Plugin.Backend.MySql.csproj</td><td/><td>2</td></row>
+		<row><td>Server.Plugin.Core.Irc</td><td>Server.Plugin.Core.Irc\Server.Plugin.Core.Irc.csproj</td><td/><td>2</td></row>
+		<row><td>Server.Plugin.General.ElasticSearch</td><td>Server.Plugin.General.ElasticSearch\Server.Plugin.General.ElasticSearch.csproj</td><td/><td>2</td></row>
+		<row><td>Server.Plugin.General.Import</td><td>Server.Plugin.General.Import\Server.Plugin.General.Import.csproj</td><td/><td>2</td></row>
 		<row><td>Server.Plugin.General.Jabber</td><td>Server.Plugin.General.Jabber\Server.Plugin.General.Jabber.csproj</td><td/><td>2</td></row>
 		<row><td>Server.Plugin.General.Webserver</td><td>Server.Plugin.General.Webserver\Server.Plugin.General.Webserver.csproj</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
@@ -4117,8 +4132,8 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="a4f66fafb30885f14d732b73e196bba0">
-RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="de9f554a3bc05c12be9c31b998217995">
+UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 			</td></row>
 		<row><td>DefaultProductConfiguration</td><td>Express</td></row>
 		<row><td>EnableSwidtag</td><td>1</td></row>
@@ -4509,7 +4524,7 @@ RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>ProductCode</td><td>{5B780069-C803-4AB5-885F-CBF8CFFE8D8E}</td><td/></row>
 		<row><td>ProductName</td><td>XG</td><td/></row>
-		<row><td>ProductVersion</td><td>2.0.0</td><td/></row>
+		<row><td>ProductVersion</td><td>2.2.0.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>

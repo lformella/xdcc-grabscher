@@ -172,7 +172,7 @@ namespace XG.Server
 
 		public string XgVersion
 		{
-			get { return "2.1.1"; }
+			get { return "2.2.0.0"; }
 		}
 
 		public int CommandWaitTime

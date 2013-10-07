@@ -52,5 +52,17 @@
 			<Name>Server.Plugin.General.Webserver</Name>
 			<Project>{E84F51EE-E324-4A99-A4C1-76F53CC4F08D}</Project>
 		</ProjectReference>
+		<ProjectReference Include="..\Server.Plugin.Core.Irc\Server.Plugin.Core.Irc.csproj">
+			<Name>Server.Plugin.Core.Irc</Name>
+			<Project>{22E24C0D-A524-4E37-9750-3EE7EB755A85}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\Server.Plugin.General.ElasticSearch\Server.Plugin.General.ElasticSearch.csproj">
+			<Name>Server.Plugin.General.ElasticSearch</Name>
+			<Project>{2114B736-97E8-4DC8-BA5E-74DC69E1C080}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\Server.Plugin.General.Import\Server.Plugin.General.Import.csproj">
+			<Name>Server.Plugin.General.Import</Name>
+			<Project>{B6C773B1-28F4-4627-8BC8-35F90249E73D}</Project>
+		</ProjectReference>
 	</ItemGroup>
 </Project>
