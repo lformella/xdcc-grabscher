@@ -186,7 +186,7 @@ small
 
 #notificationsLink + .dropdown-menu
 {
-	left: -440px;
+	left: -410px;
 }
 
 #unreadNotifications
@@ -257,6 +257,26 @@ small
 	border-top: 1px solid #ddd;
 }
 
+.grid .grid-canvas .slick-row .slick-cell
+{
+	height: 32px;
+}
+
+.gecko .grid .grid-canvas .slick-row .slick-cell
+{
+	height: 21px;
+}
+
+#NotificationGrid .grid-canvas .slick-row .slick-cell
+{
+	height: 49px;
+}
+
+.gecko #NotificationGrid .grid-canvas .slick-row .slick-cell
+{
+	height: 37px;
+}
+
 .grid .grid-canvas .slick-cell, .grid .grid-canvas .slick-headerrow-column
 {
 	border-color: -moz-use-text-color -moz-use-text-color #ddd;
@@ -310,13 +330,6 @@ small
 .slick-sort-indicator
 {
 	float: none;
-}
-
-/* Webkit Fix */
-
-.webkit .grid .grid-canvas .slick-row .slick-cell
-{
-	height: 32px;
 }
 
 /* Dasboard */
