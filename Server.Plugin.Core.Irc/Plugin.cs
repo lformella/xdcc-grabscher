@@ -91,9 +91,9 @@ namespace XG.Server.Plugin.Core.Irc
 			{
 				if (_last.AddSeconds(Settings.Instance.RunLoopTime) < DateTime.Now)
 				{
-					foreach (var server in _connections.ToArray())
+					foreach (var connection in _connections.ToArray())
 					{
-						server.TriggerTimerRun();
+						connection.TriggerTimerRun();
 					}
 				}
 

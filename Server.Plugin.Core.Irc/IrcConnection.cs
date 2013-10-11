@@ -47,7 +47,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 		ILog _log = LogManager.GetLogger(typeof(Plugin));
 
-		IrcClient _irc = new IrcClient();
+		readonly IrcClient _irc = new IrcClient();
 		string _iam;
 		
 		readonly Dictionary<Bot, DateTime> _botQueue = new Dictionary<Bot, DateTime>();
@@ -191,9 +191,9 @@ namespace XG.Server.Plugin.Core.Irc
 		
 		void ObjectAdded(AObject aParent, AObject aObj)
 		{
-			if (aObj is XG.Core.Channel)
+			var aChan = aObj as XG.Core.Channel;
+			if (aChan != null)
 			{
-				var aChan = aObj as XG.Core.Channel;
 				if (aChan.Enabled)
 				{
 					_irc.RfcJoin(aChan.Name);
@@ -203,10 +203,9 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void ObjectRemoved(AObject aParent, AObject aObj)
 		{
-			if (aObj is XG.Core.Channel)
+			var aChan = aObj as XG.Core.Channel;
+			if (aChan != null)
 			{
-				var aChan = aObj as XG.Core.Channel;
-
 				var packets = (from bot in aChan.Bots from packet in bot.Packets select packet).ToArray();
 				foreach (Packet tPack in packets)
 				{
@@ -219,23 +218,22 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void EnabledChanged(AObject aObj)
 		{
-			if (aObj is XG.Core.Channel)
+			var aChan = aObj as XG.Core.Channel;
+			if (aChan != null)
 			{
-				var tChan = aObj as XG.Core.Channel;
-
-				if (tChan.Enabled)
+				if (aChan.Enabled)
 				{
-					_irc.RfcJoin(tChan.Name);
+					_irc.RfcJoin(aChan.Name);
 				}
 				else
 				{
-					_irc.RfcPart(tChan.Name);
+					_irc.RfcPart(aChan.Name);
 				}
 			}
-
-			if (aObj is Packet)
+			
+			var tPack = aObj as Packet;
+			if (tPack != null)
 			{
-				var tPack = aObj as Packet;
 				Bot tBot = tPack.Parent;
 
 				if (tPack.Enabled)
@@ -331,11 +329,10 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void RegisterIrcEvents()
 		{
-			_irc.OnPing += (object sender, PingEventArgs e) => {
-				_irc.RfcPong(e.Data.Message);
-			};
+			_irc.OnPing += (sender, e) => _irc.RfcPong(e.Data.Message);
 
-			_irc.OnConnected += (object sender, EventArgs e) => {
+			_irc.OnConnected += (sender, e) =>
+			{
 				Server.Connected = true;
 				Server.Commit();
 				_log.Info("connected " + Server);
@@ -347,28 +344,27 @@ namespace XG.Server.Plugin.Core.Irc
 				_irc.Listen();
 			};
 
-			_irc.OnError += (object sender, ErrorEventArgs e) => {
-				_log.Info("error from " + Server + ": " + e.ErrorMessage);
-			};
+			_irc.OnError += (sender, e) => _log.Info("error from " + Server + ": " + e.ErrorMessage);
 
-			_irc.OnConnectionError += (object sender, EventArgs e) => {
-				_log.Info("connection error from " + Server + ": " + e.ToString());
-			};
+			_irc.OnConnectionError += (sender, e) => _log.Info("connection error from " + Server + ": " + e);
 
-			_irc.OnConnecting += (object sender, EventArgs e) => {
+			_irc.OnConnecting += (sender, e) =>
+			{
 				Server.Connected = false;
 				Server.Commit();
 				_log.Info("connecting to " + Server);
 			};
 
-			_irc.OnDisconnected += (object sender, EventArgs e) => {
+			_irc.OnDisconnected += (sender, e) =>
+			{
 				Server.Connected = false;
 				Server.Commit();
 				_log.Info("disconnected " + Server);
 				OnDisconnected(Server);
 			};
 
-			_irc.OnJoin += (object sender, JoinEventArgs e) => {
+			_irc.OnJoin += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Channel);
 				if (channel != null)
 				{
@@ -399,7 +395,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnPart += (object sender, PartEventArgs e) => {
+			_irc.OnPart += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Data.Channel);
 				if (channel != null)
 				{
@@ -425,7 +422,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnNickChange += (object sender, NickChangeEventArgs e) => {
+			_irc.OnNickChange += (sender, e) =>
+			{
 				if (_iam == e.OldNickname)
 				{
 					_iam = e.NewNickname;
@@ -441,7 +439,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnBan += (object sender, BanEventArgs e) => {
+			_irc.OnBan += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Channel);
 				if (channel != null)
 				{
@@ -463,7 +462,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnKick += (object sender, KickEventArgs e) => {
+			_irc.OnKick += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Data.Channel);
 				if (channel != null)
 				{
@@ -487,7 +487,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnQuit += (object sender, QuitEventArgs e) => {
+			_irc.OnQuit += (sender, e) =>
+			{
 				var bot = Server.Bot(e.Who);
 				if (bot != null)
 				{
@@ -498,7 +499,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnNames += (object sender, NamesEventArgs e) => {
+			_irc.OnNames += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Channel);
 				if (channel != null)
 				{
@@ -521,7 +523,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnTopic += (object sender, TopicEventArgs e) => {
+			_irc.OnTopic += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Channel);
 				if (channel != null)
 				{
@@ -530,7 +533,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnTopicChange += (object sender, TopicChangeEventArgs e) => {
+			_irc.OnTopicChange += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Channel);
 				if (channel != null)
 				{
@@ -539,7 +543,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnUnban += (object sender, UnbanEventArgs e) => {
+			_irc.OnUnban += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Channel);
 				if (channel != null)
 				{
@@ -552,7 +557,8 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnErrorMessage += (object sender, IrcEventArgs e) => {
+			_irc.OnErrorMessage += (sender, e) =>
+			{
 				var channel = Server.Channel(e.Data.Channel);
 				if (channel != null)
 				{
@@ -578,7 +584,7 @@ namespace XG.Server.Plugin.Core.Irc
 					}
 					if (tWaitTime > 0)
 					{
-						channel.ErrorCode = (int) e.Data.ReplyCode;
+						channel.ErrorCode = (int)e.Data.ReplyCode;
 						channel.Connected = false;
 						_log.Warn("could not join " + channel + ": " + e.Data.ReplyCode);
 
@@ -590,19 +596,17 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnQueryMessage += (object sender, IrcEventArgs e) => {
-				Message.Parse(Server, e);
-			};
+			_irc.OnQueryMessage += (sender, e) => Message.Parse(Server, e);
 
-			_irc.OnQueryAction += (object sender, ActionEventArgs e) => {
+			_irc.OnQueryAction += (sender, e) =>
+			{
 				int a = 0;
 			};
 
-			_irc.OnChannelMessage += (object sender, IrcEventArgs e) => {
-				Message.Parse(Server, e);
-			};
+			_irc.OnChannelMessage += (sender, e) => Message.Parse(Server, e);
 
-			_irc.OnQueryNotice += (object sender, IrcEventArgs e) => {
+			_irc.OnQueryNotice += (sender, e) =>
+			{
 				if (e.Data.Nick != null)
 				{
 					if (e.Data.Nick.ToLower() == "nickserv")
@@ -616,13 +620,9 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			_irc.OnCtcpReply += (object sender, CtcpEventArgs e) => {
-				Ctcp.Parse(Server, e);
-			};
+			_irc.OnCtcpReply += (sender, e) => Ctcp.Parse(Server, e);
 
-			_irc.OnCtcpRequest += (object sender, CtcpEventArgs e) => {
-				Ctcp.Parse(Server, e);
-			};
+			_irc.OnCtcpRequest += (sender, e) => Ctcp.Parse(Server, e);
 		}
 
 		void UpdateChannel(XG.Core.Channel aChannel)
@@ -744,7 +744,14 @@ namespace XG.Server.Plugin.Core.Irc
 
 		protected override void StopRun()
 		{
-			_irc.Disconnect();
+			try
+			{
+				_irc.Disconnect();
+			}
+			catch (Meebey.SmartIrc4net.NotConnectedException)
+			{
+				// this is ok
+			}
 		}
 
 		#endregion
