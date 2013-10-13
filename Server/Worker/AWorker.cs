@@ -49,12 +49,16 @@ namespace XG.Server.Worker
 
 		#region FUNCTIONS
 
-		public void Start()
+		public void Start(string aName = null)
 		{
 			_allowRunning = true;
 			try
 			{
 				_thread = new Thread(StartRun);
+				if (aName != null)
+				{
+					_thread.Name = aName;
+				}
 				_thread.Start();
 			}
 			catch (ThreadAbortException)

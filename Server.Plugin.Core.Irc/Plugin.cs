@@ -29,10 +29,10 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 
-using log4net;
-
 using XG.Core;
 using XG.Server.Plugin;
+
+using log4net;
 
 namespace XG.Server.Plugin.Core.Irc
 {
@@ -43,13 +43,9 @@ namespace XG.Server.Plugin.Core.Irc
 		static readonly ILog _log = LogManager.GetLogger(typeof(Plugin));
 
 		readonly HashSet<IrcConnection> _connections = new HashSet<IrcConnection>();
-		readonly HashSet<Download> _downloads = new HashSet<Download>();
-		readonly XdccListWatchdog _listWatchdog = new XdccListWatchdog();
+		readonly HashSet<BotDownload> _botDownloads = new HashSet<BotDownload>();
 
-		readonly Parser.Notice _noticeParser = new Parser.Notice();
-		readonly Parser.Message _messageParser = new Parser.Message();
-		readonly Parser.Ctcp _ctcpParser = new Parser.Ctcp();
-		readonly Parser.Nickserv _nickservParser = new Parser.Nickserv();
+		readonly Parser.Parser _parser = new Parser.Parser();
 
 		#endregion
 
@@ -57,23 +53,12 @@ namespace XG.Server.Plugin.Core.Irc
 
 		protected override void StartRun()
 		{
-			_ctcpParser.FileActions = FileActions;
-
-			_ctcpParser.OnAddDownload += (aPack, aChunk, aIp, aPort) => {
-				BotConnect(aPack, aChunk, aIp, aPort);
-			};
-
-			_ctcpParser.OnNotificationAdded += (aObj) => {
-				AddNotification(aObj);
-			};
-
-			_noticeParser.OnRemoveDownload += (aServer, aBot) => {
-				BotDisconnect(aBot);
-			};
-
-			_messageParser.OnNotificationAdded += (aObj) => {
-				AddNotification(aObj);
-			};
+			_parser.FileActions = FileActions;
+			_parser.OnAddDownload += BotConnect;
+			_parser.OnNotificationAdded += AddNotification;
+			_parser.OnRemoveDownload += (aServer, aBot) => BotDisconnect(aBot);
+			_parser.OnNotificationAdded += AddNotification;
+			_parser.Initialize();
 
 			foreach (XG.Core.Server server in Servers.All)
 			{
@@ -82,9 +67,6 @@ namespace XG.Server.Plugin.Core.Irc
 					ServerConnect(server);
 				}
 			}
-
-			_listWatchdog.IrcConnections = _connections;
-			_listWatchdog.Start();
 
 			DateTime _last = DateTime.Now;
 			while (AllowRunning)
@@ -103,14 +85,12 @@ namespace XG.Server.Plugin.Core.Irc
 
 		protected override void StopRun()
 		{
-			_listWatchdog.Stop();
-
 			foreach (var connection in _connections)
 			{
 				connection.Stop();
 			}
 
-			foreach (var download in _downloads)
+			foreach (var download in _botDownloads)
 			{
 				download.Stop();
 			}
@@ -174,17 +154,14 @@ namespace XG.Server.Plugin.Core.Irc
 				connection = new IrcConnection
 				{
 					Server = aServer,
-					Notice = _noticeParser,
-					Message = _messageParser,
-					Nickserv =  _nickservParser,
-					Ctcp = _ctcpParser,
+					Parser = _parser,
 					FileActions = FileActions
 				};
 				_connections.Add(connection);
 
 				connection.OnDisconnected += ServerDisconnected;
 				connection.OnNotificationAdded += AddNotification;
-				connection.Start();
+				connection.Start(aServer.ToString());
 			}
 			else
 			{
@@ -216,10 +193,7 @@ namespace XG.Server.Plugin.Core.Irc
 					connection.OnNotificationAdded -= AddNotification;
 
 					connection.Server = null;
-					connection.Notice = null;
-					connection.Message = null;
-					connection.Nickserv = null;
-					connection.Ctcp = null;
+					connection.Parser = null;
 					connection.FileActions = null;
 
 					_connections.Remove(connection);
@@ -237,10 +211,10 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void BotConnect(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
 		{
-			Download download = _downloads.SingleOrDefault(c => c.Packet == aPack);
+			var download = _botDownloads.SingleOrDefault(c => c.Packet == aPack);
 			if (download == null)
 			{
-				download = new Download
+				download = new BotDownload
 				{
 					FileActions = FileActions,
 					Packet = aPack,
@@ -253,8 +227,8 @@ namespace XG.Server.Plugin.Core.Irc
 				download.OnDisconnected += BotDisconnected;
 				download.OnNotificationAdded += AddNotification;
 
-				_downloads.Add(download);
-				download.Start();
+				_botDownloads.Add(download);
+				download.Start(aIp + ":" + aPort);
 			}
 			else
 			{
@@ -265,7 +239,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void BotDisconnect(Bot aBot)
 		{
-			Download download = _downloads.SingleOrDefault(c => c.Packet.Parent == aBot);
+			var download = _botDownloads.SingleOrDefault(c => c.Packet.Parent == aBot);
 			if (download != null)
 			{
 				download.Stop();
@@ -274,14 +248,14 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void BotDisconnected(Packet aPacket)
 		{
-			Download download = _downloads.SingleOrDefault(c => c.Packet == aPacket);
+			var download = _botDownloads.SingleOrDefault(c => c.Packet == aPacket);
 			if (download != null)
 			{
 				download.Packet = null;
 
 				download.OnDisconnected -= BotDisconnected;
 				download.OnNotificationAdded -= AddNotification;
-				_downloads.Remove(download);
+				_botDownloads.Remove(download);
 
 				try
 				{

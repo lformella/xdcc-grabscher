@@ -18,13 +18,38 @@
     <File subtype="Code" buildaction="Compile" name="Plugin.cs" />
     <File subtype="Directory" buildaction="Compile" name="Parser" />
     <File subtype="Code" buildaction="Compile" name="Parser/Helper.cs" />
-    <File subtype="Code" buildaction="Compile" name="Parser/Nickserv.cs" />
-    <File subtype="Code" buildaction="Compile" name="Parser/Notice.cs" />
     <File subtype="Code" buildaction="Compile" name="IrcConnection.cs" />
-    <File subtype="Code" buildaction="Compile" name="Download.cs" />
-    <File subtype="Code" buildaction="Compile" name="Parser/Ctcp.cs" />
-    <File subtype="Code" buildaction="Compile" name="Parser/Message.cs" />
-    <File subtype="Code" buildaction="Compile" name="XdccListWatchdog.cs" />
+    <File subtype="Code" buildaction="Compile" name="BotDownload.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Parser/Types" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Parser.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/AParser.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Nickserv.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Parser/Types/Xdcc" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/AllSlotsFull.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/AlreadyReceiving.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/AutoIgnore.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/ClosingConnection.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/DccPending.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/InvalidPacketNumber.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/NotInQueue.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/OwnerRequest.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/PacketAlreadyRequested.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/Queued.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/QueueFull.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/XdccSending.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/XdccDenied.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/XdccDown.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/TransferLimit.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Xdcc/RemoveFromQueue.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Parser/Types/Info" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Join.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Packet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Status.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Bandwidth.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/AParserWithExistingBot.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Parser/Types/Dcc" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Dcc/ExistingBot.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Dcc/ADccParser.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

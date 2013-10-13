@@ -37,11 +37,11 @@ using log4net;
 
 namespace XG.Server.Plugin.Core.Irc
 {
-	public class Download : AWorker
+	public class BotDownload : AWorker
 	{
 		#region VARIABLES
 
-		ILog _log;
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		Packet _packet;
 
@@ -133,8 +133,6 @@ namespace XG.Server.Plugin.Core.Irc
 
 		protected override void StartRun()
 		{
-			_log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType + "(" + Hostname + ":" + Port + ")");
-
 			using (_tcpClient = new TcpClient())
 			{
 				_tcpClient.SendTimeout = Settings.Instance.DownloadTimeoutTime * 1000;

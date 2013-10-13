@@ -35,7 +35,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Test
 	[TestFixture]
 	public class Message : AParser
 	{
-		Parser.Message _message = new Parser.Message();
+		//Irc.Parser.Message _message = new Irc.Parser.Message();
 
 		[Test]
 		public void ParseBandwidth()

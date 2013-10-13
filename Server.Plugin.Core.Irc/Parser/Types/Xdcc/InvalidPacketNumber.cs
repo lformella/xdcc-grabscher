@@ -1,5 +1,5 @@
 // 
-//  Helper.cs
+//  InvalidPacketNumber.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,42 +23,42 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace XG.Server.Plugin.Core.Irc.Parser
+using XG.Core;
+
+namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 {
-	public static class Helper
+	public class InvalidPacketNumber : AParserWithExistingBot
 	{
-		public static string Magicstring = @"((\*|:){2,3}|->|<-|)";
-
-		public static string RemoveSpecialIrcChars(string aData)
+		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
 		{
-			aData = Regex.Replace(aData, "(\u0002|\u0003)(\\d+(,\\d{1,2}|)|)", String.Empty);
-			aData = aData.Replace("\u0001", String.Empty);
-			aData = aData.Replace("\u000F", String.Empty);
-			aData = aData.Replace("\uFFFD", String.Empty);
-			aData = aData.Replace("\u0016", String.Empty);
-			return aData.Trim();
-		}
-
-		public static Match Match(string aMessage, string[] aRegexes)
-		{
-			Match match = null;
-			foreach (string regex in aRegexes)
+			string[] regexes =
 			{
-				match = Match(aMessage, regex);
-				if (match.Success)
+				Helper.Magicstring + " Die Nummer der Datei ist ung.ltig",
+				Helper.Magicstring + " Invalid Pack Number, Try Again"
+			};
+			var match = Helper.Match(aMessage, regexes);
+			if (match.Success)
+			{
+				Packet tPack = aBot.OldestActivePacket();
+				if (tPack != null)
 				{
-					return match;
+					// remove all packets with ids beeing greater than the current one because they MUST be missing, too
+					var tPackets = from packet in aBot.Packets where packet.Id >= tPack.Id select packet;
+					foreach (Packet pack in tPackets)
+					{
+						pack.Enabled = false;
+						aBot.RemovePacket(pack);
+					}
 				}
-			}
-			return match;
-		}
+				Log.Error("Parse() invalid packetnumber from " + aBot);
 
-		public static Match Match(string aMessage, string aRegex)
-		{
-			return Regex.Match(aMessage, aRegex, RegexOptions.IgnoreCase);
+				UpdateBot(aBot, aMessage);
+				return true;
+			}
+			return false;
 		}
 	}
 }

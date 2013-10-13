@@ -1,5 +1,5 @@
-// 
-//  Notice.cs
+﻿// 
+//  Join.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,30 +23,32 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
+using System.Text.RegularExpressions;
 
-using NUnit.Framework;
-using Meebey.SmartIrc4net;
+using XG.Core;
 
-namespace XG.Server.Plugin.Core.Irc.Parser.Test
+namespace XG.Server.Plugin.Core.Irc.Parser.Types.Info
 {
-	[TestFixture]
-	public class Notice : AParser
+	public class Join : AParserWithExistingBot
 	{
-		//Irc.Parser.Notice _notice = new Irc.Parser.Notice();
-
-		public Notice()
+		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
 		{
-			/*_notice.OnJoinChannel += (aServer, aData) => {
-				EventData = aData;
-			};*/
-		}
-
-		[Test]
-		public void BotMessages()
-		{
-			//_notice.Parse(Server, ":[XG]TestBot!~SYSTEM@XG.BITPIR.AT NOTICE xg1_bitpir_at : ** Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now");
-			Assert.AreEqual("MG-CHAT", EventData);
+			string[] regexes =
+			{
+				@".*\s+JOIN (?<channel>[^\s]+).*"
+			};
+			var match = Helper.Match(aMessage, regexes);
+			if (match.Success)
+			{
+				string channel = match.Groups["channel"].ToString();
+				if (!channel.StartsWith("#"))
+				{
+					channel = "#" + channel;
+				}
+				FireJoinChannel(aConnection.Server, channel);
+				return true;
+			}
+			return false;
 		}
 	}
 }
