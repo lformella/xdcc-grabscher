@@ -56,7 +56,7 @@ namespace XG.Server.Plugin.Core.Irc
 			_parser.FileActions = FileActions;
 			_parser.OnAddDownload += BotConnect;
 			_parser.OnNotificationAdded += AddNotification;
-			_parser.OnRemoveDownload += (aServer, aBot) => BotDisconnect(aBot);
+			_parser.OnRemoveDownload += (aSender, aEventArgs) => BotDisconnect(aEventArgs.Value2);
 			_parser.OnNotificationAdded += AddNotification;
 			_parser.Initialize();
 
@@ -100,32 +100,32 @@ namespace XG.Server.Plugin.Core.Irc
 
 		#region EVENTHANDLER
 
-		protected override void ObjectAdded(AObject aParent, AObject aObj)
+		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aObj is XG.Core.Server)
+			if (aEventArgs.Value2 is XG.Core.Server)
 			{
-				var aServer = aObj as XG.Core.Server;
+				var aServer = aEventArgs.Value2 as XG.Core.Server;
 				ServerConnect(aServer);
 			}
 		}
 
-		protected override void ObjectRemoved(AObject aParent, AObject aObj)
+		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aObj is XG.Core.Server)
+			if (aEventArgs.Value2 is XG.Core.Server)
 			{
-				var aServer = aObj as XG.Core.Server;
+				var aServer = aEventArgs.Value2 as XG.Core.Server;
 				aServer.Enabled = false;
 				ServerDisconnect(aServer);
 			}
 		}
 
-		protected override void ObjectEnabledChanged(AObject aObj)
+		protected override void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (aObj is XG.Core.Server)
+			if (aEventArgs.Value1 is XG.Core.Server)
 			{
-				var aServer = aObj as XG.Core.Server;
+				var aServer = aEventArgs.Value1 as XG.Core.Server;
 
-				if (aObj.Enabled)
+				if (aEventArgs.Value1.Enabled)
 				{
 					ServerConnect(aServer);
 				}
@@ -182,12 +182,12 @@ namespace XG.Server.Plugin.Core.Irc
 			}
 		}
 
-		void ServerDisconnected(XG.Core.Server aServer)
+		void ServerDisconnected(object aSender, EventArgs<XG.Core.Server> aEventArgs)
 		{
-			IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aServer);
+			IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aEventArgs.Value1);
 			if (connection != null)
 			{
-				if (!aServer.Enabled)
+				if (!aEventArgs.Value1.Enabled)
 				{
 					connection.OnDisconnected -= ServerDisconnected;
 					connection.OnNotificationAdded -= AddNotification;
@@ -201,7 +201,7 @@ namespace XG.Server.Plugin.Core.Irc
 			}
 			else
 			{
-				_log.Error("ServerDisconnected(" + aServer + ") is not in the list");
+				_log.Error("ServerDisconnected(" + aEventArgs.Value1 + ") is not in the list");
 			}
 		}
 
@@ -209,31 +209,31 @@ namespace XG.Server.Plugin.Core.Irc
 
 		#region BOT
 
-		void BotConnect(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
+		void BotConnect(object aSender, EventArgs<Packet, Int64, IPAddress, int> aEventArgs)
 		{
-			var download = _botDownloads.SingleOrDefault(c => c.Packet == aPack);
+			var download = _botDownloads.SingleOrDefault(c => c.Packet == aEventArgs.Value1);
 			if (download == null)
 			{
 				download = new BotDownload
 				{
 					FileActions = FileActions,
-					Packet = aPack,
-					StartSize = aChunk,
-					Hostname = aIp.ToString(),
-					Port = aPort,
-					MaxData = aPack.RealSize - aChunk
+					Packet = aEventArgs.Value1,
+					StartSize = aEventArgs.Value2,
+					IP = aEventArgs.Value3,
+					Port = aEventArgs.Value4,
+					MaxData = aEventArgs.Value1.RealSize - aEventArgs.Value2
 				};
 
 				download.OnDisconnected += BotDisconnected;
 				download.OnNotificationAdded += AddNotification;
 
 				_botDownloads.Add(download);
-				download.Start(aIp + ":" + aPort);
+				download.Start(aEventArgs.Value3 + ":" + aEventArgs.Value4);
 			}
 			else
 			{
 				// uhh - that should not happen
-				_log.Error("BotConnect(" + aPack + ") is already downloading");
+				_log.Error("BotConnect(" + aEventArgs.Value1 + ") is already downloading");
 			}
 		}
 
@@ -246,9 +246,9 @@ namespace XG.Server.Plugin.Core.Irc
 			}
 		}
 
-		void BotDisconnected(Packet aPacket)
+		void BotDisconnected(object aSender, EventArgs<Packet> aEventArgs)
 		{
-			var download = _botDownloads.SingleOrDefault(c => c.Packet == aPacket);
+			var download = _botDownloads.SingleOrDefault(c => c.Packet == aEventArgs.Value1);
 			if (download != null)
 			{
 				download.Packet = null;
@@ -274,10 +274,10 @@ namespace XG.Server.Plugin.Core.Irc
 
 				try
 				{
-					IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aPacket.Parent.Parent.Parent);
+					IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aEventArgs.Value1.Parent.Parent.Parent);
 					if (connection != null)
 					{
-						connection.AddBotToQueue(aPacket.Parent, Settings.Instance.CommandWaitTime);
+						connection.AddBotToQueue(aEventArgs.Value1.Parent, Settings.Instance.CommandWaitTime);
 					}
 				}
 				catch (Exception ex)
@@ -291,9 +291,9 @@ namespace XG.Server.Plugin.Core.Irc
 
 		#region Functions
 
-		void AddNotification (Notification aNotification)
+		void AddNotification(object aSender, EventArgs<Notification> aEventArgs)
 		{
-			Notifications.Add(aNotification);
+			Notifications.Add(aEventArgs.Value1);
 		}
 
 		#endregion

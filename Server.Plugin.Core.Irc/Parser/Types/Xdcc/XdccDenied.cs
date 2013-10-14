@@ -43,8 +43,8 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 				string info = match.Groups["info"].ToString().ToLower();
 				if (info.StartsWith("you must be on a known channel to request a pack"))
 				{
-					FireJoinChannelsFromBot(aConnection.Server, aBot);
-					FireQueueRequestFromBot(aConnection.Server, aBot, Settings.Instance.CommandWaitTime);
+					FireJoinChannelsFromBot(this, new EventArgs<XG.Core.Server, Bot>(aConnection.Server, aBot));
+					FireQueueRequestFromBot(this, new EventArgs<XG.Core.Server, Bot, int>(aConnection.Server, aBot, Settings.Instance.CommandWaitTime));
 				}
 				else if (info.StartsWith("i don't send transfers to"))
 				{
@@ -63,7 +63,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 					{
 						aBot.State = Bot.States.Idle;
 					}
-					FireQueueRequestFromBot(aConnection.Server, aBot, Settings.Instance.CommandWaitTime);
+					FireQueueRequestFromBot(this, new EventArgs<XG.Core.Server, Bot, int>(aConnection.Server, aBot, Settings.Instance.CommandWaitTime));
 					Log.Error("Parse() XDCC denied from " + aBot + ": " + info);
 				}
 

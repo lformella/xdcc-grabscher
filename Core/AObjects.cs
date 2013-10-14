@@ -31,32 +31,30 @@ using System.Runtime.Serialization;
 
 namespace XG.Core
 {
-	public delegate void ObjectsDelegate(AObjects aObjects, AObject aObject);
-
 	[Serializable]
 	public abstract class AObjects : AObject
 	{
 		#region EVENTS
 
 		[field: NonSerialized]
-		public event ObjectsDelegate OnAdded;
+		public event EventHandler<EventArgs<AObject, AObject>> OnAdded;
 
-		protected void FireAdded(AObjects aObjects, AObject aObject)
+		protected void FireAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
 			if (OnAdded != null)
 			{
-				OnAdded(aObjects, aObject);
+				OnAdded(aSender, aEventArgs);
 			}
 		}
 
 		[field: NonSerialized]
-		public event ObjectsDelegate OnRemoved;
+		public event EventHandler<EventArgs<AObject, AObject>> OnRemoved;
 
-		protected void FireRemoved(AObjects aObjects, AObject aObject)
+		protected void FireRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
 			if (OnRemoved != null)
 			{
-				OnRemoved(aObjects, aObject);
+				OnRemoved(aSender, aEventArgs);
 			}
 		}
 
@@ -101,7 +99,7 @@ namespace XG.Core
 						aObjects.OnAdded += FireAdded;
 						aObjects.OnRemoved += FireRemoved;
 					}
-					FireAdded(this, aObject);
+					FireAdded(this, new EventArgs<AObject, AObject>(this, aObject));
 				}
 			}
 			return result;
@@ -131,7 +129,7 @@ namespace XG.Core
 						aObjects.OnAdded -= FireAdded;
 						aObjects.OnRemoved -= FireRemoved;
 					}
-					FireRemoved(this, aObject);
+					FireRemoved(this, new EventArgs<AObject, AObject>(this, aObject));
 				}
 			}
 			return result;

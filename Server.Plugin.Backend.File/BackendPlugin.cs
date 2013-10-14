@@ -169,25 +169,25 @@ namespace XG.Server.Plugin.Backend.File
 
 		#region EVENTHANDLER
 
-		protected override void FileAdded(AObject aParentObj, AObject aObj)
+		protected override void FileAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
 			SaveFiles();
 		}
 
-		protected override void FileRemoved(AObject aParentObj, AObject aObj)
+		protected override void FileRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
 			SaveFiles();
 		}
 
-		protected override void FileChanged(AObject aObj, string[] aFields)
+		protected override void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			if (aObj is Core.File)
+			if (aEventArgs.Value1 is Core.File)
 			{
 				SaveFiles();
 			}
-			else if (aObj is FilePart)
+			else if (aEventArgs.Value1 is FilePart)
 			{
-				var part = aObj as FilePart;
+				var part = aEventArgs.Value1 as FilePart;
 				// if this change is lost, the data might be corrupt, so save it now
 				if (part.State != FilePart.States.Open)
 				{
@@ -201,35 +201,35 @@ namespace XG.Server.Plugin.Backend.File
 			}
 		}
 
-		protected override void SearchAdded(AObject aParent, AObject aObj)
+		protected override void SearchAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
 			SaveSearches();
 		}
 
-		protected override void SearchRemoved(AObject aParent, AObject aObj)
+		protected override void SearchRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
 			SaveSearches();
 		}
 
-		protected override void ObjectAdded(AObject aParent, AObject aObj)
+		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aObj is Core.Server || aObj is Channel)
+			if (aEventArgs.Value2 is Core.Server || aEventArgs.Value2 is Channel)
 			{
 				SaveObjects();
 			}
 		}
 
-		protected override void ObjectRemoved(AObject aParent, AObject aObj)
+		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aObj is Core.Server || aObj is Channel)
+			if (aEventArgs.Value2 is Core.Server || aEventArgs.Value2 is Channel)
 			{
 				SaveObjects();
 			}
 		}
 
-		protected override void ObjectEnabledChanged(AObject aObj)
+		protected override void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (aObj is Core.Server || aObj is Channel || aObj is Packet)
+			if (aEventArgs.Value1 is Core.Server || aEventArgs.Value1 is Channel || aEventArgs.Value1 is Packet)
 			{
 				SaveObjects();
 			}

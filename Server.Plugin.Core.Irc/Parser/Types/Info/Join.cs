@@ -45,7 +45,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Info
 				{
 					channel = "#" + channel;
 				}
-				FireJoinChannel(aConnection.Server, channel);
+				FireJoinChannel(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, channel));
 				return true;
 			}
 			return false;

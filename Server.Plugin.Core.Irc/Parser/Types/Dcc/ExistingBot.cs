@@ -100,7 +100,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 						Log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
 						tPacket.Enabled = false;
 
-						FireNotificationAdded(new Notification(Notification.Types.BotSubmittedWrongPort, tBot));
+						FireNotificationAdded(Notification.Types.BotSubmittedWrongPort, tBot);
 					}
 					else
 					{
@@ -121,12 +121,12 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 						{
 							Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use, disabling packet");
 							tPacket.Enabled = false;
-							FireUnRequestFromBot(aConnection.Server, tBot);
+							FireUnRequestFromBot(this, new EventArgs<XG.Core.Server, Bot>(aConnection.Server, tBot));
 						}
 						else if (tChunk > 0)
 						{
 							Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + tChunk);
-							FireSendPrivateMessage(aConnection.Server, tBot, "\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001");
+							FireSendPrivateMessage(this, new EventArgs<XG.Core.Server, Bot, string>(aConnection.Server, tBot, "\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001"));
 						}
 						else
 						{
@@ -165,7 +165,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 				if (isOk)
 				{
 					Log.Info("Parse() downloading from " + tBot + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
-					FireAddDownload(tPacket, tChunk, tBot.IP, tPort);
+					FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, tChunk, tBot.IP, tPort));
 					return true;
 				}
 			}

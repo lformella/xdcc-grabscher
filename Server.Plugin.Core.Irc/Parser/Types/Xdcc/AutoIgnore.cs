@@ -56,7 +56,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 					{
 						time += valueInt;
 					}
-					FireQueueRequestFromBot(aConnection.Server, aBot, time * 1000);
+					FireQueueRequestFromBot(this, new EventArgs<XG.Core.Server, Bot, int>(aConnection.Server, aBot, time * 1000));
 				}
 
 				UpdateBot(aBot, aMessage);

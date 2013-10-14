@@ -1,5 +1,5 @@
-// 
-//  ANotificationSender.cs
+﻿// 
+//  EventArgs.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -25,29 +25,47 @@
 
 using System;
 
-using XG.Core;
-
-namespace XG.Server
+namespace XG.Core
 {
-	public abstract class ANotificationSender
+	public class EventArgs<T> : EventArgs
 	{
-		#region EVENTS
-
-		public event EventHandler<EventArgs<Notification>> OnNotificationAdded;
-
-		public void FireNotificationAdded(Notification.Types aType, AObject aObject)
+		public EventArgs(T aValue1)
 		{
-			FireNotificationAdded(this, new EventArgs<Notification>(new Notification(aType, aObject)));
+			Value1 = aValue1;
 		}
 
-		public void FireNotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
+		public T Value1 { get; private set; }
+	}
+
+	public class EventArgs<T, U> : EventArgs<T>
+	{
+		public EventArgs(T aValue, U aValue2) : base(aValue)
 		{
-			if (OnNotificationAdded != null)
-			{
-				OnNotificationAdded(aSender, aEventArgs);
-			}
+			Value2 = aValue2;
 		}
 
-		#endregion
+		public U Value2 { get; private set; }
+	}
+
+	public class EventArgs<T, U, V> : EventArgs<T, U>
+	{
+		public EventArgs(T aValue, U aValue2, V aValue3)
+			: base(aValue, aValue2)
+		{
+			Value3 = aValue3;
+		}
+
+		public V Value3 { get; private set; }
+	}
+
+	public class EventArgs<T, U, V, W> : EventArgs<T, U, V>
+	{
+		public EventArgs(T aValue, U aValue2, V aValue3, W aValue4)
+			: base(aValue, aValue2, aValue3)
+		{
+			Value4 = aValue4;
+		}
+
+		public W Value4 { get; private set; }
 	}
 }

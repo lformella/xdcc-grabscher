@@ -26,6 +26,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
@@ -63,7 +64,7 @@ namespace XG.Server.Plugin.Core.Irc
 		}
 
 		public Int64 StartSize { get; set; }
-		public string Hostname { get; set; }
+		public IPAddress IP { get; set; }
 		public int Port { get; set; }
 		public Int64 MaxData { get; set; }
 		public FileActions FileActions { get; set; }
@@ -124,8 +125,8 @@ namespace XG.Server.Plugin.Core.Irc
 
 		#region EVENTS
 
-		public event PacketDelegate OnConnected;
-		public event PacketDelegate OnDisconnected;
+		public event EventHandler<EventArgs<Packet>> OnConnected;
+		public event EventHandler<EventArgs<Packet>> OnDisconnected;
 
 		#endregion
 
@@ -141,7 +142,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 				try
 				{
-					_tcpClient.Connect(Hostname, Port);
+					_tcpClient.Connect(IP, Port);
 					_log.Info("StartRun() connected");
 
 					using (NetworkStream stream = _tcpClient.GetStream())
@@ -242,7 +243,7 @@ namespace XG.Server.Plugin.Core.Irc
 					// we are connected
 					if (OnConnected != null)
 					{
-						OnConnected(Packet);
+						OnConnected(this, new EventArgs<Packet>(Packet));
 					}
 
 					// we seek if it is possible
@@ -300,7 +301,7 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 #endif
 
-				FireNotificationAdded(new Notification(Notification.Types.BotConnected, Packet));
+				FireNotificationAdded(Notification.Types.BotConnected, Packet);
 			}
 			else
 			{
@@ -344,7 +345,7 @@ namespace XG.Server.Plugin.Core.Irc
 						Part.State = FilePart.States.Ready;
 						_log.Info("StopWriting(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
 
-						FireNotificationAdded(new Notification(Notification.Types.PacketCompleted, Packet));
+						FireNotificationAdded(Notification.Types.PacketCompleted, Packet);
 					}
 					// that should not happen
 					else if (CurrentSize > StopSize)
@@ -358,7 +359,7 @@ namespace XG.Server.Plugin.Core.Irc
 							_log.Error("StopWriting(" + Packet + ") removing corupted " + File);
 						}
 
-						FireNotificationAdded(new Notification(Notification.Types.PacketBroken, Packet));
+						FireNotificationAdded(Notification.Types.PacketBroken, Packet);
 					}
 					// it did not start
 					else if (_receivedBytes == 0)
@@ -367,14 +368,14 @@ namespace XG.Server.Plugin.Core.Irc
 						Packet.Enabled = false;
 						Packet.Parent.HasNetworkProblems = true;
 
-						FireNotificationAdded(new Notification(Notification.Types.BotConnectFailed, Packet.Parent));
+						FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
 					}
 					// it is incomplete
 					else
 					{
 						_log.Error("StopWriting(" + Packet + ") incomplete");
 
-						FireNotificationAdded(new Notification(Notification.Types.PacketIncompleted, Packet));
+						FireNotificationAdded(Notification.Types.PacketIncompleted, Packet);
 					}
 				}
 			}
@@ -386,7 +387,7 @@ namespace XG.Server.Plugin.Core.Irc
 				Packet.Enabled = false;
 				Packet.Parent.HasNetworkProblems = true;
 
-				FireNotificationAdded(new Notification(Notification.Types.BotConnectFailed, Packet.Parent));
+				FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
 			}
 
 			if (Part != null)
@@ -397,13 +398,13 @@ namespace XG.Server.Plugin.Core.Irc
 			
 			if (OnDisconnected != null)
 			{
-				OnDisconnected(Packet);
+				OnDisconnected(this, new EventArgs<Packet>(Packet));
 			}
 		}
 
-		void EnabledChanged(AObject aObj)
+		void EnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (!aObj.Enabled)
+			if (!aEventArgs.Value1.Enabled)
 			{
 				_removePart = true;
 				_tcpClient.Close();

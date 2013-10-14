@@ -38,8 +38,6 @@ using log4net;
 
 namespace XG.Server.Plugin.Core.Irc
 {
-	public delegate void BotDelegate(Bot aBot);
-
 	public class IrcConnection : AWorker
 	{
 		#region VARIABLES
@@ -115,15 +113,15 @@ namespace XG.Server.Plugin.Core.Irc
 
 		#region EVENTS
 
-		public event ServerDelegate OnDisconnected;
+		public event EventHandler<EventArgs<XG.Core.Server>> OnDisconnected;
 
 		#endregion
 
 		#region EVENTHANDLER
-		
-		void ObjectAdded(AObject aParent, AObject aObj)
+
+		void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			var aChan = aObj as XG.Core.Channel;
+			var aChan = aEventArgs.Value2 as XG.Core.Channel;
 			if (aChan != null)
 			{
 				if (aChan.Enabled)
@@ -133,9 +131,9 @@ namespace XG.Server.Plugin.Core.Irc
 			}
 		}
 
-		void ObjectRemoved(AObject aParent, AObject aObj)
+		void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			var aChan = aObj as XG.Core.Channel;
+			var aChan = aEventArgs.Value2 as XG.Core.Channel;
 			if (aChan != null)
 			{
 				var packets = (from bot in aChan.Bots from packet in bot.Packets select packet).ToArray();
@@ -148,9 +146,9 @@ namespace XG.Server.Plugin.Core.Irc
 			}
 		}
 
-		void EnabledChanged(AObject aObj)
+		void EnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			var aChan = aObj as XG.Core.Channel;
+			var aChan = aEventArgs.Value1 as XG.Core.Channel;
 			if (aChan != null)
 			{
 				if (aChan.Enabled)
@@ -162,8 +160,8 @@ namespace XG.Server.Plugin.Core.Irc
 					Client.RfcPart(aChan.Name);
 				}
 			}
-			
-			var tPack = aObj as Packet;
+
+			var tPack = aEventArgs.Value1 as Packet;
 			if (tPack != null)
 			{
 				Bot tBot = tPack.Parent;
@@ -193,59 +191,59 @@ namespace XG.Server.Plugin.Core.Irc
 
 		#region IRC EVENTHANDLER
 
-		void JoinChannel (XG.Core.Server aServer, string aData)
+		void JoinChannel (object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
 		{
-			if (aServer == Server)
+			if (aEventArgs.Value1 == Server)
 			{
-				_log.Info("JoinChannel(" + aData + ")");
-				Client.RfcJoin(aData);
+				_log.Info("JoinChannel(" + aEventArgs.Value2 + ")");
+				Client.RfcJoin(aEventArgs.Value2);
 			}
 		}
 
-		void JoinChannelsFromBot (XG.Core.Server aServer, Bot aBot)
+		void JoinChannelsFromBot(object aSender, EventArgs<XG.Core.Server, Bot> aEventArgs)
 		{
-			if (aServer == Server)
+			if (aEventArgs.Value1 == Server)
 			{
-				var user = Client.GetIrcUser(aBot.Name);
+				var user = Client.GetIrcUser(aEventArgs.Value2.Name);
 				if (user != null)
 				{
-					_log.Info("JoinChannelsFromBot(" + aBot + ")");
+					_log.Info("JoinChannelsFromBot(" + aEventArgs.Value2 + ")");
 					Client.RfcJoin(user.JoinedChannels);
-					AddBotToQueue(aBot, Settings.Instance.CommandWaitTime);
+					AddBotToQueue(aEventArgs.Value2, Settings.Instance.CommandWaitTime);
 				}
 			}
 		}
 
-		void QueueRequestFromBot (XG.Core.Server aServer, Bot aBot, int aInt)
+		void QueueRequestFromBot(object aSender, EventArgs<XG.Core.Server, Bot, int> aEventArgs)
 		{
-			if (aServer == Server)
+			if (aEventArgs.Value1 == Server)
 			{
-				AddBotToQueue(aBot, aInt);
+				AddBotToQueue(aEventArgs.Value2, aEventArgs.Value3);
 			}
 		}
 
-		void UnRequestFromBot (XG.Core.Server aServer, Bot aBot)
+		void UnRequestFromBot(object aSender, EventArgs<XG.Core.Server, Bot> aEventArgs)
 		{
-			if (aServer == Server)
+			if (aEventArgs.Value1 == Server)
 			{
-				UnRequestFromBot(aBot);
+				UnRequestFromBot(aEventArgs.Value2);
 			}
 		}
 
-		void SendPrivateMessage (XG.Core.Server aServer, Bot aBot, string aData)
+		void SendPrivateMessage(object aSender, EventArgs<XG.Core.Server, Bot, string> aEventArgs)
 		{
-			if (aServer == Server)
+			if (aEventArgs.Value1 == Server)
 			{
-				_log.Info("SendPrivateMessage(" + aBot + ", " + aData + ")");
-				Client.SendMessage(SendType.Message, aBot.Name, aData, Priority.Critical);
+				_log.Info("SendPrivateMessage(" + aEventArgs.Value2 + ", " + aEventArgs.Value3 + ")");
+				Client.SendMessage(SendType.Message, aEventArgs.Value2.Name, aEventArgs.Value3, Priority.Critical);
 			}
 		}
 
-		void SendData (XG.Core.Server aServer, string aData)
+		void SendData(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
 		{
-			if (aServer == Server)
+			if (aEventArgs.Value1 == Server)
 			{
-				Client.WriteLine(aData);
+				Client.WriteLine(aEventArgs.Value2);
 			}
 		}
 
@@ -286,7 +284,7 @@ namespace XG.Server.Plugin.Core.Irc
 				Server.Connected = false;
 				Server.Commit();
 				_log.Info("disconnected " + Server);
-				OnDisconnected(Server);
+				OnDisconnected(this, new EventArgs<XG.Core.Server>(Server));
 			};
 
 			Client.OnJoin += (sender, e) =>
@@ -300,7 +298,7 @@ namespace XG.Server.Plugin.Core.Irc
 						channel.Connected = true;
 						_log.Info("joined " + channel);
 
-						FireNotificationAdded(new Notification(Notification.Types.ChannelJoined, channel));
+						FireNotificationAdded(Notification.Types.ChannelJoined, channel);
 					}
 					else
 					{
@@ -332,7 +330,7 @@ namespace XG.Server.Plugin.Core.Irc
 						channel.ErrorCode = 0;
 						_log.Info("parted " + channel);
 
-						FireNotificationAdded(new Notification(Notification.Types.ChannelParted, channel));
+						FireNotificationAdded(Notification.Types.ChannelParted, channel);
 					}
 					else
 					{
@@ -397,7 +395,7 @@ namespace XG.Server.Plugin.Core.Irc
 					{
 						channel.Connected = false;
 						_log.Warn("kicked from " + channel.Name + " (" + e.KickReason + ")");
-						FireNotificationAdded(new Notification(Notification.Types.ChannelKicked, channel));
+						FireNotificationAdded(Notification.Types.ChannelKicked, channel);
 					}
 					else
 					{
@@ -518,7 +516,7 @@ namespace XG.Server.Plugin.Core.Irc
 						channel.Connected = false;
 						_log.Warn("could not join " + channel + ": " + e.Data.ReplyCode);
 
-						FireNotificationAdded(new Notification(notificationType, channel));
+						FireNotificationAdded(notificationType, channel);
 						AddChannelToQueue(channel, tWaitTime);
 					}
 
@@ -604,7 +602,7 @@ namespace XG.Server.Plugin.Core.Irc
 							}
 							_latestPacketRequests.Add(name, DateTime.Now.AddSeconds(Settings.Instance.SamePacketRequestTime));
 
-							FireNotificationAdded(new Notification(Notification.Types.PacketRequested, tPacket));
+							FireNotificationAdded(Notification.Types.PacketRequested, tPacket);
 						}
 
 						// create a timer to re request if the bot didnt recognized the privmsg
@@ -622,7 +620,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 			AddBotToQueue(aBot, Settings.Instance.CommandWaitTime);
 
-			FireNotificationAdded(new Notification(Notification.Types.PacketRemoved, aBot));
+			FireNotificationAdded(Notification.Types.PacketRemoved, aBot);
 		}
 
 		#endregion
@@ -655,7 +653,7 @@ namespace XG.Server.Plugin.Core.Irc
 				_log.Fatal("StartRun() connection failed " + ex.Message);
 				Server.Connected = false;
 				Server.Commit();
-				OnDisconnected(Server);
+				OnDisconnected(this, new EventArgs<XG.Core.Server>(Server));
 			}
 		}
 

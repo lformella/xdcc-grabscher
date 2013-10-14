@@ -38,6 +38,7 @@
     <File subtype="Code" buildaction="Compile" name="Notification.cs" />
     <File subtype="Code" buildaction="Compile" name="Notifications.cs" />
     <File subtype="Code" buildaction="Nothing" name="packages.config" />
+    <File subtype="Code" buildaction="Compile" name="EventArgs.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

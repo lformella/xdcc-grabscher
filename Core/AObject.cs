@@ -28,33 +28,30 @@ using System.Collections.Generic;
 
 namespace XG.Core
 {
-	public delegate void ObjectDelegate(AObject aObj);
-	public delegate void ObjectFieldsDelegate(AObject aObj, string[] aFields);
-
 	[Serializable]
 	public abstract class AObject
 	{
 		#region EVENTS
 
 		[field: NonSerialized]
-		public event ObjectDelegate OnEnabledChanged;
+		public event EventHandler<EventArgs<AObject>> OnEnabledChanged;
 
-		protected void FireEnabledChanged(AObject aObj)
+		protected void FireEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
 			if (OnEnabledChanged != null)
 			{
-				OnEnabledChanged(aObj);
+				OnEnabledChanged(aSender, aEventArgs);
 			}
 		}
 
 		[field: NonSerialized]
-		public event ObjectFieldsDelegate OnChanged;
+		public event EventHandler<EventArgs<AObject, string[]>> OnChanged;
 
-		protected void FireChanged(AObject aObj, string[] aFields)
+		protected void FireChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
 			if (OnChanged != null)
 			{
-				OnChanged(aObj, aFields);
+				OnChanged(aSender, aEventArgs);
 			}
 		}
 
@@ -116,7 +113,7 @@ namespace XG.Core
 		{
 			if (_modifiedFields != null && _modifiedFields.Count > 0)
 			{
-				FireChanged(this, _modifiedFields.ToArray());
+				FireChanged(this, new EventArgs<AObject, string[]>(this, _modifiedFields.ToArray()));
 				_modifiedFields = new List<string>();
 				return true;
 			}
@@ -161,7 +158,7 @@ namespace XG.Core
 					{
 						_enabledTime = DateTime.Now;
 					}
-					FireEnabledChanged(this);
+					FireEnabledChanged(this, new EventArgs<AObject>(this));
 				}
 			}
 		}

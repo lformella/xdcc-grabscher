@@ -44,7 +44,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 				{
 					aBot.State = Bot.States.Idle;
 				}
-				FireQueueRequestFromBot(aConnection.Server, aBot, Settings.Instance.CommandWaitTime);
+				FireQueueRequestFromBot(this, new EventArgs<XG.Core.Server, Bot, int>(aConnection.Server, aBot, Settings.Instance.CommandWaitTime));
 
 				UpdateBot(aBot, aMessage);
 				return true;

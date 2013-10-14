@@ -85,39 +85,39 @@ namespace XG.Server.Plugin.General.ElasticSearch
 
 		#region EVENTHANDLER
 
-		protected override void ObjectAdded(AObject aParent, AObject aObj)
+		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			Index(aObj);
+			Index(aEventArgs.Value2);
 
 			// reindex all parents if a child is added
-			if (aObj is Channel)
+			if (aEventArgs.Value2 is Channel)
 			{
-				Index (aObj.Parent);
+				Index (aEventArgs.Value2.Parent);
 			}
-			if (aObj is Bot)
+			if (aEventArgs.Value2 is Bot)
 			{
-				Index (aObj.Parent);
-				Index (aObj.Parent.Parent);
+				Index (aEventArgs.Value2.Parent);
+				Index (aEventArgs.Value2.Parent.Parent);
 			}
-			if (aObj is Packet)
+			if (aEventArgs.Value2 is Packet)
 			{
-				Index (aObj.Parent);
-				Index (aObj.Parent.Parent);
-				Index (aObj.Parent.Parent.Parent);
+				Index (aEventArgs.Value2.Parent);
+				Index (aEventArgs.Value2.Parent.Parent);
+				Index (aEventArgs.Value2.Parent.Parent.Parent);
 			}
 		}
 
-		protected override void ObjectChanged(AObject aObj, string[] aFields)
+		protected override void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			Index(aObj);
+			Index(aEventArgs.Value1);
 
 			// reindex all packets if a bot is changed
-			if (aObj is Bot)
+			if (aEventArgs.Value1 is Bot)
 			{
-				HashSet<string> fields = new HashSet<string>(aFields);
+				HashSet<string> fields = new HashSet<string>(aEventArgs.Value2);
 				if (fields.Contains("Name") || fields.Contains("InfoSpeedCurrent") || fields.Contains("Connected") || fields.Contains("InfoSlotCurrent") || fields.Contains("InfoSlotCurrent") || fields.Contains("InfoQueueCurrent"))
 				{
-					foreach (var p in (aObj as Bot).Packets)
+					foreach (var p in (aEventArgs.Value1 as Bot).Packets)
 					{
 						Index(p);
 					}
@@ -125,17 +125,17 @@ namespace XG.Server.Plugin.General.ElasticSearch
 			}
 		}
 
-		protected override void ObjectRemoved(AObject aParent, AObject aObj)
+		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			Remove(aObj);
+			Remove(aEventArgs.Value2);
 
 			// reindex parent object
-			Index(aParent);
+			Index(aEventArgs.Value1);
 
 			// drop all children
-			if (aObj is Core.Server)
+			if (aEventArgs.Value2 is Core.Server)
 			{
-				foreach (var channel in (aObj as Core.Server).Channels)
+				foreach (var channel in (aEventArgs.Value2 as Core.Server).Channels)
 				{
 					Remove(channel);
 					foreach (var bot in channel.Bots)
@@ -148,9 +148,9 @@ namespace XG.Server.Plugin.General.ElasticSearch
 					}
 				}
 			}
-			if (aObj is Channel)
+			if (aEventArgs.Value2 is Channel)
 			{
-				foreach (var bot in (aObj as Channel).Bots)
+				foreach (var bot in (aEventArgs.Value2 as Channel).Bots)
 				{
 					Remove(bot);
 					foreach (var packet in bot.Packets)
@@ -159,9 +159,9 @@ namespace XG.Server.Plugin.General.ElasticSearch
 					}
 				}
 			}
-			if (aObj is Bot)
+			if (aEventArgs.Value2 is Bot)
 			{
-				foreach (var packet in (aObj as Bot).Packets)
+				foreach (var packet in (aEventArgs.Value2 as Bot).Packets)
 				{
 					Remove(packet);
 				}

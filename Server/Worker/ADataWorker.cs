@@ -114,12 +114,12 @@ namespace XG.Server.Worker
 			{
 				if (_notifications != null)
 				{
-					_notifications.OnAdded -= NotificationAdded;
+					_notifications.OnAdded -= (aSender, aEventArgs) => NotificationAdded(aSender, new EventArgs<Notification>((Notification)aEventArgs.Value2));
 				}
 				_notifications = value;
 				if (_notifications != null)
 				{
-					_notifications.OnAdded += NotificationAdded;
+					_notifications.OnAdded += (aSender, aEventArgs) => NotificationAdded(aSender, new EventArgs<Notification>((Notification)aEventArgs.Value2));
 				}
 			}
 		}
@@ -128,27 +128,27 @@ namespace XG.Server.Worker
 
 		#region REPOSITORY EVENTS
 
-		protected virtual void ObjectAdded(AObject aParent, AObject aObj) {}
+		protected virtual void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
-		protected virtual void ObjectRemoved(AObject aParent, AObject aObj) {}
+		protected virtual void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
-		protected virtual void ObjectChanged(AObject aObj, string[] aFields) {}
+		protected virtual void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs) {}
 
-		protected virtual void ObjectEnabledChanged(AObject aObj) {}
+		protected virtual void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs) {}
 
-		protected virtual void FileAdded(AObject aParent, AObject aObj) {}
+		protected virtual void FileAdded(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
-		protected virtual void FileRemoved(AObject aParent, AObject aObj) {}
+		protected virtual void FileRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
-		protected virtual void FileChanged(AObject aObj, string[] aFields) {}
+		protected virtual void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs) {}
 
-		protected virtual void SearchAdded(AObject aParent, AObject aObj) {}
+		protected virtual void SearchAdded(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
-		protected virtual void SearchRemoved(AObject aParent, AObject aObj) {}
+		protected virtual void SearchRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
-		protected virtual void SearchChanged(AObject aObj, string[] aFields) {}
+		protected virtual void SearchChanged(object aSender, EventArgs<AObject, string[]> aEventArgs) {}
 
-		protected virtual void NotificationAdded(AObject aParent, AObject aObj) {}
+		protected virtual void NotificationAdded(object aSender, EventArgs<Notification> aEventArgs) {}
 
 		#endregion
 

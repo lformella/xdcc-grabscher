@@ -27,8 +27,6 @@ using System;
 
 namespace XG.Core
 {
-	public delegate void NotificationDelegate(Notification aObj);
-
 	[Serializable]
 	public class Notification : AObject
 	{

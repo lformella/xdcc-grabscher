@@ -35,12 +35,6 @@ using log4net;
 
 namespace XG.Server.Plugin.Core.Irc.Parser
 {
-	public delegate void ServerBotIntDelegate(XG.Core.Server aServer, Bot aBot, int aInt);
-	public delegate void ServerBotTextDelegate(XG.Core.Server aServer, Bot aBot, string aText);
-	public delegate void DownloadPacketDelegate(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort);
-	public delegate void DownloadFileDelegate(XG.Core.Server aServer, string aBot, IPAddress aIp, int aPort, Int64 size);
-	public delegate void ServerDataTextTextDelegate(XG.Core.Server aServer, string aUser, string aData);
-
 	public abstract class AParser : ANotificationSender
 	{
 		#region VARIABLES
@@ -53,76 +47,76 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 
 		#region EVENTS
 
-		public event ServerBotDelegate OnUnRequestFromBot;
-		protected void FireUnRequestFromBot(XG.Core.Server aServer, Bot aBot)
+		public event EventHandler<EventArgs<XG.Core.Server, Bot>> OnUnRequestFromBot;
+		protected void FireUnRequestFromBot(object aSender, EventArgs<XG.Core.Server, Bot> aEventArgs)
 		{
 			if (OnUnRequestFromBot != null)
 			{
-				OnUnRequestFromBot(aServer, aBot);
+				OnUnRequestFromBot(aSender, aEventArgs);
 			}
 		}
 
-		public event ServerBotIntDelegate OnQueueRequestFromBot;
-		protected void FireQueueRequestFromBot(XG.Core.Server aServer, Bot aBot, int aInt)
+		public event EventHandler<EventArgs<XG.Core.Server, Bot, int>> OnQueueRequestFromBot;
+		protected void FireQueueRequestFromBot(object aSender, EventArgs<XG.Core.Server, Bot, int> aEventArgs)
 		{
 			if (OnQueueRequestFromBot != null)
 			{
-				OnQueueRequestFromBot(aServer, aBot, aInt);
+				OnQueueRequestFromBot(aSender, aEventArgs);
 			}
 
 		}
 
-		public event ServerBotDelegate OnJoinChannelsFromBot;
-		protected void FireJoinChannelsFromBot(XG.Core.Server aServer, Bot aBot)
+		public event EventHandler<EventArgs<XG.Core.Server, Bot>> OnJoinChannelsFromBot;
+		protected void FireJoinChannelsFromBot(object aSender, EventArgs<XG.Core.Server, Bot> aEventArgs)
 		{
 			if (OnJoinChannelsFromBot != null)
 			{
-				OnJoinChannelsFromBot(aServer, aBot);
+				OnJoinChannelsFromBot(aSender, aEventArgs);
 			}
 		}
 
-		public event ServerBotDelegate OnRemoveDownload;
-		protected void FireRemoveDownload(XG.Core.Server aServer, Bot aBot)
+		public event EventHandler<EventArgs<XG.Core.Server, Bot>> OnRemoveDownload;
+		protected void FireRemoveDownload(object aSender, EventArgs<XG.Core.Server, Bot> aEventArgs)
 		{
 			if (OnRemoveDownload != null)
 			{
-				OnRemoveDownload(aServer, aBot);
+				OnRemoveDownload(aSender, aEventArgs);
 			}
 		}
 
-		public event ServerDataTextDelegate OnJoinChannel;
-		protected void FireJoinChannel(XG.Core.Server aServer, string aData)
+		public event EventHandler<EventArgs<XG.Core.Server, string>> OnJoinChannel;
+		protected void FireJoinChannel(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
 		{
 			if (OnJoinChannel != null)
 			{
-				OnJoinChannel(aServer, aData);
+				OnJoinChannel(aSender, aEventArgs);
 			}
 		}
 
-		public event DownloadPacketDelegate OnAddDownload;
-		protected void FireAddDownload(Packet aPack, Int64 aChunk, IPAddress aIp, int aPort)
+		public event EventHandler<EventArgs<Packet, Int64, IPAddress, int>> OnAddDownload;
+		protected void FireAddDownload(object aSender, EventArgs<Packet, Int64, IPAddress, int> aEventArgs)
 		{
 			if (OnAddDownload != null)
 			{
-				OnAddDownload(aPack, aChunk, aIp, aPort);
+				OnAddDownload(aSender, aEventArgs);
 			}
 		}
 
-		public event ServerBotTextDelegate OnSendPrivateMessage;
-		protected void FireSendPrivateMessage(XG.Core.Server aServer, Bot aBot, string aData)
+		public event EventHandler<EventArgs<XG.Core.Server, Bot, string>> OnSendPrivateMessage;
+		protected void FireSendPrivateMessage(object aSender, EventArgs<XG.Core.Server, Bot, string> aEventArgs)
 		{
 			if (OnSendPrivateMessage != null)
 			{
-				OnSendPrivateMessage(aServer, aBot, aData);
+				OnSendPrivateMessage(aSender, aEventArgs);
 			}
 		}
 
-		public event ServerDataTextDelegate OnSendData;
-		protected void FireSendData(XG.Core.Server aServer, string aData)
+		public event EventHandler<EventArgs<XG.Core.Server, string>> OnSendData;
+		protected void FireSendData(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
 		{
 			if (OnSendData != null)
 			{
-				OnSendData(aServer, aData);
+				OnSendData(aSender, aEventArgs);
 			}
 		}
 

@@ -53,7 +53,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 					// if there is no active packets lets remove us from the queue
 					if (aBot.OldestActivePacket() == null)
 					{
-						FireUnRequestFromBot(aConnection.Server, aBot);
+						FireUnRequestFromBot(this, new EventArgs<XG.Core.Server, Bot>(aConnection.Server, aBot));
 					}
 				}
 

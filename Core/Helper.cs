@@ -29,8 +29,6 @@ using System.Text.RegularExpressions;
 
 namespace XG.Core
 {
-	#region ENUMS
-
 	public enum SocketErrorCode
 	{
 		None = 0,
@@ -78,28 +76,6 @@ namespace XG.Core
 		NonRecoverableError = 11003,
 		NoDataOfRequestedType = 11004
 	}
-
-	#endregion
-
-	#region DELEGATES
-
-	public delegate void EmptyDelegate();
-
-	public delegate void SocketErrorDelegate(SocketErrorCode aValue);
-
-	public delegate void ServerDataTextDelegate(Server aServer, string aData);
-
-	public delegate void DataBinaryDelegate(byte[] aData);
-
-	public delegate void ServerDelegate(Server aServer);
-
-	public delegate void ServerBotDelegate(Server aServer, Bot aBot);
-
-	public delegate void ServerChannelDelegate(Server aServer, Channel aChan);
-
-	public delegate void PacketDelegate(Packet aPacket);
-
-	#endregion
 
 	public class Helper
 	{

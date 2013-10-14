@@ -46,16 +46,37 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Download.cs" />
+    <Compile Include="BotDownload.cs" />
     <Compile Include="IrcConnection.cs" />
-    <Compile Include="Parser\Ctcp.cs" />
+    <Compile Include="Parser\AParser.cs" />
     <Compile Include="Parser\Helper.cs" />
-    <Compile Include="Parser\Message.cs" />
-    <Compile Include="Parser\Nickserv.cs" />
-    <Compile Include="Parser\Notice.cs" />
+    <Compile Include="Parser\Types\AParserWithExistingBot.cs" />
+    <Compile Include="Parser\Types\Dcc\ADccParser.cs" />
+    <Compile Include="Parser\Types\Dcc\ExistingBot.cs" />
+    <Compile Include="Parser\Types\Info\Bandwidth.cs" />
+    <Compile Include="Parser\Types\Info\Join.cs" />
+    <Compile Include="Parser\Types\Info\Packet.cs" />
+    <Compile Include="Parser\Types\Info\Status.cs" />
+    <Compile Include="Parser\Types\Nickserv.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\Types\Xdcc\AllSlotsFull.cs" />
+    <Compile Include="Parser\Types\Xdcc\AlreadyReceiving.cs" />
+    <Compile Include="Parser\Types\Xdcc\AutoIgnore.cs" />
+    <Compile Include="Parser\Types\Xdcc\ClosingConnection.cs" />
+    <Compile Include="Parser\Types\Xdcc\DccPending.cs" />
+    <Compile Include="Parser\Types\Xdcc\InvalidPacketNumber.cs" />
+    <Compile Include="Parser\Types\Xdcc\NotInQueue.cs" />
+    <Compile Include="Parser\Types\Xdcc\OwnerRequest.cs" />
+    <Compile Include="Parser\Types\Xdcc\PacketAlreadyRequested.cs" />
+    <Compile Include="Parser\Types\Xdcc\Queued.cs" />
+    <Compile Include="Parser\Types\Xdcc\QueueFull.cs" />
+    <Compile Include="Parser\Types\Xdcc\RemoveFromQueue.cs" />
+    <Compile Include="Parser\Types\Xdcc\TransferLimit.cs" />
+    <Compile Include="Parser\Types\Xdcc\XdccDenied.cs" />
+    <Compile Include="Parser\Types\Xdcc\XdccDown.cs" />
+    <Compile Include="Parser\Types\Xdcc\XdccSending.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XdccListWatchdog.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -70,6 +91,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

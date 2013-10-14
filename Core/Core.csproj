@@ -76,6 +76,7 @@
     <Compile Include="AObjects.cs" />
     <Compile Include="Bot.cs" />
     <Compile Include="Channel.cs" />
+    <Compile Include="EventArgs.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FilePart.cs" />
     <Compile Include="Files.cs" />

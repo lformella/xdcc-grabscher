@@ -71,7 +71,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Info
 				if (aBot.InfoSlotCurrent > 0 && aBot.State == Bot.States.Waiting)
 				{
 					aBot.State = Bot.States.Idle;
-					FireQueueRequestFromBot(aConnection.Server, aBot, 0);
+					FireQueueRequestFromBot(this, new EventArgs<XG.Core.Server, Bot, int>(aConnection.Server, aBot, 0));
 				}
 
 				UpdateBot(aBot);

@@ -97,37 +97,37 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 
 		#region REPOSITORY EVENTS
 
-		protected override void ObjectAdded(Core.AObject aParent, Core.AObject aObj)
+		protected override void ObjectAdded(object aSender, EventArgs<Core.AObject, Core.AObject> aEventArgs)
 		{
-			Broadcast(Response.Types.ObjectAdded, aObj, true);
+			Broadcast(Response.Types.ObjectAdded, aEventArgs.Value2, true);
 		}
 
-		protected override void ObjectRemoved(Core.AObject aParent, Core.AObject aObj)
+		protected override void ObjectRemoved(object aSender, EventArgs<Core.AObject, Core.AObject> aEventArgs)
 		{
-			Broadcast(Response.Types.ObjectRemoved, aObj, true);
+			Broadcast(Response.Types.ObjectRemoved, aEventArgs.Value2, true);
 		}
 
-		protected override void ObjectChanged(Core.AObject aObj, string[] aFields)
+		protected override void ObjectChanged(object aSender, EventArgs<Core.AObject, string[]> aEventArgs)
 		{
-			Broadcast(Response.Types.ObjectChanged, aObj, true);
+			Broadcast(Response.Types.ObjectChanged, aEventArgs.Value1, true);
 
-			HashSet<string> fields = new HashSet<string>(aFields);
+			HashSet<string> fields = new HashSet<string>(aEventArgs.Value2);
 
 			// if a bot changed dispatch the packets, too
-			if (aObj is Core.Bot)
+			if (aEventArgs.Value1 is Core.Bot)
 			{
 				if (fields.Contains("Connected"))
 				{
-					foreach (var pack in (aObj as Core.Bot).Packets)
+					foreach (var pack in (aEventArgs.Value1 as Core.Bot).Packets)
 					{
 						Broadcast(Response.Types.ObjectChanged, pack, true);
 					}
 				}
 			}
 			// if a part changed dispatch the file, packet and bot, too
-			else if (aObj is FilePart)
+			else if (aEventArgs.Value1 is FilePart)
 			{
-				var part = aObj as FilePart;
+				var part = aEventArgs.Value1 as FilePart;
 				Broadcast(Response.Types.ObjectChanged, part.Parent, false);
 
 				if (part.Packet != null)
@@ -144,51 +144,51 @@ namespace XG.Server.Plugin.General.Webserver.Websocket
 			}
 		}
 
-		protected override void ObjectEnabledChanged(Core.AObject aObj)
+		protected override void ObjectEnabledChanged(object aSender, EventArgs<Core.AObject> aEventArgs)
 		{
-			Broadcast(Response.Types.ObjectChanged, aObj, false);
+			Broadcast(Response.Types.ObjectChanged, aEventArgs.Value1, false);
 
 			// if a packet changed dispatch the bot, too
-			if (aObj is Core.Packet)
+			if (aEventArgs.Value1 is Core.Packet)
 			{
-				var part = aObj as Core.Packet;
+				var part = aEventArgs.Value1 as Core.Packet;
 				Broadcast(Response.Types.ObjectChanged, part.Parent, false);
 			}
 		}
 
-		protected override void FileAdded(Core.AObject aParent, Core.AObject aObj)
+		protected override void FileAdded(object aSender, EventArgs<Core.AObject, Core.AObject> aEventArgs)
 		{
-			ObjectAdded(aParent, aObj);
+			ObjectAdded(aSender, aEventArgs);
 		}
 
-		protected override void FileRemoved(Core.AObject aParent, Core.AObject aObj)
+		protected override void FileRemoved(object aSender, EventArgs<Core.AObject, Core.AObject> aEventArgs)
 		{
-			ObjectRemoved(aParent, aObj);
+			ObjectRemoved(aSender, aEventArgs);
 		}
 
-		protected override void FileChanged(Core.AObject aObj, string[] aFields)
+		protected override void FileChanged(object aSender, EventArgs<Core.AObject, string[]> aEventArgs)
 		{
-			ObjectChanged(aObj, aFields);
+			ObjectChanged(aSender, aEventArgs);
 		}
 
-		protected override void SearchAdded(Core.AObject aParent, Core.AObject aObj)
+		protected override void SearchAdded(object aSender, EventArgs<Core.AObject, Core.AObject> aEventArgs)
 		{
-			ObjectAdded(aParent, aObj);
+			ObjectAdded(aSender, aEventArgs);
 		}
 
-		protected override void SearchRemoved(Core.AObject aParent, Core.AObject aObj)
+		protected override void SearchRemoved(object aSender, EventArgs<Core.AObject, Core.AObject> aEventArgs)
 		{
-			ObjectRemoved(aParent, aObj);
+			ObjectRemoved(aSender, aEventArgs);
 		}
 
-		protected override void SearchChanged(Core.AObject aObj, string[] aFields)
+		protected override void SearchChanged(object aSender, EventArgs<Core.AObject, string[]> aEventArgs)
 		{
-			ObjectChanged(aObj, aFields);
+			ObjectChanged(aSender, aEventArgs);
 		}
 
-		protected override void NotificationAdded(Core.AObject aParent, Core.AObject aObj)
+		protected override void NotificationAdded(object aSender, EventArgs<Core.Notification> aEventArgs)
 		{
-			ObjectAdded(aParent, aObj);
+			ObjectAdded(aSender, new EventArgs<Core.AObject, Core.AObject>(null, aEventArgs.Value1));
 		}
 
 		#endregion

@@ -50,9 +50,9 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 					// kill that connection if the bot sends a close message , but our real bot 
 					// connection is still alive and hangs for some crapy reason - maybe because 
 					// some admins do some network fu to stop my downloads (happend to me)
-					FireRemoveDownload(aConnection.Server, aBot);
+					FireRemoveDownload(this, new EventArgs<XG.Core.Server, Bot>(aConnection.Server, aBot));
 				}
-				FireQueueRequestFromBot(aConnection.Server, aBot, Settings.Instance.CommandWaitTime);
+				FireQueueRequestFromBot(this, new EventArgs<XG.Core.Server, Bot, int>(aConnection.Server, aBot, Settings.Instance.CommandWaitTime));
 
 				match = Helper.Match(aMessage, @".*\s+JOIN (?<channel>[^\s]+).*");
 				if (match.Success)
@@ -62,7 +62,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Xdcc
 					{
 						channel = "#" + channel;
 					}
-					FireJoinChannel(aConnection.Server, channel);
+					FireJoinChannel(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, channel));
 				}
 
 				UpdateBot(aBot, aMessage);
