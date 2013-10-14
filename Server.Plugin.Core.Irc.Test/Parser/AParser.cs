@@ -26,20 +26,20 @@
 using System;
 using System.Net;
 
-using NUnit.Framework;
-
 using XG.Core;
+using Meebey.SmartIrc4net;
+using System.Reflection;
 
 namespace XG.Server.Plugin.Core.Irc.Parser.Test
 {
 	public abstract class AParser
 	{
+		protected IrcConnection Connection;
 		protected XG.Core.Server Server;
-		protected Channel Channel;
+		protected XG.Core.Channel Channel;
 		protected Bot Bot;
 
-		protected string EventParsingError;
-		protected Channel EventChannel;
+		protected XG.Core.Channel EventChannel;
 		protected Bot EventBot;
 		protected Packet EventPacket;
 		protected Int64 EventChunk;
@@ -54,11 +54,32 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Test
 		{
 			Server = new XG.Core.Server {Name = "test.bitpir.at"};
 
-			Channel = new Channel {Name = "#test"};
+			Channel = new XG.Core.Channel {Name = "#test"};
 			Server.AddChannel(Channel);
 
 			Bot = new Bot {Name = "[XG]TestBot"};
 			Channel.AddBot(Bot);
+
+			Connection = new IrcConnection();
+			Connection.Server = Server;
+
+			//parser.Parse(null, "", CreateIrcEventArgs(Channel.Name, Bot.Name, "", ReceiveType.QueryMessage));
+		}
+
+		protected IrcEventArgs CreateIrcEventArgs(string aChannel, string aBot, string aMessage, ReceiveType aType)
+		{
+			IrcMessageData data = new IrcMessageData(null, "", aBot, "", "", aChannel, aMessage, aMessage, aType, ReplyCode.Null);
+			IrcEventArgs args = (IrcEventArgs)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(IrcEventArgs));
+			FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			EventFields[0].SetValue(args, data);
+
+			return args;
+		}
+
+		protected void Parse(Irc.Parser.AParser aParser, IrcConnection aConnection, IrcEventArgs aEvent)
+		{
+			string tMessage = Helper.RemoveSpecialIrcChars(aEvent.Data.Message);
+			aParser.Parse(aConnection, tMessage, aEvent);
 		}
 	}
 }

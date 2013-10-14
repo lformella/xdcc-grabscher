@@ -102,21 +102,39 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 			}
 		}
 
-		public event EventHandler<EventArgs<XG.Core.Server, Bot, string>> OnSendPrivateMessage;
-		protected void FireSendPrivateMessage(object aSender, EventArgs<XG.Core.Server, Bot, string> aEventArgs)
+		public event EventHandler<EventArgs<XG.Core.Server, SendType, string, string>> OnSendMessage;
+		protected void FireSendMessage(object aSender, EventArgs<XG.Core.Server, SendType, string, string> aEventArgs)
 		{
-			if (OnSendPrivateMessage != null)
+			if (OnSendMessage != null)
 			{
-				OnSendPrivateMessage(aSender, aEventArgs);
+				OnSendMessage(aSender, aEventArgs);
 			}
 		}
 
-		public event EventHandler<EventArgs<XG.Core.Server, string>> OnSendData;
-		protected void FireSendData(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
+		public event EventHandler<EventArgs<XG.Core.Server, string>> OnWriteLine;
+		protected void FireWriteLine(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
 		{
-			if (OnSendData != null)
+			if (OnWriteLine != null)
 			{
-				OnSendData(aSender, aEventArgs);
+				OnWriteLine(aSender, aEventArgs);
+			}
+		}
+
+		public event EventHandler<EventArgs<XG.Core.Server, string, string>> OnXdccList;
+		protected void FireXdccList(object aSender, EventArgs<XG.Core.Server, string, string> aEventArgs)
+		{
+			if (OnXdccList != null)
+			{
+				OnXdccList(aSender, aEventArgs);
+			}
+		}
+
+		public event EventHandler<EventArgs<XG.Core.Server, string, Int64, IPAddress, int>> OnDownloadXdccList;
+		protected void FireDownloadXdccList(object aSender, EventArgs<XG.Core.Server, string, Int64, IPAddress, int> aEventArgs)
+		{
+			if (OnDownloadXdccList != null)
+			{
+				OnDownloadXdccList(aSender, aEventArgs);
 			}
 		}
 

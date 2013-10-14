@@ -55,22 +55,22 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types
 					Log.Info("registering nick");
 					if (Settings.Instance.AutoRegisterNickserv && Settings.Instance.IrcPasswort != "" && Settings.Instance.IrcRegisterEmail != "")
 					{
-						FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail));
+						FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail));
 					}
 				}
 
 				else if (Helper.Match(aMessage, ".*Nickname is .*in use.*").Success)
 				{
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " ghost " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " recover " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, "nick " + Settings.Instance.IrcNick));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " ghost " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " recover " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, Rfc2812.Nick(Settings.Instance.IrcNick)));
 				}
 
 				else if (Helper.Match(aMessage, ".*Services Enforcer.*").Success)
 				{
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " recover " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " release " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, "nick " + Settings.Instance.IrcNick));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " recover " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " release " + Settings.Instance.IrcNick + " " + Settings.Instance.IrcPasswort));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, Rfc2812.Nick(Settings.Instance.IrcNick)));
 				}
 
 				else if (Helper.Match(aMessage, ".*(This nickname is registered and protected|This nick is being held for a registered user|msg NickServ IDENTIFY).*").Success)
@@ -79,7 +79,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types
 					{
 						_authenticatedServer.Add(aConnection.Server);
 						//TODO check if we are really registered
-						FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " identify " + Settings.Instance.IrcPasswort));
+						FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " identify " + Settings.Instance.IrcPasswort));
 					}
 					else
 					{
@@ -90,7 +90,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types
 				else if (Helper.Match(aMessage, ".*You must have been using this nick for at least 30 seconds to register.*").Success)
 				{
 					//TODO sleep the given time and reregister
-					FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail));
+					FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " register " + Settings.Instance.IrcPasswort + " " + Settings.Instance.IrcRegisterEmail));
 				}
 
 				else if (Helper.Match(aMessage, ".*Please try again with a more obscure password.*").Success)
@@ -118,7 +118,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types
 					Match tMatch = Regex.Match(aMessage, ".* NickServ confirm (?<code>[^\\s]+) .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
-						FireSendData(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, "/msg NickServ confirm " + tMatch.Groups["code"]));
+						FireWriteLine(this, new EventArgs<XG.Core.Server, string>(aConnection.Server, aEvent.Data.Nick + " confirm " + tMatch.Groups["code"]));
 						Log.Info("Parse(" + aEvent.Data.RawMessage + ") - confirming nickserv");
 					}
 					else

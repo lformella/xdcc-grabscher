@@ -14,7 +14,6 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File subtype="Code" buildaction="Compile" name="Json.cs" />
     <File subtype="Code" buildaction="Nothing" name="packages.config" />
   </Contents>
   <References>

@@ -47,9 +47,11 @@ namespace XG.Server.Plugin.Core.Irc
 		public IrcClient Client { get; private set; }
 		string _iam;
 		
-		readonly Dictionary<Bot, DateTime> _botQueue = new Dictionary<Bot, DateTime>();
-		readonly Dictionary<XG.Core.Channel, DateTime> _channelQueue = new Dictionary<XG.Core.Channel, DateTime>();
-		readonly Dictionary<string, DateTime> _latestPacketRequests = new Dictionary<string, DateTime>();
+		readonly TimedList<Bot> _botQueue = new TimedList<Bot>();
+		readonly TimedList<XG.Core.Channel> _channelQueue = new TimedList<XG.Core.Channel>();
+		readonly TimedList<string> _latestPacketRequests = new TimedList<string>();
+		readonly List<XdccListEntry> _xdccListQueue = new List<XdccListEntry>();
+		readonly TimedList<string> _latestXdccListRequests = new TimedList<string>();
 
 		XG.Core.Server _server;
 		public XG.Core.Server Server
@@ -90,9 +92,10 @@ namespace XG.Server.Plugin.Core.Irc
 					_parser.OnJoinChannel -= JoinChannel;
 					_parser.OnJoinChannelsFromBot -= JoinChannelsFromBot;
 					_parser.OnQueueRequestFromBot -= QueueRequestFromBot;
-					_parser.OnSendData -= SendData;
-					_parser.OnSendPrivateMessage -= SendPrivateMessage;
+					_parser.OnSendMessage -= SendMessage;
 					_parser.OnUnRequestFromBot -= UnRequestFromBot;
+					_parser.OnWriteLine -= WriteLine;
+					_parser.OnXdccList -= XdccList;
 				}
 				_parser = value;
 				if (_parser != null)
@@ -100,9 +103,10 @@ namespace XG.Server.Plugin.Core.Irc
 					_parser.OnJoinChannel += JoinChannel;
 					_parser.OnJoinChannelsFromBot += JoinChannelsFromBot;
 					_parser.OnQueueRequestFromBot += QueueRequestFromBot;
-					_parser.OnSendData += SendData;
-					_parser.OnSendPrivateMessage += SendPrivateMessage;
+					_parser.OnSendMessage += SendMessage;
 					_parser.OnUnRequestFromBot += UnRequestFromBot;
+					_parser.OnWriteLine += WriteLine;
+					_parser.OnXdccList += XdccList;
 				}
 			}
 		}
@@ -230,20 +234,69 @@ namespace XG.Server.Plugin.Core.Irc
 			}
 		}
 
-		void SendPrivateMessage(object aSender, EventArgs<XG.Core.Server, Bot, string> aEventArgs)
+		void Parse(object aSender, IrcEventArgs aEventArgs)
 		{
-			if (aEventArgs.Value1 == Server)
+			Parser.Parse(this, aEventArgs);
+
+			// check if the bot sends a message and hold back xdcc list requests one more time
+			var entry = _xdccListQueue.FirstOrDefault(x => x.User == aEventArgs.Data.Nick);
+			if (entry != null)
 			{
-				_log.Info("SendPrivateMessage(" + aEventArgs.Value2 + ", " + aEventArgs.Value3 + ")");
-				Client.SendMessage(SendType.Message, aEventArgs.Value2.Name, aEventArgs.Value3, Priority.Critical);
+				entry.IncreaseTime();
 			}
 		}
 
-		void SendData(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
+		void XdccList (object aSender, EventArgs<XG.Core.Server, string, string> aEventArgs)
 		{
 			if (aEventArgs.Value1 == Server)
 			{
-				Client.WriteLine(aEventArgs.Value2);
+				// dont send the same request to often
+				_latestXdccListRequests.RemoveExpiredItems();
+				if (_latestXdccListRequests.Contains(aEventArgs.Value2 + "@" + aEventArgs.Value3))
+				{
+					double seconds = _latestXdccListRequests.GetMissingSeconds(aEventArgs.Value2 + "@" + aEventArgs.Value3);
+					_log.Info("XdccList(" + aEventArgs.Value2 + ", " + aEventArgs.Value3 + ") blocked for " + seconds + " seconds");
+					return;
+				}
+
+				var entry = _xdccListQueue.FirstOrDefault(x => x.User == aEventArgs.Value2);
+				if (entry == null)
+				{
+					_log.Info("XdccList(" + aEventArgs.Value2 + ", " + aEventArgs.Value3 + ") adding");
+					entry = new XdccListEntry(aEventArgs.Value2, aEventArgs.Value3);
+					_xdccListQueue.Add(entry);
+				}
+				else
+				{
+					entry.IncreaseTime();
+					if (!entry.Commands.Any(s => s == aEventArgs.Value3))
+					{
+						_log.Info("XdccList(" + aEventArgs.Value2 + ", " + aEventArgs.Value3 + ") enqueuing");
+						entry.Commands.Enqueue(aEventArgs.Value3);
+					}
+					else
+					{
+						_log.Info("XdccList(" + aEventArgs.Value2 + ", " + aEventArgs.Value3 + ") skipping");
+					}
+				}
+			}
+		}
+
+		void SendMessage(object aSender, EventArgs<XG.Core.Server, SendType, string, string> aEventArgs)
+		{
+			if (aEventArgs.Value1 == Server)
+			{
+				_log.Info("SendMessage(" + aEventArgs.Value3 + ", " + aEventArgs.Value4 + ")");
+				Client.SendMessage(aEventArgs.Value2, aEventArgs.Value3, aEventArgs.Value4, Priority.Critical);
+			}
+		}
+
+		void WriteLine(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
+		{
+			if (aEventArgs.Value1 == Server)
+			{
+				_log.Info("WriteLine(" + aEventArgs.Value2 + ")");
+				Client.WriteLine(aEventArgs.Value2, Priority.Critical);
 			}
 		}
 
@@ -524,19 +577,19 @@ namespace XG.Server.Plugin.Core.Irc
 				}
 			};
 
-			Client.OnQueryMessage += (sender, e) => Parser.Parse(this, e);
+			Client.OnQueryMessage += Parse;
 
 			Client.OnQueryAction += (sender, e) => _log.Debug("OnQueryAction " + e.Data.Message);
 
-			Client.OnChannelMessage += (sender, e) => Parser.Parse(this, e);
+			Client.OnChannelMessage += Parse;
 
 			Client.OnChannelNotice += (sender, e) => _log.Debug("OnChannelNotice " + e.Data.Message);
 
-			Client.OnQueryNotice += (sender, e) => Parser.Parse(this, e);
+			Client.OnQueryNotice += Parse;
 
-			Client.OnCtcpReply += (sender, e) => Parser.Parse(this, e);
+			Client.OnCtcpReply += Parse;
 
-			Client.OnCtcpRequest += (sender, e) => Parser.Parse(this, e);
+			Client.OnCtcpRequest += Parse;
 
 			Client.OnWriteLine += (sender, e) => _log.Debug("OnWriteLine " + e.Line);
 		}
@@ -580,26 +633,19 @@ namespace XG.Server.Plugin.Core.Irc
 					else
 					{
 						string name = XG.Core.Helper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
-						if (_latestPacketRequests.ContainsKey(name))
+						_latestPacketRequests.RemoveExpiredItems();
+						if (_latestPacketRequests.Contains(name))
 						{
-							double time = (_latestPacketRequests[name] - DateTime.Now).TotalSeconds;
-							if (time > 0)
-							{
-								_log.Warn("RequestFromBot(" + aBot + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
-								AddBotToQueue(aBot, (int) time + 1);
-								return;
-							}
+							double time = _latestPacketRequests.GetMissingSeconds(name);
+							_log.Warn("RequestFromBot(" + aBot + ") packet name " + tPacket.Name + " is blocked for " + time + "ms");
+							AddBotToQueue(aBot, (int) time + 1);
+							return;
 						}
 
 						if (_server.Connected)
 						{
 							_log.Info("RequestFromBot(" + aBot + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
 							Client.SendMessage(SendType.Message, aBot.Name, "XDCC SEND " + tPacket.Id, Priority.Critical);
-
-							if (_latestPacketRequests.ContainsKey(name))
-							{
-								_latestPacketRequests.Remove(name);
-							}
 							_latestPacketRequests.Add(name, DateTime.Now.AddSeconds(Settings.Instance.SamePacketRequestTime));
 
 							FireNotificationAdded(Notification.Types.PacketRequested, tPacket);
@@ -677,52 +723,57 @@ namespace XG.Server.Plugin.Core.Irc
 		{
 			TriggerChannelRun();
 			TriggerBotRun();
+			TriggerXdccListRun();
 		}
 
 		void TriggerChannelRun()
 		{
-			var remove = new HashSet<XG.Core.Channel>();
-
-			foreach (var kvp in _channelQueue)
+			var channelsReady = _channelQueue.GetExpiredItems();
+			foreach (var channel in channelsReady)
 			{
-				DateTime time = kvp.Value;
-				if ((time - DateTime.Now).TotalSeconds < 0)
-				{
-					remove.Add(kvp.Key);
-				}
-			}
-
-			foreach (var channel in remove)
-			{
-				_channelQueue.Remove(channel);
-
 				Client.RfcJoin(channel.Name);
 			}
 		}
 
 		void TriggerBotRun()
 		{
-			var remove = new HashSet<Bot>();
-
-			foreach (var kvp in _botQueue)
+			var botsReady = _botQueue.GetExpiredItems();
+			foreach (var bot in botsReady)
 			{
-				DateTime time = kvp.Value;
-				if ((time - DateTime.Now).TotalSeconds < 0)
-				{
-					remove.Add(kvp.Key);
-				}
+				RequestFromBot(bot);
+			}
+		}
+
+		void TriggerXdccListRun()
+		{
+			if (!Client.IsConnected)
+			{
+				return;
 			}
 
-			foreach (Bot bot in remove)
+			var entriesReady = (from e in _xdccListQueue where (e.WaitUntil - DateTime.Now).TotalSeconds < 0 && e.Commands.Count > 0 select e).ToArray();
+			foreach (var entry in entriesReady)
 			{
-				_botQueue.Remove(bot);
-				RequestFromBot(bot);
+				string command = entry.Commands.Dequeue();
+				_log.Info("TriggerXdccListRun(" + entry.User + ", " + command + ")");
+				Client.SendMessage(SendType.Message, entry.User, command, Priority.Critical);
+				_latestXdccListRequests.Add(entry.User + "@" + command, DateTime.Now.AddSeconds(Settings.Instance.ChannelWaitTimeLong));
+
+				if (entry.Commands.Count == 0)
+				{
+					_log.Info("TriggerXdccListRun(" + entry.User + ") removing entry");
+					_xdccListQueue.Remove(entry);
+				}
+				else
+				{
+					entry.IncreaseTime();
+				}
 			}
 		}
 
 		public void AddBotToQueue(Bot aBot, int aInt)
 		{
-			if (!_botQueue.ContainsKey(aBot))
+			if (!_botQueue.Contains(aBot))
 			{
 				_botQueue.Add(aBot, DateTime.Now.AddSeconds(aInt));
 			}
@@ -730,7 +781,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 		public void AddChannelToQueue(XG.Core.Channel aChannel, int aInt)
 		{
-			if (!_channelQueue.ContainsKey(aChannel))
+			if (!_channelQueue.Contains(aChannel))
 			{
 				_channelQueue.Add(aChannel, DateTime.Now.AddSeconds(aInt));
 			}

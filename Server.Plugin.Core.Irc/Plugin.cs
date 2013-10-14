@@ -27,12 +27,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 
 using XG.Core;
+using XG.Server.Helper;
 using XG.Server.Plugin;
 
 using log4net;
+using Meebey.SmartIrc4net;
 
 namespace XG.Server.Plugin.Core.Irc
 {
@@ -44,6 +47,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 		readonly HashSet<IrcConnection> _connections = new HashSet<IrcConnection>();
 		readonly HashSet<BotDownload> _botDownloads = new HashSet<BotDownload>();
+		readonly HashSet<Download> _xdccListDownloads = new HashSet<Download>();
 
 		readonly Parser.Parser _parser = new Parser.Parser();
 
@@ -55,9 +59,9 @@ namespace XG.Server.Plugin.Core.Irc
 		{
 			_parser.FileActions = FileActions;
 			_parser.OnAddDownload += BotConnect;
+			_parser.OnDownloadXdccList += DownloadXdccList;
 			_parser.OnNotificationAdded += AddNotification;
 			_parser.OnRemoveDownload += (aSender, aEventArgs) => BotDisconnect(aEventArgs.Value2);
-			_parser.OnNotificationAdded += AddNotification;
 			_parser.Initialize();
 
 			foreach (XG.Core.Server server in Servers.All)
@@ -285,6 +289,103 @@ namespace XG.Server.Plugin.Core.Irc
 					_log.Fatal("BotDisconnected() request", ex);
 				}
 			}
+		}
+
+		#endregion
+
+		#region XDCC List Download
+
+		void DownloadXdccList(object aSender, EventArgs<XG.Core.Server, string, Int64, IPAddress, int> aEventArgs)
+		{
+			var download = _xdccListDownloads.SingleOrDefault(c => c.Bot == aEventArgs.Value2);
+			if (download == null)
+			{
+				download = new Download
+				{
+					FileActions = FileActions,
+					Server = aEventArgs.Value1,
+					Bot = aEventArgs.Value2,
+					Size = aEventArgs.Value3,
+					IP = aEventArgs.Value4,
+					Port = aEventArgs.Value5,
+					FileName = CalculateXdccListFileName(aEventArgs.Value1, aEventArgs.Value2)
+				};
+
+				download.OnDisconnected += DownloadXdccDisconnected;
+				download.OnReady += DownloadXdccReady;
+
+				_xdccListDownloads.Add(download);
+				download.Start(aEventArgs.Value4 + ":" + aEventArgs.Value5);
+			}
+			else
+			{
+				// uhh - that should not happen
+				_log.Error("DownloadXdccList(" + aEventArgs.Value2 + ") is already downloading");
+			}
+		}
+
+		void DownloadXdccDisconnected(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
+		{
+			var download = _xdccListDownloads.SingleOrDefault(c => c.Bot == aEventArgs.Value2);
+			if (download != null)
+			{
+				download.OnDisconnected -= DownloadXdccDisconnected;
+				download.OnReady -= DownloadXdccReady;
+
+				_xdccListDownloads.Remove(download);
+			}
+		}
+
+		void DownloadXdccReady(object aSender, EventArgs<XG.Core.Server, string> aEventArgs)
+		{
+			string file = CalculateXdccListFileName(aEventArgs.Value1, aEventArgs.Value2);
+			var lines = System.IO.File.ReadAllLines(file);
+			FileSystem.DeleteFile(file);
+
+			var connection = _connections.FirstOrDefault(c => c.Server == aEventArgs.Value1);
+			if (connection != null)
+			{
+				XG.Core.Channel tChan = null;
+				var user = connection.Client.GetIrcUser(aEventArgs.Value2);
+				if (user != null)
+				{
+					foreach (string channel in user.JoinedChannels)
+					{
+						tChan = aEventArgs.Value1.Channel(channel);
+						if (tChan != null)
+						{
+							break;
+						}
+					}
+				}
+
+				if (tChan == null)
+				{
+					_log.Error(".DownloadXdccReady(" + aEventArgs.Value2 + ") cant find channel");
+				}
+
+				foreach (var line in lines)
+				{
+					IrcMessageData data = new IrcMessageData(connection.Client, "", aEventArgs.Value2, "", "", tChan.Name, line, line, ReceiveType.QueryNotice, ReplyCode.Null);
+
+					// damn internal contructors...
+					// uhh, this is evil - dont try this @ home kids!
+					IrcEventArgs args = (IrcEventArgs)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(IrcEventArgs));
+					FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+					EventFields[0].SetValue(args, data);
+
+					_parser.Parse(connection, args);
+				}
+			}
+			else
+			{
+				_log.Error(".DownloadXdccReady(" + aEventArgs.Value2 + ") cant find connection");
+			}
+		}
+
+		string CalculateXdccListFileName(XG.Core.Server aServer, string aBot)
+		{
+			return Settings.Instance.TempPath + aServer.Name + "." + aBot;
 		}
 
 		#endregion

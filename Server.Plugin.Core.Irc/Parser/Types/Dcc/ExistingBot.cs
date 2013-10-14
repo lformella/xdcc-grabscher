@@ -1,5 +1,5 @@
 ﻿// 
-//  WithBot.cs
+//  ExistingBot.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -27,6 +27,7 @@ using System;
 using System.Text.RegularExpressions;
 
 using XG.Core;
+using Meebey.SmartIrc4net;
 
 namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 {
@@ -126,7 +127,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 						else if (tChunk > 0)
 						{
 							Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + tChunk);
-							FireSendPrivateMessage(this, new EventArgs<XG.Core.Server, Bot, string>(aConnection.Server, tBot, "\u0001DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk + "\u0001"));
+							FireSendMessage(this, new EventArgs<XG.Core.Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk));
 						}
 						else
 						{

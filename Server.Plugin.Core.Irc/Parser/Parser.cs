@@ -31,12 +31,14 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 {
 	public class Parser : AParser
 	{
-		List<AParser> _ircParsers = new List<AParser>();
+		readonly List<AParser> _ircParsers = new List<AParser>();
 
 		public void Initialize()
 		{
 			AddParser(new Types.Nickserv());
+			AddParser(new Types.XdccList());
 			AddParser(new Types.Dcc.ExistingBot());
+			AddParser(new Types.Dcc.User());
 			AddParser(new Types.Info.Bandwitdh());
 			AddParser(new Types.Info.Join());
 			AddParser(new Types.Info.Packet());
@@ -89,9 +91,10 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 			aParser.OnNotificationAdded += FireNotificationAdded;
 			aParser.OnQueueRequestFromBot += FireQueueRequestFromBot;
 			aParser.OnRemoveDownload += FireRemoveDownload;
-			aParser.OnSendData += FireSendData;
-			aParser.OnSendPrivateMessage += FireSendPrivateMessage;
+			aParser.OnSendMessage += FireSendMessage;
 			aParser.OnUnRequestFromBot += FireUnRequestFromBot;
+			aParser.OnWriteLine += FireWriteLine;
+			aParser.OnXdccList += FireXdccList;
 
 			_ircParsers.Add(aParser);
 		}

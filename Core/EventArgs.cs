@@ -68,4 +68,15 @@ namespace XG.Core
 
 		public W Value4 { get; private set; }
 	}
+
+	public class EventArgs<T, U, V, W, X> : EventArgs<T, U, V, W>
+	{
+		public EventArgs(T aValue, U aValue2, V aValue3, W aValue4, X aValue5)
+			: base(aValue, aValue2, aValue3, aValue4)
+		{
+			Value5 = aValue5;
+		}
+
+		public X Value5 { get; private set; }
+	}
 }

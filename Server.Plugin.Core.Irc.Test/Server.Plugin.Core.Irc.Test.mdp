@@ -16,9 +16,14 @@
   <Contents>
     <File subtype="Directory" buildaction="Compile" name="Parser" />
     <File subtype="Code" buildaction="Compile" name="Parser/AParser.cs" />
-    <File subtype="Code" buildaction="Compile" name="Parser/Notice.cs" />
-    <File subtype="Code" buildaction="Compile" name="Parser/Message.cs" />
     <File subtype="Directory" buildaction="Compile" name="Parser" />
+    <File subtype="Directory" buildaction="Compile" name="Parser/Types" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/XdccList.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Parser/Types/Info" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Bandwitdh.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Status.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Packet.cs" />
+    <File subtype="Code" buildaction="Compile" name="Parser/Types/Info/Join.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
