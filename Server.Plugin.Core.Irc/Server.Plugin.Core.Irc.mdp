@@ -62,7 +62,7 @@
     <ProjectReference type="Project" localcopy="True" refto="Server" />
     <ProjectReference type="Package" specificVersion="False" localcopy="False" refto="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/log4net.2.0.0/lib/net40-full/log4net.dll" />
-    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/smartirc4net.0.4.5/Meebey.SmartIrc4net.dll" />
-    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/smartirc4net.0.4.5/StarkSoftProxy.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/smartirc4net.0.5.0/Meebey.SmartIrc4net.dll" />
+    <ProjectReference type="Assembly" specificVersion="False" localcopy="True" refto="../packages/smartirc4net.0.5.0/StarkSoftProxy.dll" />
   </References>
 </Project>
