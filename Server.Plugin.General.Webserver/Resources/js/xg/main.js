@@ -251,6 +251,8 @@ var XGMain = (function ()
 					websocket.sendGuid(Enum.Request.RemoveChannel, args.Data.Guid);
 					break;
 			}
+			args.Data.Active = true;
+			dataView.updateItem(args);
 		});
 
 		grid.onFlipObject.subscribe(function (e, args)
