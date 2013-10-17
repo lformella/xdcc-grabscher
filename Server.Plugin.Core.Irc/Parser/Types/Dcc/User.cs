@@ -43,6 +43,12 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 			string[] tDataList = aMessage.Split(' ');
 			if (tDataList[0] == "SEND")
 			{
+				if (!Helper.Match(tDataList[1], ".*\\.txt$").Success)
+				{
+					Log.Error("Parse() " + aUser + " send no text file: " + tDataList[1]);
+					return false;
+				}
+
 				IPAddress ip = null;
 				try
 				{

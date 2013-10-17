@@ -52,6 +52,8 @@ namespace XG.Server.Plugin.Core.Irc
 		readonly TimedList<string> _latestPacketRequests = new TimedList<string>();
 		readonly List<XdccListEntry> _xdccListQueue = new List<XdccListEntry>();
 		readonly TimedList<string> _latestXdccListRequests = new TimedList<string>();
+		readonly Queue<string> _userToAskForVersion = new Queue<string>();
+		DateTime _lastAskForVersionTime = DateTime.Now;
 
 		XG.Core.Server _server;
 		public XG.Core.Server Server
@@ -368,6 +370,7 @@ namespace XG.Server.Plugin.Core.Irc
 							RequestFromBot(bot);
 						}
 					}
+					CheckIfUserShouldVersioned(e.Channel, e.Who);
 					UpdateChannel(channel);
 				}
 			};
@@ -495,6 +498,7 @@ namespace XG.Server.Plugin.Core.Irc
 							bot.Commit();
 							RequestFromBot(bot);
 						}
+						CheckIfUserShouldVersioned(e.Channel, user);
 					}
 					UpdateChannel(channel);
 				}
@@ -596,7 +600,7 @@ namespace XG.Server.Plugin.Core.Irc
 
 		void UpdateChannel(XG.Core.Channel aChannel)
 		{
-			var channel = Client.GetChannel(aChannel.Name);
+			var channel = (NonRfcChannel) Client.GetChannel(aChannel.Name);
 			if (channel != null)
 			{
 				aChannel.UserCount = channel.Users.Count;
@@ -669,6 +673,34 @@ namespace XG.Server.Plugin.Core.Irc
 			FireNotificationAdded(Notification.Types.PacketRemoved, aBot);
 		}
 
+		void CheckIfUserShouldVersioned(string aChannel, string aUser)
+		{
+			var user = (NonRfcChannelUser) Client.GetChannelUser(aChannel, aUser);
+			if (user != null)
+			{
+				// dont version ops!
+				if (user.IsIrcOp || user.IsOwner || user.IsOp || user.IsHalfop)
+				{
+					return;
+				}
+				// just aks voiced users because they could be bots
+				if (!user.IsVoice)
+				{
+					return;
+				}
+			}
+			else
+			{
+				// just ask users who are named like bots
+				if (!Irc.Parser.Helper.Match(aUser, ".*XDCC.*").Success)
+				{
+					return;
+				}
+			}
+
+			_userToAskForVersion.Enqueue(aUser);
+		}
+
 		#endregion
 
 		#region AWorker
@@ -685,7 +717,8 @@ namespace XG.Server.Plugin.Core.Irc
 				AutoRetry = true,
 				AutoJoinOnInvite = true,
 				AutoRejoinOnKick = true,
-				CtcpVersion = Settings.Instance.IrcVersion
+				CtcpVersion = Settings.Instance.IrcVersion,
+				SupportNonRfc = true
 			};
 
 			RegisterIrcEvents();
@@ -724,6 +757,7 @@ namespace XG.Server.Plugin.Core.Irc
 			TriggerChannelRun();
 			TriggerBotRun();
 			TriggerXdccListRun();
+			TriggerVersionRun();
 		}
 
 		void TriggerChannelRun()
@@ -768,6 +802,18 @@ namespace XG.Server.Plugin.Core.Irc
 				{
 					entry.IncreaseTime();
 				}
+			}
+		}
+
+		void TriggerVersionRun()
+		{
+			if (_lastAskForVersionTime.AddSeconds(Settings.Instance.CommandWaitTime) < DateTime.Now && _userToAskForVersion.Count > 0)
+			{
+				_lastAskForVersionTime = DateTime.Now;
+				string user = _userToAskForVersion.Dequeue();
+
+				_log.Info("AskForVersion(" + user + ")");
+				Client.SendMessage(SendType.CtcpRequest, user, Rfc2812.Version(), Priority.Critical);
 			}
 		}
 

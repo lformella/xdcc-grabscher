@@ -39,6 +39,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 			AddParser(new Types.XdccList());
 			AddParser(new Types.Dcc.ExistingBot());
 			AddParser(new Types.Dcc.User());
+			AddParser(new Types.Dcc.Version());
 			AddParser(new Types.Info.Bandwitdh());
 			AddParser(new Types.Info.Join());
 			AddParser(new Types.Info.Packet());
@@ -86,6 +87,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 			aParser.FileActions = FileActions;
 
 			aParser.OnAddDownload += FireAddDownload;
+			aParser.OnDownloadXdccList += FireDownloadXdccList;
 			aParser.OnJoinChannel += FireJoinChannel;
 			aParser.OnJoinChannelsFromBot += FireJoinChannelsFromBot;
 			aParser.OnNotificationAdded += FireNotificationAdded;

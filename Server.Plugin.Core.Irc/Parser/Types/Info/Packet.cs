@@ -141,7 +141,7 @@ namespace XG.Server.Plugin.Core.Irc.Parser.Types.Info
 							tPack.Size = (Int64) (tPacketSizeFormated * 1024 * 1024 * 1024);
 						}
 
-						if (tPack.Commit())
+						if (tPack.Commit() && newPacket == null)
 						{
 							Log.Info("Parse() updated " + tPack + " from " + tBot);
 						}
