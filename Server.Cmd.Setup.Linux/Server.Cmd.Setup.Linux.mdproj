@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ItemType>PackagingProject</ItemType>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B4FDC9E6-5CE7-4C97-B184-FF55BA9593DE}</ProjectGuid>
+    <Packages>
+      <Packages>
+        <Package name="Linux Binärdateien">
+          <Builder targetFile="..\XG.tar.gz" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
+            <ChildEntries>
+              <SolutionItemReference path="..\Core\Core.csproj" />
+              <SolutionItemReference path="..\Server\Server.csproj" />
+              <SolutionItemReference path="..\Server.Plugin.General.Webserver\Server.Plugin.General.Webserver.csproj" />
+              <SolutionItemReference path="..\Server.Cmd\Server.Cmd.csproj" />
+              <SolutionItemReference path="..\Server.Plugin.General.Jabber\Server.Plugin.General.Jabber.csproj" />
+              <SolutionItemReference path="..\Server.Plugin.Backend.File\Server.Plugin.Backend.File.csproj" />
+              <SolutionItemReference path="..\Server.Plugin.General.Import\Server.Plugin.General.Import.csproj" />
+              <SolutionItemReference path="..\Server.Plugin.General.ElasticSearch\Server.Plugin.General.ElasticSearch.csproj" />
+              <SolutionItemReference path="..\Server.Plugin.Core.Irc\Server.Plugin.Core.Irc.csproj" />
+            </ChildEntries>
+            <ExcludedFiles>
+              <File>Core,Linux.PkgConfig,core.pc</File>
+              <File>Server,Linux.PkgConfig,server.pc</File>
+              <File>Server.Plugin.Backend.File,Linux.PkgConfig,server.plugin.backend.file.pc</File>
+              <File>Server.Plugin.Core.Irc,Linux.PkgConfig,server.plugin.core.irc.pc</File>
+              <File>Server.Plugin.General.ElasticSearch,Linux.PkgConfig,server.plugin.general.elasticsearch.pc</File>
+              <File>Server.Plugin.General.Import,Linux.PkgConfig,server.plugin.general.import.pc</File>
+              <File>Server.Plugin.General.Jabber,Linux.PkgConfig,server.plugin.general.jabber.pc</File>
+              <File>Server.Plugin.General.Webserver,Linux.PkgConfig,server.plugin.general.webserver.pc</File>
+              <File>Server.Cmd,Binaries,server.cmd</File>
+            </ExcludedFiles>
+            <RootEntry path="..\XG.sln" id=":root:" />
+          </Builder>
+        </Package>
+      </Packages>
+    </Packages>
+  </PropertyGroup>
+</Project>

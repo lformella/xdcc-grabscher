@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Server.Plugin.General.ElasticSearch</RootNamespace>
     <AssemblyName>Server.Plugin.General.ElasticSearch</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,10 +35,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Nest">
       <HintPath>..\packages\NEST.0.11.4.0\lib\NET4\Nest.dll</HintPath>
     </Reference>
@@ -45,6 +43,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Object\AObject.cs" />
@@ -57,11 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{3080df73-101a-4acb-9fc2-6feaeb90de08}</Project>
+      <Project>{3080DF73-101A-4ACB-9FC2-6FEAEB90DE08}</Project>
       <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Server\Server.csproj">
-      <Project>{6be1e225-a4e5-497b-8eb1-2a70d992fe4c}</Project>
+      <Project>{6BE1E225-A4E5-497B-8EB1-2A70D992FE4C}</Project>
       <Name>Server</Name>
     </ProjectReference>
   </ItemGroup>

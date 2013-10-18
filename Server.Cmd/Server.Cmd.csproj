@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XG.Server.Cmd</RootNamespace>
     <AssemblyName>Server.Cmd</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <StartupObject>XG.Server.Cmd.Cmd</StartupObject>
@@ -61,18 +61,18 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System" />
+    <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="SharpRobin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SharpRobin">
       <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmd.cs" />
@@ -84,11 +84,11 @@
       <Name>Server.Plugin.Backend.File</Name>
     </ProjectReference>
     <ProjectReference Include="..\Server.Plugin.Core.Irc\Server.Plugin.Core.Irc.csproj">
-      <Project>{22e24c0d-a524-4e37-9750-3ee7eb755a85}</Project>
+      <Project>{22E24C0D-A524-4E37-9750-3EE7EB755A85}</Project>
       <Name>Server.Plugin.Core.Irc</Name>
     </ProjectReference>
     <ProjectReference Include="..\Server.Plugin.General.ElasticSearch\Server.Plugin.General.ElasticSearch.csproj">
-      <Project>{2114b736-97e8-4dc8-ba5e-74dc69e1c080}</Project>
+      <Project>{2114B736-97E8-4DC8-BA5E-74DC69E1C080}</Project>
       <Name>Server.Plugin.General.ElasticSearch</Name>
     </ProjectReference>
     <ProjectReference Include="..\Server.Plugin.General.Jabber\Server.Plugin.General.Jabber.csproj">
@@ -137,7 +137,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

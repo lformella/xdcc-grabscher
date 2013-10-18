@@ -77,9 +77,9 @@ namespace XG.Server
 			_rrdDb = new Rrd().GetDb();
 		}
 
-		void NotificationAdded (Notification aObj)
+		protected override void NotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
 		{
-			Notifications.Add(aObj);
+			Notifications.Add(aEventArgs.Value1);
 		}
 
 		void TryToRecoverOpenFiles()
