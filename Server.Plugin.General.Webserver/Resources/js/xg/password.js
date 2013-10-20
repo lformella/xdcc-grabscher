@@ -23,9 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGPassword = (function ()
+define(['xg/config'], function(config)
 {
-	var salt, host, port, password;
 	var passwordOk = false;
 	var passwordDialog = $("#passwordDialog");
 	var passwordButton = $("#passwordButton");
@@ -34,9 +33,9 @@ var XGPassword = (function ()
 
 	function buttonConnectClicked ()
 	{
-		password = encodeURIComponent(CryptoJS.SHA256(salt + passwordInput.val() + salt));
+		config.setPassword(encodeURIComponent(CryptoJS.SHA256(config.getSalt() + passwordInput.val() + config.getSalt())));
 
-		if (checkPassword(password))
+		if (checkPassword(config.getPassword()))
 		{
 			passwordOk = true;
 			$("#passwordDialog .form-group").removeClass('has-error');
@@ -69,17 +68,8 @@ var XGPassword = (function ()
 	var self = {
 		onPasswordOk: new Slick.Event(),
 
-		/**
-		 * @param {String} salt1
-		 * @param {String} host1
-		 * @param {String} port1
-		 */
-		initialize: function (salt1, host1, port1)
+		initialize: function ()
 		{
-			salt = salt1;
-			host = host1;
-			port = port1;
-
 			passwordDialog.modal("show");
 			passwordDialog.bind('shown.bs.modal',
 				function ()
@@ -101,7 +91,7 @@ var XGPassword = (function ()
 				{
 					if (passwordOk)
 					{
-						self.onPasswordOk.notify({Password: password}, null, this);
+						self.onPasswordOk.notify({}, null, this);
 					}
 				}
 			);
@@ -122,5 +112,6 @@ var XGPassword = (function ()
 			});
 		}
 	};
+
 	return self;
-}());
+});

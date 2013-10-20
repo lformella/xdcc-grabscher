@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var XGDataView = (function ()
+define(function()
 {
 	var servers, channels, bots, packets, externalSearch, searches, notifications, files;
 	var botFilterGuids = [];
@@ -266,5 +266,6 @@ var XGDataView = (function ()
 			}
 		}
 	};
+
 	return self;
-}());
+});

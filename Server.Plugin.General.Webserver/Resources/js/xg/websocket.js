@@ -23,9 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGWebsocket = (function ()
+define(['xg/config', 'xg/dataview'], function(config, dataView)
 {
-	var dataView, url, port, password, state, socket;
+	var state, socket;
 
 	/**
 	 * @param {Enum.Request} Type
@@ -34,7 +34,7 @@ var XGWebsocket = (function ()
 	function buildRequest (Type)
 	{
 		return {
-			"Password": password,
+			"Password": config.getPassword(),
 			"Type": Type
 		};
 	}
@@ -120,28 +120,14 @@ var XGWebsocket = (function ()
 		onSearchComplete: new Slick.Event(),
 		onLiveSnapshot: new Slick.Event(),
 
-		/**
-		 * @param {XGDataView} dataView1
-		 * @param {String} url1
-		 * @param {String} port1
-		 * @param {String} password1
-		 */
-		initialize: function (dataView1, url1, port1, password1)
-		{
-			dataView = dataView1;
-			url = url1;
-			port = port1;
-			password = password1;
-		},
-
-		connect: function ()
+		initialize: function ()
 		{
 			var self = this;
 
 			state = WebSocket.CLOSED;
 			try
 			{
-				socket = new WebSocket("ws://" + url + ":" + port);
+				socket = new WebSocket("ws://" + config.getHost() + ":" + config.getPort());
 				socket.onopen = function ()
 				{
 					state = socket.readyState;
@@ -230,5 +216,6 @@ var XGWebsocket = (function ()
 			return sendRequest(request);
 		}
 	};
+
 	return self;
-}());
+});

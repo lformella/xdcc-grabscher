@@ -23,9 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGMain = (function ()
+define(['xg/config', 'xg/cookie', 'xg/dataview', 'xg/formatter', 'xg/graph', 'xg/grid', 'xg/gui', 'xg/helper', 'xg/password', 'xg/resize', 'xg/translate', 'xg/websocket'],
+	function(config, cookie, dataView, formatter, graph, grid, gui, helper, password, resize, translate, websocket)
 {
-	var graph, cookie, helper, formatter, websocket, dataView, grid, resize, gui, translate;
 	var currentServerGuid = "", lastSearch, currentTab = 0;
 
 	/**
@@ -92,51 +92,45 @@ var XGMain = (function ()
 		}, 1000);
 	}
 
-	/**
-	 * @param {String} host
-	 * @param {String} port
-	 * @param {String} password
-	 */
-	function start (host, port, password)
+	function start ()
 	{
-		dataView = Object.create(XGDataView);
+		config.onUpdateCombineBotAndPacketGrid.subscribe(function (e, args)
+		{
+			cookie.setCookie("combineBotAndPacketGrid", args.Enable ? "1" : "0");
+		});
+		config.onUpdateHumanDates.subscribe(function (e, args)
+		{
+			cookie.setCookie("humanDates", args.Enable ? "1" : "0");
+		});
+		config.onUpdateShowOfflineBots.subscribe(function (e, args)
+		{
+			cookie.setCookie("showOfflineBots", args.Enable ? "1" : "0");
+		});
+
+		config.setHumanDates(cookie.getCookie("humanDates", "0") == "1");
+		config.setShowOfflineBots(cookie.getCookie("showOfflineBots", "0") == "1");
+		config.setCombineBotAndPacketGrid(cookie.getCookie("combineBotAndPacketGrid", "0") == "1");
+
 		dataView.initialize();
 
-		cookie = Object.create(XGCookie);
-		var humanDates = cookie.getCookie("humanDates", "0") == "1";
-		var showOfflineBots = cookie.getCookie("showOfflineBots", "0") == "1";
-		var combineBotAndPacketGrid = cookie.getCookie("combineBotAndPacketGrid", "0") == "1";
+		graph.initialize();
 
-		helper = Object.create(XGHelper);
-		helper.setHumanDates(humanDates);
+		startWebsocket();
+		startGrid();
+		startGui();
 
-		formatter = Object.create(XGFormatter);
-		formatter.initialize(helper, translate);
-
-		graph = Object.create(XGGraph);
-		graph.initialize(helper, translate);
-
-		startWebsocket(host, port, password);
-		startGrid(showOfflineBots, combineBotAndPacketGrid);
-		startGui(showOfflineBots, humanDates, combineBotAndPacketGrid);
-
-		resize = Object.create(XGResize);
-		resize.initialize(combineBotAndPacketGrid);
 		resize.onResize.subscribe(function ()
 		{
 			grid.resize();
 			graph.resize();
 		});
-		resize.start();
+		resize.initialize();
 
 		loop();
 	}
 
-	function startWebsocket (host, port, password)
+	function startWebsocket ()
 	{
-		websocket = Object.create(XGWebsocket);
-		websocket.initialize(dataView, host, port, password);
-
 		websocket.onConnected.subscribe(function ()
 		{
 			websocket.send(Enum.Request.LiveSnapshot);
@@ -182,14 +176,11 @@ var XGMain = (function ()
 			gui.hideLoading();
 		});
 
-		websocket.connect();
+		websocket.initialize();
 	}
 
-	function startGrid (showOfflineBots, combineBotAndPacketGrid)
+	function startGrid ()
 	{
-		grid = Object.create(XGGrid);
-		grid.initialize(formatter, helper, dataView, translate, combineBotAndPacketGrid);
-
 		grid.onClick.subscribe(function (e, args)
 		{
 			if (args.Data != undefined)
@@ -278,14 +269,12 @@ var XGMain = (function ()
 			downloadLink(args);
 		});
 
-		grid.build();
-		grid.setFilterOfflineBots(showOfflineBots);
+		grid.initialize();
 	}
 
-	function startGui (showOfflineBots, humanDates, combineBotAndPacketGrid)
+	function startGui ()
 	{
-		gui = Object.create(XGGui);
-		gui.initialize(dataView, formatter, showOfflineBots, humanDates, combineBotAndPacketGrid);
+		gui.initialize();
 
 		gui.onSearch.subscribe(function (e, args)
 		{
@@ -349,19 +338,6 @@ var XGMain = (function ()
 			websocket.sendNameGuid(Enum.Request.AddChannel, args.Name, currentServerGuid);
 		});
 
-		gui.onUpdateOfflineBotsFilter.subscribe(function (e, args)
-		{
-			grid.setFilterOfflineBots(args.Enable);
-			cookie.setCookie("showOfflineBots", args.Enable ? "1" : "0");
-		});
-
-		gui.onUpdateHumanDates.subscribe(function (e, args)
-		{
-			helper.setHumanDates(args.Enable);
-			grid.invalidate();
-			cookie.setCookie("humanDates", args.Enable ? "1" : "0");
-		});
-
 		gui.onRequestSnapshotPlot.subscribe(function (e, args)
 		{
 			websocket.sendName(Enum.Request.Snapshots, args.Value);
@@ -370,13 +346,6 @@ var XGMain = (function ()
 		gui.onUpdateSnapshotPlot.subscribe(function ()
 		{
 			graph.updateSnapshotPlot();
-		});
-
-		gui.onCombineBotAndPacketGrid.subscribe(function (e, args)
-		{
-			grid.setCombineBotAndPacketGrid(args.Enable);
-			cookie.setCookie("combineBotAndPacketGrid", args.Enable ? "1" : "0");
-			resize.setCombineBotAndPacketGrid(args.Enable);
 		});
 
 		gui.onAddXdccLink.subscribe(function (e, args)
@@ -403,28 +372,23 @@ var XGMain = (function ()
 		}, 10000);
 	}
 
-	return {
-		/**
-		 * @param {String} salt
-		 * @param {String} host
-		 * @param {String} port
-		 */
-		initialize: function (salt, host, port)
+	var self = {
+		initialize: function ()
 		{
 			var translations = window.translations;
 			if (translations == undefined)
 			{
 				translations = {};
 			}
-			translate = Object.create(XGTranslate);
 			translate.initialize(translations);
 
-			var password = Object.create(XGPassword);
-			password.initialize(salt, host, port);
-			password.onPasswordOk.subscribe(function (e, args)
+			password.initialize();
+			password.onPasswordOk.subscribe(function ()
 			{
-				start(host, port, args.Password);
+				start();
 			});
 		}
 	};
-}());
+
+	return self;
+});

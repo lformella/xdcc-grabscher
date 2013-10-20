@@ -23,9 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGCookie = (function ()
+define(function()
 {
-	return {
+	var self = {
 		setCookie: function (name, value)
 		{
 			$.cookie('xg.' + name, value, { expires: 365 });
@@ -36,5 +36,7 @@ var XGCookie = (function ()
 			var val = $.cookie('xg.' + name);
 			return val != undefined && val != "" ? val : (value != undefined ? value : false);
 		}
-	}
-}());
+	};
+
+	return self;
+});

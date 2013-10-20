@@ -52,46 +52,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			"Resources/css/xg"
 		};
 
-		readonly string[] _jsFiles =
-		{
-			"Scripts/moment.min",
-			"Scripts/jquery-2.0.2.min",
-			"Scripts/jquery-ui-1.10.3.min",
-			"Scripts/jquery.event.drag.min",
-			"Scripts/jquery.cookie",
-			"Scripts/flot/jquery.flot.min",
-			"Scripts/flot/jquery.flot.time.min",
-			"Scripts/flot/jquery.flot.pie.min",
-			"Scripts/json2.min",
-			"Scripts/SlickGrid/slick.core",
-			"Scripts/SlickGrid/slick.formatters",
-			"Scripts/SlickGrid/slick.grid",
-			"Scripts/SlickGrid/slick.dataview",
-			"Scripts/SlickGrid/Plugins/slick.rowselectionmodel",
-			"Scripts/SlickGrid/slick.groupitemmetadataprovider",
-			"Scripts/bootstrap.min",
-			"Resources/js/external/jquery.flot.axislabels",
-			"Resources/js/external/sha256",
-			"Resources/js/external/favicon",
-			"Resources/js/external/css_browser_selector",
-			"Resources/js/external/jquery.knob",
-			"Resources/js/i18n/moment/#LANGUAGE_SHORT#",
-			"Resources/js/i18n/xg/#LANGUAGE_SHORT#",
-			"Resources/js/xg/enum",
-			"Resources/js/xg/gui",
-			"Resources/js/xg/cookie",
-			"Resources/js/xg/formatter",
-			"Resources/js/xg/helper",
-			"Resources/js/xg/grid",
-			"Resources/js/xg/main",
-			"Resources/js/xg/password",
-			"Resources/js/xg/dataview",
-			"Resources/js/xg/resize",
-			"Resources/js/xg/graph",
-			"Resources/js/xg/translate",
-			"Resources/js/xg/websocket"
-		};
-
 		public string Salt { get; set; }
 
 		#endregion
@@ -113,14 +73,7 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			{
 #endif
 				string content = "";
-				if (aFile == "/Resources/js/all.js")
-				{
-					foreach (string file in _jsFiles)
-					{
-						content += LoadFile("/" + PatchLanguage(file, aLanguages) + ".js", aHost, aLanguages) + "\n";
-					}
-				}
-				else if (aFile == "/Resources/css/all.css")
+				if (aFile == "/Resources/css/all.css")
 				{
 					foreach (string file in _cssFiles)
 					{
@@ -142,8 +95,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 #endif
 					if (aFile == "/Resources/index.html")
 					{
-						content = content.Replace("#HOST#", aHost);
-						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));
 //#if DEBUG
 						string css = "";
 						foreach (string cssFile in _cssFiles)
@@ -155,24 +106,19 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 #endif*/
 						content = content.Replace("#CSS_FILES#", css);
 
-						//#if DEBUG
-						string js = "";
-						foreach (string jsFile in _jsFiles)
-						{
-							js += "\t\t<script type=\"text/javascript\" src=\"" + jsFile + ".js\"></script>\n";
-						}
-						//#else
-						//	string js = "\t\t<script type=\"text/javascript\" src=\"Resources/js/all.js\"></script>\n";
-						//#endif 
-						content = content.Replace("#JS_FILES#", js);
-
-						content = content.Replace("#SALT#", Salt);
 #if DEBUG
 						content = content.Replace("#XGVERSION#", Settings.Instance.XgVersion + " (beta)");
 #else
 						content = content.Replace("#XGVERSION#", Settings.Instance.XgVersion);
 #endif
-						content = PatchLanguage(content, aLanguages);
+					}
+
+					if (aFile == "/Resources/js/xg/config.js")
+					{
+						content = content.Replace("#HOST#", aHost);
+						content = content.Replace("#PORT#", "" + (Settings.Instance.WebServerPort + 1));
+						content = content.Replace("#SALT#", Salt);
+						content = content.Replace("#LANGUAGE_SHORT#", aLanguages[0].Substring(0, 2));
 					}
 				}
 #if !DEBUG
@@ -219,12 +165,6 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 			}
 #endif
 			return new byte[0];
-		}
-
-		string PatchLanguage(string aContent, string[] aLanguages)
-		{
-			string lng = aLanguages[0].Substring(0, 2);
-			return aContent.Replace("#LANGUAGE_SHORT#", lng);
 		}
 
 		public byte[] LoadImage(string aFile)

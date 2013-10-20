@@ -23,10 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGGui = (function ()
+define(['xg/config', 'xg/dataview', 'xg/formatter'], function(config, dataView, formatter)
 {
-	var dataView, formatter;
-
 	var searchForm = $("#searchForm, #searchButtons");
 	var searches = $("#searches");
 	var search = $("#search");
@@ -46,7 +44,6 @@ var XGGui = (function ()
 
 	var currentSearchGuid = undefined;
 	var currentSlide = 0;
-	var showOfflineBots, humanDates, combineBotAndPacketGrid;
 
 	var showEffect = { effect: "drop", duration: 500 };
 
@@ -375,29 +372,26 @@ var XGGui = (function ()
 		element = $("#showOfflineBots");
 		element.click(function ()
 		{
-			showOfflineBots = !showOfflineBots;
-			self.onUpdateOfflineBotsFilter.notify({ Enable: showOfflineBots }, null, this);
-			updateFlipableVar("showOfflineBots", showOfflineBots);
+			config.setShowOfflineBots(!config.getShowOfflineBots());
+			updateFlipableVar("showOfflineBots", config.getShowOfflineBots());
 		});
-		updateFlipableVar("showOfflineBots", showOfflineBots);
+		updateFlipableVar("showOfflineBots", config.getShowOfflineBots());
 
 		element = $("#humanDates");
 		element.click(function ()
 		{
-			humanDates = !humanDates;
-			self.onUpdateHumanDates.notify({ Enable: humanDates }, null, this);
-			updateFlipableVar("humanDates", humanDates);
+			config.setHumanDates(!config.getHumanDates());
+			updateFlipableVar("humanDates", config.getHumanDates());
 		});
-		updateFlipableVar("humanDates", humanDates);
+		updateFlipableVar("humanDates", config.getHumanDates());
 
 		element = $("#combineBotAndPacketGrid");
 		element.click(function ()
 		{
-			combineBotAndPacketGrid = !combineBotAndPacketGrid;
-			self.onCombineBotAndPacketGrid.notify({ Enable: combineBotAndPacketGrid }, null, this);
-			updateFlipableVar("combineBotAndPacketGrid", combineBotAndPacketGrid);
+			config.setCombineBotAndPacketGrid(!config.getCombineBotAndPacketGrid());
+			updateFlipableVar("combineBotAndPacketGrid", config.getCombineBotAndPacketGrid());
 		});
-		updateFlipableVar("combineBotAndPacketGrid", combineBotAndPacketGrid);
+		updateFlipableVar("combineBotAndPacketGrid", config.getCombineBotAndPacketGrid());
 	}
 
 	function updateFlipableVar (variable, value)
@@ -425,29 +419,13 @@ var XGGui = (function ()
 		onSlide: new Slick.Event(),
 		onAddServer: new Slick.Event(),
 		onAddChannel: new Slick.Event(),
-		onUpdateOfflineBotsFilter: new Slick.Event(),
-		onUpdateHumanDates: new Slick.Event(),
 		onUpdateSnapshotPlot: new Slick.Event(),
-		onCombineBotAndPacketGrid: new Slick.Event(),
 		onAddXdccLink: new Slick.Event(),
 		onOpenNotifications: new Slick.Event(),
 		onRequestSnapshotPlot: new Slick.Event(),
 
-		/**
-		 * @param {XGDataView} dataView1
-		 * @param {XGFormatter} formatter1
-		 * @param {Boolean} showOfflineBots1
-		 * @param {Boolean} humanDates1
-		 * @param {Boolean} combineBotAndPacketGrid1
-		 */
-		initialize: function (dataView1, formatter1, showOfflineBots1, humanDates1, combineBotAndPacketGrid1)
+		initialize: function ()
 		{
-			dataView = dataView1;
-			formatter = formatter1;
-			showOfflineBots = showOfflineBots1;
-			humanDates = humanDates1;
-			combineBotAndPacketGrid = combineBotAndPacketGrid1;
-
 			$("div.container, nav.navbar").show();
 
 			initializeDataView();
@@ -484,5 +462,6 @@ var XGGui = (function ()
 			$("#infoDialog").modal('show');
 		}
 	};
+
 	return self;
-}());
+});

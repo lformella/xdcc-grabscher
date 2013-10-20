@@ -23,9 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGGraph = (function ()
+define(['xg/helper', 'xg/translate'], function(helper, translate)
 {
-	var dataView, helper, translate;
 	var snapshots, liveSnapshot = {};
 
 	function updateDashboardItem (element, values, formatter)
@@ -53,16 +52,9 @@ var XGGraph = (function ()
 		element.val(current).trigger("change");
 	}
 
-	return {
-		/**
-		 * @param {XGHelper} helper1
-		 * @param {XGTranslate} translate1
-		 */
-		initialize: function (helper1, translate1)
+	var self = {
+		initialize: function ()
 		{
-			helper = helper1;
-			translate = translate1;
-
 			$(".first.knob").knob(
 			{
 				min: 0,
@@ -398,5 +390,7 @@ var XGGraph = (function ()
 			this.updateSnapshotPlot();
 			this.updateDashboard();
 		}
-	}
-}());
+	};
+
+	return self;
+});

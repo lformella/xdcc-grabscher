@@ -23,17 +23,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var Grid = null;
-var XGGrid = (function ()
+define(['xg/config', 'xg/dataview', 'xg/formatter', 'xg/helper', 'xg/translate'], function(config, dataView, formatter, helper, translate)
 {
-	var formatter, helper, dataview, translate;
-
 	var serverGrid, channelGrid, botGrid, packetGrid, externalGrid, fileGrid, notificationsGrid;
 	var grids = [];
 
 	var sortColumn = { Server: null, Channel: null, Bot: null, Packet: null, ExternalSearch: null, File: null };
-	var filterOfflineBots = false;
-	var combineBotAndPacketGrid = false;
 
 	var channelFilter = {}, botFilter = {}, packetFilter = {}, externalFilter = {};
 
@@ -42,7 +37,7 @@ var XGGrid = (function ()
 	 * @param {Slick.Data.DataView} dataView
 	 * @param {Array} columns
 	 * @param {Function} comparer
-	 * @param {Integer} rowHeight
+	 * @param {int} rowHeight
 	 * @return {Slick.Grid}
 	 */
 	function buildGrid (gridName, dataView, columns, comparer, rowHeight)
@@ -139,42 +134,42 @@ var XGGrid = (function ()
 	 */
 	function applyFilter (grid)
 	{
-		var dataView;
+		var dw;
 		var filter;
 
 		switch (grid)
 		{
 			case Enum.Grid.Server:
-				dataView = serverGrid.getData();
+				dw = serverGrid.getData();
 				filter = {};
 				break;
 			case Enum.Grid.Channel:
-				dataView = channelGrid.getData();
+				dw = channelGrid.getData();
 				filter = channelFilter;
 				break;
 			case Enum.Grid.Bot:
-				dataView = botGrid.getData();
+				dw = botGrid.getData();
 				filter = botFilter;
-				filter.OfflineBots = filterOfflineBots;
+				filter.OfflineBots = config.getShowOfflineBots();
 				break;
 			case Enum.Grid.Packet:
-				dataView = packetGrid.getData();
+				dw = packetGrid.getData();
 				filter = packetFilter;
-				filter.OfflineBots = filterOfflineBots;
+				filter.OfflineBots = config.getShowOfflineBots();
 				break;
 			case Enum.Grid.ExternalSearch:
-				dataView = externalGrid.getData();
+				dw = externalGrid.getData();
 				filter = externalFilter;
 				break;
 			case Enum.Grid.File:
-				dataView = fileGrid.getData();
+				dw = fileGrid.getData();
 				filter = {};
 				break;
 		}
 
-		dataView.setFilterArgs(filter);
-		dataView.refresh();
-		dataView.reSort();
+		dw.setFilterArgs(filter);
+		dw.refresh();
+		dw.reSort();
 	}
 
 	function compareServers (a, b)
@@ -228,29 +223,41 @@ var XGGrid = (function ()
 		return (x == y ? 0 : (x > y ? 1 : -1));
 	}
 
+	function setCombineBotAndPacketGrid (enable)
+	{
+		var dw = dataView.getDataView(Enum.Grid.Packet);
+		var grid = $("#" + Enum.Grid.Bot + "Grid").hide();
+		if (enable)
+		{
+			grid.hide();
+			dw.setGrouping(
+				{
+					getter: "ParentGuid",
+					formatter: function (dataItem)
+					{
+						var bot = dataView.getItem(Enum.Grid.Bot, dataItem.value);
+						var ret = "";
+						if (bot != null)
+						{
+							ret = /*formatter.formatBotIcon(bot, true) + */bot.Name;
+						}
+						return ret;
+					}
+				});
+		}
+		else
+		{
+			grid.show();
+			dw.setGrouping([]);
+		}
+	}
+
 	var self = {
 		onClick: new Slick.Event(),
 		onDblClick: new Slick.Event(),
 		onFlipObject: new Slick.Event(),
 		onRemoveObject: new Slick.Event(),
 		onDownloadLink: new Slick.Event(),
-
-		/**
-		 * @param {XGFormatter} formatter1
-		 * @param {XGHelper} helper1
-		 * @param {XGDataView} dataview1
-		 * @param {XGTranslate} translate1
-		 * @param {Boolean} combineBotAndPacketGrid1
-		 */
-		initialize: function (formatter1, helper1, dataview1, translate1, combineBotAndPacketGrid1)
-		{
-			formatter = formatter1;
-			helper = helper1;
-			dataview = dataview1;
-			translate = translate1;
-			combineBotAndPacketGrid = combineBotAndPacketGrid1;
-			Grid = this;
-		},
 
 		/**
 		 * @param {string} name
@@ -279,11 +286,11 @@ var XGGrid = (function ()
 			return null;
 		},
 
-		build: function ()
+		initialize: function ()
 		{
 			/**************************************************************************************************************/
 
-			serverGrid = buildGrid(Enum.Grid.Server, dataview.getDataView(Enum.Grid.Server), [
+			serverGrid = buildGrid(Enum.Grid.Server, dataView.getDataView(Enum.Grid.Server), [
 				buildRow("", 46, false, function (obj)
 				{
 					return formatter.formatServerIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Server + "\", \"" + obj.Guid + "\");");
@@ -306,7 +313,7 @@ var XGGrid = (function ()
 
 			/**************************************************************************************************************/
 
-			channelGrid = buildGrid(Enum.Grid.Channel, dataview.getDataView(Enum.Grid.Channel), [
+			channelGrid = buildGrid(Enum.Grid.Channel, dataView.getDataView(Enum.Grid.Channel), [
 				buildRow("", 46, false, function (obj)
 				{
 					return formatter.formatChannelIcon(obj, "Grid.flipObject(\"" + Enum.Grid.Channel + "\", \"" + obj.Guid + "\");");
@@ -328,7 +335,7 @@ var XGGrid = (function ()
 
 			/**************************************************************************************************************/
 
-			botGrid = buildGrid(Enum.Grid.Bot, dataview.getDataView(Enum.Grid.Bot), [
+			botGrid = buildGrid(Enum.Grid.Bot, dataView.getDataView(Enum.Grid.Bot), [
 				buildRow("", 42, false, $.proxy(formatter.formatBotIcon, formatter), false, "icon"),
 				buildRow("Name", 0, true, $.proxy(formatter.formatBotName, formatter), false, "small-line"),
 				buildRow("Speed", 80, true, function (obj)
@@ -355,12 +362,12 @@ var XGGrid = (function ()
 
 			/**************************************************************************************************************/
 
-			packetGrid = buildGrid(Enum.Grid.Packet, dataview.getDataView(Enum.Grid.Packet), [
+			packetGrid = buildGrid(Enum.Grid.Packet, dataView.getDataView(Enum.Grid.Packet), [
 				buildRow("", 46, false, function (obj)
 				{
 					if (obj instanceof Slick.Group)
 					{
-						var bot = dataview.getItem(Enum.Grid.Bot, obj.groupingKey);
+						var bot = dataView.getItem(Enum.Grid.Bot, obj.groupingKey);
 						var ret = "";
 						if (bot != undefined)
 						{
@@ -384,11 +391,10 @@ var XGGrid = (function ()
 					return helper.date2Human(obj.LastUpdated);
 				}, true)
 			], comparePackets);
-			self.setCombineBotAndPacketGrid(combineBotAndPacketGrid);
 
 			/**************************************************************************************************************/
 
-			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataview.getDataView(Enum.Grid.ExternalSearch), [
+			externalGrid = buildGrid(Enum.Grid.ExternalSearch, dataView.getDataView(Enum.Grid.ExternalSearch), [
 				buildRow("", 44, false, function (obj)
 				{
 					return formatter.formatPacketIcon(obj, "Grid.downloadLink(\"" + obj.Guid + "\");");
@@ -415,7 +421,7 @@ var XGGrid = (function ()
 
 			/**************************************************************************************************************/
 
-			fileGrid = buildGrid(Enum.Grid.File, dataview.getDataView(Enum.Grid.File), [
+			fileGrid = buildGrid(Enum.Grid.File, dataView.getDataView(Enum.Grid.File), [
 				buildRow("", 42, false, function (obj)
 				{
 					return formatter.formatFileIcon(obj, "Grid.flipObject(\"" + Enum.Grid.File + "\", \"" + obj.Guid + "\");");
@@ -428,7 +434,7 @@ var XGGrid = (function ()
 
 			/**************************************************************************************************************/
 
-			notificationsGrid = buildGrid(Enum.Grid.Notification, dataview.getDataView(Enum.Grid.Notification), [
+			notificationsGrid = buildGrid(Enum.Grid.Notification, dataView.getDataView(Enum.Grid.Notification), [
 				buildRow("", 40, false, $.proxy(formatter.formatNotificationIcon, formatter), false, "icon"),
 				buildRow("Content", 0, true, $.proxy(formatter.formatNotificationContent, formatter), false, "two-line-text"),
 				buildRow("Time", 160, true, $.proxy(formatter.formatNotificationTime, formatter), true, "two-line-text")
@@ -438,16 +444,24 @@ var XGGrid = (function ()
 
 				// default filter
 			self.applySearchFilter({ Guid: "00000000-0000-0000-0000-000000000002" }, Enum.Grid.Bot);
-		},
 
-		/**
-		 * @param {Boolean} filterOfflineBots1
-		 */
-		setFilterOfflineBots: function (filterOfflineBots1)
-		{
-			filterOfflineBots = filterOfflineBots1;
-			applyFilter(Enum.Grid.Bot);
-			applyFilter(Enum.Grid.Packet);
+			// hook to config updates
+			config.onUpdateCombineBotAndPacketGrid.subscribe(function (e, args)
+			{
+				setCombineBotAndPacketGrid(args.Enable);
+			});
+			setCombineBotAndPacketGrid(config.getCombineBotAndPacketGrid());
+
+			config.onUpdateHumanDates.subscribe(function ()
+			{
+				self.invalidate();
+			});
+
+			config.onUpdateShowOfflineBots.subscribe(function ()
+			{
+				applyFilter(Enum.Grid.Bot);
+				applyFilter(Enum.Grid.Packet);
+			});
 		},
 
 		invalidate: function (grid)
@@ -475,19 +489,19 @@ var XGGrid = (function ()
 
 		flipObject: function (grid, guid)
 		{
-			var obj = dataview.getDataView(grid).getItemById(guid);
+			var obj = dataView.getDataView(grid).getItemById(guid);
 			this.onFlipObject.notify({ DataType: grid, Data: obj }, null, this);
 		},
 
 		removeObject: function (grid, guid)
 		{
-			var obj = dataview.getDataView(grid).getItemById(guid);
+			var obj = dataView.getDataView(grid).getItemById(guid);
 			this.onRemoveObject.notify({ DataType: grid, Data: obj }, null, this);
 		},
 
 		downloadLink: function (guid)
 		{
-			var obj = dataview.getDataView(Enum.Grid.ExternalSearch).getItemById(guid);
+			var obj = dataView.getDataView(Enum.Grid.ExternalSearch).getItemById(guid);
 			this.onDownloadLink.notify(obj, null, this);
 		},
 
@@ -495,7 +509,7 @@ var XGGrid = (function ()
 		{
 			if (grid == Enum.Grid.Bot)
 			{
-				dataview.resetBotFilter();
+				dataView.resetBotFilter();
 				packetFilter = { SearchGuid: obj.Guid, Name: obj.Name };
 				applyFilter(Enum.Grid.Packet);
 				applyFilter(Enum.Grid.Bot);
@@ -506,36 +520,9 @@ var XGGrid = (function ()
 				externalFilter = { SearchGuid: obj.Guid, Name: obj.Name };
 				applyFilter(Enum.Grid.ExternalSearch);
 			}
-		},
-
-		setCombineBotAndPacketGrid: function (enable)
-		{
-			var dataView = dataview.getDataView(Enum.Grid.Packet);
-			var grid = $("#" + Enum.Grid.Bot + "Grid").hide();
-			if (enable)
-			{
-				grid.hide();
-				dataView.setGrouping(
-					{
-						getter: "ParentGuid",
-						formatter: function (dataItem)
-						{
-							var bot = dataview.getItem(Enum.Grid.Bot, dataItem.value);
-							var ret = "";
-							if (bot != null)
-							{
-								ret = /*formatter.formatBotIcon(bot, true) + */bot.Name;
-							}
-							return ret;
-						}
-					});
-			}
-			else
-			{
-				grid.show();
-				dataView.setGrouping([]);
-			}
 		}
 	};
+
+	Grid = self;
 	return self;
-}());
+});

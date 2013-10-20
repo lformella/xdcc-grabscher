@@ -23,10 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGFormatter = (function ()
+define(['xg/helper', 'xg/translate'], function(helper, translate)
 {
-	var helper, translate;
-
 	/* ************************************************************************************************************** */
 	/* IMAGE FORMATTER                                                                                                */
 	/* ************************************************************************************************************** */
@@ -67,16 +65,6 @@ var XGFormatter = (function ()
 	}
 
 	var self = {
-		/**
-		 * @param {XGHelper} helper1
-		 * @param {XGTranslate} translate1
-		 */
-		initialize: function (helper1, translate1)
-		{
-			helper = helper1;
-			translate = translate1;
-		},
-
 		/* ************************************************************************************************************** */
 		/* SERVER FORMATTER                                                                                               */
 		/* ************************************************************************************************************** */
@@ -565,5 +553,6 @@ var XGFormatter = (function ()
 			return helper.date2Human(notification.Time);
 		}
 	};
+
 	return self;
-}());
+});

@@ -146,6 +146,10 @@
     <EmbeddedResource Include="Resources\css\xg.css" />
     <EmbeddedResource Include="Resources\index.html" />
     <EmbeddedResource Include="Resources\favicon.ico" />
+    <EmbeddedResource Include="Scripts\require.js" />
+    <EmbeddedResource Include="Scripts\r.js" />
+    <EmbeddedResource Include="Resources\js\xg\config.js" />
+    <EmbeddedResource Include="Resources\js\init.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />

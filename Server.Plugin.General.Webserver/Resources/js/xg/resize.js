@@ -23,10 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGResize = (function ()
+define(['xg/config'], function(config)
 {
 	var width, height;
-	var combineBotAndPacketGrid;
 
 	function resize (force)
 	{
@@ -43,7 +42,7 @@ var XGResize = (function ()
 			$("#" + Enum.Grid.Bot + "Grid, #" + Enum.Grid.Packet + "Grid, #" + Enum.Grid.ExternalSearch + "Grid, #" + Enum.Grid.File + "Grid").width(width);
 			var botHeight = height * 0.4 - 10;
 			$("#" + Enum.Grid.Bot + "Grid").height(botHeight);
-			if (combineBotAndPacketGrid)
+			if (config.getCombineBotAndPacketGrid())
 			{
 				botHeight = -10;
 			}
@@ -68,28 +67,20 @@ var XGResize = (function ()
 	var self = {
 		onResize: new Slick.Event(),
 
-		/**
-		 * @param {Boolean} combineBotAndPacketGrid1
-		 */
-		initialize: function (combineBotAndPacketGrid1)
-		{
-			combineBotAndPacketGrid = combineBotAndPacketGrid1;
-		},
-
-		start: function ()
+		initialize: function ()
 		{
 			$(window).resize(function ()
 			{
 				resize();
 			});
 			resize();
-		},
 
-		setCombineBotAndPacketGrid: function (enable)
-		{
-			combineBotAndPacketGrid = enable;
-			resize(true);
+			config.onUpdateCombineBotAndPacketGrid.subscribe(function ()
+			{
+				resize(true);
+			});
 		}
 	};
+
 	return self;
-}());
+});

@@ -23,18 +23,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 // 
 
-var XGHelper = (function ()
+define(['xg/config'], function(config)
 {
-	var humanDates;
-
-	return {
-		initialize: function ()
-		{
-			humanDates = false;
-		},
-
+	var self = {
 		/**
 		 * @param {int} size
+		 * @param {int} decimal
 		 * @return {String}
 		 */
 		size2Human: function (size, decimal)
@@ -98,15 +92,7 @@ var XGHelper = (function ()
 			{
 				return "";
 			}
-			return humanDates ? momentDate.fromNow() : momentDate.format("L LT");
-		},
-
-		/**
-		 * @param {Boolean} humanDates1
-		 */
-		setHumanDates: function (humanDates1)
-		{
-			humanDates = humanDates1;
+			return config.getHumanDates() ? momentDate.fromNow() : momentDate.format("L LT");
 		},
 
 		/**
@@ -122,5 +108,7 @@ var XGHelper = (function ()
 
 			return moment.duration(time, "seconds").humanize(true);
 		}
-	}
-}());
+	};
+
+	return self;
+});

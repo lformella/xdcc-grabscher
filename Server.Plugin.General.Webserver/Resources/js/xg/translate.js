@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-var XGTranslate = (function ()
+define(function()
 {
 	var translations;
 
@@ -41,7 +41,7 @@ var XGTranslate = (function ()
 		return translated;
 	}
 
-	return {
+	var self = {
 		initialize: function (translations1)
 		{
 			translations = translations1;
@@ -76,7 +76,9 @@ var XGTranslate = (function ()
 		{
 			return _(text, replaces);
 		}
-	}
-}());
+	};
+
+	return self;
+});
 
 
