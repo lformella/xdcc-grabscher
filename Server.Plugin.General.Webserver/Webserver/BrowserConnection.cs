@@ -135,11 +135,25 @@ namespace XG.Server.Plugin.General.Webserver.Webserver
 
 						if (binary)
 						{
-							WriteToStream(FileLoader.LoadFile(str));
+							var data = FileLoader.LoadFile(str);
+							if (data.Length == 0)
+							{
+								Context.Response.StatusCode = 404;
+								Context.Response.Close();
+								return;
+							}
+							WriteToStream(data);
 						}
 						else
 						{
-							WriteToStream(FileLoader.LoadFile(str, Context.Request.Url.Host, Context.Request.UserLanguages));
+							var data = FileLoader.LoadFile(str, Context.Request.Url.Host, Context.Request.UserLanguages);
+							if (String.IsNullOrEmpty(data))
+							{
+								Context.Response.StatusCode = 404;
+								Context.Response.Close();
+								return;
+							}
+							WriteToStream(data);
 						}
 					}
 				}
