@@ -289,7 +289,7 @@ namespace XG.Server.Plugin.Core.Irc
 			if (aEventArgs.Value1 == Server)
 			{
 				_log.Info("SendMessage(" + aEventArgs.Value3 + ", " + aEventArgs.Value4 + ")");
-				Client.SendMessage(aEventArgs.Value2, aEventArgs.Value3, aEventArgs.Value4, Priority.Critical);
+				Client.SendMessage(aEventArgs.Value2, aEventArgs.Value3, aEventArgs.Value4);
 			}
 		}
 
@@ -298,7 +298,7 @@ namespace XG.Server.Plugin.Core.Irc
 			if (aEventArgs.Value1 == Server)
 			{
 				_log.Info("WriteLine(" + aEventArgs.Value2 + ")");
-				Client.WriteLine(aEventArgs.Value2, Priority.Critical);
+				Client.WriteLine(aEventArgs.Value2);
 			}
 		}
 
@@ -649,7 +649,7 @@ namespace XG.Server.Plugin.Core.Irc
 						if (_server.Connected)
 						{
 							_log.Info("RequestFromBot(" + aBot + ") requesting packet #" + tPacket.Id + " (" + tPacket.Name + ")");
-							Client.SendMessage(SendType.Message, aBot.Name, "XDCC SEND " + tPacket.Id, Priority.Critical);
+							Client.SendMessage(SendType.Message, aBot.Name, "XDCC SEND " + tPacket.Id);
 							_latestPacketRequests.Add(name, DateTime.Now.AddSeconds(Settings.Instance.SamePacketRequestTime));
 
 							FireNotificationAdded(Notification.Types.PacketRequested, tPacket);
@@ -666,7 +666,7 @@ namespace XG.Server.Plugin.Core.Irc
 		void UnRequestFromBot(Bot aBot)
 		{
 			_log.Info("UnRequestFromBot(" + aBot + ")");
-			Client.SendMessage(SendType.Message, aBot.Name, "XDCC REMOVE", Priority.Critical);
+			Client.SendMessage(SendType.Message, aBot.Name, "XDCC REMOVE");
 
 			AddBotToQueue(aBot, Settings.Instance.CommandWaitTime);
 
@@ -790,7 +790,7 @@ namespace XG.Server.Plugin.Core.Irc
 			{
 				string command = entry.Commands.Dequeue();
 				_log.Info("TriggerXdccListRun(" + entry.User + ", " + command + ")");
-				Client.SendMessage(SendType.Message, entry.User, command, Priority.Critical);
+				Client.SendMessage(SendType.Message, entry.User, command);
 				_latestXdccListRequests.Add(entry.User + "@" + command, DateTime.Now.AddSeconds(Settings.Instance.ChannelWaitTimeLong));
 
 				if (entry.Commands.Count == 0)
@@ -813,7 +813,7 @@ namespace XG.Server.Plugin.Core.Irc
 				string user = _userToAskForVersion.Dequeue();
 
 				_log.Info("AskForVersion(" + user + ")");
-				Client.SendMessage(SendType.CtcpRequest, user, Rfc2812.Version(), Priority.Critical);
+				Client.SendMessage(SendType.CtcpRequest, user, Rfc2812.Version());
 			}
 		}
 
