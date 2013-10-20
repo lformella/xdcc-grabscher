@@ -31,7 +31,7 @@ using Meebey.SmartIrc4net;
 
 namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 {
-	public class ExistingBot : ADccParser
+	public class DownloadFromBot : ADccParser
 	{
 		protected override bool ParseInternal(IrcConnection aConnection, string aUser, string aMessage)
 		{

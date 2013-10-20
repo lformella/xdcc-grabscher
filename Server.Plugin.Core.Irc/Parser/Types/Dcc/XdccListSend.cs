@@ -30,16 +30,10 @@ using XG.Core;
 
 namespace XG.Server.Plugin.Core.Irc.Parser.Types.Dcc
 {
-	public class User : ADccParser
+	public class XdccListSend : ADccParser
 	{
 		protected override bool ParseInternal(IrcConnection aConnection, string aUser, string aMessage)
 		{
-			Bot tBot = aConnection.Server.Bot(aUser);
-			if (tBot != null)
-			{
-				return false;
-			}
-
 			string[] tDataList = aMessage.Split(' ');
 			if (tDataList[0] == "SEND")
 			{

@@ -51,7 +51,6 @@ namespace XG.Server.Plugin.Core.Irc
 		public Int64 CurrentSize { get; private set; }
 		public IPAddress IP { get; set; }
 		public int Port { get; set; }
-		public FileActions FileActions { get; set; }
 		public string FileName { get; set; }
 
 		TcpClient _tcpClient;
@@ -140,14 +139,6 @@ namespace XG.Server.Plugin.Core.Irc
 
 		protected void StartWriting()
 		{
-			var tFile = FileActions.NewFile(FileName, Size);
-			if (tFile == null)
-			{
-				_log.Fatal("StartWriting(" + FileName + ") cant find or create a file to download");
-				_tcpClient.Close();
-				return;
-			}
-
 			#if !UNSAFE
 			try
 			{

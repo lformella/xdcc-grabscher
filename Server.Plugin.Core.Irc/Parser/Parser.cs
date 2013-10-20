@@ -37,9 +37,9 @@ namespace XG.Server.Plugin.Core.Irc.Parser
 		{
 			AddParser(new Types.Nickserv());
 			AddParser(new Types.XdccList());
-			AddParser(new Types.Dcc.ExistingBot());
-			AddParser(new Types.Dcc.User());
+			AddParser(new Types.Dcc.DownloadFromBot());
 			AddParser(new Types.Dcc.Version());
+			AddParser(new Types.Dcc.XdccListSend());
 			AddParser(new Types.Info.Bandwitdh());
 			AddParser(new Types.Info.Join());
 			AddParser(new Types.Info.Packet());

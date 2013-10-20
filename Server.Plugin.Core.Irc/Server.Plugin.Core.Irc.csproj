@@ -53,7 +53,6 @@
     <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\Types\AParserWithExistingBot.cs" />
     <Compile Include="Parser\Types\Dcc\ADccParser.cs" />
-    <Compile Include="Parser\Types\Dcc\ExistingBot.cs" />
     <Compile Include="Parser\Types\Info\Bandwidth.cs" />
     <Compile Include="Parser\Types\Info\Join.cs" />
     <Compile Include="Parser\Types\Info\Packet.cs" />
@@ -82,8 +81,9 @@
     <Compile Include="XdccListEntry.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="Parser\Types\XdccList.cs" />
-    <Compile Include="Parser\Types\Dcc\User.cs" />
     <Compile Include="Parser\Types\Dcc\Version.cs" />
+    <Compile Include="Parser\Types\Dcc\XdccListSend.cs" />
+    <Compile Include="Parser\Types\Dcc\DownloadFromBot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

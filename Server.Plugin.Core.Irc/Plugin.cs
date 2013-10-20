@@ -302,7 +302,6 @@ namespace XG.Server.Plugin.Core.Irc
 			{
 				download = new Download
 				{
-					FileActions = FileActions,
 					Server = aEventArgs.Value1,
 					Bot = aEventArgs.Value2,
 					Size = aEventArgs.Value3,
@@ -362,6 +361,7 @@ namespace XG.Server.Plugin.Core.Irc
 				if (tChan == null)
 				{
 					_log.Error(".DownloadXdccReady(" + aEventArgs.Value2 + ") cant find channel");
+					return;
 				}
 
 				foreach (var line in lines)
