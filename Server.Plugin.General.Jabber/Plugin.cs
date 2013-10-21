@@ -65,9 +65,9 @@ namespace XG.Server.Plugin.General.Jabber
 
 		#region EVENTHANDLER
 
-		protected new void FileChanged(AObject aObj, string[] aFields)
+		protected new void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			if (aObj is FilePart && aFields.Contains("Speed"))
+			if (aEventArgs.Value1 is FilePart && aEventArgs.Value2.Contains("Speed"))
 			{
 				double speed;
 				try

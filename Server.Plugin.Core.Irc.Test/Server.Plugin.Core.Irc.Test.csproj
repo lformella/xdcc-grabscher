@@ -33,13 +33,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Meebey.SmartIrc4net">
-      <HintPath>..\packages\smartirc4net.0.4.5\Meebey.SmartIrc4net.dll</HintPath>
+      <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="StarkSoftProxy">
-      <HintPath>..\packages\smartirc4net.0.4.5\StarkSoftProxy.dll</HintPath>
+      <HintPath>..\packages\smartirc4net.0.5.0\StarkSoftProxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

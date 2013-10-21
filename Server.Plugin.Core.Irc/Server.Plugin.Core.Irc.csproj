@@ -33,13 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Meebey.SmartIrc4net, Version=0.4.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Meebey.SmartIrc4net, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\smartirc4net.0.4.5\Meebey.SmartIrc4net.dll</HintPath>
+      <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
     <Reference Include="StarkSoftProxy, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\smartirc4net.0.4.5\StarkSoftProxy.dll</HintPath>
+      <HintPath>..\packages\smartirc4net.0.5.0\StarkSoftProxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="log4net">
