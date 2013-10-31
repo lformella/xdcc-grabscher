@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E978DE8D-E01F-4F2D-B939-254A4308ED2B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XG.Plugin.Webserver</RootNamespace>
+    <AssemblyName>XG.Plugin.Webserver</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fleck">
+      <HintPath>..\packages\Fleck.0.9.7.24\lib\net40\Fleck.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpRobin">
+      <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ASaltedPassword.cs" />
+    <Compile Include="Object\AObject.cs" />
+    <Compile Include="Object\Bot.cs" />
+    <Compile Include="Object\Channel.cs" />
+    <Compile Include="Object\ExternalSearch.cs" />
+    <Compile Include="Object\File.cs" />
+    <Compile Include="Object\Flot.cs" />
+    <Compile Include="Object\Notification.cs" />
+    <Compile Include="Object\Packet.cs" />
+    <Compile Include="Object\Search.cs" />
+    <Compile Include="Object\Server.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Webserver\BrowserConnection.cs" />
+    <Compile Include="Webserver\FileLoader.cs" />
+    <Compile Include="Webserver\Server.cs" />
+    <Compile Include="Websocket\DoubleConverter.cs" />
+    <Compile Include="Websocket\Request.cs" />
+    <Compile Include="Websocket\Response.cs" />
+    <Compile Include="Websocket\Server.cs" />
+    <Compile Include="Websocket\User.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap\bootstrap-theme.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap\bootstrap-theme.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap\bootstrap.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap\bootstrap.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\images\down.gif" />
+    <Content Include="Content\images\header-columns-bg.gif" />
+    <Content Include="Content\images\sort-asc.gif" />
+    <Content Include="Content\images\sort-desc.gif" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.remotemodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.groupitemmetadataprovider.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.grid.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.formatters.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.editors.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.dataview.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\slick.core.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowselectionmodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.rowmovemanager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headermenu.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.headerbuttons.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.checkboxselectcolumn.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellselectionmodel.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangeselector.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellrangedecorator.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.cellcopymanager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Plugins\slick.autotooltips.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.pager.js" />
+    <EmbeddedResource Include="Scripts\SlickGrid\Controls\slick.columnpicker.js" />
+    <EmbeddedResource Include="Scripts\require.js" />
+    <EmbeddedResource Include="Scripts\r.js" />
+    <EmbeddedResource Include="Scripts\moment.min.js" />
+    <EmbeddedResource Include="Scripts\moment.js" />
+    <EmbeddedResource Include="Scripts\json2.min.js" />
+    <EmbeddedResource Include="Scripts\json2.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.live.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.live.js" />
+    <EmbeddedResource Include="Scripts\jquery.event.drag.js" />
+    <EmbeddedResource Include="Scripts\jquery.cookie.js" />
+    <EmbeddedResource Include="Scripts\jquery-ui-1.10.3.min.js" />
+    <EmbeddedResource Include="Scripts\jquery-ui-1.10.3.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.min.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.intellisense.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.js" />
+    <EmbeddedResource Include="Resources\js\xg\websocket.js" />
+    <EmbeddedResource Include="Resources\js\xg\translate.js" />
+    <EmbeddedResource Include="Resources\js\xg\resize.js" />
+    <EmbeddedResource Include="Resources\js\xg\password.js" />
+    <EmbeddedResource Include="Resources\js\xg\main.js" />
+    <EmbeddedResource Include="Resources\js\xg\helper.js" />
+    <EmbeddedResource Include="Resources\js\xg\gui.js" />
+    <EmbeddedResource Include="Resources\js\xg\grid.js" />
+    <EmbeddedResource Include="Resources\js\xg\graph.js" />
+    <EmbeddedResource Include="Resources\js\xg\formatter.js" />
+    <EmbeddedResource Include="Resources\js\xg\enum.js" />
+    <EmbeddedResource Include="Resources\js\xg\dataview.js" />
+    <EmbeddedResource Include="Resources\js\xg\cookie.js" />
+    <EmbeddedResource Include="Resources\js\xg\config.js" />
+    <EmbeddedResource Include="Resources\js\init.js" />
+    <EmbeddedResource Include="Resources\js\i18n\xg\en.js" />
+    <EmbeddedResource Include="Resources\js\i18n\xg\de.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\zh-tw.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\zh-cn.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\tr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\sv.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\ru.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\ro.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\pt.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\pt-br.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\pl.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\nl.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\nb.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\kr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\ko.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\jp.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\ja.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\it.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\is.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\hu.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\he.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\gl.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\fr.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\fr-ca.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\fi.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\eu.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\et.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\es.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\en-gb.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\en-ca.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\de.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\da.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\cv.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\ca.js" />
+    <EmbeddedResource Include="Resources\js\i18n\moment\bg.js" />
+    <EmbeddedResource Include="Resources\js\external\sha256.js" />
+    <EmbeddedResource Include="Resources\js\external\jquery.knob.js" />
+    <EmbeddedResource Include="Resources\js\external\jquery.flot.axislabels.js" />
+    <EmbeddedResource Include="Resources\js\external\favicon.js" />
+    <EmbeddedResource Include="Resources\js\external\css_browser_selector.js" />
+    <EmbeddedResource Include="Resources\index.html" />
+    <EmbeddedResource Include="Resources\favicon.ico" />
+    <EmbeddedResource Include="Resources\css\xg.css" />
+    <EmbeddedResource Include="Resources\css\tango-colors.css" />
+    <EmbeddedResource Include="Resources\css\animation.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\minified\images\animated-overlay.gif" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.theme.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.tabs.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.spinner.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.slider.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.selectable.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.resizable.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.menu.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.dialog.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.core.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.button.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.base.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.all.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery.ui.accordion.css" />
+    <EmbeddedResource Include="Content\themes\base\jquery-ui.css" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <EmbeddedResource Include="Content\themes\base\images\animated-overlay.gif" />
+    <EmbeddedResource Include="Content\slick.pager.css" />
+    <EmbeddedResource Include="Content\slick.headermenu.css" />
+    <EmbeddedResource Include="Content\slick.headerbuttons.css" />
+    <EmbeddedResource Include="Content\slick.grid.css" />
+    <EmbeddedResource Include="Content\slick.columnpicker.css" />
+    <EmbeddedResource Include="Content\slick-default-theme.css" />
+    <EmbeddedResource Include="Content\normalize.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\jquery-2.0.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Config\XG.Config.csproj">
+      <Project>{DD17AB20-C940-4EB9-9F2A-53A5914D7914}</Project>
+      <Name>XG.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Model\XG.Model.csproj">
+      <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
+      <Name>XG.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
+      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
+      <Name>XG.Plugin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="XG.Model" namespace="XG.Model.Domain">
+
+	<class name="FilePart">
+		<id name="Guid">
+			<generator class="assigned"/>
+		</id>
+		<property name="Name" />
+		<property name="Connected" />
+		<property name="Enabled" />
+		<property name="StartSize" />
+		<property name="StopSize" />
+		<property name="CurrentSize" />
+		<property name="Speed" />
+		<property name="State" />
+		<property name="Checked" />
+		<many-to-one name="Parent" column="ParentGuid" not-null="true" />
+	</class>
+
+</hibernate-mapping>

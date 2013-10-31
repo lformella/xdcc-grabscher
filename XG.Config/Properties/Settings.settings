@@ -1,0 +1,117 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="XG.Config.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="XgVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2.2.0.0</Value>
+    </Setting>
+    <Setting Name="CommandWaitTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="BotWaitTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">240</Value>
+    </Setting>
+    <Setting Name="ChannelWaitTimeShort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="ChannelWaitTimeMedium" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1800</Value>
+    </Setting>
+    <Setting Name="ChannelWaitTimeLong" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3600</Value>
+    </Setting>
+    <Setting Name="FileRollbackBytes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">512000</Value>
+    </Setting>
+    <Setting Name="FileRollbackCheckBytes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">409600</Value>
+    </Setting>
+    <Setting Name="UpdateDownloadTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="DownloadPerReadBytes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">102400</Value>
+    </Setting>
+    <Setting Name="BotOfflineTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">7200</Value>
+    </Setting>
+    <Setting Name="SamePacketRequestTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="IrcVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">mIRC v6.35 Khaled Mardam-Bey</Value>
+    </Setting>
+    <Setting Name="BotOfflineCheckTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1200</Value>
+    </Setting>
+    <Setting Name="DownloadTimeoutTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="MutliDownloadMinimumTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="RunLoopTime" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="TakeSnapshotTimeInMinutes" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MaxNoDateReceived" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="IrcNick" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Anonymous</Value>
+    </Setting>
+    <Setting Name="IrcPasswort" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">password123</Value>
+    </Setting>
+    <Setting Name="IrcRegisterEmail" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">anon@ymous.org</Value>
+    </Setting>
+    <Setting Name="AutoRegisterNickserv" Provider="XgSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TempPath" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ReadyPath" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EnableMultiDownloads" Provider="XgSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Password" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">xgisgreat</Value>
+    </Setting>
+    <Setting Name="UseWebserver" Provider="XgSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="WebserverPort" Provider="XgSettingsProvider" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5556</Value>
+    </Setting>
+    <Setting Name="UseJabberClient" Provider="XgSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="JabberServer" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="JabberUser" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="JabberPassword" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UseElasticSearch" Provider="XgSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ElasticSearchHost" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ElasticSearchPort" Provider="XgSettingsProvider" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="FileHandlers" Provider="XgSettingsProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[]</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

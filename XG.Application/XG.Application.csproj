@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FBBA96E7-9285-4B6B-9069-C8BF7896EFF3}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XG.Application</RootNamespace>
+    <AssemblyName>XG.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpRobin">
+      <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Business\XG.Business.csproj">
+      <Project>{56891BE8-B112-49A5-91C2-B250D36F80FE}</Project>
+      <Name>XG.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Config\XG.Config.csproj">
+      <Project>{DD17AB20-C940-4EB9-9F2A-53A5914D7914}</Project>
+      <Name>XG.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Model\XG.Model.csproj">
+      <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
+      <Name>XG.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.ElasticSearch\XG.Plugin.ElasticSearch.csproj">
+      <Project>{A1219CE4-01AC-4754-B620-CE281C8361D9}</Project>
+      <Name>XG.Plugin.ElasticSearch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Import\XG.Plugin.Import.csproj">
+      <Project>{4D5707FE-5167-45DC-BFD7-A55E49757D0D}</Project>
+      <Name>XG.Plugin.Import</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Irc\XG.Plugin.Irc.csproj">
+      <Project>{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}</Project>
+      <Name>XG.Plugin.Irc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Jabber\XG.Plugin.Jabber.csproj">
+      <Project>{1D427F5E-B740-453C-8670-CE5D09021595}</Project>
+      <Name>XG.Plugin.Jabber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Webserver\XG.Plugin.Webserver.csproj">
+      <Project>{E978DE8D-E01F-4F2D-B939-254A4308ED2B}</Project>
+      <Name>XG.Plugin.Webserver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
+      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
+      <Name>XG.Plugin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

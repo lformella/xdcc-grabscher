@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C86AD407-1D6B-4FE6-BC03-10E3AE87D215}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XG.Test</RootNamespace>
+    <AssemblyName>XG.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Meebey.SmartIrc4net">
+      <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="StarkSoftProxy">
+      <HintPath>..\packages\smartirc4net.0.5.0\StarkSoftProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.x86.1.0.89.0\lib\net45\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.x86.1.0.89.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise />
+  </Choose>
+  <ItemGroup>
+    <Compile Include="DB\Dao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Domain\Server.cs" />
+    <Compile Include="Model\Domain\Servers.cs" />
+    <Compile Include="Model\Domain\Helper.cs" />
+    <Compile Include="Business\Helper\Filesystem.cs" />
+    <Compile Include="Business\Helper\Process.cs" />
+    <Compile Include="Plugin\Irc\Parser\AParser.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\Info\Bandwitdh.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\Info\Join.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\Info\Packet.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\Info\Status.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\XdccList.cs" />
+    <Compile Include="Config\Properties\Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Business\XG.Business.csproj">
+      <Project>{56891BE8-B112-49A5-91C2-B250D36F80FE}</Project>
+      <Name>XG.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.DB\XG.DB.csproj">
+      <Project>{5926AB35-FF4F-4ED4-9060-EC1EEAA8F529}</Project>
+      <Name>XG.DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Model\XG.Model.csproj">
+      <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
+      <Name>XG.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.ElasticSearch\XG.Plugin.ElasticSearch.csproj">
+      <Project>{A1219CE4-01AC-4754-B620-CE281C8361D9}</Project>
+      <Name>XG.Plugin.ElasticSearch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Import\XG.Plugin.Import.csproj">
+      <Project>{4D5707FE-5167-45DC-BFD7-A55E49757D0D}</Project>
+      <Name>XG.Plugin.Import</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Irc\XG.Plugin.Irc.csproj">
+      <Project>{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}</Project>
+      <Name>XG.Plugin.Irc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Jabber\XG.Plugin.Jabber.csproj">
+      <Project>{1D427F5E-B740-453C-8670-CE5D09021595}</Project>
+      <Name>XG.Plugin.Jabber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin.Webserver\XG.Plugin.Webserver.csproj">
+      <Project>{E978DE8D-E01F-4F2D-B939-254A4308ED2B}</Project>
+      <Name>XG.Plugin.Webserver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
+      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
+      <Name>XG.Plugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Config\XG.Config.csproj">
+      <Project>{DD17AB20-C940-4EB9-9F2A-53A5914D7914}</Project>
+      <Name>XG.Config</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\XG.DB\Mappings\Bot.hbm.xml">
+      <Link>Mappings\Bot.hbm.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\XG.DB\Mappings\Packet.hbm.xml">
+      <Link>Mappings\Packet.hbm.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\XG.DB\Mappings\Channel.hbm.xml">
+      <Link>Mappings\Channel.hbm.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\XG.DB\Mappings\Server.hbm.xml">
+      <Link>Mappings\Server.hbm.xml</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\XG.DB\Mappings\File.hbm.xml">
+      <Link>Mappings\File.hbm.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\XG.DB\Mappings\FilePart.hbm.xml">
+      <Link>Mappings\FilePart.hbm.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\XG.DB\Mappings\Search.hbm.xml">
+      <Link>Mappings\Search.hbm.xml</Link>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="Model\Domain\" />
+    <Folder Include="Business\" />
+    <Folder Include="Plugin\" />
+    <Folder Include="Plugin\Irc\" />
+    <Folder Include="Config\" />
+    <Folder Include="Config\Properties\" />
+  </ItemGroup>
+</Project>

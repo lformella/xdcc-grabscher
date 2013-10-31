@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="XG.Model" namespace="XG.Model.Domain">
+
+	<class name="Channel">
+		<id name="Guid">
+			<generator class="assigned"/>
+		</id>
+		<property name="Name" />
+		<property name="Connected" />
+		<property name="Enabled" />
+		<property name="ErrorCode" />
+		<property name="Topic" />
+		<property name="AskForVersion" />
+		<many-to-one name="Parent" column="ParentGuid" not-null="true" />
+		<bag name="Children" inverse="true" cascade="all-delete-orphan" lazy="false" mutable="true">
+			<key foreign-key="FK_BOT_CHANNEL_ID">
+				<column name="ParentGuid" />
+			</key>
+			<one-to-many class="Bot" />
+		</bag>
+	</class>
+
+</hibernate-mapping>
