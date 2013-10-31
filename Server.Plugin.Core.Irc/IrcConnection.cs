@@ -370,7 +370,10 @@ namespace XG.Server.Plugin.Core.Irc
 							RequestFromBot(bot);
 						}
 					}
-					CheckIfUserShouldVersioned(e.Channel, e.Who);
+					if (channel.AskForVersion)
+					{
+						CheckIfUserShouldVersioned(e.Channel, e.Who);
+					}
 					UpdateChannel(channel);
 				}
 			};
@@ -498,7 +501,10 @@ namespace XG.Server.Plugin.Core.Irc
 							bot.Commit();
 							RequestFromBot(bot);
 						}
-						CheckIfUserShouldVersioned(e.Channel, user);
+						if (channel.AskForVersion)
+						{
+							CheckIfUserShouldVersioned(e.Channel, user);
+						}
 					}
 					UpdateChannel(channel);
 				}

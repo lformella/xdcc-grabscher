@@ -72,7 +72,7 @@ namespace XG.Core
 			get { return _topic; }
 			set { SetProperty(ref _topic, value, "Topic"); }
 		}
-		
+
 		[field: NonSerialized]
 		int _userCount;
 
@@ -80,6 +80,14 @@ namespace XG.Core
 		{
 			get { return _userCount; }
 			set { SetProperty(ref _userCount, value, "UserCount"); }
+		}
+
+		bool _askForVersion;
+
+		public bool AskForVersion
+		{
+			get { return _askForVersion; }
+			set { SetProperty(ref _askForVersion, value, "AskForVersion"); }
 		}
 
 		#endregion
