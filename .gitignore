@@ -166,3 +166,5 @@ pip-log.txt
 XG_*.tar.gz
 XG_*.exe
 *.userprefs
+packages/
+test-results/
