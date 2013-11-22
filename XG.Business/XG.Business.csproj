@@ -48,6 +48,8 @@
     <Compile Include="Helper\PartBytesObject.cs" />
     <Compile Include="Helper\Process.cs" />
     <Compile Include="Helper\Rrd.cs" />
+    <Compile Include="Helper\Snapshots.cs" />
+    <Compile Include="Model\Snapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Worker\BotWatchdog.cs" />
     <Compile Include="Worker\Rrd.cs" />

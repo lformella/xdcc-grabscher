@@ -1,4 +1,4 @@
-//
+﻿//
 //  init.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -23,47 +23,28 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-require([
-	'../../Scripts/jquery-2.0.2.min'
-], function()
-{
-	require([
-		'../../Scripts/jquery-ui-1.10.3.min',
-		'../../Scripts/jquery.event.drag.min',
-		'../../Scripts/moment.min',
-		'../../Scripts/jquery.cookie',
-		'../../Scripts/flot/jquery.flot.min',
-		'../../Scripts/json2.min',
-		'../../Scripts/SlickGrid/slick.core',
-		'../../Scripts/SlickGrid/slick.formatters',
-		'../../Scripts/SlickGrid/slick.grid',
-		'../../Scripts/SlickGrid/slick.dataview',
-		'../../Scripts/SlickGrid/Plugins/slick.rowselectionmodel',
-		'../../Scripts/SlickGrid/slick.groupitemmetadataprovider',
-		'../../Scripts/bootstrap.min',
-		'external/jquery.flot.axislabels',
-		'external/sha256',
-		'external/favicon',
-		'external/css_browser_selector',
-		'external/jquery.knob',
-		'xg/enum',
-		'i18n/xg/en'
-	], function()
-	{
-		require([
-			'xg/config',
-			'../../Scripts/flot/jquery.flot.time.min',
-			'../../Scripts/flot/jquery.flot.pie.min'
-		], function(config) {
-			require([
-				'i18n/xg/' + config.getLanguage(),
-				'i18n/moment/' + config.getLanguage()
-			], function() {
-				require(['xg/main'], function(main)
-				{
-					main.initialize();
-				});
-			});
-		});
-	});
+// let Angular know that we're bootstrapping manually
+window.name = "NG_DEFER_BOOTSTRAP!";
+
+require.config({
+	paths: {
+		'jquery': '../../../Scripts/jquery-2.0.2.min',
+		'angular': '../../../Scripts/angular',
+		'ngTranslate': './libs/angular-translate.min',
+		'domReady': './libs/domReady',
+		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
+		'ngSanitize': '../../../Scripts/angular-sanitize',
+		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.6.0',
+		'ngTable': './libs/ng-table',
+		'ipCookies': './libs/angular-cookie',
+		'moment': '../../../Scripts/moment',
+		// currentLanguage will be replaced by StartUp.cs
+		'moment-i18n': './libs/i18n/moment/currentLanguage'
+	},
+	shim: {
+		'angular': {
+			exports: 'angular'
+		}
+	},
+	deps: ['./bootstrap']
 });

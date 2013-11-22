@@ -26,6 +26,8 @@
 using System;
 using SharpRobin.Core;
 using XG.Plugin;
+using XG.Business.Helper;
+using XG.Business.Model;
 
 namespace XG.Business.Worker
 {
@@ -37,7 +39,7 @@ namespace XG.Business.Worker
 
 		protected override void LoopRun()
 		{
-			var snapshot = CollectSnapshot();
+			var snapshot = Snapshots.GenerateSnapshot();
 
 			Sample sample = RrdDB.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
 			for (int a = 1; a < Snapshot.SnapshotCount; a++)

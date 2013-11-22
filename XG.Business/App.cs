@@ -68,8 +68,13 @@ namespace XG.Business
 			FileActions.OnNotificationAdded += NotificationAdded;
 
 			_workers = new Workers();
-			
 			_rrdDb = new Helper.Rrd().GetDb();
+
+			LoadObjects();
+			//CheckForDuplicates();
+			//ResetObjects();
+			//ClearOldDownloads();
+			//TryToRecoverOpenFiles();
 		}
 
 		protected override void NotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
@@ -79,7 +84,7 @@ namespace XG.Business
 
 		void TryToRecoverOpenFiles()
 		{
-			foreach (Model.Domain.File file in Files.All)
+			foreach (XG.Model.Domain.File file in Files.All)
 			{
 				// lets check if the directory is still on the harddisk
 				if (!Directory.Exists(Settings.Default.TempPath + file.TmpPath))
@@ -185,7 +190,7 @@ namespace XG.Business
 			snapShotWorker.RrdDB = _rrdDb;
 			AddWorker(snapShotWorker);
 
-			AddWorker(new BotWatchdog { SecondsToSleep = Settings.Default.BotOfflineCheckTime });
+			//AddWorker(new BotWatchdog { SecondsToSleep = Settings.Default.BotOfflineCheckTime });
 
 			_workers.StartAll();
 		}
@@ -194,7 +199,7 @@ namespace XG.Business
 		{
 			List<string> dirs = Directory.GetDirectories(Settings.Default.TempPath).ToList();
 
-			foreach (Model.Domain.File file in Files.All)
+			foreach (XG.Model.Domain.File file in Files.All)
 			{
 				if (file.Enabled)
 				{
@@ -296,11 +301,14 @@ namespace XG.Business
 		void LoadObjects()
 		{
 			Servers = _dao.Servers();
-			FileActions.Servers = Servers;
 			Files = _dao.Files();
-			FileActions.Files = Files;
 			Searches = _dao.Searches();
+
+			FileActions.Files = Files;
+			FileActions.Servers = Servers;
 			Notifications = new Notifications();
+			Snapshots.Servers = Servers;
+			Snapshots.Files = Files;
 		}
 
 		#endregion
@@ -309,11 +317,6 @@ namespace XG.Business
 
 		protected override void StartRun()
 		{
-			LoadObjects();
-			CheckForDuplicates();
-			ResetObjects();
-			ClearOldDownloads();
-			TryToRecoverOpenFiles();
 			StartWorkers();
 		}
 

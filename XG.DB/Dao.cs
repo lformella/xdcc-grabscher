@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  Dao.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -57,7 +57,7 @@ namespace XG.DB
 #endif
 
 			string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
-			cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3";
+			cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False";
 
 			bool insertVersion = false;
 			if (!System.IO.File.Exists(db))
@@ -72,6 +72,7 @@ namespace XG.DB
 			if (insertVersion)
 			{
 				_session.Save (new Domain.Version { Number = _version });
+				_session.Flush();
 			}
 			else
 			{
@@ -148,20 +149,14 @@ namespace XG.DB
 
 		void ObjectAdded(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
-			if (eventArgs.Value2 is Server || eventArgs.Value2 is File || eventArgs.Value2 is Search)
-			{
-				_session.Save(eventArgs.Value2);
-				_session.Flush();
-			}
+			_session.Save(eventArgs.Value2);
+			_session.Flush();
 		}
 
 		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
-			if (eventArgs.Value2 is Server || eventArgs.Value2 is File || eventArgs.Value2 is Search)
-			{
-				_session.Delete(eventArgs.Value2);
-				_session.Flush();
-			}
+			_session.Delete(eventArgs.Value2);
+			_session.Flush();
 		}
 
 		void UpdateDatabase(int aFrom, int aTo)

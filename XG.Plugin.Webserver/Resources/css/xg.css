@@ -27,12 +27,7 @@
 
 /** Base **/
 
-.alignRight
-{
-	text-align: right;
-}
-
-.btn, .button
+.btn, .button, a
 {
 	cursor: pointer;
 }
@@ -40,6 +35,21 @@
 small
 {
 	font-size: 0.7em;
+}
+
+.modal
+{
+	display: block;
+}
+
+.ng-hide
+{
+	display: none;
+}
+
+body
+{
+	margin-top: 50px;
 }
 
 /** Bootstrap **/
@@ -58,9 +68,9 @@ small
 
 .progress
 {
-	height: 5px;
+	height: 6px;
 	margin-bottom: 0;
-	margin-top: 0;
+	margin-top: 2px;
 }
 
 .progress .progress-bar-light
@@ -99,18 +109,101 @@ small
 	font-size: 2em;
 }
 
+.pagination
+{
+	margin-top: 0;
+}
+
+/** Table **/
+
+.table {
+	table-layout: fixed;
+}
+
+.table tbody + tbody, .table thead + tbody {
+	border-top: 1px solid #888;
+}
+
+.table tbody tr:first-child td {
+	border-top: none;
+}
+
+.table tbody.isOffline {
+	opacity: 0.5;
+}
+
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+	line-height: 16px;
+	padding: 8px 4px;
+}
+
+.table thead > tr > th {
+	border-bottom: 1px solid #888888;
+}
+
+.table tr:nth-child(2n) {
+	background: none repeat scroll 0 0 #FEFEFE;
+}
+
+.table th {
+	text-align: center;
+}
+
+.table th.text-right, .table td.text-right {
+	text-align: right;
+}
+
+.table td.withIcon {
+	font-size: 1.6em;
+	padding: 3px 0 0 5px;
+}
+
+.table td.withIcon span {
+	position: relative;
+}
+
+.ng-table-group > td.rowWithText {
+	padding: 0 4px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+td.rowWithText span {
+	position: relative;
+}
+
+td.rowWithText small {
+	position: absolute;
+	bottom: -16px;
+	left: 0;
+}
+
+.table td.withProgress {
+	padding: 4px 4px;
+	vertical-align: middle;
+}
+
+.glyphicon.icon-overlay
+{
+	font-size: 0.5em;
+	position: absolute;
+	right: -8px;
+	top: -3px;
+	z-index: 1;
+	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
+}
+
+.glyphicon.icon-overlay-middle
+{
+	margin-top: 3px;
+	margin-right: 0;
+}
+
+.clickAble {
+	cursor: pointer;
+}
+
 /** Grids **/
-
-#BotGrid
-{
-	height: 300px;
-	margin-bottom: 10px;
-}
-
-#PacketGrid
-{
-	height: 300px;
-}
 
 #ServerGrid, #ChannelGrid
 {
@@ -132,9 +225,18 @@ small
 
 /** Dialogs **/
 
-#serverChannelsDialog .modal-dialog
+.serverChannelsDialog.modal-dialog
 {
 	width: 940px;
+}
+
+.serverChannelsDialog .tableDiv
+{
+	height: 435px;
+}
+
+.serverChannelsDialog .table, .serverChannelsDialog .pagination {
+	margin-bottom: 10px;
 }
 
 /** Menu **/
@@ -157,21 +259,16 @@ small
 
 .navbar .navbar-form
 {
-	margin-top: 4px;
-	margin-bottom: 4px;
-}
-
-#search
-{
-	height: 32px;
-	padding: 3px;
-	width: 200px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding: 0;
 }
 
 #searchForm .dropdown-menu
 {
 	overflow: hidden;
 	overflow-y: auto;
+	min-width: 212px;
 }
 
 #searchForm .dropdown-menu .text
@@ -181,6 +278,7 @@ small
 
 #searchLoading
 {
+	margin-right: 4px;
 	margin-top: 12px;
 }
 
@@ -198,138 +296,6 @@ small
 	position: absolute;
 	top: 2px;
 	font-size: 0.8em;
-}
-
-/** Slick Grid **/
-
-.grid *, .grid *:before, .grid *:after
-{
-	-moz-box-sizing: content-box;
-}
-
-.slick-cell .glyphicon
-{
-	font-size: 1.5em;
-	margin-left: -3px;
-	margin-top: -3px;
-}
-
-#NotificationGrid .slick-cell .glyphicon
-{
-	font-size: 2em;
-	margin-left: 0;
-	margin-top: 0;
-}
-
-.slick-cell .glyphicon.icon-overlay
-{
-	font-size: 1.0em;
-	float: right;
-	margin-right: -4px;
-	margin-top: -4px;
-	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
-}
-
-.slick-cell .glyphicon.icon-overlay-middle
-{
-	margin-top: 3px;
-	margin-right: 0;
-}
-
-.grid .grid-canvas .small-line
-{
-	line-height: 12px !important;
-}
-
-.grid .grid-canvas .two-line-text
-{
-	white-space: normal;
-	font-size: 1em;
-}
-
-.grid
-{
-	border-bottom: 1px solid #ddd;
-}
-
-.grid .slick-viewport
-{
-	border-top: 1px solid #ddd;
-}
-
-.grid .grid-canvas .slick-row .slick-cell
-{
-	height: 32px;
-}
-
-.gecko .grid .grid-canvas .slick-row .slick-cell
-{
-	height: 21px;
-}
-
-#NotificationGrid .grid-canvas .slick-row .slick-cell
-{
-	height: 49px;
-}
-
-.gecko #NotificationGrid .grid-canvas .slick-row .slick-cell
-{
-	height: 37px;
-}
-
-.grid .grid-canvas .slick-cell, .grid .grid-canvas .slick-headerrow-column
-{
-	border-color: -moz-use-text-color -moz-use-text-color #ddd;
-	border-width: 0 0 1px;
-}
-
-.grid .slick-header-columns .slick-header-column
-{
-	height: auto;
-	line-height: 14px;
-	border: none;
-	font-weight: bold;
-}
-
-.grid .grid-canvas .slick-cell, .grid .slick-header-columns .slick-header-column.ui-state-default
-{
-	padding: 5px 7.5834px;
-	line-height: 20px;
-}
-
-.grid .grid-canvas .slick-row.odd:hover
-{
-	background: #fcfcfc;
-}
-
-.grid .grid-canvas .slick-row.even
-{
-	background: #f9f9f9;
-}
-
-.grid .grid-canvas .slick-row.even:hover
-{
-	background: #f5f5f5;
-}
-
-.grid .grid-canvas .slick-row.active, .grid .grid-canvas .slick-cell.selected
-{
-	background: #fcf8e3;
-}
-
-.grid .grid-canvas .slick-row.active:hover, .grid .grid-canvas .slick-cell.selected:hover
-{
-	background: #fbeed5;
-}
-
-.grid .grid-canvas .slick-row.active .slick-cell.selected, .grid .grid-canvas .slick-row.active .slick-cell.selected:hover
-{
-	background: none;
-}
-
-.slick-sort-indicator
-{
-	float: none;
 }
 
 /* Dasboard */

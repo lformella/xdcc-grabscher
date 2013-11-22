@@ -85,7 +85,7 @@ namespace XG.Business.Helper
 		/// </summary>
 		/// <param name="aFile"> </param>
 		/// <returns> </returns>
-		public static string CompletePath(Model.Domain.File aFile)
+		public static string CompletePath(XG.Model.Domain.File aFile)
 		{
 			return Settings.Default.TempPath + aFile.TmpPath;
 		}
@@ -109,9 +109,9 @@ namespace XG.Business.Helper
 		/// <param name="aName"> </param>
 		/// <param name="aSize"> </param>
 		/// <returns> </returns>
-		static Model.Domain.File File(string aName, Int64 aSize)
+		static XG.Model.Domain.File File(string aName, Int64 aSize)
 		{
-			string name = Model.Domain.Helper.ShrinkFileName(aName, aSize);
+			string name = XG.Model.Domain.Helper.ShrinkFileName(aName, aSize);
 			foreach (var file in Files.All)
 			{
 				//Console.WriteLine(file.TmpPath + " - " + name);
@@ -136,12 +136,12 @@ namespace XG.Business.Helper
 		/// <param name="aName"> </param>
 		/// <param name="aSize"> </param>
 		/// <returns> </returns>
-		public static Model.Domain.File NewFile(string aName, Int64 aSize)
+		public static XG.Model.Domain.File NewFile(string aName, Int64 aSize)
 		{
 			var tFile = File(aName, aSize);
 			if (tFile == null)
 			{
-				tFile = new Model.Domain.File(aName, aSize);
+				tFile = new XG.Model.Domain.File(aName, aSize);
 				Files.Add(tFile);
 				try
 				{
@@ -162,14 +162,14 @@ namespace XG.Business.Helper
 		/// </summary>
 		static void OnRemoveFile(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			RemoveFile((Model.Domain.File)aEventArgs.Value2);
+			RemoveFile((XG.Model.Domain.File)aEventArgs.Value2);
 		}
 
 		/// <summary>
 		/// 	removes a File
 		/// 	stops all running part connections and removes the file
 		/// </summary>
-		static void RemoveFile(Model.Domain.File aFile)
+		static void RemoveFile(XG.Model.Domain.File aFile)
 		{
 			Log.Info("RemoveFile(" + aFile + ")");
 
@@ -204,7 +204,7 @@ namespace XG.Business.Helper
 		/// <param name="aFile"> </param>
 		/// <param name="aSize"> </param>
 		/// <returns> </returns>
-		public static FilePart Part(Model.Domain.File aFile, Int64 aSize)
+		public static FilePart Part(XG.Model.Domain.File aFile, Int64 aSize)
 		{
 			FilePart returnPart = null;
 
@@ -256,7 +256,7 @@ namespace XG.Business.Helper
 		/// </summary>
 		/// <param name="aFile"> </param>
 		/// <param name="aPart"> </param>
-		public static void RemovePart(Model.Domain.File aFile, FilePart aPart)
+		public static void RemovePart(XG.Model.Domain.File aFile, FilePart aPart)
 		{
 			Log.Info("RemovePart(" + aFile + ", " + aPart + ")");
 
@@ -508,7 +508,7 @@ namespace XG.Business.Helper
 		/// 	Checks a file and if it is complete it starts a thread which join the file
 		/// </summary>
 		/// <param name="aFile"> </param>
-		public static void CheckFile(Model.Domain.File aFile)
+		public static void CheckFile(XG.Model.Domain.File aFile)
 		{
 			lock (aFile)
 			{
@@ -544,7 +544,7 @@ namespace XG.Business.Helper
 		/// <param name="aObject"> </param>
 		static void JoinCompleteParts(object aObject)
 		{
-			var tFile = aObject as Model.Domain.File;
+			var tFile = aObject as XG.Model.Domain.File;
 			if (tFile != null)
 			{
 				lock (tFile)
@@ -555,7 +555,7 @@ namespace XG.Business.Helper
 
 					// TODO remove all CD* packets if a multi packet was downloaded
 
-					string fileName = Model.Domain.Helper.ShrinkFileName(tFile.Name, 0);
+					string fileName = XG.Model.Domain.Helper.ShrinkFileName(tFile.Name, 0);
 
 					foreach (Server tServ in Servers.All)
 					{
@@ -567,7 +567,7 @@ namespace XG.Business.Helper
 								{
 									foreach (Packet tPack in tBot.Packets)
 									{
-										if (tPack.Enabled && (Model.Domain.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || Model.Domain.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)))
+										if (tPack.Enabled && (XG.Model.Domain.Helper.ShrinkFileName(tPack.RealName, 0).EndsWith(fileName) || XG.Model.Domain.Helper.ShrinkFileName(tPack.Name, 0).EndsWith(fileName)))
 										{
 											Log.Info("JoinCompleteParts(" + tFile + ") disabling " + tPack + " from " + tPack.Parent);
 											tPack.Enabled = false;

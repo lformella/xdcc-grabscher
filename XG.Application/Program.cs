@@ -53,7 +53,7 @@ namespace XG.Application
 			{
 				Settings.Default.TempPath += Path.DirectorySeparatorChar;
 			}
-			new DirectoryInfo(Settings.Default.ReadyPath).Create();
+			new DirectoryInfo(Settings.Default.TempPath).Create();
 
 			if (string.IsNullOrWhiteSpace(Settings.Default.ReadyPath))
 			{
@@ -63,7 +63,9 @@ namespace XG.Application
 			{
 				Settings.Default.ReadyPath += Path.DirectorySeparatorChar;
 			}
-			new DirectoryInfo(Settings.Default.TempPath).Create();
+			new DirectoryInfo(Settings.Default.ReadyPath).Create();
+
+			Settings.Default.Save();
 
 			if (File.Exists(Settings.Default.GetAppDataPath() + "log4net.xml"))
 			{

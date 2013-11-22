@@ -25,30 +25,30 @@
 //
 */
 
-.ButterLight { color: #fce94f; }
-.ButterMiddle { color: #edd400; }
-.ButterDark { color: #c4a000; }
-.OrangeLight { color: #fcaf3e; }
-.OrangeMiddle { color: #f57900; }
-.OrangeDark { color: #ce5c00; }
-.ChocolateLight { color: #e9b96e; }
-.ChocolateMiddle { color: #c17d11; }
-.ChocolateDark { color: #8f5902; }
-.ChameleonLight { color: #8ae234; }
-.ChameleonMiddle { color: #73d216; }
-.ChameleonDark { color: #4e9a06; }
-.SkyBlueLight { color: #729fcf; }
-.SkyBlueMiddle { color: #3465a4; }
-.SkyBlueDark { color: #204a87; }
-.PlumLight { color: #ad7fa8; }
-.PlumMiddle { color: #75507b; }
-.PlumDark { color: #5c3566; }
-.ScarletRedLight { color: #ef2929; }
-.ScarletRedMiddle { color: #cc0000; }
-.ScarletRedDark { color: #a40000; }
-.Aluminium1Light { color: #eeeeec; }
-.Aluminium1Middle { color: #d3d7cf; }
-.Aluminium1Dark { color: #babdb6; }
-.Aluminium2Light { color: #888a85; }
-.Aluminium2Middle { color: #555753; }
-.Aluminium2Dark { color: #2e3436; }
+.ButterLight { color: #fce94f !important; }
+.ButterMiddle { color: #edd400 !important; }
+.ButterDark { color: #c4a000 !important; }
+.OrangeLight { color: #fcaf3e !important; }
+.OrangeMiddle { color: #f57900 !important; }
+.OrangeDark { color: #ce5c00 !important; }
+.ChocolateLight { color: #e9b96e !important; }
+.ChocolateMiddle { color: #c17d11 !important; }
+.ChocolateDark { color: #8f5902 !important; }
+.ChameleonLight { color: #8ae234 !important; }
+.ChameleonMiddle { color: #73d216 !important; }
+.ChameleonDark { color: #4e9a06 !important; }
+.SkyBlueLight { color: #729fcf !important; }
+.SkyBlueMiddle { color: #3465a4 !important; }
+.SkyBlueDark { color: #204a87 !important; }
+.PlumLight { color: #ad7fa8 !important; }
+.PlumMiddle { color: #75507b !important; }
+.PlumDark { color: #5c3566 !important; }
+.ScarletRedLight { color: #ef2929 !important; }
+.ScarletRedMiddle { color: #cc0000 !important; }
+.ScarletRedDark { color: #a40000 !important; }
+.Aluminium1Light { color: #eeeeec !important; }
+.Aluminium1Middle { color: #d3d7cf !important; }
+.Aluminium1Dark { color: #babdb6 !important; }
+.Aluminium2Light { color: #888a85 !important; }
+.Aluminium2Middle { color: #555753 !important; }
+.Aluminium2Dark { color: #2e3436 !important; }

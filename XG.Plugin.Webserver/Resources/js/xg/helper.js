@@ -68,7 +68,7 @@ define(['xg/config'], function(config)
 		{
 			if (speed == 0)
 			{
-				return "&nbsp;";
+				return "";
 			}
 			if (speed < 1024)
 			{

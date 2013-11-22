@@ -176,7 +176,7 @@ define(['xg/config', 'xg/cookie', 'xg/dataview', 'xg/formatter', 'xg/graph', 'xg
 			gui.hideLoading();
 		});
 
-		websocket.initialize();
+		//websocket.initialize();
 	}
 
 	function startGrid ()
@@ -381,12 +381,13 @@ define(['xg/config', 'xg/cookie', 'xg/dataview', 'xg/formatter', 'xg/graph', 'xg
 				translations = {};
 			}
 			translate.initialize(translations);
-
+/*
 			password.initialize();
 			password.onPasswordOk.subscribe(function ()
 			{
 				start();
-			});
+			});*/
+			start();
 		}
 	};
 

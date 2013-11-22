@@ -33,7 +33,7 @@ namespace XG.Test.DB
 	[TestFixture]
 	class Dao
 	{
-		const int Count = 3;
+		const int Count = 6;
 		Random random = new Random();
 
 		[Test]
@@ -46,41 +46,117 @@ namespace XG.Test.DB
 		}
 			
 		[Test]
-		public void DaoServerTest()
+		public void DaoObjectsTest()
 		{
 			using (var dao = new XG.DB.Dao())
 			{
-				var servers = dao.Servers();
-
+				var files = dao.Files();
 				for (int a = 0; a < Count; a++)
 				{
-					var server = new XG.Model.Domain.Server
+					var file = new File("test" + a, 1000000 * (a + 1));
+
+					for (int b = 0; b < Count; b++)
 					{
+						var part = new FilePart
+						{
+							StartSize = 100000 * (b),
+							CurrentSize = 200000 * (b + 1),
+							StopSize = 300000 * (b + 1),
+							Checked = random.Next(1, 3) == 1
+						};
+						file.Add(part);
+					}
+
+					files.Add(file);
+				}
+
+				var servers = dao.Servers();
+				for (int a = 1; a < Count; a++)
+				{
+					var server = new Server
+					{
+						Connected = random.Next(1, 3) == 1,
 						Name = "irc.test.com" + a,
 						Port = 6666 + a
 					};
 
-					for (int b = 0; b < Count; b++)
+					for (int b = 1; b < Count; b++)
 					{
 						var channel = new Channel
 						{
+							Connected = random.Next(1, 3) == 1,
 							Name = "#test" + a + "-" + b
 						};
 
-						for (int c = 0; c < Count; c++)
+						for (int c = 1; c < Count; c++)
 						{
 							var bot = new Bot
 							{
-								Name = "Bot" + a + "-" + b + "-" + c
+								Name = "Bot " + a + "-" + b + "-" + c,
+								InfoSpeedCurrent = random.Next(100000, 1000000),
+								InfoSpeedMax = random.Next(1000000, 10000000),
+								InfoSlotCurrent = random.Next(1, 10),
+								InfoSlotTotal = random.Next(10, 100),
+								InfoQueueCurrent = random.Next(1, 10),
+								InfoQueueTotal = random.Next(10, 1000),
+								HasNetworkProblems = random.Next(1, 10) > 7,
+								LastMessage = "This is a test message that should be long enough for the most of the table and cell width test cases which are there for testing purposes.",
+								LastMessageTime = DateTime.Now.AddMinutes(random.Next(10000, 100000))
 							};
 
-							for (int d = 0; d < Count; d++)
+							int rand = random.Next(1, 4);
+							if (rand == 1)
 							{
+								bot.Connected = true;
+								bot.State = Bot.States.Active;
+								bot.HasNetworkProblems = false;
+							}
+							else if (rand == 2)
+							{
+								bot.Connected = random.Next(1, 3) == 1;
+								bot.State = Bot.States.Idle;
+							}
+							else if (rand == 3)
+							{
+								bot.Connected = true;
+								bot.State = Bot.States.Waiting;
+								bot.QueueTime = random.Next(10, 100);
+								bot.QueuePosition = random.Next(1, 10);
+							}
+
+							for (int d = 1; d < Count; d++)
+							{
+								var ending = new string[]{"rar", "mkv", "mp3", "tar", "avi", "wav", "jpg", "bmp"};
+
 								var packet = new Packet
 								{
-									Name = "Pack" + a + "-" + b + "-" + c + "-" + d,
-									Id = d
+									Name = "Pack " + a + "-" + b + "-" + c + "-" + d + "." + ending[random.Next(0, ending.Length)],
+									Id = a + b + c + d,
+									Size = random.Next(1000000, 10000000),
+									LastUpdated = DateTime.Now.AddDays(random.Next(1, 10) * -1),
+									LastMentioned = DateTime.Now.AddDays(random.Next(10, 100) * -1)
 								};
+
+								if (d == 1)
+								{
+									if (bot.State == Bot.States.Active)
+									{
+										packet.Enabled = true;
+										packet.Connected = true;
+									}
+									else if (bot.State == Bot.States.Waiting)
+									{
+										packet.Enabled = true;
+									}
+								}
+								else if (d == 2)
+								{
+									if (bot.State == Bot.States.Waiting)
+									{
+										packet.Enabled = true;
+									}
+								}
+
 								bot.AddPacket(packet);
 							}
 
@@ -95,52 +171,18 @@ namespace XG.Test.DB
 					var channelToDrop = server.Channels.First();
 					server.RemoveChannel(channelToDrop);
 				}
-			}
-		}
 
-		[Test]
-		public void DaoFileTest()
-		{
-			using (var dao = new XG.DB.Dao())
-			{
-				var files = dao.Files();
-
-				for (int a = 0; a < Count; a++)
-				{
-					var file = new File("test" + a, 1000 * (a + 1));
-
-					for (int b = 0; b < Count; b++)
-					{
-						var part = new FilePart
-						{
-							StartSize = 100 * (b + 1),
-							StopSize = 200 * (b + 1)
-						};
-						file.Add(part);
-					}
-
-					files.Add(file);
-				}
-			}
-		}
-
-		[Test]
-		public void DaoSearchTest()
-		{
-			using (var dao = new XG.DB.Dao())
-			{
 				var searches = dao.Searches();
-
 				for (int a = 0; a < Count; a++)
 				{
 					var search = new Search
 					{
-						Name = "test" + random.Next(1000, 9999)
+						Name = "test" + random.Next(1000, 10000)
 					};
 
 					searches.Add(search);
 
-					search.Name = "search test " + a;
+					search.Name = "Pack " + a;
 				}
 			}
 		}
