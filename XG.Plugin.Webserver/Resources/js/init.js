@@ -28,7 +28,7 @@ window.name = "NG_DEFER_BOOTSTRAP!";
 
 require.config({
 	paths: {
-		'jquery': '../../../Scripts/jquery-2.0.2.min',
+		'jquery': '../../../Scripts/jquery-2.0.3.min',
 		'angular': '../../../Scripts/angular',
 		'ngTranslate': './libs/angular-translate.min',
 		'domReady': './libs/domReady',
@@ -37,9 +37,7 @@ require.config({
 		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.6.0',
 		'ngTable': './libs/ng-table',
 		'ipCookies': './libs/angular-cookie',
-		'moment': '../../../Scripts/moment',
-		// currentLanguage will be replaced by StartUp.cs
-		'moment-i18n': './libs/i18n/moment/currentLanguage'
+		'moment': '../../../Scripts/moment-with-langs'
 	},
 	shim: {
 		'angular': {

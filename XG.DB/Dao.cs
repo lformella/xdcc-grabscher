@@ -32,6 +32,11 @@ using NHibernate.Tool.hbm2ddl;
 using XG.Config.Properties;
 using XG.Model.Domain;
 using log4net;
+#if __MonoCS__
+using Mono.Data.Sqlite;
+#else
+using System.Data.SQLite;
+#endif
 
 namespace XG.DB
 {
@@ -45,19 +50,33 @@ namespace XG.DB
 
 		public Dao()
 		{
+			// load assembly by creating new object
+			// otherwise there will occur weird assembly loading errors
+#if __MonoCS__
+			new SqliteConnection();
+#else
+			new SQLiteConnection();
+#endif
+
 			var cfg = new Configuration();
 			cfg.Configure();
 			cfg.AddAssembly(typeof(Dao).Assembly);
 
 			// mono needs a special driver wrapper
 #if __MonoCS__
-			cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
-#else
-			cfg.Properties["connection.driver_class"] = "NHibernate.Driver.SQLite20Driver";
+			if (cfg.Properties["connection.driver_class"] == "NHibernate.Driver.SQLite20Driver")
+			{
+				cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
+			}
 #endif
-
-			string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
-			cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False";
+			
+			string db = "xgobjects.db";
+			if (cfg.Properties["connection.connection_string"].Contains("=" + db))
+			{
+				db = Config.Properties.Settings.Default.GetAppDataPath() + db;
+				string dbStr = cfg.Properties["connection.connection_string"].Replace("=xgobjects.db", "=" + db);
+				cfg.Properties["connection.connection_string"] = dbStr;
+			}
 
 			bool insertVersion = false;
 			if (!System.IO.File.Exists(db))

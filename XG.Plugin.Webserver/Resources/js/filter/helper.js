@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (filter) {
+define(['./module', 'moment'], function (filter, moment) {
 	'use strict';
 
 	filter.filter('size2Human', function ()

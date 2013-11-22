@@ -38,7 +38,9 @@ namespace XG.Plugin.Webserver
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static readonly Dictionary<string, byte[]> DicByte = new Dictionary<string, byte[]>();
+#if !DEBUG || !__MonoCS__
 		static readonly Assembly Assembly = Assembly.GetAssembly(typeof(EmbeddedFileLoader));
+#endif
 
 		#endregion
 

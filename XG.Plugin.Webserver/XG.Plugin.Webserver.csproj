@@ -32,50 +32,45 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="SharpRobin">
       <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.2.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Diagnostics">
-      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.1\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Diagnostics">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.2\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
     <Reference Include="Nowin">
       <HintPath>..\packages\Nowin.0.11.0.0\lib\net45\Nowin.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security" />
-    <Reference Include="System.IdentityModel" />
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Plugin.cs" />
@@ -108,7 +103,6 @@
     <Compile Include="SignalR\Hub\ExternalHub.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap\bootstrap-theme.css" />
     <EmbeddedResource Include="Resources\js\config\config.js" />
     <EmbeddedResource Include="Resources\js\config\index.js" />
     <EmbeddedResource Include="Resources\js\config\module.js" />
@@ -136,162 +130,182 @@
     <EmbeddedResource Include="Resources\js\service\signalr.js" />
     <EmbeddedResource Include="Resources\js\bootstrap.js" />
     <EmbeddedResource Include="Resources\js\init.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap\bootstrap-theme.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap\bootstrap.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap\bootstrap.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.eot" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="Resources\css\ng-table.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.0.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.0.min.js" />
-    <EmbeddedResource Include="Scripts\require.js" />
-    <EmbeddedResource Include="Scripts\r.js" />
-    <EmbeddedResource Include="Scripts\moment.min.js" />
-    <EmbeddedResource Include="Scripts\moment.js" />
-    <EmbeddedResource Include="Scripts\json2.min.js" />
-    <EmbeddedResource Include="Scripts\json2.js" />
-    <EmbeddedResource Include="Scripts\jquery.event.drag.min.js" />
-    <EmbeddedResource Include="Scripts\jquery.event.drag.live.min.js" />
-    <EmbeddedResource Include="Scripts\jquery.event.drag.live.js" />
-    <EmbeddedResource Include="Scripts\jquery.event.drag.js" />
-    <EmbeddedResource Include="Scripts\jquery.cookie.js" />
-    <EmbeddedResource Include="Scripts\jquery-ui-1.10.3.min.js" />
-    <EmbeddedResource Include="Scripts\jquery-ui-1.10.3.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.2.min.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.2.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.2.intellisense.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
-    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
-    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
-    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
-    <EmbeddedResource Include="Scripts\bootstrap.js" />
     <EmbeddedResource Include="Resources\index.html" />
     <EmbeddedResource Include="Resources\favicon.ico" />
     <EmbeddedResource Include="Resources\css\xg.css" />
     <EmbeddedResource Include="Resources\css\tango-colors.css" />
     <EmbeddedResource Include="Resources\css\animation.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.core.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.button.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\jquery-ui.min.css" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <EmbeddedResource Include="Content\themes\base\minified\images\animated-overlay.gif" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.tooltip.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.theme.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.tabs.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.spinner.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.slider.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.selectable.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.resizable.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.progressbar.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.menu.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.dialog.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.datepicker.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.core.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.button.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.base.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.autocomplete.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.all.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery.ui.accordion.css" />
-    <EmbeddedResource Include="Content\themes\base\jquery-ui.css" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <EmbeddedResource Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <EmbeddedResource Include="Content\themes\base\images\animated-overlay.gif" />
-    <EmbeddedResource Include="Content\normalize.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\jquery-2.0.2.min.map" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-0.6.0.js" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-0.6.0.min.js" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.6.0.js" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.6.0.min.js" />
+    <EmbeddedResource Include="Resources\js\libs\angular-translate.min.js" />
+    <EmbeddedResource Include="Resources\js\libs\css_browser_selector.js" />
+    <EmbeddedResource Include="Resources\js\libs\domReady.js" />
+    <EmbeddedResource Include="Resources\js\libs\favicon.js" />
+    <EmbeddedResource Include="Resources\js\libs\jquery.flot.axislabels.js" />
+    <EmbeddedResource Include="Resources\js\libs\jquery.knob.js" />
+    <EmbeddedResource Include="Resources\js\libs\ng-table.js" />
+    <EmbeddedResource Include="Resources\js\libs\sha256.js" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.3-vsdoc.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.3.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.3.min.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.0.3.min.map" />
+    <EmbeddedResource Include="Scripts\require.js" />
+    <EmbeddedResource Include="Scripts\r.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.0.js" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.0.min.js" />
+    <EmbeddedResource Include="Scripts\json2.js" />
+    <EmbeddedResource Include="Scripts\json2.min.js" />
+    <EmbeddedResource Include="Content\normalize.css" />
+    <EmbeddedResource Include="Scripts\moment-with-langs.js" />
+    <EmbeddedResource Include="Scripts\moment-with-langs.min.js" />
+    <EmbeddedResource Include="Scripts\moment.js" />
+    <EmbeddedResource Include="Scripts\moment.min.js" />
+    <EmbeddedResource Include="Content\bootstrap-theme.css" />
+    <EmbeddedResource Include="Content\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="Content\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap.min.css" />
+    <EmbeddedResource Include="Scripts\bootstrap.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Resources\js\index.js" />
+    <EmbeddedResource Include="Resources\js\controller\notification.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\channel.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\index.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\module.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\password.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\server.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\serverChannel.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\xdcc.js" />
+    <EmbeddedResource Include="Resources\js\filter\formatter\channel.js" />
+    <EmbeddedResource Include="Resources\js\filter\formatter\notification.js" />
+    <EmbeddedResource Include="Resources\js\filter\formatter\server.js" />
+    <EmbeddedResource Include="Resources\js\service\signalr-crud-table.js" />
+    <EmbeddedResource Include="Resources\js\service\signalr-crud.js" />
+    <EmbeddedResource Include="Resources\js\xg\config.js" />
+    <EmbeddedResource Include="Resources\js\xg\cookie.js" />
+    <EmbeddedResource Include="Resources\js\xg\dataview.js" />
+    <EmbeddedResource Include="Resources\js\xg\enum.js" />
+    <EmbeddedResource Include="Resources\js\xg\formatter.js" />
+    <EmbeddedResource Include="Resources\js\xg\graph.js" />
+    <EmbeddedResource Include="Resources\js\xg\grid.js" />
+    <EmbeddedResource Include="Resources\js\xg\gui.js" />
+    <EmbeddedResource Include="Resources\js\xg\helper.js" />
+    <EmbeddedResource Include="Resources\js\xg\init.js" />
+    <EmbeddedResource Include="Resources\js\xg\main.js" />
+    <EmbeddedResource Include="Resources\js\xg\password.js" />
+    <EmbeddedResource Include="Resources\js\xg\resize.js" />
+    <EmbeddedResource Include="Resources\js\xg\translate.js" />
+    <EmbeddedResource Include="Resources\js\xg\websocket.js" />
+    <EmbeddedResource Include="Scripts\angular-animate.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-cookies.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-loader.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-resource.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-route.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-sanitize.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular.min.js.map" />
+    <None Include="Scripts\errors.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Business\XG.Business.csproj">
+      <Project>{56891BE8-B112-49A5-91C2-B250D36F80FE}</Project>
+      <Name>XG.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Config\XG.Config.csproj">
+      <Project>{DD17AB20-C940-4EB9-9F2A-53A5914D7914}</Project>
+      <Name>XG.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Model\XG.Model.csproj">
+      <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
+      <Name>XG.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
+      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
+      <Name>XG.Plugin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\libs\angular-cookie.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\main.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\ui-bootstrap-0.7.0.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-0.7.0.min.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.7.0.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.7.0.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\angular-animate.js" />
+    <EmbeddedResource Include="Scripts\angular-animate.min.js" />
+    <EmbeddedResource Include="Scripts\angular-cookies.js" />
+    <EmbeddedResource Include="Scripts\angular-cookies.min.js" />
+    <EmbeddedResource Include="Scripts\angular-csp.css" />
+    <EmbeddedResource Include="Scripts\angular-loader.js" />
+    <EmbeddedResource Include="Scripts\angular-loader.min.js" />
+    <EmbeddedResource Include="Scripts\angular-mocks.js" />
+    <EmbeddedResource Include="Scripts\angular-resource.js" />
+    <EmbeddedResource Include="Scripts\angular-resource.min.js" />
+    <EmbeddedResource Include="Scripts\angular-route.js" />
+    <EmbeddedResource Include="Scripts\angular-route.min.js" />
+    <EmbeddedResource Include="Scripts\angular-sanitize.js" />
+    <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
+    <EmbeddedResource Include="Scripts\angular-scenario.js" />
+    <EmbeddedResource Include="Scripts\angular-touch.js" />
+    <EmbeddedResource Include="Scripts\angular-touch.min.js" />
+    <EmbeddedResource Include="Scripts\angular.js" />
+    <EmbeddedResource Include="Scripts\angular.min.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_af-na.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_af-za.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_af.js" />
@@ -537,106 +551,5 @@
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zh.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zu-za.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zu.js" />
-    <EmbeddedResource Include="Scripts\angular-animate.js" />
-    <EmbeddedResource Include="Scripts\angular-animate.min.js" />
-    <EmbeddedResource Include="Scripts\angular-animate.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-cookies.js" />
-    <EmbeddedResource Include="Scripts\angular-cookies.min.js" />
-    <EmbeddedResource Include="Scripts\angular-cookies.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-loader.js" />
-    <EmbeddedResource Include="Scripts\angular-loader.min.js" />
-    <EmbeddedResource Include="Scripts\angular-loader.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-mocks.js" />
-    <EmbeddedResource Include="Scripts\angular-resource.js" />
-    <EmbeddedResource Include="Scripts\angular-resource.min.js" />
-    <EmbeddedResource Include="Scripts\angular-resource.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-route.js" />
-    <EmbeddedResource Include="Scripts\angular-route.min.js" />
-    <EmbeddedResource Include="Scripts\angular-route.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.js" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-scenario.js" />
-    <EmbeddedResource Include="Scripts\angular-touch.js" />
-    <EmbeddedResource Include="Scripts\angular-touch.min.js" />
-    <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular.js" />
-    <EmbeddedResource Include="Scripts\angular.min.js" />
-    <EmbeddedResource Include="Scripts\angular.min.js.map" />
-    <EmbeddedResource Include="Scripts\errors.json" />
-    <EmbeddedResource Include="Resources\js\libs\angular-translate.min.js" />
-    <EmbeddedResource Include="Resources\js\libs\css_browser_selector.js" />
-    <EmbeddedResource Include="Resources\js\libs\domReady.js" />
-    <EmbeddedResource Include="Resources\js\libs\favicon.js" />
-    <EmbeddedResource Include="Resources\js\libs\jquery.flot.axislabels.js" />
-    <EmbeddedResource Include="Resources\js\libs\jquery.knob.js" />
-    <EmbeddedResource Include="Resources\js\libs\ng-table.js" />
-    <EmbeddedResource Include="Resources\js\libs\sha256.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\bg.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\ca.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\cv.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\da.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\de.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\en-ca.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\en-gb.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\en.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\es.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\et.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\eu.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\fi.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\fr-ca.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\fr.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\gl.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\he.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\hu.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\is.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\it.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\ja.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\jp.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\ko.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\kr.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\nb.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\nl.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\pl.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\pt-br.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\pt.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\ro.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\ru.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\sv.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\tr.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\zh-cn.js" />
-    <EmbeddedResource Include="Resources\js\libs\i18n\moment\zh-tw.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\XG.Business\XG.Business.csproj">
-      <Project>{56891BE8-B112-49A5-91C2-B250D36F80FE}</Project>
-      <Name>XG.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Config\XG.Config.csproj">
-      <Project>{DD17AB20-C940-4EB9-9F2A-53A5914D7914}</Project>
-      <Name>XG.Config</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Model\XG.Model.csproj">
-      <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
-      <Name>XG.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
-      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
-      <Name>XG.Plugin</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\libs\angular-cookie.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\controller\main.js" />
   </ItemGroup>
 </Project>

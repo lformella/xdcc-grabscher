@@ -26,17 +26,23 @@
 using System;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
 
-public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+namespace XG.Plugin.Webserver.SignalR.Hub
 {
-	public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
 	{
-		return true;
-	}
+		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		{
+			return true;
+		}
 
-	public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
-	{
-		return request.Cookies["password"].Value == Settings.Default.Password;
+		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
+		{
+#if DEBUG
+			return true;
+#else
+			return request.Cookies.ContainsKey("password") && request.Cookies["password"].Value == Settings.Default.Password;
+#endif
+		}
 	}
 }

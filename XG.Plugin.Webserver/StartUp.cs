@@ -26,14 +26,11 @@
 using Owin;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using System.Text;
 using XG.Config.Properties;
-using Microsoft.Owin;
 
 namespace XG.Plugin.Webserver
 {
@@ -66,8 +63,7 @@ namespace XG.Plugin.Webserver
 			app.Use(async (aContext, aNext) => 
 			{
 				var lang = aContext.Request.Headers.Get("Accept-Language").Substring(0, 2);
-
-				string file = aContext.Request.Path.Value.Replace("currentLanguage", lang);
+				string file = aContext.Request.Path.Value;
 				var content = new byte[0];
 
 				if (file.Contains("?"))
