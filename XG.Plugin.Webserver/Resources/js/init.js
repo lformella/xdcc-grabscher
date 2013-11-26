@@ -34,14 +34,34 @@ require.config({
 		'domReady': './libs/domReady',
 		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
 		'ngSanitize': '../../../Scripts/angular-sanitize',
-		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.6.0',
+		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0',
 		'ngTable': './libs/ng-table',
 		'ipCookies': './libs/angular-cookie',
-		'moment': '../../../Scripts/moment-with-langs'
+		'moment': '../../../Scripts/moment-with-langs',
+		'jqKnob': './libs/jquery.knob'
 	},
 	shim: {
 		'angular': {
-			exports: 'angular'
+			exports: 'angular',
+			deps: ['jquery']
+		},
+		'ngTranslate': {
+			deps: ['angular']
+		},
+		'ngSanitize': {
+			deps: ['angular']
+		},
+		'ui.bootstrap': {
+			deps: ['angular']
+		},
+		'ngTable': {
+			deps: ['angular']
+		},
+		'ipCookies': {
+			deps: ['angular']
+		},
+		'jqKnob': {
+			deps: ['jquery']
 		}
 	},
 	deps: ['./bootstrap']

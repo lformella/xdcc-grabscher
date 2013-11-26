@@ -24,6 +24,7 @@
 //
 
 define([
+	'./directive/index',
 	'./filter/index',
 	'./service/index',
 	'./controller/index',

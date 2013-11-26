@@ -38,6 +38,7 @@ define([
 		'ngSanitize',
 		'ngTable',
 		'ivpusic.cookie',
+		'xg.directive',
 		'xg.filter',
 		'xg.filter.formatter',
 		'xg.service',

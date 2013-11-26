@@ -24,11 +24,5 @@
 //
 
 define([
-	'./dashboard',
-	'./dialog/index',
-	'./file',
-	'./packet',
-	'./main',
-	'./notification',
-	'./search'
+	'./knob'
 ], function () {});

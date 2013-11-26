@@ -353,73 +353,73 @@
 					</span>
 				</div>
 			</nav>
-			<div class="container ng-hide" ng-show="passwordOk">
+			<div class="container ng-hide" ng-controller="DashboardCtrl" ng-show="passwordOk">
 				<div ng-show="slide == 1">
 
-					<div id="dashboardServers" class="panel panel-default dashboardItem">
+					<div class="panel panel-default dashboardItem">
 						<div class="panel-heading">
 							<h3 class="panel-title icons-globe" translate> Servers</h3>
 						</div>
 						<div class="panel-body">
 							<div>
-								<input class="knob first" data-width="100" data-height="100">
+								<input knob thickness="0.25" max="Servers" current="ServersEnabled" snapshot="snapshot" size="100">
 							</div>
 							<div>
-								<input class="knob second" data-width="70" data-height="70">
+								<input knob thickness="0.1" max="Servers" current="ServersConnected" snapshot="snapshot" size="70">
 							</div>
 							<div>
-								<span class="value" translate>connected</span>
+								{{snapshot.ServersConnected}} <span translate>of</span> {{snapshot.ServersEnabled}} <span class="value" translate>connected</span>
 							</div>
 						</div>
 					</div>
 
-					<div id="dashboardChannels" class="panel panel-default dashboardItem">
+					<div class="panel panel-default dashboardItem">
 						<div class="panel-heading">
 							<h3 class="panel-title icons-comment" translate> Channels</h3>
 						</div>
 						<div class="panel-body">
 							<div>
-								<input class="knob first" data-width="100" data-height="100">
+								<input knob thickness="0.25" max="Channels" current="ChannelsEnabled" snapshot="snapshot" size="100">
 							</div>
 							<div>
-								<input class="knob second" data-width="70" data-height="70">
+								<input knob thickness="0.1" max="Channels" current="ChannelsConnected" snapshot="snapshot" size="70">
 							</div>
 							<div>
-								<span class="value" translate>connected</span>
+								{{snapshot.ChannelsConnected}} <span translate>of</span> {{snapshot.ChannelsEnabled}} <span class="value" translate>connected</span>
 							</div>
 						</div>
 					</div>
 
-					<div id="dashboardBots" class="panel panel-default dashboardItem">
+					<div class="panel panel-default dashboardItem">
 						<div class="panel-heading">
 							<h3 class="panel-title icons-user" translate> Bots</h3>
 						</div>
 						<div class="panel-body">
 							<div>
-								<input class="knob first" data-width="100" data-height="100">
+								<input knob thickness="0.25" max="Bots" current="BotsConnected" snapshot="snapshot" size="100">
 							</div>
 							<div></div>
 							<div>
-								<span class="value" translate>online</span>
+								{{snapshot.BotsConnected}} <span translate>of</span> {{snapshot.Bots}} <span translate>online</span>
 							</div>
 						</div>
 					</div>
 
-					<div id="dashboardFiles" class="panel panel-default dashboardItem">
+					<div ng-show="snapshot.FileTimeMissing > 0" class="panel panel-default dashboardItem">
 						<div class="panel-heading">
 							<h3 class="panel-title icons-doc-text" translate> Files</h3>
 						</div>
 						<div class="panel-body">
 							<div>
-								<input class="knob first" data-width="100" data-height="100">
+								<input knob thickness="0.25" max="FileSize" current="FileSizeDownloaded" snapshot="snapshot" size="100">
 							</div>
 							<div></div>
 							<div>
-								<span class="value" translate>downloaded</span>
+								{{snapshot.FileSizeDownloaded|size2Human}}  <span translate>of</span> {{snapshot.FileSize|size2Human}} <span class="value" translate>downloaded</span>
 							</div>
 						</div>
 						<div class="panel-footer">
-							<span translate>Ready</span>: <span id="timeMissing"></span>
+							<span translate>Ready</span>: {{snapshot.FileTimeMissing|time2Human}}
 						</div>
 					</div>
 
@@ -485,8 +485,7 @@
 								</td>
 								<td class="text-right">
 									<span ng-if="packet.Connected"><strong>{{packet.Speed|speed2Human}}</strong></span>
-							<span ng-if="!packet.Connected && packet.Next && $parent.parents[group.value].QueuePosition > 0"><strong>pos.
-								{{$parent.parents[group.value].QueuePosition}}</strong></span>
+									<span ng-if="!packet.Connected && packet.Next && $parent.parents[group.value].QueuePosition > 0"><strong>pos. {{$parent.parents[group.value].QueuePosition}}</strong></span>
 								</td>
 								<td>
 									<span ng-if="packet.Connected"><strong>{{packet.TimeMissing|time2Human}}</strong></span>

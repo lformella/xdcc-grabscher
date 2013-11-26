@@ -114,46 +114,61 @@ body
 	margin-top: 0;
 }
 
+.modal-header .close
+{
+	display: none;
+}
+
 /** Table **/
 
-.table {
+.table
+{
 	table-layout: fixed;
 }
 
-.table tbody + tbody, .table thead + tbody {
+.table tbody + tbody, .table thead + tbody
+{
 	border-top: 1px solid #888;
 }
 
-.table tbody tr:first-child td {
+.table tbody tr:first-child td
+{
 	border-top: none;
 }
 
-.table tbody.isOffline {
+.table tbody.isOffline
+{
 	opacity: 0.5;
 }
 
-.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td
+{
 	line-height: 16px;
 	padding: 8px 4px;
 }
 
-.table thead > tr > th {
+.table thead > tr > th
+{
 	border-bottom: 1px solid #888888;
 }
 
-.table tr:nth-child(2n) {
+.table tr:nth-child(2n)
+{
 	background: none repeat scroll 0 0 #FEFEFE;
 }
 
-.table th {
+.table th
+{
 	text-align: center;
 }
 
-.table th.text-right, .table td.text-right {
+.table th.text-right, .table td.text-right
+{
 	text-align: right;
 }
 
-.table td.withIcon {
+.table td.withIcon
+{
 	font-size: 1.6em;
 	padding: 3px 0 0 5px;
 }
@@ -162,7 +177,8 @@ body
 	position: relative;
 }
 
-.ng-table-group > td.rowWithText {
+.ng-table-group > td.rowWithText
+{
 	padding: 0 4px;
 	overflow: hidden;
 	white-space: nowrap;
@@ -172,13 +188,15 @@ td.rowWithText span {
 	position: relative;
 }
 
-td.rowWithText small {
+td.rowWithText small
+{
 	position: absolute;
 	bottom: -16px;
 	left: 0;
 }
 
-.table td.withProgress {
+.table td.withProgress
+{
 	padding: 4px 4px;
 	vertical-align: middle;
 }
@@ -193,13 +211,8 @@ td.rowWithText small {
 	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
 }
 
-.glyphicon.icon-overlay-middle
+.clickAble
 {
-	margin-top: 3px;
-	margin-right: 0;
-}
-
-.clickAble {
 	cursor: pointer;
 }
 
@@ -303,8 +316,9 @@ td.rowWithText small {
 .dashboardItem
 {
 	float: left;
-	width: 300px;
-	margin-right: 20px;
+	margin: 10px;
+	width: calc(25% - 20px);
+	min-width: 280px;
 }
 
 .dashboardItem .glyphicon

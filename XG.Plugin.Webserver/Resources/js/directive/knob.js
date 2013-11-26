@@ -1,5 +1,5 @@
 //
-//  index.js
+//  knob.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,12 +23,47 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define([
-	'./dashboard',
-	'./dialog/index',
-	'./file',
-	'./packet',
-	'./main',
-	'./notification',
-	'./search'
-], function () {});
+define(['./module', 'jqKnob'], function (directive) {
+	'use strict';
+
+	directive.directive('knob', function ()
+	{
+		return {
+			restrict: 'A',
+			scope: {
+				thickness: '=',
+				max: '@',
+				current: '@',
+				size: '=',
+				snapshot: '='
+			},
+			link: function(scope, element, attrs) {
+				var $el = $(element);
+				$el.knob(
+				{
+					min: 0,
+					max: 100,
+					readOnly: true,
+					bgColor: "#eeeeec",
+					fgColor: "#4e9a06",
+					displayInput: false,
+					thickness: scope.thickness,
+					angleOffset: -125,
+					angleArc: 250,
+					width: scope.size,
+					height: scope.size
+				});
+
+				scope.$watch('snapshot', function (snapshot) {
+					$el.trigger(
+						'configure',
+						{
+							max: snapshot[scope.max]
+						}
+					);
+					$el.val(snapshot[scope.current]).trigger('change');
+				});
+			}
+		};
+	});
+});

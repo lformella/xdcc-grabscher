@@ -34,7 +34,7 @@ define(['./module'], function (controller) {
 					name: 'OnConnected',
 					callback:  function ()
 					{
-						$scope.service.signalrInvoke("GetAll");
+						$scope.service.signalrInvoke('GetAll');
 					}
 				}
 			];

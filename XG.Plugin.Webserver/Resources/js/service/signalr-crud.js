@@ -26,8 +26,8 @@
 define(['./module'], function (service) {
 	'use strict';
 
-	service.factory('SignalrCrud', ['$rootScope', '$injector', 'Signalr', 'HelperService',
-		function ($rootScope, $injector, Signalr, HelperService)
+	service.factory('SignalrCrud', ['$injector', 'Signalr', 'HelperService',
+		function ($injector, Signalr, HelperService)
 		{
 			var SignalrCrud = function(){};
 
@@ -94,12 +94,6 @@ define(['./module'], function (service) {
 
 				this.Signalr = new Signalr();
 				this.Signalr.initialize(name, eventCallbacks);
-
-				var SignalrInstance = this.Signalr;
-				$rootScope.$on('OnConnectToSignalR', function (e, password)
-				{
-					SignalrInstance.connect(password);
-				});
 			};
 
 			// be able to overwrite the current scope because it wil change on dialogs

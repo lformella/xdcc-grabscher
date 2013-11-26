@@ -552,4 +552,12 @@
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zu-za.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zu.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dashboard.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\directive\index.js" />
+    <EmbeddedResource Include="Resources\js\directive\knob.js" />
+    <EmbeddedResource Include="Resources\js\directive\module.js" />
+  </ItemGroup>
 </Project>

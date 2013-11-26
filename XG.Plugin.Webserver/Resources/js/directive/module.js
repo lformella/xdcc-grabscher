@@ -1,5 +1,5 @@
 //
-//  index.js
+//  module.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,12 +23,8 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define([
-	'./dashboard',
-	'./dialog/index',
-	'./file',
-	'./packet',
-	'./main',
-	'./notification',
-	'./search'
-], function () {});
+define(['angular'], function (angular) {
+	'use strict';
+	angular.module('xg.directive', []);
+	return angular.module('xg.directive');
+});

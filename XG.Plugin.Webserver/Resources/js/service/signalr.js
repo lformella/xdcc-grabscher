@@ -26,88 +26,103 @@
 define(['./module', 'signalr'], function (service) {
 	'use strict';
 
-	service.factory('Signalr', function ()
-	{
-		var Signalr = function (){};
-
-		Signalr.prototype.initialize = function(name, eventCallbacks)
+	service.factory('Signalr', ['$rootScope',
+		function ($rootScope)
 		{
-			this.name = name;
-			this.eventCallbacks = eventCallbacks;
+			var Signalr = function (){};
 
-			this.proxy = null;
-			this.connected = false;
-		};
-
-		Signalr.prototype.connect = function(password)
-		{
-			var connection = $.hubConnection();
-			this.proxy = connection.createHubProxy(this.name);
-
-			var connectedCallback = null;
-			angular.forEach(this.eventCallbacks, function (value)
+			Signalr.prototype.initialize = function(name, eventCallbacks)
 			{
-				if (value.name == "OnConnected")
+				this.name = name;
+				this.eventCallbacks = eventCallbacks;
+
+				this.proxy = null;
+				this.connected = false;
+
+				var self = this;
+				$rootScope.$on('OnConnectToSignalR', function (e, password)
 				{
-					connectedCallback = value.callback;
+					self.connect(password);
+				});
+			};
+
+			Signalr.prototype.connect = function(password)
+			{
+				var connection = $.hubConnection();
+				this.proxy = connection.createHubProxy(this.name);
+
+				var connectedCallback = null;
+				angular.forEach(this.eventCallbacks, function (value)
+				{
+					if (value.name == "OnConnected")
+					{
+						connectedCallback = value.callback;
+					}
+					else
+					{
+						this.proxy.on(value.name, function (message)
+						{
+							value.callback(message);
+						});
+					}
+				}, this);
+
+				var self = this;
+				connection.start().done(
+					function ()
+					{
+						self.connected = true;
+						if (connectedCallback != null)
+						{
+							connectedCallback();
+						}
+					}
+				).fail(
+					function (message)
+					{
+						alert(message);
+					}
+				);
+			};
+
+			Signalr.prototype.invoke = function (method, arg1, arg2, arg3, arg4, arg5, arg6)
+			{
+				if (!this.connected)
+				{
+					return null;
+				}
+
+				if (arg6 != undefined && arg6 != null)
+				{
+					return this.proxy.invoke(method, arg1, arg2, arg3, arg4, arg5, arg6);
+				}
+				else if (arg5 != undefined && arg5 != null)
+				{
+					return this.proxy.invoke(method, arg1, arg2, arg3, arg4, arg5);
+				}
+				else if (arg4 != undefined && arg4 != null)
+				{
+					return this.proxy.invoke(method, arg1, arg2, arg3, arg4);
+				}
+				else if (arg3 != undefined && arg3 != null)
+				{
+					return this.proxy.invoke(method, arg1, arg2, arg3);
+				}
+				else if (arg2 != undefined && arg2 != null)
+				{
+					return this.proxy.invoke(method, arg1, arg2);
+				}
+				else if (arg1 != undefined && arg1 != null)
+				{
+					return this.proxy.invoke(method, arg1);
 				}
 				else
 				{
-					this.proxy.on(value.name, function (message)
-					{
-						value.callback(message);
-					});
+					return this.proxy.invoke(method);
 				}
-			}, this);
+			};
 
-			var self = this;
-			connection.start().done(function ()
-			{
-				self.connected = true;
-				if (connectedCallback != null)
-				{
-					connectedCallback();
-				}
-			});
-		};
-
-		Signalr.prototype.invoke = function (method, arg1, arg2, arg3, arg4, arg5, arg6)
-		{
-			if (!this.connected)
-			{
-				return null;
-			}
-
-			if (arg6 != undefined && arg6 != null)
-			{
-				return this.proxy.invoke(method, arg1, arg2, arg3, arg4, arg5, arg6);
-			}
-			else if (arg5 != undefined && arg5 != null)
-			{
-				return this.proxy.invoke(method, arg1, arg2, arg3, arg4, arg5);
-			}
-			else if (arg4 != undefined && arg4 != null)
-			{
-				return this.proxy.invoke(method, arg1, arg2, arg3, arg4);
-			}
-			else if (arg3 != undefined && arg3 != null)
-			{
-				return this.proxy.invoke(method, arg1, arg2, arg3);
-			}
-			else if (arg2 != undefined && arg2 != null)
-			{
-				return this.proxy.invoke(method, arg1, arg2);
-			}
-			else if (arg1 != undefined && arg1 != null)
-			{
-				return this.proxy.invoke(method, arg1);
-			}
-			else
-			{
-				return this.proxy.invoke(method);
-			}
-		};
-
-		return(Signalr);
-	});
+			return(Signalr);
+		}
+	]);
 });
