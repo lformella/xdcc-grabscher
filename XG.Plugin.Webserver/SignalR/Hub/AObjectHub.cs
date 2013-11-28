@@ -81,7 +81,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 		}
 
-		public IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
+		protected IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
 		{
 			aPage--;
 			var objects = Helper.XgObjectsToHubObjects(aObjects).Cast<T>();

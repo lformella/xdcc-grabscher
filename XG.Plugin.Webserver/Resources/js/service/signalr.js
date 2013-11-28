@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module', 'signalr'], function (service) {
+define(['./module', 'signalr.hubs'], function (service) {
 	'use strict';
 
 	service.factory('Signalr', ['$rootScope',
@@ -36,20 +36,8 @@ define(['./module', 'signalr'], function (service) {
 				this.name = name;
 				this.eventCallbacks = eventCallbacks;
 
-				this.proxy = null;
+				this.proxy = $.connection[this.name];
 				this.connected = false;
-
-				var self = this;
-				$rootScope.$on('OnConnectToSignalR', function (e, password)
-				{
-					self.connect(password);
-				});
-			};
-
-			Signalr.prototype.connect = function(password)
-			{
-				var connection = $.hubConnection();
-				this.proxy = connection.createHubProxy(this.name);
 
 				var connectedCallback = null;
 				angular.forEach(this.eventCallbacks, function (value)
@@ -68,21 +56,14 @@ define(['./module', 'signalr'], function (service) {
 				}, this);
 
 				var self = this;
-				connection.start().done(
-					function ()
+				$rootScope.$on('OnConnectedToSignalR', function (e, password)
+				{
+					self.connected = true;
+					if (connectedCallback != null)
 					{
-						self.connected = true;
-						if (connectedCallback != null)
-						{
-							connectedCallback();
-						}
+						connectedCallback();
 					}
-				).fail(
-					function (message)
-					{
-						alert(message);
-					}
-				);
+				});
 			};
 
 			Signalr.prototype.invoke = function (method, arg1, arg2, arg3, arg4, arg5, arg6)

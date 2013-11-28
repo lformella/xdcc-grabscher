@@ -41,7 +41,6 @@ namespace XG.Plugin.Webserver
 		public void Configuration(IAppBuilder app)
 		{
 			var hubConfiguration = new HubConfiguration();
-			hubConfiguration.EnableJavaScriptProxies = false;
 #if DEBUG
 			hubConfiguration.EnableDetailedErrors = true;
 #endif

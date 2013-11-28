@@ -58,10 +58,11 @@ namespace XG.Plugin.Webserver
 			Helper.Searches = Searches;
 			Helper.RrdDb = RrdDB;
 
-			var options = new StartOptions
+			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{
-				ServerFactory = "Nowin",
-				Port = 8080// Settings.Default.WebserverPort)
+#if __MonoCS__
+				ServerFactory = "Nowin"
+#endif
 			};
 
 			try

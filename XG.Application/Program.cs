@@ -81,7 +81,11 @@ namespace XG.Application
 				{
 					Name = "Console",
 					Layout = new PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n"),
+#if DEBUG
+					Threshold = Level.Info
+#else
 					Threshold = Level.Fatal
+#endif
 				};
 				lAppender.ActivateOptions();
 

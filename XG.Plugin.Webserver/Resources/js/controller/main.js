@@ -43,7 +43,14 @@ define(['./module'], function (controller) {
 				modalInstance.result.then(function (password)
 				{
 					$scope.passwordOk = true;
-					$rootScope.$emit('OnConnectToSignalR', password);
+					$.connection.hub.start().done(function () {
+						$rootScope.$emit('OnConnectedToSignalR', password);
+					}).fail(
+						function (message)
+						{
+							alert(message);
+						}
+					);
 					ipCookie('password', password, { expires: 21, path: '/' });
 				});
 			};

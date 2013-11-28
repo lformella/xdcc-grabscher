@@ -33,6 +33,7 @@ require.config({
 		'ngTranslate': './libs/angular-translate.min',
 		'domReady': './libs/domReady',
 		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
+		'signalr.hubs': '../../../signalr/hubs?noext=',
 		'ngSanitize': '../../../Scripts/angular-sanitize',
 		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0',
 		'ngTable': './libs/ng-table',
@@ -62,6 +63,9 @@ require.config({
 		},
 		'jqKnob': {
 			deps: ['jquery']
+		},
+		'signalr.hubs': {
+			deps: ['signalr']
 		}
 	},
 	deps: ['./bootstrap']
