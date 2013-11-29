@@ -29,6 +29,28 @@ define(['./module'], function (controller) {
 	controller.controller('XdccDialogCtrl', ['$scope', '$modalInstance',
 		function ($scope, $modalInstance)
 		{
+			$scope.xdccLink = "";
+
+			$scope.isXdccLinkValid = function ()
+			{
+				return $scope.xdccLink.match(/^xdcc:\/\/([^/]+\/){2}#([^/]+\/){2}#[0-9]+\/[^/]+\/$/);
+			};
+
+			$scope.xdccKeydown = function($event)
+			{
+				if ($event.keyCode == 13)
+				{
+					$scope.save();
+				}
+			};
+
+			$scope.save = function ()
+			{
+				if ($scope.isXdccLinkValid())
+				{
+					$modalInstance.close($scope.xdccLink);
+				}
+			};
 		}
 	]);
 });

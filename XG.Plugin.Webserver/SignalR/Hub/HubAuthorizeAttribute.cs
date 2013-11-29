@@ -41,7 +41,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 #if DEBUG
 			return true;
 #else
-			return request.Cookies.ContainsKey("password") && request.Cookies["password"].Value == Settings.Default.Password;
+			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
 #endif
 		}
 	}

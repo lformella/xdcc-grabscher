@@ -61,9 +61,33 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		#endregion
 
-		public Model.Domain.Result LoadBySearch(string aSearch, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where packet.Name.ContainsAll(aSearch.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)) select packet);
+			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
+			if (search != null)
+			{
+				return LoadByName(search.Name, aOfflineBots, aCount, aPage, aSortBy, aSort);
+			}
+
+			IEnumerable<Packet> packets = new List<Packet>();
+			if (aGuid == new Guid("00000000-0000-0000-0000-000000000001"))
+			{
+				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Enabled select packet);
+			}
+			else if (aGuid == new Guid("00000000-0000-0000-0000-000000000002"))
+			{
+				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Connected select packet);
+			}
+
+			int length;
+			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
+			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
+			return new Model.Domain.Result { Total = length, Results = objects };
+		}
+
+		public Model.Domain.Result LoadByName(string aSearch, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		{
+			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Name.ContainsAll(aSearch.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)) select packet);
 			int length;
 			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);

@@ -86,23 +86,6 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Files = Files;
 			_eventForwarder.Searches = Searches;
 			_eventForwarder.Start();
-
-			// test
-			var firstParts = (from file in Files.All where file.Parts.Any() select file.Parts.First()).ToArray();
-			var connectedPackets = (from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where packet.Connected select packet).ToArray();
-
-			int a = 0;
-			Random random = new Random();
-			foreach (var packet in connectedPackets)
-			{
-				if (a == firstParts.Count())
-				{
-					break;
-				}
-				packet.Part = firstParts.Skip(a).First();
-				packet.Part.Speed = random.Next(10000, 99999);
-				a++;
-			}
 		}
 
 		protected override void StopRun()

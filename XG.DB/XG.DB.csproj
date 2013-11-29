@@ -35,10 +35,6 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
@@ -50,6 +46,9 @@
     </Reference>
     <Reference Include="System.Data.SQLite.Linq">
       <HintPath>..\packages\System.Data.SQLite.x86.1.0.89.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

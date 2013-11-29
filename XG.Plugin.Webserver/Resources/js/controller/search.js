@@ -26,8 +26,8 @@
 define(['./module'], function (controller) {
 	'use strict';
 
-	controller.controller('SearchCtrl', ['$rootScope', '$scope', 'SignalrCrud', 'HelperService',
-		function ($rootScope, $scope, SignalrCrud, HelperService)
+	controller.controller('SearchCtrl', ['$rootScope', '$scope', 'SignalrCrud', 'HelperService', '$translate',
+		function ($rootScope, $scope, SignalrCrud, HelperService, $translate)
 		{
 			var eventCallbacks = [
 				{
@@ -47,13 +47,13 @@ define(['./module'], function (controller) {
 			[
 				{
 					Guid: '00000000-0000-0000-0000-000000000001',
-					Name: 'Enabled',
+					Name: $translate('Enabled'),
 					ResultsOnline: 0,
 					ResultsOffline: 0
 				},
 				{
 					Guid: '00000000-0000-0000-0000-000000000002',
-					Name: 'Downloads',
+					Name: $translate('Downloads'),
 					ResultsOnline: 0,
 					ResultsOffline: 0
 				}

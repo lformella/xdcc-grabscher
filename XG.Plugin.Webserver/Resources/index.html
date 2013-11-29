@@ -34,11 +34,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<link rel="stylesheet" href="/Content/normalize.css" type="text/css" media="screen"/>
-
 		<link rel="stylesheet" href="/Resources/css/ng-table.css"/>
-
 		<link rel="stylesheet" href="/Content/bootstrap.css" type="text/css" media="screen"/>
-
 		<link rel="stylesheet" href="/Resources/css/animation.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/tango-colors.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/xg.css" type="text/css" media="screen"/>
@@ -56,11 +53,9 @@
 					</div>
 					<div class="modal-body">
 						<p translate>Please enter the password for this webfrontend.</p>
-
 						<div class="form-horizontal">
-							<div class="form-group">
+							<div class="form-group" ng-class="{'has-error': passwordWrong}">
 								<label class="col-lg-2 control-label" for="password" translate>Password</label>
-
 								<div class="col-lg-10">
 									<input type="password" name="password" ng-model="$parent.password" class="form-control" placeholder="Password" ng-keydown="passwordKeydown($event)"/>
 								</div>
@@ -81,17 +76,16 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
 						<h4 class="modal-title" translate>XDCC link input</h4>
 					</div>
 					<div class="modal-body">
 						<p translate>Please enter a valid XDCC link.</p>
-
 						<div class="form-horizontal">
-							<div class="form-group">
+							<div class="form-group" ng-class="{'has-error': !isXdccLinkValid()}">
 								<label class="col-lg-3 control-label" for="xdccLink" translate>XDCC link</label>
 								<div class="col-lg-9">
-									<input type="text" name="xdccLink" ng-model="xdccLink" class="form-control" placeholder="XDCC Link"/>
+									<input type="text" name="xdccLink" ng-model="$parent.xdccLink" class="form-control" placeholder="XDCC Link" ng-keydown="xdccKeydown($event)"/>
 								</div>
 							</div>
 							<div class="form-group">
@@ -103,7 +97,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<a class="btn btn-primary">
+						<a class="btn btn-primary" ng-click="save()" ng-disabled="!isXdccLinkValid()">
 							<span class="glyphicon glyphicon-cloud-download"></span> <span translate>Download</span>
 						</a>
 					</div>
@@ -115,7 +109,7 @@
 			<div class="serverChannelsDialog modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
 						<h4 class="modal-title" translate>Change Servers and Channels</h4>
 					</div>
 					<div class="modal-body">
@@ -304,13 +298,13 @@
 								</li>
 								<li class="divider"></li>
 								<li>
-									<a ng-click="hideOfflineBots()">
+									<a ng-click="flipSetting('showOfflineBots')" ng-class="{'ScarletRedDark': settings.showOfflineBots}">
 										<span class="glyphicon glyphicon-eye-open"></span>
 										<span translate>Hide offline Bots</span>
 									</a>
 								</li>
 								<li>
-									<a ng-click="humanReadableDates()">
+									<a ng-click="flipSetting('humanDates')" ng-class="{'ScarletRedDark': settings.humanDates}">
 										<span class="glyphicon glyphicon-time"></span>
 										<span translate>Human readable dates</span>
 									</a>
@@ -333,16 +327,16 @@
 							<ul class="dropdown-menu">
 								<li class="dropdown-header" translate>Predefined</li>
 								<li ng-repeat="search in predefinedSearches">
-									<a href="#" ng-click="$parent.searchByName(search.Name); $parent.search = search.Name">
+									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
 										<span class="resultsOnline label label-success pull-right">{{search.ResultsOnline}}</span>
 										<span class="resultsOffline label label-default pull-right">{{search.ResultsOffline}}</span>
-										<span class="text" title="{{search.Name}}">{{search.Name|translate}}</span>
+										<span class="text" title="{{search.Name}}">{{search.Name}}</span>
 									</a>
 								</li>
 								<li class="divider"></li>
 								<li class="dropdown-header" translate>Custom</li>
 								<li ng-repeat="search in objects">
-									<a href="#" ng-click="$parent.searchByName(search.Name); $parent.search = search.Name">
+									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
 										<span class="resultsOnline label label-success pull-right">{{search.ResultsOnline}}</span>
 										<span class="resultsOffline label label-default pull-right">{{search.ResultsOffline}}</span>
 										<span class="text" title="{{search.Name}}">{{search.Name}}</span>
@@ -541,8 +535,7 @@
 							<div class="panel-group">
 								<div class="panel panel-default">
 									<div class="panel-heading">
-										<h4 class="panel-title">
-											Timespan </h4>
+										<h4 class="panel-title">Timespan </h4>
 									</div>
 									<div class="panel-collapse collapse in">
 										<div class="panel-body">

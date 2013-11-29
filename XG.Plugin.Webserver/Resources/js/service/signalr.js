@@ -33,12 +33,9 @@ define(['./module', 'signalr.hubs'], function (service) {
 
 			Signalr.prototype.initialize = function(name, eventCallbacks)
 			{
-				this.name = name;
 				this.eventCallbacks = eventCallbacks;
 
-				this.proxy = $.connection[this.name];
-				this.connected = false;
-
+				this.proxy = $.connection[name];
 				var connectedCallback = null;
 				angular.forEach(this.eventCallbacks, function (value)
 				{
@@ -56,7 +53,8 @@ define(['./module', 'signalr.hubs'], function (service) {
 				}, this);
 
 				var self = this;
-				$rootScope.$on('OnConnectedToSignalR', function (e, password)
+				this.connected = false;
+				$rootScope.$on('OnConnected', function (e, password)
 				{
 					self.connected = true;
 					if (connectedCallback != null)

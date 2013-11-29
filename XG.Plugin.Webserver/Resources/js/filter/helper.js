@@ -78,7 +78,7 @@ define(['./module', 'moment'], function (filter, moment) {
 		}
 	});
 
-	filter.filter('date2Human', function ()
+	filter.filter('date2Human', ['$rootScope', function ($rootScope)
 	{
 		return function (date)
 		{
@@ -87,9 +87,9 @@ define(['./module', 'moment'], function (filter, moment) {
 			{
 				return "";
 			}
-			return /*config.getHumanDates() ? momentDate.fromNow() : */momentDate.format("L LT");
+			return $rootScope.settings.humanDates ? momentDate.fromNow() : momentDate.format("L LT");
 		}
-	});
+	}]);
 
 	filter.filter('time2Human', function ()
 	{
@@ -104,11 +104,11 @@ define(['./module', 'moment'], function (filter, moment) {
 		}
 	});
 
-	filter.filter('trustAsHtml', function ($sce)
+	filter.filter('trustAsHtml', ['$sce', function ($sce)
 	{
 		return function (input)
 		{
 			return $sce.trustAsHtml(input);
 		}
-	});
+	}]);
 });

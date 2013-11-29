@@ -41,6 +41,7 @@ define(['./module'], function (controller) {
 			$scope.service = new SignalrCrud();
 			$scope.service.initialize('packetHub', $scope, 'objects', eventCallbacks);
 
+			$scope.searchBy = "Name";
 			$scope.search = "";
 			$scope.parents = [];
 
@@ -63,7 +64,7 @@ define(['./module'], function (controller) {
 						sort = params.$params.sorting[sortBy];
 					}
 
-					var signalR = $scope.service.signalrInvoke('LoadBySearch', $scope.search, params.$params.count, params.$params.page, sortBy, sort);
+					var signalR = $scope.service.signalrInvoke('LoadBy' + $scope.searchBy, $scope.search, $rootScope.settings.showOfflineBots, params.$params.count, params.$params.page, sortBy, sort);
 					if (signalR != null)
 					{
 						signalR.done(
@@ -90,7 +91,19 @@ define(['./module'], function (controller) {
 			// events
 			$rootScope.$on('SearchByName', function (e, message)
 			{
+				$scope.searchBy = "Name";
 				$scope.search = message;
+				$scope.tableParams.reload();
+			});
+
+			$rootScope.$on('SearchByGuid', function (e, message)
+			{
+				$scope.searchBy = "Guid";
+				$scope.search = message;
+				$scope.tableParams.reload();
+			});
+
+			$rootScope.$watch('settings.showOfflineBots', function () {
 				$scope.tableParams.reload();
 			});
 		}

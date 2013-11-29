@@ -30,44 +30,38 @@ define(['./module'], function (controller) {
 		function ($rootScope, $scope, $modal, ipCookie, SignalrCrudTable)
 		{
 			$scope.passwordOk = false;
-
-			$scope.openPasswordDialog = function ()
+			$modal.open({
+				keyboard: false,
+				backdrop: 'static',
+				templateUrl: 'passwordDialog.html',
+				controller: 'PasswordDialogCtrl'
+			}).result.then(function (password)
 			{
-				var modalInstance = $modal.open({
-					keyboard: false,
-					backdrop: 'static',
-					templateUrl: 'passwordDialog.html',
-					controller: 'PasswordDialogCtrl'
-				});
-
-				modalInstance.result.then(function (password)
-				{
-					$scope.passwordOk = true;
-					$.connection.hub.start().done(function () {
-						$rootScope.$emit('OnConnectedToSignalR', password);
-					}).fail(
-						function (message)
-						{
-							alert(message);
-						}
-					);
-					ipCookie('password', password, { expires: 21, path: '/' });
-				});
-			};
-			$scope.openPasswordDialog();
+				$scope.passwordOk = true;
+				$.connection.hub.start().done(
+					function ()
+					{
+						$rootScope.$emit('OnConnected', password);
+					}
+				).fail(
+					function (message)
+					{
+						alert(message);
+					}
+				);
+				ipCookie('xg.password', password, { expires: 21, path: '/' });
+			});
 
 			$scope.openXdccDialog = function ()
 			{
-				var modalInstance = $modal.open({
+				$modal.open({
 					keyboard: true,
 					backdrop: true,
 					templateUrl: 'xdccDialog.html',
 					controller: 'XdccDialogCtrl'
-				});
-
-				modalInstance.result.then(function (xdccLink)
+				}).result.then(function (xdccLink)
 				{
-					//
+					alert(xdccLink);
 				});
 			};
 
@@ -82,7 +76,7 @@ define(['./module'], function (controller) {
 
 			$scope.openServerChannelsDialog = function ()
 			{
-				var modalInstance = $modal.open({
+				$modal.open({
 					keyboard: true,
 					backdrop: true,
 					templateUrl: 'serverChannelDialog.html',
@@ -99,19 +93,18 @@ define(['./module'], function (controller) {
 						}
 					}
 				});
-
-				modalInstance.result.then(function ()
-				{
-					//
-				});
 			};
 
-			$scope.hideOfflineBots = function ()
-			{
+			$rootScope.settings = {
+				showOfflineBots: ipCookie('xg.showOfflineBots'),
+				humanDates: ipCookie('xg.humanDates')
 			};
 
-			$scope.humanReadableDates = function ()
+			$scope.flipSetting = function (setting)
 			{
+				var newValue = !$rootScope.settings[setting];
+				$rootScope.settings[setting] = newValue;
+				ipCookie('xg.' + setting, newValue ? '1' : '0', { expires: 21, path: '/' });
 			};
 		}
 	]);

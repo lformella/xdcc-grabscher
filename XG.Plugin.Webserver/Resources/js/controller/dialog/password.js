@@ -49,12 +49,11 @@ define(['./module'], function (controller) {
 					$scope.passwordWrong = false;
 					$scope.passwordLoading = false;
 					$modalInstance.close($scope.password);
-				}).
-					error(function()
-					{
-						$scope.passwordWrong = true;
-						$scope.passwordLoading = false;
-					});
+				}).error(function()
+				{
+					$scope.passwordWrong = true;
+					$scope.passwordLoading = false;
+				});
 			};
 		}
 	]);
