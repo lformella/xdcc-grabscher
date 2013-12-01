@@ -62,8 +62,12 @@ body
 	max-width: -webkit-calc(100% - 20px);
 	max-width: -moz-calc(100% - 20px);
 	max-width: calc(100% - 20px);
-	padding-left: 0;
-	padding-right: 0;
+	padding: 0;
+}
+
+.container .item
+{
+	padding: 10px;
 }
 
 .progress
@@ -76,32 +80,6 @@ body
 .progress .progress-bar-light
 {
 	opacity: 0.3;
-}
-
-.panel-group .panel-heading
-{
-	padding: 3px 9px;
-}
-
-.panel-group .panel-body
-{
-	padding: 0 5px;
-}
-
-.panel-body .checkbox
-{
-	margin-bottom: 0;
-	margin-top: 0;
-}
-
-.panel-body label.checkbox
-{
-	font-weight: normal;
-}
-
-#accordion
-{
-	margin-top: 5px;
 }
 
 .glyphiconBig
@@ -201,7 +179,7 @@ td.rowWithText small
 	font-size: 0.5em;
 	position: absolute;
 	right: -8px;
-	top: -3px;
+	top: 0;
 	z-index: 1;
 	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
 }
@@ -240,11 +218,16 @@ td.rowWithText small
 
 .serverChannelsDialog .tableDiv
 {
-	height: 435px;
+	height: 420px;
 }
 
 .serverChannelsDialog .table, .serverChannelsDialog .pagination {
 	margin-bottom: 10px;
+}
+
+.serverChannelsDialog .pagination > li > a
+{
+	padding: 0 8px;
 }
 
 /** Menu **/
@@ -262,7 +245,9 @@ td.rowWithText small
 
 .navbar .nav > li > a
 {
-	padding: 3px 15px;
+	margin: 3px 0 0;
+	padding: 3px 15px 0;
+	border-radius: 10px;
 }
 
 .navbar .navbar-form
@@ -297,13 +282,45 @@ td.rowWithText small
 
 #unreadNotifications
 {
-	display: none;
 	left: 6px;
-	padding-left: 3px;
+	padding-left: 4px;
 	padding-right: 3px;
 	position: absolute;
 	top: 2px;
 	font-size: 0.8em;
+}
+
+/* Snapshots */
+
+#snapshot .panel
+{
+	margin-bottom: 5px;
+}
+
+#snapshot .panel-heading
+{
+	padding: 3px 9px;
+}
+
+#snapshot .panel-body
+{
+	padding: 0 5px;
+}
+
+#snapshot .panel-body .checkbox
+{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+#snapshot .panel-body label.checkbox
+{
+	font-weight: normal;
+}
+
+#snapshot .col-md-2, #snapshot .col-md-10
+{
+	padding-left: 0;
 }
 
 /* Dasboard */
@@ -342,34 +359,4 @@ td.rowWithText small
 {
 	position: inherit;
 	padding-left: 120px;
-}
-
-/* Animation */
-
-.fade-hide, .fade-show
-{
-	-webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-	-moz-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-	-o-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-	transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-}
-
-.fade-hide
-{
-	opacity:1;
-}
-
-.fade-hide.fade-hide-active
-{
-	opacity:0;
-}
-
-.fade-show
-{
-	opacity:0;
-}
-
-.fade-show.fade-show-active
-{
-	opacity:1;
 }

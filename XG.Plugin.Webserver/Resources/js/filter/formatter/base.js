@@ -24,10 +24,10 @@
 //
 
 
-define(['./module'], function (filter) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	filter.filter('formatIcon', function ()
+	ng.filter('formatIcon', function ()
 	{
 		return function (icon, iconClass, overlay, overlayClass, overlayStyle)
 		{
@@ -55,7 +55,7 @@ define(['./module'], function (filter) {
 		}
 	});
 
-	filter.filter('speed2Overlay', function ()
+	ng.filter('speed2Overlay', function ()
 	{
 		return function (speed)
 		{

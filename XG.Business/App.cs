@@ -71,15 +71,10 @@ namespace XG.Business
 			_rrdDb = new Helper.Rrd().GetDb();
 
 			LoadObjects();
-			//CheckForDuplicates();
-			//ResetObjects();
-			//ClearOldDownloads();
-			//TryToRecoverOpenFiles();
-		}
-
-		protected override void NotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
-		{
-			Notifications.Add(aEventArgs.Value1);
+			CheckForDuplicates();
+			ResetObjects();
+			ClearOldDownloads();
+			TryToRecoverOpenFiles();
 		}
 
 		void TryToRecoverOpenFiles()
@@ -190,7 +185,7 @@ namespace XG.Business
 			snapShotWorker.RrdDB = _rrdDb;
 			AddWorker(snapShotWorker);
 
-			//AddWorker(new BotWatchdog { SecondsToSleep = Settings.Default.BotOfflineCheckTime });
+			AddWorker(new BotWatchdog { SecondsToSleep = Settings.Default.BotOfflineCheckTime });
 
 			_workers.StartAll();
 		}

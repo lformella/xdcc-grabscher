@@ -31,6 +31,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using System.Text;
 using XG.Config.Properties;
+using Newtonsoft.Json;
+using Microsoft.AspNet.SignalR.Json;
 
 namespace XG.Plugin.Webserver
 {
@@ -40,6 +42,16 @@ namespace XG.Plugin.Webserver
 	{
 		public void Configuration(IAppBuilder app)
 		{
+			var settings = new JsonSerializerSettings
+			{
+				DateFormatHandling = DateFormatHandling.MicrosoftDateFormat,
+				DateParseHandling = DateParseHandling.DateTime,
+				DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
+			};
+			settings.Converters.Add(new DoubleConverter());
+
+			GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => JsonSerializer.Create(settings));
+
 			var hubConfiguration = new HubConfiguration();
 #if DEBUG
 			hubConfiguration.EnableDetailedErrors = true;

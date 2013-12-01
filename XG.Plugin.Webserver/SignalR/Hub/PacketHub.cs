@@ -42,7 +42,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected override void AddClient(Client aClient)
 		{
-			ConnectedClients.Add(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>() });
+			aClient.MaxObjects = 20;
+			ConnectedClients.Add(aClient);
 		}
 
 		protected override void RemoveClient(string connectionId)
@@ -70,11 +71,11 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 
 			IEnumerable<Packet> packets = new List<Packet>();
-			if (aGuid == new Guid("00000000-0000-0000-0000-000000000001"))
+			if (aGuid == Helper._searchEnabled)
 			{
 				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Enabled select packet);
 			}
-			else if (aGuid == new Guid("00000000-0000-0000-0000-000000000002"))
+			else if (aGuid == Helper._searchDownloads)
 			{
 				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Connected select packet);
 			}

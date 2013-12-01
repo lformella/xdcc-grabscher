@@ -23,10 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (filter) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	filter.filter('formatBotIcon', ['$filter', function ($filter)
+	ng.filter('formatBotIcon', ['$filter', function ($filter)
 	{
 		return function (bot)
 		{
@@ -94,7 +94,7 @@ define(['./module'], function (filter) {
 		}
 	}]);
 
-	filter.filter('formatBotName', ['$filter', function ($filter)
+	ng.filter('formatBotName', ['$filter', function ($filter)
 	{
 		return function (bot)
 		{
@@ -112,7 +112,7 @@ define(['./module'], function (filter) {
 		}
 	}]);
 
-	filter.filter('formatBotSpeed', ['$filter', function ($filter)
+	ng.filter('formatBotSpeed', ['$filter', function ($filter)
 	{
 		return function (bot)
 		{
@@ -138,7 +138,7 @@ define(['./module'], function (filter) {
 		}
 	}]);
 
-	filter.filter('formatBotSlots', function ()
+	ng.filter('formatBotSlots', function ()
 	{
 		return function (bot)
 		{
@@ -155,7 +155,7 @@ define(['./module'], function (filter) {
 		}
 	});
 
-	filter.filter('formatBotQueue', function ()
+	ng.filter('formatBotQueue', function ()
 	{
 		return function (bot)
 		{

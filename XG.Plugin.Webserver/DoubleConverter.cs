@@ -1,5 +1,5 @@
 // 
-//  Flot.cs
+//  DoubleConverter.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,17 +23,49 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
+namespace XG.Plugin.Webserver
 {
-	[JsonObject(MemberSerialization.OptOut)]
-	public class Flot
+	public class DoubleConverter : JsonConverter
 	{
-		[JsonProperty(PropertyName = "type")]
-		public int Type { get; set; }
+		public override bool CanRead
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-		[JsonProperty(PropertyName = "data")]
-		public double[][] Data { get; set; }
+		public override bool CanWrite
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		{
+			var val = value as double? ?? (double?)(value as float?);
+			if (val == null || Double.IsNaN((double)val) || Double.IsInfinity((double)val))
+			{
+				writer.WriteNull();
+				return;
+			}
+			writer.WriteValue((double)val);
+		}
+
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override bool CanConvert(Type objectType)
+		{
+			return objectType == typeof(double) || objectType == typeof(float);
+		}
 	}
 }
+

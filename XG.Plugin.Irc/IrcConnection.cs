@@ -311,6 +311,7 @@ namespace XG.Plugin.Irc
 			{
 				Server.Connected = true;
 				Server.Commit();
+				FireNotificationAdded(Notification.Types.ServerConnected, Server);
 				_log.Info("connected " + Server);
 
 				Client.Login(Settings.Default.IrcNick, Settings.Default.IrcNick, 0, Settings.Default.IrcNick, Settings.Default.IrcPasswort);
@@ -428,6 +429,8 @@ namespace XG.Plugin.Irc
 					if (_iam == e.Who)
 					{
 						channel.Connected = false;
+						_log.Warn("banned from " + channel.Name );
+						FireNotificationAdded(Notification.Types.ChannelBanned, channel);
 					}
 					else
 					{
@@ -734,6 +737,7 @@ namespace XG.Plugin.Irc
 			catch(CouldNotConnectException ex)
 			{
 				_log.Fatal("StartRun() connection failed " + ex.Message);
+				FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
 				Server.Connected = false;
 				Server.Commit();
 				OnDisconnected(this, new EventArgs<Server>(Server));
@@ -749,6 +753,9 @@ namespace XG.Plugin.Irc
 			catch (NotConnectedException)
 			{
 				// this is ok
+				Server.Connected = false;
+				Server.Commit();
+				OnDisconnected(this, new EventArgs<Server>(Server));
 			}
 		}
 

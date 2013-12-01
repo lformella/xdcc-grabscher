@@ -23,23 +23,23 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	controller.controller('SearchCtrl', ['$rootScope', '$scope', 'SignalrCrud', 'HelperService', '$translate',
-		function ($rootScope, $scope, SignalrCrud, HelperService, $translate)
+	ng.controller('SearchCtrl', ['$rootScope', '$scope', 'SignalrFactory', 'HelperService', '$translate',
+		function ($rootScope, $scope, SignalrFactory, HelperService, $translate)
 		{
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
 					callback:  function ()
 					{
-						$scope.service.signalrInvoke('GetAll');
+						$scope.signalr.getProxy().server.getAll();
 					}
 				}
 			];
-			$scope.service = new SignalrCrud();
-			$scope.service.initialize('searchHub', $scope, 'objects', eventCallbacks);
+			$scope.signalr = new SignalrFactory();
+			$scope.signalr.initialize('searchHub', $scope, 'objects', eventCallbacks);
 
 			$scope.objects = [];
 
@@ -60,16 +60,16 @@ define(['./module'], function (controller) {
 			];
 
 			// attach methods to service
-			$scope.service.removeByName = function (name)
+			$scope.signalr.removeByName = function (name)
 			{
 				var element = HelperService.getByName($scope.objects, name);
 				if (element != null)
 				{
-					$scope.service.remove(element.value);
+					$scope.signalr.remove(element.value);
 				}
 			};
 
-			$scope.service.isObject = function(name)
+			$scope.signalr.isObject = function(name)
 			{
 				return HelperService.getByName($scope.objects, name) != null;
 			};
@@ -102,6 +102,18 @@ define(['./module'], function (controller) {
 				$scope.loading = false;
 				$scope.$apply();
 			});
+
+			var resize = function ()
+			{
+				$("#searchForm .dropdown-menu").css("max-height", ($(window).height() - 70) + "px");
+			};
+
+			$(window).resize(function ()
+			{
+				resize();
+			});
+
+			resize();
 		}
 	]);
 });

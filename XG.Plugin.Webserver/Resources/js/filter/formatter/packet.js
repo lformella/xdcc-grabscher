@@ -23,10 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (filter) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	filter.filter('formatPacketIcon', ['$filter', function ($filter)
+	ng.filter('formatPacketIcon', ['$filter', function ($filter)
 	{
 		return function (packet)
 		{
@@ -92,7 +92,7 @@ define(['./module'], function (filter) {
 		}
 	}]);
 
-	filter.filter('formatPacketName', function ()
+	ng.filter('formatPacketName', function ()
 	{
 		return function (packet)
 		{

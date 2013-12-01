@@ -23,10 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module', 'moment'], function (filter, moment) {
+define(['./module', 'moment'], function (ng, moment) {
 	'use strict';
 
-	filter.filter('size2Human', function ()
+	ng.filter('size2Human', function ()
 	{
 		return function (size, decimal)
 		{
@@ -58,7 +58,7 @@ define(['./module', 'moment'], function (filter, moment) {
 		}
 	});
 
-	filter.filter('speed2Human', function ()
+	ng.filter('speed2Human', function ()
 	{
 		return function (speed)
 		{
@@ -78,7 +78,7 @@ define(['./module', 'moment'], function (filter, moment) {
 		}
 	});
 
-	filter.filter('date2Human', ['$rootScope', function ($rootScope)
+	ng.filter('date2Human', ['$rootScope', function ($rootScope)
 	{
 		return function (date)
 		{
@@ -91,7 +91,7 @@ define(['./module', 'moment'], function (filter, moment) {
 		}
 	}]);
 
-	filter.filter('time2Human', function ()
+	ng.filter('time2Human', function ()
 	{
 		return function (time)
 		{
@@ -104,7 +104,7 @@ define(['./module', 'moment'], function (filter, moment) {
 		}
 	});
 
-	filter.filter('trustAsHtml', ['$sce', function ($sce)
+	ng.filter('trustAsHtml', ['$sce', function ($sce)
 	{
 		return function (input)
 		{

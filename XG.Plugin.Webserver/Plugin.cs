@@ -56,6 +56,7 @@ namespace XG.Plugin.Webserver
 			Helper.Servers = Servers;
 			Helper.Files = Files;
 			Helper.Searches = Searches;
+			Helper.Notifications = Notifications;
 			Helper.RrdDb = RrdDB;
 
 			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
@@ -85,6 +86,7 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Servers = Servers;
 			_eventForwarder.Files = Files;
 			_eventForwarder.Searches = Searches;
+			_eventForwarder.Notifications = Notifications;
 			_eventForwarder.Start();
 		}
 

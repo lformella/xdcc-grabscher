@@ -23,11 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	controller.controller('PacketCtrl', ['$rootScope', '$scope', 'SignalrCrud', 'ngTableParams',
-		function ($rootScope, $scope, SignalrCrud, ngTableParams)
+	ng.controller('PacketCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', 'ngTableParams',
+		function ($rootScope, $scope, SignalrTableFactory, ngTableParams)
 		{
 			var eventCallbacks = [
 				{
@@ -38,8 +38,8 @@ define(['./module'], function (controller) {
 					}
 				}
 			];
-			$scope.service = new SignalrCrud();
-			$scope.service.initialize('packetHub', $scope, 'objects', eventCallbacks);
+			$scope.signalr = new SignalrTableFactory();
+			$scope.signalr.initialize('packetHub', $scope, 'objects', eventCallbacks);
 
 			$scope.searchBy = "Name";
 			$scope.search = "";
@@ -54,6 +54,11 @@ define(['./module'], function (controller) {
 				total: 0,
 				getData: function($defer, params)
 				{
+					if (!$scope.signalr.isConnected())
+					{
+						return;
+					}
+
 					var sortBy = '';
 					var sort = '';
 
@@ -64,7 +69,7 @@ define(['./module'], function (controller) {
 						sort = params.$params.sorting[sortBy];
 					}
 
-					var signalR = $scope.service.signalrInvoke('LoadBy' + $scope.searchBy, $scope.search, $rootScope.settings.showOfflineBots, params.$params.count, params.$params.page, sortBy, sort);
+					var signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots, params.$params.count, params.$params.page, sortBy, sort);
 					if (signalR != null)
 					{
 						signalR.done(

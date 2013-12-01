@@ -23,11 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module', 'favicon'], function (ng) {
 	'use strict';
 
-	controller.controller('NotificationCtrl', ['$scope', 'SignalrCrudTable', '$filter', 'ngTableParams',
-		function ($scope, SignalrCrudTable, $filter, ngTableParams)
+	ng.controller('NotificationCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', '$filter', 'ngTableParams',
+		function ($rootScope, $scope, SignalrTableFactory, $filter, ngTableParams)
 		{
 			var eventCallbacks = [
 				{
@@ -36,10 +36,27 @@ define(['./module'], function (controller) {
 					{
 						$scope.tableParams.reload();
 					}
+				},
+				{
+					name: 'OnAdded',
+					callback:  function (message)
+					{
+						$scope.counter++;
+
+						if ("Notification" in window && Notification.permission === "granted")
+						{
+							var options = {
+								body: "",
+								tag: message.Guid,
+								icon: ""
+							};
+							new Notification($filter('formatNotificationContent')(message, true), options);
+						}
+					}
 				}
 			];
-			$scope.service = new SignalrCrudTable();
-			$scope.service.initialize('notificationHub', $scope, 'objects', eventCallbacks);
+			$scope.signalr = new SignalrTableFactory();
+			$scope.signalr.initialize('notificationHub', $scope, 'objects', eventCallbacks);
 
 			$scope.tableParams = new ngTableParams({
 				page: 1,
@@ -49,9 +66,34 @@ define(['./module'], function (controller) {
 				total: 0,
 				getData: function($defer, params)
 				{
-					$scope.service.loadData($defer, params);
+					$scope.signalr.loadData($defer, params);
 				}
 			});
+
+			$rootScope.$on('OnSlideTo', function (e, slide)
+			{
+				$scope.refresh = slide == 1;
+			});
+
+			$scope.counter = 0;
+
+			var favicon = new Favico({ animation:'none' });
+			$scope.$watch('counter', function (counter)
+			{
+				favicon.badge(counter);
+			});
+
+			// request desktop notification permission
+			if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== 'denied')
+			{
+				Notification.requestPermission(function (permission)
+				{
+					if (!('permission' in Notification))
+					{
+						Notification.permission = permission;
+					}
+				});
+			}
 		}
 	]);
 });

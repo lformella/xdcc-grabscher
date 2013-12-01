@@ -37,9 +37,10 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public static readonly Guid _searchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
 		public static readonly Guid _searchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
 
-		public static XG.Model.Domain.Servers Servers { get; set; }
-		public static XG.Model.Domain.Files Files { get; set; }
-		public static XG.Model.Domain.Searches Searches { get; set; }
+		public static Servers Servers { get; set; }
+		public static Files Files { get; set; }
+		public static Searches Searches { get; set; }
+		public static Notifications Notifications { get; set; }
 		public static RrdDb RrdDb { get; set; }
 
 		public static IEnumerable<SignalR.Hub.Model.Domain.AObject> XgObjectsToHubObjects(IEnumerable<AObject> aObjects)

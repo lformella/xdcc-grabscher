@@ -28,18 +28,16 @@ using System.Linq;
 using XG.Model.Domain;
 using XG.Plugin.Webserver.SignalR.Hub;
 using System.Collections.Generic;
-using XG.Model;
 using log4net;
 using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Reflection;
 using XG.Config.Properties;
-using XG.Plugin.Webserver.SignalR.Hub.Model;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
-	public class ExternalHub : AObjectHub
+	public class ExternalHub : Microsoft.AspNet.SignalR.Hub
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -49,23 +47,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			DateParseHandling = DateParseHandling.DateTime,
 			DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
 		};
-
-		#region Client Handling
-
-		protected override void AddClient(Client aClient)
-		{
-		}
-
-		protected override void RemoveClient(string connectionId)
-		{
-		}
-
-		protected override Client GetClient(string connectionId)
-		{
-			return null;
-		}
-
-		#endregion
 
 		public void ParseXdccLink(String aLink)
 		{
@@ -111,50 +92,43 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			pack.Enabled = true;
 		}
 
-		public IEnumerable<Hub.Model.Domain.ExternalSearch> Search (string search)
+		public Model.Domain.Result LoadBySearch(String aSearch, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var objects = new List<Hub.Model.Domain.ExternalSearch>();
+			aPage--;
 
-			int start = 0;
-			int limit = 25;
-			do
+			try
 			{
-				try
+				var uri = new Uri(
+					"http://xg.bitpir.at/index.php?" +
+					"show=search&" +
+					"action=external&" +
+					"xg=" + Settings.Default.XgVersion + "&" +
+					"start=" + aPage * aCount + "&" +
+					"limit=" + aCount + "&" +
+					"sortBy=" + aSortBy + "&" +
+					"sort=" + aSort + "&" +
+					"search=" + aSearch
+				);
+				var req = HttpWebRequest.Create(uri);
+
+				var response = req.GetResponse();
+				StreamReader sr = new StreamReader(response.GetResponseStream());
+				string text = sr.ReadToEnd();
+				response.Close();
+
+				var result = JsonConvert.DeserializeObject<Hub.Model.Domain.ExternalSearch>(text, _jsonSerializerSettings);
+
+				if (result.Data.Count() > 0)
 				{
-					var uri = new Uri("http://xg.bitpir.at/index.php?show=search&action=external&xg=" + Settings.Default.XgVersion + "&start=" + start + "&limit=" + limit + "&search=" + search);
-					var req = HttpWebRequest.Create(uri);
-
-					var response = req.GetResponse();
-					StreamReader sr = new StreamReader(response.GetResponseStream());
-					string text = sr.ReadToEnd();
-					response.Close();
-
-					var results = JsonConvert.DeserializeObject<Hub.Model.Domain.ExternalSearch[]>(text, _jsonSerializerSettings);
-
-					if (results.Length > 0)
-					{
-						objects.AddRange(results);
-					}
-
-					if (results.Length == 0 || results.Length < limit)
-					{
-						break;
-					}
+					return new Model.Domain.Result { Total = result.Count, Results = result.Data };
 				}
-				catch (Exception ex)
-				{
-					Log.Fatal("OnSearchExternal(" + search + ") cant load external search", ex);
-					break;
-				}
-				start += limit;
-			} while (true);
-
-			return objects;
-
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("OnSearchExternal(" + aSearch + ") cant load external search", ex);
+			}
 			
-			/*int length;
-			var objects = FilterAndLoadObjects<Model.Domain.File>(Helper.Files.All, aCount, aPage, aSortBy, aSort, out length);
-			return new Model.Domain.Result { Total = length, Results = objects };*/
+			return new Model.Domain.Result { Total = 0, Results = new List<Hub.Model.Domain.AObject>() };
 		}
 	}
 }

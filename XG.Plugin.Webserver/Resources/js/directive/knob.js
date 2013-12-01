@@ -23,10 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module', 'jqKnob'], function (directive) {
+define(['./module', 'jqKnob'], function (ng) {
 	'use strict';
 
-	directive.directive('knob', function ()
+	ng.directive('knob', function ()
 	{
 		return {
 			restrict: 'A',
@@ -55,6 +55,11 @@ define(['./module', 'jqKnob'], function (directive) {
 				});
 
 				scope.$watch('snapshot', function (snapshot) {
+					if (snapshot == undefined)
+					{
+						return;
+					}
+
 					$el.trigger(
 						'configure',
 						{

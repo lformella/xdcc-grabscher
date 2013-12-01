@@ -22,41 +22,34 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
-define(['./module'], function (service) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	service.factory('HelperService', [
-		function ()
+	ng.service('HelperService', function ()
+	{
+		var getBy = function (array, name, expected)
 		{
-			var getBy = function (array, name, expected)
+			var element = null;
+			angular.forEach(array, function (value, key)
 			{
-				var element = null;
-				angular.forEach(array, function (value, key)
+				if (value[name] == expected)
 				{
-					if (value[name] == expected)
-					{
-						element = { value: value, id: key };
-						return false;
-					}
-					return true;
-				});
-				return element;
-			};
+					element = { value: value, id: key };
+					return false;
+				}
+				return true;
+			});
+			return element;
+		};
 
-			var getByName = function (array, name)
-			{
-				return getBy(array, "Name", name);
-			};
+		this.getByName = function (array, name)
+		{
+			return getBy(array, "Name", name);
+		};
 
-			var getByGuid = function (array, guid)
-			{
-				return getBy(array, "Guid", guid);
-			};
-
-			return {
-				getByName: getByName,
-				getByGuid: getByGuid
-			};
-		}
-	]);
+		this.getByGuid = function (array, guid)
+		{
+			return getBy(array, "Guid", guid);
+		};
+	});
 });

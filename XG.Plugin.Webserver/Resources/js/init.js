@@ -28,22 +28,45 @@ window.name = "NG_DEFER_BOOTSTRAP!";
 
 require.config({
 	paths: {
-		'jquery': '../../../Scripts/jquery-2.0.3.min',
 		'angular': '../../../Scripts/angular',
-		'ngTranslate': './libs/angular-translate.min',
 		'domReady': './libs/domReady',
+		'jquery': '../../../Scripts/jquery-2.0.3.min',
+		'ngTranslate': './libs/angular-translate.min',
+		'favicon': './libs/favicon',
+		'ipCookies': './libs/angular-cookie',
+		'jqKnob': './libs/jquery.knob',
+		'jqFlot': '../../../Scripts/flot/jquery.flot',
+		'jqFlot.time': '../../../Scripts/flot/jquery.flot.time.min',
+		'jqFlot.pie': '../../../Scripts/flot/jquery.flot.pie.min',
+		'jqFlot.axislabels': './libs/jquery.flot.axislabels',
+		'moment': '../../../Scripts/moment-with-langs',
+		'ngSanitize': '../../../Scripts/angular-sanitize',
+		'ngTable': './libs/ng-table',
 		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
 		'signalr.hubs': '../../../signalr/hubs?noext=',
-		'ngSanitize': '../../../Scripts/angular-sanitize',
-		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0',
-		'ngTable': './libs/ng-table',
-		'ipCookies': './libs/angular-cookie',
-		'moment': '../../../Scripts/moment-with-langs',
-		'jqKnob': './libs/jquery.knob'
+		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0'
 	},
 	shim: {
 		'angular': {
 			exports: 'angular',
+			deps: ['jquery', 'signalr.hubs']
+		},
+		'ipCookies': {
+			deps: ['angular']
+		},
+		'jqFlot': {
+			deps: ['jquery']
+		},
+		'jqFlot.time': {
+			deps: ['jqFlot']
+		},
+		'jqFlot.pie': {
+			deps: ['jqFlot']
+		},
+		'jqFlot.axislabels': {
+			deps: ['jqFlot']
+		},
+		'jqKnob': {
 			deps: ['jquery']
 		},
 		'ngTranslate': {
@@ -52,20 +75,17 @@ require.config({
 		'ngSanitize': {
 			deps: ['angular']
 		},
-		'ui.bootstrap': {
-			deps: ['angular']
-		},
 		'ngTable': {
 			deps: ['angular']
 		},
-		'ipCookies': {
-			deps: ['angular']
-		},
-		'jqKnob': {
+		'signalr': {
 			deps: ['jquery']
 		},
 		'signalr.hubs': {
 			deps: ['signalr']
+		},
+		'ui.bootstrap': {
+			deps: ['angular']
 		}
 	},
 	deps: ['./bootstrap']

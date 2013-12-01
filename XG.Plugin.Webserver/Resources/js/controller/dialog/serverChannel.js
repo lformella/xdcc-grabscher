@@ -23,14 +23,81 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	controller.controller('ServerChannelDialogCtrl', ['$scope', '$modalInstance', 'serverService', 'channelService',
-		function ($scope, $modalInstance, serverService, channelService)
+	ng.controller('ServerChannelDialogCtrl', ['$scope', '$modalInstance', 'serverSignalr', 'channelSignalr', 'ngTableParams',
+		function ($scope, $modalInstance, serverSignalr, channelSignalr, ngTableParams)
 		{
-			$scope.serverService = serverService;
-			$scope.channelService = channelService;
+			$scope.serverSignalr = serverSignalr;
+			$scope.serverSignalr.setScope($scope);
+			$scope.serverSignalr.server = null;
+			$scope.tableParamsServer = new ngTableParams({
+				page: 1,
+				count: 10
+			}, {
+				counts: [],
+				total: 0,
+				getData: function($defer, params)
+				{
+					$scope.serverSignalr.loadData($defer, params);
+				}
+			});
+
+			$scope.server = '';
+			$scope.addServer = function()
+			{
+				$scope.serverSignalr.add($scope.server);
+				$scope.server = '';
+			};
+
+			$scope.serverKeydown = function($event)
+			{
+				if ($event.keyCode == 13)
+				{
+					$scope.addServer();
+				}
+			};
+
+			$scope.channelSignalr = channelSignalr;
+			$scope.channelSignalr.setScope($scope);
+			$scope.tableParamsChannel = new ngTableParams({
+				page: 1,
+				count: 10
+			}, {
+				counts: [],
+				total: 0,
+				getData: function($defer, params)
+				{
+					if ($scope.serverSignalr.server != null)
+					{
+						$scope.channelSignalr.loadData($defer, params, 'loadByServer', $scope.serverSignalr.server.Guid);
+					}
+					else
+					{
+						$defer.resolve({});
+					}
+				}
+			});
+
+			$scope.channel = '';
+			$scope.addChannel = function()
+			{
+				$scope.channelSignalr.add($scope.channel, $scope.serverSignalr.server.Guid);
+				$scope.channel = '';
+			};
+
+			$scope.channelKeydown = function($event)
+			{
+				if ($event.keyCode == 13)
+				{
+					$scope.addChannel();
+				}
+			};
+
+			$scope.$watch('serverSignalr.server', function () {
+				$scope.tableParamsChannel.reload();
+			});
 		}
 	]);
 });

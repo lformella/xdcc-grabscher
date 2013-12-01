@@ -1,5 +1,5 @@
 ﻿//
-//  file.js
+//  external.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -26,20 +26,11 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('FileCtrl', ['$scope', 'SignalrTableFactory', 'ngTableParams',
+	ng.controller('ExternalCtrl', ['$scope', 'SignalrTableFactory', 'ngTableParams',
 		function ($scope, SignalrTableFactory, ngTableParams)
 		{
-			var eventCallbacks = [
-				{
-					name: 'OnConnected',
-					callback:  function ()
-					{
-						$scope.tableParams.reload();
-					}
-				}
-			];
 			$scope.signalr = new SignalrTableFactory();
-			$scope.signalr.initialize('fileHub', $scope, 'objects', eventCallbacks);
+			$scope.signalr.initialize('externalHub', $scope, 'objects');
 
 			$scope.tableParams = new ngTableParams({
 				page: 1,

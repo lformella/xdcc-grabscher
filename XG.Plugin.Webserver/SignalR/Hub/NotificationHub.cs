@@ -39,7 +39,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected override void AddClient(Client aClient)
 		{
-			ConnectedClients.Add(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>() });
+			aClient.MaxObjects = 10;
+			ConnectedClients.Add(aClient);
 		}
 
 		protected override void RemoveClient(string connectionId)
@@ -57,5 +58,13 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		}
 
 		#endregion
+
+		public Model.Domain.Result Load(int aCount, int aPage, string aSortBy, string aSort)
+		{
+			int length;
+			var objects = FilterAndLoadObjects<Model.Domain.Server>(Helper.Notifications.All, aCount, aPage, aSortBy, aSort, out length);
+			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
+			return new Model.Domain.Result { Total = length, Results = objects };
+		}
 	}
 }

@@ -23,50 +23,75 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	controller.controller('DashboardCtrl', ['$rootScope', '$scope', 'Signalr',
-		function ($rootScope, $scope, Signalr)
+	ng.controller('DashboardCtrl', ['$rootScope', '$scope', 'SignalrService',
+		function ($rootScope, $scope, SignalrService)
 		{
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
 					callback:  function ()
 					{
-						$scope.service.invoke('GetFlotSnapshot').done(
-							function (data)
-							{
-								var liveSnapshot = {};
-								$.each(data, function (index, item)
-								{
-									liveSnapshot[item.label] = item.data[0][1];
-								});
-
-								$scope.snapshot = liveSnapshot;
-								$scope.$apply();
-							}
-						);
+						$scope.refreshSnapshot();
+						$scope.loop();
 					}
 				}
 			];
-			$scope.service = new Signalr();
-			$scope.service.initialize('snapshotHub', eventCallbacks);
+			SignalrService.attachEventCallbacks('snapshotHub', eventCallbacks);
+			$scope.proxy = SignalrService.getProxy('snapshotHub');
 
-			$scope.snapshot = {
-				Servers: 0,
-				ServersEnabled: 0,
-				ServersConnected: 0,
-				Channels: 0,
-				ChannelsEnabled: 0,
-				ChannelsConnected: 0,
-				Bots: 0,
-				BotsConnected: 0,
-				FileSize: 0,
-				FileTimeMissing: 0,
-				FileSizeMissing: 0,
-				FileSizeDownloaded: 0
-			}
+			$scope.snapshot = {};
+			$scope.snapshot[Enum.SnapshotValue.Servers] = 0;
+			$scope.snapshot[Enum.SnapshotValue.ServersEnabled] = 0;
+			$scope.snapshot[Enum.SnapshotValue.ServersConnected] = 0;
+			$scope.snapshot[Enum.SnapshotValue.Channels] = 0;
+			$scope.snapshot[Enum.SnapshotValue.ChannelsEnabled] = 0;
+			$scope.snapshot[Enum.SnapshotValue.ChannelsConnected] = 0;
+			$scope.snapshot[Enum.SnapshotValue.Bots] = 0;
+			$scope.snapshot[Enum.SnapshotValue.BotsConnected] = 0;
+			$scope.snapshot[Enum.SnapshotValue.FileSize] = 0;
+			$scope.snapshot[Enum.SnapshotValue.FileSizeMissing] = 0;
+			$scope.snapshot[Enum.SnapshotValue.FileSizeDownloaded] = 0;
+			$scope.snapshot[Enum.SnapshotValue.FileTimeMissing] = 0;
+
+			$scope.refreshSnapshot = function ()
+			{
+				$scope.proxy.server.getFlotSnapshot().done(
+					function (data)
+					{
+						var liveSnapshot = {};
+						$.each(data, function (index, item)
+						{
+							liveSnapshot[item.type] = item.data[0][1];
+						});
+						liveSnapshot[Enum.SnapshotValue.FileSize] = liveSnapshot[Enum.SnapshotValue.FileSizeDownloaded] + liveSnapshot[Enum.SnapshotValue.FileSizeMissing];
+
+						$scope.snapshot = liveSnapshot;
+						$scope.$apply();
+					}
+				);
+			};
+
+			$scope.refresh = true;
+			$rootScope.$on('OnSlideTo', function (e, slide)
+			{
+				$scope.refresh = slide == 1;
+			});
+
+			$scope.loop = function ()
+			{
+				if ($scope.refresh)
+				{
+					$scope.refreshSnapshot();
+				}
+
+				setTimeout(function ()
+				{
+					$scope.loop();
+				}, 10000);
+			};
 		}
 	]);
 });

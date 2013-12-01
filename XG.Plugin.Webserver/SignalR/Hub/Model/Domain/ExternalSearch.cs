@@ -25,6 +25,7 @@
 
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
@@ -33,35 +34,9 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 	{
 		#region PROPERTIES
 
-		public Guid ParentGuid { get; set; }
+		public int Count { get; set; }
 
-		public Guid Guid { get; set; }
-		
-		public virtual string Name { get; set; }
-		
-		public bool Connected { get; set; }
-		
-		public bool Enabled { get; set; }
-
-		public int Id { get; set; }
-
-		public Int64 Size { get; set; }
-		
-		public DateTime LastUpdated { get; set; }
-		
-		public DateTime LastMentioned { get; set; }
-		
-		public string BotName { get; set; }
-		
-		public Int64 BotSpeed { get; set; }
-		
-		public Int64 BotConnected { get; set; }
-		
-		public Int64 BotHasFreeSlots { get; set; }
-		
-		public Int64 BotHasFreeQueue { get; set; }
-		
-		public string IrcLink { get; set; }
+		public IEnumerable<ExternalSearch> Data { get; set; }
 
 		#endregion
 	}

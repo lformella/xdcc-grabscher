@@ -23,10 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (filter) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	filter.filter('formatNotificationIcon', ['$filter', function ($filter)
+	ng.filter('formatNotificationIcon', ['$filter', function ($filter)
 	{
 		return function (notification)
 		{
@@ -108,7 +108,7 @@ define(['./module'], function (filter) {
 		}
 	}]);
 
-	filter.filter('formatNotificationContent', ['$translate', function ($translate)
+	ng.filter('formatNotificationContent', ['$translate', function ($translate)
 	{
 		return function (notification)
 		{

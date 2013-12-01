@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  AObjectHub.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -37,7 +37,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 	{
 		public override Task OnConnected()
 		{
-			AddClient(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>() });
+			AddClient(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>(), MaxObjects = 0 });
 			return base.OnConnected();
 		}
 

@@ -1,5 +1,5 @@
 //
-//  signalr-crud-table.js
+//  signalr-table.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,23 +23,17 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (service) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	service.factory('SignalrCrudTable', ['$rootScope', '$injector', 'SignalrCrud',
-		function ($rootScope, $injector, SignalrCrud)
+	ng.service('SignalrTableFactory', ['$rootScope', '$injector', 'SignalrFactory',
+		function ($rootScope, $injector, SignalrFactory)
 		{
-			var SignalrCrudTable = function() {};
+			var SignalrTableFactory = function() {};
+			SignalrTableFactory.prototype = Object.create(SignalrFactory.prototype);
 
-			SignalrCrud.prototype.reloadTable = function ()
-			{
-				this.$scope[this.tableParamsName].reload();
-			};
-
-			SignalrCrudTable.prototype = Object.create(SignalrCrud.prototype);
-
-			SignalrCrudTable.prototype.parentInitialize = SignalrCrudTable.prototype.initialize;
-			SignalrCrudTable.prototype.initialize = function (name, $scope, objectsName, customEventCallbacks, tableParamsName)
+			SignalrTableFactory.prototype.parentInitialize = SignalrTableFactory.prototype.initialize;
+			SignalrTableFactory.prototype.initialize = function (name, $scope, objectsName, customEventCallbacks, tableParamsName)
 			{
 				if (tableParamsName == undefined)
 				{
@@ -53,28 +47,28 @@ define(['./module'], function (service) {
 						name: 'OnAdded',
 						callback:  function ()
 						{
-							$.proxy(self.reloadTable(), self);
+							self.$scope[self.tableParamsName].reload();
 						}
 					},
 					{
 						name: 'OnRemoved',
 						callback:  function ()
 						{
-							$.proxy(self.reloadTable(), self);
+							self.$scope[self.tableParamsName].reload();
 						}
 					},
 					{
 						name: 'OnChanged',
 						callback:  function ()
 						{
-							$.proxy(self.reloadTable(), self);
+							self.$scope[self.tableParamsName].reload();
 						}
 					},
 					{
 						name: 'OnReloadTable',
 						callback:  function ()
 						{
-							$.proxy(self.reloadTable(), self);
+							self.$scope[self.tableParamsName].reload();
 						}
 					}
 				];
@@ -87,11 +81,16 @@ define(['./module'], function (service) {
 				this.parentInitialize(name, $scope, objectsName, eventCallbacks);
 			};
 
-			SignalrCrudTable.prototype.loadData = function ($defer, params, method, methodParam)
+			SignalrTableFactory.prototype.loadData = function ($defer, params, method, methodParam)
 			{
+				if (!this.isConnected())
+				{
+					return;
+				}
+
 				if (method == undefined)
 				{
-					method = 'Load';
+					method = 'load';
 				}
 
 				var sortBy = '';
@@ -104,18 +103,18 @@ define(['./module'], function (service) {
 				}
 
 				var $scope = this.$scope;
-				var signalR = null;
+				var signalr = null;
 				if (methodParam == undefined)
 				{
-					signalR = this.signalrInvoke(method, params.$params.count, params.$params.page, sortBy, sort);
+					signalr = this.proxy.server[method](params.$params.count, params.$params.page, sortBy, sort);
 				}
 				else
 				{
-					signalR = this.signalrInvoke(method, methodParam, params.$params.count, params.$params.page, sortBy, sort);
+					signalr = this.proxy.server[method](methodParam, params.$params.count, params.$params.page, sortBy, sort);
 				}
-				if (signalR != null)
+				if (signalr != null)
 				{
-					signalR.done(
+					signalr.done(
 						function (data)
 						{
 							params.total(data.Total);
@@ -127,7 +126,7 @@ define(['./module'], function (service) {
 				}
 			};
 
-			return(SignalrCrudTable);
+			return(SignalrTableFactory);
 		}
 	]);
 });

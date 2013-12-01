@@ -100,6 +100,8 @@
     <Compile Include="SignalR\Hub\ChannelHub.cs" />
     <Compile Include="SignalR\Hub\Model\Client.cs" />
     <Compile Include="SignalR\Hub\ExternalHub.cs" />
+    <Compile Include="DoubleConverter.cs" />
+    <Compile Include="SignalR\Hub\Model\Domain\ExternalSearchEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\config.js" />
@@ -130,6 +132,10 @@
     <EmbeddedResource Include="Resources\js\bootstrap.js" />
     <EmbeddedResource Include="Resources\js\init.js" />
     <EmbeddedResource Include="Resources\css\ng-table.css" />
+    <EmbeddedResource Include="Resources\js\factory\index.js" />
+    <EmbeddedResource Include="Resources\js\factory\module.js" />
+    <EmbeddedResource Include="Resources\js\factory\signalr.js" />
+    <EmbeddedResource Include="Resources\js\factory\signalr-table.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
@@ -210,18 +216,14 @@
     <EmbeddedResource Include="Scripts\bootstrap.min.js" />
     <EmbeddedResource Include="Resources\js\index.js" />
     <EmbeddedResource Include="Resources\js\controller\notification.js" />
-    <EmbeddedResource Include="Resources\js\controller\dialog\channel.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\index.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\module.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\password.js" />
-    <EmbeddedResource Include="Resources\js\controller\dialog\server.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\serverChannel.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\xdcc.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\channel.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\notification.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\server.js" />
-    <EmbeddedResource Include="Resources\js\service\signalr-crud-table.js" />
-    <EmbeddedResource Include="Resources\js\service\signalr-crud.js" />
     <EmbeddedResource Include="Resources\js\xg\config.js" />
     <EmbeddedResource Include="Resources\js\xg\cookie.js" />
     <EmbeddedResource Include="Resources\js\xg\dataview.js" />
@@ -558,5 +560,8 @@
     <EmbeddedResource Include="Resources\js\directive\index.js" />
     <EmbeddedResource Include="Resources\js\directive\knob.js" />
     <EmbeddedResource Include="Resources\js\directive\module.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\js\factory\" />
   </ItemGroup>
 </Project>

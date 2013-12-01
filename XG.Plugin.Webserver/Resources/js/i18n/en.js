@@ -30,10 +30,37 @@ define(['./module'], function (i18n) {
 		function ($translateProvider) {
 			$translateProvider.translations('en', {
 				/* ************************************************************************************************************** */
-				/* GRIDS                                                                                                          */
+				/* SNAPSHOTS                                                                                                      */
 				/* ************************************************************************************************************** */
 
-				"Id": "Id",
+				"Snapshot_2": "Servers",
+				"Snapshot_21": "Server enabled",
+				"Snapshot_22": "Server disabled",
+				"Snapshot_3": "Server connected",
+				"Snapshot_4": "Server disconnected",
+				"Snapshot_5": "Channels",
+				"Snapshot_23": "Channel enabled",
+				"Snapshot_24": "Channel disabled",
+				"Snapshot_6": "Channel connected",
+				"Snapshot_7": "Channel disconnected",
+				"Snapshot_8": "Bots",
+				"Snapshot_9": "Bots connected",
+				"Snapshot_10": "Bots disconnected",
+				"Snapshot_11": "Bots free slots",
+				"Snapshot_12": "Bots free queue",
+				"Snapshot_19": "Bots average current speed",
+				"Snapshot_20": "Bots average max speed",
+				"Snapshot_13": "Packets",
+				"Snapshot_14": "Packets connected",
+				"Snapshot_15": "Packets disconnected",
+				"Snapshot_16": "Packets size",
+				"Snapshot_17": "Packets size downloading",
+				"Snapshot_18": "Packets size not downloading",
+				"Snapshot_25": "Packets size connected",
+				"Snapshot_26": "Packets size disconnected",
+				"Snapshot_27": "File size downloaded",
+				"Snapshot_28": "File size missing",
+				"Snapshot_29": "File time missing",
 
 				/* ************************************************************************************************************** */
 				/* NOTIFICATIONS                                                                                                  */

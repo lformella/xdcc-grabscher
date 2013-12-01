@@ -23,12 +23,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	controller.controller('XdccDialogCtrl', ['$scope', '$modalInstance',
-		function ($scope, $modalInstance)
+	ng.controller('XdccDialogCtrl', ['$scope', '$modalInstance', 'SignalrService',
+		function ($scope, $modalInstance, SignalrService)
 		{
+			$scope.proxy = SignalrService.getProxy('externalHub');
 			$scope.xdccLink = "";
 
 			$scope.isXdccLinkValid = function ()
@@ -48,7 +49,11 @@ define(['./module'], function (controller) {
 			{
 				if ($scope.isXdccLinkValid())
 				{
-					$modalInstance.close($scope.xdccLink);
+					if (SignalrService.isConnected())
+					{
+						$scope.proxy.server.parseXdccLink($scope.xdccLink);
+					}
+					$modalInstance.close();
 				}
 			};
 		}

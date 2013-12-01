@@ -23,11 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (controller) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	controller.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrCrudTable',
-		function ($rootScope, $scope, $modal, ipCookie, SignalrCrudTable)
+	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrTableFactory',
+		function ($rootScope, $scope, $modal, ipCookie, SignalrTableFactory)
 		{
 			$scope.passwordOk = false;
 			$modal.open({
@@ -59,19 +59,16 @@ define(['./module'], function (controller) {
 					backdrop: true,
 					templateUrl: 'xdccDialog.html',
 					controller: 'XdccDialogCtrl'
-				}).result.then(function (xdccLink)
-				{
-					alert(xdccLink);
 				});
 			};
 
 			// build this here, because the dialogs will respawn and recreate stuff
 			$scope.servers = [];
-			$scope.serverService = new SignalrCrudTable();
-			$scope.serverService.initialize('serverHub', $scope, 'servers', undefined, 'tableParamsServer');
+			$scope.serverSignalr = new SignalrTableFactory();
+			$scope.serverSignalr.initialize('serverHub', $scope, 'servers', undefined, 'tableParamsServer');
 
-			$scope.channelService = new SignalrCrudTable();
-			$scope.channelService.initialize('channelHub', $scope, 'channels', undefined, 'tableParamsChannel');
+			$scope.channelSignalr = new SignalrTableFactory();
+			$scope.channelSignalr.initialize('channelHub', $scope, 'channels', undefined, 'tableParamsChannel');
 			$scope.channels = [];
 
 			$scope.openServerChannelsDialog = function ()
@@ -83,13 +80,13 @@ define(['./module'], function (controller) {
 					controller: 'ServerChannelDialogCtrl',
 					resolve:
 					{
-						serverService: function ()
+						serverSignalr: function ()
 						{
-							return $scope.serverService;
+							return $scope.serverSignalr;
 						},
-						channelService: function ()
+						channelSignalr: function ()
 						{
-							return $scope.channelService;
+							return $scope.channelSignalr;
 						}
 					}
 				});
@@ -105,6 +102,13 @@ define(['./module'], function (controller) {
 				var newValue = !$rootScope.settings[setting];
 				$rootScope.settings[setting] = newValue;
 				ipCookie('xg.' + setting, newValue ? '1' : '0', { expires: 21, path: '/' });
+			};
+
+			$scope.slide = 1;
+			$scope.slideTo = function (slide)
+			{
+				$scope.slide = slide;
+				$rootScope.$emit('OnSlideTo', slide);
 			};
 		}
 	]);

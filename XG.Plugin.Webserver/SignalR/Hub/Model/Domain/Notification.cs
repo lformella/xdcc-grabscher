@@ -45,7 +45,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 
 		#region VARIABLES
 
-		public XG.Model.Domain.Notification.Types Type
+		public new XG.Model.Domain.Notification.Types Type
 		{
 			get { return Object.Type; }
 		}

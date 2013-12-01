@@ -34,7 +34,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 	{
 		public int Total { get; set; }
 
-		public IEnumerable<AObject> Results { get; set; }
+		public IEnumerable<object> Results { get; set; }
 	}
 }
 

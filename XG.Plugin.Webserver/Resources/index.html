@@ -114,7 +114,7 @@
 					</div>
 					<div class="modal-body">
 						<div class="row">
-							<div class="col-md-5" ng-controller="ServerCtrl">
+							<div class="col-md-5">
 								<div class="tableDiv">
 									<table ng-table="tableParamsServer" class="table">
 										<thead>
@@ -129,13 +129,13 @@
 										<tbody>
 											<tr ng-repeat="server in $data">
 												<td class="withIcon">
-													<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="$parent.service.flip(server)"></span>
+													<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="serverSignalr.flip(server);"></span>
 												</td>
 												<td class="rowWithText">
-													<a ng-click="$parent.channelService.server = server; $parent.channelService.reloadTable()"><span ng-bind-html='server|formatServerName|trustAsHtml'></span></a>
+													<span class="clickAble" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
 												</td>
 												<td class="text-right">
-													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="$parent.service.remove(server)"></span>
+													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)"></span>
 												</td>
 											</tr>
 										</tbody>
@@ -146,7 +146,7 @@
 										<label class="col-lg-2 control-label" for="server" translate>Server</label>
 										<div class="col-lg-10">
 											<div class="input-group">
-												<input class="form-control" type="text" name="server" ng-model="server" ng-keydown="serverKeydown($event);"/>
+												<input class="form-control" type="text" name="server" ng-model="$parent.server" ng-keydown="serverKeydown($event);"/>
 												<span class="input-group-btn">
 													<button class="btn" ng-click="addServer();" translate>Add</button>
 												</span>
@@ -155,9 +155,9 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-7" ng-controller="ChannelCtrl">
+							<div class="col-md-7" ng-show="serverSignalr.server != null">
 								<div class="tableDiv">
-									<table ng-table="tableParamsChannel" class="table" ng-show="channelService.server != null">
+									<table ng-table="tableParamsChannel" class="table">
 										<thead>
 											<tr>
 												<th width="38"></th>
@@ -172,7 +172,7 @@
 										<tbody>
 											<tr ng-repeat="channel in $data">
 												<td class="withIcon">
-													<span class="clickAble" ng-bind-html='channel|formatChannelIcon' ng-click="$parent.service.flip(channel)"></span>
+													<span class="clickAble" ng-bind-html='channel|formatChannelIcon' ng-click="channelSignalr.flip(channel)"></span>
 												</td>
 												<td class="withProgress">
 													<span ng-bind-html='channel|formatChannelName|trustAsHtml'></span>
@@ -184,18 +184,18 @@
 													{{channel.BotCount}}
 												</td>
 												<td class="text-right">
-													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="$parent.service.remove(channel)"></span>
+													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="channelSignalr.remove(channel)"></span>
 												</td>
 											</tr>
 										</tbody>
 									</table>
 								</div>
-								<div class="form-horizontal" ng-show="channelService.server != null">
+								<div class="form-horizontal">
 									<div class="form-group">
 										<label class="col-lg-2 control-label" for="channel" translate>Channel</label>
 										<div class="col-lg-10">
 											<div class="input-group">
-												<input class="form-control" type="text" name="channel" ng-model="channel" ng-keydown="channelKeydown($event)"/>
+												<input class="form-control" type="text" name="channel" ng-model="$parent.channel" ng-keydown="channelKeydown($event)"/>
 												<span class="input-group-btn">
 													<button class="btn" ng-click="addChannel()" translate>Add</button>
 												</span>
@@ -218,43 +218,43 @@
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav">
 						<li ng-class="{'active': slide == 1}">
-							<a href="#" ng-click="slide = 1">
+							<a href="#" ng-click="slideTo(1)">
 								<span class="glyphicon glyphicon-dashboard glyphiconBig" title="{{'Dashboard'|translate}}"></span>
 							</a>
 						</li>
 						<li ng-class="{'active': slide == 2}">
-							<a href="#" ng-click="slide = 2">
+							<a href="#" ng-click="slideTo(2)">
 								<span class="glyphicon glyphicon-list-alt glyphiconBig" title="{{'IRC View'|translate}}"></span>
 							</a>
 						</li>
 						<li ng-class="{'active': slide == 3}">
-							<a href="#" ng-click="slide = 3">
+							<a href="#" ng-click="slideTo(3)">
 								<span class="glyphicon glyphicon-cloud-download glyphiconBig" title="{{'External search'|translate}}"></span>
 							</a>
 						</li>
 						<li ng-class="{'active': slide == 4}">
-							<a href="#" ng-click="slide = 4">
+							<a href="#" ng-click="slideTo(4)">
 								<span class="glyphicon glyphicon-hdd glyphiconBig" title="{{'Files'|translate}}"></span>
 							</a>
 						</li>
 						<li ng-class="{'active': slide == 5}">
-							<a href="#" ng-click="slide = 5">
+							<a href="#" ng-click="slideTo(5)">
 								<span class="glyphicon glyphicon-stats glyphiconBig" title="{{'Graphs'|translate}}"></span>
 							</a>
 						</li>
-						<li class="dropdown">
-							<a class="dropdown-toggle">
+						<li class="dropdown" ng-controller="NotificationCtrl">
+							<a class="dropdown-toggle" ng-click="counter = 0">
 								<span class="glyphicon glyphicon-exclamation-sign glyphiconBig" title="{{'Notifications'|translate}}"></span>
-								<span id="unreadNotifications" class="label label-danger"></span>
+								<span class="label label-danger" ng-show="counter > 0" id="unreadNotifications">{{counter}}</span>
 							</a>
 							<div class="dropdown-menu">
 								<h3 class="popover-title" translate>Notifications</h3>
-								<div class="popover-content" ng-controller="NotificationCtrl">
+								<div class="popover-content">
 									<table ng-table="tableParams" class="table">
 										<thead>
 											<tr>
 												<th width="38"></th>
-												<th class="sortable" ng-class="{'icons-up-dir': tableParamsServer.isSortBy('Content', 'asc'), 'icons-down-dir': tableParamsServer.isSortBy('Content', 'desc')}" ng-click="tableParamsServer.sorting({'Content' : tableParamsServer.isSortBy('Content', 'asc') ? 'desc' : 'asc'})" translate>
+												<th width="300" class="sortable" ng-class="{'icons-up-dir': tableParamsServer.isSortBy('Content', 'asc'), 'icons-down-dir': tableParamsServer.isSortBy('Content', 'desc')}" ng-click="tableParamsServer.sorting({'Content' : tableParamsServer.isSortBy('Content', 'asc') ? 'desc' : 'asc'})" translate>
 													Content
 												</th>
 												<th width="60" class="sortable" ng-class="{'icons-up-dir': tableParamsServer.isSortBy('Time', 'asc'), 'icons-down-dir': tableParamsServer.isSortBy('Time', 'desc')}" ng-click="tableParamsServer.sorting({'Time' : tableParamsServer.isSortBy('Time', 'asc') ? 'desc' : 'asc'})" translate>
@@ -312,16 +312,16 @@
 							</ul>
 						</li>
 					</ul>
-					<span ng-show="slide == 2 || slide == 3" ng-animate="'fade'" ng-controller="SearchCtrl" class="navbar-form pull-right">
+					<span ng-show="slide == 2 || slide == 3" ng-controller="SearchCtrl" class="navbar-form pull-right">
 						<span id="searchLoading" ng-show="loading" class="glyphicon glyphicon-asterisk animate-spin ScarletRedDark"></span>
 						<div id="searchForm" class="input-append dropdown navbar-form pull-right">
 							<div class="form-group dropdown-toggle">
 								<input type="text" class="search-query form-control" placeholder="Search" ng-model="search" ng-keydown="searchKeydown($event)"/>
 							</div>
-							<button class="btn btn-default" type="button" ng-show="!service.isObject(search)" ng-click="service.add(search)">
+							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search)" ng-click="signalr.add(search)">
 								<span class="glyphicon glyphicon-thumbs-up"></span>
 							</button>
-							<button class="btn btn-default" type="button" ng-show="service.isObject(search)" ng-click="service.removeByName(search)">
+							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search)" ng-click="signalr.removeByName(search)">
 								<span class="glyphicon glyphicon-thumbs-down"></span>
 							</button>
 							<ul class="dropdown-menu">
@@ -347,8 +347,8 @@
 					</span>
 				</div>
 			</nav>
-			<div class="container ng-hide" ng-controller="DashboardCtrl" ng-show="passwordOk">
-				<div ng-show="slide == 1">
+			<div class="container ng-hide" ng-show="passwordOk">
+				<div ng-show="slide == 1" ng-controller="DashboardCtrl">
 
 					<div class="panel panel-default dashboardItem">
 						<div class="panel-heading">
@@ -356,13 +356,13 @@
 						</div>
 						<div class="panel-body">
 							<div>
-								<input knob thickness="0.25" max="Servers" current="ServersEnabled" snapshot="snapshot" size="100">
+								<input knob thickness="0.25" max="2" current="21" snapshot="snapshot" size="100">
 							</div>
 							<div>
-								<input knob thickness="0.1" max="Servers" current="ServersConnected" snapshot="snapshot" size="70">
+								<input knob thickness="0.1" max="2" current="3" snapshot="snapshot" size="70">
 							</div>
 							<div>
-								{{snapshot.ServersConnected}} <span translate>of</span> {{snapshot.ServersEnabled}} <span class="value" translate>connected</span>
+								{{snapshot[3]}} <span translate>of</span> {{snapshot[21]}} <span class="value" translate>connected</span>
 							</div>
 						</div>
 					</div>
@@ -373,13 +373,13 @@
 						</div>
 						<div class="panel-body">
 							<div>
-								<input knob thickness="0.25" max="Channels" current="ChannelsEnabled" snapshot="snapshot" size="100">
+								<input knob thickness="0.25" max="5" current="23" snapshot="snapshot" size="100">
 							</div>
 							<div>
-								<input knob thickness="0.1" max="Channels" current="ChannelsConnected" snapshot="snapshot" size="70">
+								<input knob thickness="0.1" max="5" current="6" snapshot="snapshot" size="70">
 							</div>
 							<div>
-								{{snapshot.ChannelsConnected}} <span translate>of</span> {{snapshot.ChannelsEnabled}} <span class="value" translate>connected</span>
+								{{snapshot[6]}} <span translate>of</span> {{snapshot[23]}} <span class="value" translate>connected</span>
 							</div>
 						</div>
 					</div>
@@ -390,11 +390,11 @@
 						</div>
 						<div class="panel-body">
 							<div>
-								<input knob thickness="0.25" max="Bots" current="BotsConnected" snapshot="snapshot" size="100">
+								<input knob thickness="0.25" max="8" current="9" snapshot="snapshot" size="100">
 							</div>
 							<div></div>
 							<div>
-								{{snapshot.BotsConnected}} <span translate>of</span> {{snapshot.Bots}} <span translate>online</span>
+								{{snapshot[9]}} <span translate>of</span> {{snapshot[8]}} <span translate>online</span>
 							</div>
 						</div>
 					</div>
@@ -405,20 +405,20 @@
 						</div>
 						<div class="panel-body">
 							<div>
-								<input knob thickness="0.25" max="FileSize" current="FileSizeDownloaded" snapshot="snapshot" size="100">
+								<input knob thickness="0.25" max="30" current="27" snapshot="snapshot" size="100">
 							</div>
 							<div></div>
 							<div>
-								{{snapshot.FileSizeDownloaded|size2Human}}  <span translate>of</span> {{snapshot.FileSize|size2Human}} <span class="value" translate>downloaded</span>
+								{{snapshot[27]|size2Human}}  <span translate>of</span> {{snapshot[30]|size2Human}} <span class="value" translate>downloaded</span>
 							</div>
 						</div>
 						<div class="panel-footer">
-							<span translate>Ready</span>: {{snapshot.FileTimeMissing|time2Human}}
+							<span translate>Ready</span>: {{snapshot[29]|time2Human}}
 						</div>
 					</div>
 
 				</div>
-				<div ng-show="slide == 2" ng-controller="PacketCtrl">
+				<div ng-show="slide == 2" ng-controller="PacketCtrl" class="item">
 
 					<table ng-table="tableParams" class="table">
 						<thead>
@@ -469,7 +469,7 @@
 									#{{packet.Id}}
 								</td>
 								<td class="withIcon">
-									<span class="clickAble" ng-bind-html='packet|formatPacketIcon' ng-click="$parent.service.flip(packet)"></span>
+									<span class="clickAble" ng-bind-html='packet|formatPacketIcon' ng-click="$parent.signalr.flip(packet)"></span>
 								</td>
 								<td class="withProgress">
 									<span ng-bind-html='packet|formatPacketName|trustAsHtml'></span>
@@ -491,11 +491,73 @@
 							</tr>
 						</tbody>
 					</table>
+
 				</div>
-				<div ng-show="slide == 3">
-					<div class="grid"></div>
+				<div ng-show="slide == 3" ng-controller="ExternalCtrl" class="item">
+
+					<table ng-table="tableParams" class="table">
+						<thead>
+							<tr>
+								<th class="text-right sortable" width="52" ng-click="tableParams.sorting({'Id' : tableParams.isSortBy('Id', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Id', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Id', 'desc')}"></span>
+									<span translate>Id</span>
+								</th>
+								<th width="37"></th>
+								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})" translate>
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
+									<span translate>Name</span>
+								</th>
+								<th width="70" class="text-right sortable" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})" translate>
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Size', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Size', 'desc')}"></span>
+									<span translate>Size</span>
+								</th>
+								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})" translate>
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Speed', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Speed', 'desc')}"></span>
+									<span translate>Speed</span>
+								</th>
+								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})" translate>
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('TimeMissing', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('TimeMissing', 'desc')}"></span>
+									<span translate>Time Missing</span>
+								</th>
+								<th width="155" class="sortable" ng-click="tableParams.sorting({'LastMentioned' : tableParams.isSortBy('LastMentioned', 'asc') ? 'desc' : 'asc'})" translate>
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('LastMentioned', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('LastMentioned', 'desc')}"></span>
+									<span translate>Last Mentioned</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="packet in $data">
+								<td class="text-right">
+									#{{packet.Id}}
+								</td>
+								<td class="withIcon">
+									<span class="clickAble" ng-bind-html='packet|formatPacketIcon' ng-click="$parent.signalr.server.parseXdccLink(IrcLink)"></span>
+								</td>
+								<td>
+									<span ng-bind-html='packet|formatPacketName|trustAsHtml'></span>
+								</td>
+								<td class="text-right">
+									{{packet.Size|size2Human}}
+								</td>
+
+								<td class="text-right">
+									<span ng-if="packet.Connected"><strong>{{packet.Speed|speed2Human}}</strong></span>
+									<span ng-if="!packet.Connected && packet.Next && $parent.parents[group.value].QueuePosition > 0"><strong>pos. {{$parent.parents[group.value].QueuePosition}}</strong></span>
+								</td>
+								<td>
+									<span ng-if="packet.Connected"><strong>{{packet.TimeMissing|time2Human}}</strong></span>
+									<span ng-if="!packet.Connected && packet.Next && $parent.parents[group.value].QueuePosition > 0"><strong>{{$parent.parents[group.value].QueueTime|time2Human}}</strong></span>
+								</td>
+								<td class="text-right">
+									{{packet.LastMentioned|date2Human}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
 				</div>
-				<div ng-show="slide == 4" ng-controller="FileCtrl">
+				<div ng-show="slide == 4" ng-controller="FileCtrl" class="item">
+
 					<table ng-table="tableParams" class="table">
 						<thead>
 							<tr>
@@ -514,7 +576,7 @@
 						<tbody>
 							<tr ng-repeat="file in $data">
 								<td class="withIcon">
-									<span class="clickAble" ng-bind-html='file|formatFileIcon' ng-click="$parent.remove(file)"></span>
+									<span class="clickAble" ng-bind-html='file|formatFileIcon' ng-click="$parent.signalr.remove(file)"></span>
 								</td>
 								<td class="withProgress">
 									<span ng-bind-html='file|formatFileName|trustAsHtml'></span>
@@ -528,194 +590,54 @@
 							</tr>
 						</tbody>
 					</table>
+
 				</div>
-				<div ng-show="slide == 5">
-					<div class="row">
-						<div class="col-md-2">
-							<div class="panel-group">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">Timespan </h4>
-									</div>
-									<div class="panel-collapse collapse in">
-										<div class="panel-body">
-											<label class="radio">
-												<input type="radio" id="time1" name="snapshotTime" value="-1" checked="checked">
-												<span translate>1 Day</span>
-											</label>
-											<label class="radio">
-												<input type="radio" id="time7" name="snapshotTime" value="-7">
-												<span translate>1 Week</span>
-											</label>
-											<label class="radio">
-												<input type="radio" id="time31" name="snapshotTime" value="-31">
-												<span translate>1 Month</span>
-											</label>
-										</div>
-									</div>
-								</div>
+				<div ng-show="slide == 5" ng-controller="SnapshotCtrl" id="snapshot" class="item">
+
+					<div class="col-md-2">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">Timespan </h4>
 							</div>
-							<div class="panel-group">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">
-											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseServer">
-												Server
-											</a>
-										</h4>
-									</div>
-									<div class="panel-collapse collapse">
-										<div class="panel-body">
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox2"/>
-												<span translate>All</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox21"/>
-												<span translate>Enabled</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox22"/>
-												<span translate>Disabled</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox3"/>
-												<span translate>Connected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox4"/>
-												<span translate>Disconnected</span>
-											</label>
-										</div>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">
-											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseChannel">
-												Channel
-											</a>
-										</h4>
-									</div>
-									<div class="panel-collapse collapse">
-										<div class="panel-body">
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox5"/>
-												<span translate>All</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox23"/>
-												<span translate>Enabled</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox24"/>
-												<span translate>Disabled</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox6"/>
-												<span translate>Connected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox7"/>
-												<span translate>Disconnected</span>
-											</label>
-										</div>
-									</div>
-								</div>
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">
-											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseBots">
-												Bots
-											</a>
-										</h4>
-									</div>
-									<div class="panel-collapse collapse">
-										<div class="panel-body">
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox8"/>
-												<span translate>All</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox9"/>
-												<span translate>Connected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox10"/>
-												<span translate>Disconnected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox11"/>
-												<span translate>Free Slots</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox12"/>
-												<span translate>Free Queue</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox19"/>
-												<span translate>Current Speed</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox20"/>
-												<span translate>Max Speed</span>
-											</label>
-										</div>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h4 class="panel-title">
-											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapsePackets">
-												Packets
-											</a>
-										</h4>
-									</div>
-									<div class="panel-collapse collapse">
-										<div class="panel-body">
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox13"/>
-												<span translate>All</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox14"/>
-												<span translate>Connected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox15"/>
-												<span translate>Disconnected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox16"/>
-												<span translate>Size</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox17"/>
-												<span translate>Size Downloading</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox18"/>
-												<span translate>Size not Downloading</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox25"/>
-												<span translate>Size Connected</span>
-											</label>
-											<label class="checkbox">
-												<input type="checkbox" id="snapshotCheckbox26"/>
-												<span translate>Size Disconnected</span>
-											</label>
-										</div>
-									</div>
+							<div class="panel-collapse">
+								<div class="panel-body">
+									<label class="radio">
+										<input type="radio" id="time1" name="snapshotTime" value="1" checked="checked" ng-click="days = 1; updateSnapshots()">
+										<span translate>1 Day</span>
+									</label>
+									<label class="radio">
+										<input type="radio" id="time7" name="snapshotTime" value="7" ng-click="days = 7; updateSnapshots()">
+										<span translate>1 Week</span>
+									</label>
+									<label class="radio">
+										<input type="radio" id="time31" name="snapshotTime" value="31" ng-click="days = 31; updateSnapshots()">
+										<span translate>1 Month</span>
+									</label>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-10">
-							<div style="height: 550px; width: 1000px;"></div>
+						<div class="panel panel-default" ng-repeat="group in groups">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a class="accordion-toggle" ng-click="group.collapsed = !group.collapsed">
+										{{group.name}}
+									</a>
+								</h4>
+							</div>
+							<div class="panel-collapse" ng-show="group.collapsed">
+								<div class="panel-body">
+									<label class="checkbox" ng-repeat="type in group.types">
+										<input type="checkbox" ng-click="type.enabled = !type.enabled" />
+										<span translate>Snapshot_{{type.id}}</span>
+									</label>
+								</div>
+							</div>
 						</div>
 					</div>
+					<div class="col-md-10">
+						<div flot days="days" groups="groups" snapshots="snapshots" style="height: 550px; width: 1000px;"></div>
+					</div>
+
 				</div>
 			</div>
 		</div>

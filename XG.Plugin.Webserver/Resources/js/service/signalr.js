@@ -1,5 +1,5 @@
 //
-//  signalr.js
+//  signalrService.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,85 +23,52 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module', 'signalr.hubs'], function (service) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	service.factory('Signalr', ['$rootScope',
-		function ($rootScope)
+	ng.service('SignalrService', ['$rootScope', function ($rootScope)
+	{
+		var connected = false;
+		$rootScope.$on('OnConnected', function ()
 		{
-			var Signalr = function (){};
+			connected = true;
+		});
 
-			Signalr.prototype.initialize = function(name, eventCallbacks)
+		this.isConnected = function(name)
+		{
+			return connected;
+		};
+
+		this.getProxy = function(name)
+		{
+			return $.connection[name];
+		};
+
+		this.attachEventCallback = function(name, eventCallback)
+		{
+			var proxy = this.getProxy(name);
+			if (eventCallback.name == "OnConnected")
 			{
-				this.eventCallbacks = eventCallbacks;
-
-				this.proxy = $.connection[name];
-				var connectedCallback = null;
-				angular.forEach(this.eventCallbacks, function (value)
+				$rootScope.$on('OnConnected', function ()
 				{
-					if (value.name == "OnConnected")
-					{
-						connectedCallback = value.callback;
-					}
-					else
-					{
-						this.proxy.on(value.name, function (message)
-						{
-							value.callback(message);
-						});
-					}
-				}, this);
-
-				var self = this;
-				this.connected = false;
-				$rootScope.$on('OnConnected', function (e, password)
-				{
-					self.connected = true;
-					if (connectedCallback != null)
-					{
-						connectedCallback();
-					}
+					eventCallback.callback();
 				});
-			};
-
-			Signalr.prototype.invoke = function (method, arg1, arg2, arg3, arg4, arg5, arg6)
+			}
+			else
 			{
-				if (!this.connected)
+				proxy.on(eventCallback.name, function (message)
 				{
-					return null;
-				}
+					eventCallback.callback(message);
+				});
+			}
+		};
 
-				if (arg6 != undefined && arg6 != null)
-				{
-					return this.proxy.invoke(method, arg1, arg2, arg3, arg4, arg5, arg6);
-				}
-				else if (arg5 != undefined && arg5 != null)
-				{
-					return this.proxy.invoke(method, arg1, arg2, arg3, arg4, arg5);
-				}
-				else if (arg4 != undefined && arg4 != null)
-				{
-					return this.proxy.invoke(method, arg1, arg2, arg3, arg4);
-				}
-				else if (arg3 != undefined && arg3 != null)
-				{
-					return this.proxy.invoke(method, arg1, arg2, arg3);
-				}
-				else if (arg2 != undefined && arg2 != null)
-				{
-					return this.proxy.invoke(method, arg1, arg2);
-				}
-				else if (arg1 != undefined && arg1 != null)
-				{
-					return this.proxy.invoke(method, arg1);
-				}
-				else
-				{
-					return this.proxy.invoke(method);
-				}
-			};
-
-			return(Signalr);
+		this.attachEventCallbacks = function(name, eventCallbacks)
+		{
+			angular.forEach(eventCallbacks, function (eventCallback)
+			{
+				this.attachEventCallback(name, eventCallback);
+			}, this);
 		}
-	]);
+	}]);
 });

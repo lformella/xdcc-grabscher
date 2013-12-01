@@ -25,10 +25,10 @@
 
 define([
 	'angular',
-	'ui.bootstrap',
+	'ipCookies',
 	'ngSanitize',
 	'ngTable',
-	'ipCookies',
+	'ui.bootstrap',
 	'./index'
 ], function (angular) {
 	'use strict';
@@ -38,13 +38,14 @@ define([
 		'ngSanitize',
 		'ngTable',
 		'ivpusic.cookie',
-		'xg.directive',
-		'xg.filter',
-		'xg.filter.formatter',
-		'xg.service',
+		'xg.config',
 		'xg.controller',
 		'xg.controller.dialog',
-		'xg.config',
-		'xg.i18n'
+		'xg.directive',
+		'xg.factory',
+		'xg.filter',
+		'xg.filter.formatter',
+		'xg.i18n',
+		'xg.service'
 	]);
 });

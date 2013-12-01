@@ -40,7 +40,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected override void AddClient(Client aClient)
 		{
-			ConnectedClients.Add(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>() });
+			aClient.MaxObjects = 20;
+			ConnectedClients.Add(aClient);
 		}
 
 		protected override void RemoveClient(string connectionId)

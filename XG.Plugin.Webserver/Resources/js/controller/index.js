@@ -26,9 +26,11 @@
 define([
 	'./dashboard',
 	'./dialog/index',
+	'./external',
 	'./file',
 	'./packet',
 	'./main',
 	'./notification',
-	'./search'
+	'./search',
+	'./snapshot'
 ], function () {});

@@ -43,7 +43,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected override void AddClient(Client aClient)
 		{
-			ConnectedClients.Add(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>() });
+			aClient.MaxObjects = 0;
+			ConnectedClients.Add(aClient);
 		}
 
 		protected override void RemoveClient(string connectionId)
@@ -73,7 +74,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 				var obj = new Flot
 				{
 					Data = new[] {new[] {snapshot.Get(SnapshotValue.Timestamp), snapshot.Get(value)}},
-					Label = Enum.GetName(typeof (SnapshotValue), value)
+					Type = a
 				};
 
 				tObjects.Add(obj);
@@ -84,7 +85,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public IEnumerable<Flot> GetSnapshots(int aDays)
 		{
-			var startTime = DateTime.Now.AddDays(aDays);
+			var startTime = DateTime.Now.AddDays(aDays * -1);
 			return GetFlotData(startTime, DateTime.Now);
 		}
 
@@ -98,7 +99,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 			for (int a = 1; a <= Snapshot.SnapshotCount; a++)
 			{
-				var value = (SnapshotValue)a;
 				var obj = new Flot();
 
 				var list = new List<double[]>();
@@ -108,7 +108,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 					list.Add(current);
 				}
 				obj.Data = list.ToArray();
-				obj.Label = Enum.GetName(typeof(SnapshotValue), value);
+				obj.Type = a;
 
 				tObjects.Add(obj);
 			}

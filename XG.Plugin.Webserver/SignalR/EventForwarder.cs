@@ -149,7 +149,7 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				lock (client.LoadedObjects)
 				{
-					if (client.LoadedObjects.Count < client.MaxObjects)
+					if (client.LoadedObjects.Count < client.MaxObjects || client.MaxObjects == 0)
 					{
 						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnAdded(hubObject);
 						client.LoadedObjects.Add(hubObject.Guid);

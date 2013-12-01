@@ -24,5 +24,6 @@
 //
 
 define([
+	'./flot',
 	'./knob'
 ], function () {});

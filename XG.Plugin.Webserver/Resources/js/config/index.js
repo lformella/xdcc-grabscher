@@ -24,5 +24,6 @@
 //
 
 define([
-	'./config'
+	'./config',
+	'./enum'
 ], function () {});

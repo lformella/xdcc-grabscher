@@ -25,7 +25,5 @@
 
 define([
 	'./helper',
-	'./signalr',
-	'./signalr-crud',
-	'./signalr-crud-table'
+	'./signalr'
 ], function () {});

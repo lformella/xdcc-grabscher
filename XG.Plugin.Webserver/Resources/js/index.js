@@ -24,10 +24,11 @@
 //
 
 define([
-	'./directive/index',
-	'./filter/index',
-	'./service/index',
-	'./controller/index',
 	'./config/index',
-	'./i18n/index'
+	'./controller/index',
+	'./directive/index',
+	'./factory/index',
+	'./filter/index',
+	'./i18n/index',
+	'./service/index'
 ], function () {});

@@ -23,10 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (filter) {
+define(['./module'], function (ng) {
 	'use strict';
 
-	filter.filter('formatFileIcon', ['$filter', function ($filter)
+	ng.filter('formatFileIcon', ['$filter', function ($filter)
 	{
 		return function (file)
 		{
@@ -35,7 +35,7 @@ define(['./module'], function (filter) {
 				return "";
 			}
 
-			var icon = "doc-text";
+			var icon = "file";
 			var iconClass = "Aluminium2Middle";
 			var overlay = "";
 			var overlayClass = "";
@@ -44,7 +44,7 @@ define(['./module'], function (filter) {
 			var ext = file.Name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg" || ext == "mov" || ext == "mp4")
 			{
-				icon = "video";
+				icon = "film";
 			}
 			else if (ext == "mp3")
 			{
@@ -52,12 +52,12 @@ define(['./module'], function (filter) {
 			}
 			else if (ext == "rar" || ext == "tar" || ext == "zip")
 			{
-				icon = "briefcase";
+				icon = "compressed";
 			}
 
 			if (file.Active)
 			{
-				overlay = "spin5";
+				overlay = "asterisk";
 				overlayClass = "ScarletRedMiddle animate-spin";
 				overlayStyle = "";
 			}
@@ -66,7 +66,7 @@ define(['./module'], function (filter) {
 		}
 	}]);
 
-	filter.filter('formatFileName', function ()
+	ng.filter('formatFileName', function ()
 	{
 		return function (file)
 		{

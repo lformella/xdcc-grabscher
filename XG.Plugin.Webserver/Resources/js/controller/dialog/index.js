@@ -24,9 +24,7 @@
 //
 
 define([
-	'./channel',
 	'./password',
-	'./server',
 	'./serverChannel',
 	'./xdcc'
 ], function () {});

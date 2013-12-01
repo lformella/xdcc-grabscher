@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  Snapshot.cs
 // 
 //  Author:
@@ -60,6 +60,7 @@ namespace XG.Business.Model
 		PacketsSizeConnected = 25,
 		PacketsSizeDisconnected = 26,
 
+		FileSize = 30,
 		FileSizeDownloaded = 27,
 		FileSizeMissing = 28,
 		FileTimeMissing = 29
