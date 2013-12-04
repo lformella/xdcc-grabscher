@@ -332,6 +332,11 @@ td.rowWithText small
 	padding-left: 0;
 }
 
+#snapshot .axisLabels
+{
+	color: #777777 !important;
+}
+
 /* Dasboard */
 
 .dashboardItem

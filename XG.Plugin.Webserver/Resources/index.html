@@ -121,8 +121,9 @@
 										<thead>
 											<tr>
 												<th width="38"></th>
-												<th class="sortable" ng-class="{'icons-up-dir': tableParamsServer.isSortBy('Name', 'asc'), 'icons-down-dir': tableParamsServer.isSortBy('Name', 'desc')}" ng-click="tableParamsServer.sorting({'Name' : tableParamsServer.isSortBy('Name', 'asc') ? 'desc' : 'asc'})" translate>
-													Name
+												<th class="sortable" ng-click="tableParamsServer.sorting({'Name' : tableParamsServer.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsServer.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsServer.isSortBy('Name', 'desc')}"></span>
+													<span translate>Name</span>
 												</th>
 												<th width="40"></th>
 											</tr>
@@ -162,11 +163,18 @@
 										<thead>
 											<tr>
 												<th width="38"></th>
-												<th class="sortable" ng-class="{'icons-up-dir': tableParamsChannel.isSortBy('Name', 'asc'), 'icons-down-dir': tableParamsChannel.isSortBy('Name', 'desc')}" ng-click="tableParamsChannel.sorting({'Name' : tableParamsChannel.isSortBy('Name', 'asc') ? 'desc' : 'asc'})" translate>
-													Name
+												<th class="sortable" ng-click="tableParamsChannel.sorting({'Name' : tableParamsChannel.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Name', 'desc')}"></span>
+													<span translate>Name</span>
 												</th>
-												<th class="text-right sortable" width="80" class="text-right" translate>User</th>
-												<th class="text-right sortable" width="80" class="text-right" translate>Bots</th>
+												<th class="sortable text-right sortable" width="90" ng-click="tableParamsChannel.sorting({'User' : tableParamsChannel.isSortBy('User', 'asc') ? 'desc' : 'asc'})">
+													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('User', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('User', 'desc')}"></span>
+													<span translate>User</span>
+												</th>
+												<th class="sortable text-right sortable" width="90" ng-click="tableParamsChannel.sorting({'Bots' : tableParamsChannel.isSortBy('Bots', 'asc') ? 'desc' : 'asc'})">
+													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Bots', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Bots', 'desc')}"></span>
+													<span translate>Bots</span>
+												</th>
 												<th width="40"></th>
 											</tr>
 										</thead>
@@ -429,23 +437,23 @@
 									<span translate>Id</span>
 								</th>
 								<th width="37"></th>
-								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})" translate>
+								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
 									<span translate>Name</span>
 								</th>
-								<th width="70" class="text-right sortable" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="70" class="text-right sortable" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Size', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Size', 'desc')}"></span>
 									<span translate>Size</span>
 								</th>
-								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Speed', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Speed', 'desc')}"></span>
 									<span translate>Speed</span>
 								</th>
-								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('TimeMissing', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('TimeMissing', 'desc')}"></span>
 									<span translate>Time Missing</span>
 								</th>
-								<th width="155" class="sortable" ng-click="tableParams.sorting({'LastMentioned' : tableParams.isSortBy('LastMentioned', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="155" class="sortable" ng-click="tableParams.sorting({'LastMentioned' : tableParams.isSortBy('LastMentioned', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('LastMentioned', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('LastMentioned', 'desc')}"></span>
 									<span translate>Last Mentioned</span>
 								</th>
@@ -504,23 +512,23 @@
 									<span translate>Id</span>
 								</th>
 								<th width="37"></th>
-								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})" translate>
+								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
 									<span translate>Name</span>
 								</th>
-								<th width="70" class="text-right sortable" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="70" class="text-right sortable" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Size', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Size', 'desc')}"></span>
 									<span translate>Size</span>
 								</th>
-								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Speed', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Speed', 'desc')}"></span>
 									<span translate>Speed</span>
 								</th>
-								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('TimeMissing', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('TimeMissing', 'desc')}"></span>
 									<span translate>Time Missing</span>
 								</th>
-								<th width="155" class="sortable" ng-click="tableParams.sorting({'LastMentioned' : tableParams.isSortBy('LastMentioned', 'asc') ? 'desc' : 'asc'})" translate>
+								<th width="155" class="sortable" ng-click="tableParams.sorting({'LastMentioned' : tableParams.isSortBy('LastMentioned', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('LastMentioned', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('LastMentioned', 'desc')}"></span>
 									<span translate>Last Mentioned</span>
 								</th>
@@ -563,14 +571,17 @@
 						<thead>
 							<tr>
 								<th width="32"></th>
-								<th class="sortable" ng-class="{'icons-up-dir': tableParams.isSortBy('Name', 'asc'), 'icons-down-dir': tableParams.isSortBy('Name', 'desc')}" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})" translate>
-									Name
+								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
+									<span translate>Name</span>
 								</th>
-								<th width="70" class="text-right sortable" ng-class="{'icons-up-dir': tableParams.isSortBy('Size', 'asc'), 'icons-down-dir': tableParams.isSortBy('Size', 'desc')}" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})" translate>
-									Size
+								<th width="70" class="text-right sortable" ng-click="tableParams.sorting({'Size' : tableParams.isSortBy('Size', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Size', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Size', 'desc')}"></span>
+									<span translate>Size</span>
 								</th>
-								<th width="150" class="sortable" ng-class="{'icons-up-dir': tableParams.isSortBy('TimeMissing', 'asc'), 'icons-down-dir': tableParams.isSortBy('TimeMissing', 'desc')}" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})" translate>
-									Time Missing
+								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('TimeMissing', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('TimeMissing', 'desc')}"></span>
+									<span translate>Time Missing</span>
 								</th>
 							</tr>
 						</thead>

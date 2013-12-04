@@ -41,7 +41,7 @@ define(['./module'], function (ng) {
 			$scope.signalr = new SignalrTableFactory();
 			$scope.signalr.initialize('packetHub', $scope, 'objects', eventCallbacks);
 
-			$scope.searchBy = "Name";
+			$scope.searchBy = "";
 			$scope.search = "";
 			$scope.parents = [];
 
@@ -54,7 +54,7 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
-					if (!$scope.signalr.isConnected())
+					if (!$scope.signalr.isConnected() || $scope.search == "")
 					{
 						return;
 					}
