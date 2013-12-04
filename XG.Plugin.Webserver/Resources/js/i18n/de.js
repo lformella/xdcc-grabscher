@@ -85,6 +85,7 @@ define(['./module'], function (i18n) {
 				"1 Week": "1 Woche",
 				"1 Month": "1 Monat",
 
+				"Snapshot_1": "Geschwindigkeit",
 				"Snapshot_2": "Servers",
 				"Snapshot_21": "Server aktiviert",
 				"Snapshot_22": "Server deaktiviert",

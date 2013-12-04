@@ -33,6 +33,7 @@ define(['./module'], function (i18n) {
 				/* SNAPSHOTS                                                                                                      */
 				/* ************************************************************************************************************** */
 
+				"Snapshot_1": "Speed",
 				"Snapshot_2": "Servers",
 				"Snapshot_21": "Server enabled",
 				"Snapshot_22": "Server disabled",

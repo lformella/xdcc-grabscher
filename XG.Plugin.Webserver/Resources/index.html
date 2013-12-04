@@ -243,10 +243,10 @@
 								<span class="glyphicon glyphicon-stats glyphiconBig" title="{{'Graphs'|translate}}"></span>
 							</a>
 						</li>
-						<li class="dropdown" ng-controller="NotificationCtrl">
-							<a class="dropdown-toggle" ng-click="counter = 0">
+						<li id="notifications" class="dropdown" ng-controller="NotificationCtrl">
+							<a class="dropdown-toggle" ng-click="counter = 0; refresh()">
 								<span class="glyphicon glyphicon-exclamation-sign glyphiconBig" title="{{'Notifications'|translate}}"></span>
-								<span class="label label-danger" ng-show="counter > 0" id="unreadNotifications">{{counter}}</span>
+								<span class="label label-danger" ng-show="counter > 0">{{counter}}</span>
 							</a>
 							<div class="dropdown-menu">
 								<h3 class="popover-title" translate>Notifications</h3>
@@ -254,11 +254,11 @@
 									<table ng-table="tableParams" class="table">
 										<thead>
 											<tr>
-												<th width="38"></th>
-												<th width="300" class="sortable" ng-class="{'icons-up-dir': tableParamsServer.isSortBy('Content', 'asc'), 'icons-down-dir': tableParamsServer.isSortBy('Content', 'desc')}" ng-click="tableParamsServer.sorting({'Content' : tableParamsServer.isSortBy('Content', 'asc') ? 'desc' : 'asc'})" translate>
+												<th width="40"></th>
+												<th translate>
 													Content
 												</th>
-												<th width="60" class="sortable" ng-class="{'icons-up-dir': tableParamsServer.isSortBy('Time', 'asc'), 'icons-down-dir': tableParamsServer.isSortBy('Time', 'desc')}" ng-click="tableParamsServer.sorting({'Time' : tableParamsServer.isSortBy('Time', 'asc') ? 'desc' : 'asc'})" translate>
+												<th width="190" translate>
 													Time
 												</th>
 											</tr>

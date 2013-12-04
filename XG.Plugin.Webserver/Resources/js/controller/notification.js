@@ -60,9 +60,12 @@ define(['./module', 'favicon'], function (ng) {
 
 			$scope.tableParams = new ngTableParams({
 				page: 1,
-				count: 20
+				count: 20,
+				sorting: {
+					Time: 'desc'
+				}
 			}, {
-				counts: [20, 40, 80, 160, 320, 640],
+				counts: [],
 				total: 0,
 				getData: function($defer, params)
 				{
@@ -70,10 +73,10 @@ define(['./module', 'favicon'], function (ng) {
 				}
 			});
 
-			$rootScope.$on('OnSlideTo', function (e, slide)
+			$scope.refresh = function ()
 			{
-				$scope.refresh = slide == 1;
-			});
+				$scope.tableParams.reload();
+			};
 
 			$scope.counter = 0;
 

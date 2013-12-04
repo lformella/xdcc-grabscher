@@ -79,6 +79,13 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _object, value, "Object"); }
 		}
 
+		DateTime _time;
+
+		public DateTime Time
+		{
+			get { return _time; }
+		}
+
 		#endregion
 
 		#region CONSTRUCTOR
@@ -87,6 +94,7 @@ namespace XG.Model.Domain
 		{
 			_type = aType;
 			_object = aObject;
+			_time = DateTime.Now;
 		}
 
 		#endregion

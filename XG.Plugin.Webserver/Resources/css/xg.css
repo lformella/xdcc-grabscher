@@ -281,7 +281,7 @@ td.rowWithText small
 	left: -410px;
 }
 
-#unreadNotifications
+#notifications .label
 {
 	left: 6px;
 	padding-left: 4px;
@@ -289,6 +289,14 @@ td.rowWithText small
 	position: absolute;
 	top: 2px;
 	font-size: 0.8em;
+}
+
+#notifications .dropdown-menu
+{
+	height: 400px;
+	width: 800px;
+	left: -200px;
+	overflow: scroll;
 }
 
 /* Snapshots */
