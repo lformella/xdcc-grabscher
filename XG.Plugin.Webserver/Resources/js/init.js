@@ -29,6 +29,7 @@ window.name = "NG_DEFER_BOOTSTRAP!";
 require.config({
 	paths: {
 		'angular': '../../../Scripts/angular',
+		'ngAnimate': '../../../Scripts/angular-animate',
 		'domReady': './libs/domReady',
 		'jquery': '../../../Scripts/jquery-2.0.3.min',
 		'ngTranslate': './libs/angular-translate.min',
@@ -50,6 +51,9 @@ require.config({
 		'angular': {
 			exports: 'angular',
 			deps: ['jquery', 'signalr.hubs']
+		},
+		'ngAnimate': {
+			deps: ['angular']
 		},
 		'ipCookies': {
 			deps: ['angular']

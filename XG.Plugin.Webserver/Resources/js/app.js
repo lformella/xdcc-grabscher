@@ -26,6 +26,7 @@
 define([
 	'angular',
 	'ipCookies',
+	'ngAnimate',
 	'ngSanitize',
 	'ngTable',
 	'ui.bootstrap',
@@ -34,10 +35,11 @@ define([
 	'use strict';
 
 	return angular.module('xg', [
-		'ui.bootstrap',
+		'ivpusic.cookie',
+		'ngAnimate',
 		'ngSanitize',
 		'ngTable',
-		'ivpusic.cookie',
+		'ui.bootstrap',
 		'xg.config',
 		'xg.controller',
 		'xg.controller.dialog',

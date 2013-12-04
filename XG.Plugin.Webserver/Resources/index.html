@@ -37,6 +37,7 @@
 		<link rel="stylesheet" href="/Resources/css/ng-table.css"/>
 		<link rel="stylesheet" href="/Content/bootstrap.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/animation.css" type="text/css" media="screen"/>
+		<link rel="stylesheet" href="/Resources/css/animate.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/tango-colors.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/xg.css" type="text/css" media="screen"/>
 
@@ -312,8 +313,8 @@
 							</ul>
 						</li>
 					</ul>
-					<span ng-show="slide == 2 || slide == 3" ng-controller="SearchCtrl" class="navbar-form pull-right">
-						<span id="searchLoading" ng-show="loading" class="glyphicon glyphicon-asterisk animate-spin ScarletRedDark"></span>
+					<div id="search-area" ng-show="slide == 2 || slide == 3" ng-controller="SearchCtrl" class="navbar-form pull-right">
+						<div id="searchLoading" ng-show="loading" class="glyphicon glyphicon-asterisk animate-spin ScarletRedDark"></div>
 						<div id="searchForm" class="input-append dropdown navbar-form pull-right">
 							<div class="form-group dropdown-toggle">
 								<input type="text" class="search-query form-control" placeholder="Search" ng-model="search" ng-keydown="searchKeydown($event)"/>
@@ -344,7 +345,7 @@
 								</li>
 							</ul>
 						</div>
-					</span>
+					</div>
 				</div>
 			</nav>
 			<div class="container ng-hide" ng-show="passwordOk">

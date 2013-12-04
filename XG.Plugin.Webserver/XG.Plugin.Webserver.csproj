@@ -248,6 +248,7 @@
     <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
     <EmbeddedResource Include="Scripts\angular.min.js.map" />
     <None Include="Scripts\errors.json" />
+    <None Include="Resources\css\animate.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">

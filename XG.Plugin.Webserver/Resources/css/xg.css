@@ -235,7 +235,7 @@ td.rowWithText small
 .navbar
 {
 	margin-bottom: 10px;
-	min-height: 40px;
+	min-height: 44px;
 }
 
 .navbar-brand
@@ -273,6 +273,7 @@ td.rowWithText small
 {
 	margin-right: 4px;
 	margin-top: 12px;
+	float: left;
 }
 
 #notificationsLink + .dropdown-menu
@@ -359,4 +360,42 @@ td.rowWithText small
 {
 	position: inherit;
 	padding-left: 120px;
+}
+
+/* Animate */
+
+.ng-hide
+{
+	opacity:0;
+}
+
+.ng-hide-add, #search-area.ng-hide-remove
+{
+	display:block!important;
+}
+
+#searchLoading
+{
+	opacity:1;
+}
+
+#searchLoading.ng-hide
+{
+	opacity:0;
+}
+
+#search-area.ng-hide-remove
+{
+	-webkit-animation: fadeInLeft 0.5s;
+	-moz-animation: fadeInLeft 0.5s;
+	-ms-animation: fadeInLeft 0.5s;
+	animation: fadeInLeft 0.5s;
+}
+
+#search-area.ng-hide-add
+{
+	-webkit-animation: fadeOutLeft 0.5s;
+	-moz-animation: fadeOutLeft 0.5s;
+	-ms-animation: fadeOutLeft 0.5s;
+	animation: fadeOutLeft 0.5s;
 }
