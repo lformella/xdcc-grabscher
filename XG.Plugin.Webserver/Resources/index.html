@@ -219,6 +219,61 @@
 			</div>
 		</script>
 
+		<script type="text/ng-template" id="apiDialog.html">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
+						<h4 class="modal-title" translate>Change Servers and Channels</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="tableDiv">
+								<table ng-table="tableParams" class="table">
+									<thead>
+										<tr>
+											<th width="38"></th>
+											<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
+												<span translate>Name</span>
+											</th>
+											<th width="40"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="server in $data">
+											<td class="withIcon">
+												<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="serverSignalr.flip(server);"></span>
+											</td>
+											<td class="rowWithText">
+												<span class="clickAble" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
+											</td>
+											<td class="text-right">
+												<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)"></span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-2 control-label" for="server" translate>Server</label>
+									<div class="col-lg-10">
+										<div class="input-group">
+											<input class="form-control" type="text" name="server" ng-model="$parent.server" ng-keydown="serverKeydown($event);"/>
+											<span class="input-group-btn">
+												<button class="btn" ng-click="addServer();" translate>Add</button>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</script>
+
 		<div ng-controller="MainCtrl">
 			<nav class="navbar navbar-default navbar-fixed-top ng-hide" role="navigation" ng-show="passwordOk">
 				<div class="navbar-header">

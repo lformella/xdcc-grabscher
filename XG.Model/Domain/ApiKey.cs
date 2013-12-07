@@ -1,5 +1,5 @@
 // 
-//  Search.cs
+//  ApiKey.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -25,7 +25,7 @@
 
 namespace XG.Model.Domain
 {
-	public class Search : AObject
+	public class ApiKey : AObject
 	{
 	}
 }

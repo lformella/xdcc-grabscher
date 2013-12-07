@@ -53,6 +53,8 @@
     <Compile Include="Domain\Searches.cs" />
     <Compile Include="Domain\Server.cs" />
     <Compile Include="Domain\Servers.cs" />
+    <Compile Include="Domain\ApiKey.cs" />
+    <Compile Include="Domain\ApiKeys.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

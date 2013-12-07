@@ -1,5 +1,5 @@
 // 
-//  Search.cs
+//  ApiKeys.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,9 +23,38 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace XG.Model.Domain
 {
-	public class Search : AObject
+	public class ApiKeys : AObjects
 	{
+		public new IEnumerable<ApiKey> All
+		{
+			get { return base.All.Cast<ApiKey>(); }
+		}
+
+		public bool Add(ApiKey aObject)
+		{
+			return base.Add(aObject);
+		}
+
+		public bool Remove(ApiKey aObject)
+		{
+			return base.Remove(aObject);
+		}
+
+		public new ApiKey WithGuid(Guid aGuid)
+		{
+			AObject tObject = base.WithGuid(aGuid);
+			return tObject != null ? (ApiKey) tObject : null;
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return false;
+		}
 	}
 }

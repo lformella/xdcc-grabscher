@@ -73,6 +73,18 @@ namespace XG.Plugin.Webserver
 
 			app.Use(async (aContext, aNext) => 
 			{
+				if (aContext.Request.Path.Value.StartsWith("/api/") && aContext.Request.Method == "GET")
+				{
+					await aContext.Response.WriteAsync(Api.Run(aContext.Request.Path.Value.Substring(5)));
+				}
+				else
+				{
+					await aNext();
+				}
+			});
+
+			app.Use(async (aContext, aNext) => 
+			{
 				var lang = aContext.Request.Headers.Get("Accept-Language").Substring(0, 2);
 				string file = aContext.Request.Path.Value;
 				var content = new byte[0];
