@@ -48,7 +48,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind
 		};
 
-		public void ParseXdccLink(String aLink)
+		public void ParseXdccLink(string aLink)
 		{
 			string[] link = aLink.Substring(7).Split('/');
 			string serverName = link[0];
@@ -92,7 +92,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			pack.Enabled = true;
 		}
 
-		public Model.Domain.Result LoadBySearch(String aSearch, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadBySearch(string aSearch, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			aPage--;
 

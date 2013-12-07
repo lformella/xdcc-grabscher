@@ -46,11 +46,11 @@ define(['./module', 'favicon'], function (ng) {
 						if ("Notification" in window && Notification.permission === "granted")
 						{
 							var options = {
-								body: "",
+								body: $filter('formatNotificationDescription')(message),
 								tag: message.Guid,
-								icon: ""
+								icon: "Resources/images/chat.ico"
 							};
-							new Notification($filter('formatNotificationContent')(message, true), options);
+							new Notification($filter('formatNotificationHeader')(message), options);
 						}
 					}
 				}

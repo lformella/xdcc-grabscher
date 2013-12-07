@@ -117,12 +117,42 @@ define(['./module'], function (ng) {
 				return "";
 			}
 
-			var msg = $translate("Notification_" + notification.Type,
+			var msg = $translate("Notification_Description_" + notification.Type,
 			{
 				Name: notification.ObjectName,
 				ParentName: notification.ParentName
 			});
 			return "<span title='" + msg + "'>" + msg + "</span>";
+		}
+	}]);
+
+	ng.filter('formatNotificationHeader', ['$translate', function ($translate)
+	{
+		return function (notification)
+		{
+			if (notification == undefined)
+			{
+				return "";
+			}
+
+			return $translate("Notification_Header_" + notification.Type);
+		}
+	}]);
+
+	ng.filter('formatNotificationDescription', ['$translate', function ($translate)
+	{
+		return function (notification)
+		{
+			if (notification == undefined)
+			{
+				return "";
+			}
+
+			return $translate("Notification_Description_" + notification.Type,
+				{
+					Name: notification.ObjectName,
+					ParentName: notification.ParentName
+				});
 		}
 	}]);
 });

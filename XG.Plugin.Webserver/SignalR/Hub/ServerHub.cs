@@ -61,7 +61,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		#endregion
 
-		public void Add(String aName)
+		public void Add(string aName)
 		{
 			string serverString = aName;
 			int port = 6667;

@@ -66,7 +66,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 
 		public new string Name
 		{
-			get { return !String.IsNullOrWhiteSpace(Object.RealName) ? Object.RealName : Object.Name; }
+			get { return !string.IsNullOrWhiteSpace(Object.RealName) ? Object.RealName : Object.Name; }
 		}
 
 		public DateTime LastUpdated
