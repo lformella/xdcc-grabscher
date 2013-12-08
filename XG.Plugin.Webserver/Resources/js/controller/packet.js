@@ -44,6 +44,7 @@ define(['./module'], function (ng) {
 			$scope.searchBy = "";
 			$scope.search = "";
 			$scope.parents = [];
+			$scope.active = false;
 
 			$scope.tableParams = new ngTableParams({
 				page: 1,
@@ -96,19 +97,31 @@ define(['./module'], function (ng) {
 			// events
 			$rootScope.$on('SearchByName', function (e, message)
 			{
-				$scope.searchBy = "Name";
-				$scope.search = message;
-				$scope.tableParams.reload();
+				if ($scope.active)
+				{
+					$scope.searchBy = "Name";
+					$scope.search = message;
+					$scope.tableParams.reload();
+				}
 			});
 
 			$rootScope.$on('SearchByGuid', function (e, message)
 			{
-				$scope.searchBy = "Guid";
-				$scope.search = message;
-				$scope.tableParams.reload();
+				if ($scope.active)
+				{
+					$scope.searchBy = "Guid";
+					$scope.search = message;
+					$scope.tableParams.reload();
+				}
 			});
 
-			$rootScope.$watch('settings.showOfflineBots', function () {
+			$rootScope.$on('OnSlideTo', function (e, slide)
+			{
+				$scope.active = slide == 2;
+			});
+
+			$rootScope.$watch('settings.showOfflineBots', function ()
+			{
 				$scope.tableParams.reload();
 			});
 		}

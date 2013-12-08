@@ -74,7 +74,7 @@ define(['./module'], function (i18n) {
 				"Enabled Packets": "Aktivierte Pakete",
 				"External search": "Externe Suche",
 				"Last Mentioned": "Aktualisiert",
-				"Bot Speed": "Geschw.",
+				"Bot Speed": "Geschwindigkeit",
 				"User": "Benutzer",
 
 				/* ************************************************************************************************************** */

@@ -47,8 +47,11 @@ define(['./module'], function (ng) {
 			$scope.server = '';
 			$scope.addServer = function()
 			{
-				$scope.serverSignalr.add($scope.server);
-				$scope.server = '';
+				if ($scope.server != '')
+				{
+					$scope.serverSignalr.add($scope.server);
+					$scope.server = '';
+				}
 			};
 
 			$scope.serverKeydown = function($event)
@@ -83,8 +86,11 @@ define(['./module'], function (ng) {
 			$scope.channel = '';
 			$scope.addChannel = function()
 			{
-				$scope.channelSignalr.add($scope.channel, $scope.serverSignalr.server.Guid);
-				$scope.channel = '';
+				if ($scope.channel != '')
+				{
+					$scope.channelSignalr.add($scope.channel, $scope.serverSignalr.server.Guid);
+					$scope.channel = '';
+				}
 			};
 
 			$scope.channelKeydown = function($event)

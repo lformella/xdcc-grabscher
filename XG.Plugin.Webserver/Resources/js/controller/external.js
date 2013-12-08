@@ -26,11 +26,15 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('ExternalCtrl', ['$scope', 'SignalrTableFactory', 'ngTableParams',
-		function ($scope, SignalrTableFactory, ngTableParams)
+	ng.controller('ExternalCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', 'ngTableParams',
+		function ($rootScope, $scope, SignalrTableFactory, ngTableParams)
 		{
 			$scope.signalr = new SignalrTableFactory();
 			$scope.signalr.initialize('externalHub', $scope, 'objects');
+
+			$scope.searchBy = "";
+			$scope.search = "";
+			$scope.active = false;
 
 			$scope.tableParams = new ngTableParams({
 				page: 1,
@@ -40,8 +44,68 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
-					$scope.signalr.loadData($defer, params);
+					if (!$scope.signalr.isConnected() || $scope.search == "")
+					{
+						return;
+					}
+
+					var sortBy = '';
+					var sort = '';
+
+					var keys = Object.keys(params.$params.sorting);
+					if (keys.length > 0)
+					{
+						sortBy = keys[0];
+						sort = params.$params.sorting[sortBy];
+					}
+
+					var signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots, params.$params.count, params.$params.page, sortBy, sort);
+					if (signalR != null)
+					{
+						signalR.done(
+							function (data)
+							{
+								params.total(data.Total);
+								$scope.objects = data.Results;
+
+								$rootScope.$emit('OnSearchComplete', $scope.search);
+								$defer.resolve($scope.objects);
+								$scope.$apply();
+							}
+						);
+					}
 				}
+			});
+
+			// events
+			$rootScope.$on('SearchByName', function (e, message)
+			{
+				if ($scope.active)
+				{
+					$scope.searchBy = "Name";
+					$scope.search = message;
+					$scope.tableParams.reload();
+				}
+			});
+
+			$rootScope.$on('SearchByGuid', function (e, message)
+			{
+				if ($scope.active)
+				{
+					$scope.searchBy = "Guid";
+					$scope.search = message;
+					$scope.tableParams.reload();
+				}
+			});
+
+			$rootScope.$on('OnSlideTo', function (e, slide)
+			{
+				$scope.active = slide == 3;
+			});
+
+			$rootScope.$watch('settings.showOfflineBots', function ()
+			{
+				$scope.tableParams.reload();
 			});
 		}
 	]);

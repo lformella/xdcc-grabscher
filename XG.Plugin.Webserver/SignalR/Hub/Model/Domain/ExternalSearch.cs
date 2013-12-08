@@ -36,7 +36,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 
 		public int Count { get; set; }
 
-		public IEnumerable<ExternalSearch> Data { get; set; }
+		public IEnumerable<ExternalSearchEntry> Data { get; set; }
 
 		#endregion
 	}

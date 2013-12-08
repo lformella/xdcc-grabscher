@@ -146,7 +146,13 @@ body
 	padding: 3px 0 0 5px;
 }
 
-.table td.withIcon span {
+.table td
+{
+	height: 32px;
+}
+
+.table td.withIcon span
+{
 	position: relative;
 }
 
@@ -157,7 +163,8 @@ body
 	white-space: nowrap;
 }
 
-td.rowWithText span {
+td.rowWithText span
+{
 	position: relative;
 }
 

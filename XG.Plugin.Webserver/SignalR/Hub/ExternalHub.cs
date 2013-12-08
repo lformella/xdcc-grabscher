@@ -92,7 +92,17 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			pack.Enabled = true;
 		}
 
-		public Model.Domain.Result LoadBySearch(string aSearch, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		{
+			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
+			if (search != null)
+			{
+				return LoadByName(search.Name, aOfflineBots, aCount, aPage, aSortBy, aSort);
+			}
+			return new Model.Domain.Result { Total = 0, Results = new List<Hub.Model.Domain.AObject>() };
+		}
+
+		public Model.Domain.Result LoadByName(string aSearch, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			aPage--;
 
@@ -105,7 +115,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 					"xg=" + Settings.Default.XgVersion + "&" +
 					"start=" + aPage * aCount + "&" +
 					"limit=" + aCount + "&" +
-					"sortBy=" + aSortBy + "&" +
+					"botState=" + (aOfflineBots ? 3 : 0) + "&" +
+					"sortBy=" + (aSortBy.Length > 1 ? aSortBy.Substring(0, 1).ToLower() + aSortBy.Substring(1) : "") + "&" +
 					"sort=" + aSort + "&" +
 					"search=" + aSearch
 				);

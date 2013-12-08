@@ -511,7 +511,7 @@
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Id', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Id', 'desc')}"></span>
 									<span translate>Id</span>
 								</th>
-								<th width="37"></th>
+								<th width="30"></th>
 								<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
 									<span translate>Name</span>
@@ -520,13 +520,13 @@
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Size', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Size', 'desc')}"></span>
 									<span translate>Size</span>
 								</th>
-								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})">
-									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Speed', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Speed', 'desc')}"></span>
-									<span translate>Speed</span>
+								<th width="170" class="sortable" ng-click="tableParams.sorting({'BotName' : tableParams.isSortBy('BotName', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('BotName', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('BotName', 'desc')}"></span>
+									<span translate>Bot Name</span>
 								</th>
-								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})">
-									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('TimeMissing', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('TimeMissing', 'desc')}"></span>
-									<span translate>Time Missing</span>
+								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'BotSpeed' : tableParams.isSortBy('BotSpeed', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('BotSpeed', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('BotSpeed', 'desc')}"></span>
+									<span translate>Bot Speed</span>
 								</th>
 								<th width="155" class="sortable" ng-click="tableParams.sorting({'LastMentioned' : tableParams.isSortBy('LastMentioned', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('LastMentioned', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('LastMentioned', 'desc')}"></span>
@@ -548,14 +548,11 @@
 								<td class="text-right">
 									{{packet.Size|size2Human}}
 								</td>
-
-								<td class="text-right">
-									<span ng-if="packet.Connected"><strong>{{packet.Speed|speed2Human}}</strong></span>
-									<span ng-if="!packet.Connected && packet.Next && $parent.parents[group.value].QueuePosition > 0"><strong>pos. {{$parent.parents[group.value].QueuePosition}}</strong></span>
-								</td>
 								<td>
-									<span ng-if="packet.Connected"><strong>{{packet.TimeMissing|time2Human}}</strong></span>
-									<span ng-if="!packet.Connected && packet.Next && $parent.parents[group.value].QueuePosition > 0"><strong>{{$parent.parents[group.value].QueueTime|time2Human}}</strong></span>
+									{{packet.BotName}}
+								</td>
+								<td class="text-right">
+									{{packet.BotSpeed|speed2Human}}
 								</td>
 								<td class="text-right">
 									{{packet.LastMentioned|date2Human}}
