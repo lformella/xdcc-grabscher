@@ -24,23 +24,17 @@
 //  
 
 using System;
-using System.Linq;
 using SharpRobin.Core;
 using XG.Config.Properties;
 using Microsoft.Owin.Hosting;
 using XG.Plugin.Webserver.SignalR;
 using XG.Plugin.Webserver.SignalR.Hub;
-using System.Reflection;
-using System.Net;
-using log4net;
 
 namespace XG.Plugin.Webserver
 {
 	public class Plugin : APlugin
 	{
 		#region VARIABLES
-
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		IDisposable _server;
 		EventForwarder _eventForwarder;
@@ -53,40 +47,27 @@ namespace XG.Plugin.Webserver
 
 		protected override void StartRun()
 		{
-			Helper.Servers = Servers;
-			Helper.Files = Files;
-			Helper.Searches = Searches;
-			Helper.Notifications = Notifications;
-			Helper.RrdDb = RrdDB;
+			SignalR.Hub.Helper.Servers = Servers;
+			SignalR.Hub.Helper.Files = Files;
+			SignalR.Hub.Helper.Searches = Searches;
+			SignalR.Hub.Helper.Notifications = Notifications;
+			SignalR.Hub.Helper.RrdDb = RrdDB;
+			SignalR.Hub.Helper.ApiKeys = ApiKeys;
+
+			Nancy.Helper.ApiKeys = ApiKeys;
 
 			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{
-#if __MonoCS__
 				ServerFactory = "Nowin"
-#endif
 			};
-
-			try
-			{
-				_server = WebApp.Start<Startup>(options);
-			}
-			catch (TargetInvocationException ex)
-			{
-#if !__MonoCS__
-				var inner = ex.InnerException as HttpListenerException;
-				if (inner != null && inner.NativeErrorCode == 5)
-				{
-					Log.Fatal(@"TO GET XG UP AND RUNNING YOU MUST RUN 'netsh http add urlacl url=http://*:" + Settings.Default.WebserverPort + @"/ user=%USERDOMAIN%\%USERNAME%' AS ADMINISTRATOR");
-				}
-#endif
-				throw ex;
-			}
+			_server = WebApp.Start<Startup>(options);
 
 			_eventForwarder = new EventForwarder();
 			_eventForwarder.Servers = Servers;
 			_eventForwarder.Files = Files;
 			_eventForwarder.Searches = Searches;
 			_eventForwarder.Notifications = Notifications;
+			_eventForwarder.ApiKeys = ApiKeys;
 			_eventForwarder.Start();
 		}
 

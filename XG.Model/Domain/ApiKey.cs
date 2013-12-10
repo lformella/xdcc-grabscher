@@ -1,5 +1,5 @@
 // 
-//  HubAuthorizeAttribute.cs
+//  ApiKey.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,27 +23,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
-
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Model.Domain
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	public class ApiKey : AObject
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		int _errorCount;
+
+		public virtual int ErrorCount
 		{
-			return true;
+			get { return _errorCount; }
+			set { SetProperty(ref _errorCount, value, "ErrorCount"); }
 		}
 
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
+		int _successCount;
+
+		public virtual int SuccessCount
 		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
+			get { return _successCount; }
+			set { SetProperty(ref _successCount, value, "SuccessCount"); }
 		}
 	}
 }

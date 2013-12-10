@@ -24,19 +24,8 @@
 //
 
 define([
-	'./module',
-	'moment',
 	'./de',
 	'./en',
+	'./init',
 	'ngTranslate'
-], function (i18n, moment) {
-	'use strict';
-
-	// ##LANGUAGE## will be replaced by StartUp.cs
-	moment.lang('##LANGUAGE##');
-	i18n.config(['$translateProvider',
-		function ($translateProvider) {
-			$translateProvider.preferredLanguage('##LANGUAGE##');
-		}
-	]);
-});
+], function () {});

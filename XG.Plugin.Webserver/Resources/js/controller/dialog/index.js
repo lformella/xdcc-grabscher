@@ -24,6 +24,7 @@
 //
 
 define([
+	'./api',
 	'./password',
 	'./serverChannel',
 	'./xdcc'

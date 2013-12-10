@@ -298,6 +298,7 @@ namespace XG.Business
 			Servers = _dao.Servers();
 			Files = _dao.Files();
 			Searches = _dao.Searches();
+			ApiKeys = _dao.ApiKeys();
 
 			FileActions.Files = Files;
 			FileActions.Servers = Servers;
@@ -327,6 +328,7 @@ namespace XG.Business
 			aWorker.Files = Files;
 			aWorker.Searches = Searches;
 			aWorker.Notifications = Notifications;
+			aWorker.ApiKeys = ApiKeys;
 
 			_workers.Add(aWorker);
 		}

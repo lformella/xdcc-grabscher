@@ -1,5 +1,5 @@
 // 
-//  HubAuthorizeAttribute.cs
+//  ApiKeys.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,26 +24,43 @@
 //  
 
 using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Model.Domain
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	public class ApiKeys : AObjects
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		public new IEnumerable<ApiKey> All
 		{
-			return true;
+			get { return base.All.Cast<ApiKey>(); }
 		}
 
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
+		public bool Add(ApiKey aObject)
 		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
+			return base.Add(aObject);
+		}
+
+		public bool Remove(ApiKey aObject)
+		{
+			return base.Remove(aObject);
+		}
+
+		public new ApiKey Named(string aName)
+		{
+			AObject tObject = base.Named(aName);
+			return tObject != null ? (ApiKey) tObject : null;
+		}
+
+		public new ApiKey WithGuid(Guid aGuid)
+		{
+			AObject tObject = base.WithGuid(aGuid);
+			return tObject != null ? (ApiKey) tObject : null;
+		}
+
+		public override bool DuplicateChildExists(AObject aObject)
+		{
+			return Named(aObject.Name) != null;
 		}
 	}
 }

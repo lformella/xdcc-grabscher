@@ -1,5 +1,5 @@
 ﻿// 
-//  PacketHub.cs
+//  ApiHub.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -26,15 +26,13 @@
 using System;
 using System.Linq;
 using XG.Model.Domain;
-using XG.Plugin.Webserver.SignalR.Hub;
 using System.Collections.Generic;
-using XG.Model;
 using XG.Plugin.Webserver.SignalR.Hub.Model;
 using System.Threading.Tasks;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
-	public class PacketHub : AObjectHub
+	public class ApiHub : AObjectHub
 	{
 		#region Client Handling
 
@@ -42,7 +40,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected override void AddClient(Client aClient)
 		{
-			aClient.MaxObjects = 20;
+			aClient.MaxObjects = 10;
 			ConnectedClients.Add(aClient);
 		}
 
@@ -64,7 +62,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public void Enable(Guid aGuid)
 		{
-			AObject tObj = Helper.Servers.WithGuid(aGuid);
+			AObject tObj = Helper.ApiKeys.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = true;
@@ -73,42 +71,36 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public void Disable(Guid aGuid)
 		{
-			AObject tObj = Helper.Servers.WithGuid(aGuid);
+			AObject tObj = Helper.ApiKeys.WithGuid(aGuid);
 			if (tObj != null)
 			{
 				tObj.Enabled = false;
 			}
 		}
 
-		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public void Add(string aKey)
 		{
-			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
-			if (search != null)
+			var obj = Helper.ApiKeys.Named(aKey);
+			if (obj == null)
 			{
-				return LoadByName(search.Name, aOfflineBots, aCount, aPage, aSortBy, aSort);
+				obj = new ApiKey { Name = aKey };
+				Helper.ApiKeys.Add(obj);
 			}
-
-			IEnumerable<Packet> packets = new List<Packet>();
-			if (aGuid == Helper._searchEnabled)
-			{
-				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Enabled select packet);
-			}
-			else if (aGuid == Helper._searchDownloads)
-			{
-				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Connected select packet);
-			}
-
-			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
-			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
-			return new Model.Domain.Result { Total = length, Results = objects };
 		}
 
-		public Model.Domain.Result LoadByName(string aSearch, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public void Remove(Guid aGuid)
 		{
-			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Name.ContainsAll(aSearch.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)) select packet);
+			var apiKey = Helper.ApiKeys.WithGuid(aGuid);
+			if (apiKey != null)
+			{
+				Helper.ApiKeys.Remove(apiKey);
+			}
+		}
+
+		public Model.Domain.Result Load(int aCount, int aPage, string aSortBy, string aSort)
+		{
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
+			var objects = FilterAndLoadObjects<Model.Domain.ApiKey>(Helper.ApiKeys.All, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}

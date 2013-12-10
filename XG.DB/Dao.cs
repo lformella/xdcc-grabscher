@@ -166,6 +166,28 @@ namespace XG.DB
 			return searches;
 		}
 
+		public ApiKeys ApiKeys()
+		{
+			var apiKeys = new ApiKeys();
+
+			try
+			{
+				var list = _session.CreateQuery("FROM ApiKey").List<ApiKey>();
+				foreach (var apiKey in list)
+				{
+					apiKeys.Add(apiKey);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("ApiKeys() cant load ", ex);
+			}
+
+			apiKeys.OnAdded += ObjectAdded;
+			apiKeys.OnRemoved += ObjectRemoved;
+			return apiKeys;
+		}
+
 		void ObjectAdded(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
 			_session.Save(eventArgs.Value2);

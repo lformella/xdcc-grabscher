@@ -27,6 +27,7 @@ define([
 	'./base',
 	'./bot',
 	'./channel',
+	'./client',
 	'./file',
 	'./notification',
 	'./packet',

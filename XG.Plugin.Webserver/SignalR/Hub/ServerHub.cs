@@ -61,6 +61,24 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		#endregion
 
+		public void Enable(Guid aGuid)
+		{
+			AObject tObj = Helper.Servers.WithGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = true;
+			}
+		}
+
+		public void Disable(Guid aGuid)
+		{
+			AObject tObj = Helper.Servers.WithGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = false;
+			}
+		}
+
 		public void Add(string aName)
 		{
 			string serverString = aName;

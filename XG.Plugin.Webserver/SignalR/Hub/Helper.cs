@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
-	public static class Helper
+	internal static class Helper
 	{
 		public static readonly Guid _searchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
 		public static readonly Guid _searchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
@@ -42,6 +42,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public static Searches Searches { get; set; }
 		public static Notifications Notifications { get; set; }
 		public static RrdDb RrdDb { get; set; }
+		public static ApiKeys ApiKeys { get; set; }
 
 		public static IEnumerable<SignalR.Hub.Model.Domain.AObject> XgObjectsToHubObjects(IEnumerable<AObject> aObjects)
 		{
@@ -59,7 +60,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return list;
 		}
 
-		public static SignalR.Hub.Model.Domain.AObject XgObjectToHubObject(XG.Model.Domain.AObject aObject)
+		public static SignalR.Hub.Model.Domain.AObject XgObjectToHubObject(AObject aObject)
 		{
 			SignalR.Hub.Model.Domain.AObject myObj = null;
 
@@ -67,19 +68,19 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			{
 				myObj = new SignalR.Hub.Model.Domain.Server { Object = aObject as Server };
 			}
-			if (aObject is Channel)
+			else if (aObject is Channel)
 			{
 				myObj = new SignalR.Hub.Model.Domain.Channel { Object = aObject as Channel };
 			}
-			if (aObject is Bot)
+			else if (aObject is Bot)
 			{
 				myObj = new SignalR.Hub.Model.Domain.Bot { Object = aObject as Bot };
 			}
-			if (aObject is XG.Model.Domain.Packet)
+			else if (aObject is Packet)
 			{
-				myObj = new SignalR.Hub.Model.Domain.Packet { Object = aObject as XG.Model.Domain.Packet };
+				myObj = new SignalR.Hub.Model.Domain.Packet { Object = aObject as Packet };
 			}
-			if (aObject is Search)
+			else if (aObject is Search)
 			{
 				var results = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where IsVisible(packet, aObject as Search) select packet;
 				myObj = new SignalR.Hub.Model.Domain.Search
@@ -89,19 +90,23 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 					ResultsOffline = (from obj in results where  !obj.Parent.Connected select obj).Count()
 				};
 			}
-			if (aObject is Notification)
+			else if (aObject is Notification)
 			{
 				myObj = new SignalR.Hub.Model.Domain.Notification { Object = aObject as Notification };
 			}
-			if (aObject is File)
+			else if (aObject is File)
 			{
 				myObj = new SignalR.Hub.Model.Domain.File { Object = aObject as File };
+			}
+			else if (aObject is ApiKey)
+			{
+				myObj = new SignalR.Hub.Model.Domain.ApiKey { Object = aObject as ApiKey };
 			}
 
 			return myObj;
 		}
 
-		static bool IsVisible(XG.Model.Domain.Packet aPacket, Search aSearch)
+		static bool IsVisible(Packet aPacket, Search aSearch)
 		{
 			if (aSearch.Guid == _searchDownloads)
 			{

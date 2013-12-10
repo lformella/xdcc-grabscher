@@ -1,5 +1,5 @@
 // 
-//  HubAuthorizeAttribute.cs
+//  Search.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,26 +24,28 @@
 //  
 
 using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
+using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Search : AObject
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		[JsonIgnore]
+		public new XG.Model.Domain.Search Object
 		{
-			return true;
+			get
+			{
+				return (XG.Model.Domain.Search)base.Object;
+			}
+			set
+			{
+				base.Object = value;
+			}
 		}
 
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
-		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
-		}
+		public Int64 ResultsOnline { get; set; }
+
+		public Int64 ResultsOffline { get; set; }
 	}
 }

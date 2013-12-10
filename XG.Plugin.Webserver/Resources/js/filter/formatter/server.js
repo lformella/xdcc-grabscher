@@ -34,6 +34,7 @@ define(['./module'], function (ng) {
 			{
 				return "";
 			}
+
 			var icon = "globe";
 			var iconClass = "Aluminium2Middle";
 			var overlay = "";

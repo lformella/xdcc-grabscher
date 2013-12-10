@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="XG.Model" namespace="XG.Model.Domain">
 
-	<class name="Search">
+	<class name="ApiKey">
 		<id name="Guid">
 			<generator class="assigned"/>
 		</id>
 		<property name="Name" />
+		<property name="Enabled" />
+		<property name="ErrorCount" />
+		<property name="SuccessCount" />
 	</class>
 
 </hibernate-mapping>
