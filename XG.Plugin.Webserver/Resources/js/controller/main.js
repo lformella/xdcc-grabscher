@@ -97,6 +97,15 @@ define(['./module'], function (ng) {
 				humanDates: ipCookie('xg.humanDates')
 			};
 
+			if ($rootScope.settings.showOfflineBots == undefined)
+			{
+				$rootScope.settings.showOfflineBots = false;
+			}
+			if ($rootScope.settings.humanDates == undefined)
+			{
+				$rootScope.settings.humanDates = false;
+			}
+
 			$scope.flipSetting = function (setting)
 			{
 				var newValue = !$rootScope.settings[setting];
