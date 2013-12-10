@@ -43,6 +43,7 @@ require.config({
 		'moment': '../../../Scripts/moment-with-langs',
 		'ngSanitize': '../../../Scripts/angular-sanitize',
 		'ngTable': './libs/ng-table',
+		'sha256': './libs/sha256',
 		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
 		'signalr.hubs': '../../../signalr/hubs?noext=',
 		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0'

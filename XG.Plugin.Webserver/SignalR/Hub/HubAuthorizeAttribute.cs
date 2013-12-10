@@ -26,7 +26,6 @@
 using System;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
@@ -39,11 +38,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
 		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
+			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Helper.PasswortHash;
 		}
 	}
 }

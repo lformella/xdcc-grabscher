@@ -35,11 +35,14 @@ namespace XG.Plugin.Webserver.Nancy
 		{
 			Get["/"] = _ => new RedirectResponse("/Resources/index.html");
 
-			string languageSetter = "define(['./module', 'moment'], function (i18n, moment) {\n\t'use strict';\n\n\tmoment.lang('##LANGUAGE##');\n\ti18n.config(['$translateProvider',\n\t\tfunction ($translateProvider) {\n\t\t\t$translateProvider.preferredLanguage('##LANGUAGE##');\n\t\t}\n\t]);\n});";
+			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); });";
 
-			Get["/Resources/js/i18n/init.js"] = _ => {
+			Get["/Resources/js/config/config.js"] = _ => {
 				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
-				return new TextResponse(languageSetter.Replace("##LANGUAGE##", language), "application/x-javascript");
+				string ret = config;
+				ret = ret.Replace("##LANGUAGE##", language);
+				ret = ret.Replace("##SALT##", Helper.Salt);
+				return new TextResponse(ret, "application/x-javascript");
 			};
 		}
 	}

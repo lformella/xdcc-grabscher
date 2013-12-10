@@ -25,11 +25,7 @@
 
 using System;
 using Nancy;
-using Nancy.Owin;
-using System.Collections.Generic;
 using System.IO;
-using XG.Config.Properties;
-using Nancy.Responses;
 
 namespace XG.Plugin.Webserver.Nancy
 {
@@ -40,7 +36,7 @@ namespace XG.Plugin.Webserver.Nancy
 			Post["/login"] = _ =>
 			{
 				var password = new StreamReader(Request.Body).ReadToEnd();
-				return password == Settings.Default.Password ? HttpStatusCode.OK : HttpStatusCode.Forbidden;
+				return password == Helper.PasswortHash ? HttpStatusCode.OK : HttpStatusCode.Forbidden;
 			};
 		}
 	}

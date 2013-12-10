@@ -115,9 +115,9 @@
     <Compile Include="Nancy\Api\XdccLink.cs" />
     <Compile Include="Nancy\Api\ApiModule.cs" />
     <Compile Include="Nancy\Helper.cs" />
+    <Compile Include="ASaltedPassword.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\js\config\config.js" />
     <EmbeddedResource Include="Resources\js\config\index.js" />
     <EmbeddedResource Include="Resources\js\config\module.js" />
     <EmbeddedResource Include="Resources\js\controller\file.js" />

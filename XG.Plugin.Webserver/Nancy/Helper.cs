@@ -23,17 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System.Linq;
-using SharpRobin.Core;
 using XG.Model.Domain;
-using XG.Model;
-using System;
-using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.Nancy
 {
 	internal static class Helper
 	{
 		public static ApiKeys ApiKeys { get; set; }
+		public static string Salt { get; set; }
+		public static string PasswortHash { get; set; }
 	}
 }

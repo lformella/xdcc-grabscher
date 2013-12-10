@@ -24,8 +24,18 @@
 //
 
 define([
+	'./module',
+	'moment',
 	'./de',
 	'./en',
-	'./init',
 	'ngTranslate'
-], function () {});
+], function (i18n, moment) {
+	'use strict';
+
+	i18n.config(['$translateProvider', 'LANGUAGE',
+		function ($translateProvider, LANGUAGE) {
+			moment.lang(LANGUAGE);
+			$translateProvider.preferredLanguage(LANGUAGE);
+		}
+	]);
+});

@@ -27,8 +27,8 @@ using System;
 using SharpRobin.Core;
 using XG.Config.Properties;
 using Microsoft.Owin.Hosting;
-using XG.Plugin.Webserver.SignalR;
-using XG.Plugin.Webserver.SignalR.Hub;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace XG.Plugin.Webserver
 {
@@ -37,24 +37,38 @@ namespace XG.Plugin.Webserver
 		#region VARIABLES
 
 		IDisposable _server;
-		EventForwarder _eventForwarder;
+		SignalR.EventForwarder _eventForwarder;
 
 		public RrdDb RrdDB { get; set; }
 
+		SHA256Managed _sha256 = new SHA256Managed();
+
 		#endregion
+
+		string Hash(string aStr = null)
+		{
+			byte[] bytes = aStr == null ? BitConverter.GetBytes(new Random().Next()) : Encoding.UTF8.GetBytes(aStr);
+			return BitConverter.ToString(_sha256.ComputeHash(bytes)).Replace("-", "").ToLowerInvariant();
+		}
 
 		#region AWorker
 
 		protected override void StartRun()
 		{
+			string salt = Hash();
+			string passwortHash = Hash(salt + Settings.Default.Password + salt);
+
 			SignalR.Hub.Helper.Servers = Servers;
 			SignalR.Hub.Helper.Files = Files;
 			SignalR.Hub.Helper.Searches = Searches;
 			SignalR.Hub.Helper.Notifications = Notifications;
 			SignalR.Hub.Helper.RrdDb = RrdDB;
 			SignalR.Hub.Helper.ApiKeys = ApiKeys;
+			SignalR.Hub.Helper.PasswortHash = passwortHash;
 
 			Nancy.Helper.ApiKeys = ApiKeys;
+			Nancy.Helper.Salt = salt;
+			Nancy.Helper.PasswortHash = passwortHash;
 
 			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{
@@ -62,7 +76,7 @@ namespace XG.Plugin.Webserver
 			};
 			_server = WebApp.Start<Startup>(options);
 
-			_eventForwarder = new EventForwarder();
+			_eventForwarder = new SignalR.EventForwarder();
 			_eventForwarder.Servers = Servers;
 			_eventForwarder.Files = Files;
 			_eventForwarder.Searches = Searches;

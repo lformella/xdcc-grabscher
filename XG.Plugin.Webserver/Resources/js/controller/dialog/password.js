@@ -23,11 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module'], function (ng) {
+define(['./module', 'sha256'], function (ng) {
 	'use strict';
 
-	ng.controller('PasswordDialogCtrl', ['$scope', '$modalInstance', '$http',
-		function ($scope, $modalInstance, $http)
+	ng.controller('PasswordDialogCtrl', ['$scope', '$modalInstance', '$http', 'SALT',
+		function ($scope, $modalInstance, $http, SALT)
 		{
 			$scope.password = "";
 			$scope.passwordWrong = false;
@@ -44,11 +44,12 @@ define(['./module'], function (ng) {
 			$scope.checkPassword = function ()
 			{
 				$scope.passwordLoading = true;
-				$http.post("/login", $scope.password).success(function()
+				$scope.encryptedPassword = encodeURIComponent(CryptoJS.SHA256(SALT + $scope.password + SALT));
+				$http.post("/login", $scope.encryptedPassword).success(function()
 				{
 					$scope.passwordWrong = false;
 					$scope.passwordLoading = false;
-					$modalInstance.close($scope.password);
+					$modalInstance.close($scope.encryptedPassword);
 				}).error(function()
 				{
 					$scope.passwordWrong = true;
