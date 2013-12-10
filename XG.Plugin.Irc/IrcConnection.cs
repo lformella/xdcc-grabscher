@@ -737,10 +737,14 @@ namespace XG.Plugin.Irc
 			catch(CouldNotConnectException ex)
 			{
 				_log.Fatal("StartRun() connection failed " + ex.Message);
-				FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
-				Server.Connected = false;
-				Server.Commit();
-				OnDisconnected(this, new EventArgs<Server>(Server));
+				// can be null if we stopped a connection which is not connected and fails later
+				if (Server != null)
+				{
+					FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
+					Server.Connected = false;
+					Server.Commit();
+					OnDisconnected(this, new EventArgs<Server>(Server));
+				}
 			}
 		}
 
