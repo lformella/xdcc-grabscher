@@ -47,12 +47,14 @@ namespace XG.Plugin.Webserver
 
 		protected override void StartRun()
 		{
-			Helper.Servers = Servers;
-			Helper.Files = Files;
-			Helper.Searches = Searches;
-			Helper.Notifications = Notifications;
-			Helper.RrdDb = RrdDB;
-			Helper.ApiKeys = ApiKeys;
+			SignalR.Hub.Helper.Servers = Servers;
+			SignalR.Hub.Helper.Files = Files;
+			SignalR.Hub.Helper.Searches = Searches;
+			SignalR.Hub.Helper.Notifications = Notifications;
+			SignalR.Hub.Helper.RrdDb = RrdDB;
+			SignalR.Hub.Helper.ApiKeys = ApiKeys;
+
+			Nancy.Helper.ApiKeys = ApiKeys;
 
 			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{

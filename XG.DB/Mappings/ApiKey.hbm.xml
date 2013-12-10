@@ -6,6 +6,9 @@
 			<generator class="assigned"/>
 		</id>
 		<property name="Name" />
+		<property name="Enabled" />
+		<property name="ErrorCount" />
+		<property name="SuccessCount" />
 	</class>
 
 </hibernate-mapping>

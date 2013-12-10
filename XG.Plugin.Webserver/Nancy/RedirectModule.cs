@@ -1,5 +1,5 @@
 // 
-//  HubAuthorizeAttribute.cs
+//  RedirectModule.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,27 +23,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
+using Nancy;
+using Nancy.Responses;
+using System.Linq;
 
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Plugin.Webserver.Nancy
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	public class RedirectModule : NancyModule
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		public RedirectModule()
 		{
-			return true;
-		}
+			Get["/"] = _ => new RedirectResponse("/Resources/index.html");
 
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
-		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
+			string languageSetter = "define(['./module', 'moment'], function (i18n, moment) {\n\t'use strict';\n\n\tmoment.lang('##LANGUAGE##');\n\ti18n.config(['$translateProvider',\n\t\tfunction ($translateProvider) {\n\t\t\t$translateProvider.preferredLanguage('##LANGUAGE##');\n\t\t}\n\t]);\n});";
+
+			Get["/Resources/js/i18n/init.js"] = _ => {
+				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
+				return new TextResponse(languageSetter.Replace("##LANGUAGE##", language), "application/x-javascript");
+			};
 		}
 	}
 }

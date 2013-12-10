@@ -27,5 +27,20 @@ namespace XG.Model.Domain
 {
 	public class ApiKey : AObject
 	{
+		int _errorCount;
+
+		public virtual int ErrorCount
+		{
+			get { return _errorCount; }
+			set { SetProperty(ref _errorCount, value, "ErrorCount"); }
+		}
+
+		int _successCount;
+
+		public virtual int SuccessCount
+		{
+			get { return _successCount; }
+			set { SetProperty(ref _successCount, value, "SuccessCount"); }
+		}
 	}
 }

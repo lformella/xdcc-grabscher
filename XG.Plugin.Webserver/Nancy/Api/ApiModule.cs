@@ -1,5 +1,5 @@
 // 
-//  HubAuthorizeAttribute.cs
+//  ApiModule.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,26 +24,50 @@
 //  
 
 using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
+using Nancy;
+using XG.Model.Domain;
 
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Plugin.Webserver.Nancy.Api
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	public abstract class ApiModule : NancyModule
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		protected bool IsApiKeyValid(string aKey)
 		{
-			return true;
+			var apiKey = GetApiKey(aKey);
+			if (apiKey != null)
+			{
+				return apiKey.Enabled;
+			}
+			return false;
 		}
 
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
+		protected void IncreaseErrorCount(string aKey)
 		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
+			var apiKey = GetApiKey(aKey);
+			if (apiKey != null)
+			{
+				apiKey.ErrorCount++;
+			}
+		}
+
+		protected void IncreaseSuccessCount(string aKey)
+		{
+			var apiKey = GetApiKey(aKey);
+			if (apiKey != null)
+			{
+				apiKey.SuccessCount++;
+			}
+		}
+
+		protected ApiKey GetApiKey(string aKey)
+		{
+			try
+			{
+				var guid = Guid.Parse(aKey);
+				return Helper.ApiKeys.WithGuid(guid);
+			}
+			catch (Exception) {}
+			return null;
 		}
 	}
 }

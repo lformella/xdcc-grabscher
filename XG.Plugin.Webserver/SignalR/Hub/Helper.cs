@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
-	public static class Helper
+	internal static class Helper
 	{
 		public static readonly Guid _searchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
 		public static readonly Guid _searchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");

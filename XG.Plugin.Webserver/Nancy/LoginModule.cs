@@ -1,5 +1,5 @@
 // 
-//  HubAuthorizeAttribute.cs
+//  LoginModule.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,26 +24,24 @@
 //  
 
 using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
+using Nancy;
+using Nancy.Owin;
+using System.Collections.Generic;
+using System.IO;
 using XG.Config.Properties;
+using Nancy.Responses;
 
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Plugin.Webserver.Nancy
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	public class LoginModule : NancyModule
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
+		public LoginModule()
 		{
-			return true;
-		}
-
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
-		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
+			Post["/login"] = _ =>
+			{
+				var password = new StreamReader(Request.Body).ReadToEnd();
+				return password == Settings.Default.Password ? HttpStatusCode.OK : HttpStatusCode.Forbidden;
+			};
 		}
 	}
 }

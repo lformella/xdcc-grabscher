@@ -1,5 +1,5 @@
-// 
-//  HubAuthorizeAttribute.cs
+﻿// 
+//  Helper.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,27 +23,17 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System.Linq;
+using SharpRobin.Core;
+using XG.Model.Domain;
+using XG.Model;
 using System;
-using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR;
-using XG.Config.Properties;
+using System.Collections.Generic;
 
-namespace XG.Plugin.Webserver.SignalR.Hub
+namespace XG.Plugin.Webserver.Nancy
 {
-	public class HubAuthorizeAttribute : Attribute, IAuthorizeHubConnection, IAuthorizeHubMethodInvocation
+	internal static class Helper
 	{
-		public virtual bool AuthorizeHubMethodInvocation (IHubIncomingInvokerContext hubIncomingInvokerContext, bool appliesToMethod)
-		{
-			return true;
-		}
-
-		public virtual bool AuthorizeHubConnection (HubDescriptor hubDescriptor, IRequest request)
-		{
-#if DEBUG
-			return true;
-#else
-			return request.Cookies.ContainsKey("xg.password") && request.Cookies["xg.password"].Value == Settings.Default.Password;
-#endif
-		}
+		public static ApiKeys ApiKeys { get; set; }
 	}
 }
