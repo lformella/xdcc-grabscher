@@ -149,6 +149,13 @@
     <EmbeddedResource Include="Resources\js\factory\module.js" />
     <EmbeddedResource Include="Resources\js\factory\signalr.js" />
     <EmbeddedResource Include="Resources\js\factory\signalr-table.js" />
+    <EmbeddedResource Include="Resources\js\config\enum.js" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\api.js" />
+    <EmbeddedResource Include="Resources\js\controller\external.js" />
+    <EmbeddedResource Include="Resources\js\controller\snapshot.js" />
+    <EmbeddedResource Include="Resources\js\directive\flot.js" />
+    <EmbeddedResource Include="Resources\js\filter\formatter\client.js" />
+    <EmbeddedResource Include="Resources\images\chat.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
@@ -237,21 +244,6 @@
     <EmbeddedResource Include="Resources\js\filter\formatter\channel.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\notification.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\server.js" />
-    <EmbeddedResource Include="Resources\js\xg\config.js" />
-    <EmbeddedResource Include="Resources\js\xg\cookie.js" />
-    <EmbeddedResource Include="Resources\js\xg\dataview.js" />
-    <EmbeddedResource Include="Resources\js\xg\enum.js" />
-    <EmbeddedResource Include="Resources\js\xg\formatter.js" />
-    <EmbeddedResource Include="Resources\js\xg\graph.js" />
-    <EmbeddedResource Include="Resources\js\xg\grid.js" />
-    <EmbeddedResource Include="Resources\js\xg\gui.js" />
-    <EmbeddedResource Include="Resources\js\xg\helper.js" />
-    <EmbeddedResource Include="Resources\js\xg\init.js" />
-    <EmbeddedResource Include="Resources\js\xg\main.js" />
-    <EmbeddedResource Include="Resources\js\xg\password.js" />
-    <EmbeddedResource Include="Resources\js\xg\resize.js" />
-    <EmbeddedResource Include="Resources\js\xg\translate.js" />
-    <EmbeddedResource Include="Resources\js\xg\websocket.js" />
     <EmbeddedResource Include="Scripts\angular-animate.min.js.map" />
     <EmbeddedResource Include="Scripts\angular-cookies.min.js.map" />
     <EmbeddedResource Include="Scripts\angular-loader.min.js.map" />
@@ -579,5 +571,6 @@
     <Folder Include="Resources\js\factory\" />
     <Folder Include="Nancy\" />
     <Folder Include="Nancy\Api\" />
+    <Folder Include="Resources\images\" />
   </ItemGroup>
 </Project>
