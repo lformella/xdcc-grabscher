@@ -104,6 +104,7 @@
     <Compile Include="SignalR\Hub\Model\Domain\ExternalSearchEntry.cs" />
     <Compile Include="Api.cs" />
     <Compile Include="SignalR\Hub\ApiHub.cs" />
+    <Compile Include="SignalR\Hub\Model\Domain\ApiKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\config.js" />

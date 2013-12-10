@@ -46,6 +46,12 @@ namespace XG.Model.Domain
 			return base.Remove(aObject);
 		}
 
+		public new ApiKey Named(string aName)
+		{
+			AObject tObject = base.Named(aName);
+			return tObject != null ? (ApiKey) tObject : null;
+		}
+
 		public new ApiKey WithGuid(Guid aGuid)
 		{
 			AObject tObject = base.WithGuid(aGuid);
@@ -54,7 +60,7 @@ namespace XG.Model.Domain
 
 		public override bool DuplicateChildExists(AObject aObject)
 		{
-			return false;
+			return Named(aObject.Name) != null;
 		}
 	}
 }

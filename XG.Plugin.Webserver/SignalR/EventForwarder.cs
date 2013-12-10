@@ -121,6 +121,26 @@ namespace XG.Plugin.Webserver.SignalR
 			SendChanged(aEventArgs.Value1);
 		}
 
+		protected override void ApiKeyAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			SendAdded(aEventArgs.Value2);
+		}
+
+		protected override void ApiKeyRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			SendRemoved(aEventArgs.Value2);
+		}
+
+		protected override void ApiKeyChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
+		{
+			SendChanged(aEventArgs.Value1);
+		}
+
+		protected override void ApiKeyEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
+		{
+			SendChanged(aEventArgs.Value1);
+		}
+
 		protected override void NotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
 		{
 			SendAdded(aEventArgs.Value1);
@@ -243,6 +263,10 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				return NotificationHub.ConnectedClients;
 			}
+			else if (aObject is ApiKey)
+			{
+				return ApiHub.ConnectedClients;
+			}
 
 			return new HashSet<Client>();
 		}
@@ -272,6 +296,10 @@ namespace XG.Plugin.Webserver.SignalR
 			else if (aObject is Notification)
 			{
 				return typeof(NotificationHub).Name;
+			}
+			else if (aObject is ApiKey)
+			{
+				return typeof(ApiHub).Name;
 			}
 
 			return null;

@@ -102,6 +102,31 @@ namespace XG.Plugin
 			}
 		}
 
+		ApiKeys _apiKeys;
+
+		public ApiKeys ApiKeys
+		{
+			get { return _apiKeys; }
+			set
+			{
+				if (_apiKeys != null)
+				{
+					_apiKeys.OnAdded -= ApiKeyAdded;
+					_apiKeys.OnRemoved -= ApiKeyRemoved;
+					_apiKeys.OnChanged -= ApiKeyChanged;
+					_apiKeys.OnEnabledChanged -= ApiKeyEnabledChanged;
+				}
+				_apiKeys = value;
+				if (_apiKeys != null)
+				{
+					_apiKeys.OnAdded += ApiKeyAdded;
+					_apiKeys.OnRemoved += ApiKeyRemoved;
+					_apiKeys.OnChanged += ApiKeyChanged;
+					_apiKeys.OnEnabledChanged += ApiKeyEnabledChanged;
+				}
+			}
+		}
+
 		Notifications _notifications;
 
 		public Notifications Notifications
@@ -142,6 +167,14 @@ namespace XG.Plugin
 		protected virtual void SearchAdded(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
 
 		protected virtual void SearchRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
+
+		protected virtual void ApiKeyChanged(object aSender, EventArgs<AObject, string[]> aEventArgs) {}
+
+		protected virtual void ApiKeyAdded(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
+
+		protected virtual void ApiKeyRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs) {}
+
+		protected virtual void ApiKeyEnabledChanged(object aSender, EventArgs<AObject> aEventArgs) {}
 
 		protected virtual void SearchChanged(object aSender, EventArgs<AObject, string[]> aEventArgs) {}
 

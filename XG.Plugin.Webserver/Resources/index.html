@@ -224,32 +224,39 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
-						<h4 class="modal-title" translate>Change Servers and Channels</h4>
+						<h4 class="modal-title" translate>Api Keys</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">
 							<div class="tableDiv">
-								<table ng-table="tableParams" class="table">
+								<table ng-table="tableParamsApi" class="table">
 									<thead>
 										<tr>
 											<th width="38"></th>
-											<th class="sortable" ng-click="tableParams.sorting({'Name' : tableParams.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
-												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Name', 'desc')}"></span>
+											<th width="300" class="sortable" ng-click="tableParamsApi.sorting({'Guid' : tableParamsApi.isSortBy('Guid', 'asc') ? 'desc' : 'asc'})">
+												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Guid', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Guid', 'desc')}"></span>
+												<span translate>Api Key</span>
+											</th>
+											<th class="sortable" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Name', 'desc')}"></span>
 												<span translate>Name</span>
 											</th>
 											<th width="40"></th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr ng-repeat="server in $data">
+										<tr ng-repeat="client in $data">
 											<td class="withIcon">
-												<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="serverSignalr.flip(server);"></span>
+												<span class="clickAble" ng-bind-html='client|formatClientIcon' ng-click="signalr.flip(client)"></span>
 											</td>
-											<td class="rowWithText">
-												<span class="clickAble" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
+											<td>
+												<span ng-bind-html='client.Guid'></span>
+											</td>
+											<td>
+												<span ng-bind-html='client.Name'></span>
 											</td>
 											<td class="text-right">
-												<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)"></span>
+												<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="signalr.remove(client)"></span>
 											</td>
 										</tr>
 									</tbody>
@@ -257,12 +264,12 @@
 							</div>
 							<div class="form-horizontal">
 								<div class="form-group">
-									<label class="col-lg-2 control-label" for="server" translate>Server</label>
-									<div class="col-lg-10">
+									<label class="col-lg-2 control-label" for="client" translate>Client</label>
+									<div class="col-lg-9">
 										<div class="input-group">
-											<input class="form-control" type="text" name="server" ng-model="$parent.server" ng-keydown="serverKeydown($event);"/>
+											<input class="form-control" type="text" name="client" ng-model="$parent.client" ng-keydown="clientKeydown($event);"/>
 											<span class="input-group-btn">
-												<button class="btn" ng-click="addServer();" translate>Add</button>
+												<button class="btn" ng-click="addClient();" translate>Add</button>
 											</span>
 										</div>
 									</div>
@@ -358,6 +365,12 @@
 									<a ng-click="openXdccDialog()">
 										<span class="glyphicon glyphicon-cloud-download"></span>
 										<span translate>XDCC link input</span>
+									</a>
+								</li>
+								<li>
+									<a ng-click="openApiDialog()">
+										<span class="glyphicon glyphicon-fire"></span>
+										<span translate>Api Keys</span>
 									</a>
 								</li>
 								<li class="divider"></li>

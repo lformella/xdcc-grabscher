@@ -40,7 +40,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected override void AddClient(Client aClient)
 		{
-			aClient.MaxObjects = 20;
+			aClient.MaxObjects = 10;
 			ConnectedClients.Add(aClient);
 		}
 
@@ -60,17 +60,49 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		#endregion
 
+		public void Enable(Guid aGuid)
+		{
+			AObject tObj = Helper.ApiKeys.WithGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = true;
+			}
+		}
+
+		public void Disable(Guid aGuid)
+		{
+			AObject tObj = Helper.ApiKeys.WithGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = false;
+			}
+		}
+
 		public void Add(string aKey)
 		{
+			var obj = Helper.ApiKeys.Named(aKey);
+			if (obj == null)
+			{
+				obj = new ApiKey { Name = aKey };
+				Helper.ApiKeys.Add(obj);
+			}
 		}
 
-		public void Remove(string aKey)
+		public void Remove(Guid aGuid)
 		{
+			var apiKey = Helper.ApiKeys.WithGuid(aGuid);
+			if (apiKey != null)
+			{
+				Helper.ApiKeys.Remove(apiKey);
+			}
 		}
 
-		public IEnumerable<string> GetKeys()
+		public Model.Domain.Result Load(int aCount, int aPage, string aSortBy, string aSort)
 		{
-			return null;
+			int length;
+			var objects = FilterAndLoadObjects<Model.Domain.ApiKey>(Helper.ApiKeys.All, aCount, aPage, aSortBy, aSort, out length);
+			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
+			return new Model.Domain.Result { Total = length, Results = objects };
 		}
 	}
 }

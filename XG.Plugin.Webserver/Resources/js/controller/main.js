@@ -92,6 +92,27 @@ define(['./module'], function (ng) {
 				});
 			};
 
+			$scope.apiSignalr = new SignalrTableFactory();
+			$scope.apiSignalr.initialize('apiHub', $scope, 'api', undefined, 'tableParamsApi');
+			$scope.api = [];
+
+			$scope.openApiDialog = function ()
+			{
+				$modal.open({
+					keyboard: true,
+					backdrop: true,
+					templateUrl: 'apiDialog.html',
+					controller: 'ApiDialogCtrl',
+					resolve:
+					{
+						signalr: function ()
+						{
+							return $scope.apiSignalr;
+						}
+					}
+				});
+			};
+
 			$rootScope.settings = {
 				showOfflineBots: ipCookie('xg.showOfflineBots'),
 				humanDates: ipCookie('xg.humanDates')

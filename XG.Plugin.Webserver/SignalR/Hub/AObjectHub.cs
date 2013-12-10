@@ -63,24 +63,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 		}
 
-		public void Enable(Guid aGuid)
-		{
-			AObject tObj = Helper.Servers.WithGuid(aGuid);
-			if (tObj != null)
-			{
-				tObj.Enabled = true;
-			}
-		}
-
-		public void Disable(Guid aGuid)
-		{
-			AObject tObj = Helper.Servers.WithGuid(aGuid);
-			if (tObj != null)
-			{
-				tObj.Enabled = false;
-			}
-		}
-
 		protected IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
 		{
 			aPage--;

@@ -1,5 +1,5 @@
 //
-//  channel.js
+//  client.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -26,37 +26,27 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.filter('formatChannelIcon', ['$filter', function ($filter)
+	ng.filter('formatClientIcon', ['$filter', function ($filter)
 	{
-		return function (channel)
+		return function (client)
 		{
-			if (channel == undefined)
+			if (client == undefined)
 			{
 				return "";
 			}
 
-			var icon = "comment";
+			var icon = "fire";
 			var iconClass = "Aluminium2Middle";
 			var overlay = "";
 			var overlayClass = "";
 			var overlayStyle = "opacity: 0.6";
 
-			if (!channel.Enabled)
+			if (!client.Enabled)
 			{
 				iconClass = "Aluminium1Dark";
 			}
-			else if (channel.Connected)
-			{
-				overlay = "ok-circle";
-				overlayClass = "ChameleonMiddle";
-			}
-			else if (channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0")
-			{
-				overlay = "warning-sign";
-				overlayClass = "ScarletRedMiddle";
-			}
 
-			if (channel.Active)
+			if (client.Active)
 			{
 				overlay = "asterisk";
 				overlayClass = "ScarletRedMiddle animate-spin";
@@ -64,28 +54,6 @@ define(['./module'], function (ng) {
 			}
 
 			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle);
-		}
-	}]);
-
-	ng.filter('formatChannelName', ['$filter', '$translate', function ($filter, $translate)
-	{
-		return function (channel)
-		{
-			if (channel == undefined)
-			{
-				return "";
-			}
-
-			var str = channel.Name;
-			if (channel.ErrorCode != "" && channel.ErrorCode != "None" && channel.ErrorCode != "0")
-			{
-				str += " - <small>" + $translate("Error") + ": " + channel.ErrorCode + "</small>";
-			}
-			if (channel.Topic != null)
-			{
-				str += "<br /><small title='" + channel.Topic + "'>" + channel.Topic + "</small>";
-			}
-			return str;
 		}
 	}]);
 });

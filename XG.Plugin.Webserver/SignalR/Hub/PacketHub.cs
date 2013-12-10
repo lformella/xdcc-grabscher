@@ -62,6 +62,24 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		#endregion
 
+		public void Enable(Guid aGuid)
+		{
+			AObject tObj = Helper.Servers.WithGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = true;
+			}
+		}
+
+		public void Disable(Guid aGuid)
+		{
+			AObject tObj = Helper.Servers.WithGuid(aGuid);
+			if (tObj != null)
+			{
+				tObj.Enabled = false;
+			}
+		}
+
 		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);

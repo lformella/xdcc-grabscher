@@ -1,5 +1,5 @@
 // 
-//  Searches.cs
+//  Search.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,43 +24,28 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json;
 
-namespace XG.Model.Domain
+namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
-	public class Searches : AObjects
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Search : AObject
 	{
-		public new IEnumerable<Search> All
+		[JsonIgnore]
+		public new XG.Model.Domain.Search Object
 		{
-			get { return base.All.Cast<Search>(); }
+			get
+			{
+				return (XG.Model.Domain.Search)base.Object;
+			}
+			set
+			{
+				base.Object = value;
+			}
 		}
 
-		public bool Add(Search aObject)
-		{
-			return base.Add(aObject);
-		}
+		public Int64 ResultsOnline { get; set; }
 
-		public bool Remove(Search aObject)
-		{
-			return base.Remove(aObject);
-		}
-
-		public new Search Named(string aName)
-		{
-			AObject tObject = base.Named(aName);
-			return tObject != null ? (Search) tObject : null;
-		}
-
-		public new Search WithGuid(Guid aGuid)
-		{
-			AObject tObject = base.WithGuid(aGuid);
-			return tObject != null ? (Search) tObject : null;
-		}
-
-		public override bool DuplicateChildExists(AObject aObject)
-		{
-			return Named(aObject.Name) != null;
-		}
+		public Int64 ResultsOffline { get; set; }
 	}
 }
