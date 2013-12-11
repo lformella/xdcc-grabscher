@@ -46,6 +46,121 @@
 
 	<body>
 
+		<script type="text/ng-template" id="configDialog.html">
+			<div class="wide modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
+						<h4 class="modal-title" translate>Config</h4>
+					</div>
+					<div class="modal-body">
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-4 control-label" translate>Auto Register Nickserv</label>
+								<div class="col-lg-2 checkbox">
+									<input type="checkbox" ng-model="$parent.config.AutoRegisterNickserv" ng-show="$parent.configReady">
+								</div>
+								<label class="col-lg-4 control-label" translate>Enable Multi Downloads</label>
+								<div class="col-lg-2 checkbox">
+									<input type="checkbox" ng-model="$parent.config.EnableMultiDownloads" ng-show="$parent.configReady">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" translate>Temp Path</label>
+								<div class="col-lg-9" ng-show="$parent.configReady">
+									<input class="form-control" type="text" ng-model="$parent.config.TempPath" placeholder="{{'Path in filesystem to store temporary files'|translate}}"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" translate>Ready Path</label>
+								<div class="col-lg-9" ng-show="$parent.configReady">
+									<input class="form-control" type="text" ng-model="$parent.config.ReadyPath" placeholder="{{'Path in filesystem to store downloaded files'|translate}}"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" translate>IRC</label>
+								<div class="col-lg-9" ng-show="$parent.configReady">
+									<div class="input-group">
+										<input class="form-control" type="text" ng-model="$parent.config.IrcNick" placeholder="{{'User'|translate}}"/>
+										<span class="input-group-addon">/</span>
+										<input class="form-control" type="password" ng-model="$parent.config.IrcPassword" placeholder="{{'Passwort'|translate}}"/>
+										<span class="input-group-addon">/</span>
+										<input class="form-control" type="text" ng-model="$parent.config.IrcRegisterEmail" placeholder="{{'Email'|translate}}"/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" translate>Webserver</label>
+								<div class="col-lg-9" ng-show="$parent.configReady">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" ng-model="$parent.config.UseWebserver">
+										</span>
+										<input class="form-control" type="password" ng-model="$parent.config.Password" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Password'|translate}}"/>
+										<span class="input-group-addon">/</span>
+										<input class="form-control port" type="text" ng-model="$parent.config.WebserverPort" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Port'|translate}}"/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" translate>Elasticsearch</label>
+								<div class="col-lg-9" ng-show="$parent.configReady">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" ng-model="$parent.config.UseElasticSearch">
+										</span>
+										<input class="form-control" type="text" ng-model="$parent.config.ElasticSearchHost" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Host'|translate}}"/>
+										<span class="input-group-addon">:</span>
+										<input class="form-control port" type="text" ng-model="$parent.config.ElasticSearchPort" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Port'|translate}}"/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-horizontal">
+							<div class="form-group">
+								<label class="col-lg-3 control-label" translate>Jabber</label>
+								<div class="col-lg-9" ng-show="$parent.configReady">
+									<div class="input-group">
+										<span class="input-group-addon">
+											<input type="checkbox" ng-model="$parent.config.UseJabberClient">
+										</span>
+										<input class="form-control" type="text" ng-model="$parent.config.JabberServer" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Server'|translate}}"/>
+										<span class="input-group-addon">/</span>
+										<input class="form-control" type="text" ng-model="$parent.config.JabberUser" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'User'|translate}}"/>
+										<span class="input-group-addon">/</span>
+										<input class="form-control" type="password" ng-model="$parent.config.JabberPassword" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Password'|translate}}"/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<a class="btn btn-primary" ng-click="save()" ng-disabled="!$parent.configReady">
+							<span class="glyphicon glyphicon-floppy-disk"></span> <span translate>Save</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</script>
+
 		<script type="text/ng-template" id="passwordDialog.html">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -107,7 +222,7 @@
 		</script>
 
 		<script type="text/ng-template" id="serverChannelDialog.html">
-			<div class="serverChannelsDialog modal-dialog">
+			<div class="serverChannelsDialog extra-wide modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
@@ -371,6 +486,12 @@
 									<a ng-click="openApiDialog()">
 										<span class="glyphicon glyphicon-fire"></span>
 										<span translate>Api Keys</span>
+									</a>
+								</li>
+								<li>
+									<a ng-click="openConfigDialog()">
+										<span class="glyphicon glyphicon-wrench"></span>
+										<span translate>Config</span>
 									</a>
 								</li>
 								<li class="divider"></li>

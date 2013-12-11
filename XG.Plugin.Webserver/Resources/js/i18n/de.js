@@ -49,6 +49,15 @@ define(['./module'], function (i18n) {
 				"Please enter a valid XDCC link.": "Bitte gib einen gültigen XDCC Link ein.",
 				"Api Keys": "Api Schlüssel",
 				"Api Key": "Api Schlüssel",
+				"Host": "Server",
+				"Temp Path": "Temporärer Pfad",
+				"Ready Path": "Fertig Pfad",
+				"Auto Register Nickserv": "Automatisch Nick registrieren",
+				"Enable Multi Downloads": "Multi Downloads erlauben",
+				"Config": "Konfiguration",
+				"Save": "Speichern",
+				"Path in filesystem to store temporary files": "Pfad auf der Festplatte für temporäre Dateien",
+				"Path in filesystem to store downloaded files": "Pfad auf der Festplatte für fertig geladene Dateien",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */

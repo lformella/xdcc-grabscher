@@ -116,6 +116,8 @@
     <Compile Include="Nancy\Api\ApiModule.cs" />
     <Compile Include="Nancy\Helper.cs" />
     <Compile Include="ASaltedPassword.cs" />
+    <Compile Include="SignalR\Hub\ConfiglHub.cs" />
+    <Compile Include="SignalR\Hub\Model\Domain\Config.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />

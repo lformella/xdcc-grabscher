@@ -26,8 +26,8 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrTableFactory',
-		function ($rootScope, $scope, $modal, ipCookie, SignalrTableFactory)
+	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory',
+		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory)
 		{
 			$scope.passwordOk = false;
 			$modal.open({
@@ -108,6 +108,27 @@ define(['./module'], function (ng) {
 						signalr: function ()
 						{
 							return $scope.apiSignalr;
+						}
+					}
+				});
+			};
+
+			$scope.configSignalr = new SignalrFactory();
+			$scope.configSignalr.initialize('configHub', $scope, 'config');
+			$scope.config = [];
+
+			$scope.openConfigDialog = function ()
+			{
+				$modal.open({
+					keyboard: true,
+					backdrop: true,
+					templateUrl: 'configDialog.html',
+					controller: 'ConfigDialogCtrl',
+					resolve:
+					{
+						signalr: function ()
+						{
+							return $scope.configSignalr;
 						}
 					}
 				});

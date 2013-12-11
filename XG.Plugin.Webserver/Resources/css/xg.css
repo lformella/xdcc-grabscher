@@ -92,6 +92,11 @@ body
 	margin-top: 0;
 }
 
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control
+{
+	color: #888888;
+}
+
 /** Table **/
 
 .table
@@ -218,11 +223,6 @@ td.rowWithText small
 
 /** Dialogs **/
 
-.serverChannelsDialog.modal-dialog
-{
-	width: 940px;
-}
-
 .serverChannelsDialog .tableDiv
 {
 	height: 420px;
@@ -235,6 +235,21 @@ td.rowWithText small
 .serverChannelsDialog .pagination > li > a
 {
 	padding: 0 8px;
+}
+
+.wide.modal-dialog
+{
+	width: 820px;
+}
+
+.extra-wide.modal-dialog
+{
+	width: 940px;
+}
+
+.input-group .form-control.port
+{
+	width: 75px;
 }
 
 /** Menu **/

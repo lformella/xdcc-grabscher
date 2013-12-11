@@ -1,5 +1,5 @@
 // 
-//  File.cs
+//  Config.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,48 +23,33 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using Newtonsoft.Json;
 
 namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
 	[JsonObject(MemberSerialization.OptOut)]
-	public class File : AObject
+	public class Config
 	{
-		[JsonIgnore]
-		public new XG.Model.Domain.File Object
-		{
-			get
-			{
-				return (XG.Model.Domain.File)base.Object;
-			}
-			set
-			{
-				base.Object = value;
-			}
-		}
-
 		#region VARIABLES
 
-		public Int64 Size
-		{
-			get { return Object.Size; }
-		}
-
-		public Int64 CurrentSize
-		{
-			get { return Object.CurrentSize; }
-		}
-
-		public Int64 TimeMissing
-		{
-			get { return Object.TimeMissing; }
-		}
-
-		public Int64 Speed
-		{
-			get { return Object.Speed; }
-		}
+		public bool AutoRegisterNickserv { get; set; }
+		public string ElasticSearchHost { get; set; }
+		public int ElasticSearchPort { get; set; }
+		public bool EnableMultiDownloads { get; set; }
+		public string FileHandlers { get; set; }
+		public string IrcNick { get; set; }
+		public string IrcPasswort { get; set; }
+		public string IrcRegisterEmail { get; set; }
+		public string JabberPassword { get; set; }
+		public string JabberServer { get; set; }
+		public string JabberUser { get; set; }
+		public string Password { get; set; }
+		public string ReadyPath { get; set; }
+		public string TempPath { get; set; }
+		public bool UseElasticSearch { get; set; }
+		public bool UseJabberClient { get; set; }
+		public bool UseWebserver { get; set; }
+		public int WebserverPort { get; set; }
 
 		#endregion
 	}
