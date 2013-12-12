@@ -56,6 +56,7 @@ namespace XG.Plugin.Webserver
 			var hubConfiguration = new HubConfiguration();
 #if DEBUG
 			hubConfiguration.EnableDetailedErrors = true;
+			StaticConfiguration.EnableRequestTracing = true;
 			StaticConfiguration.DisableErrorTraces = false;
 			StaticConfiguration.Caching.EnableRuntimeViewDiscovery = true;
 			StaticConfiguration.Caching.EnableRuntimeViewUpdates = true;

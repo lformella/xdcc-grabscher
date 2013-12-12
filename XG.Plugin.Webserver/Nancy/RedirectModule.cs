@@ -26,6 +26,7 @@
 using Nancy;
 using Nancy.Responses;
 using System.Linq;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver.Nancy
 {
@@ -35,13 +36,14 @@ namespace XG.Plugin.Webserver.Nancy
 		{
 			Get["/"] = _ => new RedirectResponse("/Resources/index.html");
 
-			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); });";
+			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); });";
 
 			Get["/Resources/js/config/config.js"] = _ => {
 				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
 				string ret = config;
 				ret = ret.Replace("##LANGUAGE##", language);
 				ret = ret.Replace("##SALT##", Helper.Salt);
+				ret = ret.Replace("##VERSION##", Settings.Default.XgVersion);
 				return new TextResponse(ret, "application/x-javascript");
 			};
 		}
