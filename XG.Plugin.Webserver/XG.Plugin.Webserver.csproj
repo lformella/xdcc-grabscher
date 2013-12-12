@@ -116,8 +116,8 @@
     <Compile Include="Nancy\Api\ApiModule.cs" />
     <Compile Include="Nancy\Helper.cs" />
     <Compile Include="ASaltedPassword.cs" />
-    <Compile Include="SignalR\Hub\ConfiglHub.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Config.cs" />
+    <Compile Include="SignalR\Hub\ConfigHub.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />
@@ -255,7 +255,7 @@
     <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
     <EmbeddedResource Include="Scripts\angular.min.js.map" />
     <None Include="Scripts\errors.json" />
-    <None Include="Resources\css\animate.css" />
+    <EmbeddedResource Include="Resources\css\animate.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">
@@ -569,10 +569,8 @@
     <EmbeddedResource Include="Resources\js\directive\knob.js" />
     <EmbeddedResource Include="Resources\js\directive\module.js" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resources\js\factory\" />
-    <Folder Include="Nancy\" />
-    <Folder Include="Nancy\Api\" />
-    <Folder Include="Resources\images\" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\config.js" />
   </ItemGroup>
 </Project>

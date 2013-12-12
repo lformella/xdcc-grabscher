@@ -97,6 +97,11 @@ body
 	color: #888888;
 }
 
+.modal-body
+{
+	padding-bottom: 5px;
+}
+
 /** Table **/
 
 .table
@@ -250,6 +255,36 @@ td.rowWithText small
 .input-group .form-control.port
 {
 	width: 75px;
+}
+
+input.command
+{
+	width: 70px;
+}
+
+input.arguments
+{
+	width: 425px;
+}
+
+input.regex
+{
+	width: 500px;
+}
+
+.list-group
+{
+	margin-bottom: 0;
+}
+
+.list-group-item
+{
+	padding: 5px;
+}
+
+.nav-tabs
+{
+	margin-bottom: 10px;
 }
 
 /** Menu **/

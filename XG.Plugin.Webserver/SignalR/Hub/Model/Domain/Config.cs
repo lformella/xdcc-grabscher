@@ -24,6 +24,8 @@
 //  
 
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
@@ -36,7 +38,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 		public string ElasticSearchHost { get; set; }
 		public int ElasticSearchPort { get; set; }
 		public bool EnableMultiDownloads { get; set; }
-		public string FileHandlers { get; set; }
+		public IEnumerable<FileHandler> FileHandlers { get; set; }
 		public string IrcNick { get; set; }
 		public string IrcPasswort { get; set; }
 		public string IrcRegisterEmail { get; set; }

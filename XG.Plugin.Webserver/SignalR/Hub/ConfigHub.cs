@@ -36,7 +36,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			config.ElasticSearchHost = Settings.Default.ElasticSearchHost;
 			config.ElasticSearchPort = Settings.Default.ElasticSearchPort;
 			config.EnableMultiDownloads = Settings.Default.EnableMultiDownloads;
-			config.FileHandlers = Settings.Default.FileHandlers;
+			config.FileHandlers = Settings.Default.GetFileHandlers();
 			config.IrcNick = Settings.Default.IrcNick;
 			config.IrcPasswort = Settings.Default.IrcPasswort;
 			config.IrcRegisterEmail = Settings.Default.IrcRegisterEmail;
@@ -59,7 +59,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			Settings.Default.ElasticSearchHost = aConfig.ElasticSearchHost;
 			Settings.Default.ElasticSearchPort = aConfig.ElasticSearchPort;
 			Settings.Default.EnableMultiDownloads = aConfig.EnableMultiDownloads;
-			Settings.Default.FileHandlers = aConfig.FileHandlers;
+			Settings.Default.SetFileHandlers(aConfig.FileHandlers);
 			Settings.Default.IrcNick = aConfig.IrcNick;
 			Settings.Default.IrcPasswort = aConfig.IrcPasswort;
 			Settings.Default.IrcRegisterEmail = aConfig.IrcRegisterEmail;

@@ -30,7 +30,7 @@
 <html lang="en" ng-app="xg">
 	<head>
 		<meta charset="utf-8">
-		<title>XG Webfrontend v{{version}}</title>
+		<title>XG Webfrontend v{{VERSION}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<link rel="stylesheet" href="/Content/normalize.css" type="text/css" media="screen"/>
@@ -54,103 +54,136 @@
 						<h4 class="modal-title" translate>Config</h4>
 					</div>
 					<div class="modal-body">
-
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-4 control-label" translate>Auto Register Nickserv</label>
-								<div class="col-lg-2 checkbox">
-									<input type="checkbox" ng-model="$parent.config.AutoRegisterNickserv" ng-show="$parent.configReady">
-								</div>
-								<label class="col-lg-4 control-label" translate>Enable Multi Downloads</label>
-								<div class="col-lg-2 checkbox">
-									<input type="checkbox" ng-model="$parent.config.EnableMultiDownloads" ng-show="$parent.configReady">
-								</div>
-							</div>
-						</div>
-
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-3 control-label" translate>Temp Path</label>
-								<div class="col-lg-9" ng-show="$parent.configReady">
-									<input class="form-control" type="text" ng-model="$parent.config.TempPath" placeholder="{{'Path in filesystem to store temporary files'|translate}}"/>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-3 control-label" translate>Ready Path</label>
-								<div class="col-lg-9" ng-show="$parent.configReady">
-									<input class="form-control" type="text" ng-model="$parent.config.ReadyPath" placeholder="{{'Path in filesystem to store downloaded files'|translate}}"/>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-3 control-label" translate>IRC</label>
-								<div class="col-lg-9" ng-show="$parent.configReady">
-									<div class="input-group">
-										<input class="form-control" type="text" ng-model="$parent.config.IrcNick" placeholder="{{'User'|translate}}"/>
-										<span class="input-group-addon">/</span>
-										<input class="form-control" type="password" ng-model="$parent.config.IrcPassword" placeholder="{{'Passwort'|translate}}"/>
-										<span class="input-group-addon">/</span>
-										<input class="form-control" type="text" ng-model="$parent.config.IrcRegisterEmail" placeholder="{{'Email'|translate}}"/>
+						<ul class="nav nav-tabs">
+							<li ng-class="{'active': $parent.slide == 1}"><a href="#" ng-click="$parent.slideTo(1)" translate>Settings</a></li>
+							<li ng-class="{'active': $parent.slide == 2}"><a href="#" ng-click="$parent.slideTo(2)" translate>File Handlers</a></li>
+						</ul>
+						<div ng-show="$parent.slide == 1">
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-4 control-label" translate>Auto Register Nickserv</label>
+									<div class="col-lg-2 checkbox">
+										<input type="checkbox" ng-model="$parent.config.AutoRegisterNickserv" ng-show="$parent.configReady">
+									</div>
+									<label class="col-lg-4 control-label" translate>Enable Multi Downloads</label>
+									<div class="col-lg-2 checkbox">
+										<input type="checkbox" ng-model="$parent.config.EnableMultiDownloads" ng-show="$parent.configReady">
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-3 control-label" translate>Webserver</label>
-								<div class="col-lg-9" ng-show="$parent.configReady">
-									<div class="input-group">
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label" translate>Temp Path</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<input class="form-control" type="text" ng-model="$parent.config.TempPath" placeholder="{{'Path in filesystem to store temporary files'|translate}}" title="{{'Path in filesystem to store temporary files'|translate}}"/>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label" translate>Ready Path</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<input class="form-control" type="text" ng-model="$parent.config.ReadyPath" placeholder="{{'Path in filesystem to store downloaded files'|translate}}" title="{{'Path in filesystem to store downloaded files'|translate}}"/>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label" translate>IRC</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<div class="input-group">
+											<input class="form-control" type="text" ng-model="$parent.config.IrcNick" placeholder="{{'User'|translate}}" title="{{'User'|translate}}"/>
+											<span class="input-group-addon">/</span>
+											<input class="form-control" type="password" ng-model="$parent.config.IrcPassword" placeholder="{{'Passwort'|translate}}" title="{{'Passwort'|translate}}"/>
+											<span class="input-group-addon">/</span>
+											<input class="form-control" type="text" ng-model="$parent.config.IrcRegisterEmail" placeholder="{{'Email'|translate}}" title="{{'Email'|translate}}"/>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label" translate>Webserver</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<div class="input-group">
 										<span class="input-group-addon">
 											<input type="checkbox" ng-model="$parent.config.UseWebserver">
 										</span>
-										<input class="form-control" type="password" ng-model="$parent.config.Password" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Password'|translate}}"/>
-										<span class="input-group-addon">/</span>
-										<input class="form-control port" type="text" ng-model="$parent.config.WebserverPort" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Port'|translate}}"/>
+											<input class="form-control" type="password" ng-model="$parent.config.Password" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Password'|translate}}" title="{{'Password'|translate}}"/>
+											<span class="input-group-addon">/</span>
+											<input class="form-control port" type="text" ng-model="$parent.config.WebserverPort" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Port'|translate}}" title="{{'Port'|translate}}"/>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-3 control-label" translate>Elasticsearch</label>
-								<div class="col-lg-9" ng-show="$parent.configReady">
-									<div class="input-group">
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label" translate>Elasticsearch</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<div class="input-group">
 										<span class="input-group-addon">
 											<input type="checkbox" ng-model="$parent.config.UseElasticSearch">
 										</span>
-										<input class="form-control" type="text" ng-model="$parent.config.ElasticSearchHost" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Host'|translate}}"/>
-										<span class="input-group-addon">:</span>
-										<input class="form-control port" type="text" ng-model="$parent.config.ElasticSearchPort" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Port'|translate}}"/>
+											<input class="form-control" type="text" ng-model="$parent.config.ElasticSearchHost" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Host'|translate}}" title="{{'Host'|translate}}"/>
+											<span class="input-group-addon">:</span>
+											<input class="form-control port" type="text" ng-model="$parent.config.ElasticSearchPort" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Port'|translate}}" title="{{'Port'|translate}}"/>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-lg-3 control-label" translate>Jabber</label>
-								<div class="col-lg-9" ng-show="$parent.configReady">
-									<div class="input-group">
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label" translate>Jabber</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<div class="input-group">
 										<span class="input-group-addon">
 											<input type="checkbox" ng-model="$parent.config.UseJabberClient">
 										</span>
-										<input class="form-control" type="text" ng-model="$parent.config.JabberServer" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Server'|translate}}"/>
-										<span class="input-group-addon">/</span>
-										<input class="form-control" type="text" ng-model="$parent.config.JabberUser" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'User'|translate}}"/>
-										<span class="input-group-addon">/</span>
-										<input class="form-control" type="password" ng-model="$parent.config.JabberPassword" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Password'|translate}}"/>
+											<input class="form-control" type="text" ng-model="$parent.config.JabberServer" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Server'|translate}}" title="{{'Server'|translate}}"/>
+											<span class="input-group-addon">/</span>
+											<input class="form-control" type="text" ng-model="$parent.config.JabberUser" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'User'|translate}}" title="{{'User'|translate}}"/>
+											<span class="input-group-addon">/</span>
+											<input class="form-control" type="password" ng-model="$parent.config.JabberPassword" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Password'|translate}}" title="{{'Password'|translate}}"/>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<div ng-show="$parent.slide == 2">
+							<div class="form-horizontal">
+								<div class="form-group">
+									<label class="col-lg-3 control-label">
+										<span translate>File Handler</span>
+										<span class="glyphicon glyphicon-plus-sign ChameleonDark clickAble" ng-click="$parent.addFileHandler()" title="{{'Add new'|translate}}"></span>
+									</label>
+									<div class="col-lg-9" ng-show="$parent.configReady">
+										<ul class="list-group">
+											<li class="list-group-item" ng-repeat="fileHandler in $parent.config.FileHandlers">
+												<ul class="list-group">
+													<li class="list-group-item">
+														<input type="text" ng-model="fileHandler.Regex" class="regex" placeholder="{{'File regex'|translate}}" title="{{'File regex'|translate}}"/>
+														<span class="glyphicon glyphicon-remove-sign ScarletRedMiddle clickAble" ng-click="$parent.removeFileHandler(fileHandler)" title="{{'Remove'|translate}}"></span>
+													</li>
+													<li class="list-group-item" ng-repeat="process in fileHandler.Processes">
+														<input type="text" ng-model="process.Command" class="command" placeholder="{{'Command'|translate}}" title="{{'Command'|translate}}"/>
+														<input type="text" ng-model="process.Arguments" class="arguments" placeholder="{{'Arguments'|translate}}" title="{{'Arguments'|translate}}"/>
+														<span class="glyphicon glyphicon-plus-sign ChameleonDark clickAble" ng-click="$parent.addProcess(fileHandler, process)" title="{{'Add new'|translate}}"></span>
+														<span class="glyphicon glyphicon-remove-sign ScarletRedMiddle clickAble" ng-hide="$first" ng-click="$parent.removeProcess(fileHandler, process)" title="{{'Remove'|translate}}"></span>
+													</li>
+												</ul>
 
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<a class="btn btn-primary" ng-click="save()" ng-disabled="!$parent.configReady">
@@ -252,7 +285,7 @@
 													<span class="clickAble" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
 												</td>
 												<td class="text-right">
-													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)"></span>
+													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)" title="{{'Remove'|translate}}"></span>
 												</td>
 											</tr>
 										</tbody>
@@ -308,7 +341,7 @@
 													{{channel.BotCount}}
 												</td>
 												<td class="text-right">
-													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="channelSignalr.remove(channel)"></span>
+													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="channelSignalr.remove(channel)" title="{{'Remove'|translate}}"></span>
 												</td>
 											</tr>
 										</tbody>
@@ -371,7 +404,7 @@
 												<span ng-bind-html='client.Name'></span>
 											</td>
 											<td class="text-right">
-												<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="signalr.remove(client)"></span>
+												<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="signalr.remove(client)" title="{{'Remove'|translate}}"></span>
 											</td>
 										</tr>
 									</tbody>
@@ -516,10 +549,10 @@
 							<div class="form-group dropdown-toggle">
 								<input type="text" class="search-query form-control" placeholder="Search" ng-model="search" ng-keydown="searchKeydown($event)"/>
 							</div>
-							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search)" ng-click="signalr.add(search)">
+							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search)" ng-click="signalr.add(search)" title="{{'Save'|translate}}">
 								<span class="glyphicon glyphicon-thumbs-up"></span>
 							</button>
-							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search)" ng-click="signalr.removeByName(search)">
+							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search)" ng-click="signalr.removeByName(search)" title="{{'Remove'|translate}}">
 								<span class="glyphicon glyphicon-thumbs-down"></span>
 							</button>
 							<ul class="dropdown-menu">

@@ -58,6 +58,13 @@ define(['./module'], function (i18n) {
 				"Save": "Speichern",
 				"Path in filesystem to store temporary files": "Pfad auf der Festplatte für temporäre Dateien",
 				"Path in filesystem to store downloaded files": "Pfad auf der Festplatte für fertig geladene Dateien",
+				"File regex": "Datei Regex",
+				"Remove": "Entfernen",
+				"Add new": "Neu hinzufügen",
+				"Command": "Befehl",
+				"Arguments": "Argumente",
+				"File Handlers": "Datei Routinen",
+				"File Handler": "Datei Routine",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */

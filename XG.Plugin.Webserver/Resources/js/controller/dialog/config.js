@@ -31,6 +31,12 @@ define(['./module'], function (ng) {
 		{
 			$scope.signalr = signalr;
 
+			$scope.slide = 1;
+			$scope.slideTo = function (slide)
+			{
+				$scope.slide = slide;
+			};
+
 			$scope.configReady = false;
 			$scope.config = {};
 			if ($scope.signalr.isConnected())
@@ -41,12 +47,81 @@ define(['./module'], function (ng) {
 					signalR.done(
 						function (data)
 						{
+							$.each(data.FileHandlers, function (a, fileHandler)
+							{
+								fileHandler.Processes = [];
+
+								var currentProcess = fileHandler.Process;
+								while (currentProcess != undefined)
+								{
+									fileHandler.Processes.push(currentProcess);
+									currentProcess = currentProcess.Next;
+								}
+
+								resetProcessIndex(fileHandler);
+							});
+
 							$scope.config = data;
+							resetFileHandlerIndex();
+
 							$scope.configReady = true;
+							$scope.$apply();
 						}
 					);
 				}
 			}
+
+			var resetFileHandlerIndex = function()
+			{
+				$.each($scope.config.FileHandlers, function (a, fileHandler)
+				{
+					fileHandler.Id = a;
+				});
+			};
+
+			var resetProcessIndex = function(fileHandler)
+			{
+				$.each(fileHandler.Processes, function (a, process)
+				{
+					process.Id = a;
+				});
+			};
+
+			$scope.addFileHandler = function()
+			{
+				var fileHandler = {
+					Regex: "",
+					Processes: [{
+						Id: 0,
+						Command: "",
+						Arguments: ""
+					}]
+				};
+				$scope.config.FileHandlers.push(fileHandler);
+				resetFileHandlerIndex();
+			};
+
+			$scope.removeFileHandler = function(fileHandler)
+			{
+				$scope.config.FileHandlers.splice(fileHandler.Id, 1);
+				resetFileHandlerIndex();
+			};
+
+			$scope.addProcess = function(fileHandler, afterProcess)
+			{
+				var process = {
+					Command: "",
+					Arguments: ""
+				};
+				fileHandler.Processes.splice(afterProcess.Id + 1, 0, process);
+				resetProcessIndex(fileHandler);
+			};
+
+			$scope.removeProcess = function(fileHandler, process)
+			{
+				fileHandler.Processes.splice(process.Id, 1);
+				resetProcessIndex(fileHandler);
+			};
 
 			$scope.save = function()
 			{
@@ -54,6 +129,28 @@ define(['./module'], function (ng) {
 				{
 					return;
 				}
+
+				$.each($scope.config.FileHandlers, function (a, fileHandler)
+				{
+					var previousProcess = null;
+					$.each(fileHandler.Processes, function (b, process)
+					{
+						if (b == 0)
+						{
+							fileHandler.Process = process;
+						}
+						else if (previousProcess != null)
+						{
+							previousProcess.Next = process;
+						}
+						previousProcess = process;
+
+						delete process.Id;
+					});
+
+					delete fileHandler.Id;
+					delete fileHandler.Processes;
+				});
 
 				$scope.signalr.getProxy().server.save($scope.config);
 				$modalInstance.close();
