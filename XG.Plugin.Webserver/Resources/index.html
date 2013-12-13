@@ -61,6 +61,13 @@
 						<div ng-show="$parent.slide == 1">
 							<div class="form-horizontal">
 								<div class="form-group">
+									<label class="col-lg-3 control-label"></label>
+									<div class="col-lg-9 checkbox" translate>Changes on the properties marked with an asterisk require a restart.</div>
+								</div>
+							</div>
+
+							<div class="form-horizontal">
+								<div class="form-group">
 									<label class="col-lg-4 control-label" translate>Auto Register Nickserv</label>
 									<div class="col-lg-2 checkbox">
 										<input type="checkbox" ng-model="$parent.config.AutoRegisterNickserv" ng-show="$parent.configReady">
@@ -74,7 +81,7 @@
 
 							<div class="form-horizontal">
 								<div class="form-group">
-									<label class="col-lg-3 control-label" translate>Temp Path</label>
+									<label class="col-lg-3 control-label"><span translate>Temp Path</span> *</label>
 									<div class="col-lg-9" ng-show="$parent.configReady">
 										<input class="form-control" type="text" ng-model="$parent.config.TempPath" placeholder="{{'Path in filesystem to store temporary files'|translate}}" title="{{'Path in filesystem to store temporary files'|translate}}"/>
 									</div>
@@ -83,7 +90,7 @@
 
 							<div class="form-horizontal">
 								<div class="form-group">
-									<label class="col-lg-3 control-label" translate>Ready Path</label>
+									<label class="col-lg-3 control-label"><span translate>Ready Path</span> *</label>
 									<div class="col-lg-9" ng-show="$parent.configReady">
 										<input class="form-control" type="text" ng-model="$parent.config.ReadyPath" placeholder="{{'Path in filesystem to store downloaded files'|translate}}" title="{{'Path in filesystem to store downloaded files'|translate}}"/>
 									</div>
@@ -107,7 +114,7 @@
 
 							<div class="form-horizontal">
 								<div class="form-group">
-									<label class="col-lg-3 control-label" translate>Webserver</label>
+									<label class="col-lg-3 control-label"><span translate>Webserver</span> *</label>
 									<div class="col-lg-9" ng-show="$parent.configReady">
 										<div class="input-group">
 										<span class="input-group-addon">
@@ -123,7 +130,7 @@
 
 							<div class="form-horizontal">
 								<div class="form-group">
-									<label class="col-lg-3 control-label" translate>Elasticsearch</label>
+									<label class="col-lg-3 control-label"><span translate>Elasticsearch</span> *</label>
 									<div class="col-lg-9" ng-show="$parent.configReady">
 										<div class="input-group">
 										<span class="input-group-addon">
@@ -139,7 +146,7 @@
 
 							<div class="form-horizontal">
 								<div class="form-group">
-									<label class="col-lg-3 control-label" translate>Jabber</label>
+									<label class="col-lg-3 control-label"><span translate>Jabber</span> *</label>
 									<div class="col-lg-9" ng-show="$parent.configReady">
 										<div class="input-group">
 										<span class="input-group-addon">
@@ -206,7 +213,7 @@
 							<div class="form-group" ng-class="{'has-error': passwordWrong}">
 								<label class="col-lg-2 control-label" for="password" translate>Password</label>
 								<div class="col-lg-10">
-									<input type="password" name="password" ng-model="$parent.password" class="form-control" placeholder="Password" ng-keydown="passwordKeydown($event)"/>
+									<input type="password" name="password" ng-model="$parent.password" class="form-control" placeholder="Password" ng-keydown="passwordKeydown($event)" focus="true"/>
 								</div>
 							</div>
 						</div>

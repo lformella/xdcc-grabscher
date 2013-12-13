@@ -1,5 +1,5 @@
 //
-//  index.js
+//  focus.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,8 +23,26 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define([
-	'./flot',
-	'./focus',
-	'./knob'
-], function () {});
+define(['./module'], function (ng) {
+	'use strict';
+
+	ng.directive('focus', ['$timeout', function ($timeout)
+	{
+		return {
+			scope: { trigger: '@focus' },
+			link: function(scope, element)
+			{
+				scope.$watch('trigger', function(value)
+				{
+					if(value === "true")
+					{
+						$timeout(function()
+						{
+							element[0].focus();
+						});
+					}
+				});
+			}
+		};
+	}]);
+});
