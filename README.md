@@ -2,41 +2,124 @@
 
 XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
-## What makes it special? (I am already using and happy with xWeasel.)
+
+# What makes it special? (I am already using and happy with xWeasel.)
 XG is just a command line app which connects to one or multiple IRC networks and handles the whole network communication. The IRC servers, channels, bots and packets are presented within a nice and stylish web frontend. There you can search and download packets.
 
 You can run XG on every machine that supports c# / mono - even root servers without x(org), or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere. You don't have to keep a big PC running, but just a small download box which handles all the IRC stuff.
 
 A so called killer feature is the multiple download function. Every good XDCC client can resume and check downloads of course, but XG is able to download the same packet / file from different bots / sources. It will split downloads into multiple parts, download each part from a different bot and merge them back after error free downloading, so you can use your maximum bandwidth. Because of the DCC protocol design there is no chance to implement a stable and clean error checking routine, so some downloaded files might be corrupt, even if XG assumes they are not. Use this feature at your own risk! (See the __EnableMultiDownloads__ flag in the settings chapter.
 
-## How do i use it?
-If you want to change the settings, create a file named __settings.xml__ using the example. If there is no __settings.xml__ file XG will create one using default values. The settings file must be located in your user folder:
+
+# How do i use it?
+Run the program and point your browser to __127.0.0.1:5556__. The default password is __xgisgreat__. 
+![Password Dialog](http://xg.bitpir.at/images/help/password.png)
+
+
+## At first: change the settings
+You can do this directly in the webfrontend. Just click on the __Config__ link in the options menu.
+
+![Options](http://xg.bitpir.at/images/help/options.png)
+
+This is a small explanation to help you set the correct options. If you don't want to use a special feature, just disable it.
+
+![Settings part 1](http://xg.bitpir.at/images/help/settings_1.png)
+
+The web server password is filled with __xgisgreat__ and the port ist __5556__. The IRC passport and email can be left blank and are just needed if you want use nickserv.
+
+![Settings part 2](http://xg.bitpir.at/images/help/settings_2.png)
+
+### Filehandlers
+If a packet is downloaded you can run several commands. If the regex of a file handler matches the file name, the process is started. A process is defined by a command, arguments and the next process. The next process can be left empty and only is called if the current one is successfully executed.
+
+![Settings part 3](http://xg.bitpir.at/images/help/settings_3.png)
+
+The following handler matches all rar archives. It will create a separate folder, extract the archive into it, removes the archive and moves the folder onto a different partition. Every process is executed only, if the previous one was successfully. Because of this, the handler won't delete the archive if he could not extract it.
+
+![Settings part 4](http://xg.bitpir.at/images/help/settings_4.png)
+
+You can add as many file handlers as you want. They are also stored in the settings file.
+
+#### Arguments
+You can use different placeholders in your arguments:
+
+* __%PATH%__ = full path of the file, like __/the/full/path/to/file_complete.rar__
+* __%FOLDER%__ = full path of the folder of the file, like __/the/full/path/to__
+* __%FILE%__ = the complete file name, like __file_complete.rar__
+* __%FILENAME%__ = just the file name, like __file_complete__
+* __%EXTENSION%__ = just the file extension, like __rar__
+
+### Change settings manually
+If you want to change the settings manually, you have to change the file named __xg.config__ located in your user folder:
 
 * Windows 7: C:\Users\Username\AppData\Roaming\XG
 * Linux: /home/Username/.config/XG
 * Mac: /Users/Username/.config/XG
 
-
-Change the XML file if you want, run the program and after that point your browser to __127.0.0.1:5556__ or whatever you have just specified. The default password should be __xgisgreat__. Because since version 2 XG uses a websocket to serve the data you need a second port to open. This port will always be your specified port plus one. So the default value will be port __5557__.
-
-![Password Dialog](http://xg.bitpir.at/images/help/password_dialog.png)
-
+## Add servers and channels
 Now you have to add IRC networks and channels. The bots and packets are generated and updated automatically. If you don't know which server and channels to add, try the integrated [xg.bitpir.at](http://xg.bitpir.at) search.
 
-![Server / Channel Dialog](http://xg.bitpir.at/images/help/server_channel_dialog.png)
+![Server / Channel Dialog](http://xg.bitpir.at/images/help/servers.png)
 
-If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations.
+## Search
+You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favorite searches.
 
-The packet icon will match the file ending, so there are different versions: ![Packet Icon](http://xg.bitpir.at/images/help/packet_icons.png)
+![Searc](http://xg.bitpir.at/images/help/search.png)
 
-## If upgrading from XG prior version 2
+The results are displayed in a table and the packets are grouped by their bot. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions:
 
-Because XG changed som internal routines you can safely delete the following files in the config folder:
+![Packet Icons](http://xg.bitpir.at/images/help/search_result.png)
+
+## Notifications
+If something happens inside XG you will get a notification. This can also be shown via your browser if you allow it.
+
+![Notification Icon](http://xg.bitpir.at/images/help/notification.png)
+
+## Extended Stats / Snapshots
+XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
+
+![Extend Statistics](http://xg.bitpir.at/images/help/graphs.png)
+
+This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
+
+## API
+XG v3 supports a rest like api to control it via scripts. You can add api keys and enable / disable them.
+
+![Api](http://xg.bitpir.at/images/help/api.png)
+
+Currently you can just add xdcc links by calling the following url:
+
+http://xg.de:5556/api/__615d86bb-f867-47c1-a860-ac24e09e976c__/parseXdccLink/__irc.test.net/servername/channel/bot/1/filename/__
+
+The api id has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/parseXdccLink/__. Finally you have to add the data you want to pass to method (must be a valid xdcc link in our example). Currently api methods can return the following json encoded results:
+
+* __-1__ - api key is invalid or disabled
+* __0__ - the was an error calling the method
+* __1__ - everything is fine
+
+# Upgrading XG
+
+Because XG changed some internal routines you can safely delete the following files in the config folder:
+
+## prior version 2
+
 * XG/xgsnapshots.bin
 * XG/xgsnapshots.bin.bak
 * XG/statistics.xml
 
-### If running on Ubuntu with Mono
+## prior version 3
+
+* XG/xg.bin
+* XG/xg.bin.bak
+* XG/xgfiles.bin
+* XG/xgfiles.bin.bak
+* XG/xgsearches.bin
+* XG/xgsearches.bin.bak
+* XG/settings.xml
+
+# Running XG
+
+## on Ubuntu with Mono
 
 The following packets must be installed:
 
@@ -46,143 +129,8 @@ The following packets must be installed:
 * libmono-system-runtime-serialization4.0-cil
 * libmono-system-xml-linq4.0-cil
 
-####Install command to copy paste:
+### Install command to copy paste:
 
 ```bash
 sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-web4.0-cil libmono-system-runtime-serialization4.0-cil libmono-system-xml-linq4.0-cil
 ```
-
-### If running on Windows Vista and greater
-
-If you dont want to run XG with admin rights, you have to execute the following command once using an admin shell: __netsh http add urlacl url=http://*:5556/ user=%USERDOMAIN%\%USERNAME%__ and __netsh http add urlacl url=http://*:5557/ user=%USERDOMAIN%\%USERNAME%__ because XG is using two ports. You have to adjust the ports if you changed it before, of course. Otherwise the integrated webserver wont work.
-
-## Settings
-
-You should change the default settings and this explanation will help you. If you don't want to use a special feature, just disable or remove it.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<Settings xmlns: xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns: xsd="http://www.w3.org/2001/XMLSchema">
-  <IrcNick>anon1234</IrcNick> <!-- the nickname of the IRC user -->
-  <IrcPasswort>password123</IrcPasswort> <!-- nickserv password -->
-  <IrcRegisterEmail>anon@ymous.org</IrcRegisterEmail> <!-- nickserv email -->
-  <AutoRegisterNickserv>false</AutoRegisterNickserv> <!-- register nick if he does not exist -->
-  <AutoJoinOnInvite>true</AutoJoinOnInvite> <!-- should xg join channels on invite -->
-  
-  <TempPath>/home/user/.config/XG/tmp/</TempPath> <!-- absolute folder of the temporary download folder -->
-  <ReadyPath>/home/user/.config/XG/dl/</ReadyPath> <!-- absolute folder for ready downloads -->
-  <EnableMultiDownloads>false</EnableMultiDownloads> <!-- enable multi bot dl feature -->
-  
-  <Password>xgisgreat</Password> <!-- server password -->
-  
-  <UseWebServer>true</UseWebServer> <!-- start the web server -->
-  <WebServerPort>5556</WebServerPort> <!-- port of the web server -->
-  
-  <UseJabberClient>false</UseJabberClient> <!-- connect to the jabber server -->
-  <JabberServer>jabber.org</JabberServer> <!-- server of the jabber user -->
-  <JabberUser>user</JabberUser> <!-- name of the jabber user -->
-  <JabberPassword>password</JabberPassword> <!-- password of the jabber user -->
-  
-  <FileHandlers></FileHandlers> <!-- commands to process ready downloads - see next chapter -->
-</Settings>
-```
-
-### Filehandlers
-
-If a packet is downloaded you can run several commands. If the regex of a file handler matches the file name, the process is started. A process is defined by a command, arguments and the next process. The next process can be left empty and only is called if the current one is successfully executed.
-
-The following handler matches all rar archives. It will create a separate folder, extract the archive into it, removes the archive and moves the folder onto a different partition. Every process is executed only, if the previous one was successfully. Because of this, the handler won't delete the archive if he could not extract it.
-
-```xml
-<FileHandler>
-  <Regex>.*\.rar</Regex> <!-- match rar archives -->
-  <Process>
-    <Command>mkdir</Command> <!-- generate a separate folder -->
-    <Arguments>%FOLDER%/%FILENAME%</Arguments>
-    <Next>
-      <Command>unrar</Command> <!-- unrar command with password skip! -->
-      <Arguments>e -p- %PATH% %FOLDER%/%FILENAME%</Arguments>
-      <Next>
-        <Command>rm</Command> <!-- remove file -->
-        <Arguments>%PATH%</Arguments>
-        <Next>
-          <Command>mv</Command> <!-- move to another partition -->
-          <Arguments>%FOLDER%/%FILENAME% /media/data/%FILENAME%</Arguments>
-        </Next>
-      </Next>
-    </Next>
-  </Process>
-</FileHandler>
-```
-
-#### Arguments
-
-You can use different placeholders in your arguments:
-
-* __%PATH%__ = full path of the file, like __/the/full/path/to/file_complete.rar__
-* __%FOLDER%__ = full path of the folder of the file, like __/the/full/path/to__
-* __%FILE%__ = the complete file name, like __file_complete.rar__
-* __%FILENAME%__ = just the file name, like __file_complete__
-* __%EXTENSION%__ = just the file extension, like __rar__
-
-#### Examples
-
-Just look at some more examples.
-
-```xml
-<FileHandlers>
-  <FileHandler>
-    <Regex>.*\.tar</Regex> <!-- match all tar archives -->
-    <Process>
-      <Command>mkdir</Command> <!-- generate a separate folder -->
-      <Arguments>%FOLDER%/%FILENAME%</Arguments>
-      <Next>
-        <Command>tar</Command> <!-- untar -->
-        <Arguments>-xf %PATH% -C %FOLDER%/%FILENAME%</Arguments>
-        <Next>
-          <Command>rm</Command> <!-- remove file -->
-          <Arguments>%PATH%</Arguments>
-          <Next>
-            <Command>mv</Command> <!-- move to another partition -->
-            <Arguments>%FOLDER%/%FILENAME% /media/data/%FILENAME%</Arguments>
-          </Next>
-        </Next>
-      </Next>
-    </Process>
-  </FileHandler>
-  <FileHandler>
-    <Regex>.*\.[^tar]</Regex>
-    <Process>
-      <Command>mkdir</Command> <!-- generate a separate folder -->
-      <Arguments>%FOLDER%/%FILENAME%</Arguments>
-      <Next>
-        <Command>mv</Command> <!-- move into folder -->
-        <Arguments>%PATH% %FOLDER%/%FILENAME%/%FILE%</Arguments>
-        <Next>
-          <Command>mv</Command> <!-- move to another partition -->
-          <Arguments>%FOLDER%/%FILENAME% /media/data/%FILENAME%</Arguments>
-          <Next>
-            <Command>send_email_command</Command> <!-- send email to notify -->
-            <Arguments>"hello, you have a new download: /media/data/%FILENAME%"</Arguments>
-          </Next>
-        </Next>
-      </Next>
-    </Process>
-  </FileHandler>
-</FileHandlers>
-```
-## Search for packets
-
-You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the orange bookmark button. Delting a search works the same.
-
-![Search List](http://xg.bitpir.at/images/help/search_list.png)
-
-The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favourite searches.
-
-## Extended Stats / Snapshots
-
-XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
-
-![Extend Statistic Dialog](http://xg.bitpir.at/images/help/snapshots.png)
-
-This feature wont work in older browsers like the good old IE8, so do yourself a favour and use a newer one ;-)
