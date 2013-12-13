@@ -13,7 +13,7 @@ A so called killer feature is the multiple download function. Every good XDCC cl
 
 # How do i use it?
 Run the program and point your browser to __127.0.0.1:5556__. The default password is __xgisgreat__. 
-![Password Dialog](http://xg.bitpir.at/images/help/password.png)
+![Password Dialog](http://xg.bitpir.at/images/help/login.png)
 
 
 ## At first: change the settings
