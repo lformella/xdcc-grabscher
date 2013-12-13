@@ -76,6 +76,9 @@
     <Reference Include="Nancy.Owin">
       <HintPath>..\packages\Nancy.Owin.0.21.1\lib\net40\Nancy.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy.Serialization.JsonNet">
+      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.21.1\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Plugin.cs" />
@@ -118,6 +121,7 @@
     <Compile Include="ASaltedPassword.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Config.cs" />
     <Compile Include="SignalR\Hub\ConfigHub.cs" />
+    <Compile Include="Nancy\Api\Result.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />

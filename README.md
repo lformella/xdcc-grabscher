@@ -93,9 +93,9 @@ ht*p://xg.de:5556/api/__615d86bb-f867-47c1-a860-ac24e09e976c__/parseXdccLink/__i
 
 The api id has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/parseXdccLink/__. Finally you have to add the data you want to pass to method (must be a valid xdcc link in our example). Currently api methods can return the following json encoded results:
 
-* __-1__ - api key is invalid or disabled
-* __0__ - the was an error calling the method
-* __1__ - everything is fine
+* __{"ReturnValue":-1}__ - api key is invalid or disabled
+* __{"ReturnValue":0}__ - the was an error calling the method
+* __{"ReturnValue":1}__ - everything is fine
 
 # Upgrading XG
 

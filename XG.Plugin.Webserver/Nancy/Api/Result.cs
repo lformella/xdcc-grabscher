@@ -1,5 +1,5 @@
 // 
-//  RedirectModule.cs
+//  Result.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,29 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Nancy;
-using Nancy.Responses;
-using System.Linq;
-using XG.Config.Properties;
+using System;
+using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.Nancy
+namespace XG.Plugin.Webserver.Nancy.Api
 {
-	public class RedirectModule : NancyModule
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Result
 	{
-		public RedirectModule()
-		{
-			Get["/"] = _ => new RedirectResponse("/Resources/index.html");
-
-			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); });";
-
-			Get["/Resources/js/config/config.js"] = _ => {
-				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
-				string ret = config;
-				ret = ret.Replace("##LANGUAGE##", language);
-				ret = ret.Replace("##SALT##", Helper.Salt);
-				ret = ret.Replace("##VERSION##", Settings.Default.XgVersion);
-				return new TextResponse(ret, "application/x-javascript");
-			};
-		}
+		public int ReturnValue { get; set; }
 	}
 }

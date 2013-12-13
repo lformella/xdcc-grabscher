@@ -259,12 +259,12 @@ td.rowWithText small
 
 input.command
 {
-	width: 70px;
+	width: 75px;
 }
 
 input.arguments
 {
-	width: 425px;
+	width: 420px;
 }
 
 input.regex

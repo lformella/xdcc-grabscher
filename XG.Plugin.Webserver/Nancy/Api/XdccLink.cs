@@ -25,6 +25,8 @@
 
 using System;
 using XG.Model.Domain;
+using Nancy.Responses;
+using Nancy.Serialization.JsonNet;
 
 namespace XG.Plugin.Webserver.Nancy.Api
 {
@@ -35,7 +37,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			Get["/api/{apiKey}/parseXdccLink/{server}/{servername}/{channel}/{bot}/{id}/{file}/"] = _ => {
 				if (!IsApiKeyValid(_.apiKey))
 				{
-					return "{-1}";
+					return new JsonResponse(new Result { ReturnValue = -1 }, new JsonNetSerializer());
 				}
 
 				// TODO validate
@@ -82,12 +84,12 @@ namespace XG.Plugin.Webserver.Nancy.Api
 					pack.Enabled = true;
 
 					IncreaseSuccessCount(_.apiKey);
-					return "{1}";
+					return new JsonResponse(new Result { ReturnValue = 1 }, new JsonNetSerializer());
 				}
 				catch (Exception)
 				{
 					IncreaseErrorCount(_.apiKey);
-					return "{0}";
+					return new JsonResponse(new Result { ReturnValue = 0 }, new JsonNetSerializer());
 				}
 			};
 		}
