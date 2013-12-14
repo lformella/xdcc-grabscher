@@ -100,6 +100,18 @@
 
 								<div class="form-horizontal">
 									<div class="form-group">
+										<label class="col-lg-3 control-label" translate>Max Download Speed</label>
+										<div class="col-lg-3" ng-show="$parent.configReady">
+											<div class="input-group">
+												<input class="form-control" type="number" min="0" ng-model="$parent.config.MaxDownloadSpeedInKB" placeholder="{{'Max Download Speed'|translate}}" title="{{'Max Download Speed'|translate}}"/>
+												<span class="input-group-addon">KB</span>
+											</div>
+									</div>
+								</div>
+								</div>
+
+								<div class="form-horizontal">
+									<div class="form-group">
 										<label class="col-lg-3 control-label" translate>IRC</label>
 										<div class="col-lg-3" ng-show="$parent.configReady">
 											<input class="form-control" type="text" ng-model="$parent.config.IrcNick" ng-required="true" placeholder="{{'User'|translate}}" title="{{'User'|translate}}"/>

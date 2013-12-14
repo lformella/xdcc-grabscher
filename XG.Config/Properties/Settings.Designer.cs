@@ -25,15 +25,6 @@ namespace XG.Config.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("3.0.0.0")]
-        public string XgVersion {
-            get {
-                return ((string)(this["XgVersion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("15")]
         public int CommandWaitTime {
             get {
@@ -425,6 +416,28 @@ namespace XG.Config.Properties {
             }
             set {
                 this["FileHandlers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3.0.0.0")]
+        public string XgVersion {
+            get {
+                return ((string)(this["XgVersion"]));
+            }
+        }
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int MaxDownloadSpeedInKB {
+            get {
+                return ((int)(this["MaxDownloadSpeedInKB"]));
+            }
+            set {
+                this["MaxDownloadSpeedInKB"] = value;
             }
         }
     }

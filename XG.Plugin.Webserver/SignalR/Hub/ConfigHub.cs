@@ -43,6 +43,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			config.JabberPassword = Settings.Default.JabberPassword;
 			config.JabberServer = Settings.Default.JabberServer;
 			config.JabberUser = Settings.Default.JabberUser;
+			config.MaxDownloadSpeedInKB = Settings.Default.MaxDownloadSpeedInKB;
 			config.Password = Settings.Default.Password;
 			config.ReadyPath = Settings.Default.ReadyPath;
 			config.TempPath = Settings.Default.TempPath;
@@ -66,6 +67,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			Settings.Default.JabberPassword = aConfig.JabberPassword;
 			Settings.Default.JabberServer = aConfig.JabberServer;
 			Settings.Default.JabberUser = aConfig.JabberUser;
+			Settings.Default.MaxDownloadSpeedInKB = aConfig.MaxDownloadSpeedInKB;
 			Settings.Default.Password = aConfig.Password;
 			Settings.Default.ReadyPath = aConfig.ReadyPath;
 			Settings.Default.TempPath = aConfig.TempPath;

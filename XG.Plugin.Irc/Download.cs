@@ -80,7 +80,7 @@ namespace XG.Plugin.Irc
 					_tcpClient.Connect(IP, Port);
 					_log.Info("StartRun() connected");
 
-					using (NetworkStream stream = _tcpClient.GetStream())
+					using (Stream stream = new ThrottledStream(_tcpClient.GetStream(), Settings.Default.MaxDownloadSpeedInKB * 1000))
 					{
 						StartWriting();
 

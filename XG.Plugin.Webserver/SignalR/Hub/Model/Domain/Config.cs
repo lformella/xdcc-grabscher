@@ -45,6 +45,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 		public string JabberPassword { get; set; }
 		public string JabberServer { get; set; }
 		public string JabberUser { get; set; }
+		public int MaxDownloadSpeedInKB { get; set; }
 		public string Password { get; set; }
 		public string ReadyPath { get; set; }
 		public string TempPath { get; set; }

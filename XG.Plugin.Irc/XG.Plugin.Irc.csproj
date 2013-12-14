@@ -81,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimedList.cs" />
     <Compile Include="XdccListEntry.cs" />
+    <Compile Include="ThrottledStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">

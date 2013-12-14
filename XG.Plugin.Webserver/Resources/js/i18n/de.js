@@ -66,6 +66,7 @@ define(['./module'], function (i18n) {
 				"File Handlers": "Datei Routinen",
 				"File Handler": "Datei Routine",
 				"Changes on the properties marked with an asterisk require a restart.": "Änderungen an Werten die mit einem Sternchen markiert sind benötigen einen Neustart.",
+				"Max Download Speed": "Max. Download Geschw.",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */
