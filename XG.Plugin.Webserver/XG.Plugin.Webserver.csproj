@@ -573,7 +573,9 @@
     <EmbeddedResource Include="Resources\js\directive\knob.js" />
     <EmbeddedResource Include="Resources\js\directive\module.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\directive\focus.js" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\controller\dialog\config.js" />
   </ItemGroup>

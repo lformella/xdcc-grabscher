@@ -102,6 +102,17 @@ body
 	padding-bottom: 5px;
 }
 
+.col-lg-1 input[type="radio"], input[type="checkbox"], .col-lg-2 input[type="radio"], input[type="checkbox"]
+{
+	margin: 10px 0 0;
+}
+
+.form-control.ng-invalid
+{
+	border-color: #B94A48;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
 /** Table **/
 
 .table
@@ -228,63 +239,64 @@ td.rowWithText small
 
 /** Dialogs **/
 
-.serverChannelsDialog .tableDiv
-{
-	height: 420px;
-}
-
-.serverChannelsDialog .table, .serverChannelsDialog .pagination {
-	margin-bottom: 10px;
-}
-
-.serverChannelsDialog .pagination > li > a
-{
-	padding: 0 8px;
-}
-
-.wide.modal-dialog
-{
-	width: 820px;
-}
-
-.extra-wide.modal-dialog
+#serverChannelsDialog
 {
 	width: 940px;
 }
 
-.input-group .form-control.port
+#serverChannelsDialog .tableDiv
 {
-	width: 75px;
+	height: 420px;
 }
 
-input.command
-{
-	width: 75px;
+#serverChannelsDialog .table, #serverChannelsDialog .pagination {
+	margin-bottom: 10px;
 }
 
-input.arguments
+#serverChannelsDialog .pagination > li > a
 {
-	width: 420px;
+	padding: 0 8px;
 }
 
-input.regex
+#configDialog
 {
-	width: 500px;
+	width: 850px;
 }
 
-.list-group
+#configDialog .form-group
+{
+	margin-bottom: 10px;
+}
+
+#configDialog .list-group
 {
 	margin-bottom: 0;
 }
 
-.list-group-item
+#configDialog .list-group-item
 {
 	padding: 5px;
 }
 
-.nav-tabs
+#configDialog .nav-tabs
 {
 	margin-bottom: 10px;
+}
+
+#configDialog .panel
+{
+	margin-bottom: 10px;
+}
+
+#configDialog .panel-heading, #configDialog .panel-body
+{
+	padding: 5px;
+}
+
+#configDialog .panel-heading .glyphicon, #configDialog .panel-body .glyphicon
+{
+	font-size: 1.5em;
+	padding-top: 7px;
 }
 
 /** Menu **/

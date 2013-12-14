@@ -130,7 +130,8 @@ define(['./module'], function (ng) {
 					return;
 				}
 
-				$.each($scope.config.FileHandlers, function (a, fileHandler)
+				var data = $scope.config;
+				$.each($data.FileHandlers, function (a, fileHandler)
 				{
 					var previousProcess = null;
 					$.each(fileHandler.Processes, function (b, process)
@@ -152,7 +153,7 @@ define(['./module'], function (ng) {
 					delete fileHandler.Processes;
 				});
 
-				$scope.signalr.getProxy().server.save($scope.config);
+				$scope.signalr.getProxy().server.save(data);
 				$modalInstance.close();
 			};
 		}
