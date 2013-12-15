@@ -162,7 +162,14 @@ namespace XG.Business.Helper
 		/// </summary>
 		static void OnRemoveFile(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			RemoveFile((XG.Model.Domain.File)aEventArgs.Value2);
+			if (aEventArgs.Value2 is XG.Model.Domain.File)
+			{
+				RemoveFile((XG.Model.Domain.File)aEventArgs.Value2);
+			}
+			else if (aEventArgs.Value2 is FilePart)
+			{
+				RemovePart((XG.Model.Domain.File)aEventArgs.Value2.Parent, (FilePart)aEventArgs.Value2);
+			}
 		}
 
 		/// <summary>

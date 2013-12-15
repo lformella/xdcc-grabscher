@@ -56,6 +56,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MonoSqliteDriver.cs" />
     <Compile Include="Domain\Version.cs" />
+    <Compile Include="TrackingNumberInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Config\XG.Config.csproj">
@@ -71,9 +72,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="hibernate.cfg.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Mappings\Search.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

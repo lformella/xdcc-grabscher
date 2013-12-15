@@ -137,8 +137,6 @@ namespace XG.Model.Domain
 
 				if (result)
 				{
-					aObject.Parent = null;
-
 					aObject.OnEnabledChanged -= FireEnabledChanged;
 					aObject.OnChanged -= FireChanged;
 

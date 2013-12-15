@@ -37,20 +37,20 @@ namespace XG.Test.DB
 		Random random = new Random();
 
 		[Test]
-		public void DaoTest()
+		public void DaoLoadObjectsTest()
 		{
 			using(var dao = new XG.DB.Dao())
 			{
-				dao.Servers();
+				var servers = dao.Servers;
 			}
 		}
 			
 		[Test]
-		public void DaoObjectsTest()
+		public void DaoWriteObjectsTest()
 		{
 			using (var dao = new XG.DB.Dao())
 			{
-				var files = dao.Files();
+				var files = dao.Files;
 				for (int a = 0; a < Count; a++)
 				{
 					var file = new File("test" + a, 1000000 * (a + 1));
@@ -70,7 +70,7 @@ namespace XG.Test.DB
 					files.Add(file);
 				}
 
-				var servers = dao.Servers();
+				var servers = dao.Servers;
 				for (int a = 1; a < Count; a++)
 				{
 					var server = new Server
@@ -172,7 +172,7 @@ namespace XG.Test.DB
 					server.RemoveChannel(channelToDrop);
 				}
 
-				var searches = dao.Searches();
+				var searches = dao.Searches;
 				for (int a = 0; a < Count; a++)
 				{
 					var search = new Search

@@ -105,11 +105,7 @@ namespace XG.Application
 
 			var app = new App();
 
-			if (Settings.Default.UseWebserver)
-			{
-				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
-				app.AddWorker(webServer);
-			}
+			app.AddWorker(new Plugin.Irc.Plugin());
 			if (Settings.Default.UseJabberClient)
 			{
 				app.AddWorker(new Plugin.Jabber.Plugin());
@@ -118,7 +114,11 @@ namespace XG.Application
 			{
 				app.AddWorker(new Plugin.ElasticSearch.Plugin());
 			}
-			app.AddWorker(new Plugin.Irc.Plugin());
+			if (Settings.Default.UseWebserver)
+			{
+				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
+				app.AddWorker(webServer);
+			}
 
 			app.Start();
 

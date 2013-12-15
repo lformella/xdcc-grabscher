@@ -295,10 +295,10 @@ namespace XG.Business
 
 		void LoadObjects()
 		{
-			Servers = _dao.Servers();
-			Files = _dao.Files();
-			Searches = _dao.Searches();
-			ApiKeys = _dao.ApiKeys();
+			Servers = _dao.Servers;
+			Files = _dao.Files;
+			Searches = _dao.Searches;
+			ApiKeys = _dao.ApiKeys;
 
 			FileActions.Files = Files;
 			FileActions.Servers = Servers;

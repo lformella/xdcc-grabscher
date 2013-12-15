@@ -193,6 +193,23 @@ namespace XG.Model.Domain
 			return Guid.GetHashCode();
 		}
 
+		bool _saved = false;
+
+		public virtual void OnSave()
+		{
+			_saved = true;
+		}
+
+		public virtual void OnLoad()
+		{
+			_saved = true;
+		}
+
+		public virtual bool IsSaved
+		{
+			get { return _saved; }
+		}
+
 		#endregion
 	}
 }
