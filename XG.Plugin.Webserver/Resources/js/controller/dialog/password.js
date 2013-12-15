@@ -45,16 +45,20 @@ define(['./module', 'sha256'], function (ng) {
 			{
 				$scope.passwordLoading = true;
 				$scope.encryptedPassword = encodeURIComponent(CryptoJS.SHA256(SALT + $scope.password + SALT));
-				$http.post("/login", $scope.encryptedPassword).success(function()
-				{
-					$scope.passwordWrong = false;
-					$scope.passwordLoading = false;
-					$modalInstance.close($scope.encryptedPassword);
-				}).error(function()
-				{
-					$scope.passwordWrong = true;
-					$scope.passwordLoading = false;
-				});
+				$http.post("/login", $scope.encryptedPassword).success(
+					function()
+					{
+						$scope.passwordWrong = false;
+						$scope.passwordLoading = false;
+						$modalInstance.close($scope.encryptedPassword);
+					}
+				).error(
+					function()
+					{
+						$scope.passwordWrong = true;
+						$scope.passwordLoading = false;
+					}
+				);
 			};
 		}
 	]);

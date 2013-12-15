@@ -196,6 +196,11 @@ td.rowWithText small
 	left: 0;
 }
 
+td .highlight .name
+{
+	font-weight: bold;
+}
+
 .table td.withProgress
 {
 	padding: 4px 4px;

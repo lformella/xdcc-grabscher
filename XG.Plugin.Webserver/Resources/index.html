@@ -312,7 +312,7 @@
 													<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="serverSignalr.flip(server);"></span>
 												</td>
 												<td class="rowWithText">
-													<span class="clickAble" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
+													<span class="clickAble" ng-class="{'highlight': serverSignalr.server == server}" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
 												</td>
 												<td class="text-right">
 													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)" title="{{'Remove'|translate}}"></span>

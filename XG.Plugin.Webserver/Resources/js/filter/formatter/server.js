@@ -81,7 +81,7 @@ define(['./module'], function (ng) {
 				return "";
 			}
 
-			var str = server.Name; // + ":" + server.Port;
+			var str = "<span class=\"name\">" + server.Name + ":" + server.Port + "</span>";
 			if (server.ErrorCode != "" && server.ErrorCode != "None" && server.ErrorCode != "0")
 			{
 				str += " - <small>" + $translate("Error") + ": " + server.ErrorCode + "</small>";

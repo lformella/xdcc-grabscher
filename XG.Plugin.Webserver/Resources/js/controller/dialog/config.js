@@ -131,7 +131,7 @@ define(['./module'], function (ng) {
 				}
 
 				var data = $scope.config;
-				$.each($data.FileHandlers, function (a, fileHandler)
+				$.each(data.FileHandlers, function (a, fileHandler)
 				{
 					var previousProcess = null;
 					$.each(fileHandler.Processes, function (b, process)
