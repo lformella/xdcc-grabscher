@@ -65,7 +65,7 @@ define(['./module'], function (ng) {
 							var element = HelperService.getByGuid(self.$scope[self.objectsName], message.Guid);
 							if (element != null)
 							{
-								self.$scope[self.objectsName][element.id] = element.value;
+								self.$scope[self.objectsName][element.id] = message;
 								self.$scope.$apply();
 							}
 						}

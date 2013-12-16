@@ -40,6 +40,7 @@ define(['./module'], function (ng) {
 					tableParamsName = "tableParams";
 				}
 				this.tableParamsName = tableParamsName;
+				this.reloadOffline = false;
 
 				var self = this;
 				var eventCallbacks = [
@@ -47,6 +48,7 @@ define(['./module'], function (ng) {
 						name: 'OnAdded',
 						callback:  function ()
 						{
+							self.reloadOffline = true;
 							self.$scope[self.tableParamsName].reload();
 						}
 					},
@@ -54,6 +56,7 @@ define(['./module'], function (ng) {
 						name: 'OnRemoved',
 						callback:  function ()
 						{
+							self.reloadOffline = true;
 							self.$scope[self.tableParamsName].reload();
 						}
 					},
@@ -61,6 +64,7 @@ define(['./module'], function (ng) {
 						name: 'OnChanged',
 						callback:  function ()
 						{
+							self.reloadOffline = true;
 							self.$scope[self.tableParamsName].reload();
 						}
 					},
@@ -83,6 +87,14 @@ define(['./module'], function (ng) {
 
 			SignalrTableFactory.prototype.loadData = function ($defer, params, method, methodParam)
 			{
+				if (this.reloadOffline)
+				{
+					this.reloadOffline = false;
+					$defer.resolve(this.$scope[this.objectsName]);
+					this.$scope.$apply();
+					return;
+				}
+
 				if (!this.isConnected())
 				{
 					return;
@@ -102,7 +114,7 @@ define(['./module'], function (ng) {
 					sort = params.$params.sorting[sortBy];
 				}
 
-				var $scope = this.$scope;
+				var self = this;
 				var signalr = null;
 				if (methodParam == undefined)
 				{
@@ -118,9 +130,9 @@ define(['./module'], function (ng) {
 						function (data)
 						{
 							params.total(data.Total);
-							$scope.objects = data.Results;
-							$defer.resolve($scope.objects);
-							$scope.$apply();
+							self.$scope[self.objectsName] = data.Results;
+							$defer.resolve(self.$scope[self.objectsName]);
+							self.$scope.$apply();
 						}
 					);
 				}

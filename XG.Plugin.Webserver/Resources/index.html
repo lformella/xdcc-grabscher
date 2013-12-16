@@ -311,7 +311,7 @@
 												<td class="withIcon">
 													<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="serverSignalr.flip(server);"></span>
 												</td>
-												<td class="rowWithText">
+												<td>
 													<span class="clickAble" ng-class="{'highlight': serverSignalr.server == server}" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
 												</td>
 												<td class="text-right">
@@ -361,7 +361,7 @@
 												<td class="withIcon">
 													<span class="clickAble" ng-bind-html='channel|formatChannelIcon' ng-click="channelSignalr.flip(channel)"></span>
 												</td>
-												<td class="withProgress">
+												<td class="withText">
 													<span ng-bind-html='channel|formatChannelName|trustAsHtml'></span>
 												</td>
 												<td class="text-right">
@@ -516,7 +516,7 @@
 												<td class="withIcon">
 													<span ng-bind-html='notification|formatNotificationIcon'></span>
 												</td>
-												<td class="rowWithText">
+												<td class="withText">
 													<span ng-bind-html='notification|formatNotificationContent|trustAsHtml'></span>
 												</td>
 												<td class="text-right">
@@ -717,7 +717,7 @@
 								<td class="withIcon">
 									<span ng-bind-html='$parent.parents[group.value]|formatBotIcon'></span>
 								</td>
-								<td colspan="2" class="rowWithText">
+								<td colspan="2" class="withText">
 									<span ng-bind-html='$parent.parents[group.value]|formatBotName'></span>
 								</td>
 								<td class="text-right">

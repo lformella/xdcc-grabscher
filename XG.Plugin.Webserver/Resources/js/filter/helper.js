@@ -36,7 +36,7 @@ define(['./module', 'moment'], function (ng, moment) {
 			}
 			if (size == 0)
 			{
-				return "&nbsp;";
+				return "";
 			}
 			if (size < 1024)
 			{

@@ -177,19 +177,19 @@ body
 	position: relative;
 }
 
-.ng-table-group > td.rowWithText
+.ng-table-group > td.withText, .table td.withText
 {
 	padding: 0 4px;
 	overflow: hidden;
 	white-space: nowrap;
 }
 
-td.rowWithText span
+td.withText span
 {
 	position: relative;
 }
 
-td.rowWithText small
+td.withText small
 {
 	position: absolute;
 	bottom: -16px;
@@ -205,6 +205,8 @@ td .highlight .name
 {
 	padding: 4px 4px;
 	vertical-align: middle;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .glyphicon.icon-overlay

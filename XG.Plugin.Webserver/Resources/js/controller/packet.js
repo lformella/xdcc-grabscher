@@ -26,15 +26,20 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('PacketCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', 'ngTableParams',
-		function ($rootScope, $scope, SignalrTableFactory, ngTableParams)
+	ng.controller('PacketCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', 'ngTableParams', 'HelperService',
+		function ($rootScope, $scope, SignalrTableFactory, ngTableParams, HelperService)
 		{
 			var eventCallbacks = [
 				{
 					name: 'OnChanged',
-					callback:  function ()
+					callback:  function (message)
 					{
-						$scope.tableParams.reload();
+						var element = HelperService.getByGuid($scope.parents, message.ParentGuid);
+						if (element != null)
+						{
+							$scope.parents[element.id] = message.Bot;
+							$scope.$apply();
+						}
 					}
 				}
 			];
@@ -43,7 +48,8 @@ define(['./module'], function (ng) {
 
 			$scope.searchBy = "";
 			$scope.search = "";
-			$scope.parents = [];
+			$scope.objects = [];
+			$scope.parents = {};
 			$scope.active = false;
 
 			$scope.tableParams = new ngTableParams({
@@ -55,6 +61,14 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
+					if ($scope.signalr.reloadOffline)
+					{
+						$scope.signalr.reloadOffline = false;
+						$defer.resolve($scope.objects);
+						$scope.$apply();
+						return;
+					}
+
 					if (!$scope.signalr.isConnected() || $scope.search == "")
 					{
 						return;
@@ -79,7 +93,7 @@ define(['./module'], function (ng) {
 								params.total(data.Total);
 								$scope.objects = data.Results;
 
-								$scope.parents = [];
+								$scope.parents = {};
 								angular.forEach($scope.objects, function (value)
 								{
 									$scope.parents[value.ParentGuid] = value.Bot;
