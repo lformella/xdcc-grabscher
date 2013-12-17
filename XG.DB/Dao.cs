@@ -32,6 +32,8 @@ using NHibernate.Tool.hbm2ddl;
 using XG.Config.Properties;
 using XG.Model.Domain;
 using log4net;
+
+
 #if __MonoCS__
 using Mono.Data.Sqlite;
 #else
@@ -44,9 +46,10 @@ namespace XG.DB
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		TrackingNumberInterceptor _interceptor = new TrackingNumberInterceptor();
-
-		ISessionFactory _sessions;
+		readonly ISession _session;
+		readonly int SecondsToSleep = 10;
+		DateTime _last;
+		Object _lock = new Object();
 
 		readonly int _version = 1;
 
@@ -95,7 +98,9 @@ namespace XG.DB
 			}
 
 			cfg.AddAssembly(typeof(Dao).Assembly);
-			_sessions = cfg.BuildSessionFactory();
+			var sessions = cfg.BuildSessionFactory();
+			_session = sessions.OpenSession(new TrackingNumberInterceptor());
+			_session.FlushMode = FlushMode.Never;
 
 			CheckIfDatabaseNeedsUpdate(insertVersion);
 			LoadObjects();
@@ -105,20 +110,13 @@ namespace XG.DB
 		{
 			var version = new Domain.Version { Number = _version };
 
-			using (var session = _sessions.OpenSession(_interceptor))
+			if (insertVersion)
 			{
-				using (var transaction = session.BeginTransaction())
-				{
-					if (insertVersion)
-					{
-						session.Save(new Domain.Version { Number = _version });
-					}
-					else
-					{
-						version = session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
-					}
-					transaction.Commit();
-				}
+				_session.Save(new Domain.Version { Number = _version });
+			}
+			else
+			{
+				version = _session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
 			}
 
 			UpdateDatabase(version.Number, _version);
@@ -131,36 +129,28 @@ namespace XG.DB
 			Searches = new Searches();
 			ApiKeys = new ApiKeys();
 
-			using (var session = _sessions.OpenSession(_interceptor))
+			var servers = _session.CreateQuery("FROM Server").List<Server>();
+			foreach (var server in servers)
 			{
-				using (var transaction = session.BeginTransaction())
-				{
-					var servers = session.CreateQuery("FROM Server").List<Server>();
-					foreach (var server in servers)
-					{
-						Servers.Add(server);
-					}
+				Servers.Add(server);
+			}
 
-					var files = session.CreateQuery("FROM File").List<File>();
-					foreach (var file in files)
-					{
-						Files.Add(file);
-					}
+			var files = _session.CreateQuery("FROM File").List<File>();
+			foreach (var file in files)
+			{
+				Files.Add(file);
+			}
 
-					var searches = session.CreateQuery("FROM Search").List<Search>();
-					foreach (var search in searches)
-					{
-						Searches.Add(search);
-					}
+			var searches = _session.CreateQuery("FROM Search").List<Search>();
+			foreach (var search in searches)
+			{
+				Searches.Add(search);
+			}
 
-					var apiKeys = session.CreateQuery("FROM ApiKey").List<ApiKey>();
-					foreach (var apiKey in apiKeys)
-					{
-						ApiKeys.Add(apiKey);
-					}
-
-					transaction.Commit();
-				}
+			var apiKeys = _session.CreateQuery("FROM ApiKey").List<ApiKey>();
+			foreach (var apiKey in apiKeys)
+			{
+				ApiKeys.Add(apiKey);
 			}
 
 			Servers.OnAdded += ObjectAdded;
@@ -188,76 +178,52 @@ namespace XG.DB
 		{
 			try
 			{
-				using (var session = _sessions.OpenSession(_interceptor))
-				{
-					using (var transaction = session.BeginTransaction())
-					{
-						session.Save(eventArgs.Value2);
-						transaction.Commit();
-					}
-				}
+				_session.Save(eventArgs.Value2);
 			}
 			catch (Exception ex)
 			{
 				Log.Fatal("cat save object " + eventArgs.Value2, ex);
 			}
+			RunFlush();
 		}
 
 		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
 			try
 			{
-				using (var session = _sessions.OpenSession(_interceptor))
-				{
-					using (var transaction = session.BeginTransaction())
-					{
-						session.Delete(eventArgs.Value2);
-						transaction.Commit();
-					}
-				}
+				_session.Delete(eventArgs.Value2);
 			}
 			catch (Exception ex)
 			{
 				Log.Fatal("cat remove object " + eventArgs.Value2, ex);
 			}
+			RunFlush();
 		}
 
 		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
 		{
 			try
 			{
-				using (var session = _sessions.OpenSession(_interceptor))
-				{
-					using (var transaction = session.BeginTransaction())
-					{
-						session.Update(eventArgs.Value1);
-						transaction.Commit();
-					}
-				}
+				_session.Update(eventArgs.Value1);
 			}
 			catch (Exception ex)
 			{
 				Log.Fatal("cat update object " + eventArgs.Value1, ex);
 			}
+			RunFlush();
 		}
 
 		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
 		{
 			try
 			{
-				using (var session = _sessions.OpenSession(_interceptor))
-				{
-					using (var transaction = session.BeginTransaction())
-					{
-						session.Update(eventArgs.Value1);
-						transaction.Commit();
-					}
-				}
+				_session.Update(eventArgs.Value1);
 			}
 			catch (Exception ex)
 			{
 				Log.Fatal("cat update object " + eventArgs.Value1, ex);
 			}
+			RunFlush();
 		}
 
 		void UpdateDatabase(int aFrom, int aTo)
@@ -268,6 +234,26 @@ namespace XG.DB
 			}
 
 			// add in next version...
+		}
+
+		void RunFlush ()
+		{
+			if (_last.AddSeconds(SecondsToSleep) < DateTime.Now)
+			{
+				lock (_lock)
+				{
+					_last = DateTime.Now;
+
+					try
+					{
+						_session.Flush();
+					}
+					catch (Exception ex)
+					{
+						Log.Fatal("RunFlush()", ex);
+					}
+				}
+			}
 		}
 
 		public void Dispose ()
@@ -292,7 +278,7 @@ namespace XG.DB
 			ApiKeys.OnChanged -= ObjectChanged;
 			ApiKeys.OnEnabledChanged -= ObjectEnabledChanged;
 
-			_sessions.Close();
+			_session.Close();
 		}
 	}
 }
