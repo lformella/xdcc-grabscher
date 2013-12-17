@@ -46,11 +46,34 @@ define(['./module'], function (ng) {
 				).fail(
 					function (message)
 					{
-						alert(message);
+						$scope.openErrorDialog(message);
+					}
+				);
+				$.connection.hub.error(
+					function (message)
+					{
+						$scope.openErrorDialog(message);
 					}
 				);
 				ipCookie('xg.password', password, { expires: 21, path: '/' });
 			});
+
+			$scope.openErrorDialog = function (message)
+			{
+				$modal.open({
+					keyboard: false,
+					backdrop: 'static',
+					templateUrl: 'errorDialog.html',
+					controller: 'ErrorDialogCtrl',
+					resolve:
+					{
+						message: function ()
+						{
+							return message;
+						}
+					}
+				});
+			};
 
 			$scope.openXdccDialog = function ()
 			{

@@ -1,5 +1,5 @@
 //
-//  index.js
+//  error.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,11 +23,29 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define([
-	'./api',
-	'./config',
-	'./error',
-	'./password',
-	'./serverChannel',
-	'./xdcc'
-], function () {});
+define(['./module'], function (ng) {
+	'use strict';
+
+	ng.controller('ErrorDialogCtrl', ['$scope', '$modalInstance', 'message',
+		function ($scope, $modalInstance, message)
+		{
+			if (message.source != undefined)
+			{
+				switch (message.source.status)
+				{
+					case 404:
+						$scope.message = "Lost connection to XG server - please reload page.";
+						break;
+
+					default:
+						$scope.message = "Lost connection to XG server - please reload page.";
+						break;
+				}
+			}
+			else
+			{
+				$scope.message = message;
+			}
+		}
+	]);
+});

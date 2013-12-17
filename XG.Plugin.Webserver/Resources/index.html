@@ -106,8 +106,8 @@
 												<input class="form-control" type="number" min="0" ng-model="$parent.config.MaxDownloadSpeedInKB" placeholder="{{'Max Download Speed'|translate}}" title="{{'Max Download Speed'|translate}}"/>
 												<span class="input-group-addon">KB</span>
 											</div>
+										</div>
 									</div>
-								</div>
 								</div>
 
 								<div class="form-horizontal">
@@ -246,6 +246,19 @@
 						<a class="btn btn-primary" ng-click="checkPassword()">
 							<span class="glyphicon glyphicon-log-in"></span> <span translate>Connect</span>
 						</a>
+					</div>
+				</div>
+			</div>
+		</script>
+
+		<script type="text/ng-template" id="errorDialog.html">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" translate>Error occured</h4>
+					</div>
+					<div class="modal-body">
+						<p>{{$parent.message|translate}}</p>
 					</div>
 				</div>
 			</div>
