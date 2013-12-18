@@ -48,8 +48,7 @@ namespace XG.DB
 
 		readonly ISession _session;
 		readonly int SecondsToSleep = 10;
-		DateTime _last;
-		Object _lock = new Object();
+		DateTime _lastFlush;
 
 		readonly int _version = 1;
 
@@ -238,12 +237,12 @@ namespace XG.DB
 
 		void RunFlush ()
 		{
-			if (_last.AddSeconds(SecondsToSleep) < DateTime.Now)
+			if (_lastFlush.AddSeconds(SecondsToSleep) < DateTime.Now)
 			{
-				lock (_lock)
-				{
-					_last = DateTime.Now;
+				_lastFlush = DateTime.Now;
 
+				lock (Servers) lock(Files) lock(Searches) lock(ApiKeys)
+				{
 					try
 					{
 						_session.Flush();
