@@ -579,4 +579,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\controller\dialog\config.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dialog\error.js" />
+  </ItemGroup>
 </Project>

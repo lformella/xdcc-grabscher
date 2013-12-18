@@ -102,11 +102,6 @@ body
 	padding-bottom: 5px;
 }
 
-.col-lg-1 input[type="radio"], input[type="checkbox"], .col-lg-2 input[type="radio"], input[type="checkbox"]
-{
-	margin: 10px 0 0;
-}
-
 .form-control.ng-invalid
 {
 	border-color: #B94A48;
@@ -304,6 +299,11 @@ td .highlight .name
 {
 	font-size: 1.5em;
 	padding-top: 7px;
+}
+
+#configDialog input[type="checkbox"]
+{
+	margin: 10px 0 0;
 }
 
 /** Menu **/

@@ -27,7 +27,7 @@
 //
 -->
 
-<html lang="en" ng-app="xg">
+<html lang="en" ng-app="xg" ng-controller="MainCtrl">
 	<head>
 		<meta charset="utf-8">
 		<title>XG Webfrontend v{{VERSION}}</title>
@@ -472,7 +472,7 @@
 			</div>
 		</script>
 
-		<div ng-controller="MainCtrl">
+		<div>
 			<nav class="navbar navbar-default navbar-fixed-top ng-hide" role="navigation" ng-show="passwordOk">
 				<div class="navbar-header">
 					<a class="navbar-brand" href="#">XG v{{config.version}}</a>
@@ -736,7 +736,10 @@
 								<td class="text-right">
 									{{$parent.parents[group.value]|formatBotSpeed}}
 								</td>
-								<td colspan="2"></td>
+								<td></td>
+								<td class="text-right">
+									{{$parent.parents[group.value].LastContact|date2Human}}
+								</td>
 							</tr>
 							<tr ng-repeat="packet in group.data">
 								<td class="text-right">

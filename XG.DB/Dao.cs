@@ -42,7 +42,7 @@ using System.Data.SQLite;
 
 namespace XG.DB
 {
-	public class Dao : IDisposable
+	public sealed class Dao : IDisposable
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
