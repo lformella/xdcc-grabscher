@@ -101,7 +101,18 @@ define(['./module'], function (ng) {
 				}
 			};
 
+			$scope.enableAskForVersion = function(channel)
+			{
+				$scope.channelSignalr.getProxy().server.enableAskForVersion(channel.Guid);
+			};
+
+			$scope.disableAskForVersion = function(channel)
+			{
+				$scope.channelSignalr.getProxy().server.disableAskForVersion(channel.Guid);
+			};
+
 			$scope.$watch('serverSignalr.server', function () {
+				$scope.tableParamsChannel.page(1);
 				$scope.tableParamsChannel.reload();
 			});
 		}

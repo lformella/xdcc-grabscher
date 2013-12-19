@@ -120,7 +120,7 @@ namespace XG.Application
 				app.AddWorker(webServer);
 			}
 
-			app.Start();
+			app.Start("App");
 
 			string shutdownFile = Settings.Default.GetAppDataPath() + "shutdown";
 			while (true)

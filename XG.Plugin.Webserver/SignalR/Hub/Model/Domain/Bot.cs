@@ -54,7 +54,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 
 		public string LastMessage
 		{
-			get { return Object.LastMessage; }
+			get { return Object.LastMessage.Escape(); }
 		}
 		
 		public DateTime LastMessageTime

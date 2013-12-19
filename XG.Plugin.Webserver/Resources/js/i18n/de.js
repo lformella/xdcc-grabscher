@@ -67,6 +67,9 @@ define(['./module'], function (i18n) {
 				"File Handler": "Datei Routine",
 				"Changes on the properties marked with an asterisk require a restart.": "Änderungen an Werten die mit einem Sternchen markiert sind benötigen einen Neustart.",
 				"Max Download Speed": "Max. Download Geschw.",
+				"Error Count": "Fehler Zähler",
+				"Success Count": "Erfolgs Zähler",
+				"Ask users for version": "User nach Version fragen",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */
@@ -182,7 +185,7 @@ define(['./module'], function (i18n) {
 
 				"Dashboard": "Übersicht",
 				"Graphs": "Graphen",
-				"Hide offline Bots": "inaktive Bots ausblenden",
+				"Show offline Bots": "Inaktive Bots anzeigen",
 				"IRC View": "IRC Übersicht",
 				"Files": "Dateien",
 				"Notifications": "Benachrichtigungen",

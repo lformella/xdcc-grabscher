@@ -84,6 +84,7 @@ define(['./module'], function (ng) {
 				{
 					$scope.searchBy = "Name";
 					$scope.search = message;
+					$scope.tableParams.page(1);
 					$scope.tableParams.reload();
 				}
 			});
@@ -94,6 +95,7 @@ define(['./module'], function (ng) {
 				{
 					$scope.searchBy = "Guid";
 					$scope.search = message;
+					$scope.tableParams.page(1);
 					$scope.tableParams.reload();
 				}
 			});

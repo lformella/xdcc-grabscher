@@ -358,15 +358,16 @@
 													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Name', 'desc')}"></span>
 													<span translate>Name</span>
 												</th>
-												<th class="sortable text-right sortable" width="90" ng-click="tableParamsChannel.sorting({'User' : tableParamsChannel.isSortBy('User', 'asc') ? 'desc' : 'asc'})">
+												<th class="sortable text-right sortable" width="80" ng-click="tableParamsChannel.sorting({'User' : tableParamsChannel.isSortBy('User', 'asc') ? 'desc' : 'asc'})">
 													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('User', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('User', 'desc')}"></span>
 													<span translate>User</span>
 												</th>
-												<th class="sortable text-right sortable" width="90" ng-click="tableParamsChannel.sorting({'Bots' : tableParamsChannel.isSortBy('Bots', 'asc') ? 'desc' : 'asc'})">
+												<th class="sortable text-right sortable" width="80" ng-click="tableParamsChannel.sorting({'Bots' : tableParamsChannel.isSortBy('Bots', 'asc') ? 'desc' : 'asc'})">
 													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Bots', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Bots', 'desc')}"></span>
 													<span translate>Bots</span>
 												</th>
-												<th width="40"></th>
+												<th width="90" translate>Ask users for version</th>
+												<th width="30"></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -382,6 +383,10 @@
 												</td>
 												<td class="text-right">
 													{{channel.BotCount}}
+												</td>
+												<td class="text-center">
+													<span class="glyphicon glyphicon-ok-circle ChameleonDark clickAble" ng-show="channel.AskForVersion" ng-click="disableAskForVersion(channel)" title="{{'Enabled'|translate}}"></span>
+													<span class="glyphicon glyphicon-ban-circle ScarletRedMiddle clickAble" ng-show="!channel.AskForVersion" ng-click="enableAskForVersion(channel)" title="{{'Disabled'|translate}}"></span>
 												</td>
 												<td class="text-right">
 													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="channelSignalr.remove(channel)" title="{{'Remove'|translate}}"></span>
@@ -411,7 +416,7 @@
 		</script>
 
 		<script type="text/ng-template" id="apiDialog.html">
-			<div class="modal-dialog">
+			<div id="apiDialog" class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" ng-click="$dismiss()" class="close">&times;</button>
@@ -428,9 +433,17 @@
 												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Guid', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Guid', 'desc')}"></span>
 												<span translate>Api Key</span>
 											</th>
-											<th class="sortable" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+											<th class="sortable text-left" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
 												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Name', 'desc')}"></span>
 												<span translate>Name</span>
+											</th>
+											<th width="75" class="sortable text-right" ng-click="tableParamsApi.sorting({'ErrorCount' : tableParamsApi.isSortBy('ErrorCount', 'asc') ? 'desc' : 'asc'})">
+												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('ErrorCount', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('ErrorCount', 'desc')}"></span>
+												<span translate>Error Count</span>
+											</th>
+											<th width="75" class="sortable text-right" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('SuccessCount', 'asc') ? 'desc' : 'asc'})">
+												<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('SuccessCount', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('SuccessCount', 'desc')}"></span>
+												<span translate>Success Count</span>
 											</th>
 											<th width="40"></th>
 										</tr>
@@ -441,10 +454,16 @@
 												<span class="clickAble" ng-bind-html='client|formatClientIcon' ng-click="signalr.flip(client)"></span>
 											</td>
 											<td>
-												<span ng-bind-html='client.Guid'></span>
+												{{client.Guid}}
 											</td>
 											<td>
-												<span ng-bind-html='client.Name'></span>
+												{{client.Name}}
+											</td>
+											<td class="text-right">
+												{{client.ErrorCount}}
+											</td>
+											<td class="text-right">
+												{{client.SuccessCount}}
 											</td>
 											<td class="text-right">
 												<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="signalr.remove(client)" title="{{'Remove'|translate}}"></span>
@@ -572,13 +591,13 @@
 								</li>
 								<li class="divider"></li>
 								<li>
-									<a ng-click="flipSetting('showOfflineBots')" ng-class="{'ScarletRedDark': settings.showOfflineBots}">
+									<a ng-click="flipSetting('showOfflineBots')" ng-class="{'ScarletRedDark': settings.showOfflineBots, 'Aluminium1Dark': !settings.showOfflineBots}">
 										<span class="glyphicon glyphicon-eye-open"></span>
-										<span translate>Hide offline Bots</span>
+										<span translate>Show offline Bots</span>
 									</a>
 								</li>
 								<li>
-									<a ng-click="flipSetting('humanDates')" ng-class="{'ScarletRedDark': settings.humanDates}">
+									<a ng-click="flipSetting('humanDates')" ng-class="{'ScarletRedDark': settings.humanDates, 'Aluminium1Dark': !settings.humanDates}">
 										<span class="glyphicon glyphicon-time"></span>
 										<span translate>Human readable dates</span>
 									</a>

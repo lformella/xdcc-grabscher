@@ -66,6 +66,11 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 			get { return Object.Bots.Count(); }
 		}
 
+		public bool AskForVersion
+		{
+			get { return Object.AskForVersion; }
+		}
+
 		#endregion
 	}
 }

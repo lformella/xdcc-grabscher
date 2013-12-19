@@ -1,5 +1,5 @@
 // 
-//  ApiKey.cs
+//  Search.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -29,19 +29,23 @@ using Newtonsoft.Json;
 namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
 	[JsonObject(MemberSerialization.OptOut)]
-	public class ApiKey : AObject
+	public class Search : AObject
 	{
 		[JsonIgnore]
-		public new XG.Model.Domain.ApiKey Object
+		public new XG.Model.Domain.Search Object
 		{
 			get
 			{
-				return (XG.Model.Domain.ApiKey)base.Object;
+				return (XG.Model.Domain.Search)base.Object;
 			}
 			set
 			{
 				base.Object = value;
 			}
 		}
+
+		public Int64 ResultsOnline { get; set; }
+
+		public Int64 ResultsOffline { get; set; }
 	}
 }

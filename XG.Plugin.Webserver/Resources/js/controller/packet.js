@@ -84,7 +84,7 @@ define(['./module'], function (ng) {
 						sort = params.$params.sorting[sortBy];
 					}
 
-					var signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots, params.$params.count, params.$params.page, sortBy, sort);
+					var signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots == 1, params.$params.count, params.$params.page, sortBy, sort);
 					if (signalR != null)
 					{
 						signalR.done(
@@ -115,6 +115,7 @@ define(['./module'], function (ng) {
 				{
 					$scope.searchBy = "Name";
 					$scope.search = message;
+					$scope.tableParams.page(1);
 					$scope.tableParams.reload();
 				}
 			});
@@ -125,6 +126,7 @@ define(['./module'], function (ng) {
 				{
 					$scope.searchBy = "Guid";
 					$scope.search = message;
+					$scope.tableParams.page(1);
 					$scope.tableParams.reload();
 				}
 			});

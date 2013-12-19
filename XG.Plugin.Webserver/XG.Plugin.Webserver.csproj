@@ -92,7 +92,6 @@
     <Compile Include="SignalR\Hub\Model\Domain\Flot.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Notification.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Packet.cs" />
-    <Compile Include="SignalR\Hub\Model\Domain\Search.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Server.cs" />
     <Compile Include="SignalR\Hub\Helper.cs" />
     <Compile Include="SignalR\EventForwarder.cs" />
@@ -111,7 +110,6 @@
     <Compile Include="DoubleConverter.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\ExternalSearchEntry.cs" />
     <Compile Include="SignalR\Hub\ApiHub.cs" />
-    <Compile Include="SignalR\Hub\Model\Domain\ApiKey.cs" />
     <Compile Include="Nancy\LoginModule.cs" />
     <Compile Include="Nancy\CustomBootstrapper.cs" />
     <Compile Include="Nancy\RedirectModule.cs" />
@@ -122,6 +120,9 @@
     <Compile Include="SignalR\Hub\Model\Domain\Config.cs" />
     <Compile Include="SignalR\Hub\ConfigHub.cs" />
     <Compile Include="Nancy\Api\Result.cs" />
+    <Compile Include="SignalR\Hub\Model\Domain\Search.cs" />
+    <Compile Include="SignalR\Hub\Model\Domain\ApiKey.cs" />
+    <Compile Include="SignalR\Hub\Model\Domain\Extension.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />

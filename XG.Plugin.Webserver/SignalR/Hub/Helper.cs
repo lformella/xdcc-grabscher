@@ -34,8 +34,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 {
 	internal static class Helper
 	{
-		public static readonly Guid _searchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
-		public static readonly Guid _searchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
+		public static readonly Guid SearchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
+		public static readonly Guid SearchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
 
 		public static Servers Servers { get; set; }
 		public static Files Files { get; set; }
@@ -107,14 +107,14 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return myObj;
 		}
 
-		static bool IsVisible(Packet aPacket, Search aSearch)
+		public static bool IsVisible(Packet aPacket, Search aSearch)
 		{
-			if (aSearch.Guid == _searchDownloads)
+			if (aSearch.Guid == SearchDownloads)
 			{
 				return aPacket.Connected;
 			}
 
-			if (aSearch.Guid == _searchEnabled)
+			if (aSearch.Guid == SearchEnabled)
 			{
 				return aPacket.Enabled;
 			}

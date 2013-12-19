@@ -248,7 +248,7 @@ td .highlight .name
 
 #serverChannelsDialog .tableDiv
 {
-	height: 420px;
+	height: 440px;
 }
 
 #serverChannelsDialog .table, #serverChannelsDialog .pagination {
@@ -304,6 +304,11 @@ td .highlight .name
 #configDialog input[type="checkbox"]
 {
 	margin: 10px 0 0;
+}
+
+#apiDialog
+{
+	width: 700px;
 }
 
 /** Menu **/

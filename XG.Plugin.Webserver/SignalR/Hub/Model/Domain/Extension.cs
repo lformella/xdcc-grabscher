@@ -1,5 +1,5 @@
 // 
-//  Servers.cs
+//  Extensions.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,47 +24,20 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 
-namespace XG.Model.Domain
+namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 {
-	public class Servers : AObjects
+	public static class Extensions
 	{
-		public new IEnumerable<Server> All
+		public static string Escape(this string aStr)
 		{
-			get { return base.All.Cast<Server>(); }
-		}
+			aStr = aStr.Replace("\"", "&quot;");
+			aStr = aStr.Replace("<", "&lt;");
+			aStr = aStr.Replace(">", "&gt;");
+			aStr = aStr.Replace("'", "&#39;");
 
-		public Server Server(string aName)
-		{
-			return base.Named(aName) as Server;
-		}
-
-		public bool Add(Server aServer)
-		{
-			return base.Add(aServer);
-		}
-
-		public bool Add(string aServer, int aPort = 6667)
-		{
-			aServer = aServer.Trim().ToLower();
-			if (Server(aServer) == null)
-			{
-				var tServer = new Server {Name = aServer, Port = aPort, Enabled = true};
-				return Add(tServer);
-			}
-			return false;
-		}
-
-		public bool Remove(Server aServer)
-		{
-			return base.Remove(aServer);
-		}
-
-		public override bool DuplicateChildExists(AObject aObject)
-		{
-			return Server((aObject as Server).Name) != null;
+			return aStr;
 		}
 	}
 }

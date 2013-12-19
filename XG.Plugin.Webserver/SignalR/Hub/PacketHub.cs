@@ -80,33 +80,35 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 		}
 
-		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
+			if (search == null)
+			{
+				if (aGuid == Helper.SearchEnabled)
+				{
+					search = new Search { Guid = Helper.SearchEnabled };
+				}
+				else if (aGuid == Helper.SearchDownloads)
+				{
+					search = new Search { Guid = Helper.SearchDownloads };
+				}
+			}
 			if (search != null)
 			{
-				return LoadByName(search.Name, aOfflineBots, aCount, aPage, aSortBy, aSort);
+				return LoadBySearch(search, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
 			}
-
-			IEnumerable<Packet> packets = new List<Packet>();
-			if (aGuid == Helper._searchEnabled)
-			{
-				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Enabled select packet);
-			}
-			else if (aGuid == Helper._searchDownloads)
-			{
-				packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Connected select packet);
-			}
-
-			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
-			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
-			return new Model.Domain.Result { Total = length, Results = objects };
+			return new Model.Domain.Result { Total = 0, Results = new List<Packet>() };
 		}
 
-		public Model.Domain.Result LoadByName(string aSearch, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByName(string aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (!aOfflineBots || bot.Enabled) from packet in bot.Packets where packet.Name.ContainsAll(aSearch.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)) select packet);
+			return LoadBySearch(new Search { Name = aSearch }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
+		}
+
+		Model.Domain.Result LoadBySearch(Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		{
+			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (aShowOfflineBots || bot.Connected) from packet in bot.Packets where Helper.IsVisible(packet, aSearch) select packet);
 			int length;
 			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);

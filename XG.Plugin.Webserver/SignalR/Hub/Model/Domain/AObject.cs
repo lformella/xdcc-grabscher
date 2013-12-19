@@ -53,7 +53,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 		
 		public virtual string Name
 		{
-			get { return Object.Name; }
+			get { return Object.Name.Escape(); }
 		}
 		
 		public bool Connected

@@ -677,7 +677,7 @@ namespace XG.Plugin.Irc
 
 			AddBotToQueue(aBot, Settings.Default.CommandWaitTime);
 
-			FireNotificationAdded(Notification.Types.PacketRemoved, aBot);
+			FireNotificationAdded(Notification.Types.PacketRemoved, aBot.CurrentQueuedPacket);
 		}
 
 		void CheckIfUserShouldVersioned(string aChannel, string aUser)

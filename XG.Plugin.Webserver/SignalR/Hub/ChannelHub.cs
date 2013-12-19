@@ -79,6 +79,26 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 		}
 
+		public void EnableAskForVersion(Guid aGuid)
+		{
+			Channel tObj = Helper.Servers.WithGuid(aGuid) as Channel;
+			if (tObj != null)
+			{
+				tObj.AskForVersion = true;
+				tObj.Commit();
+			}
+		}
+
+		public void DisableAskForVersion(Guid aGuid)
+		{
+			Channel tObj = Helper.Servers.WithGuid(aGuid) as Channel;
+			if (tObj != null)
+			{
+				tObj.AskForVersion = false;
+				tObj.Commit();
+			}
+		}
+
 		public void Add(Guid aGuid, string aString)
 		{
 			var tServ = Helper.Servers.WithGuid(aGuid) as Server;
