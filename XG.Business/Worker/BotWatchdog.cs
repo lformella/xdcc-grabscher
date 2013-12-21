@@ -58,7 +58,7 @@ namespace XG.Business.Worker
 			}
 			if (a > 0)
 			{
-				Log.Info("RunBotWatchdog() removed " + a + " offline bot(s)");
+				Log.Info("LoopRun() removed " + a + " offline bot(s)");
 			}
 		}
 

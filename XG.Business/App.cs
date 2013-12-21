@@ -81,99 +81,34 @@ namespace XG.Business
 		{
 			foreach (XG.Model.Domain.File file in Files.All)
 			{
-				// lets check if the directory is still on the harddisk
-				if (!Directory.Exists(Settings.Default.TempPath + file.TmpPath))
+				var info = new FileInfo(Settings.Default.TempPath + file.TmpName);
+
+				// lets check if the file is still on the harddisk
+				if (!info.Exists)
 				{
-					Log.Warn("Run() crash recovery directory " + file + " is missing ");
+					Log.Warn("TryToRecoverOpenFiles() " + info.FullName + " is missing ");
 					Files.Remove(file);
 					continue;
 				}
-
-				if (!file.Enabled)
+				else if (!file.Enabled)
 				{
-					bool complete = true;
-					string tmpPath = Settings.Default.TempPath + file.TmpPath;
-
-					foreach (FilePart part in file.Parts)
+					// check if the real file and the part is actual the same
+					if (file.CurrentSize != info.Length)
 					{
-						// first part is always checked!
-						if (part.StartSize == 0)
-						{
-							part.Checked = true;
-						}
-
-						// check if the real file and the part is actual the same
-						var info = new FileInfo(tmpPath + part.StartSize);
-						if (info.Exists)
-						{
-							// TODO uhm, should we do smt here ?! maybe check the size and set the state to ready?
-							if (part.CurrentSize != part.StartSize + info.Length)
-							{
-								Log.Warn("Run() crash recovery size mismatch of " + part + " from " + file + " - db:" + part.CurrentSize + " real:" + info.Length);
-								part.CurrentSize = part.StartSize + info.Length;
-								complete = false;
-							}
-						}
-						else
-						{
-							Log.Error("Run() crash recovery " + part + " of " + file + " is missing");
-							FileActions.RemovePart(file, part);
-							complete = false;
-						}
-
-						// uhh, this is bad - close it and hope it works again
-						if (part.State == FilePart.States.Open)
-						{
-							part.State = FilePart.States.Closed;
-							complete = false;
-						}
-						// the file is closed, so do smt
-						else
-						{
-							// check the file for safety
-							if (part.Checked && part.State == FilePart.States.Ready)
-							{
-								FilePart next = null;
-								try
-								{
-									next = (from currentPart in file.Parts where currentPart.StartSize == part.StopSize select currentPart).Single();
-								}
-								catch (Exception) {}
-								if (next != null && !next.Checked && next.CurrentSize - next.StartSize >= Settings.Default.FileRollbackCheckBytes)
-								{
-									complete = false;
-									try
-									{
-										Log.Fatal("Run() crash recovery checking " + next.Name);
-										byte[] bytes = null;
-										using (var fileStream = System.IO.File.Open(FileActions.CompletePath(part), FileMode.Open, FileAccess.ReadWrite))
-										{
-											var fileReader = new BinaryReader(fileStream);
-											// extract the needed refernce bytes
-											fileStream.Seek(-Settings.Default.FileRollbackCheckBytes, SeekOrigin.End);
-											bytes = fileReader.ReadBytes(Settings.Default.FileRollbackCheckBytes);
-											fileReader.Close();
-										}
-										FileActions.CheckNextReferenceBytes(part, bytes);
-									}
-									catch (Exception ex)
-									{
-										Log.Fatal("Run() crash recovery", ex);
-									}
-								}
-							}
-							else
-							{
-								complete = false;
-							}
-						}
+						Log.Warn("TryToRecoverOpenFiles() size mismatch of " + file + " - db:" + file.CurrentSize + " real:" + info.Length);
+						file.CurrentSize = info.Length;
 					}
 
-					// check and maybee join the files if something happend the last run
-					// for exaple the disk was full or the rights were not there
-					if (complete && file.Parts.Any())
+					// uhh, this is bad - close it and hope it works again
+					if (file.Connected)
 					{
-						FileActions.CheckFile(file);
+						file.Connected = false;
+					}
+
+					file.Commit();
+					if (!file.Enabled && file.MissingSize == 0)
+					{
+						FileActions.FinishFile(file);
 					}
 				}
 			}
@@ -192,7 +127,7 @@ namespace XG.Business
 
 		void ClearOldDownloads()
 		{
-			List<string> dirs = Directory.GetDirectories(Settings.Default.TempPath).ToList();
+			List<string> files = Directory.GetFiles(Settings.Default.TempPath).ToList();
 
 			foreach (XG.Model.Domain.File file in Files.All)
 			{
@@ -203,12 +138,12 @@ namespace XG.Business
 				}
 				else
 				{
-					string dir = Settings.Default.TempPath + file.TmpPath;
-					dirs.Remove(dir.Substring(0, dir.Length - 1));
+					string dir = Settings.Default.TempPath + file.TmpName;
+					files.Remove(dir.Substring(0, dir.Length - 1));
 				}
 			}
 
-			foreach (string dir in dirs)
+			foreach (string dir in files)
 			{
 				FileSystem.DeleteDirectory(dir);
 			}

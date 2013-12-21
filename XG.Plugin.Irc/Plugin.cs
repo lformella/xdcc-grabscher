@@ -259,12 +259,13 @@ namespace XG.Plugin.Irc
 
 				try
 				{
-					// if the connection never connected, there will be no part!
-					// and if we manually killed stopped the packet there will be no parent of the part
-					if (download.Part != null && download.Part.Parent != null)
+					// if the connection never connected, there will be no file
+					// and if we manually stopped the packet there will be file also
+					// the missing size is negative?!
+					if (download.File != null && download.File.MissingSize <= 0)
 					{
-						// do this here because the bothandler sets the part state and after this we can check the file
-						FileActions.CheckFile(download.Part.Parent);
+						// do this here because the bothandler sets the file state
+						FileActions.FinishFile(download.File);
 					}
 				}
 				catch (Exception ex)

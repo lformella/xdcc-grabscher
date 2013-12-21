@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  ConfigHub.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -35,7 +35,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			config.AutoRegisterNickserv = Settings.Default.AutoRegisterNickserv;
 			config.ElasticSearchHost = Settings.Default.ElasticSearchHost;
 			config.ElasticSearchPort = Settings.Default.ElasticSearchPort;
-			config.EnableMultiDownloads = Settings.Default.EnableMultiDownloads;
 			config.FileHandlers = Settings.Default.GetFileHandlers();
 			config.IrcNick = Settings.Default.IrcNick;
 			config.IrcPasswort = Settings.Default.IrcPasswort;
@@ -59,7 +58,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			Settings.Default.AutoRegisterNickserv = aConfig.AutoRegisterNickserv;
 			Settings.Default.ElasticSearchHost = aConfig.ElasticSearchHost;
 			Settings.Default.ElasticSearchPort = aConfig.ElasticSearchPort;
-			Settings.Default.EnableMultiDownloads = aConfig.EnableMultiDownloads;
 			Settings.Default.SetFileHandlers(aConfig.FileHandlers);
 			Settings.Default.IrcNick = aConfig.IrcNick;
 			Settings.Default.IrcPasswort = aConfig.IrcPasswort;

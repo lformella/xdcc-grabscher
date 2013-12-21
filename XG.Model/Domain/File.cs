@@ -29,7 +29,7 @@ using System.Linq;
 
 namespace XG.Model.Domain
 {
-	public class File : AObjects
+	public class File : AObject
 	{
 		#region VARIABLES
 
@@ -39,12 +39,12 @@ namespace XG.Model.Domain
 			//protected set { base.Name = value; }
 		}
 
-		string _tmpPath;
+		string _tmpName;
 
-		public virtual string TmpPath
+		public virtual string TmpName
 		{
-			get { return _tmpPath; }
-			protected set { _tmpPath = value; }
+			get { return _tmpName; }
+			protected set { _tmpName = value; }
 		}
 
 		Int64 _size;
@@ -55,77 +55,75 @@ namespace XG.Model.Domain
 			protected set { _size = value; }
 		}
 
+		Int64 _currentSize;
+
 		public virtual Int64 CurrentSize
 		{
-			get
-			{
-				try
-				{
-					return (from part in Parts select part.CurrentSize).Sum();
-				}
-				catch
-				{
-					return 0;
-				}
-			}
+			get { return _currentSize; }
+			set { SetProperty(ref _currentSize, value, "CurrentSize"); }
+		}
+
+		public virtual Int64 MissingSize
+		{
+			get { return _size - _currentSize; }
 		}
 
 		public virtual Int64 TimeMissing
 		{
 			get
 			{
-				try
-				{
-					return (from part in Parts select part.TimeMissing).Max();
-				}
-				catch
-				{
-					return 0;
-				}
+				Int64 time = (_speed > 0 ? (MissingSize / Speed) : 0);
+				return time;
 			}
 		}
+
+		Int64 _speed;
 
 		public virtual Int64 Speed
 		{
-			get
+			get { return _speed; }
+			set { SetProperty(ref _speed, value, "Speed"); }
+		}
+
+		Packet _packet;
+
+		public virtual Packet Packet
+		{
+			get { return _packet; }
+			set
 			{
-				try
+				if (_packet != value)
 				{
-					return (from part in Parts select part.Speed).Sum();
-				}
-				catch
-				{
-					return 0;
+					_packet = value;
+					if (_packet != null)
+					{
+						_packetGuid = _packet.Guid;
+					}
+					else
+					{
+						_packetGuidOld = _packetGuid;
+						_packetGuid = Guid.Empty;
+					}
 				}
 			}
 		}
 
-		#endregion
+		Guid _packetGuid;
 
-		#region CHILDREN
-
-		public virtual IEnumerable<FilePart> Parts
+		public virtual Guid PacketGuid
 		{
-			get { return All.Cast<FilePart>(); }
+			get { return _packetGuid; }
 		}
 
-		public virtual bool Add(FilePart aPart)
-		{
-			return base.Add(aPart);
-		}
+		Guid _packetGuidOld;
 
-		public virtual bool Remove(FilePart aPart)
+		public virtual Guid PacketGuidOld
 		{
-			return base.Remove(aPart);
-		}
-
-		public override bool DuplicateChildExists(AObject aObject)
-		{
-			return false;
+			get { return _packetGuidOld; }
 		}
 
 		#endregion
-
+		
 		#region CONSTRUCTOR
 
 		protected  File ()
@@ -135,7 +133,7 @@ namespace XG.Model.Domain
 		{
 			base.Name = aName;
 			_size = aSize;
-			_tmpPath = Helper.ShrinkFileName(aName, aSize);
+			_tmpName = Helper.ShrinkFileName(aName, aSize);
 		}
 
 		#endregion
@@ -144,7 +142,7 @@ namespace XG.Model.Domain
 
 		public override string ToString()
 		{
-			return base.ToString() + "|" + Size + "|" + TmpPath;
+			return base.ToString() + "|" + Size + "|" + TmpName;
 		}
 
 		#endregion

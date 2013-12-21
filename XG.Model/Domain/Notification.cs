@@ -35,15 +35,15 @@ namespace XG.Model.Domain
 		{
 			None = 0,
 			PacketCompleted = 1,
-			PacketIncompleted = 2,
+			PacketIncomplete = 2,
 			PacketBroken = 3,
+			PacketFileMismatch = 7,
 
 			PacketRequested = 4,
 			PacketRemoved = 5,
 
 			FileCompleted = 6,
-			FileSizeMismatch = 7,
-			FileBuildFailed = 8,
+			FileFinishFailed = 8,
 
 			ServerConnected = 9,
 			ServerConnectFailed = 10,
@@ -71,12 +71,20 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _type, value, "Type"); }
 		}
 
-		AObject _object;
+		AObject _object1;
 
-		public AObject Object
+		public AObject Object1
 		{
-			get { return _object; }
-			set { SetProperty(ref _object, value, "Object"); }
+			get { return _object1; }
+			set { SetProperty(ref _object1, value, "Object1"); }
+		}
+
+		AObject _object2;
+
+		public AObject Object2
+		{
+			get { return _object2; }
+			set { SetProperty(ref _object2, value, "Object2"); }
 		}
 
 		DateTime _time;
@@ -90,10 +98,11 @@ namespace XG.Model.Domain
 
 		#region CONSTRUCTOR
 
-		public Notification(Notification.Types aType, AObject aObject)
+		public Notification(Notification.Types aType, AObject aObject1, AObject aObject2 = null)
 		{
 			_type = aType;
-			_object = aObject;
+			_object1 = aObject1;
+			_object2 = aObject2;
 			_time = DateTime.Now;
 		}
 

@@ -86,32 +86,17 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 		
 		public Int64 Speed
 		{
-			get { return Object.Part != null ? Object.Part.Speed : 0; }
-		}
-		
-		public Int64 StartSize
-		{
-			get { return Object.Part != null ? Object.Part.StartSize : 0; }
-		}
-		
-		public Int64 StopSize
-		{
-			get { return Object.Part != null ? Object.Part.StopSize : 0; }
-		}
-
-		public bool IsChecked
-		{
-			get { return Object.Part != null && Object.Part.Checked; }
+			get { return Object.File != null ? Object.File.Speed : 0; }
 		}
 		
 		public Int64 CurrentSize
 		{
-			get { return Object.Part != null ? Object.Part.CurrentSize : 0; }
+			get { return Object.File != null ? Object.File.CurrentSize : 0; }
 		}
 		
 		public Int64 TimeMissing
 		{
-			get { return Object.Part != null ? Object.Part.TimeMissing : 0; }
+			get { return Object.File != null ? Object.File.TimeMissing : 0; }
 		}
 
 		#endregion

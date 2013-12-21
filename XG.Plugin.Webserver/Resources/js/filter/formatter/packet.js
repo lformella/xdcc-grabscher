@@ -112,20 +112,13 @@ define(['./module'], function (ng) {
 
 			if (packet.Connected)
 			{
-				var a = ((packet.StartSize) / packet.Size).toFixed(2) * 100;
-				var b = ((packet.CurrentSize - packet.StartSize) / packet.Size).toFixed(2) * 100;
-				var c = ((packet.StopSize - packet.CurrentSize) / packet.Size).toFixed(2) * 100;
-				if (a + b + c > 100)
-				{
-					c = 100 - a - b;
-				}
+				var a = (packet.CurrentSize / packet.Size).toFixed(2) * 100;
+				var b = 100 - a;
 
 				ret += "<div class='progress progress-striped'>" +
-					"<div style='width: " + a + "%' class='progress-bar'></div>" +
-					"<div style='width: " + b + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + "'></div>" +
-					"<div style='width: " + c + "%' class='progress-bar " + (packet.IsChecked ? "progress-bar-success" : "progress-bar-warning") + " progress-bar-light'></div>" +
+					"<div style='width: " + a + "%' class='progress-bar progress-bar-success'></div>" +
+					"<div style='width: " + b + "%' class='progress-bar progress-bar-success progress-bar-light'></div>" +
 					"</div>";
-				//ret += "<progress max='" + packet.Size + "' value='" + packet.CurrentSize + "'></progress>";
 			}
 
 			return ret;

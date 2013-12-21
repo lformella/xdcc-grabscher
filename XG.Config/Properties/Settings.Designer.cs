@@ -266,19 +266,6 @@ namespace XG.Config.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableMultiDownloads {
-            get {
-                return ((bool)(this["EnableMultiDownloads"]));
-            }
-            set {
-                this["EnableMultiDownloads"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("xgisgreat")]
         public string Password {
             get {
@@ -427,10 +414,9 @@ namespace XG.Config.Properties {
                 return ((string)(this["XgVersion"]));
             }
         }
-
-		[global::System.Configuration.UserScopedSettingAttribute()]
-		[global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int MaxDownloadSpeedInKB {
             get {

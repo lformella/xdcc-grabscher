@@ -54,19 +54,7 @@ namespace XG.Test.DB
 				for (int a = 0; a < Count; a++)
 				{
 					var file = new File("test" + a, 1000000 * (a + 1));
-
-					for (int b = 0; b < Count; b++)
-					{
-						var part = new FilePart
-						{
-							StartSize = 100000 * (b),
-							CurrentSize = 200000 * (b + 1),
-							StopSize = 300000 * (b + 1),
-							Checked = random.Next(1, 3) == 1
-						};
-						file.Add(part);
-					}
-
+					file.CurrentSize = 700000 * (a + 1);
 					files.Add(file);
 				}
 

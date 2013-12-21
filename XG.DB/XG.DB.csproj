@@ -75,7 +75,6 @@
     <EmbeddedResource Include="Mappings\Search.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mappings\FilePart.hbm.xml" />
     <EmbeddedResource Include="Mappings\Packet.hbm.xml" />
     <EmbeddedResource Include="Mappings\Bot.hbm.xml" />
     <EmbeddedResource Include="Mappings\Channel.hbm.xml" />

@@ -70,12 +70,8 @@
 								<div class="form-horizontal">
 									<div class="form-group">
 										<label class="col-lg-4 control-label" translate>Auto Register Nickserv</label>
-										<div class="col-lg-2">
+										<div class="col-lg-8">
 											<input type="checkbox" ng-model="$parent.config.AutoRegisterNickserv" ng-show="$parent.configReady">
-										</div>
-										<label class="col-lg-4 control-label" translate>Enable Multi Downloads</label>
-										<div class="col-lg-2">
-											<input type="checkbox" ng-model="$parent.config.EnableMultiDownloads" ng-show="$parent.configReady">
 										</div>
 									</div>
 								</div>
@@ -494,7 +490,7 @@
 		<div>
 			<nav class="navbar navbar-default navbar-fixed-top ng-hide" role="navigation" ng-show="passwordOk">
 				<div class="navbar-header">
-					<a class="navbar-brand" href="#">XG v{{config.version}}</a>
+					<a class="navbar-brand" href="#">XG v{{VERSION}}</a>
 				</div>
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav">
@@ -692,7 +688,7 @@
 						</div>
 					</div>
 
-					<div ng-show="snapshot.FileTimeMissing > 0" class="panel panel-default dashboardItem">
+					<div ng-show="snapshot[29] > 0" class="panel panel-default dashboardItem">
 						<div class="panel-heading">
 							<h3 class="panel-title icons-doc-text" translate> Files</h3>
 						</div>
@@ -863,6 +859,10 @@
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Size', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Size', 'desc')}"></span>
 									<span translate>Size</span>
 								</th>
+								<th width="140" class="text-right sortable" ng-click="tableParams.sorting({'Speed' : tableParams.isSortBy('Speed', 'asc') ? 'desc' : 'asc'})">
+									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('Speed', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('Speed', 'desc')}"></span>
+									<span translate>Speed</span>
+								</th>
 								<th width="170" class="sortable" ng-click="tableParams.sorting({'TimeMissing' : tableParams.isSortBy('TimeMissing', 'asc') ? 'desc' : 'asc'})">
 									<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParams.isSortBy('TimeMissing', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParams.isSortBy('TimeMissing', 'desc')}"></span>
 									<span translate>Time Missing</span>
@@ -879,6 +879,9 @@
 								</td>
 								<td class="text-right">
 									{{file.Size|size2Human}}
+								</td>
+								<td class="text-right">
+									{{file.Speed|speed2Human}}
 								</td>
 								<td class="text-right">
 									{{file.TimeMissing|time2Human}}

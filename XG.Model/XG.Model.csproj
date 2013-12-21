@@ -42,7 +42,6 @@
     <Compile Include="Domain\EventArgs.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Domain\File.cs" />
-    <Compile Include="Domain\FilePart.cs" />
     <Compile Include="Domain\Files.cs" />
     <Compile Include="Domain\Helper.cs" />
     <Compile Include="Domain\Notification.cs" />

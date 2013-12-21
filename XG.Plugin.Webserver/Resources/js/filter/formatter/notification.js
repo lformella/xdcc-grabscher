@@ -51,9 +51,9 @@ define(['./module'], function (ng) {
 				case Enum.NotificationType.ChannelKicked:
 				case Enum.NotificationType.BotConnectFailed:
 				case Enum.NotificationType.BotSubmittedWrongPort:
-				case Enum.NotificationType.PacketIncompleted:
+				case Enum.NotificationType.PacketIncomplete:
 				case Enum.NotificationType.PacketBroken:
-				case Enum.NotificationType.FileSizeMismatch:
+				case Enum.NotificationType.PacketFileMismatch:
 				case Enum.NotificationType.FileBuildFailed:
 					iconClass = "ScarletRedMiddle";
 					break;
@@ -81,23 +81,23 @@ define(['./module'], function (ng) {
 				case Enum.NotificationType.ChannelParted:
 				case Enum.NotificationType.ChannelJoined:
 					icon = "comment";
-					break;
 
-				case Enum.NotificationType.BotConnected:
+					break;
 				case Enum.NotificationType.BotConnectFailed:
 				case Enum.NotificationType.BotSubmittedWrongPort:
 					icon = "user";
 					break;
 
-				case Enum.NotificationType.PacketIncompleted:
+				case Enum.NotificationType.BotConnected:
+				case Enum.NotificationType.PacketIncomplete:
 				case Enum.NotificationType.PacketBroken:
 				case Enum.NotificationType.PacketRequested:
 				case Enum.NotificationType.PacketRemoved:
 				case Enum.NotificationType.PacketCompleted:
+				case Enum.NotificationType.PacketFileMismatch:
 					icon = "file";
 					break;
 
-				case Enum.NotificationType.FileSizeMismatch:
 				case Enum.NotificationType.FileBuildFailed:
 				case Enum.NotificationType.FileCompleted:
 					icon = "file";
@@ -119,8 +119,10 @@ define(['./module'], function (ng) {
 
 			var msg = $translate("Notification_Description_" + notification.Type,
 			{
-				Name: notification.ObjectName,
-				ParentName: notification.ParentName
+				ObjectName1: notification.ObjectName1,
+				ParentName1: notification.ParentName1,
+				ObjectName2: notification.ObjectName2,
+				ParentName2: notification.ParentName2
 			});
 			return "<span title='" + msg + "'>" + msg + "</span>";
 		}
@@ -149,10 +151,12 @@ define(['./module'], function (ng) {
 			}
 
 			return $translate("Notification_Description_" + notification.Type,
-				{
-					Name: notification.ObjectName,
-					ParentName: notification.ParentName
-				});
+			{
+				ObjectName1: notification.ObjectName1,
+				ParentName1: notification.ParentName1,
+				ObjectName2: notification.ObjectName2,
+				ParentName2: notification.ParentName2
+			});
 		}
 	}]);
 });

@@ -74,9 +74,6 @@
     <Setting Name="ReadyPath" Provider="XgSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="EnableMultiDownloads" Provider="XgSettingsProvider" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Password" Provider="XgSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)">xgisgreat</Value>
     </Setting>

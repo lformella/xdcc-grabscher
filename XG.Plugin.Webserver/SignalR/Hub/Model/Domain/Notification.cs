@@ -51,14 +51,24 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 			get { return Object.Type; }
 		}
 
-		public string ObjectName
+		public string ObjectName1
 		{
-			get { return Object.Object.Name; }
+			get { return Object.Object1 != null ? Object.Object1.Name : ""; }
 		}
 
-		public string ParentName
+		public string ParentName1
 		{
-			get { return Object.Object.Parent != null ? Object.Object.Parent.Name : ""; }
+			get { return Object.Object1 != null && Object.Object1.Parent != null ? Object.Object1.Parent.Name : ""; }
+		}
+
+		public string ObjectName2
+		{
+			get { return Object.Object2 != null ? Object.Object2.Name : ""; }
+		}
+
+		public string ParentName2
+		{
+			get { return Object.Object2 != null && Object.Object2.Parent != null ? Object.Object2.Parent.Name : ""; }
 		}
 
 		public DateTime Time

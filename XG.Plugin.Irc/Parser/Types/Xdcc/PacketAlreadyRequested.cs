@@ -24,6 +24,7 @@
 //  
 
 using XG.Model.Domain;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
@@ -43,6 +44,8 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				{
 					aBot.State = Bot.States.Waiting;
 				}
+
+				//FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.BotWaitTime));
 
 				UpdateBot(aBot, aMessage);
 				return true;

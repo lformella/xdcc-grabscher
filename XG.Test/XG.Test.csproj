@@ -153,9 +153,6 @@
     <EmbeddedResource Include="..\XG.DB\Mappings\File.hbm.xml">
       <Link>Mappings\File.hbm.xml</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\XG.DB\Mappings\FilePart.hbm.xml">
-      <Link>Mappings\FilePart.hbm.xml</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\XG.DB\Mappings\Search.hbm.xml">
       <Link>Mappings\Search.hbm.xml</Link>
       <SubType>Designer</SubType>

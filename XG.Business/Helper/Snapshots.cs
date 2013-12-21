@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  Snapshots.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -48,7 +48,7 @@ namespace XG.Business.Helper
 
 			snapshot.Set(SnapshotValue.Timestamp, DateTime.Now.ToTimestamp());
 
-			snapshot.Set(SnapshotValue.Speed, (from file in files from part in file.Parts select part.Speed).Sum());
+			snapshot.Set(SnapshotValue.Speed, (from file in files select file.Speed).Sum());
 
 			snapshot.Set(SnapshotValue.Servers, (from server in servers select server).Count());
 			snapshot.Set(SnapshotValue.ServersEnabled, (from server in servers where server.Enabled select server).Count());
@@ -93,11 +93,11 @@ namespace XG.Business.Helper
 			snapshot.Set(SnapshotValue.PacketsSizeConnected, (from packet in packets where packet.Parent.Connected select packet.Size).Sum());
 			snapshot.Set(SnapshotValue.PacketsSizeDisconnected, (from packet in packets where !packet.Parent.Connected select packet.Size).Sum());
 
-			snapshot.Set(SnapshotValue.FileSizeDownloaded, (from file in files from part in file.Parts select part.DownloadedSize).Sum());
-			snapshot.Set(SnapshotValue.FileSizeMissing, (from file in files from part in file.Parts select part.MissingSize).Sum());
+			snapshot.Set(SnapshotValue.FileSizeDownloaded, (from file in files select file.CurrentSize).Sum());
+			snapshot.Set(SnapshotValue.FileSizeMissing, (from file in files select file.MissingSize).Sum());
 			try
 			{
-				snapshot.Set(SnapshotValue.FileTimeMissing, (from file in files from part in file.Parts select part.TimeMissing).Max());
+				snapshot.Set(SnapshotValue.FileTimeMissing, (from file in files select file.TimeMissing).Max());
 			}
 			catch (Exception)
 			{

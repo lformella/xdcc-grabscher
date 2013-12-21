@@ -84,14 +84,14 @@ Enum.SnapshotValue =
 Enum.NotificationType =
 {
 	PacketCompleted: 1,
-	PacketIncompleted: 2,
+	PacketIncomplete: 2,
 	PacketBroken: 3,
+	PacketFileMismatch: 7,
 
 	PacketRequested: 4,
 	PacketRemoved: 5,
 
 	FileCompleted: 6,
-	FileSizeMismatch: 7,
 	FileBuildFailed: 8,
 
 	ServerConnected: 9,

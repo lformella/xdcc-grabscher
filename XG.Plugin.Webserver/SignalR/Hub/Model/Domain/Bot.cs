@@ -109,7 +109,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 
 		public Int64 Speed
 		{
-			get { return (from pack in Object.Packets where pack.Part != null select pack.Part.Speed).Sum(); }
+			get { return (from pack in Object.Packets where pack.File != null select pack.File.Speed).Sum(); }
 		}
 
 		public bool HasNetworkProblems

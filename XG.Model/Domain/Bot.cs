@@ -177,7 +177,7 @@ namespace XG.Model.Domain
 
 		public virtual Int64 Speed
 		{
-			get { return (from pack in Packets where pack.Part != null select pack.Part.Speed).Sum(); }
+			get { return (from pack in Packets where pack.File != null select pack.File.Speed).Sum(); }
 		}
 
 		bool _hasNetworkProblems;

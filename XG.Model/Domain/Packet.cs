@@ -37,12 +37,12 @@ namespace XG.Model.Domain
 			set { base.Parent = value; }
 		}
 
-		FilePart _part;
+		File _file;
 
-		public virtual FilePart Part
+		public virtual File File
 		{
-			get { return _part; }
-			set { _part = value; }
+			get { return _file; }
+			set { _file = value; }
 		}
 
 		public override string Name

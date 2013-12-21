@@ -84,7 +84,6 @@ define(['./module'], function (ng) {
 				"<div style='width: " + a + "%' class='progress-bar progress-bar-success'></div>" +
 				"<div style='width: " + b + "%' class='progress-bar progress-bar-success progress-bar-light'></div>" +
 				"</div>";
-			//ret += "<progress max='" + file.Size + "' value='" + file.CurrentSize + "'></progress>";
 
 			return ret;
 		}

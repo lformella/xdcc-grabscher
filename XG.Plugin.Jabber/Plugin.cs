@@ -65,12 +65,12 @@ namespace XG.Plugin.Jabber
 
 		protected new void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			if (aEventArgs.Value1 is FilePart && aEventArgs.Value2.Contains("Speed"))
+			if (aEventArgs.Value1 is File && aEventArgs.Value2.Contains("Speed"))
 			{
 				double speed;
 				try
 				{
-					speed = (from file in Files.All from part in file.Parts select part.Speed).Sum();
+					speed = (from file in Files.All select file.Speed).Sum();
 				}
 				catch (Exception)
 				{

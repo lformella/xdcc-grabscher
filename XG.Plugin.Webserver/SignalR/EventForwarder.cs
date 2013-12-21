@@ -86,17 +86,16 @@ namespace XG.Plugin.Webserver.SignalR
 
 		protected override void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			// if a part changed dispatch just connected stuff (because we have no separate bot hub)
-			if (aEventArgs.Value1 is FilePart)
+			// if a file changed dispatch just connected stuff (because we have no separate bot hub)
+			if (aEventArgs.Value1 is File)
 			{
-				var part = aEventArgs.Value1 as FilePart;
-				SendChanged(part.Parent);
+				var file = aEventArgs.Value1 as File;
 
-				if (part.Packet != null)
+				if (file.Packet != null)
 				{
 					if (aEventArgs.Value2.Contains("Speed") || aEventArgs.Value2.Contains("CurrentSize") || aEventArgs.Value2.Contains("TimeMissing"))
 					{
-						SendChanged(part.Packet);
+						SendChanged(file.Packet);
 					}
 				}
 			}

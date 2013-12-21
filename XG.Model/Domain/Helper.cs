@@ -87,7 +87,7 @@ namespace XG.Model.Domain
 		/// <returns> </returns>
 		public static string ShrinkFileName(string aName, Int64 aSize)
 		{
-			return aName != null ? Regex.Replace(aName.ToLower(), "[^a-z0-9]", "") + "." + aSize + Path.DirectorySeparatorChar : "";
+			return aName != null ? Regex.Replace(aName.ToLower(), "[^a-z0-9]", "") + "." + aSize : "";
 		}
 	}
 }

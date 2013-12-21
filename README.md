@@ -3,12 +3,10 @@
 XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
 
-# What makes it special? (I am already using and happy with xWeasel.)
+# What makes it special?
 XG is just a command line app which connects to one or multiple IRC networks and handles the whole network communication. The IRC servers, channels, bots and packets are presented within a nice and stylish web frontend. There you can search and download packets.
 
 You can run XG on every machine that supports c# / mono - even root servers without x(org), or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere. You don't have to keep a big PC running, but just a small download box which handles all the IRC stuff.
-
-A so called killer feature is the multiple download function. Every good XDCC client can resume and check downloads of course, but XG is able to download the same packet / file from different bots / sources. It will split downloads into multiple parts, download each part from a different bot and merge them back after error free downloading, so you can use your maximum bandwidth. Because of the DCC protocol design there is no chance to implement a stable and clean error checking routine, so some downloaded files might be corrupt, even if XG assumes they are not. Use this feature at your own risk! (See the __EnableMultiDownloads__ flag in the settings chapter.
 
 
 # How do i use it?

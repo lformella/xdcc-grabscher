@@ -45,7 +45,6 @@
     <Compile Include="App.cs" />
     <Compile Include="Helper\FileActions.cs" />
     <Compile Include="Helper\FileSystem.cs" />
-    <Compile Include="Helper\PartBytesObject.cs" />
     <Compile Include="Helper\Process.cs" />
     <Compile Include="Helper\Rrd.cs" />
     <Compile Include="Helper\Snapshots.cs" />

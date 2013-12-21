@@ -633,11 +633,10 @@ namespace XG.Plugin.Irc
 				Packet tPacket = aBot.OldestActivePacket();
 				while (tPacket != null)
 				{
-					Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name,
-					                                                 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
-					if (tChunk == -1)
+					File tFile = FileActions.TryGetFile(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
+					if (tFile != null && tFile.Connected)
 					{
-						_log.Warn("RequestFromBot(" + aBot + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
+						_log.Warn("RequestFromBot(" + aBot + ") packet " + tPacket + " is already in use");
 						tPacket.Enabled = false;
 						tPacket = aBot.OldestActivePacket();
 					}
