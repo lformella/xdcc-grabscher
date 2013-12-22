@@ -97,7 +97,7 @@
 								<div class="form-horizontal">
 									<div class="form-group">
 										<label class="col-lg-3 control-label" translate>Max Download Speed</label>
-										<div class="col-lg-3" ng-show="$parent.configReady">
+										<div class="col-lg-4" ng-show="$parent.configReady">
 											<div class="input-group">
 												<input class="form-control" type="number" min="0" ng-model="$parent.config.MaxDownloadSpeedInKB" placeholder="{{'Max Download Speed'|translate}}" title="{{'Max Download Speed'|translate}}"/>
 												<span class="input-group-addon">KB</span>
@@ -191,10 +191,10 @@
 												<div class="panel-body">
 													<div class="form-horizontal" ng-repeat="process in fileHandler.Processes">
 														<div class="form-group">
-															<div class="col-lg-2">
+															<div class="col-lg-3">
 																<input class="form-control" type="text" ng-model="process.Command" ng-required="true" placeholder="{{'Command'|translate}}" title="{{'Command'|translate}}"/>
 															</div>
-															<div class="col-lg-8">
+															<div class="col-lg-7">
 																<input class="form-control" type="text" ng-model="process.Arguments" ng-required="true" placeholder="{{'Arguments'|translate}}" title="{{'Arguments'|translate}}"/>
 															</div>
 															<div class="col-lg-2">
@@ -362,7 +362,7 @@
 													<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Bots', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Bots', 'desc')}"></span>
 													<span translate>Bots</span>
 												</th>
-												<th width="90" translate>Ask users for version</th>
+												<th width="90" translate>Check user versions</th>
 												<th width="30"></th>
 											</tr>
 										</thead>

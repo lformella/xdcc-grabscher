@@ -69,7 +69,7 @@ define(['./module'], function (i18n) {
 				"Max Download Speed": "Max. Download Geschw.",
 				"Error Count": "Fehler Zähler",
 				"Success Count": "Erfolgs Zähler",
-				"Ask users for version": "User nach Version fragen",
+				"Check user versions": "Überprüfe User Versionen",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */
