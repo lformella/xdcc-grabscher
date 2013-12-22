@@ -175,6 +175,11 @@ namespace XG.DB
 
 		void ObjectAdded(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
+			if (eventArgs.Value1 != Servers && eventArgs.Value1 != Files && eventArgs.Value1 != Searches && eventArgs.Value1 != ApiKeys)
+			{
+				return;
+			}
+
 			try
 			{
 				_session.Save(eventArgs.Value2);
@@ -183,11 +188,16 @@ namespace XG.DB
 			{
 				Log.Fatal("cat save object " + eventArgs.Value2, ex);
 			}
-			RunFlush();
+			TryFlush();
 		}
 
 		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
+			if (eventArgs.Value1 != Servers && eventArgs.Value1 != Files && eventArgs.Value1 != Searches && eventArgs.Value1 != ApiKeys)
+			{
+				return;
+			}
+
 			try
 			{
 				_session.Delete(eventArgs.Value2);
@@ -196,46 +206,20 @@ namespace XG.DB
 			{
 				Log.Fatal("cat remove object " + eventArgs.Value2, ex);
 			}
-			RunFlush();
+			TryFlush();
 		}
 
 		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
 		{
-			try
-			{
-				_session.Update(eventArgs.Value1);
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("cat update object " + eventArgs.Value1, ex);
-			}
-			RunFlush();
+			TryFlush();
 		}
 
 		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
 		{
-			try
-			{
-				_session.Update(eventArgs.Value1);
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("cat update object " + eventArgs.Value1, ex);
-			}
-			RunFlush();
+			TryFlush();
 		}
 
-		void UpdateDatabase(int aFrom, int aTo)
-		{
-			if (aFrom == aTo)
-			{
-				return;
-			}
-
-			// add in next version...
-		}
-
-		void RunFlush ()
+		void TryFlush ()
 		{
 			if (_lastFlush.AddSeconds(SecondsToSleep) < DateTime.Now)
 			{
@@ -247,12 +231,26 @@ namespace XG.DB
 					{
 						_session.Flush();
 					}
+					catch (InvalidOperationException)
+					{
+						// this is ok
+					}
 					catch (Exception ex)
 					{
-						Log.Fatal("RunFlush()", ex);
+						Log.Fatal("TryFlush()", ex);
 					}
 				}
 			}
+		}
+
+		void UpdateDatabase(int aFrom, int aTo)
+		{
+			if (aFrom == aTo)
+			{
+				return;
+			}
+
+			// add in next version...
 		}
 
 		public void Dispose ()
