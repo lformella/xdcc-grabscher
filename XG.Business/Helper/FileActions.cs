@@ -25,6 +25,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -107,10 +108,10 @@ namespace XG.Business.Helper
 			}
 
 			tFile = new XG.Model.Domain.File(aName, aSize);
-			Files.Add(tFile);
 			try
 			{
-				System.IO.File.Create(Settings.Default.TempPath + tFile.TmpName);
+				System.IO.File.Create(Settings.Default.TempPath + tFile.TmpName).Close();
+				Files.Add(tFile);
 			}
 			catch (Exception ex)
 			{
@@ -129,7 +130,7 @@ namespace XG.Business.Helper
 			}
 		}
 
-		public static void RemoveFile(XG.Model.Domain.File aFile)
+		static void RemoveFile(XG.Model.Domain.File aFile)
 		{
 			Log.Info("RemoveFile(" + aFile + ")");
 			FileSystem.DeleteFile(Settings.Default.TempPath + aFile.TmpName);
@@ -137,8 +138,7 @@ namespace XG.Business.Helper
 
 		#endregion
 
-		#region CHECK AND JOIN FILE
-
+		#region FINISH FILE
 
 		public static void FinishFile(XG.Model.Domain.File aFile)
 		{

@@ -138,14 +138,14 @@ namespace XG.Business
 				}
 				else
 				{
-					string dir = Settings.Default.TempPath + file.TmpName;
-					files.Remove(dir.Substring(0, dir.Length - 1));
+					string path = Settings.Default.TempPath + file.TmpName;
+					files.Remove(path);
 				}
 			}
 
 			foreach (string dir in files)
 			{
-				FileSystem.DeleteDirectory(dir);
+				FileSystem.DeleteFile(dir);
 			}
 		}
 

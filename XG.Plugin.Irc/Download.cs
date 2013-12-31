@@ -73,7 +73,6 @@ namespace XG.Plugin.Irc
 			{
 				_tcpClient.SendTimeout = Settings.Default.DownloadTimeoutTime * 1000;
 				_tcpClient.ReceiveTimeout = Settings.Default.DownloadTimeoutTime * 1000;
-				//_tcpClient.ReceiveBufferSize = Settings.Default.DownloadPerReadBytes;
 
 				try
 				{

@@ -69,9 +69,11 @@ namespace XG.DB
 			bool insertVersion = false;
 
 			var cfg = new Configuration();
+
 			try
 			{
 				cfg.Configure();
+				cfg.AddAssembly(typeof(Dao).Assembly);
 			}
 			catch (Exception ex)
 			{
@@ -89,6 +91,7 @@ namespace XG.DB
 				string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
 				cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
 
+				cfg.AddAssembly(typeof(Dao).Assembly);
 				if (!System.IO.File.Exists(db))
 				{
 					new SchemaExport(cfg).Execute(false, true, false);
@@ -96,7 +99,6 @@ namespace XG.DB
 				}
 			}
 
-			cfg.AddAssembly(typeof(Dao).Assembly);
 			var sessions = cfg.BuildSessionFactory();
 			_session = sessions.OpenSession(new TrackingNumberInterceptor());
 			_session.FlushMode = FlushMode.Never;
@@ -112,6 +114,7 @@ namespace XG.DB
 			if (insertVersion)
 			{
 				_session.Save(new Domain.Version { Number = _version });
+				_session.Flush();
 			}
 			else
 			{

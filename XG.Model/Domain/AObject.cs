@@ -107,12 +107,16 @@ namespace XG.Model.Domain
 
 		public virtual bool Commit()
 		{
-			if (_modifiedFields != null && _modifiedFields.Count > 0)
+			try
 			{
-				FireChanged(this, new EventArgs<AObject, string[]>(this, _modifiedFields.ToArray()));
-				_modifiedFields = new List<string>();
-				return true;
+				if (_modifiedFields != null && _modifiedFields.Count > 0)
+				{
+					FireChanged(this, new EventArgs<AObject, string[]>(this, _modifiedFields.ToArray()));
+					_modifiedFields = new List<string>();
+					return true;
+				}
 			}
+			catch(Exception) {}
 			return false;
 		}
 

@@ -108,11 +108,14 @@ namespace XG.Plugin.Irc
 
 		protected override void StartRun()
 		{
+			Packet.Parent.QueuePosition = 0;
+			Packet.Parent.QueueTime = 0;
+			Packet.Parent.Commit();
+
 			using (_tcpClient = new TcpClient())
 			{
 				_tcpClient.SendTimeout = Settings.Default.DownloadTimeoutTime * 1000;
 				_tcpClient.ReceiveTimeout = Settings.Default.DownloadTimeoutTime * 1000;
-				//_tcpClient.ReceiveBufferSize = Settings.Default.DownloadPerReadBytes;
 
 				try
 				{
@@ -121,7 +124,7 @@ namespace XG.Plugin.Irc
 
 					using (NetworkStream stream = _tcpClient.GetStream())
 					{
-						StartWriting();
+						InitializeWriting();
 
 						using (var reader = new BinaryReader(stream))
 						{
@@ -154,7 +157,7 @@ namespace XG.Plugin.Irc
 					_log.Fatal("StartRun()", ex);
 				}
 
-				StopWriting();
+				FinishWriting();
 			}
 
 			_tcpClient = null;
@@ -173,20 +176,16 @@ namespace XG.Plugin.Irc
 
 		#region CONNECT
 
-		protected void StartWriting()
+		protected void InitializeWriting()
 		{
 			_speedCalcTime = DateTime.Now;
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
-			Packet.Parent.QueuePosition = 0;
-			Packet.Parent.QueueTime = 0;
-			Packet.Parent.Commit();
-
 			File = FileActions.GetFileOrCreateNew(Packet.RealName, Packet.RealSize);
 			if (File == null)
 			{
-				_log.Fatal("StartWriting(" + Packet + ") cant find or create a file to download");
+				_log.Fatal("InitializeWriting(" + Packet + ") cant find or create a file to download");
 				_tcpClient.Close();
 				return;
 			}
@@ -194,7 +193,7 @@ namespace XG.Plugin.Irc
 			// wtf?
 			if (StartSize == File.Size)
 			{
-				_log.Error("StartWriting(" + Packet + ") startSize = File.Size (" + StartSize + ")");
+				_log.Error("InitializeWriting(" + Packet + ") startSize = File.Size (" + StartSize + ")");
 				_tcpClient.Close();
 				return;
 			}
@@ -202,12 +201,11 @@ namespace XG.Plugin.Irc
 			File.Connected = true;
 			File.Packet = Packet;
 
-			_log.Info("StartWriting(" + Packet + ") started (" + StartSize + " - " + File.Size + ")");
+			_log.Info("InitializeWriting(" + Packet + ") started (" + StartSize + " - " + File.Size + ")");
 
 			try
 			{
-				var info = new FileInfo(Settings.Default.TempPath + File.TmpName);
-				FileStream stream = info.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+				FileStream stream = new FileStream(Settings.Default.TempPath + File.TmpName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 				// we are connected
 				if (OnConnected != null)
@@ -215,24 +213,23 @@ namespace XG.Plugin.Irc
 					OnConnected(this, new EventArgs<Packet>(Packet));
 				}
 
-				// we seek if it is possible
-				Int64 seekPos = File.CurrentSize - Settings.Default.FileRollbackBytes;
-				if (File.CurrentSize > 0)
+				// we seek if it is necesarry
+				if (StartSize > 0)
 				{
 					try
 					{
 						_reader = new BinaryReader(stream);
 
 						// seek to seekPos and extract the rollbackcheck bytes
-						stream.Seek(seekPos, SeekOrigin.Begin);
+						stream.Seek(StartSize, SeekOrigin.Begin);
 						_rollbackRefernce = _reader.ReadBytes(Settings.Default.FileRollbackCheckBytes);
 
 						// seek back
-						stream.Seek(seekPos, SeekOrigin.Begin);
+						stream.Seek(StartSize, SeekOrigin.Begin);
 					}
 					catch (Exception ex)
 					{
-						_log.Fatal("StartWriting(" + Packet + ") seek", ex);
+						_log.Fatal("InitializeWriting(" + Packet + ") seek", ex);
 						_tcpClient.Close();
 						return;
 					}
@@ -259,7 +256,7 @@ namespace XG.Plugin.Irc
 			}
 			catch (Exception ex)
 			{
-				_log.Fatal("StartWriting(" + Packet + ")", ex);
+				_log.Fatal("InitializeWriting(" + Packet + ")", ex);
 				_tcpClient.Close();
 				return;
 			}
@@ -272,7 +269,7 @@ namespace XG.Plugin.Irc
 			_connectionWatch.Start();
 		}
 
-		protected void StopWriting()
+		protected void FinishWriting()
 		{
 			_connectionWatchEnabled = false;
 
@@ -297,31 +294,31 @@ namespace XG.Plugin.Irc
 
 				if (_removeFile)
 				{
-					_log.Info("StopWriting(" + Packet + ") removing file");
-					FileActions.RemoveFile(File);
+					_log.Info("FinishWriting(" + Packet + ") removing file");
+					Files.Remove(File);
 				}
 				else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
 					if (CurrentSize == File.Size)
 					{
-						_log.Info("StopWriting(" + Packet + ") ready");
+						_log.Info("FinishWriting(" + Packet + ") ready");
 						FireNotificationAdded(Notification.Types.PacketCompleted, Packet);
 					}
 					// that should not happen
 					else if (CurrentSize > File.Size)
 					{
-						_log.Error("StopWriting(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + File.Size);
+						_log.Error("FinishWriting(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + File.Size);
 						// lets remove the file and load the package again
 						Files.Remove(File);
-						_log.Error("StopWriting(" + Packet + ") removing corupted " + File);
+						_log.Error("FinishWriting(" + Packet + ") removing corupted " + File);
 
 						FireNotificationAdded(Notification.Types.PacketBroken, Packet);
 					}
 					// it did not start
 					else if (_receivedBytes == 0)
 					{
-						_log.Error("StopWriting(" + Packet + ") downloading did not start, disabling packet");
+						_log.Error("FinishWriting(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
 						Packet.Parent.HasNetworkProblems = true;
 
@@ -330,7 +327,7 @@ namespace XG.Plugin.Irc
 					// it is incomplete
 					else
 					{
-						_log.Error("StopWriting(" + Packet + ") incomplete");
+						_log.Error("FinishWriting(" + Packet + ") incomplete");
 
 						FireNotificationAdded(Notification.Types.PacketIncomplete, Packet);
 					}
@@ -340,7 +337,7 @@ namespace XG.Plugin.Irc
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
-				_log.Error("StopWriting(" + Packet + ") connection did not work, disabling packet");
+				_log.Error("FinishWriting(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
 				Packet.Parent.HasNetworkProblems = true;
 

@@ -58,9 +58,9 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				bool isOk = false;
 
 				int tPort = 0;
-				File tFile = FileActions.GetFileOrCreateNew(tPacket.RealName, tPacket.RealSize);
+				File tFile = FileActions.TryGetFile(tPacket.RealName, tPacket.RealSize);
 				Int64 startSize = 0;
-				if (tFile.CurrentSize > Settings.Default.FileRollbackBytes)
+				if (tFile != null && tFile.CurrentSize > Settings.Default.FileRollbackBytes)
 				{
 					startSize = tFile.CurrentSize - Settings.Default.FileRollbackBytes;
 				}
@@ -123,16 +123,23 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 							return false;
 						}
 
-						if (tFile == null || tFile.Connected)
+						if (tFile != null)
 						{
-							Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use or not found, disabling packet");
-							tPacket.Enabled = false;
-							FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
-						}
-						else if (tFile.CurrentSize > 0)
-						{
-							Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + startSize);
-							FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
+							if (tFile.Connected)
+							{
+								Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use or not found, disabling packet");
+								tPacket.Enabled = false;
+								FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
+							}
+							else if (tFile.CurrentSize > 0)
+							{
+								Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + startSize);
+								FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
+							}
+							else
+							{
+								isOk = true;
+							}
 						}
 						else
 						{
