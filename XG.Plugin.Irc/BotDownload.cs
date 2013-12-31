@@ -39,7 +39,7 @@ using System.Threading;
 
 namespace XG.Plugin.Irc
 {
-	public class BotDownload : AWorker
+	public class BotDownload : ConnectionWatcher
 	{
 		#region VARIABLES
 
@@ -92,9 +92,6 @@ namespace XG.Plugin.Irc
 
 		public Model.Domain.File File { get; set; }
 
-		bool _connectionWatchEnabled = true;
-		Thread _connectionWatch;
-
 		#endregion
 
 		#region EVENTS
@@ -122,7 +119,7 @@ namespace XG.Plugin.Irc
 					_tcpClient.Connect(IP, Port);
 					_log.Info("StartRun() connected");
 
-					using (NetworkStream stream = _tcpClient.GetStream())
+					using (Stream stream = new ThrottledStream(_tcpClient.GetStream(), Settings.Default.MaxDownloadSpeedInKB * 1000))
 					{
 						InitializeWriting();
 
@@ -131,6 +128,8 @@ namespace XG.Plugin.Irc
 							Int64 missing = MaxData;
 							Int64 max = Settings.Default.DownloadPerReadBytes;
 							byte[] data = null;
+
+							int failCounter = 0;
 							do
 							{
 								data = reader.ReadBytes((int) (missing < max ? missing : max));
@@ -142,8 +141,14 @@ namespace XG.Plugin.Irc
 								}
 								else
 								{
-									_log.Warn("StartRun() no data received");
-									break;
+									failCounter++;
+									_log.Warn("StartRun() no data received - " + failCounter);
+
+									if (failCounter > 5)
+									{
+										_log.Warn("StartRun() no data received - skipping");
+										break;
+									}
 								}
 							} while (AllowRunning && missing > 0);
 						}
@@ -174,7 +179,7 @@ namespace XG.Plugin.Irc
 
 		#endregion
 
-		#region CONNECT
+		#region CONNECTION
 
 		protected void InitializeWriting()
 		{
@@ -186,6 +191,12 @@ namespace XG.Plugin.Irc
 			if (File == null)
 			{
 				_log.Fatal("InitializeWriting(" + Packet + ") cant find or create a file to download");
+				_tcpClient.Close();
+				return;
+			}
+			if (File.Connected)
+			{
+				_log.Fatal("InitializeWriting(" + Packet + ") file already downloading");
 				_tcpClient.Close();
 				return;
 			}
@@ -263,15 +274,13 @@ namespace XG.Plugin.Irc
 
 			FireNotificationAdded(Notification.Types.BotConnected, Packet);
 
-			// start a watch thread to look if our connection is still receiving data
-			_connectionWatch = new Thread(WatchConnection);
-			_connectionWatch.Name = IP + ":" + Port + " ConnectionWatch";
-			_connectionWatch.Start();
+			// start watch to look if our connection is still receiving data
+			StartWatch(Settings.Default.UpdateDownloadTime * 10, IP + ":" + Port + " ConnectionWatch");
 		}
 
 		protected void FinishWriting()
 		{
-			_connectionWatchEnabled = false;
+			Stopwatch();
 
 			// close the writer
 			if (_writer != null)
@@ -284,13 +293,14 @@ namespace XG.Plugin.Irc
 			Packet.Commit();
 
 			Packet.Parent.State = Bot.States.Idle;
+			Packet.Parent.HasNetworkProblems = false;
 			Packet.Parent.Commit();
 
-			Packet.Parent.HasNetworkProblems = false;
 			if (File != null)
 			{
 				File.Packet = null;
 				File.Connected = false;
+				File.Commit();
 
 				if (_removeFile)
 				{
@@ -320,7 +330,10 @@ namespace XG.Plugin.Irc
 					{
 						_log.Error("FinishWriting(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
+						Packet.Commit();
+
 						Packet.Parent.HasNetworkProblems = true;
+						Packet.Parent.Commit();
 
 						FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
 					}
@@ -339,17 +352,14 @@ namespace XG.Plugin.Irc
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
 				_log.Error("FinishWriting(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
+				Packet.Commit();
+
 				Packet.Parent.HasNetworkProblems = true;
+				Packet.Parent.Commit();
 
 				FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
 			}
 
-			if (File != null)
-			{
-				File.Commit();
-			}
-			Packet.Parent.Commit();
-			
 			if (OnDisconnected != null)
 			{
 				OnDisconnected(this, new EventArgs<Packet>(Packet));
@@ -444,6 +454,7 @@ namespace XG.Plugin.Irc
 			{
 				DateTime old = _speedCalcTime;
 				_speedCalcTime = DateTime.Now;
+				LastContact = DateTime.Now;
 				File.Speed = Convert.ToInt64(_speedCalcSize / (_speedCalcTime - old).TotalSeconds);
 
 				File.Commit();
@@ -451,18 +462,9 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void WatchConnection()
+		protected override void RepairConnection()
 		{
-			while (_connectionWatchEnabled)
-			{
-				if ((DateTime.Now - _speedCalcTime).TotalSeconds > Settings.Default.UpdateDownloadTime * 4)
-				{
-					_connectionWatchEnabled = false;
-					_log.Error("WatchConnection() connection seems hanging - closing it");
-					_tcpClient.Close();
-				}
-				Thread.Sleep(500);
-			}
+			_tcpClient.Close();
 		}
 
 		#endregion

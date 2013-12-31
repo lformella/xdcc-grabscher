@@ -37,7 +37,7 @@ using XG.Business.Helper;
 
 namespace XG.Plugin.Irc
 {
-	public class IrcConnection : AWorker
+	public class IrcConnection : ConnectionWatcher
 	{
 		#region VARIABLES
 
@@ -319,11 +319,19 @@ namespace XG.Plugin.Irc
 				var channels = (from channel in Server.Channels where channel.Enabled select channel.Name).ToArray();
 				Client.RfcJoin(channels);
 				Client.Listen();
+
+				StartWatch(Settings.Default.ChannelWaitTimeShort * 5, Server + " ConnectionWatch");
 			};
 
-			Client.OnError += (sender, e) => _log.Info("error from " + Server + ": " + e.ErrorMessage);
+			Client.OnError += (sender, e) =>
+			{
+				_log.Info("error from " + Server + ": " + e.ErrorMessage);
+			};
 
-			Client.OnConnectionError += (sender, e) => _log.Info("connection error from " + Server + ": " + e);
+			Client.OnConnectionError += (sender, e) =>
+			{
+				_log.Info("connection error from " + Server + ": " + e);
+			};
 
 			Client.OnConnecting += (sender, e) =>
 			{
@@ -603,6 +611,8 @@ namespace XG.Plugin.Irc
 			Client.OnCtcpRequest += Parse;
 
 			Client.OnWriteLine += (sender, e) => _log.Debug("OnWriteLine " + e.Line);
+
+			Client.OnReadLine += (sender, e) => LastContact = DateTime.Now;
 		}
 
 		void UpdateChannel(Model.Domain.Channel aChannel)
@@ -749,6 +759,8 @@ namespace XG.Plugin.Irc
 
 		protected override void StopRun()
 		{
+			Stopwatch();
+
 			try
 			{
 				Client.Disconnect();
@@ -760,6 +772,11 @@ namespace XG.Plugin.Irc
 				Server.Commit();
 				OnDisconnected(this, new EventArgs<Server>(Server));
 			}
+		}
+
+		protected override void RepairConnection()
+		{
+			Client.Reconnect();
 		}
 
 		#endregion

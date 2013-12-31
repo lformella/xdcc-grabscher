@@ -60,11 +60,19 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				int tPort = 0;
 				File tFile = FileActions.TryGetFile(tPacket.RealName, tPacket.RealSize);
 				Int64 startSize = 0;
-				if (tFile != null && tFile.CurrentSize > Settings.Default.FileRollbackBytes)
+
+				if (tFile != null)
 				{
-					startSize = tFile.CurrentSize - Settings.Default.FileRollbackBytes;
+					if (tFile.Connected)
+					{
+						return false;
+					}
+					if (tFile.CurrentSize > Settings.Default.FileRollbackBytes)
+					{
+						startSize = tFile.CurrentSize - Settings.Default.FileRollbackBytes;
+					}
 				}
-				
+
 				string[] tDataList = aMessage.Split(' ');
 				if (tDataList[0] == "SEND")
 				{
