@@ -544,7 +544,7 @@
 												<td class="withIcon">
 													<span ng-bind-html='notification|formatNotificationIcon'></span>
 												</td>
-												<td class="withText">
+												<td class="fullText">
 													<span ng-bind-html='notification|formatNotificationContent|trustAsHtml'></span>
 												</td>
 												<td class="text-right">
@@ -617,8 +617,6 @@
 								<li class="dropdown-header" translate>Predefined</li>
 								<li ng-repeat="search in predefinedSearches">
 									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
-										<span class="resultsOnline label label-success pull-right">{{search.ResultsOnline}}</span>
-										<span class="resultsOffline label label-default pull-right">{{search.ResultsOffline}}</span>
 										<span class="text" title="{{search.Name}}">{{search.Name}}</span>
 									</a>
 								</li>
@@ -741,7 +739,11 @@
 						</thead>
 						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': !$parent.parents[group.value].Connected}">
 							<tr class="ng-table-group">
-								<td></td>
+								<td class="withIcon withIcon2">
+									<span class="clickAble" ng-click="$parent.searchByBot($parent.parents[group.value])">
+										<i class="glyphicon glyphicon-search Aluminium1Middle"></i>
+									</span>
+								</td>
 								<td class="withIcon">
 									<span ng-bind-html='$parent.parents[group.value]|formatBotIcon'></span>
 								</td>

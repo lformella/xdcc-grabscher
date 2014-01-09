@@ -162,6 +162,11 @@ body
 	padding: 3px 0 0 5px;
 }
 
+.table td.withIcon2
+{
+	padding-left: 24px;
+}
+
 .table td
 {
 	height: 32px;
@@ -177,6 +182,13 @@ body
 	padding: 0 4px;
 	overflow: hidden;
 	white-space: nowrap;
+}
+
+.ng-table-group > td.fullText, .table td.fullText
+{
+	padding: 2px 0;
+	word-wrap: break-word;
+	line-height: 1.5em;
 }
 
 td.withText span

@@ -114,5 +114,14 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}
+
+		public Model.Domain.Result LoadByParentGuid(Guid aParentGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		{
+			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where bot.Guid == aParentGuid from packet in bot.Packets select packet);
+			int length;
+			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
+			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
+			return new Model.Domain.Result { Total = length, Results = objects };
+		}
 	}
 }

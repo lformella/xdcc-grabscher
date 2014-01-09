@@ -108,6 +108,14 @@ define(['./module'], function (ng) {
 				}
 			});
 
+			$scope.searchByBot = function(bot)
+			{
+				$scope.searchBy = "ParentGuid";
+				$scope.search = bot.Guid;
+				$scope.tableParams.page(1);
+				$scope.tableParams.reload();
+			};
+
 			// events
 			$rootScope.$on('SearchByName', function (e, message)
 			{

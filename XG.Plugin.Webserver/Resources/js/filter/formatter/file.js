@@ -55,6 +55,14 @@ define(['./module'], function (ng) {
 				icon = "compressed";
 			}
 
+			if (file.Speed > 0)
+			{
+				iconClass = "SkyBlueDark";
+				overlay = "download";
+				overlayClass = "SkyBlueMiddle";
+				overlayStyle = "opacity: " + $filter('speed2Overlay')(file.Speed);
+			}
+
 			if (file.Active)
 			{
 				overlay = "asterisk";

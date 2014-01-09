@@ -119,12 +119,12 @@ define(['./module'], function (ng) {
 
 			var msg = $translate("Notification_Description_" + notification.Type,
 			{
-				ObjectName1: notification.ObjectName1,
-				ParentName1: notification.ParentName1,
-				ObjectName2: notification.ObjectName2,
-				ParentName2: notification.ParentName2
+				ObjectName1: '<b>' + notification.ObjectName1 + '</b>',
+				ParentName1: '<b>' + notification.ParentName1 + '</b>',
+				ObjectName2: '<b>' + notification.ObjectName2 + '</b>',
+				ParentName2: '<b>' + notification.ParentName2 + '</b>'
 			});
-			return "<span title='" + msg + "'>" + msg + "</span>";
+			return "<span title='" + msg + "'>" + msg.replace(/\s+/g, '&nbsp;') + "</span>";
 		}
 	}]);
 

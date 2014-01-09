@@ -31,11 +31,15 @@ using XG.Model;
 using System.Collections.Generic;
 using XG.Plugin.Webserver.SignalR.Hub.Model;
 using XG.Plugin.Webserver.SignalR.Hub;
+using log4net;
+using System.Reflection;
 
 namespace XG.Plugin.Webserver.SignalR
 {
 	public class EventForwarder : APlugin
 	{
+		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		#region REPOSITORY EVENTS
 
 		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
@@ -55,12 +59,23 @@ namespace XG.Plugin.Webserver.SignalR
 
 		protected override void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			// if a bot changed dispatch just the packets (because we have no separate bot hub)
 			if (aEventArgs.Value1 is Bot)
 			{
-				foreach (var pack in (aEventArgs.Value1 as Bot).Packets)
+				// if a bot changed maybee dispatch all packets or just the first because we have no separate bot hub
+				if (aEventArgs.Value2.Contains("State") || aEventArgs.Value2.Contains("QueuePosition") || aEventArgs.Value2.Contains("QueueTime"))
 				{
-					SendChanged(pack);
+					foreach (var pack in (aEventArgs.Value1 as Bot).Packets)
+					{
+						SendChanged(pack);
+					}
+				}
+				else
+				{
+					var pack = (aEventArgs.Value1 as Bot).Packets.FirstOrDefault();
+					if (pack != null)
+					{
+						SendChanged(pack);
+					}
 				}
 			}
 			else
@@ -86,7 +101,7 @@ namespace XG.Plugin.Webserver.SignalR
 
 		protected override void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			// if a file changed dispatch just connected stuff (because we have no separate bot hub)
+			// if a file changed dispatch connected stuff too
 			if (aEventArgs.Value1 is File)
 			{
 				var file = aEventArgs.Value1 as File;
@@ -99,10 +114,7 @@ namespace XG.Plugin.Webserver.SignalR
 					}
 				}
 			}
-			else
-			{
-				SendChanged(aEventArgs.Value1);
-			}
+			SendChanged(aEventArgs.Value1);
 		}
 
 		protected override void SearchAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
@@ -170,11 +182,13 @@ namespace XG.Plugin.Webserver.SignalR
 				{
 					if ((client.LoadedObjects.Count < client.MaxObjects || client.MaxObjects == 0) && hub != typeof(PacketHub).Name)
 					{
+						Log.Debug("SendAdded() " + aObject);
 						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnAdded(hubObject);
 						client.LoadedObjects.Add(hubObject.Guid);
 					}
 					else if (reloadTable)
 					{
+						Log.Debug("SendChanged() RELOAD");
 						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnReloadTable();
 					}
 				}
@@ -202,6 +216,7 @@ namespace XG.Plugin.Webserver.SignalR
 				{
 					if (client.LoadedObjects.Contains(hubObject.Guid))
 					{
+						Log.Debug("SendRemoved()" + aObject);
 						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnRemoved(hubObject);
 						client.LoadedObjects.Remove(hubObject.Guid);
 					}
@@ -230,6 +245,7 @@ namespace XG.Plugin.Webserver.SignalR
 				{
 					if (client.LoadedObjects.Contains(hubObject.Guid))
 					{
+						Log.Debug("SendChanged()" + aObject);
 						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnChanged(hubObject);
 					}
 				}
