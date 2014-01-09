@@ -1,5 +1,5 @@
 // 
-//  PacketAlreadyRequested.cs
+//  PacketAlreadyQueued.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,18 +24,17 @@
 //  
 
 using XG.Model.Domain;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class PacketAlreadyRequested : AParserWithExistingBot
+	public class PacketAlreadyQueued : AParserWithExistingBot
 	{
 		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
-				Helper.Magicstring + " You already requested that pack(.*|)",
-				Helper.Magicstring + ".* You already have that item queued.*",
-				Helper.Magicstring + " Du hast diese Datei bereits angefordert(.*|)"
+				Helper.Magicstring + ".* You already have that item queued.*"
 			};
 			var match = Helper.Match(aMessage, regexes);
 			if (match.Success)
@@ -44,8 +43,6 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				{
 					aBot.State = Bot.States.Waiting;
 				}
-
-				//FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.BotWaitTime));
 
 				UpdateBot(aBot, aMessage);
 				return true;

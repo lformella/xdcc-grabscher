@@ -69,7 +69,6 @@
     <Compile Include="Parser\Types\Xdcc\InvalidPacketNumber.cs" />
     <Compile Include="Parser\Types\Xdcc\NotInQueue.cs" />
     <Compile Include="Parser\Types\Xdcc\OwnerRequest.cs" />
-    <Compile Include="Parser\Types\Xdcc\PacketAlreadyRequested.cs" />
     <Compile Include="Parser\Types\Xdcc\Queued.cs" />
     <Compile Include="Parser\Types\Xdcc\QueueFull.cs" />
     <Compile Include="Parser\Types\Xdcc\RemoveFromQueue.cs" />
@@ -83,6 +82,8 @@
     <Compile Include="XdccListEntry.cs" />
     <Compile Include="ThrottledStream.cs" />
     <Compile Include="ConnectionWatcher.cs" />
+    <Compile Include="Parser\Types\Xdcc\PacketAlreadyRequested.cs" />
+    <Compile Include="Parser\Types\Xdcc\PacketAlreadyQueued.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">
