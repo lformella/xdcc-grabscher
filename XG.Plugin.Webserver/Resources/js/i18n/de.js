@@ -213,7 +213,13 @@ define(['./module'], function (i18n) {
 				"Count": "Zähler",
 				"Time": "Zeit",
 				"Human readable dates": "Lesbare Zeiten",
-				"Combine IRC View": "Kombinierte IRC Übersicht"
+				"Combine IRC View": "Kombinierte IRC Übersicht",
+
+				"Download this packet": "Lade dieses Paket runter",
+				"Skip download": "Brich den Download ab",
+				"Remove from queue": "Entferne aus der Warteschlange",
+				"Enable": "Aktiviere",
+				"Disable": "Deaktiviere"
 			});
 		}
 	]);

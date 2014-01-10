@@ -26,7 +26,7 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.filter('formatServerIcon', ['$filter', function ($filter)
+	ng.filter('formatServerIcon', ['$filter', '$translate', function ($filter, $translate)
 	{
 		return function (server)
 		{
@@ -40,10 +40,12 @@ define(['./module'], function (ng) {
 			var overlay = "";
 			var overlayClass = "";
 			var overlayStyle = "opacity: 0.6";
+			var title = $translate("Disable");
 
 			if (!server.Enabled)
 			{
 				iconClass = "Aluminium1Dark";
+				title = $translate("Enable");
 			}
 			else if (server.Connected)
 			{
@@ -68,7 +70,7 @@ define(['./module'], function (ng) {
 				overlayStyle = "";
 			}
 
-			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle, title);
 		}
 	}]);
 

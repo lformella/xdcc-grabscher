@@ -598,6 +598,12 @@
 										<span translate>Human readable dates</span>
 									</a>
 								</li>
+								<li>
+									<a ng-click="flipSetting('showBotsInView')" ng-class="{'ScarletRedDark': settings.showBotsInView, 'Aluminium1Dark': !settings.showBotsInView}">
+										<span class="glyphicon glyphicon-time"></span>
+										<span translate>Show Bots in view</span>
+									</a>
+								</li>
 							</ul>
 						</li>
 					</ul>
@@ -737,8 +743,8 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': !$parent.parents[group.value].Connected}">
-							<tr class="ng-table-group">
+						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': settings.showOfflineBots && !$parent.parents[group.value].Connected}">
+							<tr class="ng-table-group" ng-show="settings.showBotsInView">
 								<td class="withIcon withIcon2">
 									<span class="clickAble" ng-click="$parent.searchByBot($parent.parents[group.value])">
 										<i class="glyphicon glyphicon-search Aluminium1Middle"></i>

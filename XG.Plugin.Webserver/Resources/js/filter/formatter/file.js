@@ -26,7 +26,7 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.filter('formatFileIcon', ['$filter', function ($filter)
+	ng.filter('formatFileIcon', ['$filter', '$translate', function ($filter, $translate)
 	{
 		return function (file)
 		{
@@ -40,6 +40,7 @@ define(['./module'], function (ng) {
 			var overlay = "";
 			var overlayClass = "";
 			var overlayStyle = "";
+			var title = $translate("Remove");
 
 			var ext = file.Name.toLowerCase().substr(-3);
 			if (ext == "avi" || ext == "wmv" || ext == "mkv" || ext == "mpg" || ext == "mov" || ext == "mp4")
@@ -70,7 +71,7 @@ define(['./module'], function (ng) {
 				overlayStyle = "";
 			}
 
-			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle, title);
 		}
 	}]);
 

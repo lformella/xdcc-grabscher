@@ -148,6 +148,14 @@ define(['./module'], function (ng) {
 			{
 				$scope.tableParams.reload();
 			});
+
+			$rootScope.$watch('settings.showBotsInView', function ()
+			{
+				var settings = $scope.tableParams.settings();
+				settings.groupBy = $rootScope.settings.showBotsInView ? "ParentGuid" : "Guid";
+				$scope.tableParams.settings(settings);
+				$scope.tableParams.reload();
+			});
 		}
 	]);
 });

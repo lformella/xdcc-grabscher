@@ -29,7 +29,7 @@ define(['./module'], function (ng) {
 
 	ng.filter('formatIcon', function ()
 	{
-		return function (icon, iconClass, overlay, overlayClass, overlayStyle)
+		return function (icon, iconClass, overlay, overlayClass, overlayStyle, title)
 		{
 			if (icon == undefined)
 			{
@@ -49,7 +49,12 @@ define(['./module'], function (ng) {
 				}
 				str += "></i>";
 			}
-			str += "<i class='" + iconClass + "'></i>";
+			str += "<i class='" + iconClass + "'";
+			if (title != undefined && title != "")
+			{
+				str += " title='" + title + "'";
+			}
+			str += "></i>";
 
 			return str;
 		}

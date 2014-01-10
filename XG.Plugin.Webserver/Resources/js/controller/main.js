@@ -161,7 +161,8 @@ define(['./module'], function (ng) {
 
 			$rootScope.settings = {
 				showOfflineBots: ipCookie('xg.showOfflineBots'),
-				humanDates: ipCookie('xg.humanDates')
+				humanDates: ipCookie('xg.humanDates'),
+				showBotsInView: ipCookie('xg.showBotsInView')
 			};
 
 			if ($rootScope.settings.showOfflineBots == undefined)
@@ -171,6 +172,10 @@ define(['./module'], function (ng) {
 			if ($rootScope.settings.humanDates == undefined)
 			{
 				$rootScope.settings.humanDates = false;
+			}
+			if ($rootScope.settings.showBotsInView == undefined)
+			{
+				$rootScope.settings.showBotsInView = true;
 			}
 
 			$scope.flipSetting = function (setting)

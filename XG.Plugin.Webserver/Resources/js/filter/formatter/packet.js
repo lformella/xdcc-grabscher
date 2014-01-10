@@ -26,7 +26,7 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.filter('formatPacketIcon', ['$filter', function ($filter)
+	ng.filter('formatPacketIcon', ['$filter', '$translate', function ($filter, $translate)
 	{
 		return function (packet)
 		{
@@ -40,6 +40,7 @@ define(['./module'], function (ng) {
 			var overlay = "";
 			var overlayClass = "";
 			var overlayStyle = "";
+			var title = "";
 
 			var name = packet.Name;
 			var ext = name.toLowerCase().substr(-3);
@@ -59,6 +60,7 @@ define(['./module'], function (ng) {
 			if (!packet.Enabled)
 			{
 				iconClass = "Aluminium1Dark";
+				title = $translate("Download this packet");
 			}
 			else
 			{
@@ -68,16 +70,19 @@ define(['./module'], function (ng) {
 					overlay = "download";
 					overlayClass = "SkyBlueMiddle";
 					overlayStyle = "opacity: " + $filter('speed2Overlay')(packet.Speed);
+					title = $translate("Skip download");
 				}
 				else if (packet.Next)
 				{
 					overlay = "time";
 					overlayClass = "OrangeMiddle";
+					title = $translate("Remove from queue");
 				}
 				else
 				{
 					overlay = "time";
 					overlayClass = "ButterMiddle";
+					title = $translate("Remove from queue");
 				}
 			}
 
@@ -88,7 +93,7 @@ define(['./module'], function (ng) {
 				overlayStyle = "";
 			}
 
-			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle, title);
 		}
 	}]);
 

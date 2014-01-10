@@ -26,7 +26,7 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.filter('formatChannelIcon', ['$filter', function ($filter)
+	ng.filter('formatChannelIcon', ['$filter', '$translate', function ($filter, $translate)
 	{
 		return function (channel)
 		{
@@ -40,10 +40,12 @@ define(['./module'], function (ng) {
 			var overlay = "";
 			var overlayClass = "";
 			var overlayStyle = "opacity: 0.6";
+			var title = $translate("Disable");
 
 			if (!channel.Enabled)
 			{
 				iconClass = "Aluminium1Dark";
+				title = $translate("Enable");
 			}
 			else if (channel.Connected)
 			{
@@ -63,7 +65,7 @@ define(['./module'], function (ng) {
 				overlayStyle = "";
 			}
 
-			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle);
+			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle, title);
 		}
 	}]);
 
