@@ -2,17 +2,14 @@
 
 XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
-
 # What makes it special?
 XG is just a command line app which connects to one or multiple IRC networks and handles the whole network communication. The IRC servers, channels, bots and packets are presented within a nice and stylish web frontend. There you can search and download packets.
 
 You can run XG on every machine that supports c# / mono - even root servers without x(org), or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere. You don't have to keep a big PC running, but just a small download box which handles all the IRC stuff.
 
-
 # How do i use it?
 Run the program and point your browser to __127.0.0.1:5556__. The default password is __xgisgreat__. 
 ![Password Dialog](http://xg.bitpir.at/images/help/login.png?v=2)
-
 
 ## At first: change the settings
 You can do this directly in the web frontend. Just click on the __Config__ link in the options menu.
@@ -64,7 +61,7 @@ Normally the bots will announce their pakets directly in the channel. If they ar
 ## Search
 You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favorite searches.
 
-![Searc](http://xg.bitpir.at/images/help/search.png?v=2)
+![Search](http://xg.bitpir.at/images/help/search.png?v=2)
 
 The results are displayed in a table and the packets are grouped by their bot. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions.
 
@@ -83,12 +80,12 @@ You can add XDCC links in the following dialog. A XDCC link must have the follow
 
 The server, channel and bot is automatically added. If the server is connected and the channel joined, the packet will be requested.
 
-![Extend Statistics](http://xg.bitpir.at/images/help/xdcc-links.png?v=2)
+![XDCC Links](http://xg.bitpir.at/images/help/xdcc-links.png?v=2)
 
 ## Extended Stats / Snapshots
 XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
 
-![Extend Statistics](http://xg.bitpir.at/images/help/graphs.png?v=2)
+![Extended Statistics](http://xg.bitpir.at/images/help/graphs.png?v=2)
 
 This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
 
@@ -101,11 +98,16 @@ Currently you can just add xdcc links by calling the following url:
 
 > ht\*p:// *your-own-host:5556* / api / __615d86bb-f867-47c1-a860-ac24e09e976c__ / parseXdccLink / __irc.test.net__ / __servername__ / __channel__ / __bot__ / __1__ / __filename__ /
 
-The api id has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/parseXdccLink/__. Finally you have to add the data you want to pass to method (must be a valid xdcc link in our example). Currently api methods can return the following json encoded results:
+The api id has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/parseXdccLink/__. Finally you have to add the data you want to pass to method (must be a valid xdcc link in our example). Currently api methods can return the following JSON encoded results:
 
 * __{"ReturnValue":-1}__ - api key is invalid or disabled
 * __{"ReturnValue":0}__ - there was an error calling the method
 * __{"ReturnValue":1}__ - everything is fine
+
+## Shutdown XG gracefully
+
+If you want to shutdown XG, just create a file named __shutdown__ in your user folder. XG uses an internal routine which looks for this file and safely closes all connections, files and databases. Manually killing the XG process is a bad idea. Temporary files are be recovered upon restart, but the SQLite database might be broken if it is killed during a SQL transaction.
+
 
 # Upgrading XG
 
@@ -135,9 +137,15 @@ Because XG changed some internal routines you can safely delete the following fi
 
 # Running XG
 
-## on Ubuntu with Mono
+## On Linux with Mono
 
-The following packets must be installed:
+You need at least mono 3.x because some needed libs are running on .net 4.5 wich is not supported in earlier versions.
+
+If you are using Debian / Ubuntu, take a look here to get newer mono packages:
+
+> http://mono-project.com/DistroPackages/Debian
+
+### Needed packets / libs
 
 * mono-runtime
 * libmono-posix4.0-cil mono-dmcs
@@ -145,7 +153,7 @@ The following packets must be installed:
 * libmono-system-runtime-serialization4.0-cil
 * libmono-system-xml-linq4.0-cil
 
-### Install command to copy paste:
+#### Install command for Debian / Ubunut to copy paste:
 
 ```bash
 sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-web4.0-cil libmono-system-runtime-serialization4.0-cil libmono-system-xml-linq4.0-cil
