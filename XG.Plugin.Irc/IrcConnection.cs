@@ -776,7 +776,16 @@ namespace XG.Plugin.Irc
 
 		protected override void RepairConnection()
 		{
-			Client.Reconnect();
+			try
+			{
+				Client.Reconnect();
+			}
+			catch (NotConnectedException)
+			{
+				// this is ok
+				Server.Connected = false;
+				Server.Commit();
+			}
 		}
 
 		#endregion
