@@ -138,7 +138,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			{
 				Log.Fatal("OnSearchExternal(" + aSearch + ") cant load external search", ex);
 			}
-			
+
 			return new Model.Domain.Result { Total = 0, Results = new List<Hub.Model.Domain.AObject>() };
 		}
 	}

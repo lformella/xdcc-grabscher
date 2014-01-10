@@ -204,7 +204,10 @@ namespace XG.Plugin.Irc
 							Thread.Sleep(toSleep);
 						}
 						catch (ThreadAbortException) {}
-						Reset();
+						finally
+						{
+							Reset();
+						}
 					}
 				}
 			}

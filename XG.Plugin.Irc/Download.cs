@@ -113,12 +113,14 @@ namespace XG.Plugin.Irc
 				{
 					_log.Fatal("StartRun()", ex);
 				}
+				finally
+				{
+					StopWriting();
 
-				StopWriting();
+					_tcpClient = null;
+					_writer = null;
+				}
 			}
-
-			_tcpClient = null;
-			_writer = null;
 		}
 
 		protected override void StopRun()

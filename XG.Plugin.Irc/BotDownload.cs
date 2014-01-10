@@ -161,12 +161,15 @@ namespace XG.Plugin.Irc
 				{
 					_log.Fatal("StartRun()", ex);
 				}
+				finally
+				{
+					_log.Info("StartRun() finishing");
+					FinishWriting();
 
-				FinishWriting();
+					_tcpClient = null;
+					_writer = null;
+				}
 			}
-
-			_tcpClient = null;
-			_writer = null;
 		}
 
 		protected override void StopRun()
@@ -197,6 +200,7 @@ namespace XG.Plugin.Irc
 			if (File.Connected)
 			{
 				_log.Fatal("InitializeWriting(" + Packet + ") file already downloading");
+				File = null;
 				_tcpClient.Close();
 				return;
 			}
@@ -280,6 +284,7 @@ namespace XG.Plugin.Irc
 
 		protected void FinishWriting()
 		{
+			_log.Info("FinishWriting()");
 			Stopwatch();
 
 			// close the writer
@@ -300,6 +305,7 @@ namespace XG.Plugin.Irc
 			{
 				File.Packet = null;
 				File.Connected = false;
+				File.Speed = 0;
 				File.Commit();
 
 				if (_removeFile)
@@ -335,7 +341,7 @@ namespace XG.Plugin.Irc
 						Packet.Parent.HasNetworkProblems = true;
 						Packet.Parent.Commit();
 
-						FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
+						FireNotificationAdded(Notification.Types.BotConnectFailed, Packet);
 					}
 					// it is incomplete
 					else
@@ -357,7 +363,7 @@ namespace XG.Plugin.Irc
 				Packet.Parent.HasNetworkProblems = true;
 				Packet.Parent.Commit();
 
-				FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
+				FireNotificationAdded(Notification.Types.BotConnectFailed, Packet);
 			}
 
 			if (OnDisconnected != null)
@@ -439,7 +445,6 @@ namespace XG.Plugin.Irc
 				_receivedBytes += aData.Length;
 				_speedCalcSize += aData.Length;
 				File.CurrentSize += aData.Length;
-				File.Commit();
 			}
 			catch (Exception ex)
 			{

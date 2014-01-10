@@ -191,7 +191,10 @@ namespace XG.DB
 			{
 				Log.Fatal("cat save object " + eventArgs.Value2, ex);
 			}
-			TryFlush();
+			finally
+			{
+				TryFlush();
+			}
 		}
 
 		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
@@ -209,7 +212,10 @@ namespace XG.DB
 			{
 				Log.Fatal("cat remove object " + eventArgs.Value2, ex);
 			}
-			TryFlush();
+			finally
+			{
+				TryFlush();
+			}
 		}
 
 		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
