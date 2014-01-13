@@ -189,7 +189,7 @@ namespace XG.DB
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("cat save object " + eventArgs.Value2, ex);
+				Log.Fatal("cant save object " + eventArgs.Value2, ex);
 			}
 			finally
 			{
@@ -210,7 +210,7 @@ namespace XG.DB
 			}
 			catch (Exception ex)
 			{
-				Log.Fatal("cat remove object " + eventArgs.Value2, ex);
+				Log.Fatal("cant remove object " + eventArgs.Value2, ex);
 			}
 			finally
 			{

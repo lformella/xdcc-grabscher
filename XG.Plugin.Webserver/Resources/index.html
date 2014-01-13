@@ -381,8 +381,8 @@
 													{{channel.BotCount}}
 												</td>
 												<td class="text-center">
-													<span class="glyphicon glyphicon-ok-circle ChameleonDark clickAble" ng-show="channel.AskForVersion" ng-click="disableAskForVersion(channel)" title="{{'Enabled'|translate}}"></span>
-													<span class="glyphicon glyphicon-ban-circle ScarletRedMiddle clickAble" ng-show="!channel.AskForVersion" ng-click="enableAskForVersion(channel)" title="{{'Disabled'|translate}}"></span>
+													<span class="glyphicon glyphicon-ok-circle ChameleonDark clickAble" ng-show="channel.AskForVersion" ng-click="disableAskForVersion(channel)" title="{{'Disable'|translate}}"></span>
+													<span class="glyphicon glyphicon-ban-circle ScarletRedMiddle clickAble" ng-show="!channel.AskForVersion" ng-click="enableAskForVersion(channel)" title="{{'Enable'|translate}}"></span>
 												</td>
 												<td class="text-right">
 													<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="channelSignalr.remove(channel)" title="{{'Remove'|translate}}"></span>
@@ -746,7 +746,7 @@
 						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': settings.showOfflineBots && !$parent.parents[group.value].Connected}">
 							<tr class="ng-table-group" ng-show="settings.showBotsInView">
 								<td class="withIcon withIcon2">
-									<span class="clickAble" ng-click="$parent.searchByBot($parent.parents[group.value])">
+									<span class="clickAble" ng-click="$parent.searchByBot($parent.parents[group.value])" title="{{'Just display packets from this bot'|translate}}">
 										<i class="glyphicon glyphicon-search Aluminium1Middle"></i>
 									</span>
 								</td>

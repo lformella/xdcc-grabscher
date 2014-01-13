@@ -199,7 +199,7 @@ namespace XG.Business.Helper
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("FinishFile(" + aFile + ") make", ex);
+					Log.Fatal("FinishFile(" + aFile + ") cant finish file", ex);
 
 					FireNotificationAdded(Notification.Types.FileFinishFailed, aFile);
 				}

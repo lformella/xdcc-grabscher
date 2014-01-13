@@ -745,7 +745,7 @@ namespace XG.Plugin.Irc
 			}
 			catch(CouldNotConnectException ex)
 			{
-				_log.Fatal("StartRun() connection failed " + ex.Message);
+				_log.Warn("StartRun() connection failed " + ex.Message);
 				// can be null if we stopped a connection which is not connected and fails later
 				if (Server != null)
 				{

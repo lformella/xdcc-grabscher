@@ -218,8 +218,9 @@ define(['./module'], function (i18n) {
 				"Download this packet": "Lade dieses Paket runter",
 				"Skip download": "Brich den Download ab",
 				"Remove from queue": "Entferne aus der Warteschlange",
-				"Enable": "Aktiviere",
-				"Disable": "Deaktiviere"
+				"Enable": "Aktivieren",
+				"Disable": "Deaktivieren",
+				"Just display packets from this bot": "Zeige nur Pakte von diesem Bot an"
 			});
 		}
 	]);

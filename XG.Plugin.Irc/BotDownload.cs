@@ -193,13 +193,13 @@ namespace XG.Plugin.Irc
 			File = FileActions.GetFileOrCreateNew(Packet.RealName, Packet.RealSize);
 			if (File == null)
 			{
-				_log.Fatal("InitializeWriting(" + Packet + ") cant find or create a file to download");
+				_log.Warn("InitializeWriting(" + Packet + ") cant find or create a file to download");
 				_tcpClient.Close();
 				return;
 			}
 			if (File.Connected)
 			{
-				_log.Fatal("InitializeWriting(" + Packet + ") file already downloading");
+				_log.Warn("InitializeWriting(" + Packet + ") file already downloading");
 				File = null;
 				_tcpClient.Close();
 				return;
