@@ -1,4 +1,4 @@
-[![XG](http://xg.bitpir.at/images/xg_bw.png?v=2)](http://www.larsformella.de/lang/en/portfolio/programme-software/xg)
+[![XG](http://xg.bitpir.at/images/xg_bw.png?v=3)](http://www.larsformella.de/lang/en/portfolio/programme-software/xg)
 
 XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
@@ -9,29 +9,29 @@ You can run XG on every machine that supports c# / mono - even root servers with
 
 # How do i use it?
 Run the program and point your browser to __127.0.0.1:5556__. The default password is __xgisgreat__. 
-![Password Dialog](http://xg.bitpir.at/images/help/login.png?v=2)
+![Password Dialog](http://xg.bitpir.at/images/help/login.png?v=3)
 
 ## At first: change the settings
 You can do this directly in the web frontend. Just click on the __Config__ link in the options menu.
 
-![Options](http://xg.bitpir.at/images/help/options.png?v=2)
+![Options](http://xg.bitpir.at/images/help/options.png?v=3)
 
 This is a small explanation to help you set the correct options. If you don't want to use a special feature, just disable it.
 
-![Settings part 1](http://xg.bitpir.at/images/help/settings_1.png?v=2)
+![Settings part 1](http://xg.bitpir.at/images/help/settings_1.png?v=3)
 
 The web server password is filled with __xgisgreat__ and the port ist __5556__. The IRC passport and email can be left blank and are just needed if you want use nickserv.
 
-![Settings part 2](http://xg.bitpir.at/images/help/settings_2.png?v=2)
+![Settings part 2](http://xg.bitpir.at/images/help/settings_2.png?v=3)
 
 ### Filehandlers
 If a packet is downloaded you can run several commands. If the regex of a file handler matches the file name, the process is started. A process is defined by a command, arguments and the next process. The next process can be left empty and only is called if the current one is successfully executed.
 
-![Settings part 3](http://xg.bitpir.at/images/help/settings_3.png?v=2)
+![Settings part 3](http://xg.bitpir.at/images/help/settings_3.png?v=3)
 
 The following handler matches all rar / zip archives. It will create a separate folder, extract the archive into it and removes the archive. Every process is executed only, if the previous one was successfully. Because of this, the handler won't delete the archive if he could not extract it.
 
-![Settings part 4](http://xg.bitpir.at/images/help/settings_4.png?v=2)
+![Settings part 4](http://xg.bitpir.at/images/help/settings_4.png?v=3)
 
 You can add as many file handlers as you want. They are also stored in the settings file.
 
@@ -56,21 +56,21 @@ Now you have to add IRC networks and channels. The bots and packets are generate
 
 Normally the bots will announce their pakets directly in the channel. If they are silent, you can check the option __Check user versions__ and XG will ask the voiced users about their version. If XG detects an iroffer he will try to send __xdcc list__ commands to get packet lists. __\_DO NOT\___ check the option unless you know, that the bots in this channel wont announce their packets. Most likely you will be banned!
 
-![Server / Channel Dialog](http://xg.bitpir.at/images/help/servers.png?v=2)
+![Server / Channel Dialog](http://xg.bitpir.at/images/help/servers.png?v=3)
 
 ## Search
 You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favorite searches.
 
-![Search](http://xg.bitpir.at/images/help/search.png?v=2)
+![Search](http://xg.bitpir.at/images/help/search.png?v=3)
 
 The results are displayed in a table and the packets are grouped by their bot. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions.
 
-![Packet Icons](http://xg.bitpir.at/images/help/search_results.png?v=2)
+![Packet Icons](http://xg.bitpir.at/images/help/search_results.png?v=3)
 
 ## Notifications
 If something happens inside XG you will get a notification. This can also be shown via your browser if you allow it.
 
-![Notification Icon](http://xg.bitpir.at/images/help/notification.png?v=2)
+![Notification Icon](http://xg.bitpir.at/images/help/notification.png?v=3)
 
 ## XDCC Links
 
@@ -80,19 +80,19 @@ You can add XDCC links in the following dialog. A XDCC link must have the follow
 
 The server, channel and bot is automatically added. If the server is connected and the channel joined, the packet will be requested.
 
-![XDCC Links](http://xg.bitpir.at/images/help/xdcc-links.png?v=2)
+![XDCC Links](http://xg.bitpir.at/images/help/xdcc-links.png?v=3)
 
 ## Extended Stats / Snapshots
 XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
 
-![Extended Statistics](http://xg.bitpir.at/images/help/graphs.png?v=2)
+![Extended Statistics](http://xg.bitpir.at/images/help/graphs.png?v=3)
 
 This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
 
 ## API
 XG v3 supports a rest like api to control it via scripts. You can add api keys and enable / disable them.
 
-![Api](http://xg.bitpir.at/images/help/api.png?v=2)
+![Api](http://xg.bitpir.at/images/help/api.png?v=3)
 
 Currently you can just add xdcc links by calling the following url:
 
