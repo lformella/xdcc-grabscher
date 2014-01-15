@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  AWorker.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -36,8 +36,6 @@ namespace XG.Plugin
 
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		Thread _thread;
-
 		bool _allowRunning;
 		protected bool AllowRunning
 		{
@@ -53,12 +51,12 @@ namespace XG.Plugin
 			_allowRunning = true;
 			try
 			{
-				_thread = new Thread(StartRun);
+				var thread = new Thread(StartRun);
 				if (aName != null)
 				{
-					_thread.Name = aName;
+					thread.Name = aName;
 				}
-				_thread.Start();
+				thread.Start();
 			}
 			catch (ThreadAbortException)
 			{
@@ -78,7 +76,6 @@ namespace XG.Plugin
 			try
 			{
 				StopRun();
-				_thread.Abort();
 			}
 			catch (Exception ex)
 			{

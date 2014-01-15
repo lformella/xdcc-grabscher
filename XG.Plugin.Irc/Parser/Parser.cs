@@ -51,6 +51,7 @@ namespace XG.Plugin.Irc.Parser
 			AddParser(new Types.Xdcc.InvalidPacketNumber());
 			AddParser(new Types.Xdcc.NotInQueue());
 			AddParser(new Types.Xdcc.OwnerRequest());
+			AddParser(new Types.Xdcc.PacketAlreadyQueued());
 			AddParser(new Types.Xdcc.PacketAlreadyRequested());
 			AddParser(new Types.Xdcc.Queued());
 			AddParser(new Types.Xdcc.QueueFull());

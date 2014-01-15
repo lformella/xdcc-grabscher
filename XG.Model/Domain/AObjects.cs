@@ -57,7 +57,31 @@ namespace XG.Model.Domain
 
 		#region PROPERTIES
 
-		protected ICollection<AObject> Children { get; set; }
+		ICollection<AObject> _children;
+		protected ICollection<AObject> Children
+		{
+			get
+			{
+				return _children;
+			}
+			set
+			{
+				_children = value;
+
+				foreach (var child in _children)
+				{
+					child.OnEnabledChanged += FireEnabledChanged;
+					child.OnChanged += FireChanged;
+
+					var aObjects = child as AObjects;
+					if (aObjects != null)
+					{
+						aObjects.OnAdded += FireAdded;
+						aObjects.OnRemoved += FireRemoved;
+					}
+				}
+			}
+		}
 
 		protected AObject[] All
 		{
@@ -113,8 +137,6 @@ namespace XG.Model.Domain
 
 				if (result)
 				{
-					aObject.Parent = null;
-
 					aObject.OnEnabledChanged -= FireEnabledChanged;
 					aObject.OnChanged -= FireChanged;
 

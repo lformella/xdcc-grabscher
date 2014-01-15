@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  Programm.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -53,7 +53,7 @@ namespace XG.Application
 			{
 				Settings.Default.TempPath += Path.DirectorySeparatorChar;
 			}
-			new DirectoryInfo(Settings.Default.ReadyPath).Create();
+			new DirectoryInfo(Settings.Default.TempPath).Create();
 
 			if (string.IsNullOrWhiteSpace(Settings.Default.ReadyPath))
 			{
@@ -63,7 +63,9 @@ namespace XG.Application
 			{
 				Settings.Default.ReadyPath += Path.DirectorySeparatorChar;
 			}
-			new DirectoryInfo(Settings.Default.TempPath).Create();
+			new DirectoryInfo(Settings.Default.ReadyPath).Create();
+
+			Settings.Default.Save();
 
 			if (File.Exists(Settings.Default.GetAppDataPath() + "log4net.xml"))
 			{
@@ -79,7 +81,11 @@ namespace XG.Application
 				{
 					Name = "Console",
 					Layout = new PatternLayout("%date{dd-MM-yyyy HH:mm:ss,fff} %5level [%2thread] %line:%logger.%message%n"),
+#if DEBUG
+					Threshold = Level.Info
+#else
 					Threshold = Level.Fatal
+#endif
 				};
 				lAppender.ActivateOptions();
 
@@ -99,11 +105,7 @@ namespace XG.Application
 
 			var app = new App();
 
-			if (Settings.Default.UseWebserver)
-			{
-				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
-				app.AddWorker(webServer);
-			}
+			app.AddWorker(new Plugin.Irc.Plugin());
 			if (Settings.Default.UseJabberClient)
 			{
 				app.AddWorker(new Plugin.Jabber.Plugin());
@@ -112,9 +114,13 @@ namespace XG.Application
 			{
 				app.AddWorker(new Plugin.ElasticSearch.Plugin());
 			}
-			app.AddWorker(new Plugin.Irc.Plugin());
+			if (Settings.Default.UseWebserver)
+			{
+				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
+				app.AddWorker(webServer);
+			}
 
-			app.Start();
+			app.Start("App");
 
 			string shutdownFile = Settings.Default.GetAppDataPath() + "shutdown";
 			while (true)

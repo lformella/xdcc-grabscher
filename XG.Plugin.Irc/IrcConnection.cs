@@ -37,7 +37,7 @@ using XG.Business.Helper;
 
 namespace XG.Plugin.Irc
 {
-	public class IrcConnection : AWorker
+	public class IrcConnection : ConnectionWatcher
 	{
 		#region VARIABLES
 
@@ -311,6 +311,7 @@ namespace XG.Plugin.Irc
 			{
 				Server.Connected = true;
 				Server.Commit();
+				FireNotificationAdded(Notification.Types.ServerConnected, Server);
 				_log.Info("connected " + Server);
 
 				Client.Login(Settings.Default.IrcNick, Settings.Default.IrcNick, 0, Settings.Default.IrcNick, Settings.Default.IrcPasswort);
@@ -318,11 +319,19 @@ namespace XG.Plugin.Irc
 				var channels = (from channel in Server.Channels where channel.Enabled select channel.Name).ToArray();
 				Client.RfcJoin(channels);
 				Client.Listen();
+
+				StartWatch(Settings.Default.ChannelWaitTimeShort * 5, Server + " ConnectionWatch");
 			};
 
-			Client.OnError += (sender, e) => _log.Info("error from " + Server + ": " + e.ErrorMessage);
+			Client.OnError += (sender, e) =>
+			{
+				_log.Info("error from " + Server + ": " + e.ErrorMessage);
+			};
 
-			Client.OnConnectionError += (sender, e) => _log.Info("connection error from " + Server + ": " + e);
+			Client.OnConnectionError += (sender, e) =>
+			{
+				_log.Info("connection error from " + Server + ": " + e);
+			};
 
 			Client.OnConnecting += (sender, e) =>
 			{
@@ -428,6 +437,8 @@ namespace XG.Plugin.Irc
 					if (_iam == e.Who)
 					{
 						channel.Connected = false;
+						_log.Warn("banned from " + channel.Name );
+						FireNotificationAdded(Notification.Types.ChannelBanned, channel);
 					}
 					else
 					{
@@ -600,6 +611,8 @@ namespace XG.Plugin.Irc
 			Client.OnCtcpRequest += Parse;
 
 			Client.OnWriteLine += (sender, e) => _log.Debug("OnWriteLine " + e.Line);
+
+			Client.OnReadLine += (sender, e) => LastContact = DateTime.Now;
 		}
 
 		void UpdateChannel(Model.Domain.Channel aChannel)
@@ -630,11 +643,10 @@ namespace XG.Plugin.Irc
 				Packet tPacket = aBot.OldestActivePacket();
 				while (tPacket != null)
 				{
-					Int64 tChunk = FileActions.NextAvailablePartSize(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name,
-					                                                 tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
-					if (tChunk == -1)
+					File tFile = FileActions.TryGetFile(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, tPacket.RealSize != 0 ? tPacket.RealSize : tPacket.Size);
+					if (tFile != null && tFile.Connected)
 					{
-						_log.Warn("RequestFromBot(" + aBot + ") packet #" + tPacket.Id + " (" + tPacket.Name + ") is already in use");
+						_log.Warn("RequestFromBot(" + aBot + ") packet " + tPacket + " is already in use");
 						tPacket.Enabled = false;
 						tPacket = aBot.OldestActivePacket();
 					}
@@ -674,7 +686,7 @@ namespace XG.Plugin.Irc
 
 			AddBotToQueue(aBot, Settings.Default.CommandWaitTime);
 
-			FireNotificationAdded(Notification.Types.PacketRemoved, aBot);
+			FireNotificationAdded(Notification.Types.PacketRemoved, aBot.CurrentQueuedPacket);
 		}
 
 		void CheckIfUserShouldVersioned(string aChannel, string aUser)
@@ -733,15 +745,22 @@ namespace XG.Plugin.Irc
 			}
 			catch(CouldNotConnectException ex)
 			{
-				_log.Fatal("StartRun() connection failed " + ex.Message);
-				Server.Connected = false;
-				Server.Commit();
-				OnDisconnected(this, new EventArgs<Server>(Server));
+				_log.Warn("StartRun() connection failed " + ex.Message);
+				// can be null if we stopped a connection which is not connected and fails later
+				if (Server != null)
+				{
+					FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
+					Server.Connected = false;
+					Server.Commit();
+					OnDisconnected(this, new EventArgs<Server>(Server));
+				}
 			}
 		}
 
 		protected override void StopRun()
 		{
+			Stopwatch();
+
 			try
 			{
 				Client.Disconnect();
@@ -749,6 +768,23 @@ namespace XG.Plugin.Irc
 			catch (NotConnectedException)
 			{
 				// this is ok
+				Server.Connected = false;
+				Server.Commit();
+				OnDisconnected(this, new EventArgs<Server>(Server));
+			}
+		}
+
+		protected override void RepairConnection()
+		{
+			try
+			{
+				Client.Reconnect();
+			}
+			catch (NotConnectedException)
+			{
+				// this is ok
+				Server.Connected = false;
+				Server.Commit();
 			}
 		}
 

@@ -73,14 +73,13 @@ namespace XG.Plugin.Irc
 			{
 				_tcpClient.SendTimeout = Settings.Default.DownloadTimeoutTime * 1000;
 				_tcpClient.ReceiveTimeout = Settings.Default.DownloadTimeoutTime * 1000;
-				//_tcpClient.ReceiveBufferSize = Settings.Default.DownloadPerReadBytes;
 
 				try
 				{
 					_tcpClient.Connect(IP, Port);
 					_log.Info("StartRun() connected");
 
-					using (NetworkStream stream = _tcpClient.GetStream())
+					using (Stream stream = new ThrottledStream(_tcpClient.GetStream(), Settings.Default.MaxDownloadSpeedInKB * 1000))
 					{
 						StartWriting();
 
@@ -114,12 +113,14 @@ namespace XG.Plugin.Irc
 				{
 					_log.Fatal("StartRun()", ex);
 				}
+				finally
+				{
+					StopWriting();
 
-				StopWriting();
+					_tcpClient = null;
+					_writer = null;
+				}
 			}
-
-			_tcpClient = null;
-			_writer = null;
 		}
 
 		protected override void StopRun()

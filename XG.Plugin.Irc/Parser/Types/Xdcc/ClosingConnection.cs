@@ -64,6 +64,8 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					FireJoinChannel(this, new EventArgs<Model.Domain.Server, string>(aConnection.Server, channel));
 				}
 
+				//** Closing Connection: Transfers from [mg]-request|bots are restricted to only MOVIEGODS users! /Part #Beast-xdcc + #elitewarez if you want to download from [MG]-Request|Bot|003
+
 				UpdateBot(aBot, aMessage);
 				return true;
 			}

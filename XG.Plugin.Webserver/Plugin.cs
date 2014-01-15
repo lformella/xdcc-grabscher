@@ -24,10 +24,11 @@
 //  
 
 using System;
-using System.Security.Cryptography;
-using System.Text;
 using SharpRobin.Core;
 using XG.Config.Properties;
+using Microsoft.Owin.Hosting;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace XG.Plugin.Webserver
 {
@@ -35,13 +36,12 @@ namespace XG.Plugin.Webserver
 	{
 		#region VARIABLES
 
-		SHA256Managed _sha256 = new SHA256Managed();
-
-		Webserver.Server _server;
-
-		Websocket.Server _socket;
+		IDisposable _server;
+		SignalR.EventForwarder _eventForwarder;
 
 		public RrdDb RrdDB { get; set; }
+
+		SHA256Managed _sha256 = new SHA256Managed();
 
 		#endregion
 
@@ -58,35 +58,37 @@ namespace XG.Plugin.Webserver
 			string salt = Hash();
 			string passwortHash = Hash(salt + Settings.Default.Password + salt);
 
-			_server = new Webserver.Server
-			{
-				Servers = Servers,
-				Files = Files,
-				Searches = Searches,
-				Notifications = Notifications,
-				Password = passwortHash,
-				Salt = salt
-			};
-			_server.Start();
+			SignalR.Hub.Helper.Servers = Servers;
+			SignalR.Hub.Helper.Files = Files;
+			SignalR.Hub.Helper.Searches = Searches;
+			SignalR.Hub.Helper.Notifications = Notifications;
+			SignalR.Hub.Helper.RrdDb = RrdDB;
+			SignalR.Hub.Helper.ApiKeys = ApiKeys;
+			SignalR.Hub.Helper.PasswortHash = passwortHash;
 
-			_socket = new Websocket.Server
+			Nancy.Helper.ApiKeys = ApiKeys;
+			Nancy.Helper.Salt = salt;
+			Nancy.Helper.PasswortHash = passwortHash;
+
+			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{
-				Servers = Servers,
-				Files = Files,
-				Searches = Searches,
-				Notifications = Notifications,
-				Password = passwortHash,
-				Salt = salt,
-				RrdDB = RrdDB
+				ServerFactory = "Nowin"
 			};
-			_socket.Start();
+			_server = WebApp.Start<Startup>(options);
+
+			_eventForwarder = new SignalR.EventForwarder();
+			_eventForwarder.Servers = Servers;
+			_eventForwarder.Files = Files;
+			_eventForwarder.Searches = Searches;
+			_eventForwarder.Notifications = Notifications;
+			_eventForwarder.ApiKeys = ApiKeys;
+			_eventForwarder.Start();
 		}
 
 		protected override void StopRun()
 		{
-			_socket.Stop();
-
-			_server.Stop();
+			_eventForwarder.Stop();
+			_server.Dispose();
 		}
 
 		#endregion

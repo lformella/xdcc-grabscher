@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  ExistingBot.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -28,6 +28,7 @@ using System.Text.RegularExpressions;
 using Meebey.SmartIrc4net;
 using XG.Model.Domain;
 using XG.Business.Helper;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
@@ -57,8 +58,21 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				bool isOk = false;
 
 				int tPort = 0;
-				Int64 tChunk = 0;
-				
+				File tFile = FileActions.TryGetFile(tPacket.RealName, tPacket.RealSize);
+				Int64 startSize = 0;
+
+				if (tFile != null)
+				{
+					if (tFile.Connected)
+					{
+						return false;
+					}
+					if (tFile.CurrentSize > Settings.Default.FileRollbackBytes)
+					{
+						startSize = tFile.CurrentSize - Settings.Default.FileRollbackBytes;
+					}
+				}
+
 				string[] tDataList = aMessage.Split(' ');
 				if (tDataList[0] == "SEND")
 				{
@@ -117,17 +131,23 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 							return false;
 						}
 
-						tChunk = FileActions.NextAvailablePartSize(tPacket.RealName, tPacket.RealSize);
-						if (tChunk < 0)
+						if (tFile != null)
 						{
-							Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use, disabling packet");
-							tPacket.Enabled = false;
-							FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
-						}
-						else if (tChunk > 0)
-						{
-							Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + tChunk);
-							FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + tChunk));
+							if (tFile.Connected)
+							{
+								Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use or not found, disabling packet");
+								tPacket.Enabled = false;
+								FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
+							}
+							else if (tFile.CurrentSize > 0)
+							{
+								Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + startSize);
+								FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
+							}
+							else
+							{
+								isOk = true;
+							}
 						}
 						else
 						{
@@ -151,11 +171,11 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 
 					try
 					{
-						tChunk = Int64.Parse(tDataList[3]);
+						startSize = Int64.Parse(tDataList[3]);
 					}
 					catch (Exception ex)
 					{
-						Log.Fatal("Parse() " + tBot + " - can not parse packet chunk from string: " + aMessage, ex);
+						Log.Fatal("Parse() " + tBot + " - can not parse packet startSize from string: " + aMessage, ex);
 						return false;
 					}
 
@@ -165,8 +185,8 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				tPacket.Commit();
 				if (isOk)
 				{
-					Log.Info("Parse() downloading from " + tBot + " - Starting: " + tChunk + " - Size: " + tPacket.RealSize);
-					FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, tChunk, tBot.IP, tPort));
+					Log.Info("Parse() downloading from " + tBot + " - Starting: " + startSize + " - Size: " + tPacket.RealSize);
+					FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
 					return true;
 				}
 			}

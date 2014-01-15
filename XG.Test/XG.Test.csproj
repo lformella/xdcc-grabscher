@@ -39,6 +39,9 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Meebey.SmartIrc4net">
       <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
@@ -150,9 +153,6 @@
     <EmbeddedResource Include="..\XG.DB\Mappings\File.hbm.xml">
       <Link>Mappings\File.hbm.xml</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\XG.DB\Mappings\FilePart.hbm.xml">
-      <Link>Mappings\FilePart.hbm.xml</Link>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\XG.DB\Mappings\Search.hbm.xml">
       <Link>Mappings\Search.hbm.xml</Link>
       <SubType>Designer</SubType>
@@ -185,13 +185,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="Model\Domain\" />
-    <Folder Include="Business\" />
-    <Folder Include="Plugin\" />
-    <Folder Include="Plugin\Irc\" />
-    <Folder Include="Config\" />
-    <Folder Include="Config\Properties\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

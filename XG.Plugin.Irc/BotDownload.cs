@@ -35,10 +35,11 @@ using XG.Model.Domain;
 using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
+using System.Threading;
 
 namespace XG.Plugin.Irc
 {
-	public class BotDownload : AWorker
+	public class BotDownload : ConnectionWatcher
 	{
 		#region VARIABLES
 
@@ -80,47 +81,16 @@ namespace XG.Plugin.Irc
 
 		byte[] _rollbackRefernce;
 		byte[] _startBuffer;
-		byte[] _stopBuffer;
 
 		bool _streamOk;
-		bool _removePart;
+		bool _removeFile;
 
 		Int64 CurrentSize
 		{
 			get { return StartSize + _receivedBytes; }
 		}
 
-		Int64 StopSize
-		{
-			get { return Part.StopSize; }
-			set
-			{
-				Part.StopSize = value;
-				_log.Info("StopSize.set(" + value + ")");
-				Part.Commit();
-			}
-		}
-
-		public FilePart Part { get; set; }
-
-		Model.Domain.File File
-		{
-			get { return Part.Parent; }
-		}
-
-		string FileName
-		{
-			get
-			{
-				if (Part != null && File != null)
-				{
-					return Settings.Default.TempPath + File.TmpPath + Part.StartSize;
-				}
-				// damn this should not happen
-				_log.Error("Filename find no part or file");
-				return "";
-			}
-		}
+		public Model.Domain.File File { get; set; }
 
 		#endregion
 
@@ -135,26 +105,31 @@ namespace XG.Plugin.Irc
 
 		protected override void StartRun()
 		{
+			Packet.Parent.QueuePosition = 0;
+			Packet.Parent.QueueTime = 0;
+			Packet.Parent.Commit();
+
 			using (_tcpClient = new TcpClient())
 			{
 				_tcpClient.SendTimeout = Settings.Default.DownloadTimeoutTime * 1000;
 				_tcpClient.ReceiveTimeout = Settings.Default.DownloadTimeoutTime * 1000;
-				//_tcpClient.ReceiveBufferSize = Settings.Default.DownloadPerReadBytes;
 
 				try
 				{
 					_tcpClient.Connect(IP, Port);
 					_log.Info("StartRun() connected");
 
-					using (NetworkStream stream = _tcpClient.GetStream())
+					using (Stream stream = new ThrottledStream(_tcpClient.GetStream(), Settings.Default.MaxDownloadSpeedInKB * 1000))
 					{
-						StartWriting();
+						InitializeWriting();
 
 						using (var reader = new BinaryReader(stream))
 						{
 							Int64 missing = MaxData;
 							Int64 max = Settings.Default.DownloadPerReadBytes;
 							byte[] data = null;
+
+							int failCounter = 0;
 							do
 							{
 								data = reader.ReadBytes((int) (missing < max ? missing : max));
@@ -166,8 +141,14 @@ namespace XG.Plugin.Irc
 								}
 								else
 								{
-									_log.Warn("StartRun() no data received");
-									break;
+									failCounter++;
+									_log.Warn("StartRun() no data received - " + failCounter);
+
+									if (failCounter > 5)
+									{
+										_log.Warn("StartRun() no data received - skipping");
+										break;
+									}
 								}
 							} while (AllowRunning && missing > 0);
 						}
@@ -180,12 +161,15 @@ namespace XG.Plugin.Irc
 				{
 					_log.Fatal("StartRun()", ex);
 				}
+				finally
+				{
+					_log.Info("StartRun() finishing");
+					FinishWriting();
 
-				StopWriting();
+					_tcpClient = null;
+					_writer = null;
+				}
 			}
-
-			_tcpClient = null;
-			_writer = null;
 		}
 
 		protected override void StopRun()
@@ -198,116 +182,111 @@ namespace XG.Plugin.Irc
 
 		#endregion
 
-		#region CONNECT
+		#region CONNECTION
 
-		protected void StartWriting()
+		protected void InitializeWriting()
 		{
 			_speedCalcTime = DateTime.Now;
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
 
-			Packet.Parent.QueuePosition = 0;
-			Packet.Parent.QueueTime = 0;
-			Packet.Parent.Commit();
-
-			var tFile = FileActions.NewFile(Packet.RealName, Packet.RealSize);
-			if (tFile == null)
+			File = FileActions.GetFileOrCreateNew(Packet.RealName, Packet.RealSize);
+			if (File == null)
 			{
-				_log.Fatal("StartWriting(" + Packet + ") cant find or create a file to download");
+				_log.Warn("InitializeWriting(" + Packet + ") cant find or create a file to download");
+				_tcpClient.Close();
+				return;
+			}
+			if (File.Connected)
+			{
+				_log.Warn("InitializeWriting(" + Packet + ") file already downloading");
+				File = null;
 				_tcpClient.Close();
 				return;
 			}
 
-			Part = FileActions.Part(tFile, StartSize);
-			if (Part != null)
+			// wtf?
+			if (StartSize == File.Size)
 			{
-				// wtf?
-				if (StartSize == StopSize)
-				{
-					_log.Error("StartWriting(" + Packet + ") startSize = stopsize (" + StartSize + ")");
-					_tcpClient.Close();
-					return;
-				}
-
-				Part.State = FilePart.States.Open;
-				Part.Packet = Packet;
-
-				_log.Info("StartWriting(" + Packet + ") started (" + StartSize + " - " + StopSize + ")");
-
-				try
-				{
-					var info = new FileInfo(FileName);
-					FileStream stream = info.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
-
-					// we are connected
-					if (OnConnected != null)
-					{
-						OnConnected(this, new EventArgs<Packet>(Packet));
-					}
-
-					// we seek if it is possible
-					Int64 seekPos = StartSize - Part.StartSize;
-					if (seekPos > 0)
-					{
-						try
-						{
-							_reader = new BinaryReader(stream);
-
-							// seek to 0 and extract the startbuffer bytes need for the previous file
-							stream.Seek(0, SeekOrigin.Begin);
-							Part.StartReference = _reader.ReadBytes(Settings.Default.FileRollbackCheckBytes);
-
-							// seek to seekPos and extract the rollbackcheck bytes
-							stream.Seek(seekPos, SeekOrigin.Begin);
-							_rollbackRefernce = _reader.ReadBytes(Settings.Default.FileRollbackCheckBytes);
-							// seek back
-							stream.Seek(seekPos, SeekOrigin.Begin);
-						}
-						catch (Exception ex)
-						{
-							_log.Fatal("StartWriting(" + Packet + ") seek", ex);
-							_tcpClient.Close();
-							return;
-						}
-					}
-					else
-					{
-						_streamOk = true;
-					}
-
-					_writer = new BinaryWriter(stream);
-
-					#region EMIT CHANGES
-
-					Part.Commit();
-
-					Packet.Connected = true;
-					Packet.Part = Part;
-					Packet.Commit();
-
-					Packet.Parent.State = Bot.States.Active;
-					Packet.Parent.Commit();
-
-					#endregion
-				}
-				catch (Exception ex)
-				{
-					_log.Fatal("StartWriting(" + Packet + ")", ex);
-					_tcpClient.Close();
-					return;
-				}
-
-				FireNotificationAdded(Notification.Types.BotConnected, Packet);
-			}
-			else
-			{
-				_log.Error("StartWriting(" + Packet + ") cant find a part to download");
+				_log.Error("InitializeWriting(" + Packet + ") startSize = File.Size (" + StartSize + ")");
 				_tcpClient.Close();
+				return;
 			}
+
+			File.Connected = true;
+			File.Packet = Packet;
+
+			_log.Info("InitializeWriting(" + Packet + ") started (" + StartSize + " - " + File.Size + ")");
+
+			try
+			{
+				FileStream stream = new FileStream(Settings.Default.TempPath + File.TmpName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+
+				// we are connected
+				if (OnConnected != null)
+				{
+					OnConnected(this, new EventArgs<Packet>(Packet));
+				}
+
+				// we seek if it is necesarry
+				if (StartSize > 0)
+				{
+					try
+					{
+						_reader = new BinaryReader(stream);
+
+						// seek to seekPos and extract the rollbackcheck bytes
+						stream.Seek(StartSize, SeekOrigin.Begin);
+						_rollbackRefernce = _reader.ReadBytes(Settings.Default.FileRollbackCheckBytes);
+
+						// seek back
+						stream.Seek(StartSize, SeekOrigin.Begin);
+					}
+					catch (Exception ex)
+					{
+						_log.Fatal("InitializeWriting(" + Packet + ") seek", ex);
+						_tcpClient.Close();
+						return;
+					}
+				}
+				else
+				{
+					_streamOk = true;
+				}
+
+				_writer = new BinaryWriter(stream);
+
+				#region EMIT CHANGES
+
+				File.Commit();
+
+				Packet.Connected = true;
+				Packet.File = File;
+				Packet.Commit();
+
+				Packet.Parent.State = Bot.States.Active;
+				Packet.Parent.Commit();
+
+				#endregion
+			}
+			catch (Exception ex)
+			{
+				_log.Fatal("InitializeWriting(" + Packet + ")", ex);
+				_tcpClient.Close();
+				return;
+			}
+
+			FireNotificationAdded(Notification.Types.BotConnected, Packet);
+
+			// start watch to look if our connection is still receiving data
+			StartWatch(Settings.Default.UpdateDownloadTime * 10, IP + ":" + Port + " ConnectionWatch");
 		}
 
-		protected void StopWriting()
+		protected void FinishWriting()
 		{
+			_log.Info("FinishWriting()");
+			Stopwatch();
+
 			// close the writer
 			if (_writer != null)
 			{
@@ -315,63 +294,61 @@ namespace XG.Plugin.Irc
 			}
 
 			Packet.Connected = false;
-			Packet.Part = null;
+			Packet.File = null;
 			Packet.Commit();
 
 			Packet.Parent.State = Bot.States.Idle;
+			Packet.Parent.HasNetworkProblems = false;
 			Packet.Parent.Commit();
 
-			Packet.Parent.HasNetworkProblems = false;
-			if (Part != null)
+			if (File != null)
 			{
-				Part.Packet = null;
-				Part.State = FilePart.States.Closed;
+				File.Packet = null;
+				File.Connected = false;
+				File.Speed = 0;
+				File.Commit();
 
-				if (_removePart)
+				if (_removeFile)
 				{
-					_log.Info("StopWriting(" + Packet + ") removing part");
-					Part.State = FilePart.States.Broken;
-					FileActions.RemovePart(File, Part);
+					_log.Info("FinishWriting(" + Packet + ") removing file");
+					Files.Remove(File);
 				}
 				else
 				{
 					// the file is ok if the size is equal or it has an additional buffer for checking
-					if (CurrentSize == StopSize || (!Part.Checked && CurrentSize == StopSize + Settings.Default.FileRollbackCheckBytes))
+					if (CurrentSize == File.Size)
 					{
-						Part.State = FilePart.States.Ready;
-						_log.Info("StopWriting(" + Packet + ") ready" + (Part.Checked ? "" : " but unchecked"));
-
+						_log.Info("FinishWriting(" + Packet + ") ready");
 						FireNotificationAdded(Notification.Types.PacketCompleted, Packet);
 					}
 					// that should not happen
-					else if (CurrentSize > StopSize)
+					else if (CurrentSize > File.Size)
 					{
-						Part.State = FilePart.States.Broken;
-						_log.Error("StopWriting(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + StopSize);
-						// this mostly happens on the last part of a file - so lets remove the file and load the package again
-						if (File.Parts.Count() == 1 || Part.StopSize == File.Size)
-						{
-							Files.Remove(File);
-							_log.Error("StopWriting(" + Packet + ") removing corupted " + File);
-						}
+						_log.Error("FinishWriting(" + Packet + ") size is bigger than excepted: " + CurrentSize + " > " + File.Size);
+						// lets remove the file and load the package again
+						Files.Remove(File);
+						_log.Error("FinishWriting(" + Packet + ") removing corupted " + File);
 
 						FireNotificationAdded(Notification.Types.PacketBroken, Packet);
 					}
 					// it did not start
 					else if (_receivedBytes == 0)
 					{
-						_log.Error("StopWriting(" + Packet + ") downloading did not start, disabling packet");
+						_log.Error("FinishWriting(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
-						Packet.Parent.HasNetworkProblems = true;
+						Packet.Commit();
 
-						FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
+						Packet.Parent.HasNetworkProblems = true;
+						Packet.Parent.Commit();
+
+						FireNotificationAdded(Notification.Types.BotConnectFailed, Packet);
 					}
 					// it is incomplete
 					else
 					{
-						_log.Error("StopWriting(" + Packet + ") incomplete");
+						_log.Error("FinishWriting(" + Packet + ") incomplete");
 
-						FireNotificationAdded(Notification.Types.PacketIncompleted, Packet);
+						FireNotificationAdded(Notification.Types.PacketIncomplete, Packet);
 					}
 				}
 			}
@@ -379,19 +356,16 @@ namespace XG.Plugin.Irc
 			else
 			{
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
-				_log.Error("StopWriting(" + Packet + ") connection did not work, disabling packet");
+				_log.Error("FinishWriting(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
+				Packet.Commit();
+
 				Packet.Parent.HasNetworkProblems = true;
+				Packet.Parent.Commit();
 
-				FireNotificationAdded(Notification.Types.BotConnectFailed, Packet.Parent);
+				FireNotificationAdded(Notification.Types.BotConnectFailed, Packet);
 			}
 
-			if (Part != null)
-			{
-				Part.Commit();
-			}
-			Packet.Parent.Commit();
-			
 			if (OnDisconnected != null)
 			{
 				OnDisconnected(this, new EventArgs<Packet>(Packet));
@@ -402,7 +376,7 @@ namespace XG.Plugin.Irc
 		{
 			if (!aEventArgs.Value1.Enabled)
 			{
-				_removePart = true;
+				_removeFile = true;
 				_tcpClient.Close();
 			}
 		}
@@ -418,7 +392,7 @@ namespace XG.Plugin.Irc
 				{
 					_startBuffer = aData;
 				}
-					// resize buffer and copy data
+				// resize buffer and copy data
 				else
 				{
 					int dL = aData.Length;
@@ -440,130 +414,23 @@ namespace XG.Plugin.Irc
 						_startBuffer = null;
 						_streamOk = true;
 					}
-						// data mismatch
+					// data mismatch
 					else
 					{
 						_log.Error("SaveData(" + Packet + ") rollback check failed");
+						FireNotificationAdded(Notification.Types.PacketFileMismatch, Packet, File);
 
 						// unregister from the event because if this is triggered
 						// it will remove the part
 						Packet.OnEnabledChanged -= EnabledChanged;
 						Packet.Enabled = false;
 						_tcpClient.Close();
+
 						return;
 					}
 				}
-					// some data is missing, so wait for more
+				// some data is missing, so wait for more
 				else
-				{
-					return;
-				}
-			}
-				// save the reference bytes if it is a new file
-			else if (Part.StartReference == null || Part.StartReference.Length < Settings.Default.FileRollbackCheckBytes)
-			{
-				byte[] startReference = Part.StartReference;
-				// initial data
-				if (startReference == null)
-				{
-					startReference = aData;
-				}
-					// resize buffer and copy data
-				else
-				{
-					int dL = aData.Length;
-					int bL = startReference.Length;
-					Array.Resize(ref startReference, bL + dL);
-					Array.Copy(aData, 0, startReference, bL, dL);
-				}
-				// shrink the reference if it is to big
-				if (startReference.Length > Settings.Default.FileRollbackCheckBytes)
-				{
-					Array.Resize(ref startReference, Settings.Default.FileRollbackCheckBytes);
-				}
-				Part.StartReference = startReference;
-			}
-
-			#endregion
-
-			#region NEXT REFERENCE CHECK
-
-			//    stop     needed refbytes
-			// ----------~~~~~~~~~~~~~~~~~~~
-			// -------~~~~~~~~
-			//   cur    data
-			if (StopSize < Packet.RealSize && StopSize < StartSize + _receivedBytes + aData.Length)
-			{
-				bool initial = false;
-				// intial data
-				if (_stopBuffer == null)
-				{
-					initial = true;
-					Int64 length = StopSize - (StartSize + _receivedBytes);
-					if (length < 0)
-					{
-						// this is bad and should not happen
-						length = 0;
-						_tcpClient.Close();
-					}
-					_stopBuffer = new byte[aData.Length - length];
-					// copy the overlapping data into the buffer
-					Array.Copy(aData, length, _stopBuffer, 0, aData.Length - length);
-					// and shrink the actual data
-					Array.Resize(ref aData, (int) length);
-				}
-					// resize buffer and copy data
-				else
-				{
-					int dL = aData.Length;
-					int bL = _stopBuffer.Length;
-					Array.Resize(ref _stopBuffer, bL + dL);
-					Array.Copy(aData, 0, _stopBuffer, bL, dL);
-				}
-
-				int bufL = _stopBuffer.Length;
-				// we have enough data so check them
-				if (Settings.Default.FileRollbackCheckBytes <= bufL)
-				{
-					// but only if we are checked
-					if (Part.Checked)
-					{
-						Int64 stopSize = FileActions.CheckNextReferenceBytes(Part, _stopBuffer);
-						// all ok
-						if (stopSize == 0)
-						{
-							_log.Info("SaveData(" + Packet + ") reference check ok");
-							_tcpClient.Close();
-							return;
-						}
-						// data mismatch
-						else
-						{
-							_log.Error("SaveData(" + Packet + ") reference check failed");
-							aData = _stopBuffer;
-							StopSize = stopSize;
-						}
-					}
-						// we are unchecked, so just close
-					else
-					{
-						// shrink the buffer if it is to big
-						if (_stopBuffer.Length > Settings.Default.FileRollbackCheckBytes)
-						{
-							Array.Resize(ref _stopBuffer, Settings.Default.FileRollbackCheckBytes);
-						}
-						// and write it to file to be able to check the next file
-						_writer.Write(_stopBuffer);
-						_writer.Flush();
-						_receivedBytes += _stopBuffer.Length;
-
-						_tcpClient.Close();
-						return;
-					}
-				}
-					// the splitted data must be written to the file of course
-					// but if some data is missing wait for more
-				else if (!initial)
 				{
 					return;
 				}
@@ -577,7 +444,7 @@ namespace XG.Plugin.Irc
 				_writer.Flush();
 				_receivedBytes += aData.Length;
 				_speedCalcSize += aData.Length;
-				Part.CurrentSize += aData.Length;
+				File.CurrentSize += aData.Length;
 			}
 			catch (Exception ex)
 			{
@@ -592,11 +459,17 @@ namespace XG.Plugin.Irc
 			{
 				DateTime old = _speedCalcTime;
 				_speedCalcTime = DateTime.Now;
-				Part.Speed = Convert.ToInt64(_speedCalcSize / (_speedCalcTime - old).TotalSeconds);
+				LastContact = DateTime.Now;
+				File.Speed = Convert.ToInt64(_speedCalcSize / (_speedCalcTime - old).TotalSeconds);
 
-				Part.Commit();
+				File.Commit();
 				_speedCalcSize = 0;
 			}
+		}
+
+		protected override void RepairConnection()
+		{
+			_tcpClient.Close();
 		}
 
 		#endregion

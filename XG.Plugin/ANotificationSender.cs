@@ -39,6 +39,11 @@ namespace XG.Plugin
 			FireNotificationAdded(this, new EventArgs<Notification>(new Notification(aType, aObject)));
 		}
 
+		public void FireNotificationAdded(Notification.Types aType, AObject aObject1, AObject aObject2)
+		{
+			FireNotificationAdded(this, new EventArgs<Notification>(new Notification(aType, aObject1, aObject2)));
+		}
+
 		public void FireNotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
 		{
 			if (OnNotificationAdded != null)

@@ -42,7 +42,6 @@
     <Compile Include="Domain\EventArgs.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Domain\File.cs" />
-    <Compile Include="Domain\FilePart.cs" />
     <Compile Include="Domain\Files.cs" />
     <Compile Include="Domain\Helper.cs" />
     <Compile Include="Domain\Notification.cs" />
@@ -53,6 +52,8 @@
     <Compile Include="Domain\Searches.cs" />
     <Compile Include="Domain\Server.cs" />
     <Compile Include="Domain\Servers.cs" />
+    <Compile Include="Domain\ApiKey.cs" />
+    <Compile Include="Domain\ApiKeys.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

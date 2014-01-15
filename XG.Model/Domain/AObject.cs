@@ -107,12 +107,16 @@ namespace XG.Model.Domain
 
 		public virtual bool Commit()
 		{
-			if (_modifiedFields != null && _modifiedFields.Count > 0)
+			try
 			{
-				FireChanged(this, new EventArgs<AObject, string[]>(this, _modifiedFields.ToArray()));
-				_modifiedFields = new List<string>();
-				return true;
+				if (_modifiedFields != null && _modifiedFields.Count > 0)
+				{
+					FireChanged(this, new EventArgs<AObject, string[]>(this, _modifiedFields.ToArray()));
+					_modifiedFields = new List<string>();
+					return true;
+				}
 			}
+			catch(Exception) {}
 			return false;
 		}
 
@@ -191,6 +195,23 @@ namespace XG.Model.Domain
 		public override int GetHashCode()
 		{
 			return Guid.GetHashCode();
+		}
+
+		bool _saved = false;
+
+		public virtual void OnSave()
+		{
+			_saved = true;
+		}
+
+		public virtual void OnLoad()
+		{
+			_saved = true;
+		}
+
+		public virtual bool IsSaved
+		{
+			get { return _saved; }
 		}
 
 		#endregion

@@ -66,14 +66,16 @@ namespace XG.Model
 
 		public static bool ContainsAll(this string str, params string[] values)
 		{
-			if (!string.IsNullOrEmpty(str) && values.Length > 0)
+			if (string.IsNullOrWhiteSpace(str) || values.Length == 0)
 			{
-				foreach (string value in values)
+				return false;
+			}
+
+			foreach (string value in values)
+			{
+				if (str.IndexOf(value, StringComparison.OrdinalIgnoreCase) < 0)
 				{
-					if (str.IndexOf(value, StringComparison.OrdinalIgnoreCase) < 0)
-					{
-						return false;
-					}
+					return false;
 				}
 			}
 

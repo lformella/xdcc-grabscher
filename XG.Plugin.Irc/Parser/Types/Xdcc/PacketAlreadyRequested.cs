@@ -34,6 +34,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 			string[] regexes =
 			{
 				Helper.Magicstring + " You already requested that pack(.*|)",
+				Helper.Magicstring + ".* You already have that item queued.*",
 				Helper.Magicstring + " Du hast diese Datei bereits angefordert(.*|)"
 			};
 			var match = Helper.Match(aMessage, regexes);
@@ -43,6 +44,8 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				{
 					aBot.State = Bot.States.Waiting;
 				}
+
+				//FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.BotWaitTime));
 
 				UpdateBot(aBot, aMessage);
 				return true;

@@ -40,22 +40,23 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\packages\System.Data.SQLite.x86.1.0.89.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite.Linq">
       <HintPath>..\packages\System.Data.SQLite.x86.1.0.89.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MonoSqliteDriver.cs" />
     <Compile Include="Domain\Version.cs" />
+    <Compile Include="TrackingNumberInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Config\XG.Config.csproj">
@@ -71,13 +72,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="hibernate.cfg.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Mappings\Search.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Mappings\FilePart.hbm.xml" />
     <EmbeddedResource Include="Mappings\Packet.hbm.xml" />
     <EmbeddedResource Include="Mappings\Bot.hbm.xml" />
     <EmbeddedResource Include="Mappings\Channel.hbm.xml" />
@@ -86,6 +83,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Mappings\File.hbm.xml" />
     <EmbeddedResource Include="Mappings\Version.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\ApiKey.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -97,7 +97,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

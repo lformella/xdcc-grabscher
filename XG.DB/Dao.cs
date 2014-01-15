@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  Dao.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -33,134 +33,222 @@ using XG.Config.Properties;
 using XG.Model.Domain;
 using log4net;
 
+
+#if __MonoCS__
+using Mono.Data.Sqlite;
+#else
+using System.Data.SQLite;
+#endif
+
 namespace XG.DB
 {
-	public class Dao : IDisposable
+	public sealed class Dao : IDisposable
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		ISession _session;
+		readonly ISession _session;
+		readonly int SecondsToSleep = 10;
+		DateTime _lastFlush;
 
 		readonly int _version = 1;
 
+		public Servers Servers { get; private set; }
+		public Files Files { get; private set; }
+		public Searches Searches { get; private set; }
+		public ApiKeys ApiKeys { get; private set; }
+
 		public Dao()
 		{
-			var cfg = new Configuration();
-			cfg.Configure();
-			cfg.AddAssembly(typeof(Dao).Assembly);
-
-			// mono needs a special driver wrapper
+			// load assembly by creating new object
+			// otherwise there will occur weird assembly loading errors
 #if __MonoCS__
-			cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
+			new SqliteConnection();
 #else
-			cfg.Properties["connection.driver_class"] = "NHibernate.Driver.SQLite20Driver";
+			new SQLiteConnection();
+#endif
+			bool insertVersion = false;
+
+			var cfg = new Configuration();
+
+			try
+			{
+				cfg.Configure();
+				cfg.AddAssembly(typeof(Dao).Assembly);
+			}
+			catch (Exception ex)
+			{
+				cfg.Properties["connection.provider"] = "NHibernate.Connection.DriverConnectionProvider";
+				cfg.Properties["dialect"] = "NHibernate.Dialect.SQLiteDialect";
+				cfg.Properties["query.substitutions"] = "true=1;false=0";
+
+				// mono needs a special driver wrapper
+#if __MonoCS__
+				cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
+#else
+				cfg.Properties["connection.driver_class"] = "NHibernate.Driver.SQLite20Driver";
 #endif
 
-			string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
-			cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3";
+				string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
+				cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
 
-			bool insertVersion = false;
-			if (!System.IO.File.Exists(db))
-			{
-				new SchemaExport(cfg).Execute(false, true, false);
-				insertVersion = true;
+				cfg.AddAssembly(typeof(Dao).Assembly);
+				if (!System.IO.File.Exists(db))
+				{
+					new SchemaExport(cfg).Execute(false, true, false);
+					insertVersion = true;
+				}
 			}
 
 			var sessions = cfg.BuildSessionFactory();
-			_session = sessions.OpenSession();
+			_session = sessions.OpenSession(new TrackingNumberInterceptor());
+			_session.FlushMode = FlushMode.Never;
+
+			CheckIfDatabaseNeedsUpdate(insertVersion);
+			LoadObjects();
+		}
+
+		void CheckIfDatabaseNeedsUpdate(bool insertVersion)
+		{
+			var version = new Domain.Version { Number = _version };
 
 			if (insertVersion)
 			{
-				_session.Save (new Domain.Version { Number = _version });
+				_session.Save(new Domain.Version { Number = _version });
+				_session.Flush();
 			}
 			else
 			{
-				var version = _session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
-				UpdateDatabase (version.Number, _version);
+				version = _session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
 			}
+
+			UpdateDatabase(version.Number, _version);
 		}
 
-		public Servers Servers()
+		private void LoadObjects()
 		{
-			var servers = new Servers();
-			
-			try
+			Servers = new Servers();
+			Files = new Files();
+			Searches = new Searches();
+			ApiKeys = new ApiKeys();
+
+			var servers = _session.CreateQuery("FROM Server").List<Server>();
+			foreach (var server in servers)
 			{
-				var list = _session.CreateQuery("FROM Server").List<Server>();
-				foreach (var server in list)
-				{
-					servers.Add(server);
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Servers() cant load ", ex);
+				Servers.Add(server);
 			}
 
-			servers.OnAdded += ObjectAdded;
-			servers.OnRemoved += ObjectRemoved;
-			return servers;
-		}
-
-		public Files Files()
-		{
-			var files = new Files();
-
-			try
+			var files = _session.CreateQuery("FROM File").List<File>();
+			foreach (var file in files)
 			{
-				var list = _session.CreateQuery("FROM File").List<File>();
-				foreach (var file in list)
-				{
-					files.Add(file);
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Files() cant load ", ex);
+				Files.Add(file);
 			}
 
-			files.OnAdded += ObjectAdded;
-			files.OnRemoved += ObjectRemoved;
-			return files;
-		}
-
-		public Searches Searches()
-		{
-			var searches = new Searches();
-			
-			try
+			var searches = _session.CreateQuery("FROM Search").List<Search>();
+			foreach (var search in searches)
 			{
-				var list = _session.CreateQuery("FROM Search").List<Search>();
-				foreach (var search in list)
-				{
-					searches.Add(search);
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Searches() cant load ", ex);
+				Searches.Add(search);
 			}
 
-			searches.OnAdded += ObjectAdded;
-			searches.OnRemoved += ObjectRemoved;
-			return searches;
+			var apiKeys = _session.CreateQuery("FROM ApiKey").List<ApiKey>();
+			foreach (var apiKey in apiKeys)
+			{
+				ApiKeys.Add(apiKey);
+			}
+
+			Servers.OnAdded += ObjectAdded;
+			Servers.OnRemoved += ObjectRemoved;
+			Servers.OnChanged += ObjectChanged;
+			Servers.OnEnabledChanged += ObjectEnabledChanged;
+
+			Files.OnAdded += ObjectAdded;
+			Files.OnRemoved += ObjectRemoved;
+			Files.OnChanged += ObjectChanged;
+			Files.OnEnabledChanged += ObjectEnabledChanged;
+
+			Searches.OnAdded += ObjectAdded;
+			Searches.OnRemoved += ObjectRemoved;
+			Searches.OnChanged += ObjectChanged;
+			Searches.OnEnabledChanged += ObjectEnabledChanged;
+
+			ApiKeys.OnAdded += ObjectAdded;
+			ApiKeys.OnRemoved += ObjectRemoved;
+			ApiKeys.OnChanged += ObjectChanged;
+			ApiKeys.OnEnabledChanged += ObjectEnabledChanged;
 		}
 
 		void ObjectAdded(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
-			if (eventArgs.Value2 is Server || eventArgs.Value2 is File || eventArgs.Value2 is Search)
+			if (eventArgs.Value1 != Servers && eventArgs.Value1 != Files && eventArgs.Value1 != Searches && eventArgs.Value1 != ApiKeys)
+			{
+				return;
+			}
+
+			try
 			{
 				_session.Save(eventArgs.Value2);
-				_session.Flush();
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("cant save object " + eventArgs.Value2, ex);
+			}
+			finally
+			{
+				TryFlush();
 			}
 		}
 
 		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
 		{
-			if (eventArgs.Value2 is Server || eventArgs.Value2 is File || eventArgs.Value2 is Search)
+			if (eventArgs.Value1 != Servers && eventArgs.Value1 != Files && eventArgs.Value1 != Searches && eventArgs.Value1 != ApiKeys)
+			{
+				return;
+			}
+
+			try
 			{
 				_session.Delete(eventArgs.Value2);
-				_session.Flush();
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("cant remove object " + eventArgs.Value2, ex);
+			}
+			finally
+			{
+				TryFlush();
+			}
+		}
+
+		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
+		{
+			TryFlush();
+		}
+
+		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
+		{
+			TryFlush();
+		}
+
+		void TryFlush ()
+		{
+			if (_lastFlush.AddSeconds(SecondsToSleep) < DateTime.Now)
+			{
+				_lastFlush = DateTime.Now;
+
+				lock (Servers) lock(Files) lock(Searches) lock(ApiKeys)
+				{
+					try
+					{
+						_session.Flush();
+					}
+					catch (InvalidOperationException)
+					{
+						// this is ok
+					}
+					catch (Exception ex)
+					{
+						Log.Fatal("TryFlush()", ex);
+					}
+				}
 			}
 		}
 
@@ -176,7 +264,26 @@ namespace XG.DB
 
 		public void Dispose ()
 		{
-			_session.Flush();
+			Servers.OnAdded -= ObjectAdded;
+			Servers.OnRemoved -= ObjectRemoved;
+			Servers.OnChanged -= ObjectChanged;
+			Servers.OnEnabledChanged -= ObjectEnabledChanged;
+
+			Files.OnAdded -= ObjectAdded;
+			Files.OnRemoved -= ObjectRemoved;
+			Files.OnChanged -= ObjectChanged;
+			Files.OnEnabledChanged -= ObjectEnabledChanged;
+
+			Searches.OnAdded -= ObjectAdded;
+			Searches.OnRemoved -= ObjectRemoved;
+			Searches.OnChanged -= ObjectChanged;
+			Searches.OnEnabledChanged -= ObjectEnabledChanged;
+
+			ApiKeys.OnAdded -= ObjectAdded;
+			ApiKeys.OnRemoved -= ObjectRemoved;
+			ApiKeys.OnChanged -= ObjectChanged;
+			ApiKeys.OnEnabledChanged -= ObjectEnabledChanged;
+
 			_session.Close();
 		}
 	}

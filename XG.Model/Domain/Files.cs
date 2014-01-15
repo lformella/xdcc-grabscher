@@ -36,11 +36,11 @@ namespace XG.Model.Domain
 			get { return base.All.Cast<File>(); }
 		}
 
-		public File File(string tmpPath)
+		public File File(string tmpName)
 		{
 			try
 			{
-				return All.FirstOrDefault(file => file.TmpPath == tmpPath);
+				return All.FirstOrDefault(file => file.TmpName == tmpName);
 			}
 			catch (Exception)
 			{
@@ -56,7 +56,7 @@ namespace XG.Model.Domain
 		public bool Add(string aName, Int64 aSize)
 		{
 			var tFile = new File(aName, aSize);
-			if (File(tFile.TmpPath) == null)
+			if (File(tFile.TmpName) == null)
 			{
 				return Add(tFile);
 			}
@@ -70,7 +70,7 @@ namespace XG.Model.Domain
 
 		public override bool DuplicateChildExists(AObject aObject)
 		{
-			return File((aObject as File).TmpPath) != null;
+			return File((aObject as File).TmpName) != null;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-//
+﻿//
 //  init.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
@@ -23,47 +23,75 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-require([
-	'../../Scripts/jquery-2.0.2.min'
-], function()
-{
-	require([
-		'../../Scripts/jquery-ui-1.10.3.min',
-		'../../Scripts/jquery.event.drag.min',
-		'../../Scripts/moment.min',
-		'../../Scripts/jquery.cookie',
-		'../../Scripts/flot/jquery.flot.min',
-		'../../Scripts/json2.min',
-		'../../Scripts/SlickGrid/slick.core',
-		'../../Scripts/SlickGrid/slick.formatters',
-		'../../Scripts/SlickGrid/slick.grid',
-		'../../Scripts/SlickGrid/slick.dataview',
-		'../../Scripts/SlickGrid/Plugins/slick.rowselectionmodel',
-		'../../Scripts/SlickGrid/slick.groupitemmetadataprovider',
-		'../../Scripts/bootstrap.min',
-		'external/jquery.flot.axislabels',
-		'external/sha256',
-		'external/favicon',
-		'external/css_browser_selector',
-		'external/jquery.knob',
-		'xg/enum',
-		'i18n/xg/en'
-	], function()
-	{
-		require([
-			'xg/config',
-			'../../Scripts/flot/jquery.flot.time.min',
-			'../../Scripts/flot/jquery.flot.pie.min'
-		], function(config) {
-			require([
-				'i18n/xg/' + config.getLanguage(),
-				'i18n/moment/' + config.getLanguage()
-			], function() {
-				require(['xg/main'], function(main)
-				{
-					main.initialize();
-				});
-			});
-		});
-	});
+// let Angular know that we're bootstrapping manually
+window.name = "NG_DEFER_BOOTSTRAP!";
+
+require.config({
+	paths: {
+		'angular': '../../../Scripts/angular',
+		'ngAnimate': '../../../Scripts/angular-animate',
+		'domReady': './libs/domReady',
+		'jquery': '../../../Scripts/jquery-2.0.3.min',
+		'ngTranslate': './libs/angular-translate.min',
+		'favicon': './libs/favicon',
+		'ipCookies': './libs/angular-cookie',
+		'jqKnob': './libs/jquery.knob',
+		'jqFlot': '../../../Scripts/flot/jquery.flot',
+		'jqFlot.time': '../../../Scripts/flot/jquery.flot.time.min',
+		'jqFlot.pie': '../../../Scripts/flot/jquery.flot.pie.min',
+		'jqFlot.axislabels': './libs/jquery.flot.axislabels',
+		'moment': '../../../Scripts/moment-with-langs',
+		'ngSanitize': '../../../Scripts/angular-sanitize',
+		'ngTable': './libs/ng-table',
+		'sha256': './libs/sha256',
+		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
+		'signalr.hubs': '../../../signalr/hubs?noext=',
+		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0'
+	},
+	shim: {
+		'angular': {
+			exports: 'angular',
+			deps: ['jquery', 'signalr.hubs']
+		},
+		'ngAnimate': {
+			deps: ['angular']
+		},
+		'ipCookies': {
+			deps: ['angular']
+		},
+		'jqFlot': {
+			deps: ['jquery']
+		},
+		'jqFlot.time': {
+			deps: ['jqFlot']
+		},
+		'jqFlot.pie': {
+			deps: ['jqFlot']
+		},
+		'jqFlot.axislabels': {
+			deps: ['jqFlot']
+		},
+		'jqKnob': {
+			deps: ['jquery']
+		},
+		'ngTranslate': {
+			deps: ['angular']
+		},
+		'ngSanitize': {
+			deps: ['angular']
+		},
+		'ngTable': {
+			deps: ['angular']
+		},
+		'signalr': {
+			deps: ['jquery']
+		},
+		'signalr.hubs': {
+			deps: ['signalr']
+		},
+		'ui.bootstrap': {
+			deps: ['angular']
+		}
+	},
+	deps: ['./bootstrap']
 });

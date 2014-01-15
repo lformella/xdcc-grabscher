@@ -27,12 +27,7 @@
 
 /** Base **/
 
-.alignRight
-{
-	text-align: right;
-}
-
-.btn, .button
+.btn, .button, a
 {
 	cursor: pointer;
 }
@@ -40,6 +35,21 @@
 small
 {
 	font-size: 0.7em;
+}
+
+.modal
+{
+	display: block;
+}
+
+.ng-hide
+{
+	display: none;
+}
+
+body
+{
+	margin-top: 50px;
 }
 
 /** Bootstrap **/
@@ -52,15 +62,19 @@ small
 	max-width: -webkit-calc(100% - 20px);
 	max-width: -moz-calc(100% - 20px);
 	max-width: calc(100% - 20px);
-	padding-left: 0;
-	padding-right: 0;
+	padding: 0;
+}
+
+.container .item
+{
+	padding: 10px;
 }
 
 .progress
 {
-	height: 5px;
+	height: 6px;
 	margin-bottom: 0;
-	margin-top: 0;
+	margin-top: 2px;
 }
 
 .progress .progress-bar-light
@@ -68,49 +82,156 @@ small
 	opacity: 0.3;
 }
 
-.panel-group .panel-heading
-{
-	padding: 3px 9px;
-}
-
-.panel-group .panel-body
-{
-	padding: 0 5px;
-}
-
-.panel-body .checkbox
-{
-	margin-bottom: 0;
-	margin-top: 0;
-}
-
-.panel-body label.checkbox
-{
-	font-weight: normal;
-}
-
-#accordion
-{
-	margin-top: 5px;
-}
-
 .glyphiconBig
 {
 	font-size: 2em;
 }
 
+.pagination
+{
+	margin-top: 0;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control
+{
+	color: #888888;
+}
+
+.modal-body
+{
+	padding-bottom: 5px;
+}
+
+.form-control.ng-invalid
+{
+	border-color: #B94A48;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+/** Table **/
+
+.table
+{
+	table-layout: fixed;
+}
+
+.table tbody + tbody, .table thead + tbody
+{
+	border-top: 1px solid #888;
+}
+
+.table tbody tr:first-child td
+{
+	border-top: none;
+}
+
+.table tbody.isOffline
+{
+	opacity: 0.5;
+}
+
+.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td
+{
+	line-height: 16px;
+	padding: 8px 4px;
+}
+
+.table thead > tr > th
+{
+	border-bottom: 1px solid #888888;
+}
+
+.table tr:nth-child(2n)
+{
+	background: none repeat scroll 0 0 #FEFEFE;
+}
+
+.table th
+{
+	text-align: center;
+}
+
+.table th.text-right, .table td.text-right
+{
+	text-align: right;
+}
+
+.table td.withIcon
+{
+	font-size: 1.6em;
+	padding: 3px 0 0 5px;
+}
+
+.table td.withIcon2
+{
+	padding-left: 24px;
+}
+
+.table td
+{
+	height: 32px;
+}
+
+.table td.withIcon span
+{
+	position: relative;
+}
+
+.ng-table-group > td.withText, .table td.withText
+{
+	padding: 0 4px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.ng-table-group > td.fullText, .table td.fullText
+{
+	padding: 2px 0;
+	word-wrap: break-word;
+	line-height: 1.5em;
+}
+
+td.withText span
+{
+	position: relative;
+}
+
+td.withText small
+{
+	position: absolute;
+	bottom: -16px;
+	left: 0;
+}
+
+td .highlight .name
+{
+	font-weight: bold;
+}
+
+.table td.withProgress
+{
+	padding: 4px 4px;
+	vertical-align: middle;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.glyphicon.icon-overlay
+{
+	font-size: 0.5em;
+	position: absolute;
+	right: -8px;
+	top: 0;
+	z-index: 1;
+	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
+}
+
+.clickAble
+{
+	cursor: pointer;
+}
+
 /** Grids **/
-
-#BotGrid
-{
-	height: 300px;
-	margin-bottom: 10px;
-}
-
-#PacketGrid
-{
-	height: 300px;
-}
 
 #ServerGrid, #ChannelGrid
 {
@@ -132,9 +253,74 @@ small
 
 /** Dialogs **/
 
-#serverChannelsDialog .modal-dialog
+#serverChannelsDialog
 {
 	width: 940px;
+}
+
+#serverChannelsDialog .tableDiv
+{
+	height: 440px;
+}
+
+#serverChannelsDialog .table, #serverChannelsDialog .pagination {
+	margin-bottom: 10px;
+}
+
+#serverChannelsDialog .pagination > li > a
+{
+	padding: 0 8px;
+}
+
+#configDialog
+{
+	width: 850px;
+}
+
+#configDialog .form-group
+{
+	margin-bottom: 10px;
+}
+
+#configDialog .list-group
+{
+	margin-bottom: 0;
+}
+
+#configDialog .list-group-item
+{
+	padding: 5px;
+}
+
+#configDialog .nav-tabs
+{
+	margin-bottom: 10px;
+}
+
+#configDialog .panel
+{
+	margin-bottom: 10px;
+}
+
+#configDialog .panel-heading, #configDialog .panel-body
+{
+	padding: 5px;
+}
+
+#configDialog .panel-heading .glyphicon, #configDialog .panel-body .glyphicon
+{
+	font-size: 1.5em;
+	padding-top: 7px;
+}
+
+#configDialog input[type="checkbox"]
+{
+	margin: 10px 0 0;
+}
+
+#apiDialog
+{
+	width: 700px;
 }
 
 /** Menu **/
@@ -142,7 +328,7 @@ small
 .navbar
 {
 	margin-bottom: 10px;
-	min-height: 40px;
+	min-height: 44px;
 }
 
 .navbar-brand
@@ -152,26 +338,23 @@ small
 
 .navbar .nav > li > a
 {
-	padding: 3px 15px;
+	margin: 3px 0 0;
+	padding: 3px 15px 0;
+	border-radius: 10px;
 }
 
 .navbar .navbar-form
 {
-	margin-top: 4px;
-	margin-bottom: 4px;
-}
-
-#search
-{
-	height: 32px;
-	padding: 3px;
-	width: 200px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding: 0;
 }
 
 #searchForm .dropdown-menu
 {
 	overflow: hidden;
 	overflow-y: auto;
+	min-width: 212px;
 }
 
 #searchForm .dropdown-menu .text
@@ -181,7 +364,9 @@ small
 
 #searchLoading
 {
+	margin-right: 4px;
 	margin-top: 12px;
+	float: left;
 }
 
 #notificationsLink + .dropdown-menu
@@ -189,147 +374,60 @@ small
 	left: -410px;
 }
 
-#unreadNotifications
+#notifications .label
 {
-	display: none;
 	left: 6px;
-	padding-left: 3px;
+	padding-left: 4px;
 	padding-right: 3px;
 	position: absolute;
 	top: 2px;
 	font-size: 0.8em;
 }
 
-/** Slick Grid **/
-
-.grid *, .grid *:before, .grid *:after
+#notifications .dropdown-menu
 {
-	-moz-box-sizing: content-box;
+	height: 400px;
+	width: 800px;
+	left: -200px;
+	overflow: scroll;
 }
 
-.slick-cell .glyphicon
+/* Snapshots */
+
+#snapshot .panel
 {
-	font-size: 1.5em;
-	margin-left: -3px;
-	margin-top: -3px;
+	margin-bottom: 5px;
 }
 
-#NotificationGrid .slick-cell .glyphicon
+#snapshot .panel-heading
 {
-	font-size: 2em;
-	margin-left: 0;
+	padding: 3px 9px;
+}
+
+#snapshot .panel-body
+{
+	padding: 0 5px;
+}
+
+#snapshot .panel-body .checkbox
+{
+	margin-bottom: 0;
 	margin-top: 0;
 }
 
-.slick-cell .glyphicon.icon-overlay
+#snapshot .panel-body label.checkbox
 {
-	font-size: 1.0em;
-	float: right;
-	margin-right: -4px;
-	margin-top: -4px;
-	text-shadow: #fff -2px -2px, #fff -2px 2px, #fff 2px -2px, #fff 2px 2px;
+	font-weight: normal;
 }
 
-.slick-cell .glyphicon.icon-overlay-middle
+#snapshot .col-md-2, #snapshot .col-md-10
 {
-	margin-top: 3px;
-	margin-right: 0;
+	padding-left: 0;
 }
 
-.grid .grid-canvas .small-line
+#snapshot .axisLabels
 {
-	line-height: 12px !important;
-}
-
-.grid .grid-canvas .two-line-text
-{
-	white-space: normal;
-	font-size: 1em;
-}
-
-.grid
-{
-	border-bottom: 1px solid #ddd;
-}
-
-.grid .slick-viewport
-{
-	border-top: 1px solid #ddd;
-}
-
-.grid .grid-canvas .slick-row .slick-cell
-{
-	height: 32px;
-}
-
-.gecko .grid .grid-canvas .slick-row .slick-cell
-{
-	height: 21px;
-}
-
-#NotificationGrid .grid-canvas .slick-row .slick-cell
-{
-	height: 49px;
-}
-
-.gecko #NotificationGrid .grid-canvas .slick-row .slick-cell
-{
-	height: 37px;
-}
-
-.grid .grid-canvas .slick-cell, .grid .grid-canvas .slick-headerrow-column
-{
-	border-color: -moz-use-text-color -moz-use-text-color #ddd;
-	border-width: 0 0 1px;
-}
-
-.grid .slick-header-columns .slick-header-column
-{
-	height: auto;
-	line-height: 14px;
-	border: none;
-	font-weight: bold;
-}
-
-.grid .grid-canvas .slick-cell, .grid .slick-header-columns .slick-header-column.ui-state-default
-{
-	padding: 5px 7.5834px;
-	line-height: 20px;
-}
-
-.grid .grid-canvas .slick-row.odd:hover
-{
-	background: #fcfcfc;
-}
-
-.grid .grid-canvas .slick-row.even
-{
-	background: #f9f9f9;
-}
-
-.grid .grid-canvas .slick-row.even:hover
-{
-	background: #f5f5f5;
-}
-
-.grid .grid-canvas .slick-row.active, .grid .grid-canvas .slick-cell.selected
-{
-	background: #fcf8e3;
-}
-
-.grid .grid-canvas .slick-row.active:hover, .grid .grid-canvas .slick-cell.selected:hover
-{
-	background: #fbeed5;
-}
-
-.grid .grid-canvas .slick-row.active .slick-cell.selected, .grid .grid-canvas .slick-row.active .slick-cell.selected:hover
-{
-	background: none;
-}
-
-.slick-sort-indicator
-{
-	float: none;
+	color: #777777 !important;
 }
 
 /* Dasboard */
@@ -337,8 +435,9 @@ small
 .dashboardItem
 {
 	float: left;
-	width: 300px;
-	margin-right: 20px;
+	margin: 10px;
+	width: calc(25% - 20px);
+	min-width: 280px;
 }
 
 .dashboardItem .glyphicon
@@ -367,4 +466,42 @@ small
 {
 	position: inherit;
 	padding-left: 120px;
+}
+
+/* Animate */
+
+.ng-hide
+{
+	opacity:0;
+}
+
+.ng-hide-add, #search-area.ng-hide-remove
+{
+	display:block!important;
+}
+
+#searchLoading
+{
+	opacity:1;
+}
+
+#searchLoading.ng-hide
+{
+	opacity:0;
+}
+
+#search-area.ng-hide-remove
+{
+	-webkit-animation: fadeInLeft 0.5s;
+	-moz-animation: fadeInLeft 0.5s;
+	-ms-animation: fadeInLeft 0.5s;
+	animation: fadeInLeft 0.5s;
+}
+
+#search-area.ng-hide-add
+{
+	-webkit-animation: fadeOutLeft 0.5s;
+	-moz-animation: fadeOutLeft 0.5s;
+	-ms-animation: fadeOutLeft 0.5s;
+	animation: fadeOutLeft 0.5s;
 }

@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Meebey.SmartIrc4net">
       <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
@@ -42,6 +39,9 @@
       <HintPath>..\packages\smartirc4net.0.5.0\StarkSoftProxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BotDownload.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="Parser\Types\Xdcc\InvalidPacketNumber.cs" />
     <Compile Include="Parser\Types\Xdcc\NotInQueue.cs" />
     <Compile Include="Parser\Types\Xdcc\OwnerRequest.cs" />
-    <Compile Include="Parser\Types\Xdcc\PacketAlreadyRequested.cs" />
     <Compile Include="Parser\Types\Xdcc\Queued.cs" />
     <Compile Include="Parser\Types\Xdcc\QueueFull.cs" />
     <Compile Include="Parser\Types\Xdcc\RemoveFromQueue.cs" />
@@ -81,6 +80,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimedList.cs" />
     <Compile Include="XdccListEntry.cs" />
+    <Compile Include="ThrottledStream.cs" />
+    <Compile Include="ConnectionWatcher.cs" />
+    <Compile Include="Parser\Types\Xdcc\PacketAlreadyRequested.cs" />
+    <Compile Include="Parser\Types\Xdcc\PacketAlreadyQueued.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">
