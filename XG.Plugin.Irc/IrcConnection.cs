@@ -316,8 +316,14 @@ namespace XG.Plugin.Irc
 
 				Client.Login(Settings.Default.IrcNick, Settings.Default.IrcNick, 0, Settings.Default.IrcNick, Settings.Default.IrcPasswort);
 
-				var channels = (from channel in Server.Channels where channel.Enabled select channel.Name).ToArray();
-				Client.RfcJoin(channels);
+				if (Server.Channels.Count > 0)
+				{
+					var channels = (from channel in Server.Channels where channel.Enabled select channel.Name).ToArray();
+					if (channels.Count() > 0)
+					{
+						Client.RfcJoin(channels);
+					}
+				}
 				Client.Listen();
 
 				StartWatch(Settings.Default.ChannelWaitTimeShort * 5, Server + " ConnectionWatch");
