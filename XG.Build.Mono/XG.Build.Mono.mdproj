@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ItemType>PackagingProject</ItemType>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{25B2122B-481A-4C5F-AEF7-DFE57FD23C17}</ProjectGuid>
+    <Packages>
+      <Packages>
+        <Package name="Linux Binärdateien">
+          <Builder targetFile="..\XG_version.zip" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
+            <ChildEntries>
+              <SolutionItemReference path="..\XG.Model\XG.Model.csproj" />
+              <SolutionItemReference path="..\XG.Business\XG.Business.csproj" />
+              <SolutionItemReference path="..\XG.Application\XG.Application.csproj" />
+              <SolutionItemReference path="..\XG.DB\XG.DB.csproj" />
+              <SolutionItemReference path="..\XG.Plugin\XG.Plugin.csproj" />
+              <SolutionItemReference path="..\XG.Plugin.Jabber\XG.Plugin.Jabber.csproj" />
+              <SolutionItemReference path="..\XG.Plugin.Webserver\XG.Plugin.Webserver.csproj" />
+              <SolutionItemReference path="..\XG.Plugin.Import\XG.Plugin.Import.csproj" />
+              <SolutionItemReference path="..\XG.Plugin.ElasticSearch\XG.Plugin.ElasticSearch.csproj" />
+              <SolutionItemReference path="..\XG.Config\XG.Config.csproj" />
+              <SolutionItemReference path="..\XG.Plugin.Irc\XG.Plugin.Irc.csproj" />
+            </ChildEntries>
+            <ExcludedFiles>
+              <File>XG.Business,Linux.PkgConfig,xg.business.pc</File>
+              <File>XG.Config,Linux.PkgConfig,xg.config.pc</File>
+              <File>XG.DB,Linux.PkgConfig,xg.db.pc</File>
+              <File>XG.Model,Linux.PkgConfig,xg.model.pc</File>
+              <File>XG.Plugin.Webserver,Linux.PkgConfig,xg.plugin.webserver.pc</File>
+              <File>XG.Plugin.Jabber,Linux.PkgConfig,xg.plugin.jabber.pc</File>
+              <File>XG.Plugin.Irc,Linux.PkgConfig,xg.plugin.irc.pc</File>
+              <File>XG.Plugin.Import,Linux.PkgConfig,xg.plugin.import.pc</File>
+              <File>XG.Plugin.ElasticSearch,Linux.PkgConfig,xg.plugin.elasticsearch.pc</File>
+              <File>XG.Plugin,Linux.PkgConfig,xg.plugin.pc</File>
+            </ExcludedFiles>
+            <RootEntry path="..\XG.sln" id=":root:" />
+          </Builder>
+        </Package>
+      </Packages>
+    </Packages>
+  </PropertyGroup>
+</Project>

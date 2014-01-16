@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Model", "XG.Model\XG.Model.csproj", "{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}"
@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Config", "XG.Config\XG.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Plugin.Irc", "XG.Plugin.Irc\XG.Plugin.Irc.csproj", "{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}"
 EndProject
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "XG.Build.Mono", "XG.Build.Mono\XG.Build.Mono.mdproj", "{25B2122B-481A-4C5F-AEF7-DFE57FD23C17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,8 @@ Global
 		{258B9C1A-AA53-4E23-8486-2BCA0FE65538}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{258B9C1A-AA53-4E23-8486-2BCA0FE65538}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{258B9C1A-AA53-4E23-8486-2BCA0FE65538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B2122B-481A-4C5F-AEF7-DFE57FD23C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B2122B-481A-4C5F-AEF7-DFE57FD23C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D5707FE-5167-45DC-BFD7-A55E49757D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D5707FE-5167-45DC-BFD7-A55E49757D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D5707FE-5167-45DC-BFD7-A55E49757D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
