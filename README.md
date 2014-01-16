@@ -2,13 +2,16 @@
 
 XG, called __X__dcc __G__rabscher, is a XDCC download manager. Grabscher is the german word for grabber :-)
 
+
 # What makes it special?
 XG is just a command line app which connects to one or multiple IRC networks and handles the whole network communication. The IRC servers, channels, bots and packets are presented within a nice and stylish web frontend. There you can search and download packets.
 
-You can run XG on every machine that supports c# / mono - even root servers without x(org), or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere. You don't have to keep a big PC running, but just a small download box which handles all the IRC stuff.
+You can run XG on every machine that supports C# / Mono - even root servers without x(org), or an old weak pc running linux without a monitor - and control your downloads with your browser from everywhere. You don't have to keep a big PC running, but just a small download box which handles all the IRC stuff.
+
 
 # How do i use it?
-Run the program and point your browser to __127.0.0.1:5556__. The default password is __xgisgreat__. 
+Run the program and point your browser to __127.0.0.1:5556__. The default password is __xgisgreat__. If you already added some servers and channels, it will take some time untill the Webfrontend is up and running. This is due to the build in SQLite database which is not really performant and takes some time to load the saved objects.
+
 ![Password Dialog](http://xg.bitpir.at/images/help/login.png?v=3)
 
 ## At first: change the settings
@@ -54,16 +57,16 @@ If you want to change the settings manually, you have to change the file named _
 ## Add servers and channels
 Now you have to add IRC networks and channels. The bots and packets are generated and updated automatically. If you don't know which server and channels to add, try the integrated [xg.bitpir.at](http://xg.bitpir.at) search or add a XDCC link.
 
-Normally the bots will announce their pakets directly in the channel. If they are silent, you can check the option __Check user versions__ and XG will ask the voiced users about their version. If XG detects an iroffer he will try to send __xdcc list__ commands to get packet lists. __\_DO NOT\___ check the option unless you know, that the bots in this channel wont announce their packets. Most likely you will be banned!
+Normally the bots will announce their pakets directly in the channel. If they are silent, you can check the option __Check user versions__ and XG will ask the voiced users about their version. If XG detects an iroffer he will try to send __xdcc list__ commands to get packet lists. __\_DO NOT\___ check the option unless you know, that the bots in this channel wont announce their packets. Otherwhise you mostly will be banned!
 
 ![Server / Channel Dialog](http://xg.bitpir.at/images/help/servers.png?v=3)
 
 ## Search
-You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are saved into a file. So you can hassle-free store your favorite searches.
+You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are also saved into the database.
 
 ![Search](http://xg.bitpir.at/images/help/search.png?v=3)
 
-The results are displayed in a table and the packets are grouped by their bot. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions.
+The results are displayed in a table and the packets are grouped by their bot. The grouping can be disabled in the settings menu, but you will lose some important informations. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions.
 
 ![Packet Icons](http://xg.bitpir.at/images/help/search_results.png?v=3)
 
@@ -73,7 +76,6 @@ If something happens inside XG you will get a notification. This can also be sho
 ![Notification Icon](http://xg.bitpir.at/images/help/notification.png?v=3)
 
 ## XDCC Links
-
 You can add XDCC links in the following dialog. A XDCC link must have the following structure:
 
 > xdcc:// __server__ / __server-name__ / __channel__ / __bot__ / __packet-id__ / __file-name__ /
@@ -81,6 +83,8 @@ You can add XDCC links in the following dialog. A XDCC link must have the follow
 The server, channel and bot is automatically added. If the server is connected and the channel joined, the packet will be requested.
 
 ![XDCC Links](http://xg.bitpir.at/images/help/xdcc-links.png?v=3)
+
+The server and channel are not deleted after the packet is complete, so if you dont need them anymore, you have to delete them yourself.
 
 ## Extended Stats / Snapshots
 XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
@@ -105,28 +109,23 @@ The api id has to be entered after the __/api/__ path segment. After that is the
 * __{"ReturnValue":1}__ - everything is fine
 
 ## Shutdown XG gracefully
-
 If you want to shutdown XG, just create a file named __shutdown__ in your user folder. XG uses an internal routine which looks for this file and safely closes all connections, files and databases. Manually killing the XG process is a bad idea. Temporary files are be recovered upon restart, but the SQLite database might be broken if it is killed during a SQL transaction.
 
 
 # Upgrading XG
-
 If you are upgrading from version 2 to 3, you should finish your downloads and write down your servers and channels, because XG 3 is not able to load the data generated by previous versions.
 
-XG 3 is using NHibernate, so you can use your own config if you want to put the data into a mysql database for example. If you do not need this feature you can use the build in SQLite config which is loaded by default. The database is located in your user config folder and can be edited if XG is not running.
+XG 3 is using NHibernate, so you can use your own config if you want to put the data into a mysql database for example. If you do not need this feature you can use the build in SQLite config which is loaded by default. The database named __xgobjects.db__ is located in your user config folder and can be edited if XG is not running.
 
 ## Unnecessary Files
-
 Because XG changed some internal routines you can safely delete the following files in the config folder:
 
 ### prior version 2
-
 * XG/xgsnapshots.bin
 * XG/xgsnapshots.bin.bak
 * XG/statistics.xml
 
 ### prior version 3
-
 * XG/xg.bin
 * XG/xg.bin.bak
 * XG/xgfiles.bin
@@ -135,10 +134,10 @@ Because XG changed some internal routines you can safely delete the following fi
 * XG/xgsearches.bin.bak
 * XG/settings.xml
 
+
 # Running XG
 
 ## On Linux with Mono
-
 You need at least mono 3.x because some needed libs are running on .net 4.5 wich is not supported in earlier versions.
 
 If you are using Debian / Ubuntu, take a look here to get newer mono packages:
@@ -146,7 +145,6 @@ If you are using Debian / Ubuntu, take a look here to get newer mono packages:
 > http://mono-project.com/DistroPackages/Debian
 
 ### Needed packets / libs
-
 * mono-runtime
 * libmono-posix4.0-cil mono-dmcs
 * libmono-system-web4.0-cil
@@ -154,7 +152,6 @@ If you are using Debian / Ubuntu, take a look here to get newer mono packages:
 * libmono-system-xml-linq4.0-cil
 
 #### Install command for Debian / Ubunut to copy paste:
-
 ```bash
 sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-web4.0-cil libmono-system-runtime-serialization4.0-cil libmono-system-xml-linq4.0-cil
 ```
