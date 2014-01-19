@@ -337,6 +337,7 @@ namespace XG.Plugin.Irc
 			Client.OnConnectionError += (sender, e) =>
 			{
 				_log.Info("connection error from " + Server + ": " + e);
+				StopRun();
 			};
 
 			Client.OnConnecting += (sender, e) =>
@@ -782,16 +783,7 @@ namespace XG.Plugin.Irc
 
 		protected override void RepairConnection()
 		{
-			try
-			{
-				Client.Reconnect();
-			}
-			catch (NotConnectedException)
-			{
-				// this is ok
-				Server.Connected = false;
-				Server.Commit();
-			}
+			StopRun();
 		}
 
 		#endregion
