@@ -50,10 +50,11 @@ define(['./module'], function (ng) {
 				case Enum.NotificationType.ChannelBanned:
 				case Enum.NotificationType.ChannelKicked:
 				case Enum.NotificationType.BotConnectFailed:
-				case Enum.NotificationType.BotSubmittedWrongPort:
+				case Enum.NotificationType.BotSubmittedWrongData:
 				case Enum.NotificationType.PacketIncomplete:
 				case Enum.NotificationType.PacketBroken:
 				case Enum.NotificationType.PacketFileMismatch:
+				case Enum.NotificationType.PacketNameDifferent:
 				case Enum.NotificationType.FileBuildFailed:
 					iconClass = "ScarletRedMiddle";
 					break;
@@ -84,7 +85,7 @@ define(['./module'], function (ng) {
 
 					break;
 				case Enum.NotificationType.BotConnectFailed:
-				case Enum.NotificationType.BotSubmittedWrongPort:
+				case Enum.NotificationType.BotSubmittedWrongData:
 					icon = "user";
 					break;
 
@@ -95,6 +96,7 @@ define(['./module'], function (ng) {
 				case Enum.NotificationType.PacketRemoved:
 				case Enum.NotificationType.PacketCompleted:
 				case Enum.NotificationType.PacketFileMismatch:
+				case Enum.NotificationType.PacketNameDifferent:
 					icon = "file";
 					break;
 

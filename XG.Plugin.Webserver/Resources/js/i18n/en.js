@@ -101,8 +101,10 @@ define(['./module'], function (i18n) {
 				"Notification_Description_16": "The Packet {{ObjectName1}} of {{ParentName1}} is downloading",
 				"Notification_Header_17": "Packet could not be downloaded",
 				"Notification_Description_17": "The Packet {{ObjectName1}} of {{ParentName1}} could not be downloaded",
-				"Notification_Header_18": "Bot submitted wrong download port",
-				"Notification_Description_18": "The Bot {{ParentName1}} submitted wrong download port for packet {{ObjectName1}}"
+				"Notification_Header_18": "Bot submitted wrong data",
+				"Notification_Description_18": "The Bot {{ParentName1}} submitted wrong data for packet {{ObjectName1}}",
+				"Notification_Header_19": "Packet name is different",
+				"Notification_Description_19": "The submitted name of the Packet {{ObjectName1}} is different from the expected"
 			});
 		}
 	]);

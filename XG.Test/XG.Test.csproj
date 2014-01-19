@@ -87,6 +87,7 @@
     <Compile Include="Plugin\Irc\Parser\Types\Info\Status.cs" />
     <Compile Include="Plugin\Irc\Parser\Types\XdccList.cs" />
     <Compile Include="Config\Properties\Settings.cs" />
+    <Compile Include="Model\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

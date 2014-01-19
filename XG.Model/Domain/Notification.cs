@@ -38,6 +38,7 @@ namespace XG.Model.Domain
 			PacketIncomplete = 2,
 			PacketBroken = 3,
 			PacketFileMismatch = 7,
+			PacketNameDifferent = 19,
 
 			PacketRequested = 4,
 			PacketRemoved = 5,
@@ -56,7 +57,7 @@ namespace XG.Model.Domain
 
 			BotConnected = 16,
 			BotConnectFailed = 17,
-			BotSubmittedWrongPort = 18
+			BotSubmittedWrongData = 18
 		}
 
 		#endregion

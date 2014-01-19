@@ -87,6 +87,7 @@ Enum.NotificationType =
 	PacketIncomplete: 2,
 	PacketBroken: 3,
 	PacketFileMismatch: 7,
+	PacketNameDifferent: 19,
 
 	PacketRequested: 4,
 	PacketRemoved: 5,
@@ -105,5 +106,5 @@ Enum.NotificationType =
 
 	BotConnected: 16,
 	BotConnectFailed: 17,
-	BotSubmittedWrongPort: 18
+	BotSubmittedWrongData: 18
 };

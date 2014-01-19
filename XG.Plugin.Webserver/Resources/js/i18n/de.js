@@ -176,8 +176,10 @@ define(['./module'], function (i18n) {
 				"Notification_Description_16": "Das Paket {{ObjectName1}} ({{ParentName1}}) läd runter",
 				"Notification_Header_17": "Paket konnte nicht runtergeladen werden",
 				"Notification_Description_17": "Das Paket {{ObjectName1}} von {{ParentName1}} konnte nicht runtergeladen werden",
-				"Notification_Header_18": "Bot hat einen falschen Port übermittelt",
-				"Notification_Description_18": "Der Bot {{ParentName1}} hat einen falschen Port für {{ObjectName1}} übermittelt",
+				"Notification_Header_18": "Bot hat einen falschen Daten übermittelt",
+				"Notification_Description_18": "Der Bot {{ParentName1}} hat falsche Daten für {{ObjectName1}} übermittelt",
+				"Notification_Header_19": "Paketname is unterschiedlich",
+				"Notification_Description_19": "Der übermittelte Name des Paketes {{ObjectName1}} unterscheided sich von dem erwarteten",
 
 				/* ************************************************************************************************************** */
 				/* OTHERS                                                                                                         */

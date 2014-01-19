@@ -26,6 +26,7 @@
 using System;
 using System.Text.RegularExpressions;
 using Meebey.SmartIrc4net;
+using XG.Model;
 using XG.Model.Domain;
 using XG.Business.Helper;
 using XG.Config.Properties;
@@ -52,144 +53,159 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 			if (tPacket.Connected)
 			{
 				Log.Error("Parse() ignoring dcc from " + tBot + " because " + tPacket + " is already connected");
+				return false;
 			}
-			else
-			{
-				bool isOk = false;
 
-				int tPort = 0;
-				File tFile = FileActions.TryGetFile(tPacket.RealName, tPacket.RealSize);
-				Int64 startSize = 0;
+			bool isOk = false;
+
+			int tPort = 0;
+			File tFile = FileActions.TryGetFile(tPacket.RealName, tPacket.RealSize);
+			Int64 startSize = 0;
+
+			if (tFile != null)
+			{
+				if (tFile.Connected)
+				{
+					return false;
+				}
+				if (tFile.CurrentSize > Settings.Default.FileRollbackBytes)
+				{
+					startSize = tFile.CurrentSize - Settings.Default.FileRollbackBytes;
+				}
+			}
+
+			string[] tDataList = aMessage.Split(' ');
+			if (tDataList[0] == "SEND")
+			{
+				Log.Info("Parse() DCC from " + tBot);
+
+				// if the name of the file contains spaces, we have to replace em
+				if (aMessage.StartsWith("SEND \""))
+				{
+					Match tMatch = Regex.Match(aMessage, "SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
+					if (tMatch.Success)
+					{
+						tDataList = ("SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"]).Split(' ');
+					}
+				}
+
+				try
+				{
+					tBot.IP = TryCalculateIp(tDataList[2]);
+					tBot.Commit();
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
+					return false;
+				}
+
+				try
+				{
+					tPort = int.Parse(tDataList[3]);
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
+					return false;
+				}
+
+				// we cant connect to port <= 0
+				if (tPort <= 0)
+				{
+					Log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
+					tPacket.Enabled = false;
+					tPacket.Commit();
+
+					FireNotificationAdded(Notification.Types.BotSubmittedWrongData, tBot);
+					return false;
+				}
+
+				tPacket.RealName = tDataList[1];
+
+				if (tPacket.Name.Difference(tPacket.RealName) > 0.7)
+				{
+					FireNotificationAdded(Notification.Types.PacketNameDifferent, tPacket);
+				}
+
+				try
+				{
+					tPacket.RealSize = Int64.Parse(tDataList[4]);
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Parse() " + tBot + " - can not parse packet size from string: " + aMessage, ex);
+					return false;
+				}
+
+				if (tPacket.RealSize <= 0)
+				{
+					Log.Error("Parse() " + tBot + " submitted wrong file size: " + tPacket.RealSize + ", disabling packet");
+					tPacket.Enabled = false;
+					tPacket.Commit();
+
+					FireNotificationAdded(Notification.Types.BotSubmittedWrongData, tBot);
+					return false;
+				}
 
 				if (tFile != null)
 				{
 					if (tFile.Connected)
 					{
-						return false;
-					}
-					if (tFile.CurrentSize > Settings.Default.FileRollbackBytes)
-					{
-						startSize = tFile.CurrentSize - Settings.Default.FileRollbackBytes;
-					}
-				}
-
-				string[] tDataList = aMessage.Split(' ');
-				if (tDataList[0] == "SEND")
-				{
-					Log.Info("Parse() DCC from " + tBot);
-
-					// if the name of the file contains spaces, we have to replace em
-					if (aMessage.StartsWith("SEND \""))
-					{
-						Match tMatch = Regex.Match(aMessage, "SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
-						if (tMatch.Success)
-						{
-							tDataList = ("SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"]).Split(' ');
-						}
-					}
-
-					try
-					{
-						tBot.IP = TryCalculateIp(tDataList[2]);
-						tBot.Commit();
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
-						return false;
-					}
-
-					try
-					{
-						tPort = int.Parse(tDataList[3]);
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
-						return false;
-					}
-
-					// we cant connect to port <= 0
-					if (tPort <= 0)
-					{
-						Log.Error("Parse() " + tBot + " submitted wrong port: " + tPort + ", disabling packet");
+						Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use or not found, disabling packet");
 						tPacket.Enabled = false;
-
-						FireNotificationAdded(Notification.Types.BotSubmittedWrongPort, tBot);
+						FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
+					}
+					else if (tFile.CurrentSize > 0)
+					{
+						Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + startSize);
+						FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
 					}
 					else
 					{
-						tPacket.RealName = tDataList[1];
-
-						try
-						{
-							tPacket.RealSize = Int64.Parse(tDataList[4]);
-						}
-						catch (Exception ex)
-						{
-							Log.Fatal("Parse() " + tBot + " - can not parse packet size from string: " + aMessage, ex);
-							return false;
-						}
-
-						if (tFile != null)
-						{
-							if (tFile.Connected)
-							{
-								Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use or not found, disabling packet");
-								tPacket.Enabled = false;
-								FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
-							}
-							else if (tFile.CurrentSize > 0)
-							{
-								Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + startSize);
-								FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
-							}
-							else
-							{
-								isOk = true;
-							}
-						}
-						else
-						{
-							isOk = true;
-						}
+						isOk = true;
 					}
 				}
-				else if (tDataList[0] == "ACCEPT")
+				else
 				{
-					Log.Info("Parse() DCC resume accepted from " + tBot);
-
-					try
-					{
-						tPort = int.Parse(tDataList[2]);
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
-						return false;
-					}
-
-					try
-					{
-						startSize = Int64.Parse(tDataList[3]);
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("Parse() " + tBot + " - can not parse packet startSize from string: " + aMessage, ex);
-						return false;
-					}
-
 					isOk = true;
 				}
-
-				tPacket.Commit();
-				if (isOk)
-				{
-					Log.Info("Parse() downloading from " + tBot + " - Starting: " + startSize + " - Size: " + tPacket.RealSize);
-					FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
-					return true;
-				}
 			}
+			else if (tDataList[0] == "ACCEPT")
+			{
+				Log.Info("Parse() DCC resume accepted from " + tBot);
+
+				try
+				{
+					tPort = int.Parse(tDataList[2]);
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
+					return false;
+				}
+
+				try
+				{
+					startSize = Int64.Parse(tDataList[3]);
+				}
+				catch (Exception ex)
+				{
+					Log.Fatal("Parse() " + tBot + " - can not parse packet startSize from string: " + aMessage, ex);
+					return false;
+				}
+
+				isOk = true;
+			}
+
+			tPacket.Commit();
+			if (isOk)
+			{
+				Log.Info("Parse() downloading from " + tBot + " - Starting: " + startSize + " - Size: " + tPacket.RealSize);
+				FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
+				return true;
+			}
+
 			return false;
 		}
 	}
