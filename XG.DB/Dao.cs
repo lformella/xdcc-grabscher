@@ -32,6 +32,8 @@ using NHibernate.Tool.hbm2ddl;
 using XG.Config.Properties;
 using XG.Model.Domain;
 using log4net;
+using System.Collections.Generic;
+using System.Threading;
 
 
 #if __MonoCS__
@@ -46,9 +48,8 @@ namespace XG.DB
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		readonly ISession _session;
-		readonly int SecondsToSleep = 10;
-		DateTime _lastFlush;
+		ISessionFactory _sessions;
+		readonly int SecondsToSleep = 60;
 
 		readonly int _version = 1;
 
@@ -56,6 +57,12 @@ namespace XG.DB
 		public Files Files { get; private set; }
 		public Searches Searches { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
+
+		bool _allowRunning { get; set; }
+		DateTime _lastSave;
+		List<AObject> _objectsAdded = new List<AObject>();
+		List<AObject> _objectsChanged = new List<AObject>();
+		List<AObject> _objectsRemoved = new List<AObject>();
 
 		public Dao()
 		{
@@ -75,7 +82,7 @@ namespace XG.DB
 				cfg.Configure();
 				cfg.AddAssembly(typeof(Dao).Assembly);
 			}
-			catch (Exception ex)
+			catch (HibernateConfigException ex)
 			{
 				cfg.Properties["connection.provider"] = "NHibernate.Connection.DriverConnectionProvider";
 				cfg.Properties["dialect"] = "NHibernate.Dialect.SQLiteDialect";
@@ -99,29 +106,44 @@ namespace XG.DB
 				}
 			}
 
-			var sessions = cfg.BuildSessionFactory();
-			_session = sessions.OpenSession(new TrackingNumberInterceptor());
-			_session.FlushMode = FlushMode.Never;
+			_sessions = cfg.BuildSessionFactory();
 
 			CheckIfDatabaseNeedsUpdate(insertVersion);
 			LoadObjects();
+
+			var thread = new Thread(DatabaseSync);
+			thread.Name = "DatabaseSync";
+			thread.Start();
 		}
 
 		void CheckIfDatabaseNeedsUpdate(bool insertVersion)
 		{
 			var version = new Domain.Version { Number = _version };
 
-			if (insertVersion)
+			using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 			{
-				_session.Save(new Domain.Version { Number = _version });
-				_session.Flush();
-			}
-			else
-			{
-				version = _session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
+				if (insertVersion)
+				{
+					session.Save(new Domain.Version { Number = _version });
+					session.Flush();
+				}
+				else
+				{
+					version = session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
+				}
 			}
 
 			UpdateDatabase(version.Number, _version);
+		}
+
+		void UpdateDatabase(int aFrom, int aTo)
+		{
+			if (aFrom == aTo)
+			{
+				return;
+			}
+
+			// add in next version...
 		}
 
 		private void LoadObjects()
@@ -131,28 +153,31 @@ namespace XG.DB
 			Searches = new Searches();
 			ApiKeys = new ApiKeys();
 
-			var servers = _session.CreateQuery("FROM Server").List<Server>();
-			foreach (var server in servers)
+			using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 			{
-				Servers.Add(server);
-			}
+				var servers = session.CreateQuery("FROM Server").List<Server>();
+				foreach (var server in servers)
+				{
+					Servers.Add(server);
+				}
 
-			var files = _session.CreateQuery("FROM File").List<File>();
-			foreach (var file in files)
-			{
-				Files.Add(file);
-			}
+				var files = session.CreateQuery("FROM File").List<File>();
+				foreach (var file in files)
+				{
+					Files.Add(file);
+				}
 
-			var searches = _session.CreateQuery("FROM Search").List<Search>();
-			foreach (var search in searches)
-			{
-				Searches.Add(search);
-			}
+				var searches = session.CreateQuery("FROM Search").List<Search>();
+				foreach (var search in searches)
+				{
+					Searches.Add(search);
+				}
 
-			var apiKeys = _session.CreateQuery("FROM ApiKey").List<ApiKey>();
-			foreach (var apiKey in apiKeys)
-			{
-				ApiKeys.Add(apiKey);
+				var apiKeys = session.CreateQuery("FROM ApiKey").List<ApiKey>();
+				foreach (var apiKey in apiKeys)
+				{
+					ApiKeys.Add(apiKey);
+				}
 			}
 
 			Servers.OnAdded += ObjectAdded;
@@ -183,17 +208,17 @@ namespace XG.DB
 				return;
 			}
 
-			try
+			lock (_objectsAdded)
 			{
-				_session.Save(eventArgs.Value2);
+				if (!_objectsAdded.Contains(eventArgs.Value2))
+				{
+					_objectsAdded.Add(eventArgs.Value2);
+				}
 			}
-			catch (Exception ex)
+
+			if (eventArgs.Value2 is Server || eventArgs.Value2 is Channel || eventArgs.Value2 is File || eventArgs.Value2 is Search || eventArgs.Value2 is ApiKey)
 			{
-				Log.Fatal("cant save object " + eventArgs.Value2, ex);
-			}
-			finally
-			{
-				TryFlush();
+				WriteToDatabase();
 			}
 		}
 
@@ -204,66 +229,143 @@ namespace XG.DB
 				return;
 			}
 
-			try
+			lock (_objectsRemoved)
 			{
-				_session.Delete(eventArgs.Value2);
+				if (!_objectsRemoved.Contains(eventArgs.Value2))
+				{
+					_objectsRemoved.Add(eventArgs.Value2);
+				}
 			}
-			catch (Exception ex)
+
+			if (eventArgs.Value2 is Server || eventArgs.Value2 is Channel || eventArgs.Value2 is File || eventArgs.Value2 is Search || eventArgs.Value2 is ApiKey)
 			{
-				Log.Fatal("cant remove object " + eventArgs.Value2, ex);
-			}
-			finally
-			{
-				TryFlush();
+				WriteToDatabase();
 			}
 		}
 
 		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
 		{
-			TryFlush();
-		}
-
-		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
-		{
-			TryFlush();
-		}
-
-		void TryFlush ()
-		{
-			if (_lastFlush.AddSeconds(SecondsToSleep) < DateTime.Now)
+			lock (_objectsChanged)
 			{
-				_lastFlush = DateTime.Now;
-
-				lock (Servers) lock(Files) lock(Searches) lock(ApiKeys)
+				if (!_objectsChanged.Contains(eventArgs.Value1))
 				{
-					try
-					{
-						_session.Flush();
-					}
-					catch (InvalidOperationException)
-					{
-						// this is ok
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("TryFlush()", ex);
-					}
+					_objectsChanged.Add(eventArgs.Value1);
 				}
 			}
 		}
 
-		void UpdateDatabase(int aFrom, int aTo)
+		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
 		{
-			if (aFrom == aTo)
+			lock (_objectsChanged)
 			{
-				return;
+				if (!_objectsChanged.Contains(eventArgs.Value1))
+				{
+					_objectsChanged.Add(eventArgs.Value1);
+				}
 			}
 
-			// add in next version...
+			WriteToDatabase();
+		}
+
+		void DatabaseSync()
+		{
+			_lastSave = DateTime.Now;
+			_allowRunning = true;
+			while (_allowRunning)
+			{
+				if (_lastSave.AddSeconds(SecondsToSleep) < DateTime.Now)
+				{
+					WriteToDatabase();
+				}
+
+				Thread.Sleep(500);
+			}
+		}
+
+		void WriteToDatabase()
+		{
+			_lastSave = DateTime.Now;
+			AObject currentObj;
+
+			try
+			{
+				lock (_objectsAdded)
+				{
+					if (_objectsAdded.Count > 0)
+					{
+						using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
+						{
+							foreach (AObject obj in _objectsAdded)
+							{
+								currentObj = obj;
+								session.SaveOrUpdate(obj);
+							}
+							session.Flush();
+						}
+						_objectsAdded.Clear();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("WriteToDatabase() added ", ex);
+			}
+
+			try
+			{
+				lock (_objectsChanged)
+				{
+					if (_objectsChanged.Count > 0)
+					{
+						using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
+						{
+							foreach (AObject obj in _objectsChanged)
+							{
+								currentObj = obj;
+								session.SaveOrUpdate(obj);
+							}
+							session.Flush();
+						}
+						_objectsChanged.Clear();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("WriteToDatabase() changed ", ex);
+			}
+
+			try
+			{
+				lock (_objectsRemoved)
+				{
+					if (_objectsRemoved.Count > 0)
+					{
+						using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
+						{
+							foreach (AObject obj in _objectsRemoved)
+							{
+								currentObj = obj;
+								session.Delete(obj);
+							}
+							session.Flush();
+						}
+						_objectsRemoved.Clear();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal("WriteToDatabase() removed ", ex);
+			}
+
+			GC.Collect();
 		}
 
 		public void Dispose ()
 		{
+			_allowRunning = false;
+
 			Servers.OnAdded -= ObjectAdded;
 			Servers.OnRemoved -= ObjectRemoved;
 			Servers.OnChanged -= ObjectChanged;
@@ -284,7 +386,7 @@ namespace XG.DB
 			ApiKeys.OnChanged -= ObjectChanged;
 			ApiKeys.OnEnabledChanged -= ObjectEnabledChanged;
 
-			_session.Close();
+			_sessions.Dispose();
 		}
 	}
 }
