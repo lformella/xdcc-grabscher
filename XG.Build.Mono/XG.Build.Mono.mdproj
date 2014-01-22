@@ -8,7 +8,7 @@
     <Packages>
       <Packages>
         <Package name="Linux Binärdateien">
-          <Builder targetFile="..\XG_version.zip" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
+          <Builder targetFile="..\XG.zip" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
             <ChildEntries>
               <SolutionItemReference path="..\XG.Model\XG.Model.csproj" />
               <SolutionItemReference path="..\XG.Business\XG.Business.csproj" />
@@ -33,6 +33,7 @@
               <File>XG.Plugin.Import,Linux.PkgConfig,xg.plugin.import.pc</File>
               <File>XG.Plugin.ElasticSearch,Linux.PkgConfig,xg.plugin.elasticsearch.pc</File>
               <File>XG.Plugin,Linux.PkgConfig,xg.plugin.pc</File>
+              <File>XG.Application,Binaries,xg.application</File>
             </ExcludedFiles>
             <RootEntry path="..\XG.sln" id=":root:" />
           </Builder>

@@ -27,9 +27,6 @@ EndProject
 Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "XG.Build.Mono", "XG.Build.Mono\XG.Build.Mono.mdproj", "{25B2122B-481A-4C5F-AEF7-DFE57FD23C17}"
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "XG.Build.Net", "XG.Build.Net\XG.Build.Net.isproj", "{FCCC7AEB-1509-4E1A-89A0-E7FBA690A9EE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{20384A6F-DEBE-438D-9B38-AD2AC36F5B21} = {20384A6F-DEBE-438D-9B38-AD2AC36F5B21}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

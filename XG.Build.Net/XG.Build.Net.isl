@@ -263,6 +263,7 @@
 		<row><td>NewBinary16</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallFirstUse.ico</td></row>
 		<row><td>NewBinary17</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallPartial.ico</td></row>
 		<row><td>NewBinary18</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallStateMenu.ico</td></row>
+		<row><td>NewBinary19</td><td/><td>&lt;ISProductFolder&gt;\redist\Language independent\i386\SerialNumCAHelper.dll</td></row>
 		<row><td>NewBinary2</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\New.ibd</td></row>
 		<row><td>NewBinary3</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\Up.ibd</td></row>
 		<row><td>NewBinary4</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\WarningIcon.ibd</td></row>
@@ -340,17 +341,17 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>XG.Application.Primary_output2</td><td>{F5FB7E74-4388-46D3-A954-9BF92F48916E}</td><td>XG</td><td>2</td><td/><td>xg.application.primary_outpu2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Business.Primary_output2</td><td>{F825BEBA-7FA4-4ED1-A7D5-FD8F5FC8FCD4}</td><td>XG</td><td>2</td><td/><td>xg.business.primary_output2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Config.Primary_output2</td><td>{273A5719-B05C-4FC9-8F47-56DBD3CAD9FC}</td><td>XG</td><td>2</td><td/><td>xg.config.primary_output2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.DB.Primary_output2</td><td>{5BABBC28-8AE9-4FCE-82A0-2E7C5AD0375F}</td><td>XG</td><td>2</td><td/><td>xg.db.primary_output2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Model.Primary_output</td><td>{5142D8CB-0BB4-4684-99F7-6E04EB3136F6}</td><td>XG</td><td>2</td><td/><td>xg.model.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Plugin.ElasticSearch.Primary_output2</td><td>{04D85FDF-EB6D-400D-A56B-12173398CF5A}</td><td>XG</td><td>2</td><td/><td>xg.plugin.elasticsearch.prim2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Plugin.Import.Primary_output2</td><td>{67EC7305-E9D6-432C-866F-6124DBEE6435}</td><td>XG</td><td>2</td><td/><td>xg.plugin.import.primary_out2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Plugin.Irc.Primary_output2</td><td>{BBA62D62-5621-49F0-A260-04D7267F8352}</td><td>XG</td><td>2</td><td/><td>xg.plugin.irc.primary_output2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Plugin.Jabber.Primary_output2</td><td>{47068E4C-F6FA-4432-9B83-4F217FAF38DA}</td><td>XG</td><td>2</td><td/><td>xg.plugin.jabber.primary_out2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Plugin.Primary_output2</td><td>{78EDDF63-08A6-41DF-8B12-6BC158E3EE44}</td><td>XG</td><td>2</td><td/><td>xg.plugin.primary_output2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XG.Plugin.Webserver.Primary_output2</td><td>{DC37CF1D-85D6-4785-87BE-B8C1E922F31A}</td><td>XG</td><td>2</td><td/><td>xg.plugin.webserver.primary_2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Application.Primary_output1</td><td>{E4647AD6-81BF-4CE2-8782-301E1139F309}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.application.primary_outpu1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Business.Primary_output1</td><td>{0AF646C4-705C-4D89-ACDF-CB4EAC30C79B}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.business.primary_output1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Config.Primary_output1</td><td>{4776309E-551A-466D-AD19-6184944137A0}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.config.primary_output1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.DB.Primary_output1</td><td>{9FA013CD-EB42-4AE2-9E6B-9AC68CE337FE}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.db.primary_output1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Model.Primary_output2</td><td>{11D5F6E0-7A81-4E5A-818D-DAE8B4BCCFD7}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.model.primary_output2</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Plugin.ElasticSearch.Primary_output1</td><td>{32DFE760-3E0E-4727-8442-B6937262BF77}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.plugin.elasticsearch.prim1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Plugin.Import.Primary_output1</td><td>{058274AF-AB21-4F40-BA32-00CCCDAD357C}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.plugin.import.primary_out1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Plugin.Irc.Primary_output1</td><td>{4AA3BFEB-69A5-4E3F-8E24-4A9D76DE157F}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.plugin.irc.primary_output1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Plugin.Jabber.Primary_output1</td><td>{192E4A93-2F77-492B-BFB9-1B9054C8E3E7}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.plugin.jabber.primary_out1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Plugin.Primary_output1</td><td>{D0D0CE9D-4C54-4443-9C75-7CD87366B61E}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.plugin.primary_output1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XG.Plugin.Webserver.Primary_output1</td><td>{020ED1EF-4157-4EB6-BC64-B451530D4E31}</td><td>INSTALLDIR</td><td>2</td><td/><td>xg.plugin.webserver.primary_1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -930,7 +931,7 @@
 		<row><td>DatabaseFolder</td><td>ChangeFolder</td><td>SpawnDialog</td><td>InstallChangeFolder</td><td>1</td><td>1</td></row>
 		<row><td>DatabaseFolder</td><td>ChangeFolder</td><td>[_BrowseProperty]</td><td>DATABASEDIR</td><td>1</td><td>2</td></row>
 		<row><td>DatabaseFolder</td><td>Next</td><td>NewDialog</td><td>SetupType</td><td>1</td><td>1</td></row>
-		<row><td>DestinationFolder</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>0</td></row>
+		<row><td>DestinationFolder</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>NOT Installed</td><td>0</td></row>
 		<row><td>DestinationFolder</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>1</td></row>
 		<row><td>DestinationFolder</td><td>ChangeFolder</td><td>SpawnDialog</td><td>InstallChangeFolder</td><td>1</td><td>1</td></row>
 		<row><td>DestinationFolder</td><td>ChangeFolder</td><td>[_BrowseProperty]</td><td>INSTALLDIR</td><td>1</td><td>2</td></row>
@@ -947,7 +948,7 @@
 		<row><td>InstallChangeFolder</td><td>Up</td><td>DirectoryListUp</td><td>0</td><td>1</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Back</td><td>NewDialog</td><td>SplashBitmap</td><td>Display_IsBitmapDlg</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
-		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>ReadyToInstall</td><td>1</td><td>0</td></row>
+		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>ISPrintButton</td><td>DoAction</td><td>ISPrint</td><td>1</td><td>0</td></row>
@@ -982,7 +983,7 @@
 		<row><td>ReadmeInformation</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>1</td></row>
 		<row><td>ReadmeInformation</td><td>Next</td><td>NewDialog</td><td>CustomerInformation</td><td>1</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>CustomSetup</td><td>Installed OR _IsSetupTypeMin = "Custom"</td><td>2</td></row>
-		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>NOT Installed</td><td>1</td></row>
+		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>DestinationFolder</td><td>NOT Installed</td><td>1</td></row>
 		<row><td>ReadyToInstall</td><td>Back</td><td>NewDialog</td><td>MaintenanceType</td><td>Installed AND _IsMaintenance = "Reinstall"</td><td>3</td></row>
 		<row><td>ReadyToInstall</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>ReadyToInstall</td><td>InstallNow</td><td>EndDialog</td><td>Return</td><td>OutOfNoRbDiskSpace &lt;&gt; 1</td><td>0</td></row>
@@ -1020,8 +1021,9 @@
 		<row><td>SetupCompleteError</td><td>Finish</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1")</td><td>3</td></row>
 		<row><td>SetupCompleteError</td><td>Finish</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CleanUp</td><td>ISSCRIPTRUNNING="1"</td><td>1</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1") And NOT ISENABLEDWUSFINISHDIALOG</td><td>6</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>LaunchProgramFileFromSetupCompleteSuccess</td><td>LAUNCHPROGRAM And PROGRAMFILETOLAUNCHATEND &lt;&gt; "" And NOT Installed</td><td>2</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1") And NOT ISENABLEDWUSFINISHDIALOG</td><td>7</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>3</td></row>
 		<row><td>SetupError</td><td>A</td><td>EndDialog</td><td>ErrorAbort</td><td>1</td><td>0</td></row>
 		<row><td>SetupError</td><td>C</td><td>EndDialog</td><td>ErrorCancel</td><td>1</td><td>0</td></row>
 		<row><td>SetupError</td><td>I</td><td>EndDialog</td><td>ErrorIgnore</td><td>1</td><td>0</td></row>
@@ -1075,6 +1077,7 @@
 		<row><td>ISSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/><td/></row>
+		<row><td>LaunchProgramFileFromSetupCompleteSuccess</td><td>1</td><td>NewBinary19</td><td>LaunchProgram</td><td/><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/><td/></row>
 		<row><td>ShowMsiLog</td><td>226</td><td>SystemFolder</td><td>[SystemFolder]notepad.exe "[MsiLogFileLocation]"</td><td/><td>Shows Property-driven MSI Log</td></row>
@@ -1866,17 +1869,17 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AlwaysInstall</td><td>XG.Application.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Business.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Config.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.DB.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Model.Primary_output</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Plugin.ElasticSearch.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Plugin.Import.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Plugin.Irc.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Plugin.Jabber.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Plugin.Primary_output2</td></row>
-		<row><td>AlwaysInstall</td><td>XG.Plugin.Webserver.Primary_output2</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Application.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Business.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Config.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.DB.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Model.Primary_output2</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Plugin.ElasticSearch.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Plugin.Import.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Plugin.Irc.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Plugin.Jabber.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Plugin.Primary_output1</td></row>
+		<row><td>AlwaysInstall</td><td>XG.Plugin.Webserver.Primary_output1</td></row>
 	</table>
 
 	<table name="File">
@@ -1891,17 +1894,17 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>xg.application.primary_outpu2</td><td>XG.Application.Primary_output2</td><td>XG.Application.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Application&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.business.primary_output2</td><td>XG.Business.Primary_output2</td><td>XG.Business.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Business&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.config.primary_output2</td><td>XG.Config.Primary_output2</td><td>XG.Config.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Config&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.db.primary_output2</td><td>XG.DB.Primary_output2</td><td>XG.DB.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.DB&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.model.primary_output</td><td>XG.Model.Primary_output</td><td>XG.Model.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Model&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.plugin.elasticsearch.prim2</td><td>XG.Plugin.ElasticSearch.Primary_output2</td><td>XG.Plugin.ElasticSearch.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.ElasticSearch&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.plugin.import.primary_out2</td><td>XG.Plugin.Import.Primary_output2</td><td>XG.Plugin.Import.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Import&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.plugin.irc.primary_output2</td><td>XG.Plugin.Irc.Primary_output2</td><td>XG.Plugin.Irc.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Irc&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.plugin.jabber.primary_out2</td><td>XG.Plugin.Jabber.Primary_output2</td><td>XG.Plugin.Jabber.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Jabber&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.plugin.primary_output2</td><td>XG.Plugin.Primary_output2</td><td>XG.Plugin.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin&gt;|Built</td><td>3</td><td/></row>
-		<row><td>xg.plugin.webserver.primary_2</td><td>XG.Plugin.Webserver.Primary_output2</td><td>XG.Plugin.Webserver.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Webserver&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.application.primary_outpu1</td><td>XG.Application.Primary_output1</td><td>XG.Application.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Application&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.business.primary_output1</td><td>XG.Business.Primary_output1</td><td>XG.Business.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Business&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.config.primary_output1</td><td>XG.Config.Primary_output1</td><td>XG.Config.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Config&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.db.primary_output1</td><td>XG.DB.Primary_output1</td><td>XG.DB.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.DB&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.model.primary_output2</td><td>XG.Model.Primary_output2</td><td>XG.Model.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Model&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.plugin.elasticsearch.prim1</td><td>XG.Plugin.ElasticSearch.Primary_output1</td><td>XG.Plugin.ElasticSearch.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.ElasticSearch&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.plugin.import.primary_out1</td><td>XG.Plugin.Import.Primary_output1</td><td>XG.Plugin.Import.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Import&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.plugin.irc.primary_output1</td><td>XG.Plugin.Irc.Primary_output1</td><td>XG.Plugin.Irc.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Irc&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.plugin.jabber.primary_out1</td><td>XG.Plugin.Jabber.Primary_output1</td><td>XG.Plugin.Jabber.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Jabber&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.plugin.primary_output1</td><td>XG.Plugin.Primary_output1</td><td>XG.Plugin.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin&gt;|Built</td><td>3</td><td/></row>
+		<row><td>xg.plugin.webserver.primary_1</td><td>XG.Plugin.Webserver.Primary_output1</td><td>XG.Plugin.Webserver.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;XG.Plugin.Webserver&gt;|Built</td><td>3</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2158,17 +2161,17 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>XG.Application.Primary_output2</td><td/><td/><td>_E1B1ED2D_EDAF_46C7_AF5A_0F8ED0D800D5_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Business.Primary_output2</td><td/><td/><td>_2D946627_9BA8_4C59_AAF8_04B1083751B7_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Config.Primary_output2</td><td/><td/><td>_82DA2F63_5818_4670_8A70_7D79AF4C889B_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.DB.Primary_output2</td><td/><td/><td>_50D28CF6_5AA1_471B_9B59_FC426EFE8D6D_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Model.Primary_output</td><td/><td/><td>_687160AE_5146_4366_BAFF_9EBE4499C628_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Plugin.ElasticSearch.Primary_output2</td><td/><td/><td>_50F92CCD_A0FB_428D_9A3D_A693B9A4D564_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Plugin.Import.Primary_output2</td><td/><td/><td>_938DB625_ADD9_423A_90A6_449621578ECF_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Plugin.Irc.Primary_output2</td><td/><td/><td>_49724526_07D9_466D_AEA7_650585EE717B_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Plugin.Jabber.Primary_output2</td><td/><td/><td>_4093D7FC_CF22_4683_A6E8_C131F80FED69_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Plugin.Primary_output2</td><td/><td/><td>_CF1B99CB_58F9_4B17_AAE0_5DB5DB13D56D_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XG.Plugin.Webserver.Primary_output2</td><td/><td/><td>_0FD1EF2F_E0F5_4B5F_8730_53DC6A67CE8F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Application.Primary_output1</td><td/><td/><td>_2A02668E_F92F_4E6C_927A_0E146127D594_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Business.Primary_output1</td><td/><td/><td>_C17F3E45_BDC1_44AE_8FB3_41E7BC4ADB02_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Config.Primary_output1</td><td/><td/><td>_2C61D3B1_FFFB_468B_903F_643CE2082AB4_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.DB.Primary_output1</td><td/><td/><td>_E4E97C0B_383F_4200_B0FB_5922FB2350BA_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Model.Primary_output2</td><td/><td/><td>_5AF79DA3_D7D2_4924_9C10_AC6EC34083D2_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Plugin.ElasticSearch.Primary_output1</td><td/><td/><td>_901FA9B6_24F5_42CE_8FC2_9276686C8F20_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Plugin.Import.Primary_output1</td><td/><td/><td>_B2D4319C_C3BC_4789_88B0_5BE8CE6D4BCE_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Plugin.Irc.Primary_output1</td><td/><td/><td>_3AB18605_4F1A_4B2C_8A6A_45A423B73E45_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Plugin.Jabber.Primary_output1</td><td/><td/><td>_6D3E317E_A980_4FF1_B29D_A47E065711ED_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Plugin.Primary_output1</td><td/><td/><td>_A2425955_B242_45FA_A923_71101917D9D8_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XG.Plugin.Webserver.Primary_output1</td><td/><td/><td>_F4C31D49_A7A0_4DA8_A0E9_D33A082E3A0D_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2807,7 +2810,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>XG</td><td>0</td><td/><td>-1734181546</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>XG</td><td>0</td><td/><td>-1331508493</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>-1734188394</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1033</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>-1734163754</td></row>
@@ -3907,8 +3910,8 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.XG.com</td><td>0</td><td/><td>-1734181546</td></row>
-		<row><td>ID_STRING2</td><td>1033</td><td>XG</td><td>0</td><td/><td>-1734181546</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>http://www.XG.com</td><td>0</td><td/><td>-1331508493</td></row>
+		<row><td>ID_STRING2</td><td>1033</td><td>XG</td><td>0</td><td/><td>-1331508493</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-1734188394</td></row>
 	</table>
 
@@ -4495,6 +4498,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>IS_SQLSERVER_USERNAME</td><td>sa</td><td/></row>
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
 		<row><td>LAUNCHPROGRAM</td><td>1</td><td/></row>
+		<row><td>LAUNCHPROGRAMCOMPCODE</td><td>{E4647AD6-81BF-4CE2-8782-301E1139F309}</td><td/></row>
+		<row><td>LAUNCHPROGRAMFILEKEY</td><td>xg.application.primary_outpu1</td><td/></row>
 		<row><td>LAUNCHREADME</td><td>1</td><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>PIDKEY</td><td/><td/></row>
@@ -4522,6 +4527,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
+		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]XG.Application.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{3D03C5AC-ACDE-48D0-BA30-6E69AABBE76B}</td><td/></row>
 		<row><td>ProductName</td><td>XG</td><td/></row>
 		<row><td>ProductVersion</td><td>3.0.0.0</td><td/></row>
@@ -4536,6 +4542,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>RestartManagerOption</td><td>CloseRestart</td><td/></row>
 		<row><td>SERIALNUMBER</td><td/><td/></row>
 		<row><td>SERIALNUMVALSUCCESSRETVAL</td><td>1</td><td/></row>
+		<row><td>SHOWLAUNCHPROGRAM</td><td>-1</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;DOTNETVERSION45FULL</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>

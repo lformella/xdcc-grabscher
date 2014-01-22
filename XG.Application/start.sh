@@ -11,6 +11,6 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 cd $DIR
-mono Server.Cmd.exe > log.txt & pid=$!
+mono XG.Application.exe > log.txt & pid=$!
 echo $pid > pid
 
