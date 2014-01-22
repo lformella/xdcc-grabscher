@@ -40,6 +40,10 @@ namespace XG.Plugin.Webserver.Nancy
 
 			Get["/Resources/js/config/config.js"] = _ => {
 				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
+				if (language != "en" && language != "de")
+				{
+					language = "en";
+				}
 				string ret = config;
 				ret = ret.Replace("##LANGUAGE##", language);
 				ret = ret.Replace("##SALT##", Helper.Salt);
