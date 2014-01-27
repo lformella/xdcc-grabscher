@@ -34,11 +34,7 @@ namespace XG.Plugin.Irc.Parser
 
 		public static string RemoveSpecialIrcChars(string aData)
 		{
-			aData = Regex.Replace(aData, "(\u0002|\u0003)(\\d+(,\\d{1,2}|)|)", String.Empty);
-			aData = aData.Replace("\u0001", String.Empty);
-			aData = aData.Replace("\u000F", String.Empty);
-			aData = aData.Replace("\uFFFD", String.Empty);
-			aData = aData.Replace("\u0016", String.Empty);
+			aData = Regex.Replace(aData, @"[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?", String.Empty);
 			return aData.Trim();
 		}
 
