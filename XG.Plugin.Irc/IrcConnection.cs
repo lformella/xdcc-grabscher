@@ -324,9 +324,9 @@ namespace XG.Plugin.Irc
 						Client.RfcJoin(channels);
 					}
 				}
-				Client.Listen();
-
 				StartWatch(Settings.Default.ChannelWaitTimeShort * 5, Server + " ConnectionWatch");
+
+				Client.Listen();
 			};
 
 			Client.OnError += (sender, e) =>
