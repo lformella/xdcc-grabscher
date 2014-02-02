@@ -35,8 +35,9 @@ define(['./module'], function (ng) {
 			$modal.open({
 				keyboard: false,
 				backdrop: 'static',
-				templateUrl: 'passwordDialog.html',
-				controller: 'PasswordDialogCtrl'
+				templateUrl: 'templates/dialog/password.html',
+				controller: 'PasswordDialogCtrl',
+				windowClass: 'passwordDialog'
 			}).result.then(function (password)
 			{
 				$scope.passwordOk = true;
@@ -65,8 +66,9 @@ define(['./module'], function (ng) {
 				$modal.open({
 					keyboard: false,
 					backdrop: 'static',
-					templateUrl: 'errorDialog.html',
+					templateUrl: 'templates/dialog/error.html',
 					controller: 'ErrorDialogCtrl',
+					windowClass: 'errorDialog',
 					resolve:
 					{
 						message: function ()
@@ -82,8 +84,9 @@ define(['./module'], function (ng) {
 				$modal.open({
 					keyboard: true,
 					backdrop: true,
-					templateUrl: 'xdccDialog.html',
-					controller: 'XdccDialogCtrl'
+					templateUrl: 'templates/dialog/xdcc.html',
+					controller: 'XdccDialogCtrl',
+					windowClass: 'xdccDialog'
 				});
 			};
 
@@ -101,8 +104,9 @@ define(['./module'], function (ng) {
 				$modal.open({
 					keyboard: true,
 					backdrop: true,
-					templateUrl: 'serverChannelDialog.html',
+					templateUrl: 'templates/dialog/serverChannel.html',
 					controller: 'ServerChannelDialogCtrl',
+					windowClass: 'serverChannelDialog',
 					resolve:
 					{
 						serverSignalr: function ()
@@ -126,8 +130,9 @@ define(['./module'], function (ng) {
 				$modal.open({
 					keyboard: true,
 					backdrop: true,
-					templateUrl: 'apiDialog.html',
+					templateUrl: 'templates/dialog/api.html',
 					controller: 'ApiDialogCtrl',
+					windowClass: 'apiDialog',
 					resolve:
 					{
 						signalr: function ()
@@ -147,8 +152,9 @@ define(['./module'], function (ng) {
 				$modal.open({
 					keyboard: true,
 					backdrop: true,
-					templateUrl: 'configDialog.html',
+					templateUrl: 'templates/dialog/config.html',
 					controller: 'ConfigDialogCtrl',
+					windowClass: 'configDialog',
 					resolve:
 					{
 						signalr: function ()

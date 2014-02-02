@@ -28,25 +28,25 @@ window.name = "NG_DEFER_BOOTSTRAP!";
 
 require.config({
 	paths: {
-		'angular': '../../../Scripts/angular',
-		'ngAnimate': '../../../Scripts/angular-animate',
+		'angular': '../../../Scripts/angular.min',
+		'ngAnimate': '../../../Scripts/angular-animate.min',
 		'domReady': './libs/domReady',
-		'jquery': '../../../Scripts/jquery-2.0.3.min',
+		'jquery': '../../../Scripts/jquery-2.1.0.min',
 		'ngTranslate': './libs/angular-translate.min',
 		'favicon': './libs/favicon',
 		'ipCookies': './libs/angular-cookie',
 		'jqKnob': './libs/jquery.knob',
-		'jqFlot': '../../../Scripts/flot/jquery.flot',
+		'jqFlot': '../../../Scripts/flot/jquery.flot.min',
 		'jqFlot.time': '../../../Scripts/flot/jquery.flot.time.min',
 		'jqFlot.pie': '../../../Scripts/flot/jquery.flot.pie.min',
 		'jqFlot.axislabels': './libs/jquery.flot.axislabels',
-		'moment': '../../../Scripts/moment-with-langs',
-		'ngSanitize': '../../../Scripts/angular-sanitize',
+		'moment': '../../../Scripts/moment-with-langs.min',
+		'ngSanitize': '../../../Scripts/angular-sanitize.min',
 		'ngTable': './libs/ng-table',
 		'sha256': './libs/sha256',
-		'signalr': '../../../Scripts/jquery.signalR-2.0.0',
+		'signalr': '../../../Scripts/jquery.signalR-2.0.2.min',
 		'signalr.hubs': '../../../signalr/hubs?noext=',
-		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.7.0'
+		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.10.0.min'
 	},
 	shim: {
 		'angular': {

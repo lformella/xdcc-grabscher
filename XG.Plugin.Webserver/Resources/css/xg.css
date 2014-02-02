@@ -253,74 +253,79 @@ td .highlight .name
 
 /** Dialogs **/
 
-#serverChannelsDialog
+.serverChannelDialog .modal-dialog
 {
 	width: 940px;
 }
 
-#serverChannelsDialog .tableDiv
+.serverChannelDialog .tableDiv
 {
 	height: 440px;
 }
 
-#serverChannelsDialog .table, #serverChannelsDialog .pagination {
+.serverChannelDialog .table, .serverChannelDialog .pagination {
 	margin-bottom: 10px;
 }
 
-#serverChannelsDialog .pagination > li > a
+.serverChannelDialog .pagination > li > a
 {
 	padding: 0 8px;
 }
 
-#configDialog
+.configDialog .modal-dialog
 {
 	width: 850px;
 }
 
-#configDialog .form-group
+.configDialog .form-group
 {
 	margin-bottom: 10px;
 }
 
-#configDialog .list-group
+.configDialog .list-group
 {
 	margin-bottom: 0;
 }
 
-#configDialog .list-group-item
+.configDialog .list-group-item
 {
 	padding: 5px;
 }
 
-#configDialog .nav-tabs
+.configDialog .nav-tabs
 {
 	margin-bottom: 10px;
 }
 
-#configDialog .panel
+.configDialog .panel
 {
 	margin-bottom: 10px;
 }
 
-#configDialog .panel-heading, #configDialog .panel-body
+.configDialog .panel-heading, .configDialog .panel-body
 {
 	padding: 5px;
 }
 
-#configDialog .panel-heading .glyphicon, #configDialog .panel-body .glyphicon
+.configDialog .panel-heading .glyphicon, .configDialog .panel-body .glyphicon
 {
 	font-size: 1.5em;
 	padding-top: 7px;
 }
 
-#configDialog input[type="checkbox"]
+.configDialog input[type="checkbox"]
 {
 	margin: 10px 0 0;
 }
 
-#apiDialog
+.apiDialog .modal-dialog
 {
 	width: 700px;
+}
+
+.passwordDialog .modal-dialog
+{
+	width: 350px;
 }
 
 /** Menu **/

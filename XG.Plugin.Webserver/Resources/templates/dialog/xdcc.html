@@ -1,0 +1,53 @@
+<!--
+//
+//  xdcc.html
+//  This file is part of XG - XDCC Grabscher
+//  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
+//
+//  Author:
+//       Lars Formella <ich@larsformella.de>
+//
+//  Copyright (c) 2012 Lars Formella
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//
+-->
+
+<div class="modal-header">
+	<button type="button" ng-click="$dismiss()" class="close">&times;</button>
+	<h4 class="modal-title" translate>XDCC link input</h4>
+</div>
+<div class="modal-body">
+	<p translate>Please enter a valid XDCC link.</p>
+	<div class="form-horizontal">
+		<div class="form-group" ng-class="{'has-error': !isXdccLinkValid()}">
+			<label class="col-lg-3 control-label" for="xdccLink" translate>XDCC link</label>
+			<div class="col-lg-9">
+				<input type="text" name="xdccLink" ng-model="$parent.xdccLink" class="form-control" placeholder="{{'XDCC Link'|translate}}" ng-keydown="xdccKeydown($event)"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-3 control-label" for="xdccLink" translate>Example link</label>
+			<div class="col-lg-9">
+				<p class="form-control-static">xdcc://irc.server.net/servername/#channel/bot/#3/Test.avi/</p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<a class="btn btn-primary" ng-click="save()" ng-disabled="!isXdccLinkValid()">
+		<span class="glyphicon glyphicon-cloud-download"></span> <span translate>Download</span>
+	</a>
+</div>

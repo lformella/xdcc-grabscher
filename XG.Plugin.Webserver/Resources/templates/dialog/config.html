@@ -1,0 +1,194 @@
+<!--
+//
+//  config.html
+//  This file is part of XG - XDCC Grabscher
+//  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
+//
+//  Author:
+//       Lars Formella <ich@larsformella.de>
+//
+//  Copyright (c) 2012 Lars Formella
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//
+-->
+
+<div class="modal-header">
+	<button type="button" ng-click="$dismiss()" class="close">&times;</button>
+	<h4 class="modal-title" translate>Config</h4>
+</div>
+<div class="modal-body">
+	<form name="config" role="form" novalidate>
+		<ul class="nav nav-tabs">
+			<li ng-class="{'active': $parent.slide == 1}"><a href="#" ng-click="$parent.slideTo(1)" translate>Settings</a></li>
+			<li ng-class="{'active': $parent.slide == 2}"><a href="#" ng-click="$parent.slideTo(2)" translate>File Handlers</a></li>
+		</ul>
+		<div ng-show="$parent.slide == 1">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-2 control-label"></label>
+					<div class="col-lg-10" translate>Changes on the properties marked with an asterisk require a restart.</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-4 control-label" translate>Auto Register Nickserv</label>
+					<div class="col-lg-8">
+						<input type="checkbox" ng-model="$parent.config.AutoRegisterNickserv" ng-show="$parent.configReady">
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label"><span translate>Temp Path</span> *</label>
+					<div class="col-lg-9" ng-show="$parent.configReady">
+						<input class="form-control" type="text" ng-model="$parent.config.TempPath" ng-required="true" placeholder="{{'Path in filesystem to store temporary files'|translate}}" title="{{'Path in filesystem to store temporary files'|translate}}"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label"><span translate>Ready Path</span> *</label>
+					<div class="col-lg-9" ng-show="$parent.configReady">
+						<input class="form-control" type="text" ng-model="$parent.config.ReadyPath" ng-required="true" placeholder="{{'Path in filesystem to store downloaded files'|translate}}" title="{{'Path in filesystem to store downloaded files'|translate}}"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label" translate>Max Download Speed</label>
+					<div class="col-lg-4" ng-show="$parent.configReady">
+						<div class="input-group">
+							<input class="form-control" type="number" min="0" ng-model="$parent.config.MaxDownloadSpeedInKB" placeholder="{{'Max Download Speed'|translate}}" title="{{'Max Download Speed'|translate}}"/>
+							<span class="input-group-addon">KB</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label" translate>IRC</label>
+					<div class="col-lg-3" ng-show="$parent.configReady">
+						<input class="form-control" type="text" ng-model="$parent.config.IrcNick" ng-required="true" placeholder="{{'User'|translate}}" title="{{'User'|translate}}"/>
+					</div>
+					<div class="col-lg-3" ng-show="$parent.configReady">
+						<input class="form-control" type="password" ng-model="$parent.config.IrcPassword" placeholder="{{'Passwort'|translate}}" title="{{'Passwort'|translate}}"/>
+					</div>
+					<div class="col-lg-3" ng-show="$parent.configReady">
+						<input class="form-control" type="email" ng-model="$parent.config.IrcRegisterEmail" placeholder="{{'Email'|translate}}" title="{{'Email'|translate}}"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label"><span translate>Webserver</span> *</label>
+					<div class="col-lg-1" ng-show="$parent.configReady">
+						<input type="checkbox" ng-model="$parent.config.UseWebserver">
+					</div>
+					<div class="col-lg-6" ng-show="$parent.configReady">
+						<input class="form-control" type="password" ng-model="$parent.config.Password" ng-required="$parent.config.UseWebserver" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Password'|translate}}" title="{{'Password'|translate}}"/>
+					</div>
+					<div class="col-lg-2" ng-show="$parent.configReady">
+						<input class="form-control" type="number" ng-model="$parent.config.WebserverPort" ng-required="$parent.config.UseWebserver" min="1" max="65535" ng-disabled="!$parent.config.UseWebserver" placeholder="{{'Port'|translate}}" title="{{'Port'|translate}}"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label"><span translate>Elasticsearch</span> *</label>
+					<div class="col-lg-1" ng-show="$parent.configReady">
+						<input type="checkbox" ng-model="$parent.config.UseElasticSearch">
+					</div>
+					<div class="col-lg-6" ng-show="$parent.configReady">
+						<input class="form-control" type="text" ng-model="$parent.config.ElasticSearchHost" ng-required="$parent.config.UseElasticSearch" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Host'|translate}}" title="{{'Host'|translate}}"/>
+					</div>
+					<div class="col-lg-2" ng-show="$parent.configReady">
+						<input class="form-control" type="number" ng-model="$parent.config.ElasticSearchPort" ng-required="$parent.config.UseElasticSearch" min="1" max="65535" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Port'|translate}}" title="{{'Port'|translate}}"/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label"><span translate>Jabber</span> *</label>
+					<div class="col-lg-1" ng-show="$parent.configReady">
+						<input type="checkbox" ng-model="$parent.config.UseJabberClient">
+					</div>
+					<div class="col-lg-3" ng-show="$parent.configReady">
+						<input class="form-control" type="text" ng-model="$parent.config.JabberUser" ng-required="$parent.config.UseJabberClient" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'User'|translate}}" title="{{'User'|translate}}"/>
+					</div>
+					<div class="col-lg-3" ng-show="$parent.configReady">
+						<input class="form-control" type="password" ng-model="$parent.config.JabberPassword" ng-required="$parent.config.UseJabberClient" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Password'|translate}}" title="{{'Password'|translate}}"/>
+					</div>
+					<div class="col-lg-2" ng-show="$parent.configReady">
+						<input class="form-control" type="text" ng-model="$parent.config.JabberServer" ng-required="$parent.config.UseJabberClient" ng-disabled="!$parent.config.UseJabberClient" placeholder="{{'Server'|translate}}" title="{{'Server'|translate}}"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-show="$parent.slide == 2">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-3 control-label">
+						<span translate>File Handler</span>
+						<span class="glyphicon glyphicon-plus-sign ChameleonDark clickAble" ng-click="$parent.addFileHandler()" title="{{'Add new'|translate}}"></span>
+					</label>
+					<div class="col-lg-9" ng-show="$parent.configReady">
+						<div class="panel panel-default" ng-repeat="fileHandler in $parent.config.FileHandlers">
+							<div class="panel-heading">
+								<div class="row">
+									<div class="col-lg-10">
+										<input class="form-control" type="text" ng-model="fileHandler.Regex" ng-required="true" placeholder="{{'File regex'|translate}}" title="{{'File regex'|translate}}"/>
+									</div>
+									<div class="col-lg-2">
+										<span class="glyphicon glyphicon-remove-sign ScarletRedMiddle clickAble" ng-click="$parent.removeFileHandler(fileHandler)" title="{{'Remove'|translate}}"></span>
+									</div>
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="form-horizontal" ng-repeat="process in fileHandler.Processes">
+									<div class="form-group">
+										<div class="col-lg-3">
+											<input class="form-control" type="text" ng-model="process.Command" ng-required="true" placeholder="{{'Command'|translate}}" title="{{'Command'|translate}}"/>
+										</div>
+										<div class="col-lg-7">
+											<input class="form-control" type="text" ng-model="process.Arguments" ng-required="true" placeholder="{{'Arguments'|translate}}" title="{{'Arguments'|translate}}"/>
+										</div>
+										<div class="col-lg-2">
+											<span class="glyphicon glyphicon-plus-sign ChameleonDark clickAble" ng-click="$parent.addProcess(fileHandler, process)" title="{{'Add new'|translate}}"></span>
+											<span class="glyphicon glyphicon-remove-sign ScarletRedMiddle clickAble" ng-hide="$first" ng-click="$parent.removeProcess(fileHandler, process)" title="{{'Remove'|translate}}"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<a class="btn btn-primary" ng-click="save()" ng-disabled="!$parent.configReady || !config.$valid">
+		<span class="glyphicon glyphicon-floppy-disk"></span> <span translate>Save</span>
+	</a>
+</div>

@@ -185,6 +185,7 @@ define(['./module'], function (i18n) {
 				/* OTHERS                                                                                                         */
 				/* ************************************************************************************************************** */
 
+				"Search": "Suche",
 				"Dashboard": "Übersicht",
 				"Graphs": "Graphen",
 				"Show offline Bots": "Inaktive Bots anzeigen",

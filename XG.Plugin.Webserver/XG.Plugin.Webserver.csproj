@@ -46,38 +46,38 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Diagnostics">
-      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.2\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
     <Reference Include="Nowin">
       <HintPath>..\packages\Nowin.0.11.0.0\lib\net45\Nowin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.1.0\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.2.1.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy">
-      <HintPath>..\packages\Nancy.0.21.1\lib\net40\Nancy.dll</HintPath>
+      <HintPath>..\packages\Nancy.0.22.0\lib\net40\Nancy.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Owin">
-      <HintPath>..\packages\Nancy.Owin.0.21.1\lib\net40\Nancy.Owin.dll</HintPath>
+      <HintPath>..\packages\Nancy.Owin.0.22.0\lib\net40\Nancy.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Serialization.JsonNet">
-      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.21.1\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
+      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.22.0\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +163,33 @@
     <EmbeddedResource Include="Resources\js\directive\flot.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\client.js" />
     <EmbeddedResource Include="Resources\images\chat.ico" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.2.js" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.2.min.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.1.0.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.1.0.min.js" />
+    <EmbeddedResource Include="Scripts\jquery-2.1.0.min.map" />
+    <EmbeddedResource Include="Scripts\jquery-2.1.0-vsdoc.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-0.10.0.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-0.10.0.min.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.10.0.js" />
+    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.10.0.min.js" />
+    <EmbeddedResource Include="Scripts\errors.json" />
+    <EmbeddedResource Include="Content\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="Content\bootstrap-theme.css.map" />
+    <EmbeddedResource Include="Content\bootstrap-theme.css" />
+    <EmbeddedResource Include="Content\bootstrap.min.css" />
+    <EmbeddedResource Include="Content\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap.css.map" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="Resources\templates\dialog\api.html" />
+    <EmbeddedResource Include="Resources\templates\dialog\config.html" />
+    <EmbeddedResource Include="Resources\templates\dialog\error.html" />
+    <EmbeddedResource Include="Resources\templates\dialog\password.html" />
+    <EmbeddedResource Include="Resources\templates\dialog\serverChannel.html" />
+    <EmbeddedResource Include="Resources\templates\dialog\xdcc.html" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
@@ -182,14 +209,6 @@
     <EmbeddedResource Include="Resources\js\libs\jquery.knob.js" />
     <EmbeddedResource Include="Resources\js\libs\ng-table.js" />
     <EmbeddedResource Include="Resources\js\libs\sha256.js" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.3-vsdoc.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.3.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.3.min.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.0.3.min.map" />
     <EmbeddedResource Include="Scripts\require.js" />
     <EmbeddedResource Include="Scripts\r.js" />
     <EmbeddedResource Include="Scripts\flot\excanvas.js" />
@@ -226,8 +245,6 @@
     <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
     <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
     <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.0.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.0.min.js" />
     <EmbeddedResource Include="Scripts\json2.js" />
     <EmbeddedResource Include="Scripts\json2.min.js" />
     <EmbeddedResource Include="Content\normalize.css" />
@@ -235,12 +252,6 @@
     <EmbeddedResource Include="Scripts\moment-with-langs.min.js" />
     <EmbeddedResource Include="Scripts\moment.js" />
     <EmbeddedResource Include="Scripts\moment.min.js" />
-    <EmbeddedResource Include="Content\bootstrap-theme.css" />
-    <EmbeddedResource Include="Content\bootstrap-theme.min.css" />
-    <EmbeddedResource Include="Content\bootstrap.css" />
-    <EmbeddedResource Include="Content\bootstrap.min.css" />
-    <EmbeddedResource Include="Scripts\bootstrap.js" />
-    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
     <EmbeddedResource Include="Resources\js\index.js" />
     <EmbeddedResource Include="Resources\js\controller\notification.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\index.js" />
@@ -259,7 +270,6 @@
     <EmbeddedResource Include="Scripts\angular-sanitize.min.js.map" />
     <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
     <EmbeddedResource Include="Scripts\angular.min.js.map" />
-    <None Include="Scripts\errors.json" />
     <EmbeddedResource Include="Resources\css\animate.css" />
   </ItemGroup>
   <ItemGroup>
@@ -293,12 +303,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\controller\main.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\ui-bootstrap-0.7.0.js" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-0.7.0.min.js" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.7.0.js" />
-    <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.7.0.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\angular-animate.js" />
@@ -582,5 +586,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\controller\dialog\error.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\templates\" />
   </ItemGroup>
 </Project>

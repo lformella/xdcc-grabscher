@@ -1,0 +1,138 @@
+<!--
+//
+//  serverChannel.html
+//  This file is part of XG - XDCC Grabscher
+//  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
+//
+//  Author:
+//       Lars Formella <ich@larsformella.de>
+//
+//  Copyright (c) 2012 Lars Formella
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//
+-->
+
+<div class="modal-header">
+	<button type="button" ng-click="$dismiss()" class="close">&times;</button>
+	<h4 class="modal-title" translate>Change Servers and Channels</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-5">
+			<div class="tableDiv">
+				<table ng-table="tableParamsServer" class="table">
+					<thead>
+						<tr>
+							<th width="38"></th>
+							<th class="sortable" ng-click="tableParamsServer.sorting({'Name' : tableParamsServer.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+								<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsServer.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsServer.isSortBy('Name', 'desc')}"></span>
+								<span translate>Name</span>
+							</th>
+							<th width="40"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="server in $data">
+							<td class="withIcon">
+								<span class="clickAble" ng-bind-html='server|formatServerIcon' ng-click="serverSignalr.flip(server);"></span>
+							</td>
+							<td>
+								<span class="clickAble" ng-class="{'highlight': serverSignalr.server == server}" ng-bind-html='server|formatServerName|trustAsHtml' ng-click="serverSignalr.server = server"></span>
+							</td>
+							<td class="text-right">
+								<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="serverSignalr.remove(server)" title="{{'Remove'|translate}}"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="server" translate>Server</label>
+					<div class="col-lg-10">
+						<div class="input-group">
+							<input class="form-control" type="text" name="server" ng-model="$parent.server" ng-keydown="serverKeydown($event);"/>
+										<span class="input-group-btn">
+											<button class="btn" ng-click="addServer();" translate>Add</button>
+										</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-7" ng-show="serverSignalr.server != null">
+			<div class="tableDiv">
+				<table ng-table="tableParamsChannel" class="table">
+					<thead>
+						<tr>
+							<th width="38"></th>
+							<th class="sortable" ng-click="tableParamsChannel.sorting({'Name' : tableParamsChannel.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+								<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Name', 'desc')}"></span>
+								<span translate>Name</span>
+							</th>
+							<th class="sortable text-right sortable" width="80" ng-click="tableParamsChannel.sorting({'User' : tableParamsChannel.isSortBy('User', 'asc') ? 'desc' : 'asc'})">
+								<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('User', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('User', 'desc')}"></span>
+								<span translate>User</span>
+							</th>
+							<th class="sortable text-right sortable" width="80" ng-click="tableParamsChannel.sorting({'Bots' : tableParamsChannel.isSortBy('Bots', 'asc') ? 'desc' : 'asc'})">
+								<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsChannel.isSortBy('Bots', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsChannel.isSortBy('Bots', 'desc')}"></span>
+								<span translate>Bots</span>
+							</th>
+							<th width="90" translate>Check user versions</th>
+							<th width="30"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="channel in $data">
+							<td class="withIcon">
+								<span class="clickAble" ng-bind-html='channel|formatChannelIcon' ng-click="channelSignalr.flip(channel)"></span>
+							</td>
+							<td class="withText">
+								<span ng-bind-html='channel|formatChannelName|trustAsHtml'></span>
+							</td>
+							<td class="text-right">
+								{{channel.UserCount}}
+							</td>
+							<td class="text-right">
+								{{channel.BotCount}}
+							</td>
+							<td class="text-center">
+								<span class="glyphicon glyphicon-ok-circle ChameleonDark clickAble" ng-show="channel.AskForVersion" ng-click="disableAskForVersion(channel)" title="{{'Disable'|translate}}"></span>
+								<span class="glyphicon glyphicon-ban-circle ScarletRedMiddle clickAble" ng-show="!channel.AskForVersion" ng-click="enableAskForVersion(channel)" title="{{'Enable'|translate}}"></span>
+							</td>
+							<td class="text-right">
+								<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="channelSignalr.remove(channel)" title="{{'Remove'|translate}}"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-lg-2 control-label" for="channel" translate>Channel</label>
+					<div class="col-lg-10">
+						<div class="input-group">
+							<input class="form-control" type="text" name="channel" ng-model="$parent.channel" ng-keydown="channelKeydown($event)"/>
+										<span class="input-group-btn">
+											<button class="btn" ng-click="addChannel()" translate>Add</button>
+										</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
