@@ -724,6 +724,28 @@ namespace XG.Plugin.Irc
 			_userToAskForVersion.Enqueue(aUser);
 		}
 
+		public void TryConnect()
+		{
+			try
+			{
+				Client.Connect(Server.Name, Server.Port);
+			}
+			catch(CouldNotConnectException ex)
+			{
+				_log.Warn("StartRun() connection failed " + ex.Message);
+				// can be null if we stopped a connection which is not connected and fails later
+				if (Server != null)
+				{
+					FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
+					Server.Connected = false;
+					Server.Commit();
+					OnDisconnected(this, new EventArgs<Server>(Server));
+				}
+			}
+			catch (AlreadyConnectedException)
+			{}
+		}
+
 		#endregion
 
 		#region AWorker
@@ -746,22 +768,7 @@ namespace XG.Plugin.Irc
 
 			RegisterIrcEvents();
 
-			try
-			{
-				Client.Connect(Server.Name, Server.Port);
-			}
-			catch(CouldNotConnectException ex)
-			{
-				_log.Warn("StartRun() connection failed " + ex.Message);
-				// can be null if we stopped a connection which is not connected and fails later
-				if (Server != null)
-				{
-					FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
-					Server.Connected = false;
-					Server.Commit();
-					OnDisconnected(this, new EventArgs<Server>(Server));
-				}
-			}
+			TryConnect();
 		}
 
 		protected override void StopRun()

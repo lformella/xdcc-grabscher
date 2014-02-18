@@ -64,7 +64,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 			{
 				string[] regexes =
 				{
-					"#(?<pack_id>\\d+)(\u0240|�|)\\s+(\\d*)x\\s+\\[\\s*(�|)\\s*(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)"
+					"#(?<pack_id>\\d+)(\u0240|)\\s+(\\d*)x\\s+\\[\\s*(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)"
 				};
 				var match = Helper.Match(aMessage, regexes);
 				if (match.Success)

@@ -34,7 +34,6 @@ namespace XG.Plugin.Irc
 		#region VARIABLES
 
 		private Stream _baseStream;
-		private long _maximumBytesPerSecond;
 		private long _byteCount;
 		private long _start;
 
@@ -46,6 +45,8 @@ namespace XG.Plugin.Irc
 			}
 		}
 
+		long _maximumBytesPerSecond;
+
 		public long MaximumBytesPerSecond
 		{
 			get
@@ -54,8 +55,12 @@ namespace XG.Plugin.Irc
 			}
 			set
 			{
-				if (MaximumBytesPerSecond != value)
+				if (_maximumBytesPerSecond != value)
 				{
+					if (value < 0)
+					{
+						throw new ArgumentOutOfRangeException("The maximum number of bytes per second can't be negative.");
+					}
 					_maximumBytesPerSecond = value;
 					Reset();
 				}
@@ -120,14 +125,9 @@ namespace XG.Plugin.Irc
 			{
 				throw new ArgumentNullException("baseStream");
 			}
-
-			if (maximumBytesPerSecond < 0)
-			{
-				throw new ArgumentOutOfRangeException("maximumBytesPerSecond", maximumBytesPerSecond, "The maximum number of bytes per second can't be negative.");
-			}
+			MaximumBytesPerSecond = maximumBytesPerSecond;
 
 			_baseStream = baseStream;
-			_maximumBytesPerSecond = maximumBytesPerSecond;
 			_start = CurrentMilliseconds;
 			_byteCount = 0;
 		}
@@ -176,7 +176,6 @@ namespace XG.Plugin.Irc
 
 		protected void Throttle(int bufferSizeInBytes)
 		{
-			// Make sure the buffer isn't empty.
 			if (_maximumBytesPerSecond <= 0 || bufferSizeInBytes <= 0)
 			{
 				return;

@@ -35,7 +35,6 @@ using log4net;
 using System.Collections.Generic;
 using System.Threading;
 
-
 #if __MonoCS__
 using Mono.Data.Sqlite;
 #else
@@ -49,7 +48,7 @@ namespace XG.DB
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		ISessionFactory _sessions;
-		readonly int SecondsToSleep = 60;
+		readonly int SecondsToSleep = 300;
 
 		readonly int _version = 1;
 
@@ -66,13 +65,6 @@ namespace XG.DB
 
 		public Dao()
 		{
-			// load assembly by creating new object
-			// otherwise there will occur weird assembly loading errors
-#if __MonoCS__
-			new SqliteConnection();
-#else
-			new SQLiteConnection();
-#endif
 			bool insertVersion = false;
 
 			var cfg = new Configuration();
@@ -82,7 +74,7 @@ namespace XG.DB
 				cfg.Configure();
 				cfg.AddAssembly(typeof(Dao).Assembly);
 			}
-			catch (HibernateConfigException ex)
+			catch (HibernateConfigException)
 			{
 				cfg.Properties["connection.provider"] = "NHibernate.Connection.DriverConnectionProvider";
 				cfg.Properties["dialect"] = "NHibernate.Dialect.SQLiteDialect";
@@ -97,6 +89,34 @@ namespace XG.DB
 
 				string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
 				cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
+
+				try
+				{
+#if __MonoCS__
+					using (var con = new SqliteConnection(cfg.Properties["connection.connection_string"]))
+					{
+						con.Open();
+						using (SqliteCommand command = con.CreateCommand())
+						{
+							command.CommandText = "vacuum;";
+							command.ExecuteNonQuery();
+						}
+						con.Close();
+					}
+#else
+					using (var con = new SQLiteConnection(cfg.Properties["connection.connection_string"]))
+					{
+						con.Open();
+						using (SQLiteCommand command = con.CreateCommand())
+						{
+							command.CommandText = "vacuum;";
+							command.ExecuteNonQuery();
+						}
+						con.Close();
+					}
+#endif
+				}
+				catch(Exception) {}
 
 				cfg.AddAssembly(typeof(Dao).Assembly);
 				if (!System.IO.File.Exists(db))
@@ -365,6 +385,7 @@ namespace XG.DB
 		public void Dispose ()
 		{
 			_allowRunning = false;
+			WriteToDatabase();
 
 			Servers.OnAdded -= ObjectAdded;
 			Servers.OnRemoved -= ObjectRemoved;

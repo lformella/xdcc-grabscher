@@ -198,6 +198,11 @@ namespace XG.Plugin.Irc
 
 					_connections.Remove(connection);
 				}
+				else
+				{
+					_log.Error("ServerDisconnected(" + aEventArgs.Value1 + ") restarting");
+					connection.TryConnect();
+				}
 			}
 			else
 			{
