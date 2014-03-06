@@ -69,7 +69,8 @@ define(['./module'], function (i18n) {
 				"Max Download Speed": "Max. Download Geschw.",
 				"Error Count": "Fehler Zähler",
 				"Success Count": "Erfolgs Zähler",
-				"Check user versions": "Überprüfe User Versionen",
+				"Shutdown": "Beenden",
+				"Do you really want to shutdown XG?": "Willst du XG wirklich beenden?",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */

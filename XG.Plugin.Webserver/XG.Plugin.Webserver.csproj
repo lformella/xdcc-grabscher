@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Nancy\ShutdownModule.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartUp.cs" />
@@ -588,6 +589,9 @@
     <EmbeddedResource Include="Resources\js\controller\dialog\error.js" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\templates\" />
+    <EmbeddedResource Include="Resources\templates\dialog\shutdown.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dialog\shutdown.js" />
   </ItemGroup>
 </Project>

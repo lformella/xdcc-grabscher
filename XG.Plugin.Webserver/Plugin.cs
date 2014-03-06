@@ -27,6 +27,7 @@ using System;
 using SharpRobin.Core;
 using XG.Config.Properties;
 using Microsoft.Owin.Hosting;
+using Nowin;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -69,6 +70,7 @@ namespace XG.Plugin.Webserver
 			Nancy.Helper.ApiKeys = ApiKeys;
 			Nancy.Helper.Salt = salt;
 			Nancy.Helper.PasswortHash = passwortHash;
+			Nancy.Helper.OnShutdown += Shutdown;
 
 			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{
@@ -85,8 +87,14 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Start();
 		}
 
+		void Shutdown(object sender, EventArgs e)
+		{
+			FireShutdown(sender);
+		}
+
 		protected override void StopRun()
 		{
+			Nancy.Helper.OnShutdown -= Shutdown;
 			_eventForwarder.Stop();
 			_server.Dispose();
 		}

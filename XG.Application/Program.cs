@@ -128,9 +128,14 @@ namespace XG.Application
 				if (File.Exists(shutdownFile))
 				{
 					FileSystem.DeleteFile(shutdownFile);
-					app.Stop();
+					app.Shutdown(null, null);
 					break;
 				}
+				if (app.ShutdownInProgress)
+				{
+					break;
+				}
+
 				Thread.Sleep(1000);
 			}
 

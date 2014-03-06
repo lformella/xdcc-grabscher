@@ -23,12 +23,27 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using XG.Model.Domain;
 
 namespace XG.Plugin
 {
 	public abstract class APlugin : AWorker
 	{
+		#region EVENTS
+
+		public virtual event EventHandler<EventArgs> OnShutdown;
+
+		protected void FireShutdown(object aSender)
+		{
+			if (OnShutdown != null)
+			{
+				OnShutdown(aSender, null);
+			}
+		}
+
+		#endregion
+
 		#region REPOSITORIES
 
 		Servers _servers;

@@ -27,7 +27,8 @@ define([
 	'./api',
 	'./config',
 	'./error',
-	'./password',
+	'./password', ,
 	'./serverChannel',
+	'./shutdown',
 	'./xdcc'
 ], function () {});

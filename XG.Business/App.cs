@@ -59,6 +59,12 @@ namespace XG.Business
 			}
 		}
 
+		public bool ShutdownInProgress
+		{
+			get;
+			private set;
+		}
+
 		#endregion
 
 		#region FUNCTIONS
@@ -265,7 +271,15 @@ namespace XG.Business
 			aWorker.Notifications = Notifications;
 			aWorker.ApiKeys = ApiKeys;
 
+			aWorker.OnShutdown += Shutdown;
 			_workers.Add(aWorker);
+		}
+
+		public void Shutdown(object sender, EventArgs e)
+		{
+			ShutdownInProgress = true;
+			Log.Warn("OnShutdown() triggered by " + sender);
+			Stop();
 		}
 
 		#endregion

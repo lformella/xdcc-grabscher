@@ -1,51 +1,48 @@
-﻿// 
-//  Helper.cs
+//
+//  shutdown.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
 //  Author:
 //       Lars Formella <ich@larsformella.de>
-// 
+//
 //  Copyright (c) 2012 Lars Formella
-// 
+//
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 2 of the License, or
 //  (at your option) any later version.
-// 
+//
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-// 
+//
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-//  
+//
 
-using System;
-using XG.Model.Domain;
+define(['./module'], function (ng) {
+	'use strict';
 
-namespace XG.Plugin.Webserver.Nancy
-{
-	internal static class Helper
-	{
-		#region EVENTS
-
-		public static event EventHandler<EventArgs> OnShutdown;
-
-		public static void FireShutdown(object aSender)
+	ng.controller('ShutdownDialogCtrl', ['$scope', '$modalInstance', '$http', 'password',
+		function ($scope, $modalInstance, $http, password)
 		{
-			if (OnShutdown != null)
+			$scope.shutdown = function ()
 			{
-				OnShutdown(aSender, null);
-			}
+			    $http.post("/shutdown", password).success(
+					function ()
+					{
+					    $modalInstance.close();
+					}
+				).error(
+					function ()
+					{
+					    // well
+					}
+				);
+			};
 		}
-
-		#endregion
-
-		public static ApiKeys ApiKeys { get; set; }
-		public static string Salt { get; set; }
-		public static string PasswortHash { get; set; }
-	}
-}
+	]);
+});

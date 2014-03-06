@@ -1,5 +1,5 @@
-﻿// 
-//  Helper.cs
+// 
+//  ShutdownModule.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,29 +23,26 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using XG.Model.Domain;
+using Nancy;
+using Nancy.Responses;
+using System.IO;
 
 namespace XG.Plugin.Webserver.Nancy
 {
-	internal static class Helper
+	public class ShutdownModule : NancyModule
 	{
-		#region EVENTS
-
-		public static event EventHandler<EventArgs> OnShutdown;
-
-		public static void FireShutdown(object aSender)
+		public ShutdownModule()
 		{
-			if (OnShutdown != null)
+			Post["/shutdown"] = _ =>
 			{
-				OnShutdown(aSender, null);
-			}
+				var password = new StreamReader(Request.Body).ReadToEnd();
+				if (password == Helper.PasswortHash)
+				{
+					Helper.FireShutdown(this);
+					return HttpStatusCode.OK;
+				}
+				return HttpStatusCode.Forbidden;
+			};
 		}
-
-		#endregion
-
-		public static ApiKeys ApiKeys { get; set; }
-		public static string Salt { get; set; }
-		public static string PasswortHash { get; set; }
 	}
 }
