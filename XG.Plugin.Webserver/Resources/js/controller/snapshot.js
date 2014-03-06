@@ -98,10 +98,20 @@ define(['./module', 'jqFlot'], function (ng) {
 					return;
 				}
 
-				var signalr = $scope.proxy.server.getSnapshots($scope.days);
-				if (signalr != null)
+				var signalR = null;
+				try
 				{
-					signalr.done(
+					signalR = $scope.proxy.server.getSnapshots($scope.days);
+				}
+				catch (e)
+				{
+					var message = { source: { status: 404 }};
+					$rootScope.$emit('AnErrorOccurred', message);
+				}
+
+				if (signalR != null)
+				{
+					signalR.done(
 						function (data)
 						{
 							$.each(data, function (index, item)

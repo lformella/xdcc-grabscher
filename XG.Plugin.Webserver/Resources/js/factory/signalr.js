@@ -26,8 +26,8 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.factory('SignalrFactory', ['$injector', 'SignalrService', 'HelperService',
-		function ($injector, SignalrService, HelperService)
+	ng.factory('SignalrFactory', ['$rootScope', '$injector', 'SignalrService', 'HelperService',
+		function ($rootScope, $injector, SignalrService, HelperService)
 		{
 			var SignalrFactory = function(){};
 
@@ -105,13 +105,21 @@ define(['./module'], function (ng) {
 					return;
 				}
 
-				if (parentGuid == undefined)
+				try
 				{
-					return this.proxy.server.add(name);
+					if (parentGuid == undefined)
+					{
+						return this.proxy.server.add(name);
+					}
+					else
+					{
+						return this.proxy.server.add(parentGuid, name);
+					}
 				}
-				else
+				catch (e)
 				{
-					return this.proxy.server.add(parentGuid, name);
+					var message = { source: { status: 404 }};
+					$rootScope.$emit('AnErrorOccurred', message);
 				}
 			};
 
@@ -123,7 +131,15 @@ define(['./module'], function (ng) {
 				}
 
 				object.Active = true;
-				return this.proxy.server.remove(object.Guid);
+				try
+				{
+					return this.proxy.server.remove(object.Guid);
+				}
+				catch (e)
+				{
+					var message = { source: { status: 404 }};
+					$rootScope.$emit('AnErrorOccurred', message);
+				}
 			};
 
 			SignalrFactory.prototype.enable = function (object)
@@ -134,7 +150,15 @@ define(['./module'], function (ng) {
 				}
 
 				object.Active = true;
-				return this.proxy.server.enable(object.Guid);
+				try
+				{
+					return this.proxy.server.enable(object.Guid);
+				}
+				catch (e)
+				{
+					var message = { source: { status: 404 }};
+					$rootScope.$emit('AnErrorOccurred', message);
+				}
 			};
 
 			SignalrFactory.prototype.disable = function (object)
@@ -145,7 +169,15 @@ define(['./module'], function (ng) {
 				}
 
 				object.Active = true;
-				return this.proxy.server.disable(object.Guid);
+				try
+				{
+					return this.proxy.server.disable(object.Guid);
+				}
+				catch (e)
+				{
+					var message = { source: { status: 404 }};
+					$rootScope.$emit('AnErrorOccurred', message);
+				}
 			};
 
 			SignalrFactory.prototype.flip = function(object)

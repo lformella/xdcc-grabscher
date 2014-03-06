@@ -252,9 +252,7 @@ define(['./module', 'jqFlot', 'jqFlot.time', 'jqFlot.pie', 'jqFlot.axislabels'],
 				width = $(window).width();
 				height = $(window).height();
 
-				//$("#searchForm .dropdown-menu").css("max-height", (height - 20) + "px");
-
-				$el.width(width - 260).height(height - 70);
+				$el.width(width - 300).height(height - 100);
 				render();
 			}
 		};

@@ -80,7 +80,7 @@ namespace XG.Plugin.Irc
 				if ((DateTime.Now - LastContact).TotalSeconds > _watchSeconds)
 				{
 					_connectionWatchEnabled = false;
-					_log.Error("WatchConnection() connection seems hanging");
+					_log.Error("WatchConnection() connection seems hanging since more than " + _watchSeconds + " seconds");
 					RepairConnection();
 				}
 				Thread.Sleep(500);

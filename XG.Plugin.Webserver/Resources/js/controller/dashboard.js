@@ -58,20 +58,34 @@ define(['./module'], function (ng) {
 
 			$scope.refreshSnapshot = function ()
 			{
-				$scope.proxy.server.getFlotSnapshot().done(
-					function (data)
-					{
-						var liveSnapshot = {};
-						$.each(data, function (index, item)
-						{
-							liveSnapshot[item.type] = item.data[0][1];
-						});
-						liveSnapshot[Enum.SnapshotValue.FileSize] = liveSnapshot[Enum.SnapshotValue.FileSizeDownloaded] + liveSnapshot[Enum.SnapshotValue.FileSizeMissing];
+				var signalR = null;
+				try
+				{
+					signalR = $scope.proxy.server.getFlotSnapshot();
+				}
+				catch (e)
+				{
+					var message = { source: { status: 404 }};
+					$rootScope.$emit('AnErrorOccurred', message);
+				}
 
-						$scope.snapshot = liveSnapshot;
-						$scope.$apply();
-					}
-				);
+				if (signalR != null)
+				{
+					signalR.done(
+						function (data)
+						{
+							var liveSnapshot = {};
+							$.each(data, function (index, item)
+							{
+								liveSnapshot[item.type] = item.data[0][1];
+							});
+							liveSnapshot[Enum.SnapshotValue.FileSize] = liveSnapshot[Enum.SnapshotValue.FileSizeDownloaded] + liveSnapshot[Enum.SnapshotValue.FileSizeMissing];
+
+							$scope.snapshot = liveSnapshot;
+							$scope.$apply();
+						}
+					);
+				}
 			};
 
 			$scope.refresh = true;

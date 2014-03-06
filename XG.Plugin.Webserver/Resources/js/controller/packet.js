@@ -84,7 +84,17 @@ define(['./module'], function (ng) {
 						sort = params.$params.sorting[sortBy];
 					}
 
-					var signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots == 1, params.$params.count, params.$params.page, sortBy, sort);
+					var signalR = null;
+					try
+					{
+						signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots == 1, params.$params.count, params.$params.page, sortBy, sort);
+					}
+					catch (e)
+					{
+						var message = { source: { status: 404 }};
+						$rootScope.$emit('AnErrorOccurred', message);
+					}
+
 					if (signalR != null)
 					{
 						signalR.done(

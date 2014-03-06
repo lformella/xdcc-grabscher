@@ -61,8 +61,20 @@ define(['./module'], function (ng) {
 				ipCookie('xg.password', password, { expires: 21, path: '/' });
 			});
 
+			$rootScope.$on('AnErrorOccurred', function (e, message)
+			{
+				$scope.openErrorDialog(message);
+			});
+
+			$scope.errorDialogIsOpen = false;
 			$scope.openErrorDialog = function (message)
 			{
+				if ($scope.errorDialogIsOpen)
+				{
+					return;
+				}
+				$scope.errorDialogIsOpen = true;
+
 				$modal.open({
 					keyboard: false,
 					backdrop: 'static',
