@@ -32,6 +32,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nancy, Version=0.22.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nancy.0.22.2\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Owin, Version=0.22.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nancy.Owin.0.22.2\lib\net40\Nancy.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Serialization.JsonNet, Version=0.22.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.22.2\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharpRobin">
       <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
     </Reference>
@@ -40,9 +56,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Security" />
     <Reference Include="System.IdentityModel" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -66,15 +79,6 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy">
-      <HintPath>..\packages\Nancy.0.22.0\lib\net40\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Owin">
-      <HintPath>..\packages\Nancy.Owin.0.22.0\lib\net40\Nancy.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Serialization.JsonNet">
-      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.22.0\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
@@ -174,17 +178,6 @@
     <EmbeddedResource Include="Scripts\ui-bootstrap-0.10.0.min.js" />
     <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.10.0.js" />
     <EmbeddedResource Include="Scripts\ui-bootstrap-tpls-0.10.0.min.js" />
-    <EmbeddedResource Include="Scripts\errors.json" />
-    <EmbeddedResource Include="Content\bootstrap-theme.min.css" />
-    <EmbeddedResource Include="Content\bootstrap-theme.css.map" />
-    <EmbeddedResource Include="Content\bootstrap-theme.css" />
-    <EmbeddedResource Include="Content\bootstrap.min.css" />
-    <EmbeddedResource Include="Content\bootstrap.css" />
-    <EmbeddedResource Include="Content\bootstrap.css.map" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
     <EmbeddedResource Include="Resources\templates\dialog\api.html" />
     <EmbeddedResource Include="Resources\templates\dialog\config.html" />
     <EmbeddedResource Include="Resources\templates\dialog\error.html" />
@@ -201,6 +194,12 @@
     <EmbeddedResource Include="Resources\css\animation.css" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="Content\bootstrap-theme.css.map" />
+    <EmbeddedResource Include="Content\bootstrap.css.map" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\js\libs\angular-translate.min.js" />
     <EmbeddedResource Include="Resources\js\libs\css_browser_selector.js" />
@@ -210,42 +209,6 @@
     <EmbeddedResource Include="Resources\js\libs\jquery.knob.js" />
     <EmbeddedResource Include="Resources\js\libs\ng-table.js" />
     <EmbeddedResource Include="Resources\js\libs\sha256.js" />
-    <EmbeddedResource Include="Scripts\require.js" />
-    <EmbeddedResource Include="Scripts\r.js" />
-    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
-    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
     <EmbeddedResource Include="Scripts\json2.js" />
     <EmbeddedResource Include="Scripts\json2.min.js" />
     <EmbeddedResource Include="Content\normalize.css" />
@@ -263,6 +226,7 @@
     <EmbeddedResource Include="Resources\js\filter\formatter\channel.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\notification.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\server.js" />
+    <EmbeddedResource Include="Resources\css\animate.css" />
     <EmbeddedResource Include="Scripts\angular-animate.min.js.map" />
     <EmbeddedResource Include="Scripts\angular-cookies.min.js.map" />
     <EmbeddedResource Include="Scripts\angular-loader.min.js.map" />
@@ -271,7 +235,8 @@
     <EmbeddedResource Include="Scripts\angular-sanitize.min.js.map" />
     <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
     <EmbeddedResource Include="Scripts\angular.min.js.map" />
-    <EmbeddedResource Include="Resources\css\animate.css" />
+    <EmbeddedResource Include="Scripts\errors.json" />
+    <EmbeddedResource Include="Scripts\version.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">
@@ -306,6 +271,34 @@
     <EmbeddedResource Include="Resources\js\controller\main.js" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dashboard.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\directive\index.js" />
+    <EmbeddedResource Include="Resources\js\directive\knob.js" />
+    <EmbeddedResource Include="Resources\js\directive\module.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\directive\focus.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dialog\config.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dialog\error.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\templates\dialog\shutdown.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\js\controller\dialog\shutdown.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\bootstrap-theme.css" />
+    <EmbeddedResource Include="Content\bootstrap-theme.min.css" />
+    <EmbeddedResource Include="Content\bootstrap.css" />
+    <EmbeddedResource Include="Content\bootstrap.min.css" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
     <EmbeddedResource Include="Scripts\angular-animate.js" />
     <EmbeddedResource Include="Scripts\angular-animate.min.js" />
     <EmbeddedResource Include="Scripts\angular-cookies.js" />
@@ -325,6 +318,42 @@
     <EmbeddedResource Include="Scripts\angular-touch.min.js" />
     <EmbeddedResource Include="Scripts\angular.js" />
     <EmbeddedResource Include="Scripts\angular.min.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
+    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
+    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_af-na.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_af-za.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_af.js" />
@@ -570,28 +599,7 @@
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zh.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zu-za.js" />
     <EmbeddedResource Include="Scripts\i18n\angular-locale_zu.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\controller\dashboard.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\directive\index.js" />
-    <EmbeddedResource Include="Resources\js\directive\knob.js" />
-    <EmbeddedResource Include="Resources\js\directive\module.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\directive\focus.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\controller\dialog\config.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\controller\dialog\error.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\templates\dialog\shutdown.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\controller\dialog\shutdown.js" />
+    <EmbeddedResource Include="Scripts\r.js" />
+    <EmbeddedResource Include="Scripts\require.js" />
   </ItemGroup>
 </Project>
