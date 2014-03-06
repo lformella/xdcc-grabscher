@@ -90,6 +90,13 @@ namespace XG.DB
 				string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
 				cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
 
+				cfg.AddAssembly(typeof(Dao).Assembly);
+				if (!System.IO.File.Exists(db))
+				{
+					new SchemaExport(cfg).Execute(false, true, false);
+					insertVersion = true;
+				}
+
 				try
 				{
 #if __MonoCS__
@@ -117,13 +124,6 @@ namespace XG.DB
 #endif
 				}
 				catch(Exception) {}
-
-				cfg.AddAssembly(typeof(Dao).Assembly);
-				if (!System.IO.File.Exists(db))
-				{
-					new SchemaExport(cfg).Execute(false, true, false);
-					insertVersion = true;
-				}
 			}
 
 			_sessions = cfg.BuildSessionFactory();
