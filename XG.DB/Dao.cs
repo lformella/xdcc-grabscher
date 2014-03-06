@@ -228,18 +228,8 @@ namespace XG.DB
 				return;
 			}
 
-			lock (_objectsAdded)
-			{
-				if (!_objectsAdded.Contains(eventArgs.Value2))
-				{
-					_objectsAdded.Add(eventArgs.Value2);
-				}
-			}
-
-			if (eventArgs.Value2 is Server || eventArgs.Value2 is Channel || eventArgs.Value2 is File || eventArgs.Value2 is Search || eventArgs.Value2 is ApiKey)
-			{
-				WriteToDatabase();
-			}
+			TryAddToList(_objectsAdded, eventArgs.Value2);
+			CheckIfWriteToDatabaseIsNeeded(eventArgs.Value2);
 		}
 
 		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
@@ -249,42 +239,38 @@ namespace XG.DB
 				return;
 			}
 
-			lock (_objectsRemoved)
-			{
-				if (!_objectsRemoved.Contains(eventArgs.Value2))
-				{
-					_objectsRemoved.Add(eventArgs.Value2);
-				}
-			}
-
-			if (eventArgs.Value2 is Server || eventArgs.Value2 is Channel || eventArgs.Value2 is File || eventArgs.Value2 is Search || eventArgs.Value2 is ApiKey)
-			{
-				WriteToDatabase();
-			}
+			TryAddToList(_objectsRemoved, eventArgs.Value2);
+			CheckIfWriteToDatabaseIsNeeded(eventArgs.Value2);
 		}
 
 		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
 		{
-			lock (_objectsChanged)
-			{
-				if (!_objectsChanged.Contains(eventArgs.Value1))
-				{
-					_objectsChanged.Add(eventArgs.Value1);
-				}
-			}
+			TryAddToList(_objectsChanged, eventArgs.Value1);
 		}
 
 		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
 		{
-			lock (_objectsChanged)
+			TryAddToList(_objectsChanged, eventArgs.Value1);
+			WriteToDatabase();
+		}
+
+		void TryAddToList(List<AObject> aList, AObject aObject)
+		{
+			lock (aList)
 			{
-				if (!_objectsChanged.Contains(eventArgs.Value1))
+				if (!aList.Contains(aObject))
 				{
-					_objectsChanged.Add(eventArgs.Value1);
+					aList.Add(aObject);
 				}
 			}
+		}
 
-			WriteToDatabase();
+		void CheckIfWriteToDatabaseIsNeeded(AObject aObject)
+		{
+			if (aObject is Server || aObject is Channel || aObject is File || aObject is Search || aObject is ApiKey)
+			{
+				WriteToDatabase();
+			}
 		}
 
 		void DatabaseSync()
