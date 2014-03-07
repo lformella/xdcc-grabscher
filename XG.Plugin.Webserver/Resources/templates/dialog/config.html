@@ -114,21 +114,6 @@
 
 			<div class="form-horizontal">
 				<div class="form-group">
-					<label class="col-lg-3 control-label"><span translate>Elasticsearch</span> *</label>
-					<div class="col-lg-1" ng-show="$parent.configReady">
-						<input type="checkbox" ng-model="$parent.config.UseElasticSearch">
-					</div>
-					<div class="col-lg-6" ng-show="$parent.configReady">
-						<input class="form-control" type="text" ng-model="$parent.config.ElasticSearchHost" ng-required="$parent.config.UseElasticSearch" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Host'|translate}}" title="{{'Host'|translate}}"/>
-					</div>
-					<div class="col-lg-2" ng-show="$parent.configReady">
-						<input class="form-control" type="number" ng-model="$parent.config.ElasticSearchPort" ng-required="$parent.config.UseElasticSearch" min="1" max="65535" ng-disabled="!$parent.config.UseElasticSearch" placeholder="{{'Port'|translate}}" title="{{'Port'|translate}}"/>
-					</div>
-				</div>
-			</div>
-
-			<div class="form-horizontal">
-				<div class="form-group">
 					<label class="col-lg-3 control-label"><span translate>Jabber</span> *</label>
 					<div class="col-lg-1" ng-show="$parent.configReady">
 						<input type="checkbox" ng-model="$parent.config.UseJabberClient">
