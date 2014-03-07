@@ -3910,7 +3910,7 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-1734188394</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.XG.com</td><td>0</td><td/><td>-1331508493</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>http://www.XG.com</td><td>0</td><td/><td>966967700</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>XG</td><td>0</td><td/><td>-1331508493</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-1734188394</td></row>
 	</table>
@@ -4152,7 +4152,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{9D5F6F7A-4BF0-4305-A9D8-3DE565B3EF48}</td></row>
 		<row><td>ISUSSignature</td><td>{E398C47F-EAAE-4412-B0D1-7FA0CFE69DA0}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewUpdateService,viewProject</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4530,7 +4530,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]XG.Application.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{3D03C5AC-ACDE-48D0-BA30-6E69AABBE76B}</td><td/></row>
 		<row><td>ProductName</td><td>XG</td><td/></row>
-		<row><td>ProductVersion</td><td>3.0.0.0</td><td/></row>
+		<row><td>ProductVersion</td><td>3.1.0.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>

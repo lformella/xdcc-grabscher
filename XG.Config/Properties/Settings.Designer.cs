@@ -408,7 +408,7 @@ namespace XG.Config.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3.0.0.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3.1.0.0")]
         public string XgVersion {
             get {
                 return ((string)(this["XgVersion"]));
