@@ -28,22 +28,10 @@ using XG.Model.Domain;
 
 namespace XG.Plugin
 {
+	public delegate void EmptyEventHandler();
+
 	public abstract class APlugin : AWorker
 	{
-		#region EVENTS
-
-		public virtual event EventHandler<EventArgs> OnShutdown;
-
-		protected void FireShutdown(object aSender)
-		{
-			if (OnShutdown != null)
-			{
-				OnShutdown(aSender, null);
-			}
-		}
-
-		#endregion
-
 		#region REPOSITORIES
 
 		Servers _servers;

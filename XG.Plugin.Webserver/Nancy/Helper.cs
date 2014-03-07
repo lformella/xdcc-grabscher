@@ -32,13 +32,13 @@ namespace XG.Plugin.Webserver.Nancy
 	{
 		#region EVENTS
 
-		public static event EventHandler<EventArgs> OnShutdown;
+		public static event EmptyEventHandler OnShutdown;
 
-		public static void FireShutdown(object aSender)
+		public static void FireShutdown()
 		{
 			if (OnShutdown != null)
 			{
-				OnShutdown(aSender, null);
+				OnShutdown();
 			}
 		}
 

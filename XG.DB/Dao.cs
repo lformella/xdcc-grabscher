@@ -290,6 +290,11 @@ namespace XG.DB
 
 		void WriteToDatabase()
 		{
+			if (!_allowRunning)
+			{
+				return;
+			}
+
 			_lastSave = DateTime.Now;
 			AObject currentObj;
 
@@ -370,9 +375,6 @@ namespace XG.DB
 
 		public void Dispose ()
 		{
-			_allowRunning = false;
-			WriteToDatabase();
-
 			Servers.OnAdded -= ObjectAdded;
 			Servers.OnRemoved -= ObjectRemoved;
 			Servers.OnChanged -= ObjectChanged;
@@ -392,6 +394,9 @@ namespace XG.DB
 			ApiKeys.OnRemoved -= ObjectRemoved;
 			ApiKeys.OnChanged -= ObjectChanged;
 			ApiKeys.OnEnabledChanged -= ObjectEnabledChanged;
+
+			WriteToDatabase();
+			_allowRunning = false;
 
 			_sessions.Dispose();
 		}

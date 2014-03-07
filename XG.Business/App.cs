@@ -67,6 +67,20 @@ namespace XG.Business
 
 		#endregion
 
+		#region EVENTS
+
+		public virtual event EmptyEventHandler OnShutdownComplete;
+
+		protected void FireShutdownComplete()
+		{
+			if (OnShutdownComplete != null)
+			{
+				OnShutdownComplete();
+			}
+		}
+
+		#endregion
+
 		#region FUNCTIONS
 
 		public App()
@@ -248,6 +262,17 @@ namespace XG.Business
 			Snapshots.Files = Files;
 		}
 
+		public void Shutdown(object sender)
+		{
+			if (!ShutdownInProgress)
+			{
+				ShutdownInProgress = true;
+				Log.Warn("OnShutdown() triggered by " + sender);
+				Stop();
+				FireShutdownComplete();
+			}
+		}
+
 		#endregion
 
 		#region AWorker
@@ -259,8 +284,8 @@ namespace XG.Business
 
 		protected override void StopRun()
 		{
-			_workers.StopAll();
 			_dao.Dispose();
+			_workers.StopAll();
 		}
 
 		public void AddWorker(APlugin aWorker)
@@ -271,15 +296,7 @@ namespace XG.Business
 			aWorker.Notifications = Notifications;
 			aWorker.ApiKeys = ApiKeys;
 
-			aWorker.OnShutdown += Shutdown;
 			_workers.Add(aWorker);
-		}
-
-		public void Shutdown(object sender, EventArgs e)
-		{
-			ShutdownInProgress = true;
-			Log.Warn("OnShutdown() triggered by " + sender);
-			Stop();
 		}
 
 		#endregion

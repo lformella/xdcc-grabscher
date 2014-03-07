@@ -25,6 +25,8 @@
 
 #if __MonoCS__
 using Mono.Unix;
+#else
+using System.Runtime.InteropServices;
 #endif
 using System;
 using System.IO;
@@ -43,8 +45,57 @@ namespace XG.Application
 {
 	class Programm
 	{
+#if !__MonoCS__
+		//http://stackoverflow.com/questions/4646827/on-exit-for-a-console-application
+		static bool ConsoleEventCallback(int eventType)
+		{
+			// http://msdn.microsoft.com/en-us/library/ms683242%28v=vs.85%29.aspx
+			// CTRL_C_EVENT = 0
+			// CTRL_BREAK_EVENT = 1
+			// CTRL_CLOSE_EVENT = 2
+			// CTRL_LOGOFF_EVENT = 5
+			// CTRL_SHUTDOWN_EVENT = 6
+			if (eventType == 0 || eventType == 2 || eventType == 6)
+			{
+				app.Shutdown(handler);
+			}
+			return false;
+		}
+		static ConsoleEventDelegate handler;
+		delegate bool ConsoleEventDelegate(int eventType);
+
+		[DllImport("kernel32.dll", SetLastError = true)]
+		static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
+#endif
+
+		static App app;
+
 		public static void Main(string[] args)
 		{
+#if !__MonoCS__
+			handler = new ConsoleEventDelegate(ConsoleEventCallback);
+			SetConsoleCtrlHandler(handler, true);
+#else
+			// http://stackoverflow.com/questions/6546509/detect-when-console-application-is-closing-killed
+			UnixSignal[] signals = new UnixSignal []
+			{
+				new UnixSignal (Mono.Unix.Native.Signum.SIGABRT),
+				new UnixSignal (Mono.Unix.Native.Signum.SIGINT),
+				//new UnixSignal (Mono.Unix.Native.Signum.SIGKILL),
+				new UnixSignal (Mono.Unix.Native.Signum.SIGQUIT),
+				new UnixSignal (Mono.Unix.Native.Signum.SIGTERM),
+				//new UnixSignal (Mono.Unix.Native.Signum.SIGSTOP),
+				new UnixSignal (Mono.Unix.Native.Signum.SIGTSTP)
+			};
+
+			new Thread (delegate ()
+			{
+				// Wait for a signal to be delivered
+				UnixSignal.WaitAny(signals, -1);
+				app.Shutdown("UnixSignal");
+			}).Start();
+#endif
+
 			if (string.IsNullOrWhiteSpace(Settings.Default.TempPath))
 			{
 				Settings.Default.TempPath = Settings.Default.GetAppDataPath() + "tmp";
@@ -103,7 +154,7 @@ namespace XG.Application
 			}
 #endif
 
-			var app = new App();
+			app = new App();
 
 			app.AddWorker(new Plugin.Irc.Plugin());
 			if (Settings.Default.UseJabberClient)
@@ -117,29 +168,12 @@ namespace XG.Application
 			if (Settings.Default.UseWebserver)
 			{
 				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
+				webServer.OnShutdown += delegate { app.Shutdown(webServer); };
 				app.AddWorker(webServer);
 			}
 
+			app.OnShutdownComplete += delegate { Environment.Exit(0); };
 			app.Start("App");
-
-			string shutdownFile = Settings.Default.GetAppDataPath() + "shutdown";
-			while (true)
-			{
-				if (File.Exists(shutdownFile))
-				{
-					FileSystem.DeleteFile(shutdownFile);
-					app.Shutdown(null, null);
-					break;
-				}
-				if (app.ShutdownInProgress)
-				{
-					break;
-				}
-
-				Thread.Sleep(1000);
-			}
-
-			Environment.Exit(0);
 		}
 	}
 }

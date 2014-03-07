@@ -46,6 +46,20 @@ namespace XG.Plugin.Webserver
 
 		#endregion
 
+		#region EVENTS
+
+		public virtual event EmptyEventHandler OnShutdown;
+
+		protected void FireShutdown()
+		{
+			if (OnShutdown != null)
+			{
+				OnShutdown();
+			}
+		}
+
+		#endregion
+
 		string Hash(string aStr = null)
 		{
 			byte[] bytes = aStr == null ? BitConverter.GetBytes(new Random().Next()) : Encoding.UTF8.GetBytes(aStr);
@@ -70,7 +84,7 @@ namespace XG.Plugin.Webserver
 			Nancy.Helper.ApiKeys = ApiKeys;
 			Nancy.Helper.Salt = salt;
 			Nancy.Helper.PasswortHash = passwortHash;
-			Nancy.Helper.OnShutdown += Shutdown;
+			Nancy.Helper.OnShutdown += FireShutdown;
 
 			var options = new StartOptions("http://*:" + Settings.Default.WebserverPort)
 			{
@@ -87,14 +101,9 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Start();
 		}
 
-		void Shutdown(object sender, EventArgs e)
-		{
-			FireShutdown(sender);
-		}
-
 		protected override void StopRun()
 		{
-			Nancy.Helper.OnShutdown -= Shutdown;
+			Nancy.Helper.OnShutdown -= FireShutdown;
 			_eventForwarder.Stop();
 			_server.Dispose();
 		}

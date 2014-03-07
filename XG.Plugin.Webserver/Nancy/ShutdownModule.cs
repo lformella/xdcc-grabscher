@@ -38,7 +38,7 @@ namespace XG.Plugin.Webserver.Nancy
 				var password = new StreamReader(Request.Body).ReadToEnd();
 				if (password == Helper.PasswortHash)
 				{
-					Helper.FireShutdown(this);
+					Helper.FireShutdown();
 					return HttpStatusCode.OK;
 				}
 				return HttpStatusCode.Forbidden;
