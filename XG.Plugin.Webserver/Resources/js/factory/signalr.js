@@ -109,11 +109,11 @@ define(['./module'], function (ng) {
 				{
 					if (parentGuid == undefined)
 					{
-						return this.proxy.server.add(name);
+						this.proxy.server.add(name);
 					}
 					else
 					{
-						return this.proxy.server.add(parentGuid, name);
+						this.proxy.server.add(parentGuid, name);
 					}
 				}
 				catch (e)
@@ -133,10 +133,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-					return this.proxy.server.remove(object.Guid);
+				    this.proxy.server.remove(object.Guid);
+				    object.Active = false;
+				    object.Waiting = true;
 				}
 				catch (e)
 				{
+				    object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -152,10 +155,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-					return this.proxy.server.enable(object.Guid);
+				    this.proxy.server.enable(object.Guid);
+				    object.Active = false;
+				    object.Waiting = true;
 				}
 				catch (e)
 				{
+				    object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -171,10 +177,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-					return this.proxy.server.disable(object.Guid);
+				    this.proxy.server.disable(object.Guid);
+				    object.Active = false;
+				    object.Waiting = true;
 				}
 				catch (e)
 				{
+				    object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
