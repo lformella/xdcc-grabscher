@@ -58,6 +58,7 @@ namespace XG.DB
 		public ApiKeys ApiKeys { get; private set; }
 
 		bool _allowRunning { get; set; }
+		bool _writeInProgress { get; set; }
 		DateTime _lastSave;
 		List<AObject> _objectsAdded = new List<AObject>();
 		List<AObject> _objectsChanged = new List<AObject>();
@@ -290,11 +291,12 @@ namespace XG.DB
 
 		void WriteToDatabase()
 		{
-			if (!_allowRunning)
+			if (!_allowRunning || _writeInProgress)
 			{
 				return;
 			}
 
+			_writeInProgress = true;
 			_lastSave = DateTime.Now;
 			AObject currentObj;
 
@@ -370,11 +372,14 @@ namespace XG.DB
 				Log.Fatal("WriteToDatabase() removed ", ex);
 			}
 
+			_writeInProgress = false;
 			GC.Collect();
 		}
 
 		public void Dispose ()
 		{
+			_allowRunning = false;
+
 			Servers.OnAdded -= ObjectAdded;
 			Servers.OnRemoved -= ObjectRemoved;
 			Servers.OnChanged -= ObjectChanged;
@@ -395,9 +400,10 @@ namespace XG.DB
 			ApiKeys.OnChanged -= ObjectChanged;
 			ApiKeys.OnEnabledChanged -= ObjectEnabledChanged;
 
-			WriteToDatabase();
-			_allowRunning = false;
-
+			while (_writeInProgress)
+			{
+				Thread.Sleep(500);
+			}
 			_sessions.Dispose();
 		}
 	}

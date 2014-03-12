@@ -198,7 +198,6 @@ namespace XG.Plugin.Irc
 			// the connection didnt even connected to the given ip and port
 			else
 			{
-				// lets disable the packet, because the bot seems to have broken config or is firewalled
 				_log.Error("StopWriting(" + FileName + ") connection did not work");
 			}
 

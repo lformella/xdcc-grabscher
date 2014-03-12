@@ -87,12 +87,12 @@ namespace XG.Plugin.Irc
 
 		protected override void StopRun()
 		{
-			foreach (var connection in _connections)
+			foreach (var connection in _connections.ToArray())
 			{
 				connection.Stop();
 			}
 
-			foreach (var download in _botDownloads)
+			foreach (var download in _botDownloads.ToArray())
 			{
 				download.Stop();
 			}
@@ -188,7 +188,7 @@ namespace XG.Plugin.Irc
 			IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aEventArgs.Value1);
 			if (connection != null)
 			{
-				if (!aEventArgs.Value1.Enabled)
+				if (!AllowRunning || !aEventArgs.Value1.Enabled)
 				{
 					connection.OnDisconnected -= ServerDisconnected;
 					connection.OnNotificationAdded -= AddNotification;
@@ -261,6 +261,11 @@ namespace XG.Plugin.Irc
 				download.OnDisconnected -= BotDisconnected;
 				download.OnNotificationAdded -= AddNotification;
 				_botDownloads.Remove(download);
+
+				if (!AllowRunning)
+				{
+					return;
+				}
 
 				try
 				{

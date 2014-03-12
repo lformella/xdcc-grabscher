@@ -324,7 +324,7 @@ namespace XG.Plugin.Irc
 						Client.RfcJoin(channels);
 					}
 				}
-				StartWatch(Settings.Default.ChannelWaitTimeShort * 5, Server + " ConnectionWatch");
+				StartWatch(Settings.Default.ChannelWaitTimeMedium, Server + " ConnectionWatch");
 
 				Client.Listen();
 			};

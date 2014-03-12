@@ -129,10 +129,15 @@ namespace XG.Plugin.Irc
 							Int64 max = Settings.Default.DownloadPerReadBytes;
 							byte[] data = null;
 
+							// start watch to look if our connection is still receiving data
+							StartWatch(Settings.Default.DownloadTimeoutTime, IP + ":" + Port + " ConnectionWatch");
+
 							int failCounter = 0;
 							do
 							{
 								data = reader.ReadBytes((int) (missing < max ? missing : max));
+								// update watch thread
+								LastContact = DateTime.Now;
 
 								if (data != null && data.Length != 0)
 								{
@@ -144,7 +149,7 @@ namespace XG.Plugin.Irc
 									failCounter++;
 									_log.Warn("StartRun() no data received - " + failCounter);
 
-									if (failCounter > 5)
+									if (failCounter > Settings.Default.MaxNoDateReceived)
 									{
 										_log.Warn("StartRun() no data received - skipping");
 										break;
@@ -277,9 +282,6 @@ namespace XG.Plugin.Irc
 			}
 
 			FireNotificationAdded(Notification.Types.BotConnected, Packet);
-
-			// start watch to look if our connection is still receiving data
-			StartWatch(Settings.Default.UpdateDownloadTime * 10, IP + ":" + Port + " ConnectionWatch");
 		}
 
 		protected void FinishWriting()
@@ -459,7 +461,6 @@ namespace XG.Plugin.Irc
 			{
 				DateTime old = _speedCalcTime;
 				_speedCalcTime = DateTime.Now;
-				LastContact = DateTime.Now;
 				File.Speed = Convert.ToInt64(_speedCalcSize / (_speedCalcTime - old).TotalSeconds);
 
 				File.Commit();
