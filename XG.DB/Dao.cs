@@ -228,6 +228,10 @@ namespace XG.DB
 			{
 				return;
 			}
+			if (_objectsChanged.Contains(eventArgs.Value2) || _objectsRemoved.Contains(eventArgs.Value2))
+			{
+				return;
+			}
 
 			TryAddToList(_objectsAdded, eventArgs.Value2);
 			CheckIfWriteToDatabaseIsNeeded(eventArgs.Value2);
@@ -241,11 +245,18 @@ namespace XG.DB
 			}
 
 			TryAddToList(_objectsRemoved, eventArgs.Value2);
+			TryRemoveFromList(_objectsAdded, eventArgs.Value2);
+			TryRemoveFromList(_objectsChanged, eventArgs.Value2);
 			CheckIfWriteToDatabaseIsNeeded(eventArgs.Value2);
 		}
 
 		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
 		{
+			if (_objectsAdded.Contains(eventArgs.Value1) || _objectsRemoved.Contains(eventArgs.Value1))
+			{
+				return;
+			}
+
 			TryAddToList(_objectsChanged, eventArgs.Value1);
 		}
 
@@ -262,6 +273,17 @@ namespace XG.DB
 				if (!aList.Contains(aObject))
 				{
 					aList.Add(aObject);
+				}
+			}
+		}
+
+		void TryRemoveFromList(List<AObject> aList, AObject aObject)
+		{
+			lock (aList)
+			{
+				if (aList.Contains(aObject))
+				{
+					aList.Remove(aObject);
 				}
 			}
 		}
