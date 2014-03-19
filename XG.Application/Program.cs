@@ -25,10 +25,12 @@
 
 #if __MonoCS__
 using Mono.Unix;
+using Mono.Unix.Native;
 #else
 using System.Runtime.InteropServices;
 #endif
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using log4net;
@@ -77,21 +79,31 @@ namespace XG.Application
 			SetConsoleCtrlHandler(handler, true);
 #else
 			// http://stackoverflow.com/questions/6546509/detect-when-console-application-is-closing-killed
-			UnixSignal[] signals = new UnixSignal []
+			var signums = new Signum []
 			{
-				new UnixSignal (Mono.Unix.Native.Signum.SIGABRT),
-				new UnixSignal (Mono.Unix.Native.Signum.SIGINT),
-				//new UnixSignal (Mono.Unix.Native.Signum.SIGKILL),
-				new UnixSignal (Mono.Unix.Native.Signum.SIGQUIT),
-				new UnixSignal (Mono.Unix.Native.Signum.SIGTERM),
-				//new UnixSignal (Mono.Unix.Native.Signum.SIGSTOP),
-				new UnixSignal (Mono.Unix.Native.Signum.SIGTSTP)
+				Signum.SIGABRT,
+				Signum.SIGINT,
+				Signum.SIGKILL,
+				Signum.SIGQUIT,
+				Signum.SIGTERM,
+				Signum.SIGSTOP,
+				Signum.SIGTSTP
 			};
+
+			List<UnixSignal> signals = new List<UnixSignal>();
+			foreach (var signum in signums)
+			{
+				try
+				{
+					signals.Add(new UnixSignal(signum));
+				}
+				catch(Exception) {}
+			}
 
 			new Thread (delegate ()
 			{
 				// Wait for a signal to be delivered
-				UnixSignal.WaitAny(signals, -1);
+				UnixSignal.WaitAny(signals.ToArray(), -1);
 				app.Shutdown("UnixSignal");
 			}).Start();
 #endif
@@ -147,10 +159,18 @@ namespace XG.Application
 #if __MonoCS__
 			PlatformID id = Environment.OSVersion.Platform;
 			// Don't allow running as root on Linux or Mac
-			if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo(UnixEnvironment.UserName).UserId == 0)
+			try
 			{
-				LogManager.GetLogger(typeof(Programm)).Fatal("Sorry, you can't run XG with these permissions. Safety first!");
-				Environment.Exit(-1);
+				if ((id == PlatformID.Unix || id == PlatformID.MacOSX) && new UnixUserInfo(UnixEnvironment.UserName).UserId == 0)
+				{
+					LogManager.GetLogger(typeof(Programm)).Fatal("Sorry, you can't run XG with these permissions. Safety first!");
+					Environment.Exit(-1);
+				}
+			}
+			catch (ArgumentException)
+			{
+				// arch linux fix
+				// https://github.com/lformella/xdcc-grabscher/issues/36
 			}
 #endif
 
