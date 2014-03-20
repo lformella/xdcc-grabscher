@@ -34,22 +34,18 @@ namespace XG.Test.Model
 		[Test]
 		public void DifferenceTest()
 		{
-			string name1;
+			string name1 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
 			string name2;
 
-			name1 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
 			name2 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
 			Assert.AreEqual(0.00, name1.Difference(name2));
 
-			name1 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
 			name2 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook";
 			Assert.AreEqual(0.08, name1.Difference(name2));
 
-			name1 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
 			name2 = "F Scott Fitzgerald - The Great Gatsby epub ebook";
 			Assert.AreEqual(0.23, name1.Difference(name2));
 
-			name1 = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
 			name2 = "[ebook] F Scott Fitzgerald - The Great Gatsby";
 			Assert.AreEqual(0.56, name1.Difference(name2));
 		}

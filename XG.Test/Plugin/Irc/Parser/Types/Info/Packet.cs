@@ -48,7 +48,7 @@ namespace XG.Test.Plugin.Irc.Parser.Types.Info
 			Assert.AreEqual(150 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("[ABOOK] Fanny_Mueller--Grimms_Maerchen_(Abook)-2CD-DE-2008-OMA.rar", tPack.Name);
 
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "#1� 0x [� 5M] 5meg", ReceiveType.QueryMessage));
+			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "#1  0x [  5M] 5meg", ReceiveType.QueryMessage));
 			tPack = Bot.Packet(1);
 			Assert.AreEqual(5 * 1024 * 1024, tPack.Size);
 			Assert.AreEqual("5meg", tPack.Name);

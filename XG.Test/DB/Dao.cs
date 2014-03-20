@@ -46,6 +46,7 @@ namespace XG.Test.DB
 		}
 			
 		[Test]
+		[Ignore]
 		public void DaoWriteObjectsTest()
 		{
 			using (var dao = new XG.DB.Dao())

@@ -38,7 +38,7 @@ namespace XG.Test.Model.Domain
 			const long fileSize = 440044;
 			string result = XG.Model.Domain.Helper.ShrinkFileName(fileName, fileSize);
 
-			Assert.AreEqual("thisisanevilf1lenamet3sttxt.440044" + Path.DirectorySeparatorChar, result);
+			Assert.AreEqual("thisisanevilf1lenamet3sttxt.440044", result);
 		}
 	}
 }
