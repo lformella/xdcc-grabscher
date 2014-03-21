@@ -73,9 +73,20 @@ namespace XG.Model
 
 			foreach (string value in values)
 			{
-				if (str.IndexOf(value, StringComparison.OrdinalIgnoreCase) < 0)
+				if (value.StartsWith("-"))
 				{
-					return false;
+					string valueReal = value.Substring(1);
+					if (str.IndexOf(valueReal, StringComparison.OrdinalIgnoreCase) >= 0)
+					{
+						return false;
+					}
+				}
+				else
+				{
+					if (str.IndexOf(value, StringComparison.OrdinalIgnoreCase) < 0)
+					{
+						return false;
+					}
 				}
 			}
 
