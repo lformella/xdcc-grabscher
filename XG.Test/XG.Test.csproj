@@ -101,6 +101,7 @@
     <Compile Include="Plugin\Irc\Parser\Types\XdccList.cs" />
     <Compile Include="Config\Properties\Settings.cs" />
     <Compile Include="Model\Extensions.cs" />
+    <Compile Include="Plugin\ElasticSearch\Object\Packet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -201,4 +202,8 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Plugin\ElasticSearch\" />
+    <Folder Include="Plugin\ElasticSearch\Object\" />
+  </ItemGroup>
 </Project>

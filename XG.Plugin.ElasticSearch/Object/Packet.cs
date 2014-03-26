@@ -102,7 +102,13 @@ namespace XG.Plugin.ElasticSearch.Object
 			{
 				try
 				{
-					return "xdcc://" + Object.Parent.Parent.Parent.Name + "/" + Object.Parent.Parent.Parent.Name + "/" + Object.Parent.Parent.Name + "/" + Object.Parent.Name + "/#" + Object.Id + "/" + Object.Name + "/";
+					return "xdcc://" + Object.Parent.Parent.Parent.Name + 
+						(Object.Parent.Parent.Parent.Port == 6667 ? "" : ":" + Object.Parent.Parent.Parent.Port) + 
+						"/" + Object.Parent.Parent.Parent.Name + 
+						"/" + Object.Parent.Parent.Name + 
+						"/" + Object.Parent.Name + 
+						"/#" + String.Format("{0:0000}", Object.Id) + 
+						"/" + Object.Name + "/";
 				}
 				catch (NullReferenceException)
 				{
