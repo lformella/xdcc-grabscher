@@ -37,6 +37,7 @@ namespace XG.Test.DB
 		Random random = new Random();
 
 		[Test]
+		[Ignore]
 		public void DaoLoadObjectsTest()
 		{
 			using(var dao = new XG.DB.Dao())

@@ -65,7 +65,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					FireJoinChannel(this, new EventArgs<Model.Domain.Server, string>(aConnection.Server, channel));
 				}
 
-				match = Helper.Match(aMessage, @".*restricted to only MOVIEGODS users! /Part (?<channels>.*) if you want to download from .*");
+				match = Helper.Match(aMessage, @".*restricted to only.* /Part (?<channels>.*) if you want to download from .*");
 				if (match.Success)
 				{
 					List<string> channelToPart = new List<string>();
