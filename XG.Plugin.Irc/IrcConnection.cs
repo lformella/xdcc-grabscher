@@ -94,6 +94,7 @@ namespace XG.Plugin.Irc
 					_parser.OnJoinChannelsFromBot -= JoinChannelsFromBot;
 					_parser.OnQueueRequestFromBot -= QueueRequestFromBot;
 					_parser.OnSendMessage -= SendMessage;
+					_parser.OnTemporaryPartChannels -= TemporaryPartChannels;
 					_parser.OnUnRequestFromBot -= UnRequestFromBot;
 					_parser.OnWriteLine -= WriteLine;
 					_parser.OnXdccList -= XdccList;
@@ -105,6 +106,7 @@ namespace XG.Plugin.Irc
 					_parser.OnJoinChannelsFromBot += JoinChannelsFromBot;
 					_parser.OnQueueRequestFromBot += QueueRequestFromBot;
 					_parser.OnSendMessage += SendMessage;
+					_parser.OnTemporaryPartChannels += TemporaryPartChannels;
 					_parser.OnUnRequestFromBot += UnRequestFromBot;
 					_parser.OnWriteLine += WriteLine;
 					_parser.OnXdccList += XdccList;
@@ -230,6 +232,14 @@ namespace XG.Plugin.Irc
 			if (aEventArgs.Value1 == Server)
 			{
 				UnRequestFromBot(aEventArgs.Value2);
+			}
+		}
+
+		void TemporaryPartChannels(object aSender, EventArgs<Server, Bot, List<string>> aEventArgs)
+		{
+			if (aEventArgs.Value1 == Server)
+			{
+				// well...
 			}
 		}
 

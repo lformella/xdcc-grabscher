@@ -1,0 +1,54 @@
+//
+//  ClosingConnection.cs
+//  This file is part of XG - XDCC Grabscher
+//  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
+//
+//  Author:
+//       Lars Formella <ich@larsformella.de>
+//
+//  Copyright (c) 2013 Lars Formella
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//
+
+using System;
+using Meebey.SmartIrc4net;
+using NUnit.Framework;
+using XG.Model.Domain;
+using System.Collections.Generic;
+
+namespace XG.Test.Plugin.Irc.Parser.Types.Xdcc
+{
+	[TestFixture()]
+	public class ClosingConnection : AParser
+	{
+		[Test()]
+		public void JoinParseTest()
+		{
+			var parser = new XG.Plugin.Irc.Parser.Types.Xdcc.ClosingConnection();
+
+			EventArgs<XG.Model.Domain.Server, Bot, List<string>> raisedEvent;
+			parser.OnTemporaryPartChannels += (sender, e) => raisedEvent = e;
+
+			raisedEvent = null;
+			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Closing Connection: Transfers from [mg]-request|bots are restricted to only MOVIEGODS users! /Part #Beast-xdcc + #elitewarez if you want to download from [MG]-Request|Bot|003", ReceiveType.QueryNotice));
+			Assert.AreEqual(Server, raisedEvent.Value1);
+			Assert.AreEqual(Bot, raisedEvent.Value2);
+			Assert.AreEqual(2, raisedEvent.Value3.Count);
+			Assert.AreEqual("#Beast-xdcc", raisedEvent.Value3[0]);
+			Assert.AreEqual("#elitewarez", raisedEvent.Value3[1]);
+		}
+	}
+}

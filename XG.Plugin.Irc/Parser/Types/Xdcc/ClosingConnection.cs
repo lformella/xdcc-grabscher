@@ -25,6 +25,7 @@
 
 using XG.Config.Properties;
 using XG.Model.Domain;
+using System.Collections.Generic;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
@@ -64,7 +65,20 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					FireJoinChannel(this, new EventArgs<Model.Domain.Server, string>(aConnection.Server, channel));
 				}
 
-				//** Closing Connection: Transfers from [mg]-request|bots are restricted to only MOVIEGODS users! /Part #Beast-xdcc + #elitewarez if you want to download from [MG]-Request|Bot|003
+				match = Helper.Match(aMessage, @".*restricted to only MOVIEGODS users! /Part (?<channels>.*) if you want to download from .*");
+				if (match.Success)
+				{
+					List<string> channelToPart = new List<string>();
+					string[] channels = match.Groups["channels"].ToString().Split('+');
+					foreach (string channel in channels)
+					{
+						if (channel.Trim().StartsWith("#"))
+						{
+							channelToPart.Add(channel.Trim());
+						}
+					}
+					FireTemporaryPartChannels(this, new EventArgs<Model.Domain.Server, Bot, List<string>>(aConnection.Server, aBot, channelToPart));
+				}
 
 				UpdateBot(aBot, aMessage);
 				return true;

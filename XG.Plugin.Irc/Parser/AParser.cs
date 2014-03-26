@@ -29,6 +29,7 @@ using System.Reflection;
 using log4net;
 using Meebey.SmartIrc4net;
 using XG.Model.Domain;
+using System.Collections.Generic;
 
 namespace XG.Plugin.Irc.Parser
 {
@@ -85,6 +86,15 @@ namespace XG.Plugin.Irc.Parser
 			if (OnJoinChannel != null)
 			{
 				OnJoinChannel(aSender, aEventArgs);
+			}
+		}
+
+		public event EventHandler<EventArgs<Server, Bot, List<string>>> OnTemporaryPartChannels;
+		protected void FireTemporaryPartChannels(object aSender, EventArgs<Server, Bot, List<string>> aEventArgs)
+		{
+			if (OnTemporaryPartChannels != null)
+			{
+				OnTemporaryPartChannels(aSender, aEventArgs);
 			}
 		}
 
