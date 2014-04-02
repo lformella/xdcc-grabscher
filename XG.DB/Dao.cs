@@ -66,70 +66,35 @@ namespace XG.DB
 
 		public Dao()
 		{
-			bool insertVersion = false;
+			bool useSqlite = false;
 
 			var cfg = new Configuration();
 
-			try
+			if (System.IO.File.Exists(XG.Config.Properties.Settings.Default.GetAppDataPath() + "hibernate.cfg.xml"))
 			{
-				cfg.Configure();
-				cfg.AddAssembly(typeof(Dao).Assembly);
-			}
-			catch (HibernateConfigException)
-			{
-				cfg.Properties["connection.provider"] = "NHibernate.Connection.DriverConnectionProvider";
-				cfg.Properties["dialect"] = "NHibernate.Dialect.SQLiteDialect";
-				cfg.Properties["query.substitutions"] = "true=1;false=0";
-
-				// mono needs a special driver wrapper
-#if __MonoCS__
-				cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
-#else
-				cfg.Properties["connection.driver_class"] = "NHibernate.Driver.SQLite20Driver";
-#endif
-
-				string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
-				cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
-
-				cfg.AddAssembly(typeof(Dao).Assembly);
-				if (!System.IO.File.Exists(db))
-				{
-					new SchemaExport(cfg).Execute(false, true, false);
-					insertVersion = true;
-				}
-
 				try
 				{
-#if __MonoCS__
-					using (var con = new SqliteConnection(cfg.Properties["connection.connection_string"]))
-					{
-						con.Open();
-						using (SqliteCommand command = con.CreateCommand())
-						{
-							command.CommandText = "vacuum;";
-							command.ExecuteNonQuery();
-						}
-						con.Close();
-					}
-#else
-					using (var con = new SQLiteConnection(cfg.Properties["connection.connection_string"]))
-					{
-						con.Open();
-						using (SQLiteCommand command = con.CreateCommand())
-						{
-							command.CommandText = "vacuum;";
-							command.ExecuteNonQuery();
-						}
-						con.Close();
-					}
-#endif
+					cfg.Configure();
+					cfg.AddAssembly(typeof(Dao).Assembly);
 				}
-				catch(Exception) {}
+				catch (HibernateConfigException)
+				{
+					useSqlite = true;
+				}
+			}
+			else
+			{
+				useSqlite = true;
+			}
+
+			if (useSqlite)
+			{
+				cfg = CreateSqliteConfiguration();
 			}
 
 			_sessions = cfg.BuildSessionFactory();
 
-			CheckIfDatabaseNeedsUpdate(insertVersion);
+			CheckIfDatabaseNeedsUpdate();
 			LoadObjects();
 
 			var thread = new Thread(DatabaseSync);
@@ -137,27 +102,80 @@ namespace XG.DB
 			thread.Start();
 		}
 
-		void CheckIfDatabaseNeedsUpdate(bool insertVersion)
+		Configuration CreateSqliteConfiguration()
 		{
-			var version = new Domain.Version { Number = _version };
+			var cfg = new Configuration();
+
+			cfg.Properties["connection.provider"] = "NHibernate.Connection.DriverConnectionProvider";
+			cfg.Properties["dialect"] = "NHibernate.Dialect.SQLiteDialect";
+			cfg.Properties["query.substitutions"] = "true=1;false=0";
+
+			// mono needs a special driver wrapper
+#if __MonoCS__
+			cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
+#else
+			cfg.Properties["connection.driver_class"] = "NHibernate.Driver.SQLite20Driver";
+#endif
+
+			string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
+			cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
+
+			cfg.AddAssembly(typeof(Dao).Assembly);
+			if (!System.IO.File.Exists(db))
+			{
+				new SchemaExport(cfg).Execute(false, true, false);
+			}
+
+			try
+			{
+#if __MonoCS__
+				using (var con = new SqliteConnection(cfg.Properties["connection.connection_string"]))
+				{
+					con.Open();
+					using (SqliteCommand command = con.CreateCommand())
+					{
+						command.CommandText = "vacuum;";
+						command.ExecuteNonQuery();
+					}
+					con.Close();
+				}
+#else
+				using (var con = new SQLiteConnection(cfg.Properties["connection.connection_string"]))
+				{
+					con.Open();
+					using (SQLiteCommand command = con.CreateCommand())
+					{
+						command.CommandText = "vacuum;";
+						command.ExecuteNonQuery();
+					}
+					con.Close();
+				}
+#endif
+			}
+			catch(Exception) {}
+
+			return cfg;
+		}
+
+		void CheckIfDatabaseNeedsUpdate()
+		{
+			Domain.Version version;
 
 			using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 			{
-				if (insertVersion)
+				version = session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).FirstOrDefault();
+				if (version == null)
 				{
-					session.Save(new Domain.Version { Number = _version });
+					version = new Domain.Version { Number = _version };
+					session.Save(version);
 					session.Flush();
-				}
-				else
-				{
-					version = session.CreateQuery("FROM Version").List<Domain.Version>().OrderByDescending(v => v.Number).First();
 				}
 			}
 
-			UpdateDatabase(version.Number, _version);
+			TryToUpdateDatabase(version.Number, _version);
 		}
 
-		void UpdateDatabase(int aFrom, int aTo)
+		void TryToUpdateDatabase(int aFrom, int aTo)
 		{
 			if (aFrom == aTo)
 			{
@@ -320,7 +338,6 @@ namespace XG.DB
 
 			_writeInProgress = true;
 			_lastSave = DateTime.Now;
-			AObject currentObj;
 
 			try
 			{
@@ -332,7 +349,6 @@ namespace XG.DB
 						{
 							foreach (AObject obj in _objectsAdded)
 							{
-								currentObj = obj;
 								session.SaveOrUpdate(obj);
 							}
 							session.Flush();
@@ -356,7 +372,6 @@ namespace XG.DB
 						{
 							foreach (AObject obj in _objectsChanged)
 							{
-								currentObj = obj;
 								session.SaveOrUpdate(obj);
 							}
 							session.Flush();
@@ -380,7 +395,6 @@ namespace XG.DB
 						{
 							foreach (AObject obj in _objectsRemoved)
 							{
-								currentObj = obj;
 								session.Delete(obj);
 							}
 							session.Flush();
