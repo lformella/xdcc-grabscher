@@ -339,6 +339,7 @@ td .highlight .name
 .navbar-brand
 {
 	padding: 10px 15px;
+	height: auto;
 }
 
 .navbar .nav > li > a
@@ -352,7 +353,7 @@ td .highlight .name
 {
 	margin-top: 2px;
 	margin-bottom: 2px;
-	padding: 0;
+	padding: 0 2px 0 0;
 }
 
 #searchForm .dropdown-menu
