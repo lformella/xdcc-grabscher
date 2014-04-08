@@ -27,6 +27,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using CacheAspect;
+using CacheAspect.Attributes;
 using Nancy;
 using Nancy.Conventions;
 using Nancy.Responses;
@@ -73,21 +75,24 @@ namespace XG.Plugin.Webserver.Nancy
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Resources", "Resources"));
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Scripts", "Scripts"));
 #else
-			nancyConventions.StaticContentsConventions.Add((ctx, rootPath) =>
-			{
-				try
-				{
-					var directoryName = "XG.Plugin.Webserver" + Path.GetDirectoryName(ctx.Request.Url.Path).Replace(Path.DirectorySeparatorChar, '.').Replace("-", "_");
-					var fileName = Path.GetFileName(ctx.Request.Url.Path);
-					if (ResourceExists(directoryName + "." + fileName))
-					{
-						return new EmbeddedFileResponse(GetType().Assembly, directoryName, fileName);
-					}
-				}
-				catch(Exception) {}
-				return null;
-			});
+			nancyConventions.StaticContentsConventions.Add((ctx, rootPath) => GetResource (ctx.Request.Url.Path));
 #endif
+		}
+
+		[Cache.Cacheable]
+		private EmbeddedFileResponse GetResource(string aPath)
+		{
+			try
+			{
+				var directoryName = "XG.Plugin.Webserver" + Path.GetDirectoryName(aPath).Replace(Path.DirectorySeparatorChar, '.').Replace("-", "_");
+				var fileName = Path.GetFileName(aPath);
+				if (ResourceExists(directoryName + "." + fileName))
+				{
+					return new EmbeddedFileResponse(GetType().Assembly, directoryName, fileName);
+				}
+			}
+			catch(Exception) {}
+			return null;
 		}
 	}
 }
