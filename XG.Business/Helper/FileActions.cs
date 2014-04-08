@@ -91,7 +91,7 @@ namespace XG.Business.Helper
 					if (!System.IO.File.Exists(Settings.Default.TempPath + file.TmpName))
 					{
 						Log.Warn("TryGetFile(" + aName + ", " + aSize + ") " + file + " is missing ");
-						RemoveFile(file);
+						Files.Remove(file);
 						break;
 					}
 					return file;
@@ -127,14 +127,10 @@ namespace XG.Business.Helper
 		{
 			if (aEventArgs.Value2 is XG.Model.Domain.File)
 			{
-				RemoveFile((XG.Model.Domain.File)aEventArgs.Value2);
+				XG.Model.Domain.File file = (XG.Model.Domain.File)aEventArgs.Value2;
+				Log.Info("RemoveFile(" + file + ")");
+				FileSystem.DeleteFile(Settings.Default.TempPath + file.TmpName);
 			}
-		}
-
-		static void RemoveFile(XG.Model.Domain.File aFile)
-		{
-			Log.Info("RemoveFile(" + aFile + ")");
-			FileSystem.DeleteFile(Settings.Default.TempPath + aFile.TmpName);
 		}
 
 		#endregion

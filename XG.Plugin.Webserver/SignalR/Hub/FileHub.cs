@@ -65,7 +65,15 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			var file = Helper.Files.WithGuid(aGuid) as File;
 			if (file != null)
 			{
-				Helper.Files.Remove(file);
+				if (file.Packet != null)
+				{
+					file.Packet.Enabled = false;
+					file.Packet.Commit();
+				}
+				else
+				{
+					Helper.Files.Remove(file);
+				}
 			}
 		}
 
