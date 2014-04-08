@@ -347,9 +347,10 @@ namespace XG.DB
 					{
 						using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 						{
-							foreach (AObject obj in _objectsAdded)
+							foreach (AObject obj in _objectsAdded.ToArray())
 							{
 								session.SaveOrUpdate(obj);
+								_objectsAdded.Remove(obj);
 							}
 							session.Flush();
 						}
@@ -370,9 +371,10 @@ namespace XG.DB
 					{
 						using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 						{
-							foreach (AObject obj in _objectsChanged)
+							foreach (AObject obj in _objectsChanged.ToArray())
 							{
 								session.SaveOrUpdate(obj);
+								_objectsChanged.Remove(obj);
 							}
 							session.Flush();
 						}
@@ -393,9 +395,10 @@ namespace XG.DB
 					{
 						using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 						{
-							foreach (AObject obj in _objectsRemoved)
+							foreach (AObject obj in _objectsRemoved.ToArray())
 							{
 								session.Delete(obj);
+								_objectsRemoved.Remove(obj);
 							}
 							session.Flush();
 						}
