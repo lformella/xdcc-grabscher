@@ -64,7 +64,7 @@ Normally the bots will announce their pakets directly in the channel. If they ar
 ![Server / Channel Dialog](http://xg.bitpir.at/images/help/servers.png?v=3)
 
 ## Search
-You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are also saved into the database.
+You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are also saved into the database. If you want to exclude words from your search you can use "-". To search for packages and exclude TS releases you could use "Spiderman -TS".
 
 ![Search](http://xg.bitpir.at/images/help/search.png?v=3)
 
