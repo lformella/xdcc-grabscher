@@ -36,40 +36,24 @@ namespace XG.Test.Plugin.Irc.Parser.Types
 		[Test()]
 		public void XdccListParseTest()
 		{
+			TestParse("** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC LIST\" **", "XDCC LIST");
+			TestParse("** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC LIST ALL\" **", "XDCC LIST ALL");
+			TestParse("group: TOKINO - Toki no Tabibito: Time Stranger", "XDCC LIST TOKINO");
+			TestParse("group: maji[720p] - Maji de Watashi ni Koi Shinasai[720p]", "XDCC LIST maji[720p]");
+			TestParse("** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC SEND LIST\" **", "XDCC SEND LIST");
+			TestParse("** Per richiedere la lista: \"/MSG XXBOTNAME XDCC LIST\" **", "XDCC LIST");
+		}
+
+		void TestParse(string aMessage, string aExpectedCommand)
+		{
 			var parser = new XG.Plugin.Irc.Parser.Types.XdccList();
+			EventArgs<XG.Model.Domain.Server, string, string> raisedEvent = null;
+			parser.OnXdccList += (sender, e) => raisedEvent = e;
 
-			EventArgs<XG.Model.Domain.Server, string, string> raisedEvent1;
-			parser.OnXdccList += (sender, e) => raisedEvent1 = e;
-
-			raisedEvent1 = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC LIST\" **", ReceiveType.QueryNotice));
-			Assert.AreEqual(Server, raisedEvent1.Value1);
-			Assert.AreEqual(Bot.Name, raisedEvent1.Value2);
-			Assert.AreEqual("XDCC LIST", raisedEvent1.Value3);
-
-			raisedEvent1 = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC LIST ALL\" **", ReceiveType.QueryNotice));
-			Assert.AreEqual(Server, raisedEvent1.Value1);
-			Assert.AreEqual(Bot.Name, raisedEvent1.Value2);
-			Assert.AreEqual("XDCC LIST ALL", raisedEvent1.Value3);
-
-			raisedEvent1 = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "group: TOKINO - Toki no Tabibito: Time Stranger", ReceiveType.QueryNotice));
-			Assert.AreEqual(Server, raisedEvent1.Value1);
-			Assert.AreEqual(Bot.Name, raisedEvent1.Value2);
-			Assert.AreEqual("XDCC LIST TOKINO", raisedEvent1.Value3);
-
-			raisedEvent1 = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "group: maji[720p] - Maji de Watashi ni Koi Shinasai[720p]", ReceiveType.QueryNotice));
-			Assert.AreEqual(Server, raisedEvent1.Value1);
-			Assert.AreEqual(Bot.Name, raisedEvent1.Value2);
-			Assert.AreEqual("XDCC LIST maji[720p]", raisedEvent1.Value3);
-
-			raisedEvent1 = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC SEND LIST\" **", ReceiveType.QueryNotice));
-			Assert.AreEqual(Server, raisedEvent1.Value1);
-			Assert.AreEqual(Bot.Name, raisedEvent1.Value2);
-			Assert.AreEqual("XDCC SEND LIST", raisedEvent1.Value3);
+			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, aMessage, ReceiveType.QueryNotice));
+			Assert.AreEqual(Server, raisedEvent.Value1);
+			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
+			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
 		}
 	}
 }
