@@ -102,6 +102,7 @@
     <Compile Include="Config\Properties\Settings.cs" />
     <Compile Include="Model\Extensions.cs" />
     <Compile Include="Plugin\ElasticSearch\Object\Packet.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\Dcc\Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -205,5 +206,6 @@
   <ItemGroup>
     <Folder Include="Plugin\ElasticSearch\" />
     <Folder Include="Plugin\ElasticSearch\Object\" />
+    <Folder Include="Plugin\Irc\Parser\Types\Dcc\" />
   </ItemGroup>
 </Project>

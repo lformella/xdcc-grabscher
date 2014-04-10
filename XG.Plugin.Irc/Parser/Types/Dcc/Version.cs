@@ -36,13 +36,26 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 			{
 				if (args.CtcpCommand == Rfc2812.Version())
 				{
-					if (aMessage.Contains("iroffer"))
-					{
-						FireXdccList(this, new Model.Domain.EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC HELP"));
-					}
+					CheckVersion(aConnection, aEvent.Data.Nick, aMessage);
+				}
+			}
+			else if (aEvent.Data.Type == ReceiveType.QueryNotice)
+			{
+				if (aMessage.StartsWith("\u0001" + Rfc2812.Version() + " "))
+				{
+					CheckVersion(aConnection, aEvent.Data.Nick, aMessage.Substring(9));
 				}
 			}
 			return false;
+		}
+
+		private void CheckVersion(IrcConnection aConnection, string aNick, string aVersion)
+		{
+			Log.Info("Parse() received version reply from " + aNick + ": " + aVersion);
+			if (aVersion.ToLower().Contains("iroffer"))
+			{
+				FireXdccList(this, new Model.Domain.EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aNick, "XDCC HELP"));
+			}
 		}
 	}
 }

@@ -75,6 +75,19 @@ namespace XG.Test.Plugin.Irc.Parser
 			return args;
 		}
 
+		protected IrcEventArgs CreateCtcpEventArgs(string aChannel, string aBot, string aMessage, ReceiveType aType, string aCtcpCommand)
+		{
+			IrcMessageData data = new IrcMessageData(null, "", aBot, "", "", aChannel, aMessage, aMessage, aType, ReplyCode.Null);
+			CtcpEventArgs args = (CtcpEventArgs)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(CtcpEventArgs));
+			FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			EventFields[0].SetValue(args, data);
+
+			FieldInfo[] EventFields2 = typeof(string).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			EventFields2[1].SetValue(args, aCtcpCommand);
+
+			return args;
+		}
+
 		protected void Parse(XG.Plugin.Irc.Parser.AParser aParser, XG.Plugin.Irc.IrcConnection aConnection, IrcEventArgs aEvent)
 		{
 			string tMessage = XG.Plugin.Irc.Parser.Helper.RemoveSpecialIrcChars(aEvent.Data.Message);
