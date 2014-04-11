@@ -34,7 +34,7 @@ namespace XG.Test.Plugin.Irc.Parser.Types.Dcc
 	public class Version : AParser
 	{
 		[Test()]
-		public void BandwitdhParseTest()
+		public void VersionParseTest()
 		{
 			var parser = new XG.Plugin.Irc.Parser.Types.Dcc.Version();
 			EventArgs<XG.Model.Domain.Server, string, string> raisedEvent = null;
@@ -48,13 +48,13 @@ namespace XG.Test.Plugin.Irc.Parser.Types.Dcc
 			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
 			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
 
-//			raisedEvent = null;
-//			Parse(parser, Connection, CreateCtcpEventArgs(Channel.Name, Bot.Name, "*** iroffer v2.0 Creato Da ArSeNiO ***", ReceiveType.CtcpReply, Rfc2812.Version()));
-//			parser.OnXdccList += (sender, e) => raisedEvent = e;
-//
-//			Assert.AreEqual(Server, raisedEvent.Value1);
-//			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
-//			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
+			raisedEvent = null;
+			Parse(parser, Connection, CreateCtcpEventArgs(Channel.Name, Bot.Name, "*** iroffer v2.0 Creato Da ArSeNiO ***", ReceiveType.CtcpReply, Rfc2812.Version()));
+			parser.OnXdccList += (sender, e) => raisedEvent = e;
+
+			Assert.AreEqual(Server, raisedEvent.Value1);
+			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
+			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
 		}
 	}
 }

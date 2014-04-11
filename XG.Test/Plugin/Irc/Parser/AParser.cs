@@ -82,8 +82,8 @@ namespace XG.Test.Plugin.Irc.Parser
 			FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 			EventFields[0].SetValue(args, data);
 
-			FieldInfo[] EventFields2 = typeof(string).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-			EventFields2[1].SetValue(args, aCtcpCommand);
+			FieldInfo[] EventFields2 = typeof(CtcpEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+			EventFields2[0].SetValue(args, aCtcpCommand);
 
 			return args;
 		}
