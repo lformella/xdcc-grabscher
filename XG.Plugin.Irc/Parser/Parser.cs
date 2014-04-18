@@ -93,6 +93,7 @@ namespace XG.Plugin.Irc.Parser
 			aParser.OnRemoveDownload += FireRemoveDownload;
 			aParser.OnSendMessage += FireSendMessage;
 			aParser.OnUnRequestFromBot += FireUnRequestFromBot;
+			aParser.OnTemporaryPartChannels += FireTemporaryPartChannels;
 			aParser.OnWriteLine += FireWriteLine;
 			aParser.OnXdccList += FireXdccList;
 

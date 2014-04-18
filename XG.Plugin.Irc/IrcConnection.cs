@@ -53,6 +53,7 @@ namespace XG.Plugin.Irc
 		readonly TimedList<string> _latestXdccListRequests = new TimedList<string>();
 		readonly Queue<string> _userToAskForVersion = new Queue<string>();
 		DateTime _lastAskForVersionTime = DateTime.Now;
+		readonly Dictionary<Bot, List<Model.Domain.Channel>> botToRequireChannelParts = new Dictionary<Bot, List<Model.Domain.Channel>>();
 
 		Server _server;
 		public Server Server
@@ -239,7 +240,25 @@ namespace XG.Plugin.Irc
 		{
 			if (aEventArgs.Value1 == Server)
 			{
-				// well...
+				List<Model.Domain.Channel> channels = new List<XG.Model.Domain.Channel>();
+				if (botToRequireChannelParts.ContainsKey(aEventArgs.Value2))
+				{
+					channels = botToRequireChannelParts[aEventArgs.Value2];
+				}
+
+				foreach (string channel in aEventArgs.Value3)
+				{
+					var chan = aEventArgs.Value1.Channel(channel);
+					if (chan != null && !channels.Contains(chan))
+					{
+						channels.Add(chan);
+					}
+				}
+
+				if (!botToRequireChannelParts.ContainsKey(aEventArgs.Value2) && channels.Count > 0)
+				{
+					botToRequireChannelParts.Add(aEventArgs.Value2, channels);
+				}
 			}
 		}
 
