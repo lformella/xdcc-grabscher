@@ -41,9 +41,12 @@ namespace XG.Plugin.Webserver.Nancy
 
 		protected override byte[] FavIcon
 		{
-			get { return this.favicon?? (this.favicon= LoadFavIcon()); }
+			get { return this.favicon?? (this.favicon = LoadFavIcon()); }
 		}
 
+#if !DEBUG
+		[Cache.Cacheable]
+#endif
 		private byte[] LoadFavIcon()
 		{
 			using (var resourceStream = GetType().Assembly.GetManifestResourceStream("XG.Plugin.Webserver.Resources.favicon.ico"))
@@ -79,7 +82,9 @@ namespace XG.Plugin.Webserver.Nancy
 #endif
 		}
 
+#if !DEBUG
 		[Cache.Cacheable]
+#endif
 		private EmbeddedFileResponse GetResource(string aPath)
 		{
 			try
