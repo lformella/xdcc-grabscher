@@ -1,5 +1,5 @@
 // 
-//  Connection.cs
+//  TimerTrigger.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,32 +24,19 @@
 //  
 
 using System;
+using log4net;
+using System.Reflection;
 using Quartz;
-using XG.Config.Properties;
-using XG.Plugin.Irc.Job;
 
-namespace XG.Plugin.Irc
+namespace XG.Plugin.Irc.Job
 {
-	public abstract class Connection : AWorker
+	public abstract class TimerTrigger : IJob
 	{
-		JobKey _jobKey;
+		public Plugin Plugin { get; set; }
 
-		public DateTime LastContact { get; protected set; }
-
-		protected abstract void RepairConnection();
-
-		public void StartWatch(Int64 aWatchSeconds, string aName)
+		public void Execute (IJobExecutionContext context)
 		{
-			_jobKey = new JobKey(aName, "Connection");
-
-			Scheduler.AddJob(typeof(ConnectionWatcher), _jobKey, 1, 
-				new JobItem("Connection", this),
-				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
-		}
-
-		public void Stopwatch()
-		{
-			Scheduler.DeleteJob(_jobKey);
+			Plugin.TriggerTimer();
 		}
 	}
 }

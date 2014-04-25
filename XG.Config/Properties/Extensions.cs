@@ -27,6 +27,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Quartz;
 
 namespace XG.Config.Properties
 {
@@ -51,6 +52,27 @@ namespace XG.Config.Properties
 			var fileHandlers = JsonConvert.SerializeObject(aFileHandlers);
 
 			aSettings.FileHandlers = fileHandlers;
+		}
+
+		public static void AddJob(this IScheduler aScheduler, Type aType, JobKey aKey, int aSecondsToSleep, params JobItem[] aItems)
+		{
+			var data = new JobDataMap();
+			foreach (JobItem item in aItems)
+			{
+				data.Add(item.Key, item.Value);
+			}
+
+			IJobDetail job = JobBuilder.Create(aType)
+				.WithIdentity(aKey)
+				.UsingJobData(data)
+				.Build();
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(aKey.Name, aKey.Group)
+				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aSecondsToSleep).RepeatForever())
+				.Build();
+
+			aScheduler.ScheduleJob(job, trigger);
 		}
 	}
 }

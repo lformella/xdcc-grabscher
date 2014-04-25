@@ -91,6 +91,7 @@
     <Compile Include="Parser\Types\Xdcc\PacketAlreadyQueued.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="Job\ConnectionWatcher.cs" />
+    <Compile Include="Job\TimerTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">

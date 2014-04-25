@@ -140,28 +140,11 @@ namespace XG.Business
 
 		void CreateJobs()
 		{
-			var data1 = new JobDataMap();
-			data1.Add("RrdDB", _rrdDb);
-			AddJob(typeof(Job.Rrd), data1, Settings.Default.TakeSnapshotTimeInMinutes * 60);
+			Scheduler.AddJob(typeof(Job.Rrd), new JobKey("RrdDbCollector", "Core"), Settings.Default.TakeSnapshotTimeInMinutes * 60, 
+				new JobItem("RrdDB", _rrdDb));
 
-			var data2 = new JobDataMap();
-			data2.Add("Servers", Servers);
-			AddJob(typeof(BotWatchdog), data2, Settings.Default.BotOfflineCheckTime);
-		}
-
-		void AddJob(Type aType, JobDataMap aData, int aInterval)
-		{
-			IJobDetail job = JobBuilder.Create(aType)
-				.WithIdentity(aType.Name, "Core")
-				.UsingJobData(aData)
-				.Build();
-
-			ITrigger trigger = TriggerBuilder.Create()
-				.WithIdentity(aType.Name, "Core")
-				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aInterval).RepeatForever())
-				.Build();
-
-			Scheduler.ScheduleJob(job, trigger);
+			Scheduler.AddJob(typeof(BotWatchdog), new JobKey("BotWatchdog", "Core"), Settings.Default.BotOfflineCheckTime, 
+				new JobItem("Servers", Servers));
 		}
 
 		void ClearOldDownloads()

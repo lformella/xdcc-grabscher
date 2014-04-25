@@ -98,22 +98,10 @@ namespace XG.DB
 			CheckIfDatabaseNeedsUpdate();
 			LoadObjects();
 
-			// start sync job
-			var data = new JobDataMap();
-			data.Add("Dao", this);
-			data.Add("MaximalTimeBetweenSaves", 300);
-
-			IJobDetail job = JobBuilder.Create<DaoSync>()
-				.WithIdentity("DaoSync", "Dao")
-				.UsingJobData(data)
-				.Build();
-
-			ITrigger trigger = TriggerBuilder.Create()
-				.WithIdentity("DaoSync", "Dao")
-				.WithSimpleSchedule(x => x.WithIntervalInSeconds(1).RepeatForever())
-				.Build();
-
-			Scheduler.ScheduleJob(job, trigger);
+			// create sync job
+			Scheduler.AddJob(typeof(DaoSync), new JobKey("DaoSync", "Dao"), 1, 
+				new JobItem("Dao", this),
+				new JobItem("MaximalTimeBetweenSaves", 300));
 		}
 
 		protected override void StopRun()

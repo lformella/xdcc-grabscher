@@ -1,5 +1,5 @@
 // 
-//  Connection.cs
+//  JobItem.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,32 +24,22 @@
 //  
 
 using System;
+using System.IO;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using Quartz;
-using XG.Config.Properties;
-using XG.Plugin.Irc.Job;
 
-namespace XG.Plugin.Irc
+namespace XG.Config.Properties
 {
-	public abstract class Connection : AWorker
+	public class JobItem
 	{
-		JobKey _jobKey;
+		public string Key { get; set; }
+		public object Value { get; set; }
 
-		public DateTime LastContact { get; protected set; }
-
-		protected abstract void RepairConnection();
-
-		public void StartWatch(Int64 aWatchSeconds, string aName)
+		public JobItem(string aKey, object aValue)
 		{
-			_jobKey = new JobKey(aName, "Connection");
-
-			Scheduler.AddJob(typeof(ConnectionWatcher), _jobKey, 1, 
-				new JobItem("Connection", this),
-				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
-		}
-
-		public void Stopwatch()
-		{
-			Scheduler.DeleteJob(_jobKey);
+			Key = aKey;
+			Value = aValue;
 		}
 	}
 }

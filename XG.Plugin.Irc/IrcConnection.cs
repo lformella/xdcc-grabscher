@@ -35,7 +35,7 @@ using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
 using Quartz;
-using XG.Plugin.Job;
+using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {

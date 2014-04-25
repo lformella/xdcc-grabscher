@@ -35,6 +35,8 @@ using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
 using XG.Model.Domain;
+using Quartz;
+using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {
@@ -70,19 +72,8 @@ namespace XG.Plugin.Irc
 				}
 			}
 
-			DateTime _last = DateTime.Now;
-			while (AllowRunning)
-			{
-				if (_last.AddSeconds(Settings.Default.RunLoopTime) < DateTime.Now)
-				{
-					foreach (var connection in _connections.ToArray())
-					{
-						connection.TriggerTimerRun();
-					}
-				}
-
-				Thread.Sleep(500);
-			}
+			Scheduler.AddJob(typeof(TimerTrigger), new JobKey("Trigger", "IrcPlugin"), Settings.Default.RunLoopTime, 
+				new JobItem("Plugin", this));
 		}
 
 		protected override void StopRun()
@@ -400,6 +391,14 @@ namespace XG.Plugin.Irc
 		#endregion
 
 		#region Functions
+
+		internal void TriggerTimer()
+		{
+			foreach (var connection in _connections.ToArray())
+			{
+				connection.TriggerTimerRun();
+			}
+		}
 
 		void AddNotification(object aSender, EventArgs<Notification> aEventArgs)
 		{
