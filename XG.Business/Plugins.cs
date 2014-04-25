@@ -1,5 +1,5 @@
 // 
-//  AWorker.cs
+//  Plugins.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,70 +23,46 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.Reflection;
-using System.Threading;
-using log4net;
-using Quartz;
+using System.Collections.Generic;
+using XG.Plugin;
 
-namespace XG.Plugin
+namespace XG.Business
 {
-	public abstract class AWorker : ANotificationSender
+	public class Plugins
 	{
 		#region VARIABLES
 
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		bool _allowRunning;
-		protected bool AllowRunning
-		{
-			get { return _allowRunning; }
-		}
-
-		public IScheduler Scheduler { get; set; }
+		readonly HashSet<APlugin> _plugins;
 
 		#endregion
 
 		#region FUNCTIONS
 
-		public void Start(string aName = null)
+		public Plugins()
 		{
-			_allowRunning = true;
-			try
+			_plugins = new HashSet<APlugin>();
+		}
+
+		public void Add(APlugin aPlugin)
+		{
+			_plugins.Add(aPlugin);
+		}
+
+		public void StartAll()
+		{
+			foreach (APlugin plugin in _plugins)
 			{
-				var thread = new Thread(StartRun);
-				if (aName != null)
-				{
-					thread.Name = aName;
-				}
-				thread.Start();
-			}
-			catch (ThreadAbortException)
-			{
-				// this is ok
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Start()", ex);
+				plugin.Start();
 			}
 		}
 
-		protected virtual void StartRun() {}
-
-		public void Stop()
+		public void StopAll()
 		{
-			_allowRunning = false;
-			try
+			foreach (APlugin plugin in _plugins)
 			{
-				StopRun();
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Stop()", ex);
+				plugin.Stop();
 			}
 		}
-
-		protected virtual void StopRun() {}
 
 		#endregion
 	}

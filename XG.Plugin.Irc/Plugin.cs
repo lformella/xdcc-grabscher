@@ -156,7 +156,8 @@ namespace XG.Plugin.Irc
 				connection = new IrcConnection
 				{
 					Server = aServer,
-					Parser = _parser
+					Parser = _parser,
+					Scheduler = Scheduler
 				};
 				_connections.Add(connection);
 
@@ -226,7 +227,8 @@ namespace XG.Plugin.Irc
 					StartSize = aEventArgs.Value2,
 					IP = aEventArgs.Value3,
 					Port = aEventArgs.Value4,
-					MaxData = aEventArgs.Value1.RealSize - aEventArgs.Value2
+					MaxData = aEventArgs.Value1.RealSize - aEventArgs.Value2,
+					Scheduler = Scheduler
 				};
 
 				download.OnDisconnected += BotDisconnected;

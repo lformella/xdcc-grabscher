@@ -34,8 +34,10 @@ using XG.Business.Helper;
 using XG.Model.Domain;
 using XG.Plugin;
 using XG.Config.Properties;
-using XG.Business.Worker;
+using XG.Business.Job;
 using XG.DB;
+using Quartz;
+using Quartz.Impl;
 
 namespace XG.Business
 {
@@ -45,9 +47,11 @@ namespace XG.Business
 
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		readonly Dao _dao = new Dao();
+		readonly Dao _dao;
 
-		readonly Workers _workers;
+		readonly Plugins _plugins;
+
+		readonly IScheduler _scheduler;
 
 		RrdDb _rrdDb;
 
@@ -85,9 +89,14 @@ namespace XG.Business
 
 		public App()
 		{
+			_scheduler = new StdSchedulerFactory().GetScheduler();
+			_scheduler.Start();
+
+			_dao = new Dao(_scheduler);
+
 			FileActions.OnNotificationAdded += NotificationAdded;
 
-			_workers = new Workers();
+			_plugins = new Plugins();
 			_rrdDb = new Helper.Rrd().GetDb();
 
 			LoadObjects();
@@ -136,13 +145,30 @@ namespace XG.Business
 
 		void StartWorkers()
 		{
-			var snapShotWorker = new Worker.Rrd { SecondsToSleep = Settings.Default.TakeSnapshotTimeInMinutes * 60 };
-			snapShotWorker.RrdDB = _rrdDb;
-			AddWorker(snapShotWorker);
+			var data1 = new JobDataMap();
+			data1.Add("RrdDB", _rrdDb);
+			AddJob(typeof(Job.Rrd), data1, Settings.Default.TakeSnapshotTimeInMinutes * 60);
+			
+			var data2 = new JobDataMap();
+			data2.Add("Servers", Servers);
+			AddJob(typeof(BotWatchdog), data2, Settings.Default.BotOfflineCheckTime);
 
-			AddWorker(new BotWatchdog { SecondsToSleep = Settings.Default.BotOfflineCheckTime });
+			_plugins.StartAll();
+		}
 
-			_workers.StartAll();
+		void AddJob(Type aType, JobDataMap aData, int aInterval)
+		{
+			IJobDetail job = JobBuilder.Create(aType)
+				.WithIdentity(aType.Name, "Core")
+				.UsingJobData(aData)
+				.Build();
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(aType.Name, "Core")
+				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aInterval).RepeatForever())
+				.Build();
+
+			_scheduler.ScheduleJob(job, trigger);
 		}
 
 		void ClearOldDownloads()
@@ -284,19 +310,21 @@ namespace XG.Business
 
 		protected override void StopRun()
 		{
+			_scheduler.Shutdown();
 			_dao.Dispose();
-			_workers.StopAll();
+			_plugins.StopAll();
 		}
 
-		public void AddWorker(APlugin aWorker)
+		public void AddPlugin(APlugin aPlugin)
 		{
-			aWorker.Servers = Servers;
-			aWorker.Files = Files;
-			aWorker.Searches = Searches;
-			aWorker.Notifications = Notifications;
-			aWorker.ApiKeys = ApiKeys;
+			aPlugin.Servers = Servers;
+			aPlugin.Files = Files;
+			aPlugin.Searches = Searches;
+			aPlugin.Notifications = Notifications;
+			aPlugin.ApiKeys = ApiKeys;
+			aPlugin.Scheduler = _scheduler;
 
-			_workers.Add(aWorker);
+			_plugins.Add(aPlugin);
 		}
 
 		#endregion

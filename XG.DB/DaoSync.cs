@@ -1,5 +1,5 @@
 // 
-//  Rrd.cs
+//  DaoSync.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,31 +24,21 @@
 //  
 
 using System;
-using SharpRobin.Core;
-using XG.Plugin;
-using XG.Business.Helper;
-using XG.Business.Model;
+using Quartz;
 
-namespace XG.Business.Worker
+namespace XG.DB
 {
-	public class Rrd : ALoopPlugin
+	public class DaoSync : IJob
 	{
-		public RrdDb RrdDB { get; set; }
+		public Dao Dao { get; set; }
+		public int MaximalTimeBetweenSaves { get; set; }
 
-		#region AWorker
-
-		protected override void LoopRun()
+		public void Execute (IJobExecutionContext context)
 		{
-			var snapshot = Snapshots.GenerateSnapshot();
-
-			Sample sample = RrdDB.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
-			for (int a = 1; a < Snapshot.SnapshotCount; a++)
+			if (Dao.LastSave.AddSeconds(MaximalTimeBetweenSaves) < DateTime.Now)
 			{
-				sample.setValue(a + "", snapshot.Get((SnapshotValue)a));
+				Dao.WriteToDatabase();
 			}
-			sample.update();
 		}
-
-		#endregion
 	}
 }

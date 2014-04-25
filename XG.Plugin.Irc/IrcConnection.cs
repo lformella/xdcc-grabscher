@@ -34,10 +34,12 @@ using XG.Model.Domain;
 using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
+using Quartz;
+using XG.Plugin.Job;
 
 namespace XG.Plugin.Irc
 {
-	public class IrcConnection : ConnectionWatcher
+	public class IrcConnection : Connection
 	{
 		#region VARIABLES
 
@@ -324,7 +326,7 @@ namespace XG.Plugin.Irc
 						Client.RfcJoin(channels);
 					}
 				}
-				StartWatch(Settings.Default.ChannelWaitTimeMedium, Server + " ConnectionWatch");
+				StartWatch(Settings.Default.ChannelWaitTimeMedium, Server.ToString());
 
 				Client.Listen();
 			};

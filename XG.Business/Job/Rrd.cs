@@ -1,5 +1,5 @@
 // 
-//  AWorker.cs
+//  Rrd.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,70 +24,28 @@
 //  
 
 using System;
-using System.Reflection;
-using System.Threading;
-using log4net;
+using SharpRobin.Core;
+using XG.Plugin;
+using XG.Business.Helper;
+using XG.Business.Model;
 using Quartz;
 
-namespace XG.Plugin
+namespace XG.Business.Job
 {
-	public abstract class AWorker : ANotificationSender
+	public class Rrd : IJob
 	{
-		#region VARIABLES
+		public RrdDb RrdDB { get; set; }
 
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		bool _allowRunning;
-		protected bool AllowRunning
+		public void Execute (IJobExecutionContext context)
 		{
-			get { return _allowRunning; }
+			var snapshot = Snapshots.GenerateSnapshot();
+
+			Sample sample = RrdDB.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
+			for (int a = 1; a < Snapshot.SnapshotCount; a++)
+			{
+				sample.setValue(a + "", snapshot.Get((SnapshotValue)a));
+			}
+			sample.update();
 		}
-
-		public IScheduler Scheduler { get; set; }
-
-		#endregion
-
-		#region FUNCTIONS
-
-		public void Start(string aName = null)
-		{
-			_allowRunning = true;
-			try
-			{
-				var thread = new Thread(StartRun);
-				if (aName != null)
-				{
-					thread.Name = aName;
-				}
-				thread.Start();
-			}
-			catch (ThreadAbortException)
-			{
-				// this is ok
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Start()", ex);
-			}
-		}
-
-		protected virtual void StartRun() {}
-
-		public void Stop()
-		{
-			_allowRunning = false;
-			try
-			{
-				StopRun();
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Stop()", ex);
-			}
-		}
-
-		protected virtual void StopRun() {}
-
-		#endregion
 	}
 }

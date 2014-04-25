@@ -27,6 +27,7 @@ using NUnit.Framework;
 using XG.Model.Domain;
 using System;
 using System.Linq;
+using Quartz.Impl;
 
 namespace XG.Test.DB
 {
@@ -39,7 +40,7 @@ namespace XG.Test.DB
 		[Test]
 		public void DaoLoadObjectsTest()
 		{
-			using(var dao = new XG.DB.Dao())
+			using(var dao = new XG.DB.Dao(new StdSchedulerFactory().GetScheduler()))
 			{
 				var servers = dao.Servers;
 			}
@@ -49,7 +50,7 @@ namespace XG.Test.DB
 		[Ignore]
 		public void DaoWriteObjectsTest()
 		{
-			using (var dao = new XG.DB.Dao())
+			using (var dao = new XG.DB.Dao(new StdSchedulerFactory().GetScheduler()))
 			{
 				var files = dao.Files;
 				for (int a = 0; a < Count; a++)

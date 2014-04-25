@@ -1,5 +1,5 @@
 // 
-//  Workers.cs
+//  ConnectionWatcher.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,47 +23,28 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System.Collections.Generic;
-using XG.Plugin;
+using System;
+using log4net;
+using System.Reflection;
+using Quartz;
+using XG.Plugin.Irc;
 
-namespace XG.Business
+namespace XG.Plugin.Job
 {
-	public class Workers
+	public abstract class ConnectionWatcher : IJob
 	{
-		#region VARIABLES
+		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		readonly HashSet<AWorker> _workers;
+		public Connection Connection { get; set; }
+		public Int64 MaximalTimeAfterLastContact { get; set; }
 
-		#endregion
-
-		#region FUNCTIONS
-
-		public Workers()
+		public void Execute (IJobExecutionContext context)
 		{
-			_workers = new HashSet<AWorker>();
-		}
-
-		public void Add(AWorker aWorker)
-		{
-			_workers.Add(aWorker);
-		}
-
-		public void StartAll()
-		{
-			foreach (AWorker worker in _workers)
+			if ((DateTime.Now - Connection.LastContact).TotalSeconds > MaximalTimeAfterLastContact)
 			{
-				worker.Start();
+				_log.Error("Execute() connection seems hanging since more than " + MaximalTimeAfterLastContact + " seconds");
+				Connection.Stop();
 			}
 		}
-
-		public void StopAll()
-		{
-			foreach (AWorker worker in _workers)
-			{
-				worker.Stop();
-			}
-		}
-
-		#endregion
 	}
 }

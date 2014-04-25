@@ -34,6 +34,7 @@ using XG.Model.Domain;
 using log4net;
 using System.Collections.Generic;
 using System.Threading;
+using Quartz;
 
 #if __MonoCS__
 using Mono.Data.Sqlite;
@@ -43,12 +44,11 @@ using System.Data.SQLite;
 
 namespace XG.DB
 {
-	public sealed class Dao : IDisposable
+	public class Dao : IDisposable
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		ISessionFactory _sessions;
-		readonly int SecondsToSleep = 300;
 
 		readonly int _version = 1;
 
@@ -57,14 +57,13 @@ namespace XG.DB
 		public Searches Searches { get; private set; }
 		public ApiKeys ApiKeys { get; private set; }
 
-		bool _allowRunning { get; set; }
 		bool _writeInProgress { get; set; }
-		DateTime _lastSave;
+		public DateTime LastSave { get; private set; }
 		List<AObject> _objectsAdded = new List<AObject>();
 		List<AObject> _objectsChanged = new List<AObject>();
 		List<AObject> _objectsRemoved = new List<AObject>();
 
-		public Dao()
+		public Dao(IScheduler aScheduler)
 		{
 			bool useSqlite = false;
 
@@ -97,9 +96,22 @@ namespace XG.DB
 			CheckIfDatabaseNeedsUpdate();
 			LoadObjects();
 
-			var thread = new Thread(DatabaseSync);
-			thread.Name = "DatabaseSync";
-			thread.Start();
+			// start sync job
+			var data = new JobDataMap();
+			data.Add("Dao", this);
+			data.Add("MaximalTimeBetweenSaves", 300);
+
+			IJobDetail job = JobBuilder.Create<DaoSync>()
+				.WithIdentity("DaoSync", "Dao")
+				.UsingJobData(data)
+				.Build();
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity("DaoSync", "Dao")
+				.WithSimpleSchedule(x => x.WithIntervalInSeconds(1).RepeatForever())
+				.Build();
+
+			aScheduler.ScheduleJob(job, trigger);
 		}
 
 		Configuration CreateSqliteConfiguration()
@@ -314,30 +326,15 @@ namespace XG.DB
 			}
 		}
 
-		void DatabaseSync()
+		internal void WriteToDatabase()
 		{
-			_lastSave = DateTime.Now;
-			_allowRunning = true;
-			while (_allowRunning)
-			{
-				if (_lastSave.AddSeconds(SecondsToSleep) < DateTime.Now)
-				{
-					WriteToDatabase();
-				}
-
-				Thread.Sleep(500);
-			}
-		}
-
-		void WriteToDatabase()
-		{
-			if (!_allowRunning || _writeInProgress)
+			if (_writeInProgress)
 			{
 				return;
 			}
 
 			_writeInProgress = true;
-			_lastSave = DateTime.Now;
+			LastSave = DateTime.Now;
 
 			try
 			{
@@ -417,8 +414,6 @@ namespace XG.DB
 
 		public void Dispose ()
 		{
-			_allowRunning = false;
-
 			Servers.OnAdded -= ObjectAdded;
 			Servers.OnRemoved -= ObjectRemoved;
 			Servers.OnChanged -= ObjectChanged;

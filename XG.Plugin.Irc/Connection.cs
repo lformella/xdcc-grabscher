@@ -1,5 +1,5 @@
-﻿// 
-//  ALoopPlugin.cs
+// 
+//  Connection.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,59 +24,43 @@
 //  
 
 using System;
-using System.Reflection;
-using System.Threading;
-using log4net;
+using Quartz;
+using XG.Plugin.Job;
 
-namespace XG.Plugin
+namespace XG.Plugin.Irc
 {
-	public abstract class ALoopPlugin : APlugin
+	public abstract class Connection : AWorker
 	{
-		#region VARIABLES
+		JobKey _jobKey;
 
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public DateTime LastContact { get; protected set; }
 
-		public Int64 SecondsToSleep { get; set; }
-		DateTime _last;
+		protected abstract void RepairConnection();
 
-		#endregion
-
-		#region FUNCTIONS
-
-		protected ALoopPlugin()
+		public void StartWatch(Int64 aWatchSeconds, string aName)
 		{
-			_last = DateTime.MinValue.ToUniversalTime();
+			_jobKey = new JobKey(aName, "Connection");
+
+			var data = new JobDataMap();
+			data.Add("Connection", this);
+			data.Add("MaximalTimeAfterLastContact", aWatchSeconds);
+
+			IJobDetail job = JobBuilder.Create<ConnectionWatcher>()
+				.WithIdentity(_jobKey)
+				.UsingJobData(data)
+				.Build();
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(aName, "Connection")
+				.WithSimpleSchedule(x => x.WithIntervalInSeconds(1).RepeatForever())
+				.Build();
+
+			Scheduler.ScheduleJob(job, trigger);
 		}
 
-		protected override void StartRun()
+		public void Stopwatch()
 		{
-			while (AllowRunning)
-			{
-				if (_last.AddSeconds(SecondsToSleep) < DateTime.Now)
-				{
-					_last = DateTime.Now;
-
-					try
-					{
-						LoopRun();
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("LoopRun()", ex);
-					}
-				}
-
-				Thread.Sleep(500);
-			}
+			Scheduler.DeleteJob(_jobKey);
 		}
-
-		protected override void StopRun()
-		{
-			Thread.Sleep(2000);
-		}
-
-		protected abstract void LoopRun();
-
-		#endregion
 	}
 }
