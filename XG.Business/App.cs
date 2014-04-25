@@ -51,9 +51,7 @@ namespace XG.Business
 
 		readonly Plugins _plugins;
 
-		readonly IScheduler _scheduler;
-
-		RrdDb _rrdDb;
+		readonly RrdDb _rrdDb;
 
 		public RrdDb RrdDb
 		{
@@ -63,11 +61,7 @@ namespace XG.Business
 			}
 		}
 
-		public bool ShutdownInProgress
-		{
-			get;
-			private set;
-		}
+		public bool ShutdownInProgress { get; private set; }
 
 		#endregion
 
@@ -89,17 +83,18 @@ namespace XG.Business
 
 		public App()
 		{
-			_scheduler = new StdSchedulerFactory().GetScheduler();
-			_scheduler.Start();
+			Scheduler = new StdSchedulerFactory().GetScheduler();
+			Scheduler.Start();
 
-			_dao = new Dao(_scheduler);
+			_dao = new Dao();
+			_dao.Scheduler = Scheduler;
+			LoadObjects();
 
 			FileActions.OnNotificationAdded += NotificationAdded;
 
 			_plugins = new Plugins();
 			_rrdDb = new Helper.Rrd().GetDb();
 
-			LoadObjects();
 			CheckForDuplicates();
 			ResetObjects();
 			ClearOldDownloads();
@@ -143,17 +138,15 @@ namespace XG.Business
 			}
 		}
 
-		void StartWorkers()
+		void CreateJobs()
 		{
 			var data1 = new JobDataMap();
 			data1.Add("RrdDB", _rrdDb);
 			AddJob(typeof(Job.Rrd), data1, Settings.Default.TakeSnapshotTimeInMinutes * 60);
-			
+
 			var data2 = new JobDataMap();
 			data2.Add("Servers", Servers);
 			AddJob(typeof(BotWatchdog), data2, Settings.Default.BotOfflineCheckTime);
-
-			_plugins.StartAll();
 		}
 
 		void AddJob(Type aType, JobDataMap aData, int aInterval)
@@ -168,7 +161,7 @@ namespace XG.Business
 				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aInterval).RepeatForever())
 				.Build();
 
-			_scheduler.ScheduleJob(job, trigger);
+			Scheduler.ScheduleJob(job, trigger);
 		}
 
 		void ClearOldDownloads()
@@ -276,6 +269,8 @@ namespace XG.Business
 
 		void LoadObjects()
 		{
+			_dao.Start("Dao", false);
+
 			Servers = _dao.Servers;
 			Files = _dao.Files;
 			Searches = _dao.Searches;
@@ -305,13 +300,14 @@ namespace XG.Business
 
 		protected override void StartRun()
 		{
-			StartWorkers();
+			CreateJobs();
+			_plugins.StartAll();
 		}
 
 		protected override void StopRun()
 		{
-			_scheduler.Shutdown();
-			_dao.Dispose();
+			Scheduler.Shutdown();
+			_dao.Stop();
 			_plugins.StopAll();
 		}
 
@@ -322,7 +318,7 @@ namespace XG.Business
 			aPlugin.Searches = Searches;
 			aPlugin.Notifications = Notifications;
 			aPlugin.ApiKeys = ApiKeys;
-			aPlugin.Scheduler = _scheduler;
+			aPlugin.Scheduler = Scheduler;
 
 			_plugins.Add(aPlugin);
 		}

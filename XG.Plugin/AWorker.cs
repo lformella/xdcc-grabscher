@@ -49,17 +49,21 @@ namespace XG.Plugin
 
 		#region FUNCTIONS
 
-		public void Start(string aName = null)
+		public void Start(string aName, bool aNewThread = true)
 		{
 			_allowRunning = true;
 			try
 			{
-				var thread = new Thread(StartRun);
-				if (aName != null)
+				if (aNewThread)
 				{
+					var thread = new Thread(StartRun);
 					thread.Name = aName;
+					thread.Start();
 				}
-				thread.Start();
+				else
+				{
+					StartRun();
+				}
 			}
 			catch (ThreadAbortException)
 			{

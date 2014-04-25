@@ -25,7 +25,7 @@
 
 using System;
 using Quartz;
-using XG.Plugin.Job;
+using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {

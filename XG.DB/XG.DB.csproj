@@ -84,6 +84,10 @@
       <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
       <Name>XG.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
+      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
+      <Name>XG.Plugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

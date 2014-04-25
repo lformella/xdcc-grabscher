@@ -52,7 +52,7 @@ namespace XG.Business
 		{
 			foreach (APlugin plugin in _plugins)
 			{
-				plugin.Start();
+				plugin.Start(plugin.GetType().Name);
 			}
 		}
 

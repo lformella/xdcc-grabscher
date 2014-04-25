@@ -27,9 +27,8 @@ using System;
 using log4net;
 using System.Reflection;
 using Quartz;
-using XG.Plugin.Irc;
 
-namespace XG.Plugin.Job
+namespace XG.Plugin.Irc.Job
 {
 	public abstract class ConnectionWatcher : IJob
 	{
