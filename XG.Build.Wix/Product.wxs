@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="XG" Language="1033" Version="3.2.0.0" Manufacturer="Lars Formella" UpgradeCode="d95523ff-1478-41d8-8139-3a7abc1a3fc7">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of XG is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="XG" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+
+		<PropertyRef Id="NETFRAMEWORK45"/>
+		<Condition Message="XG requires .NET Framework 4.5. Please install the .NET Framework then run this installer again.">
+			<![CDATA[Installed OR NETFRAMEWORK45]]>
+		</Condition>
+
+		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+		<UIRef Id="WixUI_InstallDir" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="XG" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<Component Id="ApplicationFiles" Guid="48974b54-bfcd-41b4-b1ba-fa2571950fe1">
+				<File Id="agsXMPP.dll" Source="..\XG.Application\bin\Release\agsXMPP.dll"/>
+				<File Id="BplusDotNet.dll" Source="..\XG.Application\bin\Release\BplusDotNet.dll"/>
+				<File Id="CacheAspect.dll" Source="..\XG.Application\bin\Release\CacheAspect.dll"/>
+				<File Id="CacheAspect.pdb" Source="..\XG.Application\bin\Release\CacheAspect.pdb"/>
+				<File Id="HtmlAgilityPack.dll" Source="..\XG.Application\bin\Release\HtmlAgilityPack.dll"/>
+				<File Id="HtmlAgilityPack.pdb" Source="..\XG.Application\bin\Release\HtmlAgilityPack.pdb"/>
+				<File Id="HtmlAgilityPack.xml" Source="..\XG.Application\bin\Release\HtmlAgilityPack.xml"/>
+				<File Id="Iesi.Collections.dll" Source="..\XG.Application\bin\Release\Iesi.Collections.dll"/>
+				<File Id="Iesi.Collections.xml" Source="..\XG.Application\bin\Release\Iesi.Collections.xml"/>
+				<File Id="log4net.dll" Source="..\XG.Application\bin\Release\log4net.dll"/>
+				<File Id="log4net.xml" Source="..\XG.Application\bin\Release\log4net.xml"/>
+				<File Id="Meebey.SmartIrc4net.dll" Source="..\XG.Application\bin\Release\Meebey.SmartIrc4net.dll"/>
+				<File Id="Microsoft.AspNet.SignalR.Core.dll" Source="..\XG.Application\bin\Release\Microsoft.AspNet.SignalR.Core.dll"/>
+				<File Id="Microsoft.AspNet.SignalR.Core.xml" Source="..\XG.Application\bin\Release\Microsoft.AspNet.SignalR.Core.xml"/>
+				<File Id="Microsoft.Owin.dll" Source="..\XG.Application\bin\Release\Microsoft.Owin.dll"/>
+				<File Id="Microsoft.Owin.Hosting.dll" Source="..\XG.Application\bin\Release\Microsoft.Owin.Hosting.dll"/>
+				<File Id="Microsoft.Owin.Hosting.xml" Source="..\XG.Application\bin\Release\Microsoft.Owin.Hosting.xml"/>
+				<File Id="Microsoft.Owin.Security.dll" Source="..\XG.Application\bin\Release\Microsoft.Owin.Security.dll"/>
+				<File Id="Microsoft.Owin.Security.xml" Source="..\XG.Application\bin\Release\Microsoft.Owin.Security.xml"/>
+				<File Id="Microsoft.Owin.xml" Source="..\XG.Application\bin\Release\Microsoft.Owin.xml"/>
+				<File Id="Nancy.dll" Source="..\XG.Application\bin\Release\Nancy.dll"/>
+				<File Id="Nancy.Owin.dll" Source="..\XG.Application\bin\Release\Nancy.Owin.dll"/>
+				<File Id="Nancy.Owin.xml" Source="..\XG.Application\bin\Release\Nancy.Owin.xml"/>
+				<File Id="Nancy.Serialization.JsonNet.dll" Source="..\XG.Application\bin\Release\Nancy.Serialization.JsonNet.dll"/>
+				<File Id="Nancy.xml" Source="..\XG.Application\bin\Release\Nancy.xml"/>
+				<File Id="Nest.dll" Source="..\XG.Application\bin\Release\Nest.dll"/>
+				<File Id="Nest.pdb" Source="..\XG.Application\bin\Release\Nest.pdb"/>
+				<File Id="Nest.xml" Source="..\XG.Application\bin\Release\Nest.xml"/>
+				<File Id="Newtonsoft.Json.dll" Source="..\XG.Application\bin\Release\Newtonsoft.Json.dll"/>
+				<File Id="Newtonsoft.Json.xml" Source="..\XG.Application\bin\Release\Newtonsoft.Json.xml"/>
+				<File Id="NHibernate.dll" Source="..\XG.Application\bin\Release\NHibernate.dll"/>
+				<File Id="NHibernate.xml" Source="..\XG.Application\bin\Release\NHibernate.xml"/>
+				<File Id="Nowin.dll" Source="..\XG.Application\bin\Release\Nowin.dll"/>
+				<File Id="Owin.dll" Source="..\XG.Application\bin\Release\Owin.dll"/>
+				<File Id="PostSharp.dll" Source="..\XG.Application\bin\Release\PostSharp.dll"/>
+				<File Id="SharpRobin.dll" Source="..\XG.Application\bin\Release\SharpRobin.dll"/>
+				<File Id="StarkSoftProxy.dll" Source="..\XG.Application\bin\Release\StarkSoftProxy.dll"/>
+				<File Id="start.sh" Source="..\XG.Application\bin\Release\start.sh"/>
+				<File Id="stop.sh" Source="..\XG.Application\bin\Release\stop.sh"/>
+				<File Id="System.Data.SQLite.dll" Source="..\XG.Application\bin\Release\System.Data.SQLite.dll"/>
+				<File Id="System.Data.SQLite.xml" Source="..\XG.Application\bin\Release\System.Data.SQLite.xml"/>
+				<File Id="XG.Application.exe" Source="..\XG.Application\bin\Release\XG.Application.exe"/>
+				<File Id="XG.Application.exe.config" Source="..\XG.Application\bin\Release\XG.Application.exe.config"/>
+				<File Id="XG.Application.exe.mdb" Source="..\XG.Application\bin\Release\XG.Application.exe.mdb"/>
+				<File Id="XG.Application.pdb" Source="..\XG.Application\bin\Release\XG.Application.pdb"/>
+				<File Id="xg.application.vshost.exe" Source="..\XG.Application\bin\Release\xg.application.vshost.exe"/>
+				<File Id="XG.Application.vshost.exe.config" Source="..\XG.Application\bin\Release\XG.Application.vshost.exe.config"/>
+				<File Id="xg.application.vshost.exe.manifest" Source="..\XG.Application\bin\Release\xg.application.vshost.exe.manifest"/>
+				<File Id="XG.Business.dll" Source="..\XG.Application\bin\Release\XG.Business.dll"/>
+				<File Id="XG.Business.dll.mdb" Source="..\XG.Application\bin\Release\XG.Business.dll.mdb"/>
+				<File Id="XG.Business.pdb" Source="..\XG.Application\bin\Release\XG.Business.pdb"/>
+				<File Id="XG.Config.dll" Source="..\XG.Application\bin\Release\XG.Config.dll"/>
+				<File Id="XG.Config.dll.mdb" Source="..\XG.Application\bin\Release\XG.Config.dll.mdb"/>
+				<File Id="XG.Config.pdb" Source="..\XG.Application\bin\Release\XG.Config.pdb"/>
+				<File Id="XG.DB.dll" Source="..\XG.Application\bin\Release\XG.DB.dll"/>
+				<File Id="XG.DB.dll.mdb" Source="..\XG.Application\bin\Release\XG.DB.dll.mdb"/>
+				<File Id="XG.DB.pdb" Source="..\XG.Application\bin\Release\XG.DB.pdb"/>
+				<File Id="XG.Model.dll" Source="..\XG.Application\bin\Release\XG.Model.dll"/>
+				<File Id="XG.Model.dll.mdb" Source="..\XG.Application\bin\Release\XG.Model.dll.mdb"/>
+				<File Id="XG.Model.pdb" Source="..\XG.Application\bin\Release\XG.Model.pdb"/>
+				<File Id="XG.Plugin.dll" Source="..\XG.Application\bin\Release\XG.Plugin.dll"/>
+				<File Id="XG.Plugin.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.dll.mdb"/>
+				<File Id="XG.Plugin.ElasticSearch.dll" Source="..\XG.Application\bin\Release\XG.Plugin.ElasticSearch.dll"/>
+				<File Id="XG.Plugin.ElasticSearch.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.ElasticSearch.dll.mdb"/>
+				<File Id="XG.Plugin.ElasticSearch.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.ElasticSearch.pdb"/>
+				<File Id="XG.Plugin.Import.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Import.dll"/>
+				<File Id="XG.Plugin.Import.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Import.dll.mdb"/>
+				<File Id="XG.Plugin.Import.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Import.pdb"/>
+				<File Id="XG.Plugin.Irc.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Irc.dll"/>
+				<File Id="XG.Plugin.Irc.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Irc.dll.mdb"/>
+				<File Id="XG.Plugin.Irc.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Irc.pdb"/>
+				<File Id="XG.Plugin.Jabber.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Jabber.dll"/>
+				<File Id="XG.Plugin.Jabber.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Jabber.dll.mdb"/>
+				<File Id="XG.Plugin.Jabber.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Jabber.pdb"/>
+				<File Id="XG.Plugin.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.pdb"/>
+				<File Id="XG.Plugin.Webserver.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Webserver.dll"/>
+				<File Id="XG.Plugin.Webserver.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Webserver.dll.mdb"/>
+				<File Id="XG.Plugin.Webserver.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Webserver.pdb"/>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
