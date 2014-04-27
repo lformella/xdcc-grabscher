@@ -354,7 +354,12 @@ namespace XG.Plugin.Irc
 				Server.Connected = false;
 				Server.Commit();
 				_log.Info("disconnected " + Server);
-				OnDisconnected(this, new EventArgs<Server>(Server));
+
+				// dont message a disconnect because the server will be reconnected
+				if (!Server.Enabled)
+				{
+					OnDisconnected(this, new EventArgs<Server>(Server));
+				}
 			};
 
 			Client.OnJoin += (sender, e) =>
@@ -732,7 +737,7 @@ namespace XG.Plugin.Irc
 			{
 				Client.Connect(Server.Name, Server.Port);
 			}
-			catch(CouldNotConnectException ex)
+			catch (CouldNotConnectException ex)
 			{
 				_log.Warn("StartRun() connection failed " + ex.Message);
 				// can be null if we stopped a connection which is not connected and fails later
