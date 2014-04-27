@@ -195,7 +195,7 @@ namespace XG.Application
 			}
 
 			app.OnShutdownComplete += delegate { Environment.Exit(0); };
-			app.Start("App");
+			app.Start(typeof(App).ToString());
 		}
 	}
 }

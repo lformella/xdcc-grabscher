@@ -103,6 +103,7 @@ namespace XG.Plugin
 				Log.Error("AddRepeatingJob(" + aType.Name + ", " + aName + ", " + aGroup + ") already exists");
 				return;
 			}
+			Log.Info("AddRepeatingJob(" + aType.Name + ", " + aName + ", " + aGroup + ", " + aSecondsToSleep + ")");
 
 			_scheduledJobs.Add(key);
 

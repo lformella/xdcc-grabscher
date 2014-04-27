@@ -98,7 +98,7 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Searches = Searches;
 			_eventForwarder.Notifications = Notifications;
 			_eventForwarder.ApiKeys = ApiKeys;
-			_eventForwarder.Start("EventForwarder");
+			_eventForwarder.Start(typeof(SignalR.EventForwarder).ToString());
 		}
 
 		protected override void StopRun()

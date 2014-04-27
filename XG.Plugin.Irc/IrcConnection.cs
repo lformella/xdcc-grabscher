@@ -795,9 +795,9 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		protected override void RepairConnection()
+		internal override void RepairConnection()
 		{
-			StopRun();
+			Client.Reconnect();
 		}
 
 		#endregion

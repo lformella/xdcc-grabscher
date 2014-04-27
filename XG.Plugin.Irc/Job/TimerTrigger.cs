@@ -30,7 +30,7 @@ using Quartz;
 
 namespace XG.Plugin.Irc.Job
 {
-	public abstract class TimerTrigger : IJob
+	public class TimerTrigger : IJob
 	{
 		public Plugin Plugin { get; set; }
 

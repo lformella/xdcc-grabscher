@@ -33,7 +33,6 @@ using XG.Business.Helper;
 using XG.Model.Domain;
 using XG.Plugin;
 using XG.Config.Properties;
-using XG.Business.Job;
 using XG.DB;
 using Quartz.Impl;
 
@@ -82,7 +81,6 @@ namespace XG.Business
 		public App()
 		{
 			Scheduler = new StdSchedulerFactory().GetScheduler();
-			Scheduler.Start();
 
 			_dao = new Dao();
 			_dao.Scheduler = Scheduler;
@@ -141,7 +139,7 @@ namespace XG.Business
 			AddRepeatingJob(typeof(Job.Rrd), "RrdDbCollector", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 60, 
 				new JobItem("RrdDB", _rrdDb));
 
-			AddRepeatingJob(typeof(BotWatchdog), "BotWatchdog", "Core", Settings.Default.BotOfflineCheckTime, 
+			AddRepeatingJob(typeof(Job.BotWatchdog), "BotWatchdog", "Core", Settings.Default.BotOfflineCheckTime, 
 				new JobItem("Servers", Servers));
 		}
 
@@ -250,7 +248,7 @@ namespace XG.Business
 
 		void LoadObjects()
 		{
-			_dao.Start("Dao", false);
+			_dao.Start(typeof(Dao).ToString(), false);
 
 			Servers = _dao.Servers;
 			Files = _dao.Files;
@@ -283,6 +281,8 @@ namespace XG.Business
 		{
 			CreateJobs();
 			_plugins.StartAll();
+
+			Scheduler.Start();
 		}
 
 		protected override void StopRun()

@@ -30,7 +30,7 @@ using Quartz;
 
 namespace XG.Plugin.Irc.Job
 {
-	public abstract class ConnectionWatcher : IJob
+	public class ConnectionWatcher : IJob
 	{
 		static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -42,7 +42,7 @@ namespace XG.Plugin.Irc.Job
 			if ((DateTime.Now - Connection.LastContact).TotalSeconds > MaximalTimeAfterLastContact)
 			{
 				_log.Error("Execute() connection seems hanging since more than " + MaximalTimeAfterLastContact + " seconds");
-				Connection.Stop();
+				Connection.RepairConnection();
 			}
 		}
 	}

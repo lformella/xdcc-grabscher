@@ -34,7 +34,6 @@ using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
 using XG.Model.Domain;
-using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {
@@ -70,7 +69,7 @@ namespace XG.Plugin.Irc
 				}
 			}
 
-			AddRepeatingJob(typeof(TimerTrigger), "Trigger", "IrcPlugin", Settings.Default.RunLoopTime, 
+			AddRepeatingJob(typeof(Job.TimerTrigger), "Trigger", "IrcPlugin", Settings.Default.RunLoopTime,
 				new JobItem("Plugin", this));
 		}
 

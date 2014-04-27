@@ -464,7 +464,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		protected override void RepairConnection()
+		internal override void RepairConnection()
 		{
 			_tcpClient.Close();
 		}

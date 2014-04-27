@@ -24,7 +24,6 @@
 //  
 
 using System;
-using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {
@@ -32,11 +31,12 @@ namespace XG.Plugin.Irc
 	{
 		public DateTime LastContact { get; protected set; }
 
-		protected abstract void RepairConnection();
+		internal abstract void RepairConnection();
 
 		public void StartWatch(Int64 aWatchSeconds, string aName)
 		{
-			AddRepeatingJob(typeof(ConnectionWatcher), aName, "Connection", 1, 
+			LastContact = DateTime.Now;
+			AddRepeatingJob(typeof(Job.ConnectionWatcher), aName, "Connection", 1, 
 				new JobItem("Connection", this),
 				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
 		}
