@@ -26,10 +26,9 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Quartz;
 
-namespace XG.Config.Properties
+namespace XG.Plugin
 {
 	public class JobItem
 	{

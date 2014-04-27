@@ -24,32 +24,26 @@
 //  
 
 using System;
-using Quartz;
-using XG.Config.Properties;
 using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {
 	public abstract class Connection : AWorker
 	{
-		JobKey _jobKey;
-
 		public DateTime LastContact { get; protected set; }
 
 		protected abstract void RepairConnection();
 
 		public void StartWatch(Int64 aWatchSeconds, string aName)
 		{
-			_jobKey = new JobKey(aName, "Connection");
-
-			Scheduler.AddJob(typeof(ConnectionWatcher), _jobKey, 1, 
+			AddRepeatingJob(typeof(ConnectionWatcher), aName, "Connection", 1, 
 				new JobItem("Connection", this),
 				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
 		}
 
 		public void Stopwatch()
 		{
-			Scheduler.DeleteJob(_jobKey);
+			RemoveAllMyRepeatingJobs();
 		}
 	}
 }

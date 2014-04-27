@@ -34,7 +34,6 @@ using XG.Model.Domain;
 using log4net;
 using System.Collections.Generic;
 using System.Threading;
-using Quartz;
 using XG.Plugin;
 
 #if __MonoCS__
@@ -99,7 +98,7 @@ namespace XG.DB
 			LoadObjects();
 
 			// create sync job
-			Scheduler.AddJob(typeof(DaoSync), new JobKey("DaoSync", "Dao"), 1, 
+			AddRepeatingJob(typeof(DaoSync), "DaoSync", "Dao", 1, 
 				new JobItem("Dao", this),
 				new JobItem("MaximalTimeBetweenSaves", 300));
 		}

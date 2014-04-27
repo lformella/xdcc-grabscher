@@ -41,9 +41,6 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Quartz">
-      <HintPath>..\packages\Quartz.2.2.3\lib\net40\Quartz.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Extensions.cs" />
@@ -56,7 +53,6 @@
     <Compile Include="Properties\FileHandler.cs" />
     <Compile Include="Properties\FileHandlerProcess.cs" />
     <Compile Include="XgSettingsProvider.cs" />
-    <Compile Include="Properties\JobItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

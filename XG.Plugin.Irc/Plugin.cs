@@ -28,14 +28,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Threading;
 using log4net;
 using Meebey.SmartIrc4net;
 using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
 using XG.Model.Domain;
-using Quartz;
 using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
@@ -72,7 +70,7 @@ namespace XG.Plugin.Irc
 				}
 			}
 
-			Scheduler.AddJob(typeof(TimerTrigger), new JobKey("Trigger", "IrcPlugin"), Settings.Default.RunLoopTime, 
+			AddRepeatingJob(typeof(TimerTrigger), "Trigger", "IrcPlugin", Settings.Default.RunLoopTime, 
 				new JobItem("Plugin", this));
 		}
 

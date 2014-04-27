@@ -23,7 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,7 +35,6 @@ using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Job;
 using XG.DB;
-using Quartz;
 using Quartz.Impl;
 
 namespace XG.Business
@@ -140,10 +138,10 @@ namespace XG.Business
 
 		void CreateJobs()
 		{
-			Scheduler.AddJob(typeof(Job.Rrd), new JobKey("RrdDbCollector", "Core"), Settings.Default.TakeSnapshotTimeInMinutes * 60, 
+			AddRepeatingJob(typeof(Job.Rrd), "RrdDbCollector", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 60, 
 				new JobItem("RrdDB", _rrdDb));
 
-			Scheduler.AddJob(typeof(BotWatchdog), new JobKey("BotWatchdog", "Core"), Settings.Default.BotOfflineCheckTime, 
+			AddRepeatingJob(typeof(BotWatchdog), "BotWatchdog", "Core", Settings.Default.BotOfflineCheckTime, 
 				new JobItem("Servers", Servers));
 		}
 
