@@ -22,6 +22,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
+using Quartz;
+using Quartz.Impl;
 
 #if __MonoCS__
 using Mono.Unix;
@@ -176,20 +178,20 @@ namespace XG.Application
 
 			app = new App();
 
-			app.AddWorker(new Plugin.Irc.Plugin());
+			app.AddPlugin(new Plugin.Irc.Plugin());
 			if (Settings.Default.UseJabberClient)
 			{
-				app.AddWorker(new Plugin.Jabber.Plugin());
+				app.AddPlugin(new Plugin.Jabber.Plugin());
 			}
 			if (Settings.Default.UseElasticSearch)
 			{
-				app.AddWorker(new Plugin.ElasticSearch.Plugin());
+				app.AddPlugin(new Plugin.ElasticSearch.Plugin());
 			}
 			if (Settings.Default.UseWebserver)
 			{
 				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
 				webServer.OnShutdown += delegate { app.Shutdown(webServer); };
-				app.AddWorker(webServer);
+				app.AddPlugin(webServer);
 			}
 
 			app.OnShutdownComplete += delegate { Environment.Exit(0); };

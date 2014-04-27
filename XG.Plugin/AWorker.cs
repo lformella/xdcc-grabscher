@@ -27,6 +27,8 @@ using System;
 using System.Reflection;
 using System.Threading;
 using log4net;
+using Quartz;
+using System.Collections.Generic;
 
 namespace XG.Plugin
 {
@@ -42,21 +44,29 @@ namespace XG.Plugin
 			get { return _allowRunning; }
 		}
 
+		public IScheduler Scheduler { get; set; }
+
+		List<JobKey> _scheduledJobs = new List<JobKey>();
+
 		#endregion
 
 		#region FUNCTIONS
 
-		public void Start(string aName = null)
+		public void Start(string aName, bool aNewThread = true)
 		{
 			_allowRunning = true;
 			try
 			{
-				var thread = new Thread(StartRun);
-				if (aName != null)
+				if (aNewThread)
 				{
+					var thread = new Thread(StartRun);
 					thread.Name = aName;
+					thread.Start();
 				}
-				thread.Start();
+				else
+				{
+					StartRun();
+				}
 			}
 			catch (ThreadAbortException)
 			{
@@ -84,6 +94,41 @@ namespace XG.Plugin
 		}
 
 		protected virtual void StopRun() {}
+
+		public void AddRepeatingJob(Type aType, string aName, string aGroup, int aSecondsToSleep, params JobItem[] aItems)
+		{
+			JobKey key = new JobKey(aName, aGroup);
+			if (Scheduler.GetJobDetail(key) != null)
+			{
+				Log.Error("AddRepeatingJob(" + aType.Name + ", " + aName + ", " + aGroup + ") already exists");
+				return;
+			}
+
+			_scheduledJobs.Add(key);
+
+			var data = new JobDataMap();
+			foreach (JobItem item in aItems)
+			{
+				data.Add(item.Key, item.Value);
+			}
+
+			IJobDetail job = JobBuilder.Create(aType)
+				.WithIdentity(key)
+				.UsingJobData(data)
+				.Build();
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(aName, aGroup)
+				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aSecondsToSleep).RepeatForever())
+				.Build();
+
+			Scheduler.ScheduleJob(job, trigger);
+		}
+
+		public void RemoveAllMyRepeatingJobs()
+		{
+			Scheduler.DeleteJobs(_scheduledJobs);
+		}
 
 		#endregion
 	}

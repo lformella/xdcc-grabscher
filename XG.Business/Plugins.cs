@@ -1,5 +1,5 @@
-﻿// 
-//  ALoopPlugin.cs
+// 
+//  Plugins.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,59 +23,46 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.Reflection;
-using System.Threading;
-using log4net;
+using System.Collections.Generic;
+using XG.Plugin;
 
-namespace XG.Plugin
+namespace XG.Business
 {
-	public abstract class ALoopPlugin : APlugin
+	public class Plugins
 	{
 		#region VARIABLES
 
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		public Int64 SecondsToSleep { get; set; }
-		DateTime _last;
+		readonly HashSet<APlugin> _plugins;
 
 		#endregion
 
 		#region FUNCTIONS
 
-		protected ALoopPlugin()
+		public Plugins()
 		{
-			_last = DateTime.MinValue.ToUniversalTime();
+			_plugins = new HashSet<APlugin>();
 		}
 
-		protected override void StartRun()
+		public void Add(APlugin aPlugin)
 		{
-			while (AllowRunning)
+			_plugins.Add(aPlugin);
+		}
+
+		public void StartAll()
+		{
+			foreach (APlugin plugin in _plugins)
 			{
-				if (_last.AddSeconds(SecondsToSleep) < DateTime.Now)
-				{
-					_last = DateTime.Now;
-
-					try
-					{
-						LoopRun();
-					}
-					catch (Exception ex)
-					{
-						Log.Fatal("LoopRun()", ex);
-					}
-				}
-
-				Thread.Sleep(500);
+				plugin.Start(plugin.GetType().Name);
 			}
 		}
 
-		protected override void StopRun()
+		public void StopAll()
 		{
-			Thread.Sleep(2000);
+			foreach (APlugin plugin in _plugins)
+			{
+				plugin.Stop();
+			}
 		}
-
-		protected abstract void LoopRun();
 
 		#endregion
 	}

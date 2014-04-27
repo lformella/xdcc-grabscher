@@ -1,5 +1,5 @@
 // 
-//  Workers.cs
+//  Connection.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,47 +23,27 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System.Collections.Generic;
-using XG.Plugin;
+using System;
+using XG.Plugin.Irc.Job;
 
-namespace XG.Business
+namespace XG.Plugin.Irc
 {
-	public class Workers
+	public abstract class Connection : AWorker
 	{
-		#region VARIABLES
+		public DateTime LastContact { get; protected set; }
 
-		readonly HashSet<AWorker> _workers;
+		protected abstract void RepairConnection();
 
-		#endregion
-
-		#region FUNCTIONS
-
-		public Workers()
+		public void StartWatch(Int64 aWatchSeconds, string aName)
 		{
-			_workers = new HashSet<AWorker>();
+			AddRepeatingJob(typeof(ConnectionWatcher), aName, "Connection", 1, 
+				new JobItem("Connection", this),
+				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
 		}
 
-		public void Add(AWorker aWorker)
+		public void Stopwatch()
 		{
-			_workers.Add(aWorker);
+			RemoveAllMyRepeatingJobs();
 		}
-
-		public void StartAll()
-		{
-			foreach (AWorker worker in _workers)
-			{
-				worker.Start();
-			}
-		}
-
-		public void StopAll()
-		{
-			foreach (AWorker worker in _workers)
-			{
-				worker.Stop();
-			}
-		}
-
-		#endregion
 	}
 }

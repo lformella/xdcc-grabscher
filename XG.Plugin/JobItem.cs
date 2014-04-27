@@ -1,5 +1,5 @@
 // 
-//  Rrd.cs
+//  JobItem.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,31 +24,21 @@
 //  
 
 using System;
-using SharpRobin.Core;
-using XG.Plugin;
-using XG.Business.Helper;
-using XG.Business.Model;
+using System.IO;
+using System.Collections.Generic;
+using Quartz;
 
-namespace XG.Business.Worker
+namespace XG.Plugin
 {
-	public class Rrd : ALoopPlugin
+	public class JobItem
 	{
-		public RrdDb RrdDB { get; set; }
+		public string Key { get; set; }
+		public object Value { get; set; }
 
-		#region AWorker
-
-		protected override void LoopRun()
+		public JobItem(string aKey, object aValue)
 		{
-			var snapshot = Snapshots.GenerateSnapshot();
-
-			Sample sample = RrdDB.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));
-			for (int a = 1; a < Snapshot.SnapshotCount; a++)
-			{
-				sample.setValue(a + "", snapshot.Get((SnapshotValue)a));
-			}
-			sample.update();
+			Key = aKey;
+			Value = aValue;
 		}
-
-		#endregion
 	}
 }

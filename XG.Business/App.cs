@@ -23,7 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,8 +33,9 @@ using XG.Business.Helper;
 using XG.Model.Domain;
 using XG.Plugin;
 using XG.Config.Properties;
-using XG.Business.Worker;
+using XG.Business.Job;
 using XG.DB;
+using Quartz.Impl;
 
 namespace XG.Business
 {
@@ -45,11 +45,11 @@ namespace XG.Business
 
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		readonly Dao _dao = new Dao();
+		readonly Dao _dao;
 
-		readonly Workers _workers;
+		readonly Plugins _plugins;
 
-		RrdDb _rrdDb;
+		readonly RrdDb _rrdDb;
 
 		public RrdDb RrdDb
 		{
@@ -59,11 +59,7 @@ namespace XG.Business
 			}
 		}
 
-		public bool ShutdownInProgress
-		{
-			get;
-			private set;
-		}
+		public bool ShutdownInProgress { get; private set; }
 
 		#endregion
 
@@ -85,12 +81,18 @@ namespace XG.Business
 
 		public App()
 		{
+			Scheduler = new StdSchedulerFactory().GetScheduler();
+			Scheduler.Start();
+
+			_dao = new Dao();
+			_dao.Scheduler = Scheduler;
+			LoadObjects();
+
 			FileActions.OnNotificationAdded += NotificationAdded;
 
-			_workers = new Workers();
+			_plugins = new Plugins();
 			_rrdDb = new Helper.Rrd().GetDb();
 
-			LoadObjects();
 			CheckForDuplicates();
 			ResetObjects();
 			ClearOldDownloads();
@@ -134,15 +136,13 @@ namespace XG.Business
 			}
 		}
 
-		void StartWorkers()
+		void CreateJobs()
 		{
-			var snapShotWorker = new Worker.Rrd { SecondsToSleep = Settings.Default.TakeSnapshotTimeInMinutes * 60 };
-			snapShotWorker.RrdDB = _rrdDb;
-			AddWorker(snapShotWorker);
+			AddRepeatingJob(typeof(Job.Rrd), "RrdDbCollector", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 60, 
+				new JobItem("RrdDB", _rrdDb));
 
-			AddWorker(new BotWatchdog { SecondsToSleep = Settings.Default.BotOfflineCheckTime });
-
-			_workers.StartAll();
+			AddRepeatingJob(typeof(BotWatchdog), "BotWatchdog", "Core", Settings.Default.BotOfflineCheckTime, 
+				new JobItem("Servers", Servers));
 		}
 
 		void ClearOldDownloads()
@@ -250,6 +250,8 @@ namespace XG.Business
 
 		void LoadObjects()
 		{
+			_dao.Start("Dao", false);
+
 			Servers = _dao.Servers;
 			Files = _dao.Files;
 			Searches = _dao.Searches;
@@ -279,24 +281,27 @@ namespace XG.Business
 
 		protected override void StartRun()
 		{
-			StartWorkers();
+			CreateJobs();
+			_plugins.StartAll();
 		}
 
 		protected override void StopRun()
 		{
-			_dao.Dispose();
-			_workers.StopAll();
+			Scheduler.Shutdown();
+			_dao.Stop();
+			_plugins.StopAll();
 		}
 
-		public void AddWorker(APlugin aWorker)
+		public void AddPlugin(APlugin aPlugin)
 		{
-			aWorker.Servers = Servers;
-			aWorker.Files = Files;
-			aWorker.Searches = Searches;
-			aWorker.Notifications = Notifications;
-			aWorker.ApiKeys = ApiKeys;
+			aPlugin.Servers = Servers;
+			aPlugin.Files = Files;
+			aPlugin.Searches = Searches;
+			aPlugin.Notifications = Notifications;
+			aPlugin.ApiKeys = ApiKeys;
+			aPlugin.Scheduler = Scheduler;
 
-			_workers.Add(aWorker);
+			_plugins.Add(aPlugin);
 		}
 
 		#endregion

@@ -60,6 +60,12 @@
     <Reference Include="System.Data.SQLite.Linq">
       <HintPath>..\packages\System.Data.SQLite.x86.1.0.91.3\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\packages\Quartz.2.2.3\lib\net40\Quartz.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dao.cs" />
@@ -67,6 +73,7 @@
     <Compile Include="MonoSqliteDriver.cs" />
     <Compile Include="Domain\Version.cs" />
     <Compile Include="TrackingNumberInterceptor.cs" />
+    <Compile Include="DaoSync.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Config\XG.Config.csproj">
@@ -76,6 +83,10 @@
     <ProjectReference Include="..\XG.Model\XG.Model.csproj">
       <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
       <Name>XG.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
+      <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
+      <Name>XG.Plugin</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

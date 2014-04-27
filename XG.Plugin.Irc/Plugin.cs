@@ -28,13 +28,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Threading;
 using log4net;
 using Meebey.SmartIrc4net;
 using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
 using XG.Model.Domain;
+using XG.Plugin.Irc.Job;
 
 namespace XG.Plugin.Irc
 {
@@ -70,19 +70,8 @@ namespace XG.Plugin.Irc
 				}
 			}
 
-			DateTime _last = DateTime.Now;
-			while (AllowRunning)
-			{
-				if (_last.AddSeconds(Settings.Default.RunLoopTime) < DateTime.Now)
-				{
-					foreach (var connection in _connections.ToArray())
-					{
-						connection.TriggerTimerRun();
-					}
-				}
-
-				Thread.Sleep(500);
-			}
+			AddRepeatingJob(typeof(TimerTrigger), "Trigger", "IrcPlugin", Settings.Default.RunLoopTime, 
+				new JobItem("Plugin", this));
 		}
 
 		protected override void StopRun()
@@ -156,7 +145,8 @@ namespace XG.Plugin.Irc
 				connection = new IrcConnection
 				{
 					Server = aServer,
-					Parser = _parser
+					Parser = _parser,
+					Scheduler = Scheduler
 				};
 				_connections.Add(connection);
 
@@ -226,7 +216,8 @@ namespace XG.Plugin.Irc
 					StartSize = aEventArgs.Value2,
 					IP = aEventArgs.Value3,
 					Port = aEventArgs.Value4,
-					MaxData = aEventArgs.Value1.RealSize - aEventArgs.Value2
+					MaxData = aEventArgs.Value1.RealSize - aEventArgs.Value2,
+					Scheduler = Scheduler
 				};
 
 				download.OnDisconnected += BotDisconnected;
@@ -398,6 +389,14 @@ namespace XG.Plugin.Irc
 		#endregion
 
 		#region Functions
+
+		internal void TriggerTimer()
+		{
+			foreach (var connection in _connections.ToArray())
+			{
+				connection.TriggerTimerRun();
+			}
+		}
 
 		void AddNotification(object aSender, EventArgs<Notification> aEventArgs)
 		{

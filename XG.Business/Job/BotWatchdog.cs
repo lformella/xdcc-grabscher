@@ -30,16 +30,17 @@ using log4net;
 using XG.Model.Domain;
 using XG.Plugin;
 using XG.Config.Properties;
+using Quartz;
 
-namespace XG.Business.Worker
+namespace XG.Business.Job
 {
-	public class BotWatchdog : ALoopPlugin
+	public class BotWatchdog : IJob
 	{
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region AWorker
+		public Servers Servers { get; set; }
 
-		protected override void LoopRun()
+		public void Execute (IJobExecutionContext context)
 		{
 			Bot[] tBots = (from server in Servers.All
 			                where server.Connected
@@ -51,17 +52,15 @@ namespace XG.Business.Worker
 				                bot.OldestActivePacket() == null
 			                select bot).ToArray();
 
-			int a = tBots.Count();
+			int a = tBots.Length;
 			foreach (Bot tBot in tBots)
 			{
 				tBot.Parent.RemoveBot(tBot);
 			}
 			if (a > 0)
 			{
-				Log.Info("LoopRun() removed " + a + " offline bot(s)");
+				Log.Info("Execute() removed " + a + " offline bot(s)");
 			}
 		}
-
-		#endregion
 	}
 }

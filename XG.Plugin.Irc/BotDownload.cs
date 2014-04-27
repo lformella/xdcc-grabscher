@@ -25,21 +25,18 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using log4net;
 using XG.Model;
 using XG.Model.Domain;
-using XG.Plugin;
 using XG.Config.Properties;
 using XG.Business.Helper;
-using System.Threading;
 
 namespace XG.Plugin.Irc
 {
-	public class BotDownload : ConnectionWatcher
+	public class BotDownload : Connection
 	{
 		#region VARIABLES
 
@@ -130,13 +127,12 @@ namespace XG.Plugin.Irc
 							byte[] data = null;
 
 							// start watch to look if our connection is still receiving data
-							StartWatch(Settings.Default.DownloadTimeoutTime, IP + ":" + Port + " ConnectionWatch");
+							StartWatch(Settings.Default.DownloadTimeoutTime, IP + ":" + Port);
 
 							int failCounter = 0;
 							do
 							{
 								data = reader.ReadBytes((int) (missing < max ? missing : max));
-								// update watch thread
 								LastContact = DateTime.Now;
 
 								if (data != null && data.Length != 0)

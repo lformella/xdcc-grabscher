@@ -34,6 +34,7 @@ using XG.Model.Domain;
 using log4net;
 using System.Collections.Generic;
 using System.Threading;
+using XG.Plugin;
 
 #if __MonoCS__
 using Mono.Data.Sqlite;
@@ -43,28 +44,27 @@ using System.Data.SQLite;
 
 namespace XG.DB
 {
-	public sealed class Dao : IDisposable
+	public class Dao : APlugin
 	{
+		#region VARIABLES
+
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		ISessionFactory _sessions;
-		readonly int SecondsToSleep = 300;
 
 		readonly int _version = 1;
 
-		public Servers Servers { get; private set; }
-		public Files Files { get; private set; }
-		public Searches Searches { get; private set; }
-		public ApiKeys ApiKeys { get; private set; }
-
-		bool _allowRunning { get; set; }
 		bool _writeInProgress { get; set; }
-		DateTime _lastSave;
+		public DateTime LastSave { get; private set; }
 		List<AObject> _objectsAdded = new List<AObject>();
 		List<AObject> _objectsChanged = new List<AObject>();
 		List<AObject> _objectsRemoved = new List<AObject>();
 
-		public Dao()
+		#endregion
+
+		#region AWorker
+
+		protected override void StartRun()
 		{
 			bool useSqlite = false;
 
@@ -97,10 +97,77 @@ namespace XG.DB
 			CheckIfDatabaseNeedsUpdate();
 			LoadObjects();
 
-			var thread = new Thread(DatabaseSync);
-			thread.Name = "DatabaseSync";
-			thread.Start();
+			// create sync job
+			AddRepeatingJob(typeof(DaoSync), "DaoSync", "Dao", 1, 
+				new JobItem("Dao", this),
+				new JobItem("MaximalTimeBetweenSaves", 300));
 		}
+
+		protected override void StopRun()
+		{
+			Servers = null;
+			Files = null;
+			Searches = null;
+			ApiKeys = null;
+
+			while (_writeInProgress)
+			{
+				Thread.Sleep(500);
+			}
+			_sessions.Dispose();
+		}
+
+		#endregion
+
+		#region EVENTHANDLER
+
+		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			if (aEventArgs.Value1 != Servers && aEventArgs.Value1 != Files && aEventArgs.Value1 != Searches && aEventArgs.Value1 != ApiKeys)
+			{
+				return;
+			}
+			if (_objectsChanged.Contains(aEventArgs.Value2) || _objectsRemoved.Contains(aEventArgs.Value2))
+			{
+				return;
+			}
+
+			TryAddToList(_objectsAdded, aEventArgs.Value2);
+			CheckIfWriteToDatabaseIsNeeded(aEventArgs.Value2);
+		}
+
+		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			if (aEventArgs.Value1 != Servers && aEventArgs.Value1 != Files && aEventArgs.Value1 != Searches && aEventArgs.Value1 != ApiKeys)
+			{
+				return;
+			}
+
+			TryAddToList(_objectsRemoved, aEventArgs.Value2);
+			TryRemoveFromList(_objectsAdded, aEventArgs.Value2);
+			TryRemoveFromList(_objectsChanged, aEventArgs.Value2);
+			CheckIfWriteToDatabaseIsNeeded(aEventArgs.Value2);
+		}
+
+		protected override void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
+		{
+			if (_objectsAdded.Contains(aEventArgs.Value1) || _objectsRemoved.Contains(aEventArgs.Value1))
+			{
+				return;
+			}
+
+			TryAddToList(_objectsChanged, aEventArgs.Value1);
+		}
+
+		protected override void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
+		{
+			TryAddToList(_objectsChanged, aEventArgs.Value1);
+			WriteToDatabase();
+		}
+
+		#endregion
+
+		#region FUNCTIONS
 
 		Configuration CreateSqliteConfiguration()
 		{
@@ -111,11 +178,11 @@ namespace XG.DB
 			cfg.Properties["query.substitutions"] = "true=1;false=0";
 
 			// mono needs a special driver wrapper
-#if __MonoCS__
+			#if __MonoCS__
 			cfg.Properties["connection.driver_class"] = "XG.DB.MonoSqliteDriver, XG.DB";
-#else
+			#else
 			cfg.Properties["connection.driver_class"] = "NHibernate.Driver.SQLite20Driver";
-#endif
+			#endif
 
 			string db = Config.Properties.Settings.Default.GetAppDataPath() + "xgobjects.db";
 			cfg.Properties["connection.connection_string"] = "Data Source=" + db + ";Version=3;BinaryGuid=False;synchronous=off;journal mode=memory";
@@ -128,7 +195,7 @@ namespace XG.DB
 
 			try
 			{
-#if __MonoCS__
+				#if __MonoCS__
 				using (var con = new SqliteConnection(cfg.Properties["connection.connection_string"]))
 				{
 					con.Open();
@@ -139,18 +206,18 @@ namespace XG.DB
 					}
 					con.Close();
 				}
-#else
+				#else
 				using (var con = new SQLiteConnection(cfg.Properties["connection.connection_string"]))
 				{
-					con.Open();
-					using (SQLiteCommand command = con.CreateCommand())
-					{
-						command.CommandText = "vacuum;";
-						command.ExecuteNonQuery();
-					}
-					con.Close();
+				con.Open();
+				using (SQLiteCommand command = con.CreateCommand())
+				{
+				command.CommandText = "vacuum;";
+				command.ExecuteNonQuery();
 				}
-#endif
+				con.Close();
+				}
+				#endif
 			}
 			catch(Exception) {}
 
@@ -185,103 +252,44 @@ namespace XG.DB
 			// add in next version...
 		}
 
-		private void LoadObjects()
+		void LoadObjects()
 		{
-			Servers = new Servers();
-			Files = new Files();
-			Searches = new Searches();
-			ApiKeys = new ApiKeys();
+			var _servers = new Servers();
+			var _files = new Files();
+			var _searches = new Searches();
+			var _apiKeys = new ApiKeys();
 
 			using (ISession session = _sessions.OpenSession(new TrackingNumberInterceptor()))
 			{
 				var servers = session.CreateQuery("FROM Server").List<Server>();
 				foreach (var server in servers)
 				{
-					Servers.Add(server);
+					_servers.Add(server);
 				}
 
 				var files = session.CreateQuery("FROM File").List<File>();
 				foreach (var file in files)
 				{
-					Files.Add(file);
+					_files.Add(file);
 				}
 
 				var searches = session.CreateQuery("FROM Search").List<Search>();
 				foreach (var search in searches)
 				{
-					Searches.Add(search);
+					_searches.Add(search);
 				}
 
 				var apiKeys = session.CreateQuery("FROM ApiKey").List<ApiKey>();
 				foreach (var apiKey in apiKeys)
 				{
-					ApiKeys.Add(apiKey);
+					_apiKeys.Add(apiKey);
 				}
 			}
 
-			Servers.OnAdded += ObjectAdded;
-			Servers.OnRemoved += ObjectRemoved;
-			Servers.OnChanged += ObjectChanged;
-			Servers.OnEnabledChanged += ObjectEnabledChanged;
-
-			Files.OnAdded += ObjectAdded;
-			Files.OnRemoved += ObjectRemoved;
-			Files.OnChanged += ObjectChanged;
-			Files.OnEnabledChanged += ObjectEnabledChanged;
-
-			Searches.OnAdded += ObjectAdded;
-			Searches.OnRemoved += ObjectRemoved;
-			Searches.OnChanged += ObjectChanged;
-			Searches.OnEnabledChanged += ObjectEnabledChanged;
-
-			ApiKeys.OnAdded += ObjectAdded;
-			ApiKeys.OnRemoved += ObjectRemoved;
-			ApiKeys.OnChanged += ObjectChanged;
-			ApiKeys.OnEnabledChanged += ObjectEnabledChanged;
-		}
-
-		void ObjectAdded(object sender, EventArgs<AObject, AObject> eventArgs)
-		{
-			if (eventArgs.Value1 != Servers && eventArgs.Value1 != Files && eventArgs.Value1 != Searches && eventArgs.Value1 != ApiKeys)
-			{
-				return;
-			}
-			if (_objectsChanged.Contains(eventArgs.Value2) || _objectsRemoved.Contains(eventArgs.Value2))
-			{
-				return;
-			}
-
-			TryAddToList(_objectsAdded, eventArgs.Value2);
-			CheckIfWriteToDatabaseIsNeeded(eventArgs.Value2);
-		}
-
-		void ObjectRemoved(object sender, EventArgs<AObject, AObject> eventArgs)
-		{
-			if (eventArgs.Value1 != Servers && eventArgs.Value1 != Files && eventArgs.Value1 != Searches && eventArgs.Value1 != ApiKeys)
-			{
-				return;
-			}
-
-			TryAddToList(_objectsRemoved, eventArgs.Value2);
-			TryRemoveFromList(_objectsAdded, eventArgs.Value2);
-			TryRemoveFromList(_objectsChanged, eventArgs.Value2);
-			CheckIfWriteToDatabaseIsNeeded(eventArgs.Value2);
-		}
-
-		void ObjectChanged(object sender, EventArgs<AObject, string[]> eventArgs)
-		{
-			if (_objectsAdded.Contains(eventArgs.Value1) || _objectsRemoved.Contains(eventArgs.Value1))
-			{
-				return;
-			}
-
-			TryAddToList(_objectsChanged, eventArgs.Value1);
-		}
-
-		void ObjectEnabledChanged(object sender, EventArgs<AObject> eventArgs)
-		{
-			TryAddToList(_objectsChanged, eventArgs.Value1);
-			WriteToDatabase();
+			Servers = _servers;
+			Files = _files;
+			Searches = _searches;
+			ApiKeys = _apiKeys;
 		}
 
 		void TryAddToList(List<AObject> aList, AObject aObject)
@@ -314,30 +322,15 @@ namespace XG.DB
 			}
 		}
 
-		void DatabaseSync()
+		internal void WriteToDatabase()
 		{
-			_lastSave = DateTime.Now;
-			_allowRunning = true;
-			while (_allowRunning)
-			{
-				if (_lastSave.AddSeconds(SecondsToSleep) < DateTime.Now)
-				{
-					WriteToDatabase();
-				}
-
-				Thread.Sleep(500);
-			}
-		}
-
-		void WriteToDatabase()
-		{
-			if (!_allowRunning || _writeInProgress)
+			if (_writeInProgress)
 			{
 				return;
 			}
 
 			_writeInProgress = true;
-			_lastSave = DateTime.Now;
+			LastSave = DateTime.Now;
 
 			try
 			{
@@ -415,35 +408,6 @@ namespace XG.DB
 			GC.Collect();
 		}
 
-		public void Dispose ()
-		{
-			_allowRunning = false;
-
-			Servers.OnAdded -= ObjectAdded;
-			Servers.OnRemoved -= ObjectRemoved;
-			Servers.OnChanged -= ObjectChanged;
-			Servers.OnEnabledChanged -= ObjectEnabledChanged;
-
-			Files.OnAdded -= ObjectAdded;
-			Files.OnRemoved -= ObjectRemoved;
-			Files.OnChanged -= ObjectChanged;
-			Files.OnEnabledChanged -= ObjectEnabledChanged;
-
-			Searches.OnAdded -= ObjectAdded;
-			Searches.OnRemoved -= ObjectRemoved;
-			Searches.OnChanged -= ObjectChanged;
-			Searches.OnEnabledChanged -= ObjectEnabledChanged;
-
-			ApiKeys.OnAdded -= ObjectAdded;
-			ApiKeys.OnRemoved -= ObjectRemoved;
-			ApiKeys.OnChanged -= ObjectChanged;
-			ApiKeys.OnEnabledChanged -= ObjectEnabledChanged;
-
-			while (_writeInProgress)
-			{
-				Thread.Sleep(500);
-			}
-			_sessions.Dispose();
-		}
+		#endregion
 	}
-}
+}	
