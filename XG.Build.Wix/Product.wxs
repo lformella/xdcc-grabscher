@@ -34,6 +34,9 @@
 				<File Id="BplusDotNet.dll" Source="..\XG.Application\bin\Release\BplusDotNet.dll"/>
 				<File Id="CacheAspect.dll" Source="..\XG.Application\bin\Release\CacheAspect.dll"/>
 				<File Id="CacheAspect.pdb" Source="..\XG.Application\bin\Release\CacheAspect.pdb"/>
+			    <File Id="Common.Logging.dll" Source="..\XG.Application\bin\Release\Common.Logging.dll"/>
+			    <File Id="Common.Logging.pdb" Source="..\XG.Application\bin\Release\Common.Logging.pdb"/>
+			    <File Id="Common.Logging.xml" Source="..\XG.Application\bin\Release\Common.Logging.xml"/>
 				<File Id="HtmlAgilityPack.dll" Source="..\XG.Application\bin\Release\HtmlAgilityPack.dll"/>
 				<File Id="HtmlAgilityPack.pdb" Source="..\XG.Application\bin\Release\HtmlAgilityPack.pdb"/>
 				<File Id="HtmlAgilityPack.xml" Source="..\XG.Application\bin\Release\HtmlAgilityPack.xml"/>
@@ -65,6 +68,9 @@
 				<File Id="Nowin.dll" Source="..\XG.Application\bin\Release\Nowin.dll"/>
 				<File Id="Owin.dll" Source="..\XG.Application\bin\Release\Owin.dll"/>
 				<File Id="PostSharp.dll" Source="..\XG.Application\bin\Release\PostSharp.dll"/>
+				<File Id="Quartz.dll" Source="..\XG.Application\bin\Release\Quartz.dll"/>
+				<File Id="Quartz.pdb" Source="..\XG.Application\bin\Release\Quartz.pdb"/>
+				<File Id="Quartz.xml" Source="..\XG.Application\bin\Release\Quartz.xml"/>
 				<File Id="SharpRobin.dll" Source="..\XG.Application\bin\Release\SharpRobin.dll"/>
 				<File Id="StarkSoftProxy.dll" Source="..\XG.Application\bin\Release\StarkSoftProxy.dll"/>
 				<File Id="start.sh" Source="..\XG.Application\bin\Release\start.sh"/>
