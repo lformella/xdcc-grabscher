@@ -53,7 +53,7 @@ namespace XG.Plugin.Irc
 		readonly TimedList<string> _latestXdccListRequests = new TimedList<string>();
 		readonly Queue<string> _userToAskForVersion = new Queue<string>();
 		DateTime _lastAskForVersionTime = DateTime.Now;
-		readonly Dictionary<Bot, List<Model.Domain.Channel>> botToRequireChannelParts = new Dictionary<Bot, List<Model.Domain.Channel>>();
+		readonly Dictionary<Bot, List<string>> _botToRequireChannelParts = new Dictionary<Bot, List<string>>();
 
 		Server _server;
 		public Server Server
@@ -69,6 +69,7 @@ namespace XG.Plugin.Irc
 					_server.OnAdded -= ObjectAdded;
 					_server.OnRemoved -= ObjectRemoved;
 					_server.OnEnabledChanged -= EnabledChanged;
+					_server.OnChanged -= ObjectChanged;
 				}
 				_server = value;
 				if (_server != null)
@@ -76,6 +77,7 @@ namespace XG.Plugin.Irc
 					_server.OnAdded += ObjectAdded;
 					_server.OnRemoved += ObjectRemoved;
 					_server.OnEnabledChanged += EnabledChanged;
+					_server.OnChanged += ObjectChanged;
 				}
 			}
 		}
@@ -193,6 +195,79 @@ namespace XG.Plugin.Irc
 			}
 		}
 
+		void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
+		{
+			// check if a bot on our server changes his state to syncronize with _botToRequireChannelParts
+			Bot bot = aEventArgs.Value1 as Bot;
+			if (bot != null)
+			{
+				if (bot.Parent.Parent != Server)
+				{
+					return;
+				}
+
+				if (aEventArgs.Value2.Contains("State"))
+				{
+					if (bot.State == Bot.States.Active)
+					{
+						// part channels
+						var channels = GetChannelsToPart(bot);
+						if (channels.Count > 0)
+						{
+							_log.Info("ObjectChanged() parting " + channels.ToString() + " because " + bot);
+							Client.RfcPart(channels.ToArray());
+						}
+					}
+					else if (bot.State == Bot.States.Idle)
+					{
+						// join channels again
+						var channels = GetChannelsToJoin(bot);
+						if (channels.Count > 0)
+						{
+							_log.Info("ObjectChanged() rejoining " + channels.ToString() + " because " + bot);
+							Client.RfcJoin(channels.ToArray());
+						}
+					}
+				}
+			}
+		}
+
+		List<string> GetChannelsToPart(Bot aBot)
+		{
+			if (_botToRequireChannelParts.ContainsKey(aBot))
+			{
+				return _botToRequireChannelParts[aBot];
+			}
+			return new List<string>();
+		}
+
+		List<string> GetChannelsToJoin(Bot aBot)
+		{
+			List<string> channels = new List<string>();
+
+			if (_botToRequireChannelParts.ContainsKey(aBot))
+			{
+				channels = _botToRequireChannelParts[aBot];
+
+				// check if the parted channel is needed by another active bot
+				foreach(var entry in _botToRequireChannelParts)
+				{
+					if (entry.Key.State == Bot.States.Active)
+					{
+						foreach (string channel in entry.Value)
+						{
+							if (channels.Contains(channel))
+							{
+								channels.Remove(channel);
+							}
+						}
+					}
+				}
+			}
+
+			return channels;
+		}
+
 		#endregion
 
 		#region IRC EVENTHANDLER
@@ -240,24 +315,22 @@ namespace XG.Plugin.Irc
 		{
 			if (aEventArgs.Value1 == Server)
 			{
-				List<Model.Domain.Channel> channels = new List<XG.Model.Domain.Channel>();
-				if (botToRequireChannelParts.ContainsKey(aEventArgs.Value2))
+				List<string> channels = new List<string>();
+				if (_botToRequireChannelParts.ContainsKey(aEventArgs.Value2))
 				{
-					channels = botToRequireChannelParts[aEventArgs.Value2];
+					channels = _botToRequireChannelParts[aEventArgs.Value2];
+				}
+				else
+				{
+					_botToRequireChannelParts.Add(aEventArgs.Value2, channels);
 				}
 
 				foreach (string channel in aEventArgs.Value3)
 				{
-					var chan = aEventArgs.Value1.Channel(channel);
-					if (chan != null && !channels.Contains(chan))
+					if (!channels.Contains(channel))
 					{
-						channels.Add(chan);
+						channels.Add(channel);
 					}
-				}
-
-				if (!botToRequireChannelParts.ContainsKey(aEventArgs.Value2) && channels.Count > 0)
-				{
-					botToRequireChannelParts.Add(aEventArgs.Value2, channels);
 				}
 			}
 		}

@@ -103,6 +103,7 @@
     <Compile Include="Model\Extensions.cs" />
     <Compile Include="Plugin\ElasticSearch\Object\Packet.cs" />
     <Compile Include="Plugin\Irc\Parser\Types\Xdcc\ClosingConnection.cs" />
+    <Compile Include="Plugin\Irc\IrcConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
