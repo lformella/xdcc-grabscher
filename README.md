@@ -138,6 +138,9 @@ Because XG changed some internal routines you can safely delete the following fi
 
 # Running XG
 
+## On Windows
+You need at least .net 4.5.
+
 ## On Linux with Mono
 You need at least mono 3.x because some needed libs are running on .net 4.5 wich is not supported in earlier versions.
 
@@ -146,13 +149,9 @@ If you are using Debian / Ubuntu, take a look here to get newer mono packages:
 > http://mono-project.com/DistroPackages/Debian
 
 ### Needed packets / libs
-* mono-runtime
-* libmono-posix4.0-cil mono-dmcs
-* libmono-system-web4.0-cil
-* libmono-system-runtime-serialization4.0-cil
-* libmono-system-xml-linq4.0-cil
+* mono-complete
 
 #### Install command for Debian / Ubunut to copy paste:
 ```bash
-sudo apt-get install mono-runtime libmono-posix4.0-cil mono-dmcs libmono-system-web4.0-cil libmono-system-runtime-serialization4.0-cil libmono-system-xml-linq4.0-cil
+sudo apt-get install mono-complete
 ```
