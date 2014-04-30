@@ -29,6 +29,7 @@ using System.Reflection;
 using Meebey.SmartIrc4net;
 using XG.Model.Domain;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace XG.Test.Plugin.Irc
 {
@@ -40,7 +41,29 @@ namespace XG.Test.Plugin.Irc
 		{
 			XG.Plugin.Irc.IrcConnection ircConnection = new XG.Plugin.Irc.IrcConnection();
 
-			//ircConnection.GetChannelsToJoin();
+			Server server = new Server();
+			ircConnection.Server = server;
+
+			Bot bot1 = new Bot();
+			List<string> channelsToPart1 = new List<string>();
+			channelsToPart1.Add("#test1");
+			channelsToPart1.Add("#test2");
+			ircConnection.TemporaryPartChannels(null, new EventArgs<Server, Bot, List<string>>(server, bot1, channelsToPart1));
+			
+			Bot bot2 = new Bot();
+			List<string> channelsToPart2 = new List<string>();
+			channelsToPart2.Add("#test1");
+			channelsToPart2.Add("#test3");
+			ircConnection.TemporaryPartChannels(null, new EventArgs<Server, Bot, List<string>>(server, bot2, channelsToPart2));
+
+			bot1.State = Bot.States.Idle;
+			CollectionAssert.AreEquivalent(new string[]{"#test1", "#test3"}, ircConnection.GetChannelsToJoin(bot2));
+
+			bot1.State = Bot.States.Active;
+			CollectionAssert.AreEquivalent(new string[]{"#test3"}, ircConnection.GetChannelsToJoin(bot2));
+
+			bot1.State = Bot.States.Idle;
+			CollectionAssert.AreEquivalent(new string[]{"#test1", "#test3"}, ircConnection.GetChannelsToJoin(bot2));
 		}
 	}
 }

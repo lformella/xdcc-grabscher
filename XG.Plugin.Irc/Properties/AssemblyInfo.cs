@@ -34,3 +34,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("3.1.0.1")]
 [assembly: AssemblyFileVersion("3.1.0.1")]
+[assembly: InternalsVisibleTo("XG.Test")]

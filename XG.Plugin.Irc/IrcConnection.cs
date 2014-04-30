@@ -241,13 +241,13 @@ namespace XG.Plugin.Irc
 			return new List<string>();
 		}
 
-		List<string> GetChannelsToJoin(Bot aBot)
+		internal List<string> GetChannelsToJoin(Bot aBot)
 		{
 			List<string> channels = new List<string>();
 
 			if (_botToRequireChannelParts.ContainsKey(aBot))
 			{
-				channels = _botToRequireChannelParts[aBot];
+				channels = _botToRequireChannelParts[aBot].ToList();
 
 				// check if the parted channel is needed by another active bot
 				foreach(var entry in _botToRequireChannelParts)
@@ -311,7 +311,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void TemporaryPartChannels(object aSender, EventArgs<Server, Bot, List<string>> aEventArgs)
+		internal void TemporaryPartChannels(object aSender, EventArgs<Server, Bot, List<string>> aEventArgs)
 		{
 			if (aEventArgs.Value1 == Server)
 			{
