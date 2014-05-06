@@ -30,14 +30,18 @@ namespace XG.DB
 {
 	public class DaoSync : IJob
 	{
+		readonly static Object _lock = new Object();
+
 		public Dao Dao { get; set; }
-		public int MaximalTimeBetweenSaves { get; set; }
 
 		public void Execute (IJobExecutionContext context)
 		{
-			if (Dao.LastSave.AddSeconds(MaximalTimeBetweenSaves) < DateTime.Now)
+			if (Dao.WriteNecessary)
 			{
-				Dao.WriteToDatabase();
+				lock (_lock)
+				{
+					Dao.WriteToDatabase();
+				}
 			}
 		}
 	}

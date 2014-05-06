@@ -54,11 +54,36 @@ namespace XG.DB
 
 		readonly int _version = 1;
 
-		bool _writeInProgress { get; set; }
-		public DateTime LastSave { get; private set; }
-		List<AObject> _objectsAdded = new List<AObject>();
-		List<AObject> _objectsChanged = new List<AObject>();
-		List<AObject> _objectsRemoved = new List<AObject>();
+		bool _writeInProgress;
+		DateTime _lastSave;
+		readonly List<AObject> _objectsAdded = new List<AObject>();
+		readonly List<AObject> _objectsChanged = new List<AObject>();
+		readonly List<AObject> _objectsRemoved = new List<AObject>();
+
+		bool _writeNecessary;
+		internal bool WriteNecessary
+		{
+			get
+			{
+				if (_writeInProgress)
+				{
+					return false;
+				}
+				if (_objectsAdded.Count == 0 && _objectsChanged.Count == 0 && _objectsRemoved.Count == 0)
+				{
+					return false;
+				}
+				if (_writeNecessary)
+				{
+					return true;
+				}
+				if (_lastSave.AddSeconds(300) > DateTime.Now)
+				{
+					return false;
+				}
+				return true;
+			}
+		}
 
 		#endregion
 
@@ -99,8 +124,7 @@ namespace XG.DB
 
 			// create sync job
 			AddRepeatingJob(typeof(DaoSync), "DaoSync", "Dao", 1, 
-				new JobItem("Dao", this),
-				new JobItem("MaximalTimeBetweenSaves", 300));
+				new JobItem("Dao", this));
 		}
 
 		protected override void StopRun()
@@ -133,7 +157,7 @@ namespace XG.DB
 			}
 
 			TryAddToList(_objectsAdded, aEventArgs.Value2);
-			CheckIfWriteToDatabaseIsNeeded(aEventArgs.Value2);
+			UpdateWriteNecesary(aEventArgs.Value2);
 		}
 
 		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
@@ -146,7 +170,7 @@ namespace XG.DB
 			TryAddToList(_objectsRemoved, aEventArgs.Value2);
 			TryRemoveFromList(_objectsAdded, aEventArgs.Value2);
 			TryRemoveFromList(_objectsChanged, aEventArgs.Value2);
-			CheckIfWriteToDatabaseIsNeeded(aEventArgs.Value2);
+			UpdateWriteNecesary(aEventArgs.Value2);
 		}
 
 		protected override void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
@@ -162,7 +186,7 @@ namespace XG.DB
 		protected override void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
 			TryAddToList(_objectsChanged, aEventArgs.Value1);
-			WriteToDatabase();
+			_writeNecessary = true;
 		}
 
 		#endregion
@@ -290,6 +314,8 @@ namespace XG.DB
 			Files = _files;
 			Searches = _searches;
 			ApiKeys = _apiKeys;
+
+			_lastSave = DateTime.Now;
 		}
 
 		void TryAddToList(List<AObject> aList, AObject aObject)
@@ -314,23 +340,21 @@ namespace XG.DB
 			}
 		}
 
-		void CheckIfWriteToDatabaseIsNeeded(AObject aObject)
+		void UpdateWriteNecesary(AObject aObject)
 		{
 			if (aObject is Server || aObject is Channel || aObject is File || aObject is Search || aObject is ApiKey)
 			{
-				WriteToDatabase();
+				_writeNecessary = true;
 			}
 		}
 
 		internal void WriteToDatabase()
 		{
-			if (_writeInProgress)
-			{
-				return;
-			}
-
 			_writeInProgress = true;
-			LastSave = DateTime.Now;
+			_writeNecessary = false;
+			_lastSave = DateTime.Now;
+
+			Log.Info("WriteToDatabase() running ");
 
 			try
 			{
@@ -405,6 +429,8 @@ namespace XG.DB
 			}
 
 			_writeInProgress = false;
+			Log.Info("WriteToDatabase() ready ");
+
 			GC.Collect();
 		}
 
