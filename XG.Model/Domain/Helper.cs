@@ -89,5 +89,10 @@ namespace XG.Model.Domain
 		{
 			return aName != null ? Regex.Replace(aName.ToLower(), "[^a-z0-9]", "") + "." + aSize : "";
 		}
+
+		public static string RemoveBadCharsFromFileName(string aName)
+		{
+			return aName != null ? Regex.Replace(aName, @"[?/:\\]", "") : "";
+		}
 	}
 }

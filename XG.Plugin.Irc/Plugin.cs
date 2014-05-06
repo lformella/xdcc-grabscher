@@ -382,7 +382,7 @@ namespace XG.Plugin.Irc
 
 		string CalculateXdccListFileName(Server aServer, string aBot)
 		{
-			return Settings.Default.TempPath + aServer.Name + "." + aBot;
+			return Settings.Default.TempPath + Helper.RemoveBadCharsFromFileName(aServer.Name + "." + aBot);
 		}
 
 		#endregion

@@ -131,7 +131,7 @@ namespace XG.Model.Domain
 
 		public File(string aName, Int64 aSize)
 		{
-			base.Name = aName;
+			base.Name = Helper.RemoveBadCharsFromFileName(aName);
 			_size = aSize;
 			_tmpName = Helper.ShrinkFileName(aName, aSize);
 		}

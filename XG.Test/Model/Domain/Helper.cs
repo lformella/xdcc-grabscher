@@ -40,5 +40,14 @@ namespace XG.Test.Model.Domain
 
 			Assert.AreEqual("thisisanevilf1lenamet3sttxt.440044", result);
 		}
+
+		[Test]
+		public void BadCharsInFileNameTest()
+		{
+			const string fileName = "I/con:?:t:ain?\\bad#cha-rs.txt";
+			string result = XG.Model.Domain.Helper.RemoveBadCharsFromFileName(fileName);
+
+			Assert.AreEqual("Icontainbad#cha-rs.txt", result);
+		}
 	}
 }
