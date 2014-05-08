@@ -151,7 +151,7 @@ If you are using Debian / Ubuntu, take a look here to get newer mono packages:
 ### Needed packets / libs
 * mono-complete
 
-#### Install command for Debian / Ubunut to copy paste:
+#### Install command for Debian / Ubuntu to copy paste:
 ```bash
 sudo apt-get install mono-complete
 ```
