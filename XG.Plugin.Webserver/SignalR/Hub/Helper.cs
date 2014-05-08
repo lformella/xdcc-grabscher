@@ -34,9 +34,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 {
 	internal static class Helper
 	{
-		public static readonly Guid SearchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
-		public static readonly Guid SearchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
-
 		public static Servers Servers { get; set; }
 		public static Files Files { get; set; }
 		public static Searches Searches { get; set; }
@@ -83,13 +80,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 			else if (aObject is Search)
 			{
-				var results = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where IsVisible(packet, aObject as Search) select packet;
-				myObj = new SignalR.Hub.Model.Domain.Search
-				{
-					Object = aObject as Search,
-					ResultsOnline = (from obj in results where obj.Parent.Connected select obj).Count(),
-					ResultsOffline = (from obj in results where  !obj.Parent.Connected select obj).Count()
-				};
+				myObj = new SignalR.Hub.Model.Domain.Search { Object = aObject as Search };
 			}
 			else if (aObject is Notification)
 			{
@@ -105,22 +96,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 
 			return myObj;
-		}
-
-		public static bool IsVisible(Packet aPacket, Search aSearch)
-		{
-			if (aSearch.Guid == SearchDownloads)
-			{
-				return aPacket.Connected;
-			}
-
-			if (aSearch.Guid == SearchEnabled)
-			{
-				return aPacket.Enabled;
-			}
-
-			var str = aSearch.Name;
-			return aPacket.Name.ContainsAll(str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 	}
 }

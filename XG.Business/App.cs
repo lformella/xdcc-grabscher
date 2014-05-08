@@ -141,6 +141,10 @@ namespace XG.Business
 
 			AddRepeatingJob(typeof(Job.BotWatchdog), "BotWatchdog", "Core", Settings.Default.BotOfflineCheckTime, 
 				new JobItem("Servers", Servers));
+
+			AddRepeatingJob(typeof(Job.SearchUpdater), "SearchUpdater", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 60, 
+				new JobItem("Servers", Servers),
+				new JobItem("Searches", Searches));
 		}
 
 		void ClearOldDownloads()

@@ -85,13 +85,13 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
 			if (search == null)
 			{
-				if (aGuid == Helper.SearchEnabled)
+				if (aGuid == Search.SearchEnabled)
 				{
-					search = new Search { Guid = Helper.SearchEnabled };
+					search = new Search { Guid = Search.SearchEnabled };
 				}
-				else if (aGuid == Helper.SearchDownloads)
+				else if (aGuid == Search.SearchDownloads)
 				{
-					search = new Search { Guid = Helper.SearchDownloads };
+					search = new Search { Guid = Search.SearchDownloads };
 				}
 			}
 			if (search != null)
@@ -108,7 +108,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		Model.Domain.Result LoadBySearch(Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (aShowOfflineBots || bot.Connected) from packet in bot.Packets where Helper.IsVisible(packet, aSearch) select packet);
+			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (aShowOfflineBots || bot.Connected) from packet in bot.Packets where aSearch.IsVisible(packet) select packet);
 			int length;
 			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);

@@ -1,5 +1,5 @@
 // 
-//  Search.cs
+//  SearchUpdater.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,35 +23,26 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Newtonsoft.Json;
+using System.Linq;
+using Quartz;
+using XG.Model.Domain;
 
-namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
+namespace XG.Business.Job
 {
-	[JsonObject(MemberSerialization.OptOut)]
-	public class Search : AObject
+	public class SearchUpdater : IJob
 	{
-		[JsonIgnore]
-		public new XG.Model.Domain.Search Object
-		{
-			get
-			{
-				return (XG.Model.Domain.Search)base.Object;
-			}
-			set
-			{
-				base.Object = value;
-			}
-		}
+		public Servers Servers { get; set; }
+		public Searches Searches { get; set; }
 
-		public Int64 ResultsOnline
+		public void Execute (IJobExecutionContext context)
 		{
-			get { return Object.ResultsOnline; }
-		}
-
-		public Int64 ResultsOffline
-		{
-			get { return Object.ResultsOffline; }
+			foreach (Search search in Searches.All)
+			{
+				var results = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where search.IsVisible(packet) select packet;
+				search.ResultsOnline = (from obj in results where obj.Parent.Connected select obj).Count();
+				search.ResultsOffline = (from obj in results where  !obj.Parent.Connected select obj).Count();
+				search.Commit();
+			}
 		}
 	}
 }
