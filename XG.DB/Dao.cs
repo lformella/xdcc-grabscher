@@ -123,7 +123,7 @@ namespace XG.DB
 			LoadObjects();
 
 			// create sync job
-			AddRepeatingJob(typeof(DaoSync), "DaoSync", "Dao", 1, 
+			AddRepeatingJob(typeof(DaoSync), "DaoSync", "Dao", 15, 
 				new JobItem("Dao", this));
 		}
 
@@ -147,45 +147,84 @@ namespace XG.DB
 
 		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aEventArgs.Value1 != Servers && aEventArgs.Value1 != Files && aEventArgs.Value1 != Searches && aEventArgs.Value1 != ApiKeys)
+			AddObject(aEventArgs.Value2);
+			if (aEventArgs.Value2 is Server || aEventArgs.Value2 is Channel)
 			{
-				return;
+				_writeNecessary = true;
 			}
-			if (_objectsChanged.Contains(aEventArgs.Value2) || _objectsRemoved.Contains(aEventArgs.Value2))
-			{
-				return;
-			}
-
-			TryAddToList(_objectsAdded, aEventArgs.Value2);
-			UpdateWriteNecesary(aEventArgs.Value2);
 		}
 
 		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aEventArgs.Value1 != Servers && aEventArgs.Value1 != Files && aEventArgs.Value1 != Searches && aEventArgs.Value1 != ApiKeys)
+			RemoveObject(aEventArgs.Value2);
+			if (aEventArgs.Value2 is Server || aEventArgs.Value2 is Channel)
 			{
-				return;
+				_writeNecessary = true;
 			}
-
-			TryAddToList(_objectsRemoved, aEventArgs.Value2);
-			TryRemoveFromList(_objectsAdded, aEventArgs.Value2);
-			TryRemoveFromList(_objectsChanged, aEventArgs.Value2);
-			UpdateWriteNecesary(aEventArgs.Value2);
 		}
 
 		protected override void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			if (_objectsAdded.Contains(aEventArgs.Value1) || _objectsRemoved.Contains(aEventArgs.Value1))
-			{
-				return;
-			}
-
-			TryAddToList(_objectsChanged, aEventArgs.Value1);
+			ChangeObject(aEventArgs.Value1);
 		}
 
 		protected override void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			TryAddToList(_objectsChanged, aEventArgs.Value1);
+			ChangeObject(aEventArgs.Value1);
+			_writeNecessary = true;
+		}
+
+		protected override void FileAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			AddObject(aEventArgs.Value2);
+			_writeNecessary = true;
+		}
+
+		protected override void FileRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			RemoveObject(aEventArgs.Value2);
+			_writeNecessary = true;
+		}
+
+		protected override void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
+		{
+			ChangeObject(aEventArgs.Value1);
+			_writeNecessary = true;
+		}
+
+		protected override void SearchAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			AddObject(aEventArgs.Value2);
+			_writeNecessary = true;
+		}
+
+		protected override void SearchRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			RemoveObject(aEventArgs.Value2);
+			_writeNecessary = true;
+		}
+
+		protected override void ApiKeyChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
+		{
+			ChangeObject(aEventArgs.Value1);
+			_writeNecessary = true;
+		}
+
+		protected override void ApiKeyAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			AddObject(aEventArgs.Value2);
+			_writeNecessary = true;
+		}
+
+		protected override void ApiKeyRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
+		{
+			RemoveObject(aEventArgs.Value2);
+			_writeNecessary = true;
+		}
+
+		protected override void ApiKeyEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
+		{
+			ChangeObject(aEventArgs.Value1);
 			_writeNecessary = true;
 		}
 
@@ -193,6 +232,31 @@ namespace XG.DB
 
 		#region FUNCTIONS
 
+		void AddObject(AObject aObject)
+		{
+			if (_objectsChanged.Contains(aObject) || _objectsRemoved.Contains(aObject))
+			{
+				return;
+			}
+			TryAddToList(_objectsAdded, aObject);
+		}
+
+		void RemoveObject(AObject aObject)
+		{
+			TryAddToList(_objectsRemoved, aObject);
+			TryRemoveFromList(_objectsAdded, aObject);
+			TryRemoveFromList(_objectsChanged, aObject);
+		}
+
+		void ChangeObject(AObject aObject)
+		{
+			if (_objectsAdded.Contains(aObject) || _objectsRemoved.Contains(aObject))
+			{
+				return;
+			}
+			TryAddToList(_objectsChanged, aObject);
+		}
+			
 		Configuration CreateSqliteConfiguration()
 		{
 			var cfg = new Configuration();
@@ -337,14 +401,6 @@ namespace XG.DB
 				{
 					aList.Remove(aObject);
 				}
-			}
-		}
-
-		void UpdateWriteNecesary(AObject aObject)
-		{
-			if (aObject is Server || aObject is Channel || aObject is File || aObject is Search || aObject is ApiKey)
-			{
-				_writeNecessary = true;
 			}
 		}
 
