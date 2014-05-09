@@ -74,7 +74,6 @@
 				<File Id="SharpRobin.dll" Source="..\XG.Application\bin\Release\SharpRobin.dll"/>
 				<File Id="StarkSoftProxy.dll" Source="..\XG.Application\bin\Release\StarkSoftProxy.dll"/>
 				<File Id="start.sh" Source="..\XG.Application\bin\Release\start.sh"/>
-				<File Id="stop.sh" Source="..\XG.Application\bin\Release\stop.sh"/>
 				<File Id="System.Data.SQLite.dll" Source="..\XG.Application\bin\Release\System.Data.SQLite.dll"/>
 				<File Id="System.Data.SQLite.xml" Source="..\XG.Application\bin\Release\System.Data.SQLite.xml"/>
 				<File Id="XG.Application.exe" Source="..\XG.Application\bin\Release\XG.Application.exe"/>
