@@ -797,6 +797,7 @@ namespace XG.Plugin.Irc
 
 		internal override void RepairConnection()
 		{
+			WatchConnection = false;
 			Client.Reconnect();
 		}
 

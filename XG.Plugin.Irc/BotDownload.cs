@@ -466,6 +466,7 @@ namespace XG.Plugin.Irc
 
 		internal override void RepairConnection()
 		{
+			WatchConnection = false;
 			_tcpClient.Close();
 		}
 
