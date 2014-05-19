@@ -408,7 +408,6 @@ namespace XG.DB
 		{
 			_writeInProgress = true;
 			_writeNecessary = false;
-			_lastSave = DateTime.Now;
 
 			Log.Info("WriteToDatabase() running ");
 
@@ -484,6 +483,7 @@ namespace XG.DB
 				Log.Fatal("WriteToDatabase() removed ", ex);
 			}
 
+			_lastSave = DateTime.Now;
 			_writeInProgress = false;
 			Log.Info("WriteToDatabase() ready ");
 
