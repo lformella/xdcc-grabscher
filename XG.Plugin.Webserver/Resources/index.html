@@ -194,10 +194,11 @@
 								<li class="divider"></li>
 								<li class="dropdown-header" translate>Custom</li>
 								<li ng-repeat="search in objects">
+									<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="$parent.removeSearch($event, search)" title="{{'Remove'|translate}}"></span>
 									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
 										<span class="resultsOnline label label-success pull-right">{{search.ResultsOnline}}</span>
 										<span class="resultsOffline label label-default pull-right">{{search.ResultsOffline}}</span>
-										<span class="text" title="{{search.Name}}">{{search.Name}}</span>
+										<span class="text" title="{{search.Name}}" ng-bind-html="search.Name|formatSearchString"></span>
 									</a>
 								</li>
 							</ul>

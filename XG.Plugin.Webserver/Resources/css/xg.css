@@ -368,6 +368,23 @@ td .highlight .name
 	margin-right: 60px;
 }
 
+#searchForm .dropdown-menu > li
+{
+	position: relative;
+}
+
+#searchForm .dropdown-menu > li > a
+{
+	padding-left: 25px;
+}
+
+#searchForm .dropdown-menu > li > .glyphicon
+{
+	position: absolute;
+	top: 8px;
+	left: 5px;
+}
+
 #searchLoading
 {
 	margin-right: 4px;

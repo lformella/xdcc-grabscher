@@ -193,6 +193,7 @@
     <EmbeddedResource Include="Resources\templates\dialog\password.html" />
     <EmbeddedResource Include="Resources\templates\dialog\serverChannel.html" />
     <EmbeddedResource Include="Resources\templates\dialog\xdcc.html" />
+    <EmbeddedResource Include="Resources\js\filter\formatter\search.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />

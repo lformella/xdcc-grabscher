@@ -1,5 +1,5 @@
 //
-//  index.js
+//  search.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,35 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define([
-	'./base',
-	'./bot',
-	'./channel',
-	'./client',
-	'./file',
-	'./notification',
-	'./packet',
-	'./search',
-	'./server'
-], function () {});
+define(['./module'], function (ng) {
+	'use strict';
+
+	ng.filter('formatSearchString', function ()
+	{
+		return function (search)
+		{
+			if (search == undefined)
+			{
+				return "";
+			}
+
+			var ret = "";
+
+			var searches = search.split(" ");
+			searches.forEach(function(entry)
+			{
+				if (entry.substr(0, 1) == "-")
+				{
+					ret += "<s>" + entry.substr(1) + "</s>";
+				}
+				else
+				{
+					ret += entry;
+				}
+				ret += " ";
+			});
+
+			return ret;
+		}
+	});
+});

@@ -97,6 +97,13 @@ define(['./module'], function (ng) {
 				}
 			};
 
+			$scope.removeSearch = function($event, search)
+			{
+				$event.preventDefault();
+				$event.stopPropagation();
+				$scope.signalr.remove(search);
+			};
+
 			$rootScope.$on('OnSearchComplete', function ()
 			{
 				$scope.loading = false;
