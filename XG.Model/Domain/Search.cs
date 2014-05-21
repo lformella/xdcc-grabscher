@@ -34,7 +34,7 @@ namespace XG.Model.Domain
 
 		#region VARIABLES
 
-		public virtual new Searches Parent
+		public new Searches Parent
 		{
 			get { return base.Parent as Searches; }
 			set { base.Parent = value; }
@@ -42,17 +42,17 @@ namespace XG.Model.Domain
 
 		Int64 _resultsOnline;
 
-		public virtual Int64 ResultsOnline
+		public Int64 ResultsOnline
 		{
-			get { return _resultsOnline; }
+			get { return GetProperty(ref _resultsOnline); }
 			set { SetProperty(ref _resultsOnline, value, "ResultsOnline"); }
 		}
 
 		Int64 _resultsOffline;
 
-		public virtual Int64 ResultsOffline
+		public Int64 ResultsOffline
 		{
-			get { return _resultsOffline; }
+			get { return GetProperty(ref _resultsOffline); }
 			set { SetProperty(ref _resultsOffline, value, "ResultsOffline"); }
 		}
 
@@ -60,7 +60,7 @@ namespace XG.Model.Domain
 
 		#region FUNCTIONS
 
-		public virtual bool IsVisible(Packet aPacket)
+		public bool IsVisible(Packet aPacket)
 		{
 			if (Guid == SearchDownloads)
 			{

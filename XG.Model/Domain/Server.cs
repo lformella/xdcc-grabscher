@@ -50,7 +50,7 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public virtual new Servers Parent
+		public new Servers Parent
 		{
 			get { return base.Parent as Servers; }
 			set { base.Parent = value; }
@@ -58,17 +58,17 @@ namespace XG.Model.Domain
 
 		int _port;
 
-		public virtual int Port
+		public int Port
 		{
-			get { return _port; }
+			get { return GetProperty(ref _port); }
 			set { SetProperty(ref _port, value, "Port"); }
 		}
 
 		SocketErrorCode _errorCode = SocketErrorCode.None;
 
-		public virtual SocketErrorCode ErrorCode
+		public SocketErrorCode ErrorCode
 		{
-			get { return _errorCode; }
+			get { return GetProperty(ref _errorCode); }
 			set { SetProperty(ref _errorCode, value, "ErrorCode"); }
 		}
 
@@ -76,12 +76,12 @@ namespace XG.Model.Domain
 
 		#region CHILDREN
 
-		public virtual ICollection<Channel> Channels
+		public ICollection<Channel> Channels
 		{
 			get { return All.Cast<Channel>().ToArray(); }
 		}
 
-		public virtual Channel Channel(string aName)
+		public Channel Channel(string aName)
 		{
 			if (aName != null && !aName.StartsWith("#"))
 			{
@@ -90,7 +90,7 @@ namespace XG.Model.Domain
 			return base.Named(aName) as Channel;
 		}
 
-		public virtual Bot Bot(string aName)
+		public Bot Bot(string aName)
 		{
 			Bot tBot = null;
 			foreach (Channel chan in Channels)
@@ -104,12 +104,12 @@ namespace XG.Model.Domain
 			return tBot;
 		}
 
-		public virtual bool AddChannel(Channel aChannel)
+		public bool AddChannel(Channel aChannel)
 		{
 			return Add(aChannel);
 		}
 
-		public virtual bool AddChannel(string aChannel)
+		public bool AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
 			if (!aChannel.StartsWith("#"))
@@ -118,13 +118,13 @@ namespace XG.Model.Domain
 			}
 			if (Channel(aChannel) == null)
 			{
-				var tChannel = new Channel {Name = aChannel, Enabled = Enabled};
+				var tChannel = new Channel {Name = aChannel};
 				return AddChannel(tChannel);
 			}
 			return false;
 		}
 
-		public virtual bool RemoveChannel(Channel aChannel)
+		public bool RemoveChannel(Channel aChannel)
 		{
 			return Remove(aChannel);
 		}

@@ -234,7 +234,7 @@ namespace XG.Business
 							}
 						}
 
-						foreach (Packet pack in bot.Packets)
+						/*foreach (Packet pack in bot.Packets)
 						{
 							foreach (Packet p in bot.Packets)
 							{
@@ -244,7 +244,7 @@ namespace XG.Business
 									bot.RemovePacket(p);
 								}
 							}
-						}
+						}*/
 					}
 				}
 			}

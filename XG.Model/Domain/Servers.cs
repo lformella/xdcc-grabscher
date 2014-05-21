@@ -51,7 +51,7 @@ namespace XG.Model.Domain
 			aServer = aServer.Trim().ToLower();
 			if (Server(aServer) == null)
 			{
-				var tServer = new Server {Name = aServer, Port = aPort, Enabled = true};
+				var tServer = new Server {Name = aServer, Port = aPort};
 				return Add(tServer);
 			}
 			return false;

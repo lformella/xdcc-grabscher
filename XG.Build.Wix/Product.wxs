@@ -78,40 +78,26 @@
 				<File Id="System.Data.SQLite.xml" Source="..\XG.Application\bin\Release\System.Data.SQLite.xml"/>
 				<File Id="XG.Application.exe" Source="..\XG.Application\bin\Release\XG.Application.exe"/>
 				<File Id="XG.Application.exe.config" Source="..\XG.Application\bin\Release\XG.Application.exe.config"/>
-				<File Id="XG.Application.exe.mdb" Source="..\XG.Application\bin\Release\XG.Application.exe.mdb"/>
 				<File Id="XG.Application.pdb" Source="..\XG.Application\bin\Release\XG.Application.pdb"/>
-				<File Id="xg.application.vshost.exe" Source="..\XG.Application\bin\Release\xg.application.vshost.exe"/>
-				<File Id="XG.Application.vshost.exe.config" Source="..\XG.Application\bin\Release\XG.Application.vshost.exe.config"/>
-				<File Id="xg.application.vshost.exe.manifest" Source="..\XG.Application\bin\Release\xg.application.vshost.exe.manifest"/>
 				<File Id="XG.Business.dll" Source="..\XG.Application\bin\Release\XG.Business.dll"/>
-				<File Id="XG.Business.dll.mdb" Source="..\XG.Application\bin\Release\XG.Business.dll.mdb"/>
 				<File Id="XG.Business.pdb" Source="..\XG.Application\bin\Release\XG.Business.pdb"/>
 				<File Id="XG.Config.dll" Source="..\XG.Application\bin\Release\XG.Config.dll"/>
-				<File Id="XG.Config.dll.mdb" Source="..\XG.Application\bin\Release\XG.Config.dll.mdb"/>
 				<File Id="XG.Config.pdb" Source="..\XG.Application\bin\Release\XG.Config.pdb"/>
 				<File Id="XG.DB.dll" Source="..\XG.Application\bin\Release\XG.DB.dll"/>
-				<File Id="XG.DB.dll.mdb" Source="..\XG.Application\bin\Release\XG.DB.dll.mdb"/>
 				<File Id="XG.DB.pdb" Source="..\XG.Application\bin\Release\XG.DB.pdb"/>
 				<File Id="XG.Model.dll" Source="..\XG.Application\bin\Release\XG.Model.dll"/>
-				<File Id="XG.Model.dll.mdb" Source="..\XG.Application\bin\Release\XG.Model.dll.mdb"/>
 				<File Id="XG.Model.pdb" Source="..\XG.Application\bin\Release\XG.Model.pdb"/>
 				<File Id="XG.Plugin.dll" Source="..\XG.Application\bin\Release\XG.Plugin.dll"/>
-				<File Id="XG.Plugin.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.dll.mdb"/>
 				<File Id="XG.Plugin.ElasticSearch.dll" Source="..\XG.Application\bin\Release\XG.Plugin.ElasticSearch.dll"/>
-				<File Id="XG.Plugin.ElasticSearch.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.ElasticSearch.dll.mdb"/>
 				<File Id="XG.Plugin.ElasticSearch.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.ElasticSearch.pdb"/>
 				<File Id="XG.Plugin.Import.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Import.dll"/>
-				<File Id="XG.Plugin.Import.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Import.dll.mdb"/>
 				<File Id="XG.Plugin.Import.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Import.pdb"/>
 				<File Id="XG.Plugin.Irc.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Irc.dll"/>
-				<File Id="XG.Plugin.Irc.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Irc.dll.mdb"/>
 				<File Id="XG.Plugin.Irc.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Irc.pdb"/>
 				<File Id="XG.Plugin.Jabber.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Jabber.dll"/>
-				<File Id="XG.Plugin.Jabber.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Jabber.dll.mdb"/>
 				<File Id="XG.Plugin.Jabber.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Jabber.pdb"/>
 				<File Id="XG.Plugin.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.pdb"/>
 				<File Id="XG.Plugin.Webserver.dll" Source="..\XG.Application\bin\Release\XG.Plugin.Webserver.dll"/>
-				<File Id="XG.Plugin.Webserver.dll.mdb" Source="..\XG.Application\bin\Release\XG.Plugin.Webserver.dll.mdb"/>
 				<File Id="XG.Plugin.Webserver.pdb" Source="..\XG.Application\bin\Release\XG.Plugin.Webserver.pdb"/>
 			</Component>
 		</ComponentGroup>

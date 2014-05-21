@@ -24,6 +24,7 @@
 //  
 
 using System;
+using Db4objects.Db4o;
 
 namespace XG.Model.Domain
 {
@@ -31,15 +32,16 @@ namespace XG.Model.Domain
 	{
 		#region VARIABLES
 
-		public virtual new Bot Parent
+		public new Bot Parent
 		{
 			get { return base.Parent as Bot; }
 			set { base.Parent = value; }
 		}
 
+		[Transient]
 		File _file;
 
-		public virtual File File
+		public File File
 		{
 			get { return _file; }
 			set { _file = value; }
@@ -53,7 +55,7 @@ namespace XG.Model.Domain
 				// iam updated if the packet name changes
 				if (base.Name != value)
 				{
-					_lastUpdated = DateTime.Now;
+					LastUpdated = DateTime.Now;
 				}
 				base.Name = value;
 			}
@@ -61,53 +63,53 @@ namespace XG.Model.Domain
 
 		int _id = -1;
 
-		public virtual int Id
+		public int Id
 		{
-			get { return _id; }
+			get { return GetProperty(ref _id); }
 			set { SetProperty(ref _id, value, "Id"); }
 		}
 
 		Int64 _size;
 
-		public virtual Int64 Size
+		public Int64 Size
 		{
-			get { return _size; }
+			get { return GetProperty(ref _size); }
 			set { SetProperty(ref _size, value, "Size"); }
 		}
 
 		Int64 _realSize;
 
-		public virtual Int64 RealSize
+		public Int64 RealSize
 		{
-			get { return _realSize; }
+			get { return GetProperty(ref _realSize); }
 			set { SetProperty(ref _realSize, value, "RealSize"); }
 		}
 
 		string _realName = "";
 
-		public virtual string RealName
+		public string RealName
 		{
-			get { return _realName; }
+			get { return GetProperty(ref _realName); }
 			set { SetProperty(ref _realName, value, "RealName"); }
 		}
 
 		DateTime _lastUpdated = DateTime.MinValue.ToUniversalTime();
 
-		public virtual DateTime LastUpdated
+		public DateTime LastUpdated
 		{
-			get { return _lastUpdated; }
+			get { return GetProperty(ref _lastUpdated); }
 			set { SetProperty(ref _lastUpdated, value, "LastUpdated"); }
 		}
 
 		DateTime _lastMentioned = DateTime.MinValue.ToUniversalTime();
 
-		public virtual DateTime LastMentioned
+		public DateTime LastMentioned
 		{
-			get { return _lastMentioned; }
+			get { return GetProperty(ref _lastMentioned); }
 			set { SetProperty(ref _lastMentioned, value, "LastMentioned"); }
 		}
 
-		public virtual bool Next
+		public bool Next
 		{
 			get
 			{

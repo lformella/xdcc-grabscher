@@ -25,14 +25,18 @@
 
 using System;
 using System.Collections.Generic;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Activation;
+using Db4objects.Db4o.TA;
 
 namespace XG.Model.Domain
 {
-	public abstract class AObject
+	public abstract class AObject : IActivatable 
 	{
 		#region EVENTS
 
-		public virtual event EventHandler<EventArgs<AObject>> OnEnabledChanged;
+		[Transient]
+		public event EventHandler<EventArgs<AObject>> OnEnabledChanged;
 
 		protected void FireEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
@@ -42,7 +46,8 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public virtual event EventHandler<EventArgs<AObject, string[]>> OnChanged;
+		[Transient]
+		public event EventHandler<EventArgs<AObject, string[]>> OnChanged;
 
 		protected void FireChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
@@ -56,10 +61,17 @@ namespace XG.Model.Domain
 
 		#region PROPERTIES
 
+		protected T GetProperty<T>(ref T field)
+		{
+			Activate(ActivationPurpose.Read);
+			return field;
+		}
+
 		protected bool SetProperty<T>(ref T field, T value, string aName)
 		{
 			if (!EqualityComparer<T>.Default.Equals(field, value))
 			{
+				Activate(ActivationPurpose.Write);
 				if (_modifiedFields == null)
 				{
 					_modifiedFields = new List<string>();
@@ -73,39 +85,41 @@ namespace XG.Model.Domain
 
 		Guid _parentGuid;
 
-		public virtual Guid ParentGuid
+		public Guid ParentGuid
 		{
-			get { return _parentGuid; }
+			get { return GetProperty(ref _parentGuid); }
 		}
 
 		AObject _parent;
 
-		public virtual AObject Parent
+		public AObject Parent
 		{
-			get { return _parent; }
+			get { return GetProperty(ref _parent); }
 			set
 			{
 				if (_parent != value)
 				{
+					Activate(ActivationPurpose.Write);
 					_parent = value;
 					_parentGuid = _parent != null ? _parent.Guid : Guid.Empty;
 				}
 			}
 		}
 
-		public virtual Guid Guid { get; set; }
+		public Guid Guid { get; set; }
 
 		string _name;
 
 		public virtual string Name
 		{
-			get { return _name; }
+			get { return GetProperty(ref _name); }
 			set { SetProperty(ref _name, value, "Name"); }
 		}
 
+		[Transient]
 		List<string> _modifiedFields;
 
-		public virtual bool Commit()
+		public bool Commit()
 		{
 			try
 			{
@@ -124,13 +138,14 @@ namespace XG.Model.Domain
 
 		public virtual bool Connected
 		{
-			get { return _connected; }
+			get { return GetProperty(ref _connected); }
 			set
 			{
 				SetProperty(ref _connected, value, "Connected");
 
 				if (_connected)
 				{
+					Activate(ActivationPurpose.Write);
 					_connectedTime = DateTime.Now;
 				}
 			}
@@ -138,20 +153,21 @@ namespace XG.Model.Domain
 
 		DateTime _connectedTime = DateTime.MinValue.ToUniversalTime();
 
-		public virtual DateTime ConnectedTime
+		public DateTime ConnectedTime
 		{
-			get { return _connectedTime; }
+			get { return GetProperty(ref _connectedTime); }
 		}
 
 		bool _enabled;
 
-		public virtual bool Enabled
+		public bool Enabled
 		{
-			get { return _enabled; }
+			get { return GetProperty(ref _enabled); }
 			set
 			{
 				if (_enabled != value)
 				{
+					Activate(ActivationPurpose.Write);
 					_enabled = value;
 
 					if (_enabled)
@@ -165,9 +181,9 @@ namespace XG.Model.Domain
 
 		DateTime _enabledTime = DateTime.MinValue.ToUniversalTime();
 
-		public virtual DateTime EnabledTime
+		public DateTime EnabledTime
 		{
-			get { return _enabledTime; }
+			get { return GetProperty(ref _enabledTime); }
 		}
 
 		#endregion
@@ -177,9 +193,9 @@ namespace XG.Model.Domain
 		protected AObject()
 		{
 			Guid = Guid.NewGuid();
-			_name = "";
-			_connected = false;
-			_enabled = false;
+			Name = "";
+			Connected = false;
+			Enabled = false;
 			_modifiedFields = new List<string>();
 		}
 
@@ -197,21 +213,32 @@ namespace XG.Model.Domain
 			return Guid.GetHashCode();
 		}
 
-		bool _saved = false;
+		#endregion
 
-		public virtual void OnSave()
+		#region DB4O
+
+		[Transient]
+		private IActivator _activator;
+
+		public void Activate(ActivationPurpose purpose)
 		{
-			_saved = true;
+			if (_activator != null)
+			{
+				_activator.Activate(purpose);
+			}
 		}
 
-		public virtual void OnLoad()
+		public void Bind(IActivator activator)
 		{
-			_saved = true;
-		}
-
-		public virtual bool IsSaved
-		{
-			get { return _saved; }
+			if (_activator == activator)
+			{
+				return;
+			}
+			if (activator != null && null != _activator)
+			{
+				throw new System.InvalidOperationException();
+			}
+			_activator = activator;
 		}
 
 		#endregion

@@ -26,6 +26,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Activation;
 
 namespace XG.Model.Domain
 {
@@ -41,53 +43,51 @@ namespace XG.Model.Domain
 
 		string _tmpName;
 
-		public virtual string TmpName
+		public string TmpName
 		{
-			get { return _tmpName; }
-			protected set { _tmpName = value; }
+			get { return GetProperty(ref _tmpName); }
+			protected set { SetProperty(ref _tmpName, value, "TmpName"); }
 		}
 
 		Int64 _size;
 
-		public virtual Int64 Size
+		public Int64 Size
 		{
-			get { return _size; }
-			protected set { _size = value; }
+			get { return GetProperty(ref _size); }
+			protected set { SetProperty(ref _size, value, "Size"); }
 		}
 
 		Int64 _currentSize;
 
-		public virtual Int64 CurrentSize
+		public Int64 CurrentSize
 		{
-			get { return _currentSize; }
+			get { return GetProperty(ref _currentSize); }
 			set { SetProperty(ref _currentSize, value, "CurrentSize"); }
 		}
 
-		public virtual Int64 MissingSize
+		public Int64 MissingSize
 		{
-			get { return _size - _currentSize; }
+			get { return Size - CurrentSize; }
 		}
 
-		public virtual Int64 TimeMissing
+		public Int64 TimeMissing
 		{
-			get
-			{
-				Int64 time = (_speed > 0 ? (MissingSize / Speed) : 0);
-				return time;
-			}
+			get { return (Speed > 0 ? (MissingSize / Speed) : 0); }
 		}
 
+		[Transient]
 		Int64 _speed;
 
-		public virtual Int64 Speed
+		public Int64 Speed
 		{
 			get { return _speed; }
 			set { SetProperty(ref _speed, value, "Speed"); }
 		}
 
+		[Transient]
 		Packet _packet;
 
-		public virtual Packet Packet
+		public Packet Packet
 		{
 			get { return _packet; }
 			set
@@ -108,26 +108,25 @@ namespace XG.Model.Domain
 			}
 		}
 
+		[Transient]
 		Guid _packetGuid;
 
-		public virtual Guid PacketGuid
+		public Guid PacketGuid
 		{
-			get { return _packetGuid; }
+			get { return GetProperty(ref _packetGuid); }
 		}
 
+		[Transient]
 		Guid _packetGuidOld;
 
-		public virtual Guid PacketGuidOld
+		public Guid PacketGuidOld
 		{
-			get { return _packetGuidOld; }
+			get { return GetProperty(ref _packetGuidOld); }
 		}
 
 		#endregion
 		
 		#region CONSTRUCTOR
-
-		protected  File ()
-		{}
 
 		public File(string aName, Int64 aSize)
 		{

@@ -50,7 +50,7 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public virtual new Server Parent
+		public new Server Parent
 		{
 			get { return base.Parent as Server; }
 			set { base.Parent = value; }
@@ -58,57 +58,56 @@ namespace XG.Model.Domain
 
 		int _errorCode;
 
-		public virtual int ErrorCode
+		public int ErrorCode
 		{
-			get { return _errorCode; }
+			get { return GetProperty(ref _errorCode); }
 			set { SetProperty(ref _errorCode, value, "ErrorCode"); }
 		}
 
 		string _topic;
 
-		public virtual string Topic
+		public string Topic
 		{
-			get { return _topic; }
+			get { return GetProperty(ref _topic); }
 			set { SetProperty(ref _topic, value, "Topic"); }
 		}
 
 		int _userCount;
 
-		public virtual int UserCount
+		public int UserCount
 		{
-			get { return _userCount; }
+			get { return GetProperty(ref _userCount); }
 			set { SetProperty(ref _userCount, value, "UserCount"); }
 		}
 
 		bool _askForVersion;
 
-		public virtual bool AskForVersion
+		public bool AskForVersion
 		{
-			get { return _askForVersion; }
+			get { return GetProperty(ref _askForVersion); }
 			set { SetProperty(ref _askForVersion, value, "AskForVersion"); }
 		}
-
 
 		#endregion
 
 		#region CHILDREN
 
-		public virtual IEnumerable<Bot> Bots
+		public IEnumerable<Bot> Bots
 		{
 			get { return All.Cast<Bot>(); }
 		}
 
-		public virtual Bot Bot(string aName)
+		public Bot Bot(string aName)
 		{
 			return base.Named(aName) as Bot;
 		}
 
-		public virtual bool AddBot(Bot aBot)
+		public bool AddBot(Bot aBot)
 		{
 			return Add(aBot);
 		}
 
-		public virtual bool RemoveBot(Bot aBot)
+		public bool RemoveBot(Bot aBot)
 		{
 			return Remove(aBot);
 		}

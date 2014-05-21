@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Db4objects.Db4o;
 
 namespace XG.Model.Domain
 {
@@ -45,24 +46,25 @@ namespace XG.Model.Domain
 
 		#region VARIABLES
 
-		public virtual new Channel Parent
+		public new Channel Parent
 		{
 			get { return base.Parent as Channel; }
 			set { base.Parent = value; }
 		}
 
+		[Transient]
 		Packet _currentQueuedPacket;
 
-		public virtual Packet CurrentQueuedPacket
+		public Packet CurrentQueuedPacket
 		{
 			get { return _currentQueuedPacket; }
 		}
 
 		States _state;
 
-		public virtual States State
+		public States State
 		{
-			get { return _state; }
+			get { return GetProperty(ref _state); }
 			set
 			{
 				SetProperty(ref _state, value, "State");
@@ -74,117 +76,118 @@ namespace XG.Model.Domain
 			}
 		}
 
+		[Transient]
 		IPAddress _ip = IPAddress.None;
 
-		public virtual IPAddress IP
+		public IPAddress IP
 		{
 			get { return _ip; }
-			set { SetProperty(ref _ip, value, "IP"); }
+			set { _ip =  value; }
 		}
 
 		string _lastMessage = "";
 
-		public virtual string LastMessage
+		public string LastMessage
 		{
-			get { return _lastMessage; }
+			get { return GetProperty(ref _lastMessage); }
 			set
 			{
 				SetProperty(ref _lastMessage, value, "LastMessage");
-				_lastContact = DateTime.Now;
-				_lastMessageTime = DateTime.Now;
+				LastContact = DateTime.Now;
+				LastMessageTime = DateTime.Now;
 			}
 		}
 
 		DateTime _lastMessageTime = DateTime.MinValue.ToUniversalTime();
 
-		public virtual DateTime LastMessageTime
+		public DateTime LastMessageTime
 		{
-			get { return _lastMessageTime; }
+			get { return GetProperty(ref _lastMessageTime); }
 			set { SetProperty(ref _lastMessageTime, value, "LastMessageTime"); }
 		}
 
 		DateTime _lastContact = DateTime.MinValue.ToUniversalTime();
 
-		public virtual DateTime LastContact
+		public DateTime LastContact
 		{
-			get { return _lastContact; }
+			get { return GetProperty(ref _lastContact); }
 			set { SetProperty(ref _lastContact, value, "LastContact"); }
 		}
 
 		int _queuePosition;
 
-		public virtual int QueuePosition
+		public int QueuePosition
 		{
-			get { return _queuePosition; }
+			get { return GetProperty(ref _queuePosition); }
 			set { SetProperty(ref _queuePosition, value, "QueuePosition"); }
 		}
 
 		int _queueTime;
 
-		public virtual int QueueTime
+		public int QueueTime
 		{
-			get { return _queueTime; }
+			get { return GetProperty(ref _queueTime); }
 			set { SetProperty(ref _queueTime, value, "QueueTime"); }
 		}
 
 		Int64 _infoSpeedMax;
 
-		public virtual Int64 InfoSpeedMax
+		public Int64 InfoSpeedMax
 		{
-			get { return _infoSpeedMax; }
+			get { return GetProperty(ref _infoSpeedMax); }
 			set { SetProperty(ref _infoSpeedMax, value, "InfoSpeedMax"); }
 		}
 
 		Int64 _infoSpeedCurrent;
 
-		public virtual Int64 InfoSpeedCurrent
+		public Int64 InfoSpeedCurrent
 		{
-			get { return _infoSpeedCurrent; }
+			get { return GetProperty(ref _infoSpeedCurrent); }
 			set { SetProperty(ref _infoSpeedCurrent, value, "InfoSpeedCurrent"); }
 		}
 
 		int _infoSlotTotal;
 
-		public virtual int InfoSlotTotal
+		public int InfoSlotTotal
 		{
-			get { return _infoSlotTotal; }
+			get { return GetProperty(ref _infoSlotTotal); }
 			set { SetProperty(ref _infoSlotTotal, value, "InfoSlotTotal"); }
 		}
 
 		int _infoSlotCurrent;
 
-		public virtual int InfoSlotCurrent
+		public int InfoSlotCurrent
 		{
-			get { return _infoSlotCurrent; }
+			get { return GetProperty(ref _infoSlotCurrent); }
 			set { SetProperty(ref _infoSlotCurrent, value, "InfoSlotCurrent"); }
 		}
 
 		int _infoQueueTotal;
 
-		public virtual int InfoQueueTotal
+		public int InfoQueueTotal
 		{
-			get { return _infoQueueTotal; }
+			get { return GetProperty(ref _infoQueueTotal); }
 			set { SetProperty(ref _infoQueueTotal, value, "InfoQueueTotal"); }
 		}
 
 		int _infoQueueCurrent;
 
-		public virtual int InfoQueueCurrent
+		public int InfoQueueCurrent
 		{
-			get { return _infoQueueCurrent; }
+			get { return GetProperty(ref _infoQueueCurrent); }
 			set { SetProperty(ref _infoQueueCurrent, value, "InfoQueueCurrent"); }
 		}
 
-		public virtual Int64 Speed
+		public Int64 Speed
 		{
 			get { return (from pack in Packets where pack.File != null select pack.File.Speed).Sum(); }
 		}
 
 		bool _hasNetworkProblems;
 
-		public virtual bool HasNetworkProblems
+		public bool HasNetworkProblems
 		{
-			get { return _hasNetworkProblems; }
+			get { return GetProperty(ref _hasNetworkProblems); }
 			set { SetProperty(ref _hasNetworkProblems, value, "HasNetworkProblems"); }
 		}
 
@@ -192,12 +195,12 @@ namespace XG.Model.Domain
 
 		#region CHILDREN
 
-		public virtual IEnumerable<Packet> Packets
+		public IEnumerable<Packet> Packets
 		{
 			get { return All.Cast<Packet>(); }
 		}
 
-		public virtual Packet Packet(int aId)
+		public Packet Packet(int aId)
 		{
 			try
 			{
@@ -209,17 +212,17 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public virtual bool AddPacket(Packet aPacket)
+		public bool AddPacket(Packet aPacket)
 		{
 			return Add(aPacket);
 		}
 
-		public virtual bool RemovePacket(Packet aPacket)
+		public bool RemovePacket(Packet aPacket)
 		{
 			return Remove(aPacket);
 		}
 
-		public virtual Packet OldestActivePacket()
+		public Packet OldestActivePacket()
 		{
 			try
 			{

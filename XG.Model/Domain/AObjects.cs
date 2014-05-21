@@ -26,14 +26,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Db4objects.Db4o;
+using Db4objects.Db4o.Activation;
+using Db4objects.Db4o.Collections;
+using Db4objects.Db4o.Ext;
 
 namespace XG.Model.Domain
 {
-	public abstract class AObjects : AObject
+	public abstract class AObjects : AObject, IObjectCallbacks
 	{
 		#region EVENTS
 
-		public virtual event EventHandler<EventArgs<AObject, AObject>> OnAdded;
+		[Transient]
+		public event EventHandler<EventArgs<AObject, AObject>> OnAdded;
 
 		protected void FireAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
@@ -43,7 +48,8 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public virtual event EventHandler<EventArgs<AObject, AObject>> OnRemoved;
+		[Transient]
+		public event EventHandler<EventArgs<AObject, AObject>> OnRemoved;
 
 		protected void FireRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
@@ -57,35 +63,15 @@ namespace XG.Model.Domain
 
 		#region PROPERTIES
 
-		ICollection<AObject> _children;
-		protected ICollection<AObject> Children
-		{
-			get
-			{
-				return _children;
-			}
-			set
-			{
-				_children = value;
-
-				foreach (var child in _children)
-				{
-					child.OnEnabledChanged += FireEnabledChanged;
-					child.OnChanged += FireChanged;
-
-					var aObjects = child as AObjects;
-					if (aObjects != null)
-					{
-						aObjects.OnAdded += FireAdded;
-						aObjects.OnRemoved += FireRemoved;
-					}
-				}
-			}
-		}
+		ICollection<AObject> _children = new ArrayList4<AObject>();
 
 		protected AObject[] All
 		{
-			get { return new HashSet<AObject>(Children).ToArray(); }
+			get
+			{
+				Activate(ActivationPurpose.Read);
+				return new HashSet<AObject>(_children).ToArray(); 
+			}
 		}
 
 		#endregion
@@ -97,11 +83,12 @@ namespace XG.Model.Domain
 			bool result = false;
 			if (aObject != null)
 			{
-				lock (Children)
+				lock (_children)
 				{
 					if (!DuplicateChildExists(aObject))
 					{
-						Children.Add(aObject);
+						Activate(ActivationPurpose.Write);
+						_children.Add(aObject);
 						result = true;
 					}
 				}
@@ -130,9 +117,10 @@ namespace XG.Model.Domain
 			bool result = false;
 			if (aObject != null)
 			{
-				lock (Children)
+				lock (_children)
 				{
-					result = Children.Remove(aObject);
+					Activate(ActivationPurpose.Write);
+					result = _children.Remove(aObject);
 				}
 
 				if (result)
@@ -152,7 +140,7 @@ namespace XG.Model.Domain
 			return result;
 		}
 
-		public virtual AObject WithGuid(Guid aGuid)
+		public AObject WithGuid(Guid aGuid)
 		{
 			if (aGuid == Guid.Empty)
 			{
@@ -184,7 +172,7 @@ namespace XG.Model.Domain
 			return tObjectReturn;
 		}
 
-		public virtual AObject Named(string aName)
+		public AObject Named(string aName)
 		{
 			try
 			{
@@ -200,11 +188,63 @@ namespace XG.Model.Domain
 
 		#endregion
 
-		#region CONSTRUCTOR
+		#region DB4O
 
-		protected AObjects()
+		public bool ObjectCanActivate(IObjectContainer container)
 		{
-			Children = new List<AObject>();
+			return true;
+		}
+
+		public bool ObjectCanDeactivate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanDelete(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanNew(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanUpdate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public void ObjectOnActivate(IObjectContainer container)
+		{
+			foreach (var child in All)
+			{
+				child.OnEnabledChanged += FireEnabledChanged;
+				child.OnChanged += FireChanged;
+
+				var children = child as AObjects;
+				if (children != null)
+				{
+					children.OnAdded += FireAdded;
+					children.OnRemoved += FireRemoved;
+				}
+			}
+		}
+
+		public void ObjectOnDeactivate(IObjectContainer container)
+		{
+		}
+
+		public void ObjectOnDelete(IObjectContainer container)
+		{
+		}
+
+		public void ObjectOnNew(IObjectContainer container)
+		{
+		}
+
+		public void ObjectOnUpdate(IObjectContainer container)
+		{
 		}
 
 		#endregion

@@ -29,17 +29,17 @@ namespace XG.Model.Domain
 	{
 		int _errorCount;
 
-		public virtual int ErrorCount
+		public int ErrorCount
 		{
-			get { return _errorCount; }
+			get { return GetProperty(ref _errorCount); }
 			set { SetProperty(ref _errorCount, value, "ErrorCount"); }
 		}
 
 		int _successCount;
 
-		public virtual int SuccessCount
+		public int SuccessCount
 		{
-			get { return _successCount; }
+			get { return GetProperty(ref _successCount); }
 			set { SetProperty(ref _successCount, value, "SuccessCount"); }
 		}
 	}

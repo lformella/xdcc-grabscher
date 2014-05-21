@@ -92,7 +92,7 @@ namespace XG.Plugin.Irc
 
 		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (aEventArgs.Value2 is Server)
+			if (aEventArgs.Value2 is Server && aEventArgs.Value2.Enabled)
 			{
 				var aServer = aEventArgs.Value2 as Server;
 				ServerConnect(aServer);
