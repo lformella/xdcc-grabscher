@@ -36,7 +36,7 @@ require.config({
 		'domReady': './libs/domReady',
 		'favicon': './libs/favicon',
 		'ipCookies': './libs/angular-cookie',
-		'jquery': '../../../Scripts/jquery-2.1.0.min',
+		'jquery': '../../../Scripts/jquery-2.1.1.min',
 		'jqKnob': './libs/jquery.knob',
 		'jqFlot': '../../../Scripts/flot/jquery.flot.min',
 		'jqFlot.axislabels': './libs/jquery.flot.axislabels',
@@ -44,9 +44,9 @@ require.config({
 		'jqFlot.time': '../../../Scripts/flot/jquery.flot.time.min',
 		'moment': '../../../Scripts/moment-with-langs.min',
 		'sha256': './libs/sha256',
-		'signalr': '../../../Scripts/jquery.signalR-2.0.2.min',
+		'signalr': '../../../Scripts/jquery.signalR-2.0.3.min',
 		'signalr.hubs': '../../../signalr/hubs?noext=',
-		'ui.bootstrap': '../../../Scripts/ui-bootstrap-tpls-0.10.0.min'
+		'ui.bootstrap': '../../../Scripts/angular-ui/ui-bootstrap-tpls.min'
 	},
 	shim: {
 		'angular': {
