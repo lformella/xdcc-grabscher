@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="XG" Language="1033" Version="3.2.0.0" Manufacturer="Lars Formella" UpgradeCode="d95523ff-1478-41d8-8139-3a7abc1a3fc7">
+	<Product Id="*" Name="XG" Language="1033" Version="3.3.0.0" Manufacturer="Lars Formella" UpgradeCode="d95523ff-1478-41d8-8139-3a7abc1a3fc7">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of XG is already installed." />
@@ -34,14 +34,14 @@
 				<File Id="BplusDotNet.dll" Source="..\XG.Application\bin\Release\BplusDotNet.dll"/>
 				<File Id="CacheAspect.dll" Source="..\XG.Application\bin\Release\CacheAspect.dll"/>
 				<File Id="CacheAspect.pdb" Source="..\XG.Application\bin\Release\CacheAspect.pdb"/>
-			    <File Id="Common.Logging.dll" Source="..\XG.Application\bin\Release\Common.Logging.dll"/>
-			    <File Id="Common.Logging.pdb" Source="..\XG.Application\bin\Release\Common.Logging.pdb"/>
-			    <File Id="Common.Logging.xml" Source="..\XG.Application\bin\Release\Common.Logging.xml"/>
+				<File Id="Common.Logging.dll" Source="..\XG.Application\bin\Release\Common.Logging.dll"/>
+				<File Id="Common.Logging.pdb" Source="..\XG.Application\bin\Release\Common.Logging.pdb"/>
+				<File Id="Common.Logging.xml" Source="..\XG.Application\bin\Release\Common.Logging.xml"/>
+				<File Id="Db4objects.Db4o.dll" Source="..\XG.Application\bin\Release\Db4objects.Db4o.dll"/>
+				<File Id="Db4objects.Db4o.xml" Source="..\XG.Application\bin\Release\Db4objects.Db4o.xml"/>
 				<File Id="HtmlAgilityPack.dll" Source="..\XG.Application\bin\Release\HtmlAgilityPack.dll"/>
 				<File Id="HtmlAgilityPack.pdb" Source="..\XG.Application\bin\Release\HtmlAgilityPack.pdb"/>
 				<File Id="HtmlAgilityPack.xml" Source="..\XG.Application\bin\Release\HtmlAgilityPack.xml"/>
-				<File Id="Iesi.Collections.dll" Source="..\XG.Application\bin\Release\Iesi.Collections.dll"/>
-				<File Id="Iesi.Collections.xml" Source="..\XG.Application\bin\Release\Iesi.Collections.xml"/>
 				<File Id="log4net.dll" Source="..\XG.Application\bin\Release\log4net.dll"/>
 				<File Id="log4net.xml" Source="..\XG.Application\bin\Release\log4net.xml"/>
 				<File Id="Meebey.SmartIrc4net.dll" Source="..\XG.Application\bin\Release\Meebey.SmartIrc4net.dll"/>
@@ -63,8 +63,6 @@
 				<File Id="Nest.xml" Source="..\XG.Application\bin\Release\Nest.xml"/>
 				<File Id="Newtonsoft.Json.dll" Source="..\XG.Application\bin\Release\Newtonsoft.Json.dll"/>
 				<File Id="Newtonsoft.Json.xml" Source="..\XG.Application\bin\Release\Newtonsoft.Json.xml"/>
-				<File Id="NHibernate.dll" Source="..\XG.Application\bin\Release\NHibernate.dll"/>
-				<File Id="NHibernate.xml" Source="..\XG.Application\bin\Release\NHibernate.xml"/>
 				<File Id="Nowin.dll" Source="..\XG.Application\bin\Release\Nowin.dll"/>
 				<File Id="Owin.dll" Source="..\XG.Application\bin\Release\Owin.dll"/>
 				<File Id="PostSharp.dll" Source="..\XG.Application\bin\Release\PostSharp.dll"/>
