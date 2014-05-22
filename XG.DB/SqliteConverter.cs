@@ -344,7 +344,7 @@ namespace XG.DB
 
 		File CreateFile(DbDataReader reader)
 		{
-			return new File((string)reader["Name"], (long)reader["TmpName"])
+			return new File((string)reader["Name"], (long)reader["Size"])
 			{
 				Guid = (Guid)reader["Guid"],
 				Connected = (bool)reader["Connected"],
