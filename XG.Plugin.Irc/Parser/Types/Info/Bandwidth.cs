@@ -31,7 +31,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Bandwitdh : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -58,11 +58,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 				{
 					aBot.InfoSpeedMax = speedMaxEnd.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
 				}
-
-				UpdateBot(aBot);
-				return true;
 			}
-			return false;
 		}
 	}
 }

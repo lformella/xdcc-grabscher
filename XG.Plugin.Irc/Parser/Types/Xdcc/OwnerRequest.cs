@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class OwnerRequest : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -48,11 +48,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				{
 					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, (valueInt * 60 + 1) * 1000));
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }

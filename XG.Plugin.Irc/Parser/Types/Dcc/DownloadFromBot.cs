@@ -36,31 +36,31 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
 	public class DownloadFromBot : AParser
 	{
-		public override bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
 		{
 			if (!aMessage.StartsWith("\u0001DCC ", StringComparison.Ordinal))
 			{
-				return false;
+				return;
 			}
 			aMessage = aMessage.Substring(5, aMessage.Length - 6);
 
 			Bot tBot = aChannel.Bot(aNick);
 			if (tBot == null)
 			{
-				return false;
+				return;
 			}
 
 			Packet tPacket = tBot.OldestActivePacket();
 			if (tPacket == null)
 			{
 				Log.Error("Parse() DCC not activated from " + tBot);
-				return true;
+				return;
 			}
 
 			if (tPacket.Connected)
 			{
 				Log.Error("Parse() ignoring dcc from " + tBot + " because " + tPacket + " is already connected");
-				return true;
+				return;
 			}
 
 			bool isOk = false;
@@ -73,7 +73,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 			{
 				if (tFile.Connected)
 				{
-					return true;
+					return;
 				}
 				if (tFile.CurrentSize > Settings.Default.FileRollbackBytes)
 				{
@@ -103,7 +103,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + tBot + " - can not parse bot ip from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				try
@@ -113,7 +113,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				// we cant connect to port <= 0
@@ -124,7 +124,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 					tPacket.Commit();
 
 					FireNotificationAdded(Notification.Types.BotSubmittedWrongData, tBot);
-					return true;
+					return;
 				}
 
 				tPacket.RealName = tDataList[1];
@@ -141,7 +141,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + tBot + " - can not parse packet size from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				if (tPacket.RealSize <= 0)
@@ -151,7 +151,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 					tPacket.Commit();
 
 					FireNotificationAdded(Notification.Types.BotSubmittedWrongData, tBot);
-					return true;
+					return;
 				}
 
 				if (tFile != null)
@@ -188,7 +188,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + tBot + " - can not parse bot port from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				try
@@ -198,7 +198,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + tBot + " - can not parse packet startSize from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				isOk = true;
@@ -210,8 +210,6 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				Log.Info("Parse() downloading from " + tBot + " - Starting: " + startSize + " - Size: " + tPacket.RealSize);
 				FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
 			}
-
-			return true;
 		}
 	}
 }

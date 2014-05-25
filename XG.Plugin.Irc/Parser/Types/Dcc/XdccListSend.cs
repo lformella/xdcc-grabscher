@@ -31,11 +31,11 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
 	public class XdccListSend : AParser
 	{
-		public override bool Parse(Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Channel aChannel, string aNick, string aMessage)
 		{
 			if (!aMessage.StartsWith("\u0001DCC ", StringComparison.Ordinal))
 			{
-				return false;
+				return;
 			}
 			aMessage = aMessage.Substring(5, aMessage.Length - 6);
 
@@ -45,7 +45,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				if (!Helper.Match(tDataList[1], ".*\\.txt$").Success)
 				{
 					Log.Error("Parse() " + aNick + " send no text file: " + tDataList[1]);
-					return false;
+					return;
 				}
 
 				IPAddress ip = null;
@@ -56,7 +56,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + aNick + " - can not parse ip from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				Int64 size = 0;
@@ -67,7 +67,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + aNick + " - can not parse size from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				int port = 0;
@@ -78,7 +78,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				catch (Exception ex)
 				{
 					Log.Fatal("Parse() " + aNick + " - can not parse port from string: " + aMessage, ex);
-					return true;
+					return;
 				}
 
 				// we cant connect to port <= 0
@@ -90,10 +90,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				{
 					FireDownloadXdccList(this, new EventArgs<Server, string, Int64, IPAddress, int>(aChannel.Parent, aNick, size, ip, port));
 				}
-
-				return true;
 			}
-			return false;
 		}
 	}
 }

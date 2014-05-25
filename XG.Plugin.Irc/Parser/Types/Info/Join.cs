@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Join : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -44,9 +44,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 					channel = "#" + channel;
 				}
 				FireJoinChannel(this, new EventArgs<Server, string>(aBot.Parent.Parent, channel));
-				return true;
 			}
-			return false;
 		}
 	}
 }

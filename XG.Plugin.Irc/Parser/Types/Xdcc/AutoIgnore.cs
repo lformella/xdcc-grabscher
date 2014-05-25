@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class AutoIgnore : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -56,11 +56,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					}
 					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, time * 1000));
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }

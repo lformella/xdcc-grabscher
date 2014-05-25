@@ -32,7 +32,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Packet : AParser
 	{
-		public override bool Parse(Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Channel aChannel, string aNick, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -62,7 +62,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 					catch (Exception ex)
 					{
 						Log.Fatal("Parse() " + tBot + " - can not parse packet id from string: " + aMessage, ex);
-						return false;
+						return;
 					}
 
 					Model.Domain.Packet tPack = tBot.Packet(tPacketId);
@@ -146,9 +146,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 
 				tBot.Commit();
 				aChannel.Commit();
-				return true;
 			}
-			return false;
 		}
 
 		#region HELPER

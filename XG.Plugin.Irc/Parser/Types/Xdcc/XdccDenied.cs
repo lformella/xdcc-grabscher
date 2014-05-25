@@ -30,7 +30,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class XdccDenied : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -65,11 +65,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 					Log.Error("Parse() XDCC denied from " + aBot + ": " + info);
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }

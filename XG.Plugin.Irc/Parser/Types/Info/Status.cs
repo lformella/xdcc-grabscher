@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Status : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -71,11 +71,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 					aBot.State = Bot.States.Idle;
 					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, 0));
 				}
-
-				UpdateBot(aBot);
-				return true;
 			}
-			return false;
 		}
 	}
 }

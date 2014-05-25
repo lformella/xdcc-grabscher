@@ -30,13 +30,12 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
 	public class Version : AParser
 	{
-		public override bool Parse(Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Channel aChannel, string aNick, string aMessage)
 		{
 			if (aMessage.StartsWith("\u0001VERSION ", StringComparison.Ordinal))
 			{
 				CheckVersion(aChannel, aNick, aMessage.Substring(9));
 			}
-			return false;
 		}
 
 		private void CheckVersion(Channel aChannel, string aNick, string aVersion)

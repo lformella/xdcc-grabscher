@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types
 {
 	public class XdccList : AParser
 	{
-		public override bool Parse(Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Channel aChannel, string aNick, string aMessage)
 		{
 			var regexes = new string[]
 			{
@@ -39,7 +39,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			if (match.Success)
 			{
 				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST ALL"));
-				return true;
+				return;
 			}
 
 			regexes = new string[]
@@ -50,7 +50,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			if (match.Success)
 			{
 				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST"));
-				return true;
+				return;
 			}
 
 			regexes = new string[]
@@ -61,7 +61,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			if (match.Success)
 			{
 				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC SEND LIST"));
-				return true;
+				return;
 			}
 
 			regexes = new string[]
@@ -72,9 +72,8 @@ namespace XG.Plugin.Irc.Parser.Types
 			if (match.Success)
 			{
 				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST " + match.Groups["group"]));
-				return true;
+				return;
 			}
-			return false;
 		}
 	}
 }

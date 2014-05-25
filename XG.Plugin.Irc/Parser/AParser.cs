@@ -137,7 +137,7 @@ namespace XG.Plugin.Irc.Parser
 
 		#region PARSING
 
-		public abstract bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage);
+		public abstract void Parse(Model.Domain.Channel aChannel, string aNick, string aMessage);
 
 		#endregion
 	}

@@ -30,7 +30,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class XdccDown : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -43,12 +43,9 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				{
 					aBot.State = Bot.States.Idle;
 				}
-				FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.BotWaitTime));
 
-				UpdateBot(aBot, aMessage);
-				return true;
+				FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.BotWaitTime));
 			}
-			return false;
 		}
 	}
 }

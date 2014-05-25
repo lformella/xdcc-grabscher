@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class AllSlotsFull : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -76,11 +76,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					time += valueInt * 60 * 60 * 24;
 				}
 				aBot.QueueTime = time;
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }

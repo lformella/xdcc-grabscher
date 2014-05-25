@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class AlreadyReceiving : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -54,11 +54,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 						FireUnRequestFromBot(this, new EventArgs<Bot>(aBot));
 					}
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }

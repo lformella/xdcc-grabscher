@@ -35,7 +35,7 @@ namespace XG.Plugin.Irc.Parser.Types
 	{
 		readonly HashSet<Server> _authenticatedServer = new HashSet<Server>();
 
-		public override bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
 		{
 			if (aNick != null && aNick.ToLower() == "nickserv")
 			{
@@ -132,9 +132,7 @@ namespace XG.Plugin.Irc.Parser.Types
 				}
 
 				Log.Error("unknow command: " + aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }

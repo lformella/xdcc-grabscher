@@ -30,7 +30,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class NotInQueue : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(Bot aBot, string aMessage)
+		protected override void ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -45,11 +45,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				}
 				aBot.QueuePosition = 0;
 				FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
 		}
 	}
 }
