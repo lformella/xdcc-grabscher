@@ -92,7 +92,6 @@ namespace XG.Business
 			_rrdDb = new Helper.Rrd().GetDb();
 
 			CheckForDuplicates();
-			ResetObjects();
 			ClearOldDownloads();
 			TryToRecoverOpenFiles();
 		}
@@ -168,34 +167,6 @@ namespace XG.Business
 			foreach (string dir in files)
 			{
 				FileSystem.DeleteFile(dir);
-			}
-		}
-
-		void ResetObjects()
-		{
-			foreach (Server tServer in Servers.All)
-			{
-				tServer.Connected = false;
-				tServer.ErrorCode = SocketErrorCode.None;
-
-				foreach (Channel tChannel in tServer.Channels)
-				{
-					tChannel.Connected = false;
-					tChannel.ErrorCode = 0;
-
-					foreach (Bot tBot in tChannel.Bots)
-					{
-						tBot.Connected = false;
-						tBot.State = Bot.States.Idle;
-						tBot.QueuePosition = 0;
-						tBot.QueueTime = 0;
-
-						foreach (Packet pack in tBot.Packets)
-						{
-							pack.Connected = false;
-						}
-					}
-				}
 			}
 		}
 

@@ -60,6 +60,7 @@ namespace XG.Model.Domain
 			get { return _currentQueuedPacket; }
 		}
 
+		[Transient]
 		States _state;
 
 		public States State
@@ -114,6 +115,7 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _lastContact, value, "LastContact"); }
 		}
 
+		[Transient]
 		int _queuePosition;
 
 		public int QueuePosition
@@ -122,6 +124,7 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _queuePosition, value, "QueuePosition"); }
 		}
 
+		[Transient]
 		int _queueTime;
 
 		public int QueueTime
@@ -183,6 +186,7 @@ namespace XG.Model.Domain
 			get { return (from pack in Packets where pack.File != null select pack.File.Speed).Sum(); }
 		}
 
+		[Transient]
 		bool _hasNetworkProblems;
 
 		public bool HasNetworkProblems
@@ -237,6 +241,15 @@ namespace XG.Model.Domain
 		public override bool DuplicateChildExists(AObject aObject)
 		{
 			return Packet((aObject as Packet).Id) != null;
+		}
+
+		#endregion
+
+		#region HELPER
+
+		public override string ToString()
+		{
+			return base.ToString() + (IP != null ? "|" + IP : "");
 		}
 
 		#endregion

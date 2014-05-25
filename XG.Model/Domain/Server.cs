@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Db4objects.Db4o;
 
 namespace XG.Model.Domain
 {
@@ -64,6 +65,7 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _port, value, "Port"); }
 		}
 
+		[Transient]
 		SocketErrorCode _errorCode = SocketErrorCode.None;
 
 		public SocketErrorCode ErrorCode

@@ -33,7 +33,7 @@ using Db4objects.Db4o.Ext;
 
 namespace XG.Model.Domain
 {
-	public abstract class AObjects : AObject, IObjectCallbacks
+	public abstract class AObjects : AObject
 	{
 		#region EVENTS
 
@@ -190,33 +190,10 @@ namespace XG.Model.Domain
 
 		#region DB4O
 
-		public bool ObjectCanActivate(IObjectContainer container)
+		public new void ObjectOnActivate(IObjectContainer container)
 		{
-			return true;
-		}
+			base.ObjectOnActivate(container);
 
-		public bool ObjectCanDeactivate(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public bool ObjectCanDelete(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public bool ObjectCanNew(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public bool ObjectCanUpdate(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public void ObjectOnActivate(IObjectContainer container)
-		{
 			foreach (var child in All)
 			{
 				child.OnEnabledChanged += FireEnabledChanged;
@@ -229,22 +206,6 @@ namespace XG.Model.Domain
 					children.OnRemoved += FireRemoved;
 				}
 			}
-		}
-
-		public void ObjectOnDeactivate(IObjectContainer container)
-		{
-		}
-
-		public void ObjectOnDelete(IObjectContainer container)
-		{
-		}
-
-		public void ObjectOnNew(IObjectContainer container)
-		{
-		}
-
-		public void ObjectOnUpdate(IObjectContainer container)
-		{
 		}
 
 		#endregion

@@ -28,10 +28,11 @@ using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.TA;
+using Db4objects.Db4o.Ext;
 
 namespace XG.Model.Domain
 {
-	public abstract class AObject : IActivatable 
+	public abstract class AObject : IActivatable, IObjectCallbacks
 	{
 		#region EVENTS
 
@@ -134,6 +135,7 @@ namespace XG.Model.Domain
 			return false;
 		}
 
+		[Transient]
 		bool _connected;
 
 		public virtual bool Connected
@@ -240,6 +242,41 @@ namespace XG.Model.Domain
 			}
 			_activator = activator;
 		}
+
+		public bool ObjectCanActivate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanDeactivate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanDelete(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanNew(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanUpdate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public void ObjectOnActivate(IObjectContainer container) {}
+
+		public void ObjectOnDeactivate(IObjectContainer container) {}
+
+		public void ObjectOnDelete(IObjectContainer container) {}
+
+		public void ObjectOnNew(IObjectContainer container) {}
+
+		public void ObjectOnUpdate(IObjectContainer container) {}
 
 		#endregion
 	}
