@@ -29,28 +29,34 @@ using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
-	public class XdccListSend : ADccParser
+	public class XdccListSend : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aUser, string aMessage)
+		public override bool Parse(Channel aChannel, string aNick, string aMessage)
 		{
+			if (!aMessage.StartsWith("\u0001DCC ", StringComparison.Ordinal))
+			{
+				return false;
+			}
+			aMessage = aMessage.Substring(5, aMessage.Length - 6);
+
 			string[] tDataList = aMessage.Split(' ');
 			if (tDataList[0] == "SEND")
 			{
 				if (!Helper.Match(tDataList[1], ".*\\.txt$").Success)
 				{
-					Log.Error("Parse() " + aUser + " send no text file: " + tDataList[1]);
+					Log.Error("Parse() " + aNick + " send no text file: " + tDataList[1]);
 					return false;
 				}
 
 				IPAddress ip = null;
 				try
 				{
-					ip = TryCalculateIp(tDataList[2]);
+					ip = IPAddress.Parse(tDataList[2]);
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("Parse() " + aUser + " - can not parse ip from string: " + aMessage, ex);
-					return false;
+					Log.Fatal("Parse() " + aNick + " - can not parse ip from string: " + aMessage, ex);
+					return true;
 				}
 
 				Int64 size = 0;
@@ -60,8 +66,8 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("Parse() " + aUser + " - can not parse size from string: " + aMessage, ex);
-					return false;
+					Log.Fatal("Parse() " + aNick + " - can not parse size from string: " + aMessage, ex);
+					return true;
 				}
 
 				int port = 0;
@@ -71,21 +77,21 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				}
 				catch (Exception ex)
 				{
-					Log.Fatal("Parse() " + aUser + " - can not parse port from string: " + aMessage, ex);
-					return false;
+					Log.Fatal("Parse() " + aNick + " - can not parse port from string: " + aMessage, ex);
+					return true;
 				}
 
 				// we cant connect to port <= 0
 				if (port <= 0)
 				{
-					Log.Error("Parse() " + aUser + " submitted wrong port: " + port);
-					return false;
+					Log.Error("Parse() " + aNick + " submitted wrong port: " + port);
 				}
 				else
 				{
-					FireDownloadXdccList(this, new EventArgs<Server, string, Int64, IPAddress, int>(aConnection.Server, aUser, size, ip, port));
-					return true;
+					FireDownloadXdccList(this, new EventArgs<Server, string, Int64, IPAddress, int>(aChannel.Parent, aNick, size, ip, port));
 				}
+
+				return true;
 			}
 			return false;
 		}

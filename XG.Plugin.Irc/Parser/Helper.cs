@@ -34,8 +34,8 @@ namespace XG.Plugin.Irc.Parser
 
 		public static string RemoveSpecialIrcChars(string aData)
 		{
-			aData = Regex.Replace(aData, @"[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?", String.Empty);
-			return aData.Trim();
+			string tData = Regex.Replace(aData, @"[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?", String.Empty);
+			return tData.Trim();
 		}
 
 		public static Match Match(string aMessage, string[] aRegexes)

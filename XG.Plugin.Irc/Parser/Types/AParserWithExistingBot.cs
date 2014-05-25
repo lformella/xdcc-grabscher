@@ -30,17 +30,17 @@ namespace XG.Plugin.Irc.Parser.Types
 {
 	public abstract class AParserWithExistingBot : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
+		public override bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
 		{
-			Bot tBot = aConnection.Server.Bot(aEvent.Data.Nick);
+			Bot tBot = aChannel.Bot(aNick);
 			if (tBot != null)
 			{
-				return ParseInternal(aConnection, tBot, aMessage);
+				return ParseInternal(tBot, aMessage);
 			}
 			return false;
 		}
 
-		protected abstract bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage);
+		protected abstract bool ParseInternal(Bot aBot, string aMessage);
 
 		public void UpdateBot(Bot aBot, string aMessage = null)
 		{

@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class OwnerRequest : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -46,7 +46,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				int valueInt = 0;
 				if (int.TryParse(match.Groups["time"].ToString(), out valueInt))
 				{
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, (valueInt * 60 + 1) * 1000));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, (valueInt * 60 + 1) * 1000));
 				}
 
 				UpdateBot(aBot, aMessage);

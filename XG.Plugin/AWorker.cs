@@ -91,6 +91,8 @@ namespace XG.Plugin
 			{
 				Log.Fatal("Stop()", ex);
 			}
+
+			RemoveAllMyRepeatingJobs();
 		}
 
 		protected virtual void StopRun() {}
@@ -128,7 +130,11 @@ namespace XG.Plugin
 
 		public void RemoveAllMyRepeatingJobs()
 		{
-			Scheduler.DeleteJobs(_scheduledJobs);
+			if (_scheduledJobs.Count > 0 && !Scheduler.IsShutdown)
+			{
+				Scheduler.DeleteJobs(_scheduledJobs);
+				_scheduledJobs.Clear();
+			}
 		}
 
 		#endregion

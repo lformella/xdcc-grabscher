@@ -62,19 +62,14 @@ namespace XG.Plugin.Irc.Parser
 			AddParser(new Types.Xdcc.XdccSending());
 		}
 
-		public bool Parse(IrcConnection aConnection, IrcEventArgs aEvent)
+		public override bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
 		{
-			string tMessage = Helper.RemoveSpecialIrcChars(aEvent.Data.Message);
-			Log.Debug("Parse() " + aEvent.Data.Nick + " " + tMessage);
+			string tMessage = Helper.RemoveSpecialIrcChars(aMessage);
+			Log.Debug("Parse() " + aNick + " " + tMessage);
 
-			return Parse(aConnection, tMessage, aEvent);
-		}
-
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
-		{
 			foreach (var parser in _ircParsers)
 			{
-				if (parser.Parse(aConnection, aMessage, aEvent))
+				if (parser.Parse(aChannel, aNick, tMessage))
 				{
 					return true;
 				}

@@ -42,8 +42,8 @@ namespace XG.Plugin.Irc.Parser
 
 		#region EVENTS
 
-		public event EventHandler<EventArgs<Server, Bot>> OnUnRequestFromBot;
-		protected void FireUnRequestFromBot(object aSender, EventArgs<Server, Bot> aEventArgs)
+		public event EventHandler<EventArgs<Bot>> OnUnRequestFromBot;
+		protected void FireUnRequestFromBot(object aSender, EventArgs<Bot> aEventArgs)
 		{
 			if (OnUnRequestFromBot != null)
 			{
@@ -51,8 +51,8 @@ namespace XG.Plugin.Irc.Parser
 			}
 		}
 
-		public event EventHandler<EventArgs<Server, Bot, int>> OnQueueRequestFromBot;
-		protected void FireQueueRequestFromBot(object aSender, EventArgs<Server, Bot, int> aEventArgs)
+		public event EventHandler<EventArgs<Bot, int>> OnQueueRequestFromBot;
+		protected void FireQueueRequestFromBot(object aSender, EventArgs<Bot, int> aEventArgs)
 		{
 			if (OnQueueRequestFromBot != null)
 			{
@@ -61,8 +61,8 @@ namespace XG.Plugin.Irc.Parser
 
 		}
 
-		public event EventHandler<EventArgs<Server, Bot>> OnJoinChannelsFromBot;
-		protected void FireJoinChannelsFromBot(object aSender, EventArgs<Server, Bot> aEventArgs)
+		public event EventHandler<EventArgs<Bot>> OnJoinChannelsFromBot;
+		protected void FireJoinChannelsFromBot(object aSender, EventArgs<Bot> aEventArgs)
 		{
 			if (OnJoinChannelsFromBot != null)
 			{
@@ -70,8 +70,8 @@ namespace XG.Plugin.Irc.Parser
 			}
 		}
 
-		public event EventHandler<EventArgs<Server, Bot>> OnRemoveDownload;
-		protected void FireRemoveDownload(object aSender, EventArgs<Server, Bot> aEventArgs)
+		public event EventHandler<EventArgs<Bot>> OnRemoveDownload;
+		protected void FireRemoveDownload(object aSender, EventArgs<Bot> aEventArgs)
 		{
 			if (OnRemoveDownload != null)
 			{
@@ -115,8 +115,8 @@ namespace XG.Plugin.Irc.Parser
 			}
 		}
 
-		public event EventHandler<EventArgs<Server, string, string>> OnXdccList;
-		protected void FireXdccList(object aSender, EventArgs<Server, string, string> aEventArgs)
+		public event EventHandler<EventArgs<Model.Domain.Channel, string, string>> OnXdccList;
+		protected void FireXdccList(object aSender, EventArgs<Model.Domain.Channel, string, string> aEventArgs)
 		{
 			if (OnXdccList != null)
 			{
@@ -137,12 +137,7 @@ namespace XG.Plugin.Irc.Parser
 
 		#region PARSING
 
-		public bool Parse(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
-		{
-			return ParseInternal(aConnection, aMessage, aEvent);
-		}
-
-		protected abstract bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent);
+		public abstract bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage);
 
 		#endregion
 	}

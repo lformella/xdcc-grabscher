@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Status : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -69,7 +69,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 				if (aBot.InfoSlotCurrent > 0 && aBot.State == Bot.States.Waiting)
 				{
 					aBot.State = Bot.States.Idle;
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, 0));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, 0));
 				}
 
 				UpdateBot(aBot);

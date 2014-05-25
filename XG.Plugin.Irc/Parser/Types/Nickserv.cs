@@ -35,9 +35,9 @@ namespace XG.Plugin.Irc.Parser.Types
 	{
 		readonly HashSet<Server> _authenticatedServer = new HashSet<Server>();
 
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
+		public override bool Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
 		{
-			if (aEvent.Data.Nick != null && aEvent.Data.Nick.ToLower() == "nickserv")
+			if (aNick != null && aNick.ToLower() == "nickserv")
 			{
 				if (Helper.Match(aMessage, ".*Password incorrect.*").Success)
 				{
@@ -54,31 +54,31 @@ namespace XG.Plugin.Irc.Parser.Types
 					Log.Info("registering nick");
 					if (Settings.Default.AutoRegisterNickserv && Settings.Default.IrcPasswort != "" && Settings.Default.IrcRegisterEmail != "")
 					{
-						FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " register " + Settings.Default.IrcPasswort + " " + Settings.Default.IrcRegisterEmail));
+						FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " register " + Settings.Default.IrcPasswort + " " + Settings.Default.IrcRegisterEmail));
 					}
 				}
 
 				else if (Helper.Match(aMessage, ".*Nickname is .*in use.*").Success)
 				{
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " ghost " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " recover " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, Rfc2812.Nick(Settings.Default.IrcNick)));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " ghost " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " recover " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, Rfc2812.Nick(Settings.Default.IrcNick)));
 				}
 
 				else if (Helper.Match(aMessage, ".*Services Enforcer.*").Success)
 				{
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " recover " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " release " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, Rfc2812.Nick(Settings.Default.IrcNick)));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " recover " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " release " + Settings.Default.IrcNick + " " + Settings.Default.IrcPasswort));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, Rfc2812.Nick(Settings.Default.IrcNick)));
 				}
 
 				else if (Helper.Match(aMessage, ".*(This nickname is registered and protected|This nick is being held for a registered user|msg NickServ IDENTIFY).*").Success)
 				{
-					if (Settings.Default.IrcPasswort != "" && !_authenticatedServer.Contains(aConnection.Server))
+					if (Settings.Default.IrcPasswort != "" && !_authenticatedServer.Contains(aChannel.Parent))
 					{
-						_authenticatedServer.Add(aConnection.Server);
+						_authenticatedServer.Add(aChannel.Parent);
 						//TODO check if we are really registered
-						FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " identify " + Settings.Default.IrcPasswort));
+						FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " identify " + Settings.Default.IrcPasswort));
 					}
 					else
 					{
@@ -89,7 +89,7 @@ namespace XG.Plugin.Irc.Parser.Types
 				else if (Helper.Match(aMessage, ".*You must have been using this nick for at least 30 seconds to register.*").Success)
 				{
 					//TODO sleep the given time and reregister
-					FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " register " + Settings.Default.IrcPasswort + " " + Settings.Default.IrcRegisterEmail));
+					FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " register " + Settings.Default.IrcPasswort + " " + Settings.Default.IrcRegisterEmail));
 				}
 
 				else if (Helper.Match(aMessage, ".*Please try again with a more obscure password.*").Success)
@@ -117,12 +117,12 @@ namespace XG.Plugin.Irc.Parser.Types
 					Match tMatch = Regex.Match(aMessage, ".* NickServ confirm (?<code>[^\\s]+) .*", RegexOptions.IgnoreCase);
 					if (tMatch.Success)
 					{
-						FireWriteLine(this, new EventArgs<Server, string>(aConnection.Server, aEvent.Data.Nick + " confirm " + tMatch.Groups["code"]));
-						Log.Info("Parse(" + aEvent.Data.RawMessage + ") - confirming nickserv");
+						FireWriteLine(this, new EventArgs<Server, string>(aChannel.Parent, aNick + " confirm " + tMatch.Groups["code"]));
+						Log.Info("Parse(" + aMessage + ") - confirming nickserv");
 					}
 					else
 					{
-						Log.Error("Parse(" + aEvent.Data.RawMessage + ") - cant find nickserv code");
+						Log.Error("Parse(" + aMessage + ") - cant find nickserv code");
 					}
 				}
 
@@ -131,7 +131,7 @@ namespace XG.Plugin.Irc.Parser.Types
 					Log.Info("password accepted");
 				}
 
-				Log.Error("unknow command: " + aEvent.Data.RawMessage);
+				Log.Error("unknow command: " + aMessage);
 				return true;
 			}
 			return false;

@@ -113,6 +113,7 @@
     <Compile Include="Model\Extensions.cs" />
     <Compile Include="Plugin\ElasticSearch\Object\Packet.cs" />
     <Compile Include="Plugin\Irc\Parser\Types\Dcc\Version.cs" />
+    <Compile Include="Plugin\Irc\Parser\Types\Dcc\DownloadFromBot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

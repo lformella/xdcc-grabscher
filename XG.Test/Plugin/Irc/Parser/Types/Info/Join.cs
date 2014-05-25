@@ -23,26 +23,24 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using System;
-using Meebey.SmartIrc4net;
 using NUnit.Framework;
 using XG.Model.Domain;
 
 namespace XG.Test.Plugin.Irc.Parser.Types.Info
 {
-	[TestFixture()]
+	[TestFixture]
 	public class Join : AParser
 	{
-		[Test()]
+		[Test]
 		public void JoinParseTest()
 		{
 			var parser = new XG.Plugin.Irc.Parser.Types.Info.Join();
 
-			EventArgs<XG.Model.Domain.Server, string> raisedEvent;
+			EventArgs<Server, string> raisedEvent;
 			parser.OnJoinChannel += (sender, e) => raisedEvent = e;
 
 			raisedEvent = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now", ReceiveType.QueryNotice));
+			Parse(parser, "** Closing Connection You Must JOIN MG-CHAT As Well To Download - Your Download Will Be Canceled Now");
 			Assert.AreEqual(Server, raisedEvent.Value1);
 			Assert.AreEqual("#MG-CHAT", raisedEvent.Value2);
 		}

@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class AutoIgnore : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -54,7 +54,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					{
 						time += valueInt;
 					}
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, time * 1000));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, time * 1000));
 				}
 
 				UpdateBot(aBot, aMessage);

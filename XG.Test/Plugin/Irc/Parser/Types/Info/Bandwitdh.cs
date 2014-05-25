@@ -24,24 +24,23 @@
 //
 
 using System;
-using Meebey.SmartIrc4net;
 using NUnit.Framework;
 
 namespace XG.Test.Plugin.Irc.Parser.Types.Info
 {
-	[TestFixture()]
+	[TestFixture]
 	public class Bandwitdh : AParser
 	{
-		[Test()]
+		[Test]
 		public void BandwitdhParseTest()
 		{
 			var parser = new XG.Plugin.Irc.Parser.Types.Info.Bandwitdh();
 
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s", ReceiveType.QueryNotice));
+			Parse(parser, @"** Bandwidth Usage ** Current: 12.7kB/s, Record: 139.5kB/s");
 			Assert.AreEqual((Int64) (12.7 * 1024), Bot.InfoSpeedCurrent);
 			Assert.AreEqual((Int64) (139.5 * 1024), Bot.InfoSpeedMax);
 			
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "** Bandwidth Usage ** Current: 0.0KB/s, Record: 231.4KB/s", ReceiveType.QueryNotice));
+			Parse(parser, @"** Bandwidth Usage ** Current: 0.0KB/s, Record: 231.4KB/s");
 			Assert.AreEqual(0, Bot.InfoSpeedCurrent);
 			Assert.AreEqual((Int64) (231.4 * 1024), Bot.InfoSpeedMax);
 		}

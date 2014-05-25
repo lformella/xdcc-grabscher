@@ -30,7 +30,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class XdccDenied : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -42,8 +42,8 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				string info = match.Groups["info"].ToString().ToLower();
 				if (info.StartsWith("you must be on a known channel to request a pack"))
 				{
-					FireJoinChannelsFromBot(this, new EventArgs<Model.Domain.Server, Bot>(aConnection.Server, aBot));
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.CommandWaitTime));
+					FireJoinChannelsFromBot(this, new EventArgs<Bot>(aBot));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 				}
 				else if (info.StartsWith("i don't send transfers to"))
 				{
@@ -62,7 +62,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					{
 						aBot.State = Bot.States.Idle;
 					}
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.CommandWaitTime));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 					Log.Error("Parse() XDCC denied from " + aBot + ": " + info);
 				}
 

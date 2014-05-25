@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
 	public class TransferLimit : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{

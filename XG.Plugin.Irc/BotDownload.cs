@@ -463,13 +463,7 @@ namespace XG.Plugin.Irc
 				_speedCalcSize = 0;
 			}
 		}
-
-		internal override void RepairConnection()
-		{
-			WatchConnection = false;
-			_tcpClient.Close();
-		}
-
+			
 		#endregion
 	}
 }

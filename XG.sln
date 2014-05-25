@@ -29,8 +29,6 @@ Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "XG.Build.Mono", "XG.Build.M
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "XG.Build.Wix", "XG.Build.Wix\XG.Build.Wix.wixproj", "{AC3C0C63-F92A-4C2D-BD95-BA5A39BAE8FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartIrc4net", "..\SmartIrc4net\SmartIrc4net.csproj", "{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,18 +105,6 @@ Global
 		{5926AB35-FF4F-4ED4-9060-EC1EEAA8F529}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5926AB35-FF4F-4ED4-9060-EC1EEAA8F529}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5926AB35-FF4F-4ED4-9060-EC1EEAA8F529}.Release|x86.ActiveCfg = Release|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|x86.Build.0 = Debug|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|x86.ActiveCfg = Release|Any CPU
-		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|x86.Build.0 = Release|Any CPU
 		{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

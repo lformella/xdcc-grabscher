@@ -101,13 +101,14 @@ namespace XG.Application
 				}
 				catch(Exception) {}
 			}
-
+#if !DEBUG
 			new Thread (delegate ()
 			{
 				// Wait for a signal to be delivered
 				UnixSignal.WaitAny(signals.ToArray(), -1);
 				app.Shutdown("UnixSignal");
 			}).Start();
+#endif
 #endif
 
 			if (string.IsNullOrWhiteSpace(Settings.Default.TempPath))

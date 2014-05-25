@@ -23,14 +23,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Meebey.SmartIrc4net;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types
 {
 	public class XdccList : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
+		public override bool Parse(Channel aChannel, string aNick, string aMessage)
 		{
 			var regexes = new string[]
 			{
@@ -39,7 +38,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			var match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC LIST ALL"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST ALL"));
 				return true;
 			}
 
@@ -50,7 +49,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC LIST"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST"));
 				return true;
 			}
 
@@ -61,7 +60,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC SEND LIST"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC SEND LIST"));
 				return true;
 			}
 
@@ -72,7 +71,7 @@ namespace XG.Plugin.Irc.Parser.Types
 			match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC LIST " + match.Groups["group"].ToString()));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST " + match.Groups["group"]));
 				return true;
 			}
 			return false;

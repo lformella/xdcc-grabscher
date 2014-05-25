@@ -31,7 +31,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Bandwitdh : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
