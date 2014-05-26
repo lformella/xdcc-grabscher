@@ -96,28 +96,160 @@ XG will collect every 5 minutes some statistical data and generate nice graphs. 
 This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
 
 ## API
-XG v3 supports a rest like api to control it via scripts. You can add api keys and enable / disable them.
+XG v3.2 supports a rest api to control it via scripts. You can add api keys and enable / disable them. 
 
 ![Api](http://xg.bitpir.at/images/help/api.png?v=3)
 
-Currently you can just add xdcc links by calling the following url:
+The api method has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/downloadPacket/__. The data you want to pass to method has to be encoded in JSON. The content type must be JSON, too. The apiKey property is mandatory and has to match an api key wich is enabled. You can test this via curl:
 
-> ht\*p:// *your-own-host:5556* / api / __615d86bb-f867-47c1-a860-ac24e09e976c__ / parseXdccLink / __irc.test.net__ / __servername__ / __channel__ / __bot__ / __1__ / __filename__ /
+```
+curl -H "Content-Type:text/json" -s -XPUT localhost:5556/api/... -d '
+{
+  "apiKey": "615d86bb-f867-47c1-a860-ac24e09e976c",
+  ...
+}'
+```
 
-The api id has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/parseXdccLink/__. Finally you have to add the data you want to pass to method (must be a valid xdcc link in our example). Currently api methods can return the following JSON encoded results:
+Api methods which create or update data, always return the following JSON encoded properties:
 
-* __{"ReturnValue":-1}__ - api key is invalid or disabled
-* __{"ReturnValue":0}__ - there was an error calling the method
-* __{"ReturnValue":1}__ - everything is fine
+* __ReturnValue = -1__ - api key is invalid or disabled
+* __ReturnValue = 0__ - there was an error calling the method
+* __ReturnValue = 1__ - everything is fine
+* __Message__ - a helpful message if an error occurred
+
+### Download Packet
+You can add and download an external packet. If you got a XDCC link, you can use this method to add a packet and download it instantly.
+
+The server and channel are not deleted after the packet is complete, so if you dont need them anymore, you have to delete them yourself.
+
+#### Url
+
+> __PUT__ / __downloadPacket__
+
+#### Example
+```
+curl -H "Content-Type:text/json" -s -XPUT localhost:5556/api/downloadPacket -d '
+{
+  "apiKey":"615d86bb-f867-47c1-a860-ac24e09e976c",
+  "server":"irc.rizon.net",
+  "channel":"#abjects",
+  "bot":"[XDCC]Bot",
+  "packetId":11,
+  "packetName":"My.Super.Movie.mkv"
+}'
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":0,
+  "Message":"server is empty"
+}
+```
+
+### Search Packets
+You can add and download a packet. If you got a XDCC link, you can use this method to add a packet and download it instantly.
+
+#### Url
+
+> __GET__ / __searchPackets__
+
+#### Example
+```
+curl -H "Content-Type:text/json" -s -XGET localhost:5556/api/searchPackets -d '
+{
+  "apiKey":"615d86bb-f867-47c1-a860-ac24e09e976c",
+  "searchTerm":"german -mkv",
+  "showOfflineBots":true,
+  "maxResults":20,
+  "page":1,
+  "sortBy":"Id",
+  "sort":"desc"
+}'
+```
+
+The properties __showOfflineBots__, __maxResults__, __page__, __sortBy__, __sort__ can be left blank. If you leave __showOfflineBots__ blank, it will be filled with __false__ and the search request will just return packets, which bots are online.
+
+#### Return Value
+```
+{
+  "Packets":
+  [
+    {
+      "Bot":
+      {
+        "State":0,
+        "LastMessage": "joined channel #moviegods",
+        "LastMessageTime":"2014-05-20T18:34:46",
+        "LastContact":"2014-05-20T18:34:46",
+        "QueuePosition":0,
+        "QueueTime":0,
+        "InfoSpeedMax":19691929,
+        "InfoSpeedCurrent":4539801,
+        "InfoSlotTotal":10,
+        "InfoSlotCurrent":1,
+        "InfoQueueTotal":100,
+        "InfoQueueCurrent":6,
+        "Speed":0,
+        "HasNetworkProblems":false,
+        "Type":"Bot",
+        "ParentGuid":"494c5f9f-94da-46e6-b276-201e5b2a51a5",
+        "Guid":"4bff3378-245e-4297-8a02-cd40727bf79f",
+        "Name":"[MG]-HDTV|EU|S|0009",
+        "Connected":false,
+        "Enabled":false
+      },
+      "Id":1400,
+      "Size":5557452,
+      "Name":"Der.Aktionaer.2014.09.GERMAN.RETAiL.MAGAZiN.eBOOk-sUppLeX.tar",
+      "LastUpdated":"2014-03-09T11:33:11",
+      "LastMentioned":"2014-03-09T11:33:11",
+      "Next":false,
+      "Speed":0,
+      "CurrentSize":0,
+      "TimeMissing":0,
+      "Type":"Packet",
+      "ParentGuid":"4bff3378-245e-4297-8a02-cd40727bf79f",
+      "Guid":"5e5903f3-71ab-41fd-919e-bdadbfd04abf",
+      "Connected":false,
+      "Enabled":false
+    }
+  ],
+  "ResultCount":5584
+}
+```
+
+### Enable / Disable Object / Download Packet
+You can enable and disable objects. If you enable servers or channels, they will connected or disconnect. If you do this with a packet, it will be downloaded or cancelled.
+
+#### Url
+
+> __POST__ / __enable__
+
+#### Example
+```
+curl -H "Content-Type:text/json" -s -XPOST localhost:5556/api/enable -d '
+{
+  "apiKey":"615d86bb-f867-47c1-a860-ac24e09e976c",
+  "guid":"5e5903f3-71ab-41fd-919e-bdadbfd04abf",
+  "enabled":true
+}'
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":1,
+  "Message":null
+}
+```
 
 ## Shutdown XG gracefully
 If you want to shutdown XG, just ctrl+c the process or close the command window. You can also stop XG by using the shutdown button in the webfrontend.
 
 # Upgrading XG
 If you are upgrading from version 2 to 3, you should finish your downloads and write down your servers and channels, because XG 3 is not able to load the data generated by previous versions.
-
-XG 3 is using NHibernate, so you can use your own config if you want to put the data into a mysql database for example. If you do not need this feature you can use the build in SQLite config which is loaded by default. The database named __xgobjects.db__ is located in your user config folder and can be edited if XG is not running.
-
+ 
 ## Unnecessary Files
 Because XG changed some internal routines you can safely delete the following files in the config folder:
 

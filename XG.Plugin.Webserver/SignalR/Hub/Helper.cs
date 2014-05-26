@@ -97,5 +97,28 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 			return myObj;
 		}
+
+		public static IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
+		{
+			aPage--;
+			var objects = Helper.XgObjectsToHubObjects(aObjects).Cast<T>();
+
+			if (string.IsNullOrWhiteSpace(aSortBy))
+			{
+				aSortBy = "Name";
+			}
+			var prop = typeof(T).GetProperty(aSortBy);
+			if (aSort == "desc")
+			{
+				objects = objects.OrderByDescending(o => prop.GetValue(o, null));
+			}
+			else
+			{
+				objects = objects.OrderBy(o => prop.GetValue(o, null));
+			}
+
+			aLength = objects.Count();
+			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
+		}
 	}
 }

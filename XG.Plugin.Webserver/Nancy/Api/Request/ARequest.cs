@@ -1,5 +1,5 @@
 // 
-//  ApiModule.cs
+//  ARequest.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,39 +24,11 @@
 //  
 
 using System;
-using Nancy;
-using XG.Model.Domain;
 
-namespace XG.Plugin.Webserver.Nancy.Api
+namespace XG.Plugin.Webserver.Nancy.Api.Request
 {
-	public abstract class ApiModule : NancyModule
+	public abstract class ARequest
 	{
-		protected bool IsApiKeyValid(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				return apiKey.Enabled;
-			}
-			return false;
-		}
-
-		protected void IncreaseErrorCount(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				apiKey.ErrorCount++;
-			}
-		}
-
-		protected void IncreaseSuccessCount(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				apiKey.SuccessCount++;
-			}
-		}
+		public Guid ApiKey { get; set; }
 	}
 }

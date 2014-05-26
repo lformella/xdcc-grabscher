@@ -139,16 +139,23 @@
     <Compile Include="Nancy\LoginModule.cs" />
     <Compile Include="Nancy\CustomBootstrapper.cs" />
     <Compile Include="Nancy\RedirectModule.cs" />
-    <Compile Include="Nancy\Api\XdccLink.cs" />
     <Compile Include="Nancy\Api\ApiModule.cs" />
     <Compile Include="Nancy\Helper.cs" />
     <Compile Include="ASaltedPassword.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Config.cs" />
     <Compile Include="SignalR\Hub\ConfigHub.cs" />
-    <Compile Include="Nancy\Api\Result.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Search.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\ApiKey.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Extension.cs" />
+    <Compile Include="Nancy\Api\Request\ARequest.cs" />
+    <Compile Include="Nancy\Api\DownloadPacket.cs" />
+    <Compile Include="Nancy\Api\Result\Default.cs" />
+    <Compile Include="Nancy\Api\Request\DownloadPacket.cs" />
+    <Compile Include="Nancy\Api\Request\SearchPackets.cs" />
+    <Compile Include="Nancy\Api\Result\SearchPackets.cs" />
+    <Compile Include="Nancy\Api\Request\Enable.cs" />
+    <Compile Include="Nancy\Api\SearchPackets.cs" />
+    <Compile Include="Nancy\Api\Enable.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />
@@ -623,5 +630,9 @@
     <EmbeddedResource Include="Scripts\i18n\angular-locale_lt.js" />
     <EmbeddedResource Include="Scripts\r.js" />
     <EmbeddedResource Include="Scripts\require.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Nancy\Api\Request\" />
+    <Folder Include="Nancy\Api\Result\" />
   </ItemGroup>
 </Project>

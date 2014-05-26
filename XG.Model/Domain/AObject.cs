@@ -107,7 +107,21 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public Guid Guid { get; set; }
+		Guid _guid;
+
+		public Guid Guid
+		{
+			get
+			{
+				Activate(ActivationPurpose.Read);
+				return _guid;
+			}
+			set
+			{
+				Activate(ActivationPurpose.Write);
+				_guid = value;
+			}
+		}
 
 		string _name;
 

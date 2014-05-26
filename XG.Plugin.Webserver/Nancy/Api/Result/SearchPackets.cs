@@ -1,5 +1,5 @@
 // 
-//  Result.cs
+//  SearchPackets.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 
-namespace XG.Plugin.Webserver.Nancy.Api
+namespace XG.Plugin.Webserver.Nancy.Api.Result
 {
-	[JsonObject(MemberSerialization.OptOut)]
-	public class Result
+	public class SearchPackets
 	{
-		public int ReturnValue { get; set; }
+		public IEnumerable<SignalR.Hub.Model.Domain.Packet> Packets { get; set; }
+
+		public int ResultCount { get; set; }
 	}
 }

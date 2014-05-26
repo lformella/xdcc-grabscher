@@ -1,5 +1,5 @@
 // 
-//  ApiModule.cs
+//  Default.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,40 +23,23 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Nancy;
-using XG.Model.Domain;
-
-namespace XG.Plugin.Webserver.Nancy.Api
+namespace XG.Plugin.Webserver.Nancy.Api.Result
 {
-	public abstract class ApiModule : NancyModule
+	public class Default
 	{
-		protected bool IsApiKeyValid(Guid aKey)
+		#region ENUMS
+
+		public enum States : byte
 		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				return apiKey.Enabled;
-			}
-			return false;
+			Error = 0,
+			Ok = 1,
+			ApiKeyInvalid = 2
 		}
 
-		protected void IncreaseErrorCount(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				apiKey.ErrorCount++;
-			}
-		}
+		#endregion
 
-		protected void IncreaseSuccessCount(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				apiKey.SuccessCount++;
-			}
-		}
+		public States ReturnValue { get; set; }
+
+		public string Message { get; set; }
 	}
 }

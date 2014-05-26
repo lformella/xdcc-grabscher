@@ -1,5 +1,5 @@
 // 
-//  ApiModule.cs
+//  DownloadPacket.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,40 +23,18 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Nancy;
-using XG.Model.Domain;
-
-namespace XG.Plugin.Webserver.Nancy.Api
+namespace XG.Plugin.Webserver.Nancy.Api.Request
 {
-	public abstract class ApiModule : NancyModule
+	public class DownloadPacket : ARequest
 	{
-		protected bool IsApiKeyValid(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				return apiKey.Enabled;
-			}
-			return false;
-		}
+		public string Server { get; set; }
 
-		protected void IncreaseErrorCount(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				apiKey.ErrorCount++;
-			}
-		}
+		public string Channel { get; set; }
 
-		protected void IncreaseSuccessCount(Guid aKey)
-		{
-			var apiKey = Helper.ApiKeys.WithGuid(aKey);
-			if (apiKey != null)
-			{
-				apiKey.SuccessCount++;
-			}
-		}
+		public string Bot { get; set; }
+
+		public int PacketId { get; set; }
+
+		public string PacketName { get; set; }
 	}
 }

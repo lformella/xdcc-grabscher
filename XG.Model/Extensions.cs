@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace XG.Model
@@ -62,6 +63,22 @@ namespace XG.Model
 		public static string RemoveSpecialChars(this string aStr)
 		{
 			return Regex.Replace(aStr, @"[^a-z0-9,.;:_\(\)\[\]\s-]", "", RegexOptions.IgnoreCase).Trim();
+		}
+
+		public static string Implode(this List<string> aList, string aDelimiter)
+		{
+			string result = "";
+			int count = 0;
+			foreach (var str in aList)
+			{
+				if (count > 0)
+				{
+					result += aDelimiter;
+				}
+				result += str;
+				count++;
+			}
+			return result;
 		}
 
 		public static bool ContainsAll(this string str, params string[] values)

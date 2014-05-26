@@ -120,7 +120,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public Model.Domain.Result LoadByServer(Guid aGuid, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Channel>((from server in Helper.Servers.All from channel in server.Channels where channel.ParentGuid == aGuid select channel).ToArray(), aCount, aPage, aSortBy, aSort, out length);
+			var objects = Helper.FilterAndLoadObjects<Model.Domain.Channel>((from server in Helper.Servers.All from channel in server.Channels where channel.ParentGuid == aGuid select channel).ToArray(), aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}

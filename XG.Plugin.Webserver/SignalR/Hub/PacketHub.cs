@@ -110,7 +110,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		{
 			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (aShowOfflineBots || bot.Connected) from packet in bot.Packets where aSearch.IsVisible(packet) select packet);
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
+			var objects = Helper.FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}
@@ -119,7 +119,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		{
 			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where bot.Guid == aParentGuid from packet in bot.Packets select packet);
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
+			var objects = Helper.FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}
