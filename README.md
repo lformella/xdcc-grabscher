@@ -96,11 +96,11 @@ XG will collect every 5 minutes some statistical data and generate nice graphs. 
 This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
 
 ## API
-XG v3.2 supports a rest api to control it via scripts. You can add api keys and enable / disable them. 
+XG v3 supports a rest api to control it via scripts. You can add api keys and enable / disable them. 
 
 ![Api](http://xg.bitpir.at/images/help/api.png?v=3)
 
-The api method has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/downloadPacket/__. The data you want to pass to method has to be encoded in JSON. The content type must be JSON, too. The apiKey property is mandatory and has to match an api key wich is enabled. You can test this via curl:
+The api method has to be entered after the __/api/__ path segment, for example __/downloadPacket/__. The data you want to pass to the method has to be encoded in JSON. The content type must be JSON, too. The apiKey property is mandatory and has to match an api key which is enabled. You can test this via curl:
 
 ```
 curl -H "Content-Type:text/json" -s -XPUT localhost:5556/api/... -d '
