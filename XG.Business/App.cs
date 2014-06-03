@@ -23,6 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,6 +48,9 @@ namespace XG.Business
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		readonly Dao _dao;
+
+		[ImportMany]
+		IEnumerable<Lazy<IPlugin, IPluginMetaData>> _plugins2;
 
 		readonly Plugins _plugins;
 
@@ -85,6 +91,7 @@ namespace XG.Business
 			_dao = new Dao();
 			_dao.Scheduler = Scheduler;
 			LoadObjects();
+			LoadPlugins();
 
 			FileActions.OnNotificationAdded += NotificationAdded;
 
@@ -131,6 +138,43 @@ namespace XG.Business
 						FileActions.FinishFile(file);
 					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// Loads the plugins, from the plugins directory and this assembly.
+		/// </summary>
+		/// <remarks>
+		/// uses System.ComponentModel.Composition to do all the heavy lifting.
+		/// </remarks>
+		void LoadPlugins()
+		{
+			var dirInfo = new DirectoryInfo(Settings.Default.GetAppDataPath () + "plugins");
+			if (!dirInfo.Exists)
+			{
+				try
+				{
+					dirInfo.Create();
+				}
+				catch (Exception ex)
+				{
+					Log.Error(ex);
+				}
+			}
+
+			var catalog = new AggregateCatalog();
+			catalog.Catalogs.Add(new AssemblyCatalog(typeof(App).Assembly));
+			catalog.Catalogs.Add(new DirectoryCatalog(dirInfo.ToString()));
+
+			var container = new CompositionContainer(catalog);
+
+			try
+			{
+				container.ComposeParts(this);
+			}
+			catch (CompositionException ex)
+			{
+				Log.Error(ex.ToString());
 			}
 		}
 
@@ -286,6 +330,11 @@ namespace XG.Business
 			CreateJobs();
 			_plugins.StartAll();
 
+			foreach (var plugin in _plugins2)
+			{
+				plugin.Value.StartRun();
+			}
+
 			Scheduler.Start();
 		}
 
@@ -294,6 +343,10 @@ namespace XG.Business
 			Scheduler.Shutdown();
 			_dao.Stop();
 			_plugins.StopAll();
+			foreach (var plugin in _plugins2)
+			{
+				plugin.Value.StopRun();
+			}
 		}
 
 		public void AddPlugin(APlugin aPlugin)

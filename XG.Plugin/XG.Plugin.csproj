@@ -49,6 +49,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APlugin.cs" />
     <Compile Include="JobItem.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="IPluginMetaData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Model\XG.Model.csproj">
