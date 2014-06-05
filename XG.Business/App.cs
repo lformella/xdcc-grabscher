@@ -50,7 +50,7 @@ namespace XG.Business
 		readonly Dao _dao;
 
 		[ImportMany]
-		IEnumerable<Lazy<IPlugin, IPluginMetaData>> _plugins2;
+		public IEnumerable<Lazy<IPlugin, IPluginMetaData>> Plugins;
 
 		readonly Plugins _plugins;
 
@@ -91,7 +91,6 @@ namespace XG.Business
 			_dao = new Dao();
 			_dao.Scheduler = Scheduler;
 			LoadObjects();
-			LoadPlugins();
 
 			FileActions.OnNotificationAdded += NotificationAdded;
 
@@ -138,43 +137,6 @@ namespace XG.Business
 						FileActions.FinishFile(file);
 					}
 				}
-			}
-		}
-
-		/// <summary>
-		/// Loads the plugins, from the plugins directory and this assembly.
-		/// </summary>
-		/// <remarks>
-		/// uses System.ComponentModel.Composition to do all the heavy lifting.
-		/// </remarks>
-		void LoadPlugins()
-		{
-			var dirInfo = new DirectoryInfo(Settings.Default.GetAppDataPath () + "plugins");
-			if (!dirInfo.Exists)
-			{
-				try
-				{
-					dirInfo.Create();
-				}
-				catch (Exception ex)
-				{
-					Log.Error(ex);
-				}
-			}
-
-			var catalog = new AggregateCatalog();
-			catalog.Catalogs.Add(new AssemblyCatalog(typeof(App).Assembly));
-			catalog.Catalogs.Add(new DirectoryCatalog(dirInfo.ToString()));
-
-			var container = new CompositionContainer(catalog);
-
-			try
-			{
-				container.ComposeParts(this);
-			}
-			catch (CompositionException ex)
-			{
-				Log.Error(ex.ToString());
 			}
 		}
 
@@ -329,11 +291,7 @@ namespace XG.Business
 		{
 			CreateJobs();
 			_plugins.StartAll();
-
-			foreach (var plugin in _plugins2)
-			{
-				plugin.Value.StartRun();
-			}
+			Plugins.StartRunAll();
 
 			Scheduler.Start();
 		}
@@ -343,12 +301,10 @@ namespace XG.Business
 			Scheduler.Shutdown();
 			_dao.Stop();
 			_plugins.StopAll();
-			foreach (var plugin in _plugins2)
-			{
-				plugin.Value.StopRun();
-			}
+			Plugins.StopRunAll();
 		}
 
+		[Obsolete("Implement XG.Plugin.IPlugin and use plugins directory instead. Also see: XG.Business.Plugins.Load()")]
 		public void AddPlugin(APlugin aPlugin)
 		{
 			aPlugin.Servers = Servers;

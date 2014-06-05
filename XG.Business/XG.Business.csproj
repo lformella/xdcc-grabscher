@@ -61,6 +61,7 @@
     <Compile Include="Job\Rrd.cs" />
     <Compile Include="Plugins.cs" />
     <Compile Include="Job\SearchUpdater.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Config\XG.Config.csproj">
