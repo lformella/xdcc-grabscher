@@ -30,8 +30,11 @@ using System.Reflection;
 using CacheAspect;
 using CacheAspect.Attributes;
 using Nancy;
+using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.Responses;
+using Nancy.TinyIoc;
+using XG.Plugin.Webserver.Nancy.Authentication;
 
 namespace XG.Plugin.Webserver.Nancy
 {
@@ -42,6 +45,13 @@ namespace XG.Plugin.Webserver.Nancy
 		protected override byte[] FavIcon
 		{
 			get { return this.favicon?? (this.favicon = LoadFavIcon()); }
+		}
+
+		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+		{
+			base.ApplicationStartup(container, pipelines);
+
+			pipelines.EnableApiKeyAuthentication();
 		}
 
 #if !DEBUG

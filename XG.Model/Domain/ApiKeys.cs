@@ -33,7 +33,7 @@ namespace XG.Model.Domain
 	{
 		public new IEnumerable<ApiKey> All
 		{
-			get { return base.All.Cast<ApiKey>(); }
+			get { return base.Children.Cast<ApiKey>(); }
 		}
 
 		public bool Add(ApiKey aObject)

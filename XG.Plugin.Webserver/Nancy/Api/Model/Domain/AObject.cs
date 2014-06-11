@@ -1,5 +1,5 @@
 // 
-//  SearchPackets.cs
+//  AObject.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,46 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System.Collections.Generic;
+using System;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Result
+namespace XG.Plugin.Webserver.Nancy.Api.Model.Domain
 {
-	public class SearchPackets
+	[JsonObject(MemberSerialization.OptOut)]
+	public class AObject
 	{
-		public IEnumerable<SignalR.Hub.Model.Domain.Packet> Packets { get; set; }
+		[XmlIgnore]
+		[JsonIgnore]
+		public virtual XG.Model.Domain.AObject Object { get; set; }
 
-		public int ResultCount { get; set; }
+		#region PROPERTIES
+
+		public Guid ParentGuid
+		{
+			get { return Object.ParentGuid; }
+		}
+
+		public Guid Guid
+		{
+			get { return Object.Guid; }
+		}
+		
+		public virtual string Name
+		{
+			get { return Object.Name; }
+		}
+		
+		public bool Connected
+		{
+			get { return Object.Connected; }
+		}
+		
+		public bool Enabled
+		{
+			get { return Object.Enabled; }
+		}
+
+		#endregion
 	}
 }

@@ -41,7 +41,7 @@ namespace XG.Model.Domain
 			{
 				if (!value)
 				{
-					foreach (AObject obj in All)
+					foreach (AObject obj in Children)
 					{
 						obj.Connected = false;
 						obj.Commit();
@@ -80,7 +80,7 @@ namespace XG.Model.Domain
 
 		public ICollection<Channel> Channels
 		{
-			get { return All.Cast<Channel>().ToArray(); }
+			get { return Children.Cast<Channel>().ToArray(); }
 		}
 
 		public Channel Channel(string aName)

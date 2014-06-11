@@ -201,7 +201,7 @@ namespace XG.Model.Domain
 
 		public IEnumerable<Packet> Packets
 		{
-			get { return All.Cast<Packet>(); }
+			get { return Children.Cast<Packet>(); }
 		}
 
 		public Packet Packet(int aId)

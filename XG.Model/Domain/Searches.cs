@@ -33,7 +33,7 @@ namespace XG.Model.Domain
 	{
 		public new IEnumerable<Search> All
 		{
-			get { return base.All.Cast<Search>(); }
+			get { return base.Children.Cast<Search>(); }
 		}
 
 		public bool Add(Search aObject)

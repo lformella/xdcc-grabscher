@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  Search.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,13 +24,36 @@
 //  
 
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Api.Model.Domain
 {
-	public abstract class ARequest
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Search : AObject
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		[XmlIgnore]
+		[JsonIgnore]
+		public new XG.Model.Domain.Search Object
+		{
+			get
+			{
+				return (XG.Model.Domain.Search)base.Object;
+			}
+			set
+			{
+				base.Object = value;
+			}
+		}
+
+		public Int64 ResultsOnline
+		{
+			get { return Object.ResultsOnline; }
+		}
+
+		public Int64 ResultsOffline
+		{
+			get { return Object.ResultsOffline; }
+		}
 	}
 }

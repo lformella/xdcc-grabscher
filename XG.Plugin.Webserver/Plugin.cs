@@ -81,6 +81,9 @@ namespace XG.Plugin.Webserver
 			SignalR.Hub.Helper.ApiKeys = ApiKeys;
 			SignalR.Hub.Helper.PasswortHash = passwortHash;
 
+			Nancy.Helper.Servers = Servers;
+			Nancy.Helper.Files = Files;
+			Nancy.Helper.Searches = Searches;
 			Nancy.Helper.ApiKeys = ApiKeys;
 			Nancy.Helper.Salt = salt;
 			Nancy.Helper.PasswortHash = passwortHash;

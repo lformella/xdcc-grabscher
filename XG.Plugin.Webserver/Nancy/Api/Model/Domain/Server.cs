@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  Server.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,40 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using System.Xml.Serialization;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Api.Model.Domain
 {
-	public abstract class ARequest
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Server : AObject
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		[XmlIgnore]
+		[JsonIgnore]
+		public new XG.Model.Domain.Server Object
+		{
+			get
+			{
+				return (XG.Model.Domain.Server)base.Object;
+			}
+			set
+			{
+				base.Object = value;
+			}
+		}
+
+		#region VARIABLES
+		
+		public int Port
+		{
+			get { return Object.Port; }
+		}
+		
+		public XG.Model.Domain.SocketErrorCode ErrorCode
+		{
+			get { return Object.ErrorCode; }
+		}
+
+		#endregion
 	}
 }

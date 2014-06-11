@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  Bots.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Api
 {
-	public abstract class ARequest
+	public class Bots : ApiModule
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		public Bots()
+		{
+			InitializeGet(Helper.Servers, "bots");
+		}
 	}
 }

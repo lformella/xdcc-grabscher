@@ -33,7 +33,7 @@ namespace XG.Model.Domain
 	{
 		public new IEnumerable<Server> All
 		{
-			get { return base.All.Cast<Server>(); }
+			get { return base.Children.Cast<Server>(); }
 		}
 
 		public Server Server(string aName)

@@ -1,5 +1,5 @@
 // 
-//  Enable.cs
+//  Searches.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -25,63 +25,61 @@
 
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using Nancy.ModelBinding;
 using XG.Model;
 using XG.Model.Domain;
-using Nancy.Responses;
-using Nancy.Serialization.JsonNet;
-using Nancy.ModelBinding;
-using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.Nancy.Api
 {
-	public class Enable : ApiModule
+	public class Searches : ApiModule
 	{
-		public Enable()
+		public Searches()
 		{
-			Post["/api/enable"] = _ =>
+			InitializeGet(Helper.Searches, "searches");
+			InitializeGetAll(Helper.Searches, "searches");
+			InitializeDelete(Helper.Searches, "searches");
+
+			Put["/searches"] = _ =>
 			{
-				Request.Enable request;
+				Request.SearchAdd request;
 				try
 				{
 					var config = new BindingConfig { BodyOnly = true, IgnoreErrors = false };
-					request = this.Bind<Request.Enable>(config);
+					request = this.Bind<Request.SearchAdd>(config);
+					request.ApiKey = Guid.Parse(Context.CurrentUser.UserName);
+
+					var results = Validate(request);
+					if (results.Count > 0)
+					{
+						return CreateErrorResponseAndUpdateApiKey((from result in results select result.ErrorMessage).Implode(", "));
+					}
 				}
 				catch (Exception ex)
 				{
-					return new JsonResponse(new Result.Default { ReturnValue = Result.Default.States.Error, Message = ex.Message }, new JsonNetSerializer());
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
 				}
 
 				return ExecuteRequest(request);
 			};
 		}
 
-		JsonResponse ExecuteRequest(Request.Enable request)
+		object ExecuteRequest(Request.SearchAdd request)
 		{
-			if (!IsApiKeyValid(request.ApiKey))
-			{
-				return new JsonResponse(new Result.Default { ReturnValue = Result.Default.States.ApiKeyInvalid }, new JsonNetSerializer());
-			}
-
 			try
 			{
-				var obj = SignalR.Hub.Helper.Servers.WithGuid(request.Guid);
-				if (obj != null)
+				if (Helper.Searches.Add(new Search { Name = request.Search }))
 				{
-					obj.Enabled = request.Enabled;
-
-					IncreaseSuccessCount(request.ApiKey);
-					return new JsonResponse(new Result.Default { ReturnValue = Result.Default.States.Ok }, new JsonNetSerializer());
+					return CreateSuccessResponseAndUpdateApiKey();
 				}
 				else
 				{
-					IncreaseErrorCount(request.ApiKey);
-					return new JsonResponse(new Result.Default { ReturnValue = Result.Default.States.Error }, new JsonNetSerializer());
+					return CreateErrorResponseAndUpdateApiKey("search already there");
 				}
 			}
 			catch (Exception ex)
 			{
-				IncreaseErrorCount(request.ApiKey);
-				return new JsonResponse(new Result.Default { ReturnValue = Result.Default.States.Error, Message = ex.Message }, new JsonNetSerializer());
+				return CreateErrorResponseAndUpdateApiKey(ex.Message);
 			}
 		}
 	}

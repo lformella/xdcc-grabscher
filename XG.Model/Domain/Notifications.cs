@@ -33,7 +33,7 @@ namespace XG.Model.Domain
 	{
 		public new IEnumerable<Notification> All
 		{
-			get { return base.All.Cast<Notification>(); }
+			get { return base.Children.Cast<Notification>(); }
 		}
 
 		public bool Add(Notification aObject)

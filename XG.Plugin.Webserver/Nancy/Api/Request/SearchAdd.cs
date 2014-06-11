@@ -1,5 +1,5 @@
 // 
-//  SearchPackets.cs
+//  SearchAdd.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,20 +23,13 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System.ComponentModel.DataAnnotations;
+
 namespace XG.Plugin.Webserver.Nancy.Api.Request
 {
-	public class SearchPackets : ARequest
+	public class SearchAdd : ARequest
 	{
-		public string SearchTerm { get; set; }
-
-		public bool ShowOfflineBots { get; set; }
-
-		public int MaxResults { get; set; }
-
-		public int Page { get; set; }
-
-		public string SortBy { get; set; }
-
-		public string Sort { get; set; }
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Search is neccesary")]
+		public string Search { get; set; }
 	}
 }

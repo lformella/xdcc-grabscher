@@ -65,7 +65,7 @@ namespace XG.Model.Domain
 
 		ICollection<AObject> _children = new ArrayList4<AObject>();
 
-		protected AObject[] All
+		public AObject[] Children
 		{
 			get
 			{
@@ -152,7 +152,7 @@ namespace XG.Model.Domain
 			}
 
 			AObject tObjectReturn = null;
-			foreach (AObject tObject in All)
+			foreach (AObject tObject in Children)
 			{
 				if (tObject.Guid == aGuid)
 				{
@@ -176,7 +176,7 @@ namespace XG.Model.Domain
 		{
 			try
 			{
-				return All.FirstOrDefault(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
+				return Children.FirstOrDefault(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
 			}
 			catch (Exception)
 			{
@@ -194,7 +194,7 @@ namespace XG.Model.Domain
 		{
 			base.ObjectOnActivate(container);
 
-			foreach (var child in All)
+			foreach (var child in Children)
 			{
 				child.OnEnabledChanged += FireEnabledChanged;
 				child.OnChanged += FireChanged;

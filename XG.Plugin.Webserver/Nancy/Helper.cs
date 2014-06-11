@@ -23,8 +23,9 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using XG.Model.Domain;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XG.Plugin.Webserver.Nancy
 {
@@ -44,8 +45,82 @@ namespace XG.Plugin.Webserver.Nancy
 
 		#endregion
 
+		public static Servers Servers { get; set; }
+		public static Files Files { get; set; }
+		public static Searches Searches { get; set; }
 		public static ApiKeys ApiKeys { get; set; }
 		public static string Salt { get; set; }
 		public static string PasswortHash { get; set; }
+
+		public static IEnumerable<Nancy.Api.Model.Domain.AObject> XgObjectsToNancyObjects(IEnumerable<AObject> aObjects)
+		{
+			var list = new HashSet<Nancy.Api.Model.Domain.AObject>();
+
+			foreach (var obj in aObjects)
+			{
+				var convertedObj = XgObjectToNancyObject(obj);
+				if (convertedObj != null)
+				{
+					list.Add(convertedObj);
+				}
+			}
+
+			return list;
+		}
+
+		public static Nancy.Api.Model.Domain.AObject XgObjectToNancyObject(AObject aObject)
+		{
+			Nancy.Api.Model.Domain.AObject myObj = null;
+
+			if (aObject is Server)
+			{
+				myObj = new Nancy.Api.Model.Domain.Server { Object = aObject as Server };
+			}
+			else if (aObject is Channel)
+			{
+				myObj = new Nancy.Api.Model.Domain.Channel { Object = aObject as Channel };
+			}
+			else if (aObject is Bot)
+			{
+				myObj = new Nancy.Api.Model.Domain.Bot { Object = aObject as Bot };
+			}
+			else if (aObject is Packet)
+			{
+				myObj = new Nancy.Api.Model.Domain.Packet { Object = aObject as Packet };
+			}
+			else if (aObject is Search)
+			{
+				myObj = new Nancy.Api.Model.Domain.Search { Object = aObject as Search };
+			}
+			else if (aObject is File)
+			{
+				myObj = new Nancy.Api.Model.Domain.File { Object = aObject as File };
+			}
+
+			return myObj;
+		}
+
+		public static IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
+		{
+			aPage--;
+			var objects = Helper.XgObjectsToNancyObjects(aObjects).Cast<T>();
+
+			if (string.IsNullOrWhiteSpace(aSortBy))
+			{
+				aSortBy = "Name";
+			}
+			var prop = typeof(T).GetProperty(aSortBy);
+			if (aSort == "desc")
+			{
+				objects = objects.OrderByDescending(o => prop.GetValue(o, null));
+			}
+			else
+			{
+				objects = objects.OrderBy(o => prop.GetValue(o, null));
+			}
+
+			aLength = objects.Count();
+			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
+		}
 	}
 }

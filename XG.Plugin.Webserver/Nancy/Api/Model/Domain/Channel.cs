@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  Channel.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,56 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Api.Model.Domain
 {
-	public abstract class ARequest
+	[JsonObject(MemberSerialization.OptOut)]
+	public class Channel : AObject
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		[XmlIgnore]
+		[JsonIgnore]
+		public new XG.Model.Domain.Channel Object
+		{
+			get
+			{
+				return (XG.Model.Domain.Channel)base.Object;
+			}
+			set
+			{
+				base.Object = value;
+			}
+		}
+
+		#region VARIABLES
+
+		public int ErrorCode
+		{
+			get { return Object.ErrorCode; }
+		}
+
+		public string Topic
+		{
+			get { return Object.Topic; }
+		}
+
+		public int UserCount
+		{
+			get { return Object.UserCount; }
+		}
+
+		public int BotCount
+		{
+			get { return Object.Bots.Count(); }
+		}
+
+		public bool AskForVersion
+		{
+			get { return Object.AskForVersion; }
+		}
+
+		#endregion
 	}
 }

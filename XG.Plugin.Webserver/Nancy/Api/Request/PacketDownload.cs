@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  DownloadPacket.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,25 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace XG.Plugin.Webserver.Nancy.Api.Request
 {
-	public abstract class ARequest
+	public class PacketDownload : ARequest
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Server is neccesary")]
+		public string Server { get; set; }
+
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Channel is neccesary")]
+		public string Channel { get; set; }
+
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Bot is neccesary")]
+		public string Bot { get; set; }
+
+		[Required(ErrorMessage = "PacketId must be valid"), Range(1, 9999999, ErrorMessage = "PacketId must be valid")]
+		public int PacketId { get; set; }
+
+		[Required(AllowEmptyStrings = false, ErrorMessage = "PacketName is neccesary")]
+		public string PacketName { get; set; }
 	}
 }

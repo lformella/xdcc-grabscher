@@ -65,7 +65,7 @@ namespace XG.Model
 			return Regex.Replace(aStr, @"[^a-z0-9,.;:_\(\)\[\]\s-]", "", RegexOptions.IgnoreCase).Trim();
 		}
 
-		public static string Implode(this List<string> aList, string aDelimiter)
+		public static string Implode(this IEnumerable<string> aList, string aDelimiter)
 		{
 			string result = "";
 			int count = 0;

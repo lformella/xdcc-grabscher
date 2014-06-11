@@ -1,5 +1,5 @@
-// 
-//  ARequest.cs
+﻿// 
+//  ApiKeyUserIdentity.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using Nancy.Security;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Authentication
 {
-	public abstract class ARequest
+	public class ApiKeyUserIdentity : IUserIdentity
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		public string UserName { get; set; }
+
+		public IEnumerable<string> Claims { get; set; }
 	}
 }

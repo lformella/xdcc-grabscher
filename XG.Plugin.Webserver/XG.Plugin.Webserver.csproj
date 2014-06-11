@@ -104,6 +104,17 @@
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="Nancy.Validation.DataAnnotations">
+      <HintPath>..\packages\Nancy.Validation.DataAnnotations.0.23.0\lib\net40\Nancy.Validation.DataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.3.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Validation.FluentValidation">
+      <HintPath>..\packages\Nancy.Validation.FluentValidation.0.23.0\lib\net40\Nancy.Validation.FluentValidation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Nancy\ShutdownModule.cs" />
@@ -148,14 +159,29 @@
     <Compile Include="SignalR\Hub\Model\Domain\ApiKey.cs" />
     <Compile Include="SignalR\Hub\Model\Domain\Extension.cs" />
     <Compile Include="Nancy\Api\Request\ARequest.cs" />
-    <Compile Include="Nancy\Api\DownloadPacket.cs" />
     <Compile Include="Nancy\Api\Result\Default.cs" />
-    <Compile Include="Nancy\Api\Request\DownloadPacket.cs" />
-    <Compile Include="Nancy\Api\Request\SearchPackets.cs" />
-    <Compile Include="Nancy\Api\Result\SearchPackets.cs" />
-    <Compile Include="Nancy\Api\Request\Enable.cs" />
-    <Compile Include="Nancy\Api\SearchPackets.cs" />
-    <Compile Include="Nancy\Api\Enable.cs" />
+    <Compile Include="Nancy\Api\Request\ChannelAdd.cs" />
+    <Compile Include="Nancy\Api\Request\PacketDownload.cs" />
+    <Compile Include="Nancy\Api\Request\PacketSearch.cs" />
+    <Compile Include="Nancy\Api\Request\ServerAdd.cs" />
+    <Compile Include="Nancy\Api\Bots.cs" />
+    <Compile Include="Nancy\Api\Channels.cs" />
+    <Compile Include="Nancy\Api\Packets.cs" />
+    <Compile Include="Nancy\Api\Searches.cs" />
+    <Compile Include="Nancy\Api\Servers.cs" />
+    <Compile Include="Nancy\Authentication\ApiKeyAuthentication.cs" />
+    <Compile Include="Nancy\Authentication\ApiKeyHttpExtensions.cs" />
+    <Compile Include="Nancy\Authentication\ApiKeyUserIdentity.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\AObject.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\Bot.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\Channel.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\File.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\Packet.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\Search.cs" />
+    <Compile Include="Nancy\Api\Model\Domain\Server.cs" />
+    <Compile Include="Nancy\Api\Files.cs" />
+    <Compile Include="Nancy\Api\Result\Objects.cs" />
+    <Compile Include="Nancy\Api\Request\SearchAdd.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />
@@ -634,5 +660,6 @@
   <ItemGroup>
     <Folder Include="Nancy\Api\Request\" />
     <Folder Include="Nancy\Api\Result\" />
+    <Folder Include="Nancy\Authentication\" />
   </ItemGroup>
 </Project>

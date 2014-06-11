@@ -33,7 +33,7 @@ namespace XG.Model.Domain
 	{
 		public new IEnumerable<File> All
 		{
-			get { return base.All.Cast<File>(); }
+			get { return base.Children.Cast<File>(); }
 		}
 
 		public File File(string tmpName)

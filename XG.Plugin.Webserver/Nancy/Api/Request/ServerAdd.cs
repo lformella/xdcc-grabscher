@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  ServerAdd.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace XG.Plugin.Webserver.Nancy.Api.Request
 {
-	public abstract class ARequest
+	public class ServerAdd : ARequest
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		[Required(AllowEmptyStrings = false, ErrorMessage = "Server is neccesary")]
+		public string Server { get; set; }
+
+		[Required(ErrorMessage = "Port must be valid"), Range(1, 65535, ErrorMessage = "Port must be valid")]
+		public int Port { get; set; }
 	}
 }

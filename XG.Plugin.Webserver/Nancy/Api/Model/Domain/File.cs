@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  File.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,13 +24,50 @@
 //  
 
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Api.Model.Domain
 {
-	public abstract class ARequest
+	[JsonObject(MemberSerialization.OptOut)]
+	public class File : AObject
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		[XmlIgnore]
+		[JsonIgnore]
+		public new XG.Model.Domain.File Object
+		{
+			get
+			{
+				return (XG.Model.Domain.File)base.Object;
+			}
+			set
+			{
+				base.Object = value;
+			}
+		}
+
+		#region VARIABLES
+
+		public Int64 Size
+		{
+			get { return Object.Size; }
+		}
+
+		public Int64 CurrentSize
+		{
+			get { return Object.CurrentSize; }
+		}
+
+		public Int64 TimeMissing
+		{
+			get { return Object.TimeMissing; }
+		}
+
+		public Int64 Speed
+		{
+			get { return Object.Speed; }
+		}
+
+		#endregion
 	}
 }

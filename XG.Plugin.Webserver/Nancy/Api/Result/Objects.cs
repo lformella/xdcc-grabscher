@@ -1,5 +1,5 @@
 // 
-//  DownloadPacket.cs
+//  Objects.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,18 +23,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+using System.Collections.Generic;
+
+namespace XG.Plugin.Webserver.Nancy.Api.Result
 {
-	public class DownloadPacket : ARequest
+	public class Objects
 	{
-		public string Server { get; set; }
+		public IEnumerable<object> Results { get; set; }
 
-		public string Channel { get; set; }
-
-		public string Bot { get; set; }
-
-		public int PacketId { get; set; }
-
-		public string PacketName { get; set; }
+		public int ResultCount { get; set; }
 	}
 }
+

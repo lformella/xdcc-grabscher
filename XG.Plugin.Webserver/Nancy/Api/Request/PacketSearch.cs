@@ -1,5 +1,5 @@
 // 
-//  Enable.cs
+//  PacketSearch.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,14 +23,25 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace XG.Plugin.Webserver.Nancy.Api.Request
 {
-	public class Enable : ARequest
+	public class PacketSearch : ARequest
 	{
-		public Guid Guid { get; set; }
+		[Required(AllowEmptyStrings = false, ErrorMessage = "SearchTerm is neccesary")]
+		public string SearchTerm { get; set; }
 
-		public bool Enabled { get; set; }
+		public bool ShowOfflineBots { get; set; }
+
+		public int MaxResults { get; set; }
+
+		public int Page { get; set; }
+
+		[RegularExpression("Name|Id|Size", ErrorMessage = "sortBy just [Name|Id|Size] is allowed")]
+		public string SortBy { get; set; }
+
+		[RegularExpression("asc|desc", ErrorMessage = "Sort just [asc|desc] is allowed")]
+		public string Sort { get; set; }
 	}
 }

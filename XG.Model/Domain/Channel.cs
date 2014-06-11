@@ -41,7 +41,7 @@ namespace XG.Model.Domain
 			{
 				if (!value)
 				{
-					foreach (AObject obj in All)
+					foreach (AObject obj in Children)
 					{
 						obj.Connected = false;
 						obj.Commit();
@@ -96,7 +96,7 @@ namespace XG.Model.Domain
 
 		public IEnumerable<Bot> Bots
 		{
-			get { return All.Cast<Bot>(); }
+			get { return Children.Cast<Bot>(); }
 		}
 
 		public Bot Bot(string aName)

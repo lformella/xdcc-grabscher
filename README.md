@@ -96,41 +96,173 @@ XG will collect every 5 minutes some statistical data and generate nice graphs. 
 This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
 
 ## API
-XG v3 supports a rest api to control it via scripts. You can add api keys and enable / disable them. 
+XG v3 supports a REST api to control it via external tools. You can add api keys and enable / disable them. 
 
 ![Api](http://xg.bitpir.at/images/help/api.png?v=3)
 
-The api method has to be entered after the __/api/__ path segment, for example __/downloadPacket/__. The data you want to pass to the method has to be encoded in JSON. The content type must be JSON, too. The apiKey property is mandatory and has to match an api key which is enabled. You can test this via curl:
+The following objects can be controlled with different methods via the api:
 
-```
-curl -H "Content-Type:text/json" -s -XPUT localhost:5556/api/... -d '
-{
-  "apiKey": "615d86bb-f867-47c1-a860-ac24e09e976c",
-  ...
-}'
-```
+* servers
+  * add
+  * delete
+  * enable / disable
+  * list
+* channels
+  * add
+  * delete
+  * enable / disable
+  * list
+* bots
+  * list
+* packets
+  * enable / disable
+  * list
+* files
+  * delete
+  * list
+* searches
+  * add
+  * delete
+  * list
 
-Api methods which create or update data, always return the following JSON encoded properties:
+The object name has to be entered after the __/api/1.0/__ path segment with the format in the wich the answer should be encoded, for example __/api/1.0/servers.json__. The data you want to pass to the method has to be encoded in same format. The content type must be the format, too. The __Authorization__ header is mandatory and has to match an api key which is enabled. If the apiKey was invalid or disabled, the method will result in an 401.
 
-* __ReturnValue = -1__ - api key is invalid or disabled
-* __ReturnValue = 0__ - there was an error calling the method
-* __ReturnValue = 1__ - everything is fine
-* __Message__ - a helpful message if an error occurred
+The currently allowed formats:
 
-### Download Packet
-You can add and download an external packet. If you got a XDCC link, you can use this method to add a packet and download it instantly.
+* json (preferred)
 
-The server and channel are not deleted after the packet is complete, so if you dont need them anymore, you have to delete them yourself.
+Api methods which create or update data, always return the following properties:
 
-#### Url
+* __ReturnValue__ (int)
+  * 0 - there was an error calling the method
+  * 1 - everything is fine
+* __Message__ (string)
+  * a helpful message if an error occurred
 
-> __PUT__ / __downloadPacket__
+---
+### Delete
+You can delete an object and all children.
+
+#### URL
+> __DELETE /api/1.0/[ servers | channels | files | searches ]/$guid.$format__
 
 #### Example
 ```
-curl -H "Content-Type:text/json" -s -XPUT localhost:5556/api/downloadPacket -d '
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XDELETE localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59.json
+```
+
+#### Return Value
+```
 {
-  "apiKey":"615d86bb-f867-47c1-a860-ac24e09e976c",
+  "ReturnValue":1,
+  "Message":null
+}
+```
+
+---
+### Get
+Get a single object by its guid.
+
+#### URL
+> __GET /api/1.0/[ servers | channels | bots | packets | files | searches ]/$guid.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XGET localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59.json
+```
+
+#### Return Value
+```
+{
+	"Port":6667,
+	"ErrorCode":0,
+	"ParentGuid":"c31aa923-b615-4d03-840d-c82357c929d4",
+	"Guid":"906bfd60-b6f1-4d38-a2f4-cb9cba983a24",
+	"Name":"irc.abjects.net",
+	"Connected":false,
+	"Enabled":false
+}
+```
+
+---
+### Enable
+If you enable servers and channels, they will be connected. If you enable a packet it will be downloaded.
+
+#### URL
+> __POST /api/1.0/[ servers | channels | packets ]/$guid/enable.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59/enable.json
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":1,
+  "Message":null
+}
+```
+
+---
+### Disable
+If you disable servers and channels, they will be disconnected. If you disable a packet the download will be stopped and the file is beeing deleted.
+
+#### URL
+> __POST /api/1.0/[ servers | channels | packets ]/$guid/disable.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59/disable.json
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":1,
+  "Message":null
+}
+```
+
+---
+### Add
+You can add an object. All parameters are mandatory.
+
+If you got a XDCC link, you can use this method to add a packet and download it instantly. The server and channel are not deleted after the packet is complete, so if you dont need them anymore, you have to delete them yourself.
+
+#### Url
+> __PUT /api/1.0/[ servers | channels | packets | searches ].$format__
+
+#### Post Parameters for servers
+* server (string): irc.rizon.net
+* port (integer): 11
+
+#### Post Parameters for channels
+* server (string): irc.rizon.net
+* channel (string): #abjects
+
+#### Post Parameters for packets
+* server (string): irc.rizon.net
+* channel (string): #abjects
+* bot (string): [XDCC]Bot
+* packetId (integer): 11
+* packetName (string): My.Super.Movie.mkv
+
+#### Post Parameters for searches
+* search (string): german -mkv
+
+#### Example
+```
+curl -H "Content-Type:application/json" -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/servers.json -d '
+{
+  "server":"irc.rizon.net",
+  "port": 6667
+}'
+```
+
+```
+curl -H "Content-Type:application/json" -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/packets.json -d '
+{
   "server":"irc.rizon.net",
   "channel":"#abjects",
   "bot":"[XDCC]Bot",
@@ -147,102 +279,41 @@ curl -H "Content-Type:text/json" -s -XPUT localhost:5556/api/downloadPacket -d '
 }
 ```
 
-### Search Packets
-You can add and download a packet. If you got a XDCC link, you can use this method to add a packet and download it instantly.
+---
+### List
+You can list objects. If you want to list packets, you can controll the results.
 
 #### Url
+> __GET /api/1.0/[ servers | channels | packets | files | searches ].$format__
 
-> __GET__ / __searchPackets__
+#### Get Parameters for packets
+* __searchTerm__ (string) *: german -mkv
+* __showOfflineBots__ (boolean): true | false
+* __maxResults__ (integer)
+* __page__ (integer)
+* __sortBy__ (string): Id | Name | Size
+* __sort__ (string): asc | desc
+
+The properties __showOfflineBots__, __maxResults__, __page__, __sortBy__, __sort__ can be left blank. If you leave __showOfflineBots__ blank, it will be filled with __false__ and the search request will just return packets, which bots are online.
 
 #### Example
 ```
-curl -H "Content-Type:text/json" -s -XGET localhost:5556/api/searchPackets -d '
-{
-  "apiKey":"615d86bb-f867-47c1-a860-ac24e09e976c",
-  "searchTerm":"german -mkv",
-  "showOfflineBots":true,
-  "maxResults":20,
-  "page":1,
-  "sortBy":"Id",
-  "sort":"desc"
-}'
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XGET 'localhost:5556/api/1.0/packets.json?searchTerm=mkv%20-seven&showOfflineBots=true'
 ```
-
-The properties __showOfflineBots__, __maxResults__, __page__, __sortBy__, __sort__ can be left blank. If you leave __showOfflineBots__ blank, it will be filled with __false__ and the search request will just return packets, which bots are online.
 
 #### Return Value
 ```
 {
-  "Packets":
+  "Results":
   [
     {
-      "Bot":
-      {
-        "State":0,
-        "LastMessage": "joined channel #moviegods",
-        "LastMessageTime":"2014-05-20T18:34:46",
-        "LastContact":"2014-05-20T18:34:46",
-        "QueuePosition":0,
-        "QueueTime":0,
-        "InfoSpeedMax":19691929,
-        "InfoSpeedCurrent":4539801,
-        "InfoSlotTotal":10,
-        "InfoSlotCurrent":1,
-        "InfoQueueTotal":100,
-        "InfoQueueCurrent":6,
-        "Speed":0,
-        "HasNetworkProblems":false,
-        "Type":"Bot",
-        "ParentGuid":"494c5f9f-94da-46e6-b276-201e5b2a51a5",
-        "Guid":"4bff3378-245e-4297-8a02-cd40727bf79f",
-        "Name":"[MG]-HDTV|EU|S|0009",
-        "Connected":false,
-        "Enabled":false
-      },
-      "Id":1400,
-      "Size":5557452,
-      "Name":"Der.Aktionaer.2014.09.GERMAN.RETAiL.MAGAZiN.eBOOk-sUppLeX.tar",
-      "LastUpdated":"2014-03-09T11:33:11",
-      "LastMentioned":"2014-03-09T11:33:11",
-      "Next":false,
-      "Speed":0,
-      "CurrentSize":0,
-      "TimeMissing":0,
-      "Type":"Packet",
-      "ParentGuid":"4bff3378-245e-4297-8a02-cd40727bf79f",
-      "Guid":"5e5903f3-71ab-41fd-919e-bdadbfd04abf",
-      "Connected":false,
-      "Enabled":false
+      ...
     }
   ],
   "ResultCount":5584
 }
 ```
-
-### Enable / Disable Object / Download Packet
-You can enable and disable objects. If you enable servers or channels, they will connected or disconnect. If you do this with a packet, it will be downloaded or cancelled.
-
-#### Url
-
-> __POST__ / __enable__
-
-#### Example
-```
-curl -H "Content-Type:text/json" -s -XPOST localhost:5556/api/enable -d '
-{
-  "apiKey":"615d86bb-f867-47c1-a860-ac24e09e976c",
-  "guid":"5e5903f3-71ab-41fd-919e-bdadbfd04abf",
-  "enabled":true
-}'
-```
-
-#### Return Value
-```
-{
-  "ReturnValue":1,
-  "Message":null
-}
-```
+Results is an array containg the requestet objects.
 
 ## Shutdown XG gracefully
 If you want to shutdown XG, just ctrl+c the process or close the command window. You can also stop XG by using the shutdown button in the webfrontend.

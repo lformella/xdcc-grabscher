@@ -1,5 +1,5 @@
 // 
-//  ARequest.cs
+//  Files.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,13 +24,42 @@
 //  
 
 using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace XG.Plugin.Webserver.Nancy.Api.Request
+namespace XG.Plugin.Webserver.Nancy.Api
 {
-	public abstract class ARequest
+	public class Files : ApiModule
 	{
-		[Required]
-		public Guid ApiKey { get; set; }
+		public Files()
+		{
+			InitializeGet(Helper.Files, "files");
+			InitializeEnable(Helper.Files, "files");
+
+			Delete["/files/{guid:guid}"] = _ =>
+			{
+				try
+				{
+					var file = Helper.Files.WithGuid(Guid.Parse(_.guid));
+					if (file != null)
+					{
+						if (file.Packet != null)
+						{
+							file.Packet.Enabled = false;
+							file.Packet.Commit();
+						}
+						else
+						{
+							Helper.Files.Remove(file);
+						}
+
+						return CreateSuccessResponseAndUpdateApiKey();
+					}
+					return CreateErrorResponseAndUpdateApiKey("object not found");
+				}
+				catch (Exception ex)
+				{
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
+				}
+			};
+		}
 	}
 }
