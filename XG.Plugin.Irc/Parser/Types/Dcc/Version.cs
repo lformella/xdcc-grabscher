@@ -38,7 +38,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 			}
 		}
 
-		private void CheckVersion(Channel aChannel, string aNick, string aVersion)
+		void CheckVersion(Channel aChannel, string aNick, string aVersion)
 		{
 			Log.Info("Parse() received version reply from " + aNick + ": " + aVersion);
 			if (aVersion.ToLower().Contains("iroffer"))
@@ -48,4 +48,3 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 		}
 	}
 }
-

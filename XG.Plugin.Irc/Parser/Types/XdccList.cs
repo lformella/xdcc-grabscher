@@ -31,7 +31,7 @@ namespace XG.Plugin.Irc.Parser.Types
 	{
 		public override void Parse(Channel aChannel, string aNick, string aMessage)
 		{
-			var regexes = new string[]
+			var regexes = new[]
 			{
 				".* XDCC LIST ALL(\"|'|)\\s*.*"
 			};
@@ -42,7 +42,7 @@ namespace XG.Plugin.Irc.Parser.Types
 				return;
 			}
 
-			regexes = new string[]
+			regexes = new[]
 			{
 				".* XDCC LIST(\"|'|)\\s*.*"
 			};
@@ -53,7 +53,7 @@ namespace XG.Plugin.Irc.Parser.Types
 				return;
 			}
 
-			regexes = new string[]
+			regexes = new[]
 			{
 				".* XDCC SEND LIST(\"|'|)\\s*.*"
 			};
@@ -64,7 +64,7 @@ namespace XG.Plugin.Irc.Parser.Types
 				return;
 			}
 
-			regexes = new string[]
+			regexes = new[]
 			{
 				"^group: (?<group>[-a-z0-9_,.{}\\[\\]\\(\\)]+) .*"
 			};

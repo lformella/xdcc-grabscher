@@ -238,7 +238,7 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Packet((aObject as Packet).Id) != null;
 		}

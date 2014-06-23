@@ -23,7 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,14 +30,14 @@ namespace XG.Model.Domain
 {
 	public class Servers : AObjects
 	{
-		public new IEnumerable<Server> All
+		public IEnumerable<Server> All
 		{
-			get { return base.Children.Cast<Server>(); }
+			get { return Children.Cast<Server>(); }
 		}
 
 		public Server Server(string aName)
 		{
-			return base.Named(aName) as Server;
+			return Named(aName) as Server;
 		}
 
 		public bool Add(Server aServer)
@@ -62,9 +61,9 @@ namespace XG.Model.Domain
 			return base.Remove(aServer);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
-			return Server((aObject as Server).Name) != null;
+			return Server(aObject.Name) != null;
 		}
 	}
 }

@@ -35,13 +35,13 @@ namespace XG.Business.Helper
 	{
 		public RrdDb GetDb ()
 		{
-			int heartBeat = 5 * 60; // * 1000
+			const int heartBeat = 5 * 60; // * 1000
 
 			string _dbPath = Settings.Default.GetAppDataPath() + "xgsnapshots.db";
 			try
 			{
 				var db = new RrdDb(_dbPath);
-				HashSet<int> sourcesToAdd = new HashSet<int>();
+				var sourcesToAdd = new HashSet<int>();
 
 				for (int a = 0; a <= 29; a++)
 				{
@@ -68,7 +68,7 @@ namespace XG.Business.Helper
 			}
 			catch (FileNotFoundException)
 			{
-				RrdDef rrdDef = new RrdDef(_dbPath, heartBeat);
+				var rrdDef = new RrdDef(_dbPath, heartBeat);
 				for (int a = 0; a <= 29; a++)
 				{
 					rrdDef.addDatasource(a + "", DsTypes.DT_GAUGE, heartBeat * 2, 0, Double.MaxValue);

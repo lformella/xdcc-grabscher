@@ -114,7 +114,7 @@ namespace XG.Model.Domain
 			return Remove(aBot);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Bot((aObject as Bot).Name) != null;
 		}

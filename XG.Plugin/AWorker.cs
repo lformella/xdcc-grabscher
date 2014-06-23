@@ -46,7 +46,7 @@ namespace XG.Plugin
 
 		public IScheduler Scheduler { get; set; }
 
-		List<JobKey> _scheduledJobs = new List<JobKey>();
+		readonly List<JobKey> _scheduledJobs = new List<JobKey>();
 
 		#endregion
 
@@ -99,7 +99,7 @@ namespace XG.Plugin
 
 		public void AddRepeatingJob(Type aType, string aName, string aGroup, int aSecondsToSleep, params JobItem[] aItems)
 		{
-			JobKey key = new JobKey(aName, aGroup);
+			var key = new JobKey(aName, aGroup);
 			if (Scheduler.GetJobDetail(key) != null)
 			{
 				Log.Error("AddRepeatingJob(" + aType.Name + ", " + aName + ", " + aGroup + ") already exists");

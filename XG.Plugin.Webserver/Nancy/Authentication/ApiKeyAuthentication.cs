@@ -85,7 +85,10 @@ namespace XG.Plugin.Webserver.Nancy.Authentication
 					return apiKey.Enabled;
 				}
 			}
-			catch (Exception) {}
+			catch (Exception)
+			{
+				return false;
+			}
 			return false;
 		}
 	}

@@ -24,7 +24,6 @@
 //
 
 using System.Collections.Generic;
-using Meebey.SmartIrc4net;
 
 namespace XG.Plugin.Irc.Parser
 {
@@ -91,4 +90,3 @@ namespace XG.Plugin.Irc.Parser
 		}
 	}
 }
-

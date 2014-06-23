@@ -68,4 +68,3 @@ namespace XG.Plugin.Webserver
 		}
 	}
 }
-

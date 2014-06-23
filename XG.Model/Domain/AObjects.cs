@@ -29,7 +29,6 @@ using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.Collections;
-using Db4objects.Db4o.Ext;
 
 namespace XG.Model.Domain
 {
@@ -184,7 +183,7 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public abstract bool DuplicateChildExists(AObject aObject);
+		protected abstract bool DuplicateChildExists(AObject aObject);
 
 		#endregion
 

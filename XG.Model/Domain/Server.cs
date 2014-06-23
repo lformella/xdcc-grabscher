@@ -85,11 +85,11 @@ namespace XG.Model.Domain
 
 		public Channel Channel(string aName)
 		{
-			if (aName != null && !aName.StartsWith("#"))
+			if (aName != null && !aName.StartsWith("#", StringComparison.CurrentCulture))
 			{
 				aName = "#" + aName;
 			}
-			return base.Named(aName) as Channel;
+			return Named(aName) as Channel;
 		}
 
 		public Bot Bot(string aName)
@@ -114,7 +114,7 @@ namespace XG.Model.Domain
 		public bool AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
-			if (!aChannel.StartsWith("#"))
+			if (!aChannel.StartsWith("#", StringComparison.CurrentCulture))
 			{
 				aChannel = "#" + aChannel;
 			}
@@ -131,7 +131,7 @@ namespace XG.Model.Domain
 			return Remove(aChannel);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Channel((aObject as Channel).Name) != null;
 		}

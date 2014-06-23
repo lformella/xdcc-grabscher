@@ -38,7 +38,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 			var match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				int valueInt = 0;
+				int valueInt;
 				if (int.TryParse(match.Groups["slot_cur"].ToString(), out valueInt))
 				{
 					aBot.InfoSlotCurrent = valueInt;

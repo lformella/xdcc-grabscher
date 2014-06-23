@@ -221,7 +221,7 @@ namespace XG.Plugin.Irc
 
 			try
 			{
-				FileStream stream = new FileStream(Settings.Default.TempPath + File.TmpName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+				var stream = new FileStream(Settings.Default.TempPath + File.TmpName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 				// we are connected
 				if (OnConnected != null)

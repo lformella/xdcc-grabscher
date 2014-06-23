@@ -24,7 +24,6 @@
 //  
 
 using System;
-using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Config.Encoding;
@@ -172,7 +171,7 @@ namespace XG.DB
 		{
 			try
 			{
-				Servers = _db.Query<Servers>(typeof(Servers)).First();
+				Servers = _db.Query<Servers>(typeof(Servers))[0];
 			}
 			catch (InvalidOperationException)
 			{
@@ -182,7 +181,7 @@ namespace XG.DB
 
 			try
 			{
-				Files = _db.Query<Files>(typeof(Files)).First();
+				Files = _db.Query<Files>(typeof(Files))[0];
 			}
 			catch (InvalidOperationException)
 			{
@@ -192,7 +191,7 @@ namespace XG.DB
 
 			try
 			{
-				Searches = _db.Query<Searches>(typeof(Searches)).First();
+				Searches = _db.Query<Searches>(typeof(Searches))[0];
 			}
 			catch (InvalidOperationException)
 			{
@@ -202,7 +201,7 @@ namespace XG.DB
 
 			try
 			{
-				ApiKeys = _db.Query<ApiKeys>(typeof(ApiKeys)).First();
+				ApiKeys = _db.Query<ApiKeys>(typeof(ApiKeys))[0];
 			}
 			catch (InvalidOperationException)
 			{

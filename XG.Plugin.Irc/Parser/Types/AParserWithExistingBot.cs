@@ -29,7 +29,7 @@ namespace XG.Plugin.Irc.Parser.Types
 {
 	public abstract class AParserWithExistingBot : AParser
 	{
-		public override void Parse(Model.Domain.Channel aChannel, string aNick, string aMessage)
+		public override void Parse(Channel aChannel, string aNick, string aMessage)
 		{
 			Bot tBot = aChannel.Bot(aNick);
 			if (tBot != null)

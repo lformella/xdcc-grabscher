@@ -41,7 +41,7 @@ namespace XG.Plugin.Irc
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.GetEnumerator();
+			return GetEnumerator();
 		}
 
 		public void Add(T aObj, DateTime aDate)
@@ -75,7 +75,7 @@ namespace XG.Plugin.Irc
 
 		public double GetMissingSeconds(T aObj)
 		{
-			DateTime date = DateTime.Now;
+			DateTime date;
 			_queue.TryGetValue(aObj, out date);
 			double seconds = (date - DateTime.Now).TotalSeconds;
 			return seconds > 0 ? seconds : 0;

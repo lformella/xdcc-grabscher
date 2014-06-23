@@ -28,7 +28,6 @@ using System.Linq;
 using System.Reflection;
 using log4net;
 using XG.Model.Domain;
-using XG.Plugin;
 using XG.Config.Properties;
 using Quartz;
 

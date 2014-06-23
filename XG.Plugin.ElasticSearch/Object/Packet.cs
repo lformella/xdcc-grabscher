@@ -83,17 +83,17 @@ namespace XG.Plugin.ElasticSearch.Object
 
 		public bool BotConnected
 		{
-			get { return Object.Parent != null ? Object.Parent.Connected : false; }
+			get { return Object.Parent != null && Object.Parent.Connected; }
 		}
 
 		public bool BotHasFreeSlots
 		{
-			get { return Object.Parent != null ? Object.Parent.InfoSlotCurrent > 0 : false; }
+			get { return Object.Parent != null && Object.Parent.InfoSlotCurrent > 0; }
 		}
 
 		public bool BotHasFreeQueue
 		{
-			get { return Object.Parent != null ? Object.Parent.InfoSlotCurrent > 0 || Object.Parent.InfoQueueCurrent > 0 : false; }
+			get { return Object.Parent != null && Object.Parent.InfoSlotCurrent > 0 || Object.Parent.InfoQueueCurrent > 0; }
 		}
 
 		public string IrcLink

@@ -88,7 +88,7 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _object2, value, "Object2"); }
 		}
 
-		DateTime _time;
+		readonly DateTime _time;
 
 		public DateTime Time
 		{

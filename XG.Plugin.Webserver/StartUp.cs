@@ -26,13 +26,9 @@
 using Owin;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
-using System.Text;
-using XG.Config.Properties;
 using Newtonsoft.Json;
-using Microsoft.AspNet.SignalR.Json;
 using Nancy;
 
 namespace XG.Plugin.Webserver

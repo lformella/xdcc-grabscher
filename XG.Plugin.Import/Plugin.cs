@@ -65,21 +65,21 @@ namespace XG.Plugin.Import
 				}
 			}
 
-			HtmlDocument doc = new HtmlDocument();
+			var doc = new HtmlDocument();
 			doc.LoadHtml(str);
 
 			HtmlNodeCollection col = doc.DocumentNode.SelectNodes("//a");
 			foreach(HtmlNode node in col)
 			{
 				string href = node.Attributes["href"].Value;
-				if(href.StartsWith("irc://"))
+				if (href.StartsWith("irc://", StringComparison.CurrentCulture))
 				{
-					string[] strs = href.Split(new char[] {'/'});
-					string serverName = strs[2].ToLower();
-					string channelName = strs[3].ToLower();
+					string[] strs = href.Split(new[] { '/' });
+					string serverName = strs [2].ToLower();
+					string channelName = strs [3].ToLower();
 
 					Server s = Servers.Server(serverName);
-					if(s == null)
+					if (s == null)
 					{
 						Servers.Add(serverName);
 						s = Servers.Server(serverName);
@@ -87,7 +87,7 @@ namespace XG.Plugin.Import
 					}
 
 					Channel c = s.Channel(channelName);
-					if(c == null)
+					if (c == null)
 					{
 						s.AddChannel(channelName);
 						_log.Debug("-> " + serverName + " - " + channelName);

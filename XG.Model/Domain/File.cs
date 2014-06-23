@@ -24,22 +24,13 @@
 //  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Db4objects.Db4o;
-using Db4objects.Db4o.Activation;
 
 namespace XG.Model.Domain
 {
 	public class File : AObject
 	{
 		#region VARIABLES
-
-		public override string Name
-		{
-			get { return base.Name; }
-			//protected set { base.Name = value; }
-		}
 
 		string _tmpName;
 

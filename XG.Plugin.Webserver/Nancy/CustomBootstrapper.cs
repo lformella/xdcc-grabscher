@@ -40,11 +40,11 @@ namespace XG.Plugin.Webserver.Nancy
 {
 	public class CustomBootstrapper : DefaultNancyBootstrapper
 	{
-		private byte[] favicon;
+		byte[] _favicon;
 
 		protected override byte[] FavIcon
 		{
-			get { return this.favicon?? (this.favicon = LoadFavIcon()); }
+			get { return _favicon?? (_favicon = LoadFavIcon()); }
 		}
 
 		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
@@ -57,7 +57,7 @@ namespace XG.Plugin.Webserver.Nancy
 #if !DEBUG
 		[Cache.Cacheable]
 #endif
-		private byte[] LoadFavIcon()
+		byte[] LoadFavIcon()
 		{
 			using (var resourceStream = GetType().Assembly.GetManifestResourceStream("XG.Plugin.Webserver.Resources.favicon.ico"))
 			{
@@ -67,9 +67,9 @@ namespace XG.Plugin.Webserver.Nancy
 			}
 		}
 
-		private string[] resourceNames;
+		string[] resourceNames;
 
-		private bool ResourceExists(string resourceName)
+		bool ResourceExists(string resourceName)
 		{
 			if (resourceNames == null)
 			{
@@ -95,7 +95,7 @@ namespace XG.Plugin.Webserver.Nancy
 #if !DEBUG
 		[Cache.Cacheable]
 #endif
-		private EmbeddedFileResponse GetResource(string aPath)
+		EmbeddedFileResponse GetResource(string aPath)
 		{
 			try
 			{
@@ -106,7 +106,10 @@ namespace XG.Plugin.Webserver.Nancy
 					return new EmbeddedFileResponse(GetType().Assembly, directoryName, fileName);
 				}
 			}
-			catch(Exception) {}
+			catch(Exception)
+			{
+				return null;
+			}
 			return null;
 		}
 	}

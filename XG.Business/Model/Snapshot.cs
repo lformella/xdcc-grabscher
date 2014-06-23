@@ -96,11 +96,7 @@ namespace XG.Business.Model
 
 		public double Get(SnapshotValue aType)
 		{
-			if (_dic.ContainsKey(aType))
-			{
-				return _dic[aType];
-			}
-			return 0;
+			return _dic.ContainsKey(aType) ? _dic[aType] : 0;
 		}
 	}
 }

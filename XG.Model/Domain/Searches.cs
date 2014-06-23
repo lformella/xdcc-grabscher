@@ -31,7 +31,7 @@ namespace XG.Model.Domain
 {
 	public class Searches : AObjects
 	{
-		public new IEnumerable<Search> All
+		public IEnumerable<Search> All
 		{
 			get { return base.Children.Cast<Search>(); }
 		}
@@ -58,7 +58,7 @@ namespace XG.Model.Domain
 			return tObject != null ? (Search) tObject : null;
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Named(aObject.Name) != null;
 		}

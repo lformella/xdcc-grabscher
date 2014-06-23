@@ -34,4 +34,3 @@ namespace XG.Plugin.Webserver.Nancy.Api.Result
 		public int ResultCount { get; set; }
 	}
 }
-

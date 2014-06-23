@@ -40,12 +40,12 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 			if (match.Success)
 			{
 				string info = match.Groups["info"].ToString().ToLower();
-				if (info.StartsWith("you must be on a known channel to request a pack"))
+				if (info.StartsWith("you must be on a known channel to request a pack", System.StringComparison.CurrentCulture))
 				{
 					FireJoinChannelsFromBot(this, new EventArgs<Bot>(aBot));
 					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 				}
-				else if (info.StartsWith("i don't send transfers to"))
+				else if (info.StartsWith("i don't send transfers to", System.StringComparison.CurrentCulture))
 				{
 					foreach (Packet tPacket in aBot.Packets)
 					{

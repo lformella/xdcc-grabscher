@@ -44,7 +44,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					aBot.State = Bot.States.Waiting;
 				}
 
-				int valueInt = 0;
+				int valueInt;
 				aBot.InfoSlotCurrent = 0;
 				if (int.TryParse(match.Groups["queue_cur"].ToString(), out valueInt))
 				{

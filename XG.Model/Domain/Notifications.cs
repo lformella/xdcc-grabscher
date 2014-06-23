@@ -23,7 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,7 +30,7 @@ namespace XG.Model.Domain
 {
 	public class Notifications : AObjects
 	{
-		public new IEnumerable<Notification> All
+		public IEnumerable<Notification> All
 		{
 			get { return base.Children.Cast<Notification>(); }
 		}
@@ -46,7 +45,7 @@ namespace XG.Model.Domain
 			return base.Remove(aObject);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return false;
 		}

@@ -46,7 +46,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					aBot.State = Bot.States.Idle;
 				}
 
-				int valueInt = 0;
+				int valueInt;
 				if (int.TryParse(match.Groups["time_m"].ToString(), out valueInt))
 				{
 					int time = valueInt * 60 + 1;

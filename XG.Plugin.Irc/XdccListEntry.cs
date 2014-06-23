@@ -49,4 +49,3 @@ namespace XG.Plugin.Irc
 		}
 	}
 }
-

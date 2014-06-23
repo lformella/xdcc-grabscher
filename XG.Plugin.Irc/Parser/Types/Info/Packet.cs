@@ -97,17 +97,22 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 
 					string tPacketAdd = match.Groups["pack_add"].ToString().ToLower();
 
-					if (tPacketAdd == "k" || tPacketAdd == "kb")
+					switch (tPacketAdd)
 					{
-						tPack.Size = (Int64) (tPacketSizeFormated * 1024);
-					}
-					else if (tPacketAdd == "m" || tPacketAdd == "mb")
-					{
-						tPack.Size = (Int64) (tPacketSizeFormated * 1024 * 1024);
-					}
-					else if (tPacketAdd == "g" || tPacketAdd == "gb")
-					{
-						tPack.Size = (Int64) (tPacketSizeFormated * 1024 * 1024 * 1024);
+						case "k":
+						case "kb":
+							tPack.Size = (Int64) (tPacketSizeFormated * 1024);
+							break;
+
+						case "m":
+						case "mb":
+							tPack.Size = (Int64) (tPacketSizeFormated * 1024 * 1024);
+							break;
+
+						case "g":
+						case "gb":
+							tPack.Size = (Int64) (tPacketSizeFormated * 1024 * 1024 * 1024);
+							break;
 					}
 
 					if (tPack.Commit() && newPacket == null)

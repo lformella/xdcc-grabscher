@@ -145,7 +145,10 @@ namespace XG.Model.Domain
 					return true;
 				}
 			}
-			catch(Exception) {}
+			catch(Exception)
+			{
+				return false;
+			}
 			return false;
 		}
 
@@ -234,7 +237,7 @@ namespace XG.Model.Domain
 		#region DB4O
 
 		[Transient]
-		private IActivator _activator;
+		IActivator _activator;
 
 		public void Activate(ActivationPurpose purpose)
 		{
@@ -252,7 +255,7 @@ namespace XG.Model.Domain
 			}
 			if (activator != null && null != _activator)
 			{
-				throw new System.InvalidOperationException();
+				throw new InvalidOperationException();
 			}
 			_activator = activator;
 		}

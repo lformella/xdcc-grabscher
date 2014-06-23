@@ -27,56 +27,56 @@ using System;
 
 namespace XG.Model.Domain
 {
-	public class EventArgs<T> : EventArgs
+	public class EventArgs<T1> : EventArgs
 	{
-		public EventArgs(T aValue1)
+		public EventArgs(T1 aValue1)
 		{
 			Value1 = aValue1;
 		}
 
-		public T Value1 { get; private set; }
+		public T1 Value1 { get; private set; }
 	}
 
-	public class EventArgs<T, U> : EventArgs<T>
+	public class EventArgs<T1, T2> : EventArgs<T1>
 	{
-		public EventArgs(T aValue, U aValue2) : base(aValue)
+		public EventArgs(T1 aValue, T2 aValue2) : base(aValue)
 		{
 			Value2 = aValue2;
 		}
 
-		public U Value2 { get; private set; }
+		public T2 Value2 { get; private set; }
 	}
 
-	public class EventArgs<T, U, V> : EventArgs<T, U>
+	public class EventArgs<T1, T2, T3> : EventArgs<T1, T2>
 	{
-		public EventArgs(T aValue, U aValue2, V aValue3)
+		public EventArgs(T1 aValue, T2 aValue2, T3 aValue3)
 			: base(aValue, aValue2)
 		{
 			Value3 = aValue3;
 		}
 
-		public V Value3 { get; private set; }
+		public T3 Value3 { get; private set; }
 	}
 
-	public class EventArgs<T, U, V, W> : EventArgs<T, U, V>
+	public class EventArgs<T1, T2, T3, T4> : EventArgs<T1, T2, T3>
 	{
-		public EventArgs(T aValue, U aValue2, V aValue3, W aValue4)
+		public EventArgs(T1 aValue, T2 aValue2, T3 aValue3, T4 aValue4)
 			: base(aValue, aValue2, aValue3)
 		{
 			Value4 = aValue4;
 		}
 
-		public W Value4 { get; private set; }
+		public T4 Value4 { get; private set; }
 	}
 
-	public class EventArgs<T, U, V, W, X> : EventArgs<T, U, V, W>
+	public class EventArgs<T1, T2, T3, T4, T5> : EventArgs<T1, T2, T3, T4>
 	{
-		public EventArgs(T aValue, U aValue2, V aValue3, W aValue4, X aValue5)
+		public EventArgs(T1 aValue, T2 aValue2, T3 aValue3, T4 aValue4, T5 aValue5)
 			: base(aValue, aValue2, aValue3, aValue4)
 		{
 			Value5 = aValue5;
 		}
 
-		public X Value5 { get; private set; }
+		public T5 Value5 { get; private set; }
 	}
 }

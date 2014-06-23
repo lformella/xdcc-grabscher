@@ -39,7 +39,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 			var match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				int valueInt = 0;
+				int valueInt;
 				if (int.TryParse(match.Groups["time"].ToString(), out valueInt))
 				{
 					if (valueInt == 30 && aBot.State != Bot.States.Active)

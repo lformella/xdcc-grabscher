@@ -89,7 +89,7 @@ namespace XG.Business
 			FileActions.OnNotificationAdded += NotificationAdded;
 
 			_plugins = new Plugins();
-			_rrdDb = new Helper.Rrd().GetDb();
+			_rrdDb = new Rrd().GetDb();
 
 			CheckForDuplicates();
 			ClearOldDownloads();
@@ -109,7 +109,7 @@ namespace XG.Business
 					Files.Remove(file);
 					continue;
 				}
-				else if (!file.Enabled)
+				if (!file.Enabled)
 				{
 					// check if the real file and the part is actual the same
 					if (file.CurrentSize != info.Length)

@@ -39,7 +39,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 			if (match.Success)
 			{
 				string channel = match.Groups["channel"].ToString();
-				if (!channel.StartsWith("#"))
+				if (!channel.StartsWith("#", System.StringComparison.CurrentCulture))
 				{
 					channel = "#" + channel;
 				}

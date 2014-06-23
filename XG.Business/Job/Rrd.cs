@@ -25,7 +25,6 @@
 
 using System;
 using SharpRobin.Core;
-using XG.Plugin;
 using XG.Business.Helper;
 using XG.Business.Model;
 using Quartz;

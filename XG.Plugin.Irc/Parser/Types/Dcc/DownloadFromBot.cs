@@ -87,12 +87,12 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				Log.Info("Parse() DCC from " + tBot);
 
 				// if the name of the file contains spaces, we have to replace em
-				if (aMessage.StartsWith("SEND \""))
+				if (aMessage.StartsWith("SEND \"", StringComparison.CurrentCulture))
 				{
 					Match tMatch = Regex.Match(aMessage, "SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
 					if (tMatch.Success)
 					{
-						tDataList = ("SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"]).Split(' ');
+						tDataList = ("SEND " + tMatch.Groups ["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups ["bot_data"]).Split(' ');
 					}
 				}
 
@@ -208,7 +208,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 			if (isOk)
 			{
 				Log.Info("Parse() downloading from " + tBot + " - Starting: " + startSize + " - Size: " + tPacket.RealSize);
-				FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
+				FireAddDownload(this, new EventArgs<Packet, long, IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
 			}
 		}
 	}

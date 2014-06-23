@@ -90,7 +90,7 @@ namespace XG.Model
 
 			foreach (string value in values)
 			{
-				if (value.StartsWith("-"))
+				if (value.StartsWith("-", StringComparison.CurrentCulture))
 				{
 					string valueReal = value.Substring(1);
 					if (str.IndexOf(valueReal, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -114,24 +114,16 @@ namespace XG.Model
 		{
 			if (string.IsNullOrEmpty(a))
 			{
-				if (!string.IsNullOrEmpty(b))
-				{
-					return b.Length;
-				}
-				return 0;
+				return string.IsNullOrEmpty(b) ? 0 : b.Length;
 			}
 
 			if (string.IsNullOrEmpty(b))
 			{
-				if (!string.IsNullOrEmpty(a))
-				{
-					return a.Length;
-				}
-				return 0;
+				return string.IsNullOrEmpty(a) ? 0 : a.Length;
 			}
 
 			int cost;
-			int[,] d = new int[a.Length + 1, b.Length + 1];
+			var d = new int[a.Length + 1, b.Length + 1];
 			int min1;
 			int min2;
 			int min3;

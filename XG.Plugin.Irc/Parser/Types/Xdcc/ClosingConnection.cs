@@ -57,11 +57,11 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				if (match.Success)
 				{
 					string channel = match.Groups["channel"].ToString();
-					if (!channel.StartsWith("#"))
+					if (!channel.StartsWith("#", System.StringComparison.CurrentCulture))
 					{
 						channel = "#" + channel;
 					}
-					FireJoinChannel(this, new EventArgs<Model.Domain.Server, string>(aBot.Parent.Parent, channel));
+					FireJoinChannel(this, new EventArgs<Server, string>(aBot.Parent.Parent, channel));
 				}
 
 				//** Closing Connection: Transfers from [mg]-request|bots are restricted to only MOVIEGODS users! /Part #Beast-xdcc + #elitewarez if you want to download from [MG]-Request|Bot|003

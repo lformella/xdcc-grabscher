@@ -48,4 +48,3 @@ namespace XG.Test.Plugin.Irc.Parser.Types.Dcc
 		}
 	}
 }
-

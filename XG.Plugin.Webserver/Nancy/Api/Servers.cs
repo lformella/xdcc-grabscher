@@ -28,11 +28,6 @@ using System.Linq;
 using System.Collections.Generic;
 using Nancy.ModelBinding;
 using XG.Model;
-using XG.Model.Domain;
-using Nancy.Validation;
-using Nancy.Validation.DataAnnotations;
-using Nancy.Validation.FluentValidation;
-using System.ComponentModel.DataAnnotations;
 
 namespace XG.Plugin.Webserver.Nancy.Api
 {

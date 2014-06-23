@@ -48,7 +48,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 					return;
 				}
 
-				IPAddress ip = null;
+				IPAddress ip;
 				try
 				{
 					ip = IPAddress.Parse(tDataList[2]);
@@ -59,7 +59,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 					return;
 				}
 
-				Int64 size = 0;
+				Int64 size;
 				try
 				{
 					size = Int64.Parse(tDataList[4]);
@@ -70,7 +70,7 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 					return;
 				}
 
-				int port = 0;
+				int port;
 				try
 				{
 					port = int.Parse(tDataList[3]);

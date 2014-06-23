@@ -52,11 +52,11 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 				double valueDouble;
 				if (double.TryParse(speedCur, out valueDouble))
 				{
-					aBot.InfoSpeedCurrent = speedCurEnd.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
+					aBot.InfoSpeedCurrent = speedCurEnd.StartsWith("k", StringComparison.CurrentCulture) ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
 				}
 				if (double.TryParse(speedMax, out valueDouble))
 				{
-					aBot.InfoSpeedMax = speedMaxEnd.StartsWith("k") ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
+					aBot.InfoSpeedMax = speedMaxEnd.StartsWith("k", StringComparison.CurrentCulture) ? (Int64) (valueDouble * 1024) : (Int64) valueDouble;
 				}
 			}
 		}
