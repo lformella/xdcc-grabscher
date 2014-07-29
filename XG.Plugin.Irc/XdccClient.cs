@@ -232,11 +232,6 @@ namespace XG.Plugin.Irc
 			OnConnected(this, new EventArgs<Server>(Server));
 		}
 
-		void ClientOnConnectionError(object sender, EventArgs e)
-		{
-			_log.Info("connection error from " + Server + ": " + e);
-		}
-
 		void ClientOnCtcpReply(object sender, CtcpEventArgs e)
 		{
 			_log.Info("ClientOnCtcpReply() " + e.Data.Message);
@@ -376,11 +371,6 @@ namespace XG.Plugin.Irc
 				}
 				UpdateChannel(channel);
 			}
-		}
-
-		void ClientOnPing(object sender, PingEventArgs e)
-		{
-			_client.RfcPong(e.Data.Message);
 		}
 
 		void ClientOnNames(object sender, NamesEventArgs e)
@@ -543,7 +533,6 @@ namespace XG.Plugin.Irc
 
 			_client.OnBan += ClientOnBan;
 			_client.OnConnected += ClientOnConnected;
-			_client.OnConnectionError += ClientOnConnectionError;
 			_client.OnChannelMessage += ClientOnChannelMessage;
 			_client.OnChannelNotice += ClientOnChannelNotice;
 			_client.OnCtcpReply += ClientOnCtcpReply;
@@ -555,7 +544,6 @@ namespace XG.Plugin.Irc
 			_client.OnNames += ClientOnNames;
 			_client.OnNickChange += ClientOnNickChange;
 			_client.OnPart += ClientOnPart;
-			_client.OnPing += ClientOnPing;
 			_client.OnQueryAction += ClientOnQueryAction;
 			_client.OnQueryMessage += ClientOnQueryMessage;
 			_client.OnQueryNotice += ClientOnQueryNotice;
@@ -588,7 +576,6 @@ namespace XG.Plugin.Irc
 
 			_client.OnBan -= ClientOnBan;
 			_client.OnConnected -= ClientOnConnected;
-			_client.OnConnectionError -= ClientOnConnectionError;
 			_client.OnChannelMessage -= ClientOnChannelMessage;
 			_client.OnChannelNotice -= ClientOnChannelNotice;
 			_client.OnCtcpReply -= ClientOnCtcpReply;
@@ -600,7 +587,6 @@ namespace XG.Plugin.Irc
 			_client.OnNames -= ClientOnNames;
 			_client.OnNickChange -= ClientOnNickChange;
 			_client.OnPart -= ClientOnPart;
-			_client.OnPing -= ClientOnPing;
 			_client.OnQueryAction -= ClientOnQueryAction;
 			_client.OnQueryMessage -= ClientOnQueryMessage;
 			_client.OnQueryNotice -= ClientOnQueryNotice;
