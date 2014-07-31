@@ -150,7 +150,7 @@ namespace XG.Plugin.Irc
 
 		void ClientOnConnected(object sender, EventArgs<Server> e)
 		{
-			StartWatch(Settings.Default.ChannelWaitTimeMedium, Server.ToString());
+			StartWatch(Settings.Default.ChannelWaitTimeLong, Server.ToString());
 		}
 
 		void ClientOnDisconnected(object sender, EventArgs<Server> e)
@@ -372,7 +372,6 @@ namespace XG.Plugin.Irc
 			_log.Info("StopRun(" + Server + ")");
 
 			Stopwatch();
-			_client.Disconnect();
 
 			_client.OnConnected -= ClientOnConnected;
 			_client.OnDisconnected -= ClientOnDisconnected;
@@ -381,6 +380,9 @@ namespace XG.Plugin.Irc
 			_client.OnUserJoined -= ClientOnUserJoined;
 			_client.OnQueueChannel -= ClientOnQueueChannel;
 			_client.OnNotificationAdded -= FireNotificationAdded;
+
+			_client.Disconnect();
+			_client = null;
 
 			OnDisconnected(this, new EventArgs<Server>(Server));
 		}
