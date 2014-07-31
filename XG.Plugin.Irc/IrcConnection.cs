@@ -67,6 +67,7 @@ namespace XG.Plugin.Irc
 				_server = value;
 				if (_server != null)
 				{
+					Name = _server.ToString();
 					_server.OnEnabledChanged += EnabledChanged;
 				}
 			}

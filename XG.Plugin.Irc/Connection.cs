@@ -29,6 +29,7 @@ namespace XG.Plugin.Irc
 {
 	public abstract class Connection : AWorker
 	{
+		public string Name { get; protected set; }
 		public DateTime LastContact { get; protected set; }
 
 		public void StartWatch(Int64 aWatchSeconds, string aName)

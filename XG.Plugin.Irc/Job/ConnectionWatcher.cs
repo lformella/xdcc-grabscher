@@ -44,7 +44,7 @@ namespace XG.Plugin.Irc.Job
 				return;
 			}
 
-			_log.Error("Execute() connection seems hanging since more than " + MaximalTimeAfterLastContact + " seconds");
+			_log.Error("Execute() connection " + Connection.Name + " seems hanging since more than " + MaximalTimeAfterLastContact + " seconds");
 
 			Connection.Stopwatch();
 			Connection.Stop();

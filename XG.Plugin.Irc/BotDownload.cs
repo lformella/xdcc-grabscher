@@ -102,6 +102,8 @@ namespace XG.Plugin.Irc
 
 		protected override void StartRun()
 		{
+			Name = IP + ":" + Port;
+
 			Packet.Parent.QueuePosition = 0;
 			Packet.Parent.QueueTime = 0;
 			Packet.Parent.Commit();
