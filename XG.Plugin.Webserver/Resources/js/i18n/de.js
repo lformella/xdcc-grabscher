@@ -71,6 +71,7 @@ define(['./module'], function (i18n) {
 				"Success Count": "Erfolgs Zähler",
 				"Shutdown": "Beenden",
 				"Do you really want to shutdown XG?": "Willst du XG wirklich beenden?",
+				"Max Connections": "Max Verbindungen",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */

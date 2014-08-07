@@ -206,6 +206,19 @@ namespace XG.Plugin.Irc
 
 		void BotConnect(object aSender, EventArgs<Packet, Int64, IPAddress, int> aEventArgs)
 		{
+			int currentDownloadCount = (from file in Files.All where file.Connected select file).Count();
+			if (currentDownloadCount >= Settings.Default.MaxDownloads)
+			{
+				_log.Error("BotConnect(" + aEventArgs.Value1 + ") skipping, because already " + Settings.Default.MaxDownloads + " packets are downloading");
+
+				IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aEventArgs.Value1.Parent.Parent.Parent);
+				if (connection != null)
+				{
+					connection.AddBotToQueue(aEventArgs.Value1.Parent, Settings.Default.BotWaitTime);
+				}
+				return;
+			}
+
 			var download = _botDownloads.SingleOrDefault(c => c.Packet == aEventArgs.Value1);
 			if (download == null)
 			{

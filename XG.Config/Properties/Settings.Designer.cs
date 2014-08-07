@@ -188,6 +188,19 @@ namespace XG.Config.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int MaxDownloads {
+            get {
+                return ((int)(this["MaxDownloads"]));
+			}
+			set {
+				this["MaxDownloads"] = value;
+			}
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Anonymous")]
         public string IrcNick {
             get {

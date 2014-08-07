@@ -73,10 +73,16 @@
 			<div class="form-horizontal">
 				<div class="form-group">
 					<label class="col-lg-3 control-label" translate>Max Download Speed</label>
-					<div class="col-lg-4" ng-show="$parent.configReady">
+					<div class="col-lg-3" ng-show="$parent.configReady">
 						<div class="input-group">
 							<input class="form-control" type="number" min="0" ng-model="$parent.config.MaxDownloadSpeedInKB" placeholder="{{'Max Download Speed'|translate}}" title="{{'Max Download Speed'|translate}}"/>
 							<span class="input-group-addon">KB</span>
+						</div>
+					</div>
+					<label class="col-lg-3 control-label" translate>Max Connections</label>
+					<div class="col-lg-3" ng-show="$parent.configReady">
+						<div class="input-group">
+							<input class="form-control" type="number" min="0" ng-model="$parent.config.MaxDownloads" title="{{'Max Download Connections'|translate}}"/>
 						</div>
 					</div>
 				</div>

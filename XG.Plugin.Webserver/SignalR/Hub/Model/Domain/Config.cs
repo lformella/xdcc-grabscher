@@ -53,6 +53,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 		public bool UseJabberClient { get; set; }
 		public bool UseWebserver { get; set; }
 		public int WebserverPort { get; set; }
+		public int MaxDownloads { get; set; }
 
 		#endregion
 	}
