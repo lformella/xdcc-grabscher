@@ -148,8 +148,6 @@ namespace XG.Business.Helper
 
 				#region DISABLE ALL MATCHING PACKETS
 
-				// TODO remove all CD* packets if a multi packet was downloaded
-
 				string fileName = XG.Model.Domain.Helper.ShrinkFileName(aFile.Name, 0);
 				List<Packet> matchedPackets = (from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where packet.Enabled && (XG.Model.Domain.Helper.ShrinkFileName(packet.RealName, 0).EndsWith(fileName) || XG.Model.Domain.Helper.ShrinkFileName(packet.Name, 0).EndsWith(fileName)) select packet).ToList();
 				foreach (Packet tPack in matchedPackets)
