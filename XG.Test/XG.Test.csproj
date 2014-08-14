@@ -114,6 +114,7 @@
     <Compile Include="Plugin\ElasticSearch\Object\Packet.cs" />
     <Compile Include="Plugin\Irc\Parser\Types\Dcc\Version.cs" />
     <Compile Include="Plugin\Irc\Parser\Types\Dcc\DownloadFromBot.cs" />
+    <Compile Include="Business\Helper\Objects.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -91,7 +91,7 @@ namespace XG.Business
 			_plugins = new Plugins();
 			_rrdDb = new Rrd().GetDb();
 
-			CheckForDuplicates();
+			Objects.CheckAndRemoveDuplicates(Servers);
 			ClearOldDownloads();
 			TryToRecoverOpenFiles();
 		}
@@ -167,57 +167,6 @@ namespace XG.Business
 			foreach (string dir in files)
 			{
 				FileSystem.DeleteFile(dir);
-			}
-		}
-
-		void CheckForDuplicates()
-		{
-			foreach (Server serv in Servers.All)
-			{
-				foreach (Server s in Servers.All)
-				{
-					if (s.Name == serv.Name && s.Guid != serv.Guid)
-					{
-						Log.Error("Run() removing dupe " + s);
-						Servers.Remove(s);
-					}
-				}
-
-				foreach (Channel chan in serv.Channels)
-				{
-					foreach (Channel c in serv.Channels)
-					{
-						if (c.Name == chan.Name && c.Guid != chan.Guid)
-						{
-							Log.Error("Run() removing dupe " + c);
-							serv.RemoveChannel(c);
-						}
-					}
-
-					foreach (Bot bot in chan.Bots)
-					{
-						foreach (Bot b in chan.Bots)
-						{
-							if (b.Name == bot.Name && b.Guid != bot.Guid)
-							{
-								Log.Error("Run() removing dupe " + b);
-								chan.RemoveBot(b);
-							}
-						}
-
-						/*foreach (Packet pack in bot.Packets)
-						{
-							foreach (Packet p in bot.Packets)
-							{
-								if (p.Id == pack.Id && p.Guid != pack.Guid)
-								{
-									Log.Error("Run() removing dupe " + p);
-									bot.RemovePacket(p);
-								}
-							}
-						}*/
-					}
-				}
 			}
 		}
 
