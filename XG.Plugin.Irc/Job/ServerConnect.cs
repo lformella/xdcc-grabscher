@@ -1,5 +1,5 @@
 // 
-//  Connection.cs
+//  ServerConnect.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -24,39 +24,21 @@
 //  
 
 using System;
+using log4net;
+using System.Reflection;
+using Quartz;
+using XG.Model.Domain;
 
-namespace XG.Plugin.Irc
+namespace XG.Plugin.Irc.Job
 {
-	public abstract class Connection : AWorker
+	public class ServerConnect : IJob
 	{
-		public string Name { get; protected set; }
-		public DateTime LastContact { get; protected set; }
-		public DateTime ConnectionStarted { get; protected set; }
-		public DateTime ConnectionStopped { get; protected set; }
+		public Plugin Plugin { get; set; }
+		public Server Server { get; set; }
 
-		public void StartWatch(Int64 aWatchSeconds, string aName)
+		public void Execute (IJobExecutionContext context)
 		{
-			LastContact = DateTime.Now;
-			AddRepeatingJob(typeof(Job.ConnectionWatcher), aName, "Connection", 1, 
-				new JobItem("Connection", this),
-				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
-		}
-
-		public void Stopwatch()
-		{
-			RemoveAllJobs();
-		}
-
-		public double TimeConnected
-		{
-			get
-			{
-				if (ConnectionStarted == DateTime.MinValue)
-				{
-					return 0;
-				}
-				return (ConnectionStopped - ConnectionStarted).TotalSeconds;
-			}
+			Plugin.TryServerConnect(Server);
 		}
 	}
 }

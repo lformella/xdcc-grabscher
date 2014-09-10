@@ -102,6 +102,7 @@
     <Compile Include="Job\ConnectionWatcher.cs" />
     <Compile Include="Job\TimerTrigger.cs" />
     <Compile Include="XdccClient.cs" />
+    <Compile Include="Job\ServerConnect.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">

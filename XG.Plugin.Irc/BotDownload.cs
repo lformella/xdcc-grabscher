@@ -189,6 +189,8 @@ namespace XG.Plugin.Irc
 
 		protected void InitializeWriting()
 		{
+			ConnectionStarted = DateTime.Now;
+
 			_speedCalcTime = DateTime.Now;
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
@@ -285,6 +287,8 @@ namespace XG.Plugin.Irc
 		protected void FinishWriting()
 		{
 			_log.Info("FinishWriting()");
+			ConnectionStopped = DateTime.Now;
+
 			Stopwatch();
 
 			// close the writer

@@ -365,10 +365,12 @@ namespace XG.Plugin.Irc
 			_client.OnNotificationAdded += FireNotificationAdded;
 
 			_client.Connect();
+			ConnectionStarted = DateTime.Now;
 		}
 
 		protected override void StopRun()
 		{
+			ConnectionStopped = DateTime.Now;
 			_log.Info("StopRun(" + Server + ")");
 
 			Stopwatch();

@@ -155,8 +155,13 @@ namespace XG.Plugin.Irc
 			}
 			else
 			{
-				_log.Error("ConnectServer(" + aServer + ") is already in the list");
+				_log.Error("ServerConnect(" + aServer + ") is already in the list");
 			}
+		}
+
+		public void TryServerConnect(Server aServer)
+		{
+			ServerConnect(aServer);
 		}
 
 		void ServerDisconnect(Server aServer)
@@ -190,8 +195,19 @@ namespace XG.Plugin.Irc
 
 				if (AllowRunning && aEventArgs.Value1.Enabled)
 				{
-					_log.Info("ServerReconnect(" + aEventArgs.Value1 + ")");
-					ServerConnect(aEventArgs.Value1);
+					// if the lifetime of a connection was to low, we should sleep some time before try connecting again
+					if (connection.TimeConnected < 10)
+					{
+						_log.Info("ServerReconnect(" + aEventArgs.Value1 + ") in " + Settings.Default.CommandWaitTime + " seconds");
+						AddFutureJob(typeof(Job.ServerConnect), "ServerConnect." + aEventArgs.Value1, "IrcPlugin", Settings.Default.CommandWaitTime, 
+							new JobItem("Server", aEventArgs.Value1),
+							new JobItem("Plugin", this));
+					}
+					else
+					{
+						_log.Info("ServerReconnect(" + aEventArgs.Value1 + ")");
+						ServerConnect(aEventArgs.Value1);
+					}
 				}
 			}
 			else
