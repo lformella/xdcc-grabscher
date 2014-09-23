@@ -364,8 +364,8 @@ namespace XG.Plugin.Irc
 			_client.OnQueueChannel += ClientOnQueueChannel;
 			_client.OnNotificationAdded += FireNotificationAdded;
 
-			_client.Connect();
 			ConnectionStarted = DateTime.Now;
+			_client.Connect();
 		}
 
 		protected override void StopRun()
