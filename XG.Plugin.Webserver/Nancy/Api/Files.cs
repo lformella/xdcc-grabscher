@@ -34,7 +34,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			InitializeGet(Helper.Files, "files");
 			InitializeEnable(Helper.Files, "files");
 
-			Delete["/files/{guid:guid}"] = _ =>
+            Delete["/files/{guid:guid}", true] = async (_, ct) =>
 			{
 				try
 				{

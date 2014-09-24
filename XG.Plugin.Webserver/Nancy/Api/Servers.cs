@@ -40,7 +40,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			InitializeEnable(Helper.Servers, "servers");
 			InitializeDelete(Helper.Servers, "servers");
 
-			Put["/servers"] = _ =>
+            Put["/servers", true] = async (_, ct) =>
 			{
 				Request.ServerAdd request;
 				try

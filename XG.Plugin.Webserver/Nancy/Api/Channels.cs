@@ -41,7 +41,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			InitializeEnable(Helper.Servers, "channels");
 			InitializeDelete(Helper.Servers, "channels");
 
-			Put["/channels"] = _ =>
+            Put["/channels", true] = async (_, ct) =>
 			{
 				Request.ChannelAdd request;
 				try

@@ -88,7 +88,7 @@ namespace XG.Plugin.Webserver.Nancy
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Resources", "Resources"));
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Scripts", "Scripts"));
 #else
-			nancyConventions.StaticContentsConventions.Add((ctx, rootPath) => GetResource (ctx.Request.Url.Path));
+			nancyConventions.StaticContentsConventions.Add((ctx, rootPath) => GetResource(ctx.Request.Url.Path));
 #endif
 		}
 
