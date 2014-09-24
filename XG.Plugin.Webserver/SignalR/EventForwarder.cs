@@ -24,15 +24,15 @@
 //  
 
 using System;
-using System.Linq;
-using Microsoft.AspNet.SignalR;
-using XG.Model.Domain;
-using XG.Model;
 using System.Collections.Generic;
-using XG.Plugin.Webserver.SignalR.Hub.Model;
-using XG.Plugin.Webserver.SignalR.Hub;
-using log4net;
+using System.Linq;
 using System.Reflection;
+using Microsoft.AspNet.SignalR;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
+using XG.Plugin.Webserver.SignalR.Hub;
+using XG.Plugin.Webserver.SignalR.Hub.Model;
 
 namespace XG.Plugin.Webserver.SignalR
 {

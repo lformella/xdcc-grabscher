@@ -28,11 +28,11 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using log4net;
-using XG.Model;
-using XG.Model.Domain;
-using XG.Config.Properties;
 using XG.Business.Helper;
+using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Plugin.Irc
 {
@@ -340,7 +340,6 @@ namespace XG.Plugin.Irc
 					{
 						_log.Error("FinishWriting(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
-						Packet.Commit();
 
 						Packet.Parent.HasNetworkProblems = true;
 						Packet.Parent.Commit();
@@ -362,7 +361,6 @@ namespace XG.Plugin.Irc
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
 				_log.Error("FinishWriting(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
-				Packet.Commit();
 
 				Packet.Parent.HasNetworkProblems = true;
 				Packet.Parent.Commit();
@@ -378,7 +376,7 @@ namespace XG.Plugin.Irc
 
 		void EnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (!aEventArgs.Value1.Enabled)
+			if (_tcpClient != null && !aEventArgs.Value1.Enabled)
 			{
 				_removeFile = true;
 				_tcpClient.Close();
@@ -469,7 +467,7 @@ namespace XG.Plugin.Irc
 				_speedCalcSize = 0;
 			}
 		}
-			
+
 		#endregion
 	}
 }

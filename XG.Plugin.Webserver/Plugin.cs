@@ -24,12 +24,12 @@
 //  
 
 using System;
-using SharpRobin.Core;
-using XG.Config.Properties;
-using Microsoft.Owin.Hosting;
-using Nowin;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Owin.Hosting;
+using Nowin;
+using SharpRobin.Core;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver
 {
@@ -48,14 +48,11 @@ namespace XG.Plugin.Webserver
 
 		#region EVENTS
 
-		public virtual event EmptyEventHandler OnShutdown;
+		public virtual event EventHandler OnShutdown = delegate {};
 
-		protected void FireShutdown()
+		protected void FireShutdown(object aSender, EventArgs aEventArgs)
 		{
-			if (OnShutdown != null)
-			{
-				OnShutdown();
-			}
+			OnShutdown(aSender, aEventArgs);
 		}
 
 		#endregion

@@ -25,24 +25,24 @@
 
 using System;
 using System.Threading;
-using XG.Model;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Packet : AParser
 	{
-		public override void Parse(Channel aChannel, string aNick, string aMessage)
+		public override bool Parse(Message aMessage)
 		{
 			string[] regexes =
 			{
 				"#(?<pack_id>\\d+)(\u0240|)\\s+(\\d*)x\\s+\\[\\s*(?<pack_size>[\\<\\>\\d.]+)(?<pack_add>[BbGgiKMs]+)\\]\\s+(?<pack_name>.*)"
 			};
-			var match = Helper.Match(aMessage, regexes);
+			var match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				string tUserName = aNick;
-				Bot tBot = aChannel.Bot(tUserName);
+				string tUserName = aMessage.Nick;
+				Bot tBot = aMessage.Channel.Bot(tUserName);
 				Model.Domain.Packet newPacket = null;
 
 				bool insertBot = false;
@@ -62,7 +62,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 					catch (Exception ex)
 					{
 						Log.Fatal("Parse() " + tBot + " - can not parse packet id from string: " + aMessage, ex);
-						return;
+						return false;
 					}
 
 					Model.Domain.Packet tPack = tBot.Packet(tPacketId);
@@ -125,20 +125,20 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 				// insert bot if ok
 				if (insertBot)
 				{
-					if (aChannel.AddBot(tBot))
+					if (aMessage.Channel.AddBot(tBot))
 					{
 						Log.Info("Parse() inserted " + tBot);
 					}
 					else
 					{
-						var duplicateBot = aChannel.Bot(tBot.Name);
+						var duplicateBot = aMessage.Channel.Bot(tBot.Name);
 						if (duplicateBot != null)
 						{
 							tBot = duplicateBot;
 						}
 						else
 						{
-							Log.Error("Parse() cant insert " + tBot + " into " + aChannel);
+							Log.Error("Parse() cant insert " + tBot + " into " + aMessage.Channel);
 						}
 					}
 				}
@@ -150,8 +150,9 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 				}
 
 				tBot.Commit();
-				aChannel.Commit();
+				aMessage.Channel.Commit();
 			}
+			return match.Success;
 		}
 
 		#region HELPER

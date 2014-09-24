@@ -24,13 +24,14 @@
 //  
 
 using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class QueueFull : AParserWithExistingBot
+	public class QueueFull : ASaveBotMessageParser
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -55,6 +56,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 
 				FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.BotWaitTime));
 			}
+			return match.Success;
 		}
 	}
 }

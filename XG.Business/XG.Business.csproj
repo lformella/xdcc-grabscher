@@ -89,6 +89,10 @@
       <Project>{5926AB35-FF4F-4ED4-9060-EC1EEAA8F529}</Project>
       <Name>XG.DB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
+      <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
+      <Name>XG.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

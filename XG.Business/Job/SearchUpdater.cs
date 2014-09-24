@@ -24,6 +24,7 @@
 //  
 
 using System.Linq;
+using System.Threading;
 using Quartz;
 using XG.Model.Domain;
 
@@ -36,6 +37,8 @@ namespace XG.Business.Job
 
 		public void Execute (IJobExecutionContext context)
 		{
+			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+
 			foreach (Search search in Searches.All)
 			{
 				var results = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where search.IsVisible(packet) select packet;

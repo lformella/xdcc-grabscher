@@ -582,6 +582,10 @@
       <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
       <Name>XG.Plugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
+      <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
+      <Name>XG.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

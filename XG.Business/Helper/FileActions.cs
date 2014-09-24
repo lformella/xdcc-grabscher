@@ -24,15 +24,16 @@
 //  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
-using log4net;
-using XG.Model.Domain;
 using XG.Config.Properties;
-using System.Collections.Generic;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Business.Helper
 {
@@ -66,14 +67,12 @@ namespace XG.Business.Helper
 
 		#region EVENTS
 
-		public static event EventHandler<EventArgs<Notification>> OnNotificationAdded;
+		public static event EventHandler<EventArgs<Notification>> OnNotificationAdded = delegate {};
 
 		public static void FireNotificationAdded(Notification.Types aType, AObject aObject)
 		{
-			if (OnNotificationAdded != null)
-			{
-				OnNotificationAdded(null, new EventArgs<Notification>(new Notification(aType, aObject)));
-			}
+			var eventArgs = new EventArgs<Notification>(new Notification(aType, aObject));
+			OnNotificationAdded(null, eventArgs);
 		}
 
 		#endregion

@@ -26,10 +26,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using log4net;
 using Nest;
-using XG.Model.Domain;
 using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Plugin.ElasticSearch
 {

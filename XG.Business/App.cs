@@ -23,18 +23,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using log4net;
+using Quartz.Impl;
 using SharpRobin.Core;
-using XG.Business.Helper;
-using XG.Model.Domain;
-using XG.Plugin;
 using XG.Config.Properties;
 using XG.DB;
-using Quartz.Impl;
+using XG.Model.Domain;
+using XG.Plugin;
+using log4net;
+using XG.Business.Helper;
 
 namespace XG.Business
 {
@@ -64,14 +65,11 @@ namespace XG.Business
 
 		#region EVENTS
 
-		public virtual event EmptyEventHandler OnShutdownComplete;
+		public virtual event EventHandler OnShutdownComplete = delegate {};
 
-		protected void FireShutdownComplete()
+		protected void FireShutdownComplete(object aSender, EventArgs aEventArgs)
 		{
-			if (OnShutdownComplete != null)
-			{
-				OnShutdownComplete();
-			}
+			OnShutdownComplete(aSender, aEventArgs);
 		}
 
 		#endregion
@@ -193,7 +191,7 @@ namespace XG.Business
 				ShutdownInProgress = true;
 				Log.Warn("OnShutdown() triggered by " + sender);
 				Stop();
-				FireShutdownComplete();
+				FireShutdownComplete(sender, null);
 			}
 		}
 

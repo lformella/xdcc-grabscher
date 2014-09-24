@@ -23,13 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Status : AParserWithExistingBot
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -72,6 +73,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, 0));
 				}
 			}
+			return match.Success;
 		}
 	}
 }

@@ -43,6 +43,7 @@ define(['./module'], function (ng) {
 					$scope.serverSignalr.loadData($defer, params);
 				}
 			});
+			$scope.clear = false;
 
 			$scope.server = '';
 			$scope.addServer = function()
@@ -72,7 +73,7 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
-					if ($scope.serverSignalr.server != null)
+					if (!$scope.clear && $scope.serverSignalr.server != null)
 					{
 						$scope.channelSignalr.loadData($defer, params, 'loadByServer', $scope.serverSignalr.server.Guid);
 					}
@@ -113,6 +114,9 @@ define(['./module'], function (ng) {
 
 			$scope.$watch('serverSignalr.server', function () {
 				$scope.tableParamsChannel.page(1);
+				$scope.clear = true;
+				$scope.tableParamsChannel.reload();
+				$scope.clear = false;
 				$scope.tableParamsChannel.reload();
 			});
 		}

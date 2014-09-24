@@ -162,6 +162,10 @@
       <Project>{DD17AB20-C940-4EB9-9F2A-53A5914D7914}</Project>
       <Name>XG.Config</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
+      <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
+      <Name>XG.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

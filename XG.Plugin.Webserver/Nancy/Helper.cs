@@ -23,9 +23,10 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using XG.Model.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using XG.Model.Domain;
 
 namespace XG.Plugin.Webserver.Nancy
 {
@@ -33,14 +34,11 @@ namespace XG.Plugin.Webserver.Nancy
 	{
 		#region EVENTS
 
-		public static event EmptyEventHandler OnShutdown;
+		public static event EventHandler OnShutdown = delegate {};
 
-		public static void FireShutdown()
+		public static void FireShutdown(object aSender, EventArgs aEventArgs)
 		{
-			if (OnShutdown != null)
-			{
-				OnShutdown();
-			}
+			OnShutdown(aSender, aEventArgs);
 		}
 
 		#endregion

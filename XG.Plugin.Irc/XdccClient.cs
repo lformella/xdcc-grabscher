@@ -27,11 +27,12 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using log4net;
 using Meebey.SmartIrc4net;
+using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 using XG.Plugin;
-using XG.Config.Properties;
+using log4net;
 
 namespace XG.Plugin.Irc
 {
@@ -84,18 +85,17 @@ namespace XG.Plugin.Irc
 			get { return _client.IsConnected; }
 		}
 
-		public DateTime LastContact { get; private set; }
-
 		#endregion
 
 		#region EVENTS
 
-		public event EventHandler<EventArgs<Server>> OnConnected;
-		public event EventHandler<EventArgs<Server>> OnDisconnected;
-		public event EventHandler<EventArgs<Model.Domain.Channel, string, string>> OnMessage;
-		public event EventHandler<EventArgs<Bot>> OnBotJoined;
-		public event EventHandler<EventArgs<Model.Domain.Channel, string>> OnUserJoined;
-		public event EventHandler<EventArgs<Model.Domain.Channel, int>> OnQueueChannel;
+		public event EventHandler<EventArgs<Server>> OnConnected = delegate {};
+		public event EventHandler<EventArgs<Server>> OnDisconnected = delegate {};
+		public event EventHandler<EventArgs<Model.Domain.Channel, string, string>> OnMessage = delegate {};
+		public event EventHandler<EventArgs<string>> OnReadLine = delegate {};
+		public event EventHandler<EventArgs<Bot>> OnBotJoined = delegate {};
+		public event EventHandler<EventArgs<Model.Domain.Channel, string>> OnUserJoined = delegate {};
+		public event EventHandler<EventArgs<Model.Domain.Channel, int>> OnQueueChannel = delegate {};
 
 		#endregion
 
@@ -392,7 +392,7 @@ namespace XG.Plugin.Irc
 						bot.Commit();
 						OnBotJoined(this, new EventArgs<Bot>(bot));
 					}
-					if (channel.AskForVersion)
+					else
 					{
 						OnUserJoined(this, new EventArgs<Model.Domain.Channel, string>(channel, user));
 					}
@@ -447,7 +447,7 @@ namespace XG.Plugin.Irc
 
 		void ClientOnReadLine(object sender, ReadLineEventArgs e)
 		{
-			LastContact = DateTime.Now;
+			OnReadLine(this, new EventArgs<string>(e.Line));
 		}
 
 		void ClientOnTopic(object sender, TopicEventArgs e)
@@ -482,11 +482,6 @@ namespace XG.Plugin.Irc
 					OnQueueChannel(this, new EventArgs<Model.Domain.Channel, int>(channel, Settings.Default.CommandWaitTime));
 				}
 			}
-		}
-
-		void ClientOnWriteLine(object sender, WriteLineEventArgs e)
-		{
-			_log.Debug("OnWriteLine " + e.Line);
 		}
 
 		void MessageReceived(IrcEventArgs e)
@@ -552,7 +547,6 @@ namespace XG.Plugin.Irc
 			_client.OnTopicChange += ClientOnTopicChange;
 			_client.OnUnban += ClientOnUnBan;
 			_client.OnReadLine += ClientOnReadLine;
-			_client.OnWriteLine += ClientOnWriteLine;
 
 			try
 			{
@@ -595,7 +589,6 @@ namespace XG.Plugin.Irc
 			_client.OnTopicChange -= ClientOnTopicChange;
 			_client.OnUnban -= ClientOnUnBan;
 			_client.OnReadLine -= ClientOnReadLine;
-			_client.OnWriteLine -= ClientOnWriteLine;
 
 			if (OnDisconnected != null)
 			{

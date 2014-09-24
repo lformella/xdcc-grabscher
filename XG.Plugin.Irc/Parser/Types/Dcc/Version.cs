@@ -24,18 +24,21 @@
 //
 
 using System;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
 	public class Version : AParser
 	{
-		public override void Parse(Channel aChannel, string aNick, string aMessage)
+		public override bool Parse(Message aMessage)
 		{
-			if (aMessage.StartsWith("\u0001VERSION ", StringComparison.Ordinal))
+			if (aMessage.Text.StartsWith("\u0001VERSION ", StringComparison.Ordinal))
 			{
-				CheckVersion(aChannel, aNick, aMessage.Substring(9));
+				CheckVersion(aMessage.Channel, aMessage.Nick, aMessage.Text.Substring(9));
+				return true;
 			}
+			return false;
 		}
 
 		void CheckVersion(Channel aChannel, string aNick, string aVersion)

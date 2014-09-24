@@ -23,57 +23,59 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types
 {
 	public class XdccList : AParser
 	{
-		public override void Parse(Channel aChannel, string aNick, string aMessage)
+		public override bool Parse(Message aMessage)
 		{
 			var regexes = new[]
 			{
 				".* XDCC LIST ALL(\"|'|)\\s*.*"
 			};
-			var match = Helper.Match(aMessage, regexes);
+			var match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST ALL"));
-				return;
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC LIST ALL"));
+				return true;
 			}
 
 			regexes = new[]
 			{
 				".* XDCC LIST(\"|'|)\\s*.*"
 			};
-			match = Helper.Match(aMessage, regexes);
+			match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST"));
-				return;
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC LIST"));
+				return true;
 			}
 
 			regexes = new[]
 			{
 				".* XDCC SEND LIST(\"|'|)\\s*.*"
 			};
-			match = Helper.Match(aMessage, regexes);
+			match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC SEND LIST"));
-				return;
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC SEND LIST"));
+				return true;
 			}
 
 			regexes = new[]
 			{
 				"^group: (?<group>[-a-z0-9_,.{}\\[\\]\\(\\)]+) .*"
 			};
-			match = Helper.Match(aMessage, regexes);
+			match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC LIST " + match.Groups["group"]));
-				return;
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC LIST " + match.Groups["group"]));
+				return true;
 			}
+			return false;
 		}
 	}
 }

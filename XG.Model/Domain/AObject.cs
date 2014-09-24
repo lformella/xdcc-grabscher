@@ -27,8 +27,9 @@ using System;
 using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
-using Db4objects.Db4o.TA;
 using Db4objects.Db4o.Ext;
+using Db4objects.Db4o.TA;
+using XG.Extensions;
 
 namespace XG.Model.Domain
 {
@@ -37,25 +38,19 @@ namespace XG.Model.Domain
 		#region EVENTS
 
 		[Transient]
-		public event EventHandler<EventArgs<AObject>> OnEnabledChanged;
+		public event EventHandler<EventArgs<AObject>> OnEnabledChanged = delegate {};
 
 		protected void FireEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (OnEnabledChanged != null)
-			{
-				OnEnabledChanged(aSender, aEventArgs);
-			}
+			OnEnabledChanged(aSender, aEventArgs);
 		}
 
 		[Transient]
-		public event EventHandler<EventArgs<AObject, string[]>> OnChanged;
+		public event EventHandler<EventArgs<AObject, string[]>> OnChanged = delegate {};
 
 		protected void FireChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			if (OnChanged != null)
-			{
-				OnChanged(aSender, aEventArgs);
-			}
+			OnChanged(aSender, aEventArgs);
 		}
 
 		#endregion

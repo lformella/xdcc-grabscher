@@ -28,9 +28,9 @@ using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class InvalidPacketNumber : AParserWithExistingBot
+	public class InvalidPacketNumber : ASaveBotMessageParser
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -53,6 +53,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				}
 				Log.Error("Parse() invalid packetnumber from " + aBot);
 			}
+			return match.Success;
 		}
 	}
 }

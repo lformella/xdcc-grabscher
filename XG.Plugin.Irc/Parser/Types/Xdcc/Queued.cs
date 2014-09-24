@@ -27,9 +27,9 @@ using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class Queued : AParserWithExistingBot
+	public class Queued : ASaveBotMessageParser
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -70,6 +70,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				}
 				aBot.QueueTime = time;
 			}
+			return match.Success;
 		}
 	}
 }

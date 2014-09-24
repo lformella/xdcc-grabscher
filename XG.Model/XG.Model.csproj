@@ -49,8 +49,6 @@
     <Compile Include="Domain\AObjects.cs" />
     <Compile Include="Domain\Bot.cs" />
     <Compile Include="Domain\Channel.cs" />
-    <Compile Include="Domain\EventArgs.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="Domain\File.cs" />
     <Compile Include="Domain\Files.cs" />
     <Compile Include="Domain\Helper.cs" />
@@ -77,4 +75,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
+      <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
+      <Name>XG.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

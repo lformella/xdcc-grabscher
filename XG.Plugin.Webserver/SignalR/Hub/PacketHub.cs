@@ -82,17 +82,18 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
-			if (search == null)
+			Search search;
+			if (aGuid == Search.SearchEnabled)
 			{
-				if (aGuid == Search.SearchEnabled)
-				{
-					search = new Search { Guid = Search.SearchEnabled };
-				}
-				else if (aGuid == Search.SearchDownloads)
-				{
-					search = new Search { Guid = Search.SearchDownloads };
-				}
+				search = new Search { Guid = Search.SearchEnabled };
+			}
+			else if (aGuid == Search.SearchDownloads)
+			{
+				search = new Search { Guid = Search.SearchDownloads };
+			}
+			else
+			{
+				search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
 			}
 			if (search != null)
 			{

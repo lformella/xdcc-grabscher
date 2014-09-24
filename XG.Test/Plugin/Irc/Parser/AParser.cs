@@ -25,8 +25,9 @@
 
 using System;
 using System.Net;
-using XG.Model.Domain;
 using XG.Business.Helper;
+using XG.Model.Domain;
+using XG.Plugin.Irc.Parser;
 
 namespace XG.Test.Plugin.Irc.Parser
 {
@@ -90,7 +91,13 @@ namespace XG.Test.Plugin.Irc.Parser
 		protected void Parse(XG.Plugin.Irc.Parser.AParser aParser, string aMessage)
 		{
 			aMessage = XG.Plugin.Irc.Parser.Helper.RemoveSpecialIrcChars(aMessage);
-			aParser.Parse(Channel, Bot.Name, aMessage);
+			var message = new Message
+			{
+				Channel = Channel,
+				Nick = Bot.Name,
+				Text = aMessage
+			};
+			aParser.Parse(message);
 		}
 	}
 }

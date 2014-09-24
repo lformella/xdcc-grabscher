@@ -25,11 +25,12 @@
 
 using System;
 using System.Linq;
+using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
 using agsXMPP;
 using agsXMPP.protocol.client;
 using log4net;
-using XG.Model.Domain;
-using XG.Config.Properties;
 
 namespace XG.Plugin.Jabber
 {

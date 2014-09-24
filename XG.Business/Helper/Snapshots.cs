@@ -25,9 +25,9 @@
 
 using System;
 using System.Linq;
-using XG.Business.Model;
-using XG.Model;
+using XG.Extensions;
 using XG.Model.Domain;
+using XG.Business.Model;
 
 namespace XG.Business.Helper
 {

@@ -55,9 +55,6 @@
     <Reference Include="Db4objects.Db4o">
       <HintPath>..\packages\db4o-devel.8.1.184.15492\lib\net40\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Meebey.SmartIrc4net">
-      <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BotDownload.cs" />
@@ -66,6 +63,7 @@
     <Compile Include="Parser\AParser.cs" />
     <Compile Include="Parser\Helper.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\Types\ASaveBotMessageParser.cs" />
     <Compile Include="Parser\Types\AParserWithExistingBot.cs" />
     <Compile Include="Parser\Types\Dcc\DownloadFromBot.cs" />
     <Compile Include="Parser\Types\Dcc\Version.cs" />
@@ -103,6 +101,7 @@
     <Compile Include="Job\TimerTrigger.cs" />
     <Compile Include="XdccClient.cs" />
     <Compile Include="Job\ServerConnect.cs" />
+    <Compile Include="Parser\Message.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">
@@ -120,6 +119,14 @@
     <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
       <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>
       <Name>XG.Plugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
+      <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
+      <Name>XG.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SmartIrc4net\SmartIrc4net.csproj">
+      <Project>{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}</Project>
+      <Name>SmartIrc4net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

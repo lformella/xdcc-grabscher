@@ -28,9 +28,9 @@ using XG.Config.Properties;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class PacketAlreadyQueued : AParserWithExistingBot
+	public class PacketAlreadyQueued : ASaveBotMessageParser
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -44,6 +44,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					aBot.State = Bot.States.Waiting;
 				}
 			}
+			return match.Success;
 		}
 	}
 }

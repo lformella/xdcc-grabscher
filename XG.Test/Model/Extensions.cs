@@ -24,7 +24,7 @@
 //  
 
 using NUnit.Framework;
-using XG.Model;
+using XG.Extensions;
 
 namespace XG.Test.Model
 {

@@ -25,6 +25,7 @@
 
 using System;
 using Db4objects.Db4o;
+using XG.Extensions;
 
 namespace XG.Model.Domain
 {
@@ -42,18 +43,18 @@ namespace XG.Model.Domain
 		}
 
 		[Transient]
-		Int64 _resultsOnline;
+		int _resultsOnline;
 
-		public Int64 ResultsOnline
+		public int ResultsOnline
 		{
 			get { return GetProperty(ref _resultsOnline); }
 			set { SetProperty(ref _resultsOnline, value, "ResultsOnline"); }
 		}
 
 		[Transient]
-		Int64 _resultsOffline;
+		int _resultsOffline;
 
-		public Int64 ResultsOffline
+		public int ResultsOffline
 		{
 			get { return GetProperty(ref _resultsOffline); }
 			set { SetProperty(ref _resultsOffline, value, "ResultsOffline"); }

@@ -27,11 +27,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using log4net;
-using XG.Plugin;
-using XG.Config.Properties;
 using XG.Business.Helper;
+using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
+using XG.Plugin;
+using log4net;
 
 namespace XG.Plugin.Irc
 {
@@ -73,6 +74,8 @@ namespace XG.Plugin.Irc
 
 		protected override void StopRun()
 		{
+			_parser.DeInitialize();
+
 			foreach (var connection in _connections.ToArray())
 			{
 				connection.Stop();

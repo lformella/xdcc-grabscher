@@ -28,6 +28,7 @@ using System.Net;
 using System.Reflection;
 using log4net;
 using Meebey.SmartIrc4net;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser
@@ -42,102 +43,81 @@ namespace XG.Plugin.Irc.Parser
 
 		#region EVENTS
 
-		public event EventHandler<EventArgs<Bot>> OnUnRequestFromBot;
+		public event EventHandler<EventArgs<Bot>> OnUnRequestFromBot = delegate {};
+
 		protected void FireUnRequestFromBot(object aSender, EventArgs<Bot> aEventArgs)
 		{
-			if (OnUnRequestFromBot != null)
-			{
-				OnUnRequestFromBot(aSender, aEventArgs);
-			}
+			OnUnRequestFromBot(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Bot, int>> OnQueueRequestFromBot;
+		public event EventHandler<EventArgs<Bot, int>> OnQueueRequestFromBot = delegate {};
+
 		protected void FireQueueRequestFromBot(object aSender, EventArgs<Bot, int> aEventArgs)
 		{
-			if (OnQueueRequestFromBot != null)
-			{
-				OnQueueRequestFromBot(aSender, aEventArgs);
-			}
-
+			OnQueueRequestFromBot(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Bot>> OnJoinChannelsFromBot;
+		public event EventHandler<EventArgs<Bot>> OnJoinChannelsFromBot = delegate {};
+
 		protected void FireJoinChannelsFromBot(object aSender, EventArgs<Bot> aEventArgs)
 		{
-			if (OnJoinChannelsFromBot != null)
-			{
-				OnJoinChannelsFromBot(aSender, aEventArgs);
-			}
+			OnJoinChannelsFromBot(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Bot>> OnRemoveDownload;
+		public event EventHandler<EventArgs<Bot>> OnRemoveDownload = delegate {};
+
 		protected void FireRemoveDownload(object aSender, EventArgs<Bot> aEventArgs)
 		{
-			if (OnRemoveDownload != null)
-			{
-				OnRemoveDownload(aSender, aEventArgs);
-			}
+			OnRemoveDownload(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Server, string>> OnJoinChannel;
+		public event EventHandler<EventArgs<Server, string>> OnJoinChannel = delegate {};
+
 		protected void FireJoinChannel(object aSender, EventArgs<Server, string> aEventArgs)
 		{
-			if (OnJoinChannel != null)
-			{
-				OnJoinChannel(aSender, aEventArgs);
-			}
+			OnJoinChannel(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Packet, Int64, IPAddress, int>> OnAddDownload;
+		public event EventHandler<EventArgs<Packet, Int64, IPAddress, int>> OnAddDownload = delegate {};
+
 		protected void FireAddDownload(object aSender, EventArgs<Packet, Int64, IPAddress, int> aEventArgs)
 		{
-			if (OnAddDownload != null)
-			{
-				OnAddDownload(aSender, aEventArgs);
-			}
+			OnAddDownload(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Server, SendType, string, string>> OnSendMessage;
+		public event EventHandler<EventArgs<Server, SendType, string, string>> OnSendMessage = delegate {};
+
 		protected void FireSendMessage(object aSender, EventArgs<Server, SendType, string, string> aEventArgs)
 		{
-			if (OnSendMessage != null)
-			{
-				OnSendMessage(aSender, aEventArgs);
-			}
+			OnSendMessage(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Server, string>> OnWriteLine;
+		public event EventHandler<EventArgs<Server, string>> OnWriteLine = delegate {};
+
 		protected void FireWriteLine(object aSender, EventArgs<Server, string> aEventArgs)
 		{
-			if (OnWriteLine != null)
-			{
-				OnWriteLine(aSender, aEventArgs);
-			}
+			OnWriteLine(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Model.Domain.Channel, string, string>> OnXdccList;
+		public event EventHandler<EventArgs<Model.Domain.Channel, string, string>> OnXdccList = delegate {};
+
 		protected void FireXdccList(object aSender, EventArgs<Model.Domain.Channel, string, string> aEventArgs)
 		{
-			if (OnXdccList != null)
-			{
-				OnXdccList(aSender, aEventArgs);
-			}
+			OnXdccList(aSender, aEventArgs);
 		}
 
-		public event EventHandler<EventArgs<Server, string, Int64, IPAddress, int>> OnDownloadXdccList;
+		public event EventHandler<EventArgs<Server, string, Int64, IPAddress, int>> OnDownloadXdccList = delegate {};
+
 		protected void FireDownloadXdccList(object aSender, EventArgs<Server, string, Int64, IPAddress, int> aEventArgs)
 		{
-			if (OnDownloadXdccList != null)
-			{
-				OnDownloadXdccList(aSender, aEventArgs);
-			}
+			OnDownloadXdccList(aSender, aEventArgs);
 		}
 
 		#endregion
 
 		#region PARSING
 
-		public abstract void Parse(Model.Domain.Channel aChannel, string aNick, string aMessage);
+		public abstract bool Parse(Message aMessage);
 
 		#endregion
 	}

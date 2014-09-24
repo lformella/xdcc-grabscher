@@ -26,6 +26,7 @@
 using System;
 using System.Net;
 using NUnit.Framework;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Test.Plugin.Irc.Parser.Types.Dcc

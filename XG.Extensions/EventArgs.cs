@@ -25,7 +25,7 @@
 
 using System;
 
-namespace XG.Model.Domain
+namespace XG.Extensions
 {
 	public class EventArgs<T1> : EventArgs
 	{

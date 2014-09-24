@@ -65,6 +65,10 @@
       <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
       <Name>XG.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
+      <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
+      <Name>XG.Extensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

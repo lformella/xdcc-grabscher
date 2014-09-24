@@ -27,11 +27,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using log4net;
 using Meebey.SmartIrc4net;
-using XG.Model.Domain;
-using XG.Config.Properties;
 using XG.Business.Helper;
+using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
+using XG.Plugin.Irc.Parser;
 
 namespace XG.Plugin.Irc
 {
@@ -158,9 +160,25 @@ namespace XG.Plugin.Irc
 			Stop();
 		}
 
+		void ClientOnReadLine(object sender, EventArgs<string> e)
+		{
+			if (!AllowRunning)
+			{
+				return;
+			}
+
+			LastContact = DateTime.Now;
+		}
+
 		void ClientOnMessage(object sender, EventArgs<Model.Domain.Channel, string, string> e)
 		{
-			Parser.Parse(e.Value1, e.Value2, e.Value3);
+			var message = new Message
+			{
+				Channel = e.Value1,
+				Nick = e.Value2,
+				Text = e.Value3
+			};
+			Parser.Parse(message);
 
 			// check if the bot sends a message and hold back xdcc list requests one more time
 			var entry = _xdccListQueue.FirstOrDefault(x => x.User == e.Value2);
@@ -298,7 +316,7 @@ namespace XG.Plugin.Irc
 					}
 					else
 					{
-						string name = Helper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
+						string name = XG.Model.Domain.Helper.ShrinkFileName(tPacket.RealName != "" ? tPacket.RealName : tPacket.Name, 0);
 						_latestPacketRequests.RemoveExpiredItems();
 						if (_latestPacketRequests.Contains(name))
 						{
@@ -337,7 +355,7 @@ namespace XG.Plugin.Irc
 
 		void CheckIfUserShouldVersioned(Model.Domain.Channel aChannel, string aUser)
 		{
-			if (_client.IsUserMaybeeXdccBot(aChannel.Name, aUser))
+			if (aChannel.AskForVersion && _client.IsUserMaybeeXdccBot(aChannel.Name, aUser))
 			{
 				_userToAskForVersion.Enqueue(aUser);
 			}
@@ -359,6 +377,7 @@ namespace XG.Plugin.Irc
 			_client.OnConnected += ClientOnConnected;
 			_client.OnDisconnected += ClientOnDisconnected;
 			_client.OnMessage += ClientOnMessage;
+			_client.OnReadLine += ClientOnReadLine;
 			_client.OnBotJoined += ClientOnBotJoined;
 			_client.OnUserJoined += ClientOnUserJoined;
 			_client.OnQueueChannel += ClientOnQueueChannel;
@@ -378,6 +397,7 @@ namespace XG.Plugin.Irc
 			_client.OnConnected -= ClientOnConnected;
 			_client.OnDisconnected -= ClientOnDisconnected;
 			_client.OnMessage -= ClientOnMessage;
+			_client.OnReadLine -= ClientOnReadLine;
 			_client.OnBotJoined -= ClientOnBotJoined;
 			_client.OnUserJoined -= ClientOnUserJoined;
 			_client.OnQueueChannel -= ClientOnQueueChannel;
@@ -386,7 +406,10 @@ namespace XG.Plugin.Irc
 			_client.Disconnect();
 			_client = null;
 
-			OnDisconnected(this, new EventArgs<Server>(Server));
+			if (OnDisconnected != null)
+			{
+				OnDisconnected(this, new EventArgs<Server>(Server));
+			}
 		}
 
 		public void ParseXdccFile(string aNick, string[] aLines)
@@ -413,7 +436,13 @@ namespace XG.Plugin.Irc
 
 			foreach (var line in aLines)
 			{
-				_parser.Parse(tChan, aNick, line);
+				var message = new Message
+				{
+					Channel = tChan,
+					Nick = aNick,
+					Text = line
+				};
+				_parser.Parse(message);
 			}
 		}
 

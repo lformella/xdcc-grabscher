@@ -24,13 +24,14 @@
 //  
 
 using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class ClosingConnection : AParserWithExistingBot
+	public class ClosingConnection : ASaveBotMessageParser
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -66,6 +67,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 
 				//** Closing Connection: Transfers from [mg]-request|bots are restricted to only MOVIEGODS users! /Part #Beast-xdcc + #elitewarez if you want to download from [MG]-Request|Bot|003
 			}
+			return match.Success;
 		}
 	}
 }

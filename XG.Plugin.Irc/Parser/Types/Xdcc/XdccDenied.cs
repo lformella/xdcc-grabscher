@@ -24,13 +24,14 @@
 //  
 
 using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class XdccDenied : AParserWithExistingBot
+	public class XdccDenied : ASaveBotMessageParser
 	{
-		protected override void ParseInternal(Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -40,6 +41,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 			if (match.Success)
 			{
 				string info = match.Groups["info"].ToString().ToLower();
+				// ** XDCC SEND denied, you must have voice on a known channel to request a pack
 				if (info.StartsWith("you must be on a known channel to request a pack", System.StringComparison.CurrentCulture))
 				{
 					FireJoinChannelsFromBot(this, new EventArgs<Bot>(aBot));
@@ -66,6 +68,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					Log.Error("Parse() XDCC denied from " + aBot + ": " + info);
 				}
 			}
+			return match.Success;
 		}
 	}
 }

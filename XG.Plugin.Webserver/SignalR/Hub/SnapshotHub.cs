@@ -24,14 +24,13 @@
 //  
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using XG.Plugin.Webserver.SignalR.Hub.Model.Domain;
-using XG.Business.Model;
+using System.Linq;
 using SharpRobin.Core;
-using XG.Model;
+using XG.Business.Model;
+using XG.Extensions;
 using XG.Plugin.Webserver.SignalR.Hub.Model;
-using System.Threading.Tasks;
+using XG.Plugin.Webserver.SignalR.Hub.Model.Domain;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {

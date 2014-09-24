@@ -29,25 +29,26 @@ namespace XG.Plugin.Irc.Parser.Types
 {
 	public abstract class AParserWithExistingBot : AParser
 	{
-		public override void Parse(Channel aChannel, string aNick, string aMessage)
+		public override bool Parse(Message aMessage)
 		{
-			Bot tBot = aChannel.Bot(aNick);
+			bool result = false;
+			Bot tBot = aMessage.Channel.Bot(aMessage.Nick);
 			if (tBot != null)
 			{
-				ParseInternal(tBot, aMessage);
+				result = ParseInternal(tBot, aMessage.Text);
 
-				if (aMessage != null)
+				if (result)
 				{
-					Log.Info("Parse() message from " + tBot + ": " + aMessage);
-					tBot.LastMessage = aMessage;
+					Log.Info("Parse() message from " + tBot + ": " + aMessage.Text);
 				}
 
 				// set em to connected if it isnt already
 				tBot.Connected = true;
 				tBot.Commit();
 			}
+			return result;
 		}
 
-		protected abstract void ParseInternal(Bot aBot, string aMessage);
+		protected abstract bool ParseInternal(Bot aBot, string aMessage);
 	}
 }
