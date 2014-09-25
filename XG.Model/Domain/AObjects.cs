@@ -188,13 +188,16 @@ namespace XG.Model.Domain
 		{
 			base.ObjectOnActivate(container);
 
+			OnAdded = delegate {};
+			OnRemoved = delegate {};
+
 			foreach (var child in Children)
 			{
-                if (child == null)
-                {
-                    _children.Remove(child);
-                    continue;
-                }
+				if (child == null)
+				{
+					_children.Remove (child);
+					continue;
+				}
 				child.OnEnabledChanged += FireEnabledChanged;
 				child.OnChanged += FireChanged;
 

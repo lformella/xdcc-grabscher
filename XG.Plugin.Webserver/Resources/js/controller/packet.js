@@ -159,10 +159,10 @@ define(['./module'], function (ng) {
 				$scope.tableParams.reload();
 			});
 
-			$rootScope.$watch('settings.showBotsInView', function ()
+			$rootScope.$watch('settings.groupBy', function ()
 			{
 				var settings = $scope.tableParams.settings();
-				settings.groupBy = $rootScope.settings.showBotsInView ? "ParentGuid" : "Guid";
+				settings.groupBy = $rootScope.settings.groupBy;
 				$scope.tableParams.settings(settings);
 				$scope.tableParams.reload();
 			});

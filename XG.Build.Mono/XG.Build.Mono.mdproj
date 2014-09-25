@@ -6,7 +6,7 @@
     <Packages>
       <Packages>
         <Package name="Linux Binärdateien">
-          <Builder targetFile="..\XG.zip" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
+          <Builder targetFile="..\XG.tar.gz" platform="Linux" configuration="Build.Mono" ctype="BinariesZipPackageBuilder">
             <ChildEntries>
               <SolutionItemReference path="..\XG.Model\XG.Model.csproj" />
               <SolutionItemReference path="..\XG.Business\XG.Business.csproj" />
@@ -19,6 +19,7 @@
               <SolutionItemReference path="..\XG.Plugin.ElasticSearch\XG.Plugin.ElasticSearch.csproj" />
               <SolutionItemReference path="..\XG.Config\XG.Config.csproj" />
               <SolutionItemReference path="..\XG.Plugin.Irc\XG.Plugin.Irc.csproj" />
+              <SolutionItemReference path="..\XG.Extensions\XG.Extensions.csproj" />
             </ChildEntries>
             <ExcludedFiles>
               <File>XG.Business,Linux.PkgConfig,xg.business.pc</File>
@@ -32,6 +33,7 @@
               <File>XG.Plugin.ElasticSearch,Linux.PkgConfig,xg.plugin.elasticsearch.pc</File>
               <File>XG.Plugin,Linux.PkgConfig,xg.plugin.pc</File>
               <File>XG.Application,Binaries,xg.application</File>
+              <File>XG.Extensions,Linux.PkgConfig,xg.extensions.pc</File>
             </ExcludedFiles>
             <RootEntry path="..\XG.sln" id=":root:" />
           </Builder>

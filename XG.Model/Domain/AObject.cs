@@ -280,7 +280,11 @@ namespace XG.Model.Domain
 			return true;
 		}
 
-		public void ObjectOnActivate(IObjectContainer container) {}
+		public void ObjectOnActivate(IObjectContainer container)
+		{
+			OnChanged = delegate {};
+			OnEnabledChanged = delegate {};
+		}
 
 		public void ObjectOnDeactivate(IObjectContainer container) {}
 

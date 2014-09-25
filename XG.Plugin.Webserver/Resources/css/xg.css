@@ -356,11 +356,22 @@ td .highlight .name
 	padding: 0 2px 0 0;
 }
 
+#search-area
+{
+	max-width: 500px;
+	width: calc(100% - 550px);
+}
+
+#searchForm
+{
+	width: calc(100% - 25px);
+}
+
 #searchForm .dropdown-menu
 {
 	overflow: hidden;
 	overflow-y: auto;
-	min-width: 212px;
+	min-width: 100%;
 }
 
 #searchForm .dropdown-menu .text
@@ -383,6 +394,16 @@ td .highlight .name
 	position: absolute;
 	top: 8px;
 	left: 5px;
+}
+
+#searchForm .form-group
+{
+	width: calc(100% - 44px);
+}
+
+#searchForm .search-query
+{
+	width: 100%;
 }
 
 #searchLoading

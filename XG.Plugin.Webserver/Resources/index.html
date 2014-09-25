@@ -119,7 +119,7 @@
 							<a class="dropdown-toggle">
 								<span class="glyphicon glyphicon-cog glyphiconBig" title="{{'Settings'|translate}}"></span>
 							</a>
-							<ul class="dropdown-menu">
+							<ul class="dropdown-menu" style="width: 225px;">
 								<li>
 									<a ng-click="openServerChannelsDialog()">
 										<span class="glyphicon glyphicon-globe"></span>
@@ -168,6 +168,14 @@
 										<span class="glyphicon glyphicon-time"></span>
 										<span translate>Show Bots in view</span>
 									</a>
+								</li>
+								<li class="dropdown-header">
+									<span translate>Group By</span>
+									<div class="btn-group">
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'ParentGuid'" uncheckable>Bots</label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'GroupBy'" uncheckable>Search</label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'Guid'" uncheckable>None</label>
+									</div>
 								</li>
 							</ul>
 						</li>
@@ -309,8 +317,8 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': settings.showOfflineBots && !$parent.parents[group.value].Connected}">
-							<tr class="ng-table-group" ng-show="settings.showBotsInView">
+						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': settings.groupBy == 'ParentGuid' && !$parent.parents[group.value].Connected}">
+							<tr class="ng-table-group" ng-show="settings.groupBy == 'ParentGuid'">
 								<td class="withIcon withIcon2">
 									<span class="clickAble" ng-click="$parent.searchByBot($parent.parents[group.value])" title="{{'Just display packets from this bot'|translate}}">
 										<i class="glyphicon glyphicon-search Aluminium1Middle"></i>
@@ -329,6 +337,10 @@
 								<td class="text-right">
 									{{$parent.parents[group.value].LastContact|date2Human}}
 								</td>
+							</tr>
+							<tr class="ng-table-group" ng-show="settings.groupBy == 'GroupBy'">
+								<td colspan="2"></td>
+								<td colspan="5">{{group.value}}</td>
 							</tr>
 							<tr ng-repeat="packet in group.data">
 								<td class="text-right">

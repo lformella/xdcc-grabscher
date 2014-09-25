@@ -112,7 +112,8 @@ define(['./module'], function (ng) {
 				$scope.channelSignalr.getProxy().server.disableAskForVersion(channel.Guid);
 			};
 
-			$scope.$watch('serverSignalr.server', function () {
+			$scope.$watch('serverSignalr.server', function ()
+			{
 				$scope.tableParamsChannel.page(1);
 				$scope.clear = true;
 				$scope.tableParamsChannel.reload();

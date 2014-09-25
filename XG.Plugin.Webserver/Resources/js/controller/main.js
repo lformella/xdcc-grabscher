@@ -200,7 +200,7 @@ define(['./module'], function (ng) {
 			$rootScope.settings = {
 				showOfflineBots: ipCookie('xg.showOfflineBots'),
 				humanDates: ipCookie('xg.humanDates'),
-				showBotsInView: ipCookie('xg.showBotsInView')
+				groupBy: ipCookie('xg.groupBy')
 			};
 
 			if ($rootScope.settings.showOfflineBots == undefined)
@@ -211,9 +211,9 @@ define(['./module'], function (ng) {
 			{
 				$rootScope.settings.humanDates = false;
 			}
-			if ($rootScope.settings.showBotsInView == undefined)
+			if ($rootScope.settings.groupBy == undefined)
 			{
-				$rootScope.settings.showBotsInView = true;
+				$rootScope.settings.groupBy = "ParentGuid";
 			}
 
 			$scope.flipSetting = function (setting)
@@ -222,6 +222,13 @@ define(['./module'], function (ng) {
 				$rootScope.settings[setting] = newValue;
 				ipCookie('xg.' + setting, newValue ? '1' : '0', { expires: 21, path: '/' });
 			};
+
+			$scope.groupBy = $rootScope.settings.groupBy;
+			$scope.$watch('groupBy', function ()
+			{
+				ipCookie('xg.groupBy', $scope.groupBy, { expires: 21, path: '/' });
+				$rootScope.settings['groupBy'] = $scope.groupBy;
+			});
 
 			$scope.slide = 1;
 			$scope.slideTo = function (slide)

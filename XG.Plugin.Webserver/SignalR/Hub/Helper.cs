@@ -118,7 +118,11 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 
 			aLength = objects.Count();
-			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
+			if (aCount > 0)
+			{
+				return objects.Skip(aPage * aCount).Take(aCount).ToArray();
+			}
+			return objects.ToArray();
 		}
 	}
 }
