@@ -270,7 +270,7 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				return FileHub.ConnectedClients;
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
 				return SearchHub.ConnectedClients;
 			}
@@ -304,7 +304,7 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				return typeof(FileHub).Name;
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
 				return typeof(SearchHub).Name;
 			}

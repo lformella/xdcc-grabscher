@@ -195,7 +195,7 @@ namespace XG.Model.Domain
 			{
 				if (child == null)
 				{
-					_children.Remove (child);
+					_children.Remove(child);
 					continue;
 				}
 				child.OnEnabledChanged += FireEnabledChanged;

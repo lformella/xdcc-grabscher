@@ -66,7 +66,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			var obj = Helper.Searches.Named(aSearch);
 			if (obj == null)
 			{
-				obj = new Search { Name = aSearch };
+				obj = new XG.Model.Domain.Search { Name = aSearch };
 				Helper.Searches.Add(obj);
 			}
 		}

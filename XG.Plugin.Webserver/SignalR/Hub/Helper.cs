@@ -26,8 +26,6 @@
 using System.Linq;
 using SharpRobin.Core;
 using XG.Model.Domain;
-using XG.Model;
-using System;
 using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
@@ -78,9 +76,9 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			{
 				myObj = new SignalR.Hub.Model.Domain.Packet { Object = aObject as Packet };
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
-				myObj = new SignalR.Hub.Model.Domain.Search { Object = aObject as Search };
+				myObj = new SignalR.Hub.Model.Domain.Search { Object = aObject as XG.Model.Domain.Search };
 			}
 			else if (aObject is Notification)
 			{
@@ -118,11 +116,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 
 			aLength = objects.Count();
-			if (aCount > 0)
-			{
-				return objects.Skip(aPage * aCount).Take(aCount).ToArray();
-			}
-			return objects.ToArray();
+			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
 		}
 	}
 }

@@ -135,6 +135,12 @@
     <Reference Include="Nancy.Validation.FluentValidation">
       <HintPath>..\packages\Nancy.Validation.FluentValidation.0.23.0\lib\net40\Nancy.Validation.FluentValidation.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Nancy\ShutdownModule.cs" />
@@ -202,6 +208,10 @@
     <Compile Include="Nancy\Api\Files.cs" />
     <Compile Include="Nancy\Api\Result\Objects.cs" />
     <Compile Include="Nancy\Api\Request\SearchAdd.cs" />
+    <Compile Include="Search\Result.cs" />
+    <Compile Include="Search\Packets.cs" />
+    <Compile Include="Job\SearchUpdater.cs" />
+    <Compile Include="Search\Results.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />
@@ -682,4 +692,8 @@
     <EmbeddedResource Include="Scripts\require.js" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Search\" />
+    <Folder Include="Job\" />
+  </ItemGroup>
 </Project>

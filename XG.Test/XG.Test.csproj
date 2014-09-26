@@ -135,6 +135,7 @@
     <Compile Include="Plugin\Irc\Parser\Types\Dcc\Version.cs" />
     <Compile Include="Plugin\Irc\Parser\Types\Dcc\DownloadFromBot.cs" />
     <Compile Include="Business\Helper\Objects.cs" />
+    <Compile Include="Plugin\Webserver\Search\Packets.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -216,4 +217,8 @@
   -->
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Plugin\Webserver\" />
+    <Folder Include="Plugin\Webserver\Search\" />
+  </ItemGroup>
 </Project>

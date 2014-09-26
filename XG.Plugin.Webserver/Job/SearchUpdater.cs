@@ -1,5 +1,5 @@
 // 
-//  Search.cs
+//  SearchUpdater.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,42 +23,28 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Db4objects.Db4o;
+using System.Threading;
+using Quartz;
+using XG.Model.Domain;
 
-namespace XG.Model.Domain
+namespace XG.Plugin.Webserver.Job
 {
-	public class Search : AObject
+	public class SearchUpdater : IJob
 	{
-		public static readonly Guid SearchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
-		public static readonly Guid SearchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
+		public Searches Searches { get; set; }
 
-		#region VARIABLES
-
-		public new Searches Parent
+		public void Execute (IJobExecutionContext context)
 		{
-			get { return base.Parent as Searches; }
-			set { base.Parent = value; }
+			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+
+			foreach (var search in Searches.All)
+			{
+				Search.Packets.Save();
+
+				search.ResultsOnline = Search.Packets.Search(search.Name, false, 0, 1, "Name", false).Total;
+				search.ResultsOffline = Search.Packets.Search(search.Name, true, 0, 1, "Name", false).Total - search.ResultsOnline;
+				search.Commit();
+			}
 		}
-
-		[Transient]
-		int _resultsOnline;
-
-		public int ResultsOnline
-		{
-			get { return GetProperty(ref _resultsOnline); }
-			set { SetProperty(ref _resultsOnline, value, "ResultsOnline"); }
-		}
-
-		[Transient]
-		int _resultsOffline;
-
-		public int ResultsOffline
-		{
-			get { return GetProperty(ref _resultsOffline); }
-			set { SetProperty(ref _resultsOffline, value, "ResultsOffline"); }
-		}
-
-		#endregion
 	}
 }

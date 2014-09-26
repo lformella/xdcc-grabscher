@@ -28,9 +28,7 @@ using System.Linq;
 using XG.Model.Domain;
 using XG.Plugin.Webserver.SignalR.Hub;
 using System.Collections.Generic;
-using XG.Model;
 using XG.Plugin.Webserver.SignalR.Hub.Model;
-using System.Threading.Tasks;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
@@ -82,14 +80,14 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			Search search;
-			if (aGuid == Search.SearchEnabled)
+			XG.Model.Domain.Search search;
+			if (aGuid == XG.Model.Domain.Search.SearchEnabled)
 			{
-				search = new Search { Guid = Search.SearchEnabled };
+				search = new XG.Model.Domain.Search { Guid = aGuid };
 			}
-			else if (aGuid == Search.SearchDownloads)
+			else if (aGuid == XG.Model.Domain.Search.SearchDownloads)
 			{
-				search = new Search { Guid = Search.SearchDownloads };
+				search = new XG.Model.Domain.Search { Guid = aGuid };
 			}
 			else
 			{
@@ -104,19 +102,21 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public Model.Domain.Result LoadByName(string aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			return LoadBySearch(new Search { Name = aSearch }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
+			return LoadBySearch(new XG.Model.Domain.Search { Name = aSearch }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
 		}
 
-		Model.Domain.Result LoadBySearch(Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		Model.Domain.Result LoadBySearch(XG.Model.Domain.Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			if (aSearch.Name.Contains("*"))
+			var result = Webserver.Search.Packets.Search(aSearch.Name, aShowOfflineBots, (aPage - 1) * aCount, aCount, aSortBy, aSort == "desc");
+			List<Model.Domain.Packet> all = new List<XG.Plugin.Webserver.SignalR.Hub.Model.Domain.Packet>();
+			foreach (var term in result.Packets.Keys)
 			{
-				return LoadByWildcardSearch(aSearch, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
+				var objects = Helper.XgObjectsToHubObjects(result.Packets[term]).Cast<Model.Domain.Packet>();
+				objects.ToList().ForEach(p => p.GroupBy = term);
+				all.AddRange(objects);
 			}
-			else
-			{
-				return LoadByNormalSearch(aSearch, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
-			}
+			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(all.Select(o => o.Guid)), aCount);
+			return new Model.Domain.Result { Total = result.Total, Results = all };
 		}
 
 		public Model.Domain.Result LoadByParentGuid(Guid aParentGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
@@ -126,35 +126,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			var objects = Helper.FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
-		}
-
-		Model.Domain.Result LoadByNormalSearch(Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
-		{
-			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (aShowOfflineBots || bot.Connected) from packet in bot.Packets where aSearch.IsVisible(packet) select packet);
-			int length;
-			var objects = Helper.FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
-			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
-			objects.ToList().ForEach(p => p.GroupBy = aSearch.Name);
-			return new Model.Domain.Result { Total = length, Results = objects };
-		}
-
-		Model.Domain.Result LoadByWildcardSearch(Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
-		{
-			int start = 1;
-			int end = aSearch.Name.Contains("**") ? 99 : 9;
-			int length = 0;
-			HashSet<object> objects = new HashSet<object>();
-			for (int a = start; a <= end; a++)
-			{
-				var result = LoadByNormalSearch(new Search { Name = aSearch.Name.Replace("**", "" + a.ToString("D2")).Replace("*", "" + a) }, aShowOfflineBots, 0, 1, aSortBy, aSort);
-				if (result.Total > 0)
-				{
-					length += result.Total;
-					objects.UnionWith(result.Results);
-				}
-			}
-			var currentObjects = objects.Skip((aPage - 1) * aCount).Take(aCount).ToArray();
-			return new Model.Domain.Result { Total = length, Results = currentObjects };
 		}
 	}
 }

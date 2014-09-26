@@ -89,7 +89,6 @@
     <Compile Include="Job\BotWatchdog.cs" />
     <Compile Include="Job\Rrd.cs" />
     <Compile Include="Plugins.cs" />
-    <Compile Include="Job\SearchUpdater.cs" />
     <Compile Include="Helper\Objects.cs" />
   </ItemGroup>
   <ItemGroup>

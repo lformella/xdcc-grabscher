@@ -68,7 +68,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 		{
 			try
 			{
-				if (Helper.Searches.Add(new Search { Name = request.Search }))
+				if (Helper.Searches.Add(new XG.Model.Domain.Search { Name = request.Search }))
 				{
 					return CreateSuccessResponseAndUpdateApiKey();
 				}

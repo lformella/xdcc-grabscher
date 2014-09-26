@@ -1,5 +1,5 @@
 // 
-//  SearchUpdater.cs
+//  Results.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,29 +23,20 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System.Linq;
-using System.Threading;
-using Quartz;
+using System.Collections.Generic;
 using XG.Model.Domain;
 
-namespace XG.Business.Job
+namespace XG.Plugin.Webserver.Search
 {
-	public class SearchUpdater : IJob
+	public class Results
 	{
-		public Servers Servers { get; set; }
-		public Searches Searches { get; set; }
+		public int Total { get; set; }
 
-		public void Execute (IJobExecutionContext context)
+		public IDictionary<string, IEnumerable<Packet>> Packets { get; set; }
+
+		public Results()
 		{
-			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-
-			foreach (Search search in Searches.All)
-			{
-				var results = from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where search.IsVisible(packet) select packet;
-				search.ResultsOnline = (from obj in results where obj.Parent.Connected select obj).Count();
-				search.ResultsOffline = (from obj in results where  !obj.Parent.Connected select obj).Count();
-				search.Commit();
-			}
+			Packets = new Dictionary<string, IEnumerable<Packet>>();
 		}
 	}
 }

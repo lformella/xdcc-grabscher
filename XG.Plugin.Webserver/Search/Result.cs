@@ -1,5 +1,5 @@
 // 
-//  Search.cs
+//  Result.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,42 +23,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
-using Db4objects.Db4o;
+using System.Collections.Generic;
+using XG.Model.Domain;
 
-namespace XG.Model.Domain
+namespace XG.Plugin.Webserver.Search
 {
-	public class Search : AObject
+	public class Result
 	{
-		public static readonly Guid SearchEnabled = Guid.Parse("00000000-0000-0000-0000-000000000001");
-		public static readonly Guid SearchDownloads = Guid.Parse("00000000-0000-0000-0000-000000000002");
+		public int Total { get; set; }
 
-		#region VARIABLES
-
-		public new Searches Parent
-		{
-			get { return base.Parent as Searches; }
-			set { base.Parent = value; }
-		}
-
-		[Transient]
-		int _resultsOnline;
-
-		public int ResultsOnline
-		{
-			get { return GetProperty(ref _resultsOnline); }
-			set { SetProperty(ref _resultsOnline, value, "ResultsOnline"); }
-		}
-
-		[Transient]
-		int _resultsOffline;
-
-		public int ResultsOffline
-		{
-			get { return GetProperty(ref _resultsOffline); }
-			set { SetProperty(ref _resultsOffline, value, "ResultsOffline"); }
-		}
-
-		#endregion
+		public IEnumerable<Packet> Packets { get; set; }
 	}
 }

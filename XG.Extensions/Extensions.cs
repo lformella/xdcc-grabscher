@@ -81,35 +81,6 @@ namespace XG.Extensions
 			return result;
 		}
 
-		public static bool ContainsAll(this string str, params string[] values)
-		{
-			if (string.IsNullOrWhiteSpace(str) || values.Length == 0)
-			{
-				return false;
-			}
-
-			foreach (string value in values)
-			{
-				if (value.StartsWith("-", StringComparison.CurrentCulture))
-				{
-					string valueReal = value.Substring(1);
-					if (str.IndexOf(valueReal, StringComparison.OrdinalIgnoreCase) >= 0)
-					{
-						return false;
-					}
-				}
-				else
-				{
-					if (str.IndexOf(value, StringComparison.OrdinalIgnoreCase) < 0)
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
 		public static double Difference(this String a, String b)
 		{
 			if (string.IsNullOrEmpty(a))

@@ -86,9 +86,9 @@ namespace XG.Plugin.Webserver.Nancy
 			{
 				myObj = new Nancy.Api.Model.Domain.Packet { Object = aObject as Packet };
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
-				myObj = new Nancy.Api.Model.Domain.Search { Object = aObject as Search };
+				myObj = new Nancy.Api.Model.Domain.Search { Object = aObject as XG.Model.Domain.Search };
 			}
 			else if (aObject is File)
 			{

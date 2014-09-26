@@ -67,6 +67,12 @@ namespace XG.Plugin.Webserver
 
 		protected override void StartRun()
 		{
+			Search.Packets.Servers = Servers;
+			Search.Packets.Initialize();
+
+			AddRepeatingJob(typeof(Job.SearchUpdater), "SearchUpdater", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 60,
+				new JobItem("Searches", Searches));
+
 			string salt = Hash();
 			string passwortHash = Hash(salt + Settings.Default.Password + salt);
 
