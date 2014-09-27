@@ -26,7 +26,7 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.filter('formatSearchString', function ()
+	ng.filter('formatSearchString', ['$filter', function ($filter)
 	{
 		return function (search)
 		{
@@ -37,7 +37,7 @@ define(['./module'], function (ng) {
 
 			var ret = "";
 
-			var searches = search.split(" ");
+			var searches = search.Name.split(" ");
 			searches.forEach(function(entry)
 			{
 				if (entry.substr(0, 1) == "-")
@@ -51,7 +51,12 @@ define(['./module'], function (ng) {
 				ret += " ";
 			});
 
+			if (search.Size > 0 && search.Size != undefined)
+			{
+				ret += " (" + $filter('size2Human')(search.Size, 2) + ")";
+			}
+
 			return ret;
 		}
-	});
+	}]);
 });

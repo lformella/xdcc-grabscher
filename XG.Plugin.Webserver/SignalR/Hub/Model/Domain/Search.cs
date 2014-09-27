@@ -44,6 +44,11 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 			}
 		}
 
+		public Int64 Size
+		{
+			get { return Object.Size; }
+		}
+
 		public Int64 ResultsOnline
 		{
 			get { return Object.ResultsOnline; }

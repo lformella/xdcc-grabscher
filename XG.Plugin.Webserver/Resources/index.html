@@ -119,7 +119,7 @@
 							<a class="dropdown-toggle">
 								<span class="glyphicon glyphicon-cog glyphiconBig" title="{{'Settings'|translate}}"></span>
 							</a>
-							<ul class="dropdown-menu" style="width: 225px;">
+							<ul class="dropdown-menu" style="width: 228px;">
 								<li>
 									<a ng-click="openServerChannelsDialog()">
 										<span class="glyphicon glyphicon-globe"></span>
@@ -163,18 +163,13 @@
 										<span translate>Human readable dates</span>
 									</a>
 								</li>
-								<li>
-									<a ng-click="flipSetting('showBotsInView')" ng-class="{'ScarletRedDark': settings.showBotsInView, 'Aluminium1Dark': !settings.showBotsInView}">
-										<span class="glyphicon glyphicon-time"></span>
-										<span translate>Show Bots in view</span>
-									</a>
-								</li>
+								<li class="divider"></li>
 								<li class="dropdown-header">
-									<span translate>Group By</span>
+									<span translate>Group Search Results By</span>
 									<div class="btn-group">
-										<label class="btn btn-info" ng-model="groupBy" btn-radio="'ParentGuid'" uncheckable>Bots</label>
-										<label class="btn btn-info" ng-model="groupBy" btn-radio="'GroupBy'" uncheckable>Search</label>
-										<label class="btn btn-info" ng-model="groupBy" btn-radio="'Guid'" uncheckable>None</label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'ParentGuid'" uncheckable><span translate>Bots</span></label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'GroupBy'" uncheckable><span translate>Search</span></label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'Guid'" uncheckable><span translate>None</span></label>
 									</div>
 								</li>
 							</ul>
@@ -184,18 +179,22 @@
 						<div id="searchLoading" ng-show="loading" class="glyphicon glyphicon-asterisk animate-spin ScarletRedDark"></div>
 						<div id="searchForm" class="input-append dropdown navbar-form pull-right">
 							<div class="form-group dropdown-toggle">
-								<input type="text" class="search-query form-control" placeholder="{{'Search'|translate}}" ng-model="search" ng-keydown="searchKeydown($event)"/>
+								<div class="input-group">
+									<input type="text" class="search-query form-control" placeholder="{{'Search'|translate}}" ng-model="search" ng-keydown="searchKeydown($event)"/>
+									<input type="text" class="search-size form-control" placeholder="{{'Size'|translate}}" ng-model="size" ng-keydown="searchKeydown($event)">
+									<select class="search-format form-control" ng-model="format" ng-options="f for f in formats" ng-change="triggerSearch()"><option></option></select>
+								</div>
 							</div>
-							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search)" ng-click="signalr.add(search)" title="{{'Save'|translate}}">
+							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search, getRealSize())" ng-click="signalr.add(getRealSize(), search)" title="{{'Save'|translate}}">
 								<span class="glyphicon glyphicon-thumbs-up"></span>
 							</button>
-							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search)" ng-click="signalr.removeByName(search)" title="{{'Remove'|translate}}">
+							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search, getRealSize())" ng-click="signalr.removeByParameter(search, size)" title="{{'Remove'|translate}}">
 								<span class="glyphicon glyphicon-thumbs-down"></span>
 							</button>
 							<ul class="dropdown-menu">
 								<li class="dropdown-header" translate>Predefined</li>
 								<li ng-repeat="search in predefinedSearches">
-									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
+									<a href="#" ng-click="$parent.searchClicked(search)">
 										<span class="text" title="{{search.Name}}">{{search.Name}}</span>
 									</a>
 								</li>
@@ -203,10 +202,10 @@
 								<li class="dropdown-header" translate>Custom</li>
 								<li ng-repeat="search in objects">
 									<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="$parent.removeSearch($event, search)" title="{{'Remove'|translate}}"></span>
-									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
+									<a href="#" ng-click="$parent.searchClicked(search)">
 										<span class="resultsOnline label label-success pull-right">{{search.ResultsOnline}}</span>
 										<span class="resultsOffline label label-default pull-right">{{search.ResultsOffline}}</span>
-										<span class="text" title="{{search.Name}}" ng-bind-html="search.Name|formatSearchString"></span>
+										<span class="text" title="{{search.Name}}" ng-bind-html="search|formatSearchString"></span>
 									</a>
 								</li>
 							</ul>
@@ -340,7 +339,7 @@
 							</tr>
 							<tr class="ng-table-group" ng-show="settings.groupBy == 'GroupBy'">
 								<td colspan="2"></td>
-								<td colspan="5">{{group.value}}</td>
+								<td colspan="5" class="bold">{{group.value}}</td>
 							</tr>
 							<tr ng-repeat="packet in group.data">
 								<td class="text-right">

@@ -78,6 +78,14 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			}
 			try
 			{
+				request.Size = Request.Query.size;
+			}
+			catch (Exception)
+			{
+				request.Size = 0;
+			}
+			try
+			{
 				request.MaxResults = Request.Query.maxResults;
 			}
 			catch (Exception)
@@ -113,7 +121,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			try
 			{
 				var result = new Result.Objects();
-				var searchResult = Webserver.Search.Packets.Search(request.SearchTerm, request.ShowOfflineBots, (request.Page - 1) * request.MaxResults, request.MaxResults, request.SortBy, request.Sort == "desc");
+				var searchResult = Webserver.Search.Packets.Search(new XG.Model.Domain.Search { Name = request.SearchTerm, Size = request.Size }, request.ShowOfflineBots, (request.Page - 1) * request.MaxResults, request.MaxResults, request.SortBy, request.Sort == "desc");
 				result.Results = Helper.XgObjectsToNancyObjects(from packets in searchResult.Packets from packet in packets.Value select packet).Cast<Nancy.Api.Model.Domain.Packet>();
 				result.ResultCount = searchResult.Total;
 

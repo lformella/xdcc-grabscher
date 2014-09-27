@@ -37,8 +37,6 @@ using Lucene.Net.Store;
 using XG.Extensions;
 using XG.Model.Domain;
 using log4net;
-using System.Diagnostics;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace XG.Plugin.Webserver.Search
@@ -61,6 +59,7 @@ namespace XG.Plugin.Webserver.Search
 					_servers.OnAdded -= ObjectAdded;
 					_servers.OnRemoved -= ObjectRemoved;
 					_servers.OnChanged -= ObjectChanged;
+					_servers.OnEnabledChanged -= ObjectEnabledChanged;
 				}
 				_servers = value;
 				if (_servers != null)
@@ -68,6 +67,7 @@ namespace XG.Plugin.Webserver.Search
 					_servers.OnAdded += ObjectAdded;
 					_servers.OnRemoved += ObjectRemoved;
 					_servers.OnChanged += ObjectChanged;
+					_servers.OnEnabledChanged += ObjectEnabledChanged;
 				}
 			}
 		}
@@ -79,6 +79,7 @@ namespace XG.Plugin.Webserver.Search
 		static Analyzer _analyzer;
 
 		const int MAX_WILDCARDS_REPLACEMENTS = 50;
+		const string SIZE_STRING = "000000000000";
 
 		static bool _saveNeeded;
 
@@ -128,6 +129,15 @@ namespace XG.Plugin.Webserver.Search
 			}
 		}
 
+		static void ObjectEnabledChanged (object sender, EventArgs<AObject> aEventArgs)
+		{
+			var packet = aEventArgs.Value1 as Packet;
+			if (packet != null)
+			{
+				UpdateIndex(packet);
+			}
+		}
+
 		#endregion
 
 		public static void Initialize()
@@ -145,21 +155,39 @@ namespace XG.Plugin.Webserver.Search
 			Save();
 		}
 
-		public static Results Search(string aTerm, bool aShowOfflineBots, int aStart, int aLimit, string aSort, bool aReverse)
+		public static Results Search(Model.Domain.Search aSearch, bool aShowOfflineBots, int aStart, int aLimit, string aSort, bool aReverse)
 		{
 			var results = new Results();
 			var sort = BuildSort(aSort, aReverse);
 
 			var searcher = new IndexSearcher(_writer.GetReader());
-			var terms = GenerateTerms(aTerm);
-			foreach (string term in terms)
+
+			if (aSearch.Guid == Model.Domain.Search.SearchDownloads)
 			{
-				var query = BuildQuery(term, aShowOfflineBots);
+				var query = BuildPredefinedQuery("Connected", aShowOfflineBots);
 				var res = Search(searcher, query, sort, aStart, aStart + aLimit);
-				if (res.Total > 0)
+				results.Packets.Add("", res.Packets);
+				results.Total = res.Total;
+			}
+			else if (aSearch.Guid == Model.Domain.Search.SearchEnabled)
+			{
+				var query = BuildPredefinedQuery("Enabled", aShowOfflineBots);
+				var res = Search(searcher, query, sort, aStart, aStart + aLimit);
+				results.Packets.Add("", res.Packets);
+				results.Total = res.Total;
+			}
+			else
+			{
+				var terms = GenerateTerms(aSearch.Name);
+				foreach (string term in terms)
 				{
-					results.Packets.Add(term, res.Packets);
-					results.Total += res.Total;
+					var query = BuildQuery(term, aSearch.Size, aShowOfflineBots);
+					var res = Search(searcher, query, sort, aStart, aStart + aLimit);
+					if (res.Total > 0)
+					{
+						results.Packets.Add(term, res.Packets);
+						results.Total += res.Total;
+					}
 				}
 			}
 
@@ -257,7 +285,7 @@ namespace XG.Plugin.Webserver.Search
 			}
 		}
 
-		static BooleanQuery BuildQuery(string aTerm, bool aShowOfflineBots)
+		static BooleanQuery BuildQuery(string aTerm, Int64 aSize, bool aShowOfflineBots)
 		{
 			var query = new BooleanQuery();
 			foreach (string str in aTerm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
@@ -271,6 +299,18 @@ namespace XG.Plugin.Webserver.Search
 					query.Add(new TermQuery(new Term("Name", str)), Occur.MUST);
 				}
 			}
+			query.Add(new TermRangeQuery("Size", aSize.ToString(SIZE_STRING), null, false, true), Occur.MUST);
+			if (!aShowOfflineBots)
+			{
+				query.Add(new TermQuery(new Term("Online", "1")), Occur.MUST);
+			}
+			return query;
+		}
+
+		static BooleanQuery BuildPredefinedQuery(string aName, bool aShowOfflineBots)
+		{
+			var query = new BooleanQuery();
+			query.Add(new TermQuery(new Term(aName, "1")), Occur.MUST);
 			if (!aShowOfflineBots)
 			{
 				query.Add(new TermQuery(new Term("Online", "1")), Occur.MUST);
@@ -332,11 +372,13 @@ namespace XG.Plugin.Webserver.Search
 			doc.Add(new Field("Guid", aPacket.Guid.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("Id", "" + aPacket.Id, Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("Name", aPacket.Name.Replace("_", " ").Replace("-", " ").Replace(".", " "), Field.Store.YES, Field.Index.ANALYZED));
-			doc.Add(new Field("Size", "" + aPacket.Size, Field.Store.YES, Field.Index.NOT_ANALYZED ));
+			doc.Add(new Field("Size", aPacket.Size.ToString(SIZE_STRING), Field.Store.YES, Field.Index.NOT_ANALYZED ));
 			doc.Add(new Field("Speed", "" + (aPacket.File != null ? aPacket.File.Speed : 0), Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("TimeMissing", "" + (aPacket.File != null ? aPacket.File.TimeMissing : 0), Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("LastMentioned", "" + aPacket.LastMentioned.ToTimestamp(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("Online", aPacket.Parent.Connected ? "1" : "0", Field.Store.YES, Field.Index.NOT_ANALYZED));
+			doc.Add(new Field("Enabled", aPacket.Enabled ? "1" : "0", Field.Store.YES, Field.Index.NOT_ANALYZED));
+			doc.Add(new Field("Connected", aPacket.Connected ? "1" : "0", Field.Store.YES, Field.Index.NOT_ANALYZED));
 			return doc;
 		}
 

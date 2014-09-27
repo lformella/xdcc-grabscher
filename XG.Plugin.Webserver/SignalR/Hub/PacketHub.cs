@@ -100,14 +100,14 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return new Model.Domain.Result { Total = 0, Results = new List<Packet>() };
 		}
 
-		public Model.Domain.Result LoadByName(string aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByParameter(string aSearch, Int64 aSize, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			return LoadBySearch(new XG.Model.Domain.Search { Name = aSearch }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
+			return LoadBySearch(new XG.Model.Domain.Search { Name = aSearch, Size = aSize }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
 		}
 
 		Model.Domain.Result LoadBySearch(XG.Model.Domain.Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var result = Webserver.Search.Packets.Search(aSearch.Name, aShowOfflineBots, (aPage - 1) * aCount, aCount, aSortBy, aSort == "desc");
+			var result = Webserver.Search.Packets.Search(aSearch, aShowOfflineBots, (aPage - 1) * aCount, aCount, aSortBy, aSort == "desc");
 			List<Model.Domain.Packet> all = new List<XG.Plugin.Webserver.SignalR.Hub.Model.Domain.Packet>();
 			foreach (var term in result.Packets.Keys)
 			{

@@ -203,7 +203,7 @@ td.withText small
 	left: 0;
 }
 
-td .highlight .name
+td .highlight .name, td.bold
 {
 	font-weight: bold;
 }
@@ -401,9 +401,26 @@ td .highlight .name
 	width: calc(100% - 44px);
 }
 
+#searchForm .form-group .input-group
+{
+	width: 100%;;
+}
+
 #searchForm .search-query
 {
-	width: 100%;
+	width: calc(100% - 120px);
+}
+
+#searchForm .search-size
+{
+	border-left: medium none;
+	width: 65px;
+}
+
+#searchForm .search-format
+{
+	border-left: medium none;
+	width: 55px;
 }
 
 #searchLoading

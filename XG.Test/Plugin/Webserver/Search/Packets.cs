@@ -89,34 +89,34 @@ namespace XG.Test.Plugin.Webserver.Search
 			};
 		}
 
-		XG.Plugin.Webserver.Search.Results GetResult(string aTerm, bool includeOffline)
+		XG.Plugin.Webserver.Search.Results GetResult(string aTerm, Int64 aSize, bool includeOffline)
 		{
-			return XG.Plugin.Webserver.Search.Packets.Search(aTerm, includeOffline, 0, 4, "Size", false);
+			return XG.Plugin.Webserver.Search.Packets.Search(new XG.Model.Domain.Search { Name = aTerm, Size = aSize }, includeOffline, 0, 4, "Size", false);
 		}
 
 		[Test]
 		public void SearchUpdateBotStatusTest()
 		{
-			var result = GetResult("under", false);
+			var result = GetResult("under", 0, false);
 			Assert.AreEqual(8, result.Total);
 
 			bot2.Connected = false;
 			bot2.Commit();
 
-			result = GetResult("under", false);
+			result = GetResult("under", 0, false);
 			Assert.AreEqual(4, result.Total);
 
 			bot2.Connected = true;
 			bot2.Commit();
 
-			result = GetResult("under", false);
+			result = GetResult("under", 0, false);
 			Assert.AreEqual(8, result.Total);
 		}
 
 		[Test]
 		public void SearchSingleStringTest()
 		{
-			var result = GetResult("under", true);
+			var result = GetResult("under", 0, true);
 			Assert.AreEqual(8, result.Total);
 			Assert.AreEqual(1, result.Packets.Count);
 			Assert.AreEqual(4, result.Packets.First().Value.Count());
@@ -126,7 +126,7 @@ namespace XG.Test.Plugin.Webserver.Search
 		[Test]
 		public void SearchMultipleStringTest()
 		{
-			var result = GetResult("under s01e04", true);
+			var result = GetResult("under s01e04", 0, true);
 			Assert.AreEqual(2, result.Total);
 			Assert.AreEqual(1, result.Packets.Count);
 			Assert.AreEqual(2, result.Packets.First().Value.Count());
@@ -136,7 +136,7 @@ namespace XG.Test.Plugin.Webserver.Search
 		[Test]
 		public void SearchMultipleNotStringTest()
 		{
-			var result = GetResult("dome -under", true);
+			var result = GetResult("dome -under", 0, true);
 			Assert.AreEqual(1, result.Total);
 			Assert.AreEqual(1, result.Packets.Count);
 			Assert.AreEqual(1, result.Packets.First().Value.Count());
@@ -146,7 +146,7 @@ namespace XG.Test.Plugin.Webserver.Search
 		[Test]
 		public void SearchByGroupTest()
 		{
-			var result = GetResult("under s01e**", true);
+			var result = GetResult("under s01e**", 0, true);
 			Assert.AreEqual(8, result.Total);
 			Assert.AreEqual(4, result.Packets.Count);
 			Assert.AreEqual(2, result.Packets.First().Value.Count());
@@ -156,7 +156,7 @@ namespace XG.Test.Plugin.Webserver.Search
 		[Test]
 		public void SearchByDoubleGroupTest()
 		{
-			var result = GetResult("under s**e**", true);
+			var result = GetResult("under s**e**", 0, true);
 			Assert.AreEqual(8, result.Total);
 			Assert.AreEqual(4, result.Packets.Count);
 			Assert.AreEqual(2, result.Packets.First().Value.Count());
@@ -164,6 +164,21 @@ namespace XG.Test.Plugin.Webserver.Search
 			Assert.AreEqual(2, result.Packets.Last().Value.Count());
 			Assert.AreEqual(104, result.Packets.Last().Value.First().Size);
 		}
+
+		[Test]
+		public void SearchMinSizeTest()
+		{
+			var result = GetResult("under", 202, true);
+			Assert.AreEqual(2, result.Total);
+			Assert.AreEqual(1, result.Packets.Count);
+			Assert.AreEqual(2, result.Packets.First().Value.Count());
+			Assert.AreEqual(203, result.Packets.First().Value.First().Size);
+
+			result = GetResult("under", 200, true);
+			Assert.AreEqual(4, result.Total);
+			Assert.AreEqual(1, result.Packets.Count);
+			Assert.AreEqual(4, result.Packets.First().Value.Count());
+			Assert.AreEqual(201, result.Packets.First().Value.First().Size);
+		}
 	}
 }
-

@@ -41,6 +41,14 @@ namespace XG.Model.Domain
 			set { base.Parent = value; }
 		}
 
+		Int64 _size;
+
+		public virtual Int64 Size
+		{
+			get { return GetProperty(ref _size); }
+			set { SetProperty(ref _size, value, "Size"); }
+		}
+
 		[Transient]
 		int _resultsOnline;
 
@@ -57,6 +65,15 @@ namespace XG.Model.Domain
 		{
 			get { return GetProperty(ref _resultsOffline); }
 			set { SetProperty(ref _resultsOffline, value, "ResultsOffline"); }
+		}
+
+		#endregion
+
+		#region HELPER
+
+		public override string ToString()
+		{
+			return base.ToString() + "|" + Size;
 		}
 
 		#endregion

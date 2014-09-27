@@ -23,6 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace XG.Plugin.Webserver.Nancy.Api.Request
@@ -31,6 +32,8 @@ namespace XG.Plugin.Webserver.Nancy.Api.Request
 	{
 		[Required(AllowEmptyStrings = false, ErrorMessage = "SearchTerm is neccesary")]
 		public string SearchTerm { get; set; }
+
+		public Int64 Size { get; set; }
 
 		public bool ShowOfflineBots { get; set; }
 

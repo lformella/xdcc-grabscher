@@ -197,6 +197,8 @@ define(['./module'], function (i18n) {
 				"Predefined": "Vorgefertigt",
 				"Custom": "Eigene",
 				"Ready": "Fertig",
+				"None": "Nichts",
+				"Group Search Results By": "Suchergebnisse gruppieren durch",
 
 				"of": "von",
 				"connected": "verbunden",

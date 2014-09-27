@@ -36,13 +36,12 @@ namespace XG.Plugin.Webserver.Job
 		public void Execute (IJobExecutionContext context)
 		{
 			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+			Search.Packets.Save();
 
 			foreach (var search in Searches.All)
 			{
-				Search.Packets.Save();
-
-				search.ResultsOnline = Search.Packets.Search(search.Name, false, 0, 1, "Name", false).Total;
-				search.ResultsOffline = Search.Packets.Search(search.Name, true, 0, 1, "Name", false).Total - search.ResultsOnline;
+				search.ResultsOnline = Search.Packets.Search(search, false, 0, 1, "Name", false).Total;
+				search.ResultsOffline = Search.Packets.Search(search, true, 0, 1, "Name", false).Total - search.ResultsOnline;
 				search.Commit();
 			}
 		}

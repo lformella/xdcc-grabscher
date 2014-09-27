@@ -88,7 +88,7 @@ define(['./module'], function (ng) {
 			});
 
 			// events
-			$rootScope.$on('SearchByName', function (e, message)
+			$rootScope.$on('SearchByParameter', function (e, message)
 			{
 				if ($scope.active)
 				{
