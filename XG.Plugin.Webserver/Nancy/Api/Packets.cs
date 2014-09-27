@@ -40,7 +40,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			InitializeGetAll(Helper.Servers, "packets");
 			InitializeEnable(Helper.Servers, "packets");
 
-            Put["/packets", true] = async (_, ct) =>
+			Put["/packets", true] = async(_, ct) =>
 			{
 				Request.PacketDownload request;
 				try

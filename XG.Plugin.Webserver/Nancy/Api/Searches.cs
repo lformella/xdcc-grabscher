@@ -40,7 +40,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			InitializeGetAll(Helper.Searches, "searches");
 			InitializeDelete(Helper.Searches, "searches");
 
-            Put["/searches", true] = async (_, ct) =>
+			Put["/searches", true] = async(_, ct) =>
 			{
 				Request.SearchAdd request;
 				try

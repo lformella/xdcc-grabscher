@@ -34,11 +34,11 @@ namespace XG.Plugin.Webserver.Nancy
 	{
 		public RedirectModule()
 		{
-            Get["/", true] = async (_, ct) => new RedirectResponse("/Resources/index.html");
+			Get["/", true] = async(_, ct) => new RedirectResponse("/Resources/index.html");
 
 			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); });";
 
-			Get["/Resources/js/config/config.js", true] = async (parameters, ct) => {
+			Get["/Resources/js/config/config.js", true] = async(parameters, ct) => {
 				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
 				if (language != "en" && language != "de")
 				{

@@ -41,7 +41,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 		{
 			this.RequiresAuthentication();
 
-            Get["/" + aPath + "/{guid:guid}", true] = async (_, ct) =>
+			Get["/" + aPath + "/{guid:guid}", true] = async(_, ct) =>
 			{
 				try
 				{
@@ -80,7 +80,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 		{
 			this.RequiresAuthentication();
 
-            Post["/" + aPath + "/{guid:guid}/enable", true] = async (_, ct) =>
+			Post["/" + aPath + "/{guid:guid}/enable", true] = async(_, ct) =>
 			{
 				try
 				{
@@ -98,7 +98,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 				}
 			};
 
-            Post["/" + aPath + "/{guid:guid}/disable", true] = async (_, ct) =>
+			Post["/" + aPath + "/{guid:guid}/disable", true] = async(_, ct) =>
 			{
 				try
 				{
@@ -121,7 +121,7 @@ namespace XG.Plugin.Webserver.Nancy.Api
 		{
 			this.RequiresAuthentication();
 
-            Delete["/" + aPath + "/{guid:guid}", true] = async (_, ct) =>
+			Delete["/" + aPath + "/{guid:guid}", true] = async(_, ct) =>
 			{
 				try
 				{

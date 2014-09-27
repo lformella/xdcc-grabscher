@@ -33,7 +33,7 @@ namespace XG.Plugin.Webserver.Nancy
 	{
 		public LoginModule()
 		{
-            Post["/login", true] = async (_, ct) =>
+			Post["/login", true] = async(_, ct) =>
 			{
 				var password = new StreamReader(Request.Body).ReadToEnd();
 				return password == Helper.PasswortHash ? HttpStatusCode.OK : HttpStatusCode.Forbidden;

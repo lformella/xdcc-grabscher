@@ -27,7 +27,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text.RegularExpressions;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -36,16 +36,12 @@ using Lucene.Net.Search;
 using Lucene.Net.Store;
 using XG.Extensions;
 using XG.Model.Domain;
-using log4net;
-using System.Text.RegularExpressions;
 
 namespace XG.Plugin.Webserver.Search
 {
 	public static class Packets
 	{
 		#region VARIABLES
-
-		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static Servers _servers;
 

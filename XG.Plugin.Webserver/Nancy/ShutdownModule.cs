@@ -33,7 +33,7 @@ namespace XG.Plugin.Webserver.Nancy
 	{
 		public ShutdownModule()
 		{
-            Post["/shutdown", true] = async (_, ct) =>
+			Post["/shutdown", true] = async(_, ct) =>
 			{
 				var password = new StreamReader(Request.Body).ReadToEnd();
 				if (password == Helper.PasswortHash)
