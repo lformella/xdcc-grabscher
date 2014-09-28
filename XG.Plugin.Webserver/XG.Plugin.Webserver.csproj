@@ -212,6 +212,7 @@
     <Compile Include="Search\Packets.cs" />
     <Compile Include="Job\SearchUpdater.cs" />
     <Compile Include="Search\Results.cs" />
+    <Compile Include="Search\WildcardQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />

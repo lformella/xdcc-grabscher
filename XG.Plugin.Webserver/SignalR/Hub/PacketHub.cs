@@ -107,16 +107,16 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		Model.Domain.Result LoadBySearch(XG.Model.Domain.Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var result = Webserver.Search.Packets.Search(aSearch, aShowOfflineBots, (aPage - 1) * aCount, aCount, aSortBy, aSort == "desc");
+			var results = Webserver.Search.Packets.GetResults(aSearch, aShowOfflineBots, (aPage - 1) * aCount, aCount, aSortBy, aSort == "desc");
 			List<Model.Domain.Packet> all = new List<XG.Plugin.Webserver.SignalR.Hub.Model.Domain.Packet>();
-			foreach (var term in result.Packets.Keys)
+			foreach (var term in results.Packets.Keys)
 			{
-				var objects = Helper.XgObjectsToHubObjects(result.Packets[term]).Cast<Model.Domain.Packet>();
+				var objects = Helper.XgObjectsToHubObjects(results.Packets[term]).Cast<Model.Domain.Packet>();
 				objects.ToList().ForEach(p => p.GroupBy = term);
 				all.AddRange(objects);
 			}
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(all.Select(o => o.Guid)), aCount);
-			return new Model.Domain.Result { Total = result.Total, Results = all };
+			return new Model.Domain.Result { Total = results.Total, Results = all };
 		}
 
 		public Model.Domain.Result LoadByParentGuid(Guid aParentGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)

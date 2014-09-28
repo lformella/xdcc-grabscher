@@ -74,7 +74,10 @@ namespace XG.Plugin.Webserver.Search
 		static Directory _dir;
 		static Analyzer _analyzer;
 
-		const int MAX_WILDCARDS_REPLACEMENTS = 50;
+		const int MAX_REPLACEMENTS_ONE_WILDCARD = 99;
+		const int MAX_REPLACEMENTS_TWO_WILDCARDS_FIRST = 10;
+		const int MAX_REPLACEMENTS_TWO_WILDCARDS_SECOND = 30;
+
 		const string SIZE_STRING = "000000000000";
 
 		static bool _saveNeeded;
@@ -151,62 +154,133 @@ namespace XG.Plugin.Webserver.Search
 			Save();
 		}
 
-		public static Results Search(Model.Domain.Search aSearch, bool aShowOfflineBots, int aStart, int aLimit, string aSort, bool aReverse)
+		public static Results GetResults(Model.Domain.Search aSearch, bool aShowOfflineBots, int aStart, int aLimit, string aSort, bool aReverse)
 		{
-			var results = new Results();
 			var sort = BuildSort(aSort, aReverse);
-
 			var searcher = new IndexSearcher(_writer.GetReader());
 
 			if (aSearch.Guid == Model.Domain.Search.SearchDownloads)
 			{
 				var query = BuildPredefinedQuery("Connected", aShowOfflineBots);
-				var res = Search(searcher, query, sort, aStart, aStart + aLimit);
-				results.Packets.Add("", res.Packets);
-				results.Total = res.Total;
+				return GetPredefinedResults(searcher, query, sort, aStart, aLimit);
 			}
-			else if (aSearch.Guid == Model.Domain.Search.SearchEnabled)
+			if (aSearch.Guid == Model.Domain.Search.SearchEnabled)
 			{
 				var query = BuildPredefinedQuery("Enabled", aShowOfflineBots);
-				var res = Search(searcher, query, sort, aStart, aStart + aLimit);
-				results.Packets.Add("", res.Packets);
-				results.Total = res.Total;
+				return GetPredefinedResults(searcher, query, sort, aStart, aLimit);
 			}
-			else
+
+			var results = new Results();
+			var terms = GenerateTermsFromSearchString(aSearch.Name);
+
+			// normal search
+			if (terms.Count() == 1)
 			{
-				var terms = GenerateTerms(aSearch.Name);
-				foreach (string term in terms)
+				var query = BuildQuery(terms.First(), aSearch.Size, aShowOfflineBots);
+				var res = GetResult(searcher, query, sort, aStart, aLimit);
+				if (res.Total > 0)
 				{
-					var query = BuildQuery(term, aSearch.Size, aShowOfflineBots);
-					var res = Search(searcher, query, sort, aStart, aStart + aLimit);
-					if (res.Total > 0)
-					{
-						results.Packets.Add(term, res.Packets);
-						results.Total += res.Total;
-					}
+					results.Packets.Add(terms.First(), res.Packets);
+					results.Total = res.Total;
+				}
+				return results;
+			}
+
+			// wildcard search
+			var queries = BuildWildCardQueries(searcher, terms, aSearch.Size, aShowOfflineBots, aStart, aLimit);
+			results.Total = (from query in queries select query.Total).Sum();
+
+			foreach (var query in queries)
+			{
+				if (!query.Enabled)
+				{
+					continue;
+				}
+
+				var res = GetResult(searcher, query.Query, sort, query.Start, query.Limit);
+				if (res.Packets.Any())
+				{
+					results.Packets.Add(query.Term, res.Packets);
 				}
 			}
 
 			return results;
 		}
 
-		public static Result Search(IndexSearcher aSercher, Query aQuery, Sort aSort, int aStart, int aStop)
+		static Results GetPredefinedResults(IndexSearcher aSearcher, Query aQuery,  Sort aSort, int aStart, int aLimit)
 		{
-			TopDocs resultDocs = aSercher.Search(aQuery, null, aStop, aSort);
+			var results = new Results();
+			var res = GetResult(aSearcher, aQuery, aSort, aStart, aLimit);
+			results.Packets.Add("", res.Packets);
+			results.Total = res.Total;
+			return results;
+		}
+
+		static Result GetResult(IndexSearcher aSercher, Query aQuery, Sort aSort, int aStart, int aLimit)
+		{
+			int maxResults = aStart + aLimit;
+			TopDocs resultDocs = aSercher.Search(aQuery, null, maxResults, aSort);
 			var packets = new List<Packet>();
-			for (int a = aStart; a < aStop; a++)
+			for (int a = aStart; a < maxResults; a++)
 			{
 				if (resultDocs.TotalHits <= a)
 				{
 					break;
 				}
-				var documentFromSearcher = aSercher.Doc(resultDocs.ScoreDocs[a].Doc);
-				packets.Add((Packet) _packets[documentFromSearcher.Get("Guid")]);
+				packets.Add((Packet)_packets[aSercher.Doc(resultDocs.ScoreDocs[a].Doc).Get("Guid")]);
 			}
 			return new Result { Total = resultDocs.TotalHits, Packets = packets };
 		}
 
-		static string[] GenerateTerms(string aTerm)
+		static int GetTotalResults(IndexSearcher aSercher, Query aQuery)
+		{
+			return aSercher.Search(aQuery, null, 1, Sort.INDEXORDER).TotalHits;
+		}
+
+		#region BUILDER
+
+		static IEnumerable<WildcardQuery> BuildWildCardQueries(IndexSearcher aSearcher, string[] aTerms, Int64 aSize, bool aShowOfflineBots, int aStart, int aLimit)
+		{
+			var queries = new List<WildcardQuery>();
+
+			int count = 0;
+			int missing = aLimit;
+			foreach (string term in aTerms)
+			{
+				var query = BuildQuery(term, aSize, aShowOfflineBots);
+				var total = GetTotalResults(aSearcher, query);
+				if (total > 0)
+				{
+					var wq = new WildcardQuery { Enabled = true, Query = query, Term = term, Total = total };
+
+					if (count + total <= aStart || missing == 0)
+					{
+						wq.Enabled = false;
+					}
+					else
+					{
+						wq.Start = aStart > count ? aStart - count : 0;
+						if (wq.Total - wq.Start >= missing)
+						{
+							wq.Limit = missing;
+							missing = 0;
+						}
+						else
+						{
+							wq.Limit = wq.Total - wq.Start;
+							missing -= wq.Limit;
+						}
+					}
+
+					queries.Add(wq);
+					count += wq.Total;
+				}
+			}
+
+			return queries;
+		}
+
+		static string[] GenerateTermsFromSearchString(string aTerm)
 		{
 			aTerm = aTerm.ToLower();
 			if (!aTerm.Contains("**"))
@@ -241,7 +315,8 @@ namespace XG.Plugin.Webserver.Search
 
 				// first segment
 				var str1 = strings.Dequeue();
-				for (int a = 1; a <= Math.Pow(MAX_WILDCARDS_REPLACEMENTS, wildcardCount); a++)
+				int count = wildcardCount == 2 ? MAX_REPLACEMENTS_TWO_WILDCARDS_FIRST * MAX_REPLACEMENTS_TWO_WILDCARDS_SECOND : MAX_REPLACEMENTS_ONE_WILDCARD;
+				for (int a = 1; a <= count; a++)
 				{
 					results.Add(a, str1);
 				}
@@ -254,7 +329,7 @@ namespace XG.Plugin.Webserver.Search
 					int secondCount = 1;
 					for (int a = 1; a <= results.Count; a++)
 					{
-						if (secondCount > MAX_WILDCARDS_REPLACEMENTS)
+						if (secondCount > MAX_REPLACEMENTS_TWO_WILDCARDS_SECOND)
 						{
 							secondCount = 1;
 							firstCount++;
@@ -269,7 +344,7 @@ namespace XG.Plugin.Webserver.Search
 				int secondCount1 = 1;
 				for (int a = 1; a <= results.Count; a++)
 				{
-					if (secondCount1 > MAX_WILDCARDS_REPLACEMENTS)
+					if (secondCount1 > (wildcardCount == 2 ? MAX_REPLACEMENTS_TWO_WILDCARDS_SECOND : MAX_REPLACEMENTS_ONE_WILDCARD))
 					{
 						secondCount1 = 1;
 					}
@@ -329,6 +404,8 @@ namespace XG.Plugin.Webserver.Search
 					return new Sort(new SortField("Name", SortField.STRING, aReverse));
 			}
 		}
+
+		#endregion
 
 		#region INDEX
 

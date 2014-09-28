@@ -1,5 +1,5 @@
-// 
-//  SearchUpdater.cs
+﻿// 
+//  WildcardQuery.cs
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,27 +23,22 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System.Threading;
-using Quartz;
-using XG.Model.Domain;
+using Lucene.Net.Search;
 
-namespace XG.Plugin.Webserver.Job
+namespace XG.Plugin.Webserver.Search
 {
-	public class SearchUpdater : IJob
+	public class WildcardQuery
 	{
-		public Searches Searches { get; set; }
+		public bool Enabled { get; set; }
 
-		public void Execute (IJobExecutionContext context)
-		{
-			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-			Search.Packets.Save();
+		public int Start { get; set; }
 
-			foreach (var search in Searches.All)
-			{
-				search.ResultsOnline = Search.Packets.GetResults(search, false, 0, 1, "Name", false).Total;
-				search.ResultsOffline = Search.Packets.GetResults(search, true, 0, 1, "Name", false).Total - search.ResultsOnline;
-				search.Commit();
-			}
-		}
+		public int Limit { get; set; }
+
+		public int Total { get; set; }
+
+		public Query Query { get; set; }
+
+		public string Term { get; set; }
 	}
 }

@@ -121,9 +121,9 @@ namespace XG.Plugin.Webserver.Nancy.Api
 			try
 			{
 				var result = new Result.Objects();
-				var searchResult = Webserver.Search.Packets.Search(new XG.Model.Domain.Search { Name = request.SearchTerm, Size = request.Size }, request.ShowOfflineBots, (request.Page - 1) * request.MaxResults, request.MaxResults, request.SortBy, request.Sort == "desc");
-				result.Results = Helper.XgObjectsToNancyObjects(from packets in searchResult.Packets from packet in packets.Value select packet).Cast<Nancy.Api.Model.Domain.Packet>();
-				result.ResultCount = searchResult.Total;
+				var results = Webserver.Search.Packets.GetResults(new XG.Model.Domain.Search { Name = request.SearchTerm, Size = request.Size }, request.ShowOfflineBots, (request.Page - 1) * request.MaxResults, request.MaxResults, request.SortBy, request.Sort == "desc");
+				result.Results = Helper.XgObjectsToNancyObjects(from packets in results.Packets from packet in packets.Value select packet).Cast<Nancy.Api.Model.Domain.Packet>();
+				result.ResultCount = results.Total;
 
 				return CreateSuccessResponseAndUpdateApiKey(result);
 			}
