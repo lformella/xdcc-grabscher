@@ -65,7 +65,9 @@ define(['./module'], function (ng) {
 							var element = HelperService.getByGuid(self.$scope[self.objectsName], message.Guid);
 							if (element != null)
 							{
+								var groupBy = self.$scope[self.objectsName][element.id].GroupBy;
 								self.$scope[self.objectsName][element.id] = message;
+								self.$scope[self.objectsName][element.id].GroupBy = groupBy;
 								self.$scope.$apply();
 							}
 						}
