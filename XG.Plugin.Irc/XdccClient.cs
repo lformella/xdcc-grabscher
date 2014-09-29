@@ -24,9 +24,11 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Meebey.SmartIrc4net;
 using XG.Config.Properties;
 using XG.Extensions;
@@ -84,6 +86,12 @@ namespace XG.Plugin.Irc
 		{
 			get { return _client.IsConnected; }
 		}
+
+		readonly Queue<IrcEvent> _events = new Queue<IrcEvent>();
+
+		AutoResetEvent _waitHandle = new AutoResetEvent(false);
+
+		bool _allowRunning = true;
 
 		#endregion
 
@@ -150,6 +158,199 @@ namespace XG.Plugin.Irc
 
 		void ClientOnBan(object sender, BanEventArgs e)
 		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Ban, Event = e });
+			_waitHandle.Set();
+		}
+			
+		void ClientOnChannelMessage(object sender, IrcEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.ChannelMessage, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnConnected(object sender, EventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Connected, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnCtcpReply(object sender, CtcpEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.CtcpReply, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnCtcpRequest(object sender, CtcpEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.CtcpRequest, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnErrorMessage(object sender, IrcEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.ErrorMessage, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnJoin(object sender, JoinEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Join, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnKick(object sender, KickEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Kick, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnPart(object sender, PartEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Part, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnNames(object sender, NamesEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Names, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnNickChange(object sender, NickChangeEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.NickChange, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnQueryMessage(object sender, IrcEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.QueryMessage, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnQueryNotice(object sender, IrcEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.QueryNotice, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnQuit(object sender, QuitEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Quit, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnReadLine(object sender, ReadLineEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.ReadLine, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnTopic(object sender, TopicEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.Topic, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnTopicChange(object sender, TopicChangeEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.TopicChange, Event = e });
+			_waitHandle.Set();
+		}
+
+		void ClientOnUnBan(object sender, UnbanEventArgs e)
+		{
+			_events.Enqueue(new IrcEvent { Type = IrcEvent.EventType.UnBan, Event = e });
+			_waitHandle.Set();
+		}
+
+		protected void EventThread()
+		{
+			IrcEvent tEvent = null;
+			while (true)
+			{
+				if (_events.Count == 0)
+				{
+					_waitHandle.WaitOne();
+				}
+				if (!_allowRunning)
+				{
+					break;
+				}
+
+				try
+				{
+					tEvent = _events.Dequeue();
+				}
+				catch (Exception) {}
+				if (tEvent == null)
+				{
+					continue;
+				}
+
+				// run
+				switch (tEvent.Type)
+				{
+					case IrcEvent.EventType.Ban:
+						ClientBan((BanEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.ChannelMessage:
+						ClientChannelMessage((IrcEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.Connected:
+						ClientConnected(tEvent.Event);
+						break;
+					case IrcEvent.EventType.CtcpReply:
+						MessageReceived((CtcpEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.CtcpRequest:
+						MessageReceived((CtcpEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.ErrorMessage:
+						ClientErrorMessage((IrcEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.Join:
+						ClientJoin((JoinEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.Kick:
+						ClientKick((KickEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.Part:
+						ClientPart((PartEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.Names:
+						ClientNames((NamesEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.NickChange:
+						ClienNickChange((NickChangeEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.QueryMessage:
+						MessageReceived((IrcEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.QueryNotice:
+						MessageReceived((IrcEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.Quit:
+						ClientQuit((QuitEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.ReadLine:
+						OnReadLine(this, new EventArgs<string>(((ReadLineEventArgs) tEvent.Event).Line));
+						break;
+					case IrcEvent.EventType.Topic:
+						ClientTopic((TopicEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.TopicChange:
+						ClientTopicChange((TopicChangeEventArgs) tEvent.Event);
+						break;
+					case IrcEvent.EventType.UnBan:
+						ClientUnBan((UnbanEventArgs) tEvent.Event);
+						break;
+				}
+			}
+		}
+
+		void ClientBan (BanEventArgs e)
+		{
 			var channel = Server.Channel(e.Channel);
 			if (channel != null)
 			{
@@ -173,15 +374,9 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnChannelNotice(object sender, IrcEventArgs e)
-		{
-			_log.Debug("OnChannelNotice " + e.Data.Message);
-		}
-
-		void ClientOnChannelMessage(object sender, IrcEventArgs e)
+		void ClientChannelMessage(IrcEventArgs e)
 		{
 			Model.Domain.Channel tChan = null;
-
 			if (e.Data.Type == ReceiveType.QueryNotice)
 			{
 				if (!String.IsNullOrEmpty(e.Data.Nick))
@@ -204,52 +399,33 @@ namespace XG.Plugin.Irc
 			{
 				tChan = Server.Channel(e.Data.Channel);
 			}
-
 			if (tChan != null)
 			{
 				OnMessage(this, new EventArgs<Model.Domain.Channel, string, string>(tChan, e.Data.Nick, e.Data.Message));
 			}
 		}
 
-		void ClientOnConnected(object sender, EventArgs e)
+		void ClientConnected(EventArgs e)
 		{
 			Server.Connected = true;
 			Server.Commit();
-
 			FireNotificationAdded(Notification.Types.ServerConnected, Server);
 			_log.Info("connected " + Server);
-
 			_client.Login(Settings.Default.IrcNick, Settings.Default.IrcNick, 0, Settings.Default.IrcNick, Settings.Default.IrcPasswort);
 			if (Server.Channels.Count > 0)
 			{
-				var channels = (from channel in Server.Channels where channel.Enabled select channel.Name).ToArray();
+				var channels = (from channel in Server.Channels
+				where channel.Enabled
+				select channel.Name).ToArray();
 				if (channels.Any())
 				{
 					_client.RfcJoin(channels);
 				}
 			}
-
 			OnConnected(this, new EventArgs<Server>(Server));
 		}
 
-		void ClientOnCtcpReply(object sender, CtcpEventArgs e)
-		{
-			_log.Info("ClientOnCtcpReply() " + e.Data.Message);
-			MessageReceived(e);
-		}
-
-		void ClientOnCtcpRequest(object sender, CtcpEventArgs e)
-		{
-			_log.Info("ClientOnCtcpRequest() " + e.Data.Message);
-			MessageReceived(e);
-		}
-
-		void ClientOnError(object sender, ErrorEventArgs e)
-		{
-			_log.Info("error from " + Server + ": " + e.ErrorMessage);
-		}
-
-		void ClientOnErrorMessage(object sender, IrcEventArgs e)
+		void ClientErrorMessage(IrcEventArgs e)
 		{
 			var channel = Server.Channel(e.Data.Channel);
 			if (channel == null && e.Data.RawMessageArray.Length >= 4)
@@ -278,7 +454,7 @@ namespace XG.Plugin.Irc
 				}
 				if (tWaitTime > 0)
 				{
-					channel.ErrorCode = (int) e.Data.ReplyCode;
+					channel.ErrorCode = (int)e.Data.ReplyCode;
 					channel.Connected = false;
 					_log.Warn("could not join " + channel + ": " + e.Data.ReplyCode);
 					FireNotificationAdded(notificationType, channel);
@@ -288,7 +464,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnJoin(object sender, JoinEventArgs e)
+		void ClientJoin(JoinEventArgs e)
 		{
 			var channel = Server.Channel(e.Channel);
 			if (channel != null)
@@ -322,7 +498,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnKick(object sender, KickEventArgs e)
+		void ClientKick(KickEventArgs e)
 		{
 			var channel = Server.Channel(e.Data.Channel);
 			if (channel != null)
@@ -347,7 +523,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnPart(object sender, PartEventArgs e)
+		void ClientPart(PartEventArgs e)
 		{
 			var channel = Server.Channel(e.Data.Channel);
 			if (channel != null)
@@ -373,7 +549,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnNames(object sender, NamesEventArgs e)
+		void ClientNames(NamesEventArgs e)
 		{
 			var channel = Server.Channel(e.Channel);
 			if (channel != null)
@@ -401,7 +577,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnNickChange(object sender, NickChangeEventArgs e)
+		void ClienNickChange(NickChangeEventArgs e)
 		{
 			if (_iam == e.OldNickname)
 			{
@@ -418,22 +594,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnQueryAction(object sender, ActionEventArgs e)
-		{
-			_log.Debug("OnQueryAction " + e.Data.Message);
-		}
-
-		void ClientOnQueryMessage(object sender, IrcEventArgs e)
-		{
-			MessageReceived(e);
-		}
-
-		void ClientOnQueryNotice(object sender, IrcEventArgs e)
-		{
-			MessageReceived(e);
-		}
-
-		void ClientOnQuit(object sender, QuitEventArgs e)
+		void ClientQuit(QuitEventArgs e)
 		{
 			var bot = Server.Bot(e.Who);
 			if (bot != null)
@@ -445,12 +606,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnReadLine(object sender, ReadLineEventArgs e)
-		{
-			OnReadLine(this, new EventArgs<string>(e.Line));
-		}
-
-		void ClientOnTopic(object sender, TopicEventArgs e)
+		void ClientTopic(TopicEventArgs e)
 		{
 			var channel = Server.Channel(e.Channel);
 			if (channel != null)
@@ -460,7 +616,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnTopicChange(object sender, TopicChangeEventArgs e)
+		void ClientTopicChange(TopicChangeEventArgs e)
 		{
 			var channel = Server.Channel(e.Channel);
 			if (channel != null)
@@ -470,7 +626,7 @@ namespace XG.Plugin.Irc
 			}
 		}
 
-		void ClientOnUnBan(object sender, UnbanEventArgs e)
+		void ClientUnBan(UnbanEventArgs e)
 		{
 			var channel = Server.Channel(e.Channel);
 			if (channel != null)
@@ -525,21 +681,19 @@ namespace XG.Plugin.Irc
 		{
 			Server.Connected = false;
 			Server.Commit();
+			_allowRunning = true;
 
 			_client.OnBan += ClientOnBan;
 			_client.OnConnected += ClientOnConnected;
 			_client.OnChannelMessage += ClientOnChannelMessage;
-			_client.OnChannelNotice += ClientOnChannelNotice;
 			_client.OnCtcpReply += ClientOnCtcpReply;
 			_client.OnCtcpRequest += ClientOnCtcpRequest;
-			_client.OnError += ClientOnError;
 			_client.OnErrorMessage += ClientOnErrorMessage;
 			_client.OnJoin += ClientOnJoin;
 			_client.OnKick += ClientOnKick;
 			_client.OnNames += ClientOnNames;
 			_client.OnNickChange += ClientOnNickChange;
 			_client.OnPart += ClientOnPart;
-			_client.OnQueryAction += ClientOnQueryAction;
 			_client.OnQueryMessage += ClientOnQueryMessage;
 			_client.OnQueryNotice += ClientOnQueryNotice;
 			_client.OnQuit += ClientOnQuit;
@@ -550,6 +704,8 @@ namespace XG.Plugin.Irc
 
 			try
 			{
+				new Thread(new ThreadStart(EventThread)).Start();
+
 				_log.Info("connecting " + Server);
 				_client.Connect(Server.Name, Server.Port);
 
@@ -568,20 +724,20 @@ namespace XG.Plugin.Irc
 			Server.Connected = false;
 			Server.Commit();
 
+			_allowRunning = false;
+			_waitHandle.Set();
+
 			_client.OnBan -= ClientOnBan;
 			_client.OnConnected -= ClientOnConnected;
 			_client.OnChannelMessage -= ClientOnChannelMessage;
-			_client.OnChannelNotice -= ClientOnChannelNotice;
 			_client.OnCtcpReply -= ClientOnCtcpReply;
 			_client.OnCtcpRequest -= ClientOnCtcpRequest;
-			_client.OnError -= ClientOnError;
 			_client.OnErrorMessage -= ClientOnErrorMessage;
 			_client.OnJoin -= ClientOnJoin;
 			_client.OnKick -= ClientOnKick;
 			_client.OnNames -= ClientOnNames;
 			_client.OnNickChange -= ClientOnNickChange;
 			_client.OnPart -= ClientOnPart;
-			_client.OnQueryAction -= ClientOnQueryAction;
 			_client.OnQueryMessage -= ClientOnQueryMessage;
 			_client.OnQueryNotice -= ClientOnQueryNotice;
 			_client.OnQuit -= ClientOnQuit;

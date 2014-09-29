@@ -31,6 +31,8 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "XG.Build.Wix", "XG.Build.Wi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XG.Extensions", "XG.Extensions\XG.Extensions.csproj", "{846CAB27-130D-4B2D-8823-93A3E8B34AEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartIrc4net", "..\SmartIrc4net\SmartIrc4net.csproj", "{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Build.Mono|Any CPU = Build.Mono|Any CPU
@@ -100,6 +102,14 @@ Global
 		{846CAB27-130D-4B2D-8823-93A3E8B34AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{846CAB27-130D-4B2D-8823-93A3E8B34AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{846CAB27-130D-4B2D-8823-93A3E8B34AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Build.Mono|Any CPU.ActiveCfg = Release|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Build.Mono|Any CPU.Build.0 = Release|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Build.Wix|Any CPU.ActiveCfg = Release|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Build.Wix|Any CPU.Build.0 = Release|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}.Build.Mono|Any CPU.ActiveCfg = Build.Mono|Any CPU
 		{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}.Build.Mono|Any CPU.Build.0 = Build.Mono|Any CPU
 		{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}.Build.Wix|Any CPU.ActiveCfg = Build.Wix|Any CPU
@@ -163,6 +173,35 @@ Global
 		$0.DotNetNamingPolicy = $2
 		$2.DirectoryNamespaceAssociation = PrefixedHierarchical
 		$2.ResourceNamePolicy = FileFormatDefault
+		$0.TextStylePolicy = $3
+		$3.inheritsSet = null
+		$3.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $4
+		$4.IndentSwitchBody = True
+		$4.PropertyBraceStyle = NextLine
+		$4.PropertyGetBraceStyle = NextLine
+		$4.PropertySetBraceStyle = NextLine
+		$4.EventBraceStyle = NextLine
+		$4.EventAddBraceStyle = NextLine
+		$4.EventRemoveBraceStyle = NextLine
+		$4.StatementBraceStyle = NextLine
+		$4.ElseNewLinePlacement = NewLine
+		$4.CatchNewLinePlacement = NewLine
+		$4.FinallyNewLinePlacement = NewLine
+		$4.BeforeMethodDeclarationParentheses = False
+		$4.BeforeMethodCallParentheses = False
+		$4.BeforeConstructorDeclarationParentheses = False
+		$4.NewLineBeforeConstructorInitializerColon = SameLine
+		$4.NewLineAfterConstructorInitializerColon = SameLine
+		$4.BeforeIndexerDeclarationBracket = False
+		$4.BeforeDelegateDeclarationParentheses = False
+		$4.AfterDelegateDeclarationParameterComma = True
+		$4.NewParentheses = False
+		$4.SpacesBeforeBrackets = False
+		$4.BlankLinesBeforeUsings = 1
+		$4.inheritsSet = Mono
+		$4.inheritsScope = text/x-csharp
+		$4.scope = text/x-csharp
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = XG.vsmdi

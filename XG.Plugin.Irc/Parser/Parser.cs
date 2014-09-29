@@ -35,7 +35,7 @@ namespace XG.Plugin.Irc.Parser
 
 		AutoResetEvent _waitHandle = new AutoResetEvent(false);
 
-		private bool _allowRunning = true;
+		bool _allowRunning = true;
 
 		readonly List<AParser> _ircParsers = new List<AParser>();
 
