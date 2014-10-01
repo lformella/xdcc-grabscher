@@ -411,7 +411,7 @@ namespace XG.Plugin.Webserver.Search
 
 		static void AddToIndex(Packet aPacket)
 		{
-			_writer.AddDocument(PacketToDocument(aPacket));
+			_writer.UpdateDocument(new Term("Guid", aPacket.Guid.ToString()), PacketToDocument(aPacket));
 			_packets.Add(aPacket.Guid.ToString(), aPacket);
 			_saveNeeded = true;
 		}
