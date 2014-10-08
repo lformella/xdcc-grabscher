@@ -66,14 +66,20 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Quartz">
-      <HintPath>..\packages\Quartz.2.2.3\lib\net40\Quartz.dll</HintPath>
-    </Reference>
     <Reference Include="Db4objects.Db4o">
       <HintPath>..\packages\db4o-devel.8.1.184.15492\lib\net40\Db4objects.Db4o.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\packages\Quartz.2.2.4\lib\net40\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.2.0\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Meebey.SmartIrc4net">
+      <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -144,10 +150,6 @@
     <ProjectReference Include="..\XG.Extensions\XG.Extensions.csproj">
       <Project>{846CAB27-130D-4B2D-8823-93A3E8B34AEE}</Project>
       <Name>XG.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SmartIrc4net\SmartIrc4net.csproj">
-      <Project>{91D3003B-7E65-4EAF-8EE1-DA43832E7A9C}</Project>
-      <Name>SmartIrc4net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

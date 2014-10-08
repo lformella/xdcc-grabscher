@@ -43,10 +43,10 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		protected abstract void AddClient(Client aClient);
 
-		public override Task OnDisconnected()
+		public override Task OnDisconnected(bool stopCalled)
 		{
 			RemoveClient(Context.ConnectionId);
-			return base.OnDisconnected();
+			return base.OnDisconnected(stopCalled);
 		}
 
 		protected abstract void RemoveClient(string connectionId);

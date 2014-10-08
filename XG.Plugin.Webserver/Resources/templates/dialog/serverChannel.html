@@ -64,7 +64,7 @@
 					<label class="col-lg-2 control-label" for="server" translate>Server</label>
 					<div class="col-lg-10">
 						<div class="input-group">
-							<input class="form-control" type="text" name="server" ng-model="$parent.server" ng-keydown="serverKeydown($event);"/>
+							<input class="form-control" type="text" name="server" ng-model="server" ng-keydown="serverKeydown($event);"/>
 							<span class="input-group-btn">
 								<button class="btn" ng-click="addServer();" translate>Add</button>
 							</span>
@@ -125,7 +125,7 @@
 					<label class="col-lg-2 control-label" for="channel" translate>Channel</label>
 					<div class="col-lg-10">
 						<div class="input-group">
-							<input class="form-control" type="text" name="channel" ng-model="$parent.channel" ng-keydown="channelKeydown($event)"/>
+							<input class="form-control" type="text" name="channel" ng-model="channel" ng-keydown="channelKeydown($event)"/>
 							<span class="input-group-btn">
 								<button class="btn" ng-click="addChannel()" translate>Add</button>
 							</span>

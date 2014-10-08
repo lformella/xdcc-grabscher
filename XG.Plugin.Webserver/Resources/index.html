@@ -33,9 +33,9 @@
 		<title>XG Webfrontend v{{VERSION}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+		<link rel="stylesheet" href="/Content/bootstrap.min.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Content/normalize.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/ng-table.css"/>
-		<link rel="stylesheet" href="/Content/bootstrap.css" type="text/css" media="screen"/>
+		<link rel="stylesheet" href="/Resources/css/ng-table.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/animation.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/animate.css" type="text/css" media="screen"/>
 		<link rel="stylesheet" href="/Resources/css/tango-colors.css" type="text/css" media="screen"/>
@@ -115,11 +115,11 @@
 								</div>
 							</div>
 						</li>
-						<li class="dropdown">
+						<li id="settings" class="dropdown">
 							<a class="dropdown-toggle">
 								<span class="glyphicon glyphicon-cog glyphiconBig" title="{{'Settings'|translate}}"></span>
 							</a>
-							<ul class="dropdown-menu" style="width: 228px;">
+							<ul class="dropdown-menu">
 								<li>
 									<a ng-click="openServerChannelsDialog()">
 										<span class="glyphicon glyphicon-globe"></span>

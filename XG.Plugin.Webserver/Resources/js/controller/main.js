@@ -41,7 +41,7 @@ define(['./module'], function (ng) {
 				windowClass: 'passwordDialog'
 			}).result.then(function (password)
 			{
-			    $scope.password = password;
+				$scope.password = password;
 				$scope.passwordOk = true;
 				$.connection.hub.start().done(
 					function ()
@@ -106,20 +106,20 @@ define(['./module'], function (ng) {
 
 			$scope.openShutdownDialog = function ()
 			{
-			    $modal.open({
-			        keyboard: true,
-			        backdrop: true,
-			        templateUrl: 'templates/dialog/shutdown.html',
-			        controller: 'ShutdownDialogCtrl',
-			        windowClass: 'shutdownDialog',
-			        resolve:
+				$modal.open({
+					keyboard: true,
+					backdrop: true,
+					templateUrl: 'templates/dialog/shutdown.html',
+					controller: 'ShutdownDialogCtrl',
+					windowClass: 'shutdownDialog',
+					resolve:
 					{
-					    password: function ()
-					    {
-					        return $scope.password;
-					    }
+						password: function ()
+						{
+							return $scope.password;
+						}
 					}
-			    });
+				});
 			};
 
 			// build this here, because the dialogs will respawn and recreate stuff

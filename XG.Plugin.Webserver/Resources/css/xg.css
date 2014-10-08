@@ -453,6 +453,16 @@ td .highlight .name, td.bold
 	overflow: scroll;
 }
 
+#settings .dropdown-menu
+{
+	width: 228px;
+}
+
+#settings .btn-group
+{
+	display: block;
+}
+
 /* Snapshots */
 
 #snapshot .panel

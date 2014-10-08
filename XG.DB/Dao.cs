@@ -42,7 +42,7 @@ namespace XG.DB
 
 		IObjectContainer _db;
 
-		object _lock = new object();
+		readonly object _lock = new object();
 
 		#endregion
 

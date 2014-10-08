@@ -70,38 +70,8 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Nowin">
-      <HintPath>..\packages\Nowin.0.11.0.0\lib\net45\Nowin.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security">
-      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Diagnostics">
-      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.1.0\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.2.1.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy">
-      <HintPath>..\packages\Nancy.0.22.2\lib\net40\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Owin">
-      <HintPath>..\packages\Nancy.Owin.0.22.2\lib\net40\Nancy.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Serialization.JsonNet">
-      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.22.2\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Client">
       <HintPath>..\packages\Cache.1.2.1\Microsoft.ApplicationServer.Caching.Client.dll</HintPath>
@@ -112,25 +82,13 @@
     <Reference Include="PostSharp">
       <HintPath>..\packages\Cache.1.2.1\PostSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Quartz">
-      <HintPath>..\packages\Quartz.2.2.3\lib\net40\Quartz.dll</HintPath>
-    </Reference>
     <Reference Include="Db4objects.Db4o">
       <HintPath>..\packages\db4o-devel.8.1.184.15492\lib\net40\Db4objects.Db4o.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="Nancy.Validation.DataAnnotations">
       <HintPath>..\packages\Nancy.Validation.DataAnnotations.0.23.0\lib\net40\Nancy.Validation.DataAnnotations.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation">
-      <HintPath>..\packages\FluentValidation.5.3.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Validation.FluentValidation">
       <HintPath>..\packages\Nancy.Validation.FluentValidation.0.23.0\lib\net40\Nancy.Validation.FluentValidation.dll</HintPath>
@@ -140,6 +98,51 @@
     </Reference>
     <Reference Include="Lucene.Net">
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Nowin">
+      <HintPath>..\packages\Nowin.0.12.1.0\lib\net45\Nowin.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Serialization.JsonNet">
+      <HintPath>..\packages\Nancy.Serialization.JsonNet.0.23.2\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Owin">
+      <HintPath>..\packages\Nancy.Owin.0.23.2\lib\net40\Nancy.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy">
+      <HintPath>..\packages\Nancy.0.23.2\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Diagnostics">
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.3.0.0\lib\net45\Microsoft.Owin.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.4.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\packages\Quartz.2.2.4\lib\net40\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.2.0\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -260,51 +263,19 @@
     <EmbeddedResource Include="Resources\templates\dialog\serverChannel.html" />
     <EmbeddedResource Include="Resources\templates\dialog\xdcc.html" />
     <EmbeddedResource Include="Resources\js\filter\formatter\search.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.3.js" />
-    <EmbeddedResource Include="Scripts\jquery.signalR-2.0.3.min.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.1.1.js" />
     <EmbeddedResource Include="Scripts\jquery-2.1.1.min.js" />
-    <EmbeddedResource Include="Scripts\jquery-2.1.1.min.map" />
-    <EmbeddedResource Include="Scripts\jquery-2.1.1-vsdoc.js" />
-    <EmbeddedResource Include="Scripts\version.json" />
-    <EmbeddedResource Include="Scripts\moment-with-langs.min.js" />
-    <EmbeddedResource Include="Scripts\moment-with-langs.js" />
-    <EmbeddedResource Include="Scripts\moment.min.js" />
-    <EmbeddedResource Include="Scripts\moment.js" />
-    <EmbeddedResource Include="Scripts\errors.json" />
-    <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap.js" />
-    <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap.min.js" />
-    <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
-    <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
-    <EmbeddedResource Include="Scripts\flot\excanvas.js" />
-    <EmbeddedResource Include="Scripts\flot\excanvas.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.selection.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.stack.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.symbol.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.threshold.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.time.js" />
     <EmbeddedResource Include="Scripts\flot\jquery.flot.time.min.js" />
     <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.navigate.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.canvas.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.categories.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.crosshair.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.errorbars.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.fillbetween.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.image.min.js" />
+    <EmbeddedResource Include="Content\bootstrap.min.css" />
+    <EmbeddedResource Include="Content\normalize.css" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
+    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
+    <EmbeddedResource Include="Scripts\r.js" />
+    <EmbeddedResource Include="Scripts\require.js" />
+    <EmbeddedResource Include="Scripts\version.json" />
+    <EmbeddedResource Include="Scripts\angular.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
@@ -316,11 +287,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <EmbeddedResource Include="Content\bootstrap-theme.css.map" />
-    <EmbeddedResource Include="Content\bootstrap.css.map" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.woff" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\js\libs\angular-translate.min.js" />
     <EmbeddedResource Include="Resources\js\libs\css_browser_selector.js" />
@@ -330,9 +296,7 @@
     <EmbeddedResource Include="Resources\js\libs\jquery.knob.js" />
     <EmbeddedResource Include="Resources\js\libs\ng-table.js" />
     <EmbeddedResource Include="Resources\js\libs\sha256.js" />
-    <EmbeddedResource Include="Scripts\json2.js" />
     <EmbeddedResource Include="Scripts\json2.min.js" />
-    <EmbeddedResource Include="Content\normalize.css" />
     <EmbeddedResource Include="Resources\js\index.js" />
     <EmbeddedResource Include="Resources\js\controller\notification.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\index.js" />
@@ -344,257 +308,18 @@
     <EmbeddedResource Include="Resources\js\filter\formatter\notification.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\server.js" />
     <EmbeddedResource Include="Resources\css\animate.css" />
-    <EmbeddedResource Include="Scripts\angular-animate.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-cookies.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-loader.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-resource.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-route.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular-touch.min.js.map" />
-    <EmbeddedResource Include="Scripts\angular.min.js.map" />
-    <None Include="Scripts\i18n\angular-locale_af-na.js" />
-    <None Include="Scripts\i18n\angular-locale_af-za.js" />
-    <None Include="Scripts\i18n\angular-locale_af.js" />
-    <None Include="Scripts\i18n\angular-locale_am-et.js" />
-    <None Include="Scripts\i18n\angular-locale_am.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-001.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-ae.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-bh.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-dz.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-eg.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-iq.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-jo.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-kw.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-lb.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-ly.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-ma.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-om.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-qa.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-sa.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-sd.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-sy.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-tn.js" />
-    <None Include="Scripts\i18n\angular-locale_ar-ye.js" />
-    <None Include="Scripts\i18n\angular-locale_ar.js" />
-    <None Include="Scripts\i18n\angular-locale_bg-bg.js" />
-    <None Include="Scripts\i18n\angular-locale_bg.js" />
-    <None Include="Scripts\i18n\angular-locale_bn-bd.js" />
-    <None Include="Scripts\i18n\angular-locale_bn-in.js" />
-    <None Include="Scripts\i18n\angular-locale_bn.js" />
-    <None Include="Scripts\i18n\angular-locale_ca-ad.js" />
-    <None Include="Scripts\i18n\angular-locale_ca-es.js" />
-    <None Include="Scripts\i18n\angular-locale_ca.js" />
-    <None Include="Scripts\i18n\angular-locale_cs-cz.js" />
-    <None Include="Scripts\i18n\angular-locale_cs.js" />
-    <None Include="Scripts\i18n\angular-locale_da-dk.js" />
-    <None Include="Scripts\i18n\angular-locale_da.js" />
-    <None Include="Scripts\i18n\angular-locale_de-at.js" />
-    <None Include="Scripts\i18n\angular-locale_de-be.js" />
-    <None Include="Scripts\i18n\angular-locale_de-ch.js" />
-    <None Include="Scripts\i18n\angular-locale_de-de.js" />
-    <None Include="Scripts\i18n\angular-locale_de-li.js" />
-    <None Include="Scripts\i18n\angular-locale_de-lu.js" />
-    <None Include="Scripts\i18n\angular-locale_de.js" />
-    <None Include="Scripts\i18n\angular-locale_el-cy.js" />
-    <None Include="Scripts\i18n\angular-locale_el-gr.js" />
-    <None Include="Scripts\i18n\angular-locale_el.js" />
-    <None Include="Scripts\i18n\angular-locale_en-as.js" />
-    <None Include="Scripts\i18n\angular-locale_en-au.js" />
-    <None Include="Scripts\i18n\angular-locale_en-bb.js" />
-    <None Include="Scripts\i18n\angular-locale_en-be.js" />
-    <None Include="Scripts\i18n\angular-locale_en-bm.js" />
-    <None Include="Scripts\i18n\angular-locale_en-bw.js" />
-    <None Include="Scripts\i18n\angular-locale_en-bz.js" />
-    <None Include="Scripts\i18n\angular-locale_en-ca.js" />
-    <None Include="Scripts\i18n\angular-locale_en-dsrt-us.js" />
-    <None Include="Scripts\i18n\angular-locale_en-dsrt.js" />
-    <None Include="Scripts\i18n\angular-locale_en-fm.js" />
-    <None Include="Scripts\i18n\angular-locale_en-gb.js" />
-    <None Include="Scripts\i18n\angular-locale_en-gu.js" />
-    <None Include="Scripts\i18n\angular-locale_en-gy.js" />
-    <None Include="Scripts\i18n\angular-locale_en-hk.js" />
-    <None Include="Scripts\i18n\angular-locale_en-ie.js" />
-    <None Include="Scripts\i18n\angular-locale_en-in.js" />
-    <None Include="Scripts\i18n\angular-locale_en-iso.js" />
-    <None Include="Scripts\i18n\angular-locale_en-jm.js" />
-    <None Include="Scripts\i18n\angular-locale_en-mh.js" />
-    <None Include="Scripts\i18n\angular-locale_en-mp.js" />
-    <None Include="Scripts\i18n\angular-locale_en-mt.js" />
-    <None Include="Scripts\i18n\angular-locale_en-mu.js" />
-    <None Include="Scripts\i18n\angular-locale_en-na.js" />
-    <None Include="Scripts\i18n\angular-locale_en-nz.js" />
-    <None Include="Scripts\i18n\angular-locale_en-ph.js" />
-    <None Include="Scripts\i18n\angular-locale_en-pk.js" />
-    <None Include="Scripts\i18n\angular-locale_en-pr.js" />
-    <None Include="Scripts\i18n\angular-locale_en-pw.js" />
-    <None Include="Scripts\i18n\angular-locale_en-sg.js" />
-    <None Include="Scripts\i18n\angular-locale_en-tc.js" />
-    <None Include="Scripts\i18n\angular-locale_en-tt.js" />
-    <None Include="Scripts\i18n\angular-locale_en-um.js" />
-    <None Include="Scripts\i18n\angular-locale_en-us.js" />
-    <None Include="Scripts\i18n\angular-locale_en-vg.js" />
-    <None Include="Scripts\i18n\angular-locale_en-vi.js" />
-    <None Include="Scripts\i18n\angular-locale_en-za.js" />
-    <None Include="Scripts\i18n\angular-locale_en-zw.js" />
-    <None Include="Scripts\i18n\angular-locale_en.js" />
-    <None Include="Scripts\i18n\angular-locale_es-419.js" />
-    <None Include="Scripts\i18n\angular-locale_es-ar.js" />
-    <None Include="Scripts\i18n\angular-locale_es-bo.js" />
-    <None Include="Scripts\i18n\angular-locale_es-cl.js" />
-    <None Include="Scripts\i18n\angular-locale_es-co.js" />
-    <None Include="Scripts\i18n\angular-locale_es-cr.js" />
-    <None Include="Scripts\i18n\angular-locale_es-do.js" />
-    <None Include="Scripts\i18n\angular-locale_es-ea.js" />
-    <None Include="Scripts\i18n\angular-locale_es-ec.js" />
-    <None Include="Scripts\i18n\angular-locale_es-es.js" />
-    <None Include="Scripts\i18n\angular-locale_es-gq.js" />
-    <None Include="Scripts\i18n\angular-locale_es-gt.js" />
-    <None Include="Scripts\i18n\angular-locale_es-hn.js" />
-    <None Include="Scripts\i18n\angular-locale_es-ic.js" />
-    <None Include="Scripts\i18n\angular-locale_es-mx.js" />
-    <None Include="Scripts\i18n\angular-locale_es-ni.js" />
-    <None Include="Scripts\i18n\angular-locale_es-pa.js" />
-    <None Include="Scripts\i18n\angular-locale_es-pe.js" />
-    <None Include="Scripts\i18n\angular-locale_es-pr.js" />
-    <None Include="Scripts\i18n\angular-locale_es-py.js" />
-    <None Include="Scripts\i18n\angular-locale_es-sv.js" />
-    <None Include="Scripts\i18n\angular-locale_es-us.js" />
-    <None Include="Scripts\i18n\angular-locale_es-uy.js" />
-    <None Include="Scripts\i18n\angular-locale_es-ve.js" />
-    <None Include="Scripts\i18n\angular-locale_es.js" />
-    <None Include="Scripts\i18n\angular-locale_et-ee.js" />
-    <None Include="Scripts\i18n\angular-locale_et.js" />
-    <None Include="Scripts\i18n\angular-locale_eu-es.js" />
-    <None Include="Scripts\i18n\angular-locale_eu.js" />
-    <None Include="Scripts\i18n\angular-locale_fa-af.js" />
-    <None Include="Scripts\i18n\angular-locale_fa-ir.js" />
-    <None Include="Scripts\i18n\angular-locale_fa.js" />
-    <None Include="Scripts\i18n\angular-locale_fi-fi.js" />
-    <None Include="Scripts\i18n\angular-locale_fi.js" />
-    <None Include="Scripts\i18n\angular-locale_fil-ph.js" />
-    <None Include="Scripts\i18n\angular-locale_fil.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-be.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-bf.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-bi.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-bj.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-bl.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-ca.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-cd.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-cf.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-cg.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-ch.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-ci.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-cm.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-dj.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-fr.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-ga.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-gf.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-gn.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-gp.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-gq.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-km.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-lu.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-mc.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-mf.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-mg.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-ml.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-mq.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-ne.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-re.js" />
-    <None Include="Scripts\i18n\angular-locale_fr-yt.js" />
-    <None Include="Scripts\i18n\angular-locale_fr.js" />
-    <None Include="Scripts\i18n\angular-locale_gl-es.js" />
-    <None Include="Scripts\i18n\angular-locale_gl.js" />
-    <None Include="Scripts\i18n\angular-locale_gsw-ch.js" />
-    <None Include="Scripts\i18n\angular-locale_gsw.js" />
-    <None Include="Scripts\i18n\angular-locale_gu-in.js" />
-    <None Include="Scripts\i18n\angular-locale_gu.js" />
-    <None Include="Scripts\i18n\angular-locale_he-il.js" />
-    <None Include="Scripts\i18n\angular-locale_he.js" />
-    <None Include="Scripts\i18n\angular-locale_hi-in.js" />
-    <None Include="Scripts\i18n\angular-locale_hi.js" />
-    <None Include="Scripts\i18n\angular-locale_hr-hr.js" />
-    <None Include="Scripts\i18n\angular-locale_hr.js" />
-    <None Include="Scripts\i18n\angular-locale_hu-hu.js" />
-    <None Include="Scripts\i18n\angular-locale_hu.js" />
-    <None Include="Scripts\i18n\angular-locale_id-id.js" />
-    <None Include="Scripts\i18n\angular-locale_id.js" />
-    <None Include="Scripts\i18n\angular-locale_in.js" />
-    <None Include="Scripts\i18n\angular-locale_is-is.js" />
-    <None Include="Scripts\i18n\angular-locale_is.js" />
-    <None Include="Scripts\i18n\angular-locale_it-it.js" />
-    <None Include="Scripts\i18n\angular-locale_it-sm.js" />
-    <None Include="Scripts\i18n\angular-locale_it.js" />
-    <None Include="Scripts\i18n\angular-locale_iw.js" />
-    <None Include="Scripts\i18n\angular-locale_ja-jp.js" />
-    <None Include="Scripts\i18n\angular-locale_ja.js" />
-    <None Include="Scripts\i18n\angular-locale_kn-in.js" />
-    <None Include="Scripts\i18n\angular-locale_kn.js" />
-    <None Include="Scripts\i18n\angular-locale_ko-kr.js" />
-    <None Include="Scripts\i18n\angular-locale_ko.js" />
-    <None Include="Scripts\i18n\angular-locale_ln-cd.js" />
-    <None Include="Scripts\i18n\angular-locale_ln.js" />
-    <None Include="Scripts\i18n\angular-locale_lv-lv.js" />
-    <None Include="Scripts\i18n\angular-locale_lv.js" />
-    <None Include="Scripts\i18n\angular-locale_ml-in.js" />
-    <None Include="Scripts\i18n\angular-locale_ml.js" />
-    <None Include="Scripts\i18n\angular-locale_mr-in.js" />
-    <None Include="Scripts\i18n\angular-locale_mr.js" />
-    <None Include="Scripts\i18n\angular-locale_ms-my.js" />
-    <None Include="Scripts\i18n\angular-locale_ms.js" />
-    <None Include="Scripts\i18n\angular-locale_mt-mt.js" />
-    <None Include="Scripts\i18n\angular-locale_mt.js" />
-    <None Include="Scripts\i18n\angular-locale_nl-cw.js" />
-    <None Include="Scripts\i18n\angular-locale_nl-nl.js" />
-    <None Include="Scripts\i18n\angular-locale_nl-sx.js" />
-    <None Include="Scripts\i18n\angular-locale_nl.js" />
-    <None Include="Scripts\i18n\angular-locale_no.js" />
-    <None Include="Scripts\i18n\angular-locale_or-in.js" />
-    <None Include="Scripts\i18n\angular-locale_or.js" />
-    <None Include="Scripts\i18n\angular-locale_pl-pl.js" />
-    <None Include="Scripts\i18n\angular-locale_pl.js" />
-    <None Include="Scripts\i18n\angular-locale_pt-br.js" />
-    <None Include="Scripts\i18n\angular-locale_pt-pt.js" />
-    <None Include="Scripts\i18n\angular-locale_pt.js" />
-    <None Include="Scripts\i18n\angular-locale_ro-ro.js" />
-    <None Include="Scripts\i18n\angular-locale_ro.js" />
-    <None Include="Scripts\i18n\angular-locale_ru-ru.js" />
-    <None Include="Scripts\i18n\angular-locale_ru.js" />
-    <None Include="Scripts\i18n\angular-locale_sk-sk.js" />
-    <None Include="Scripts\i18n\angular-locale_sk.js" />
-    <None Include="Scripts\i18n\angular-locale_sl-si.js" />
-    <None Include="Scripts\i18n\angular-locale_sl.js" />
-    <None Include="Scripts\i18n\angular-locale_sq-al.js" />
-    <None Include="Scripts\i18n\angular-locale_sq.js" />
-    <None Include="Scripts\i18n\angular-locale_sr-cyrl-rs.js" />
-    <None Include="Scripts\i18n\angular-locale_sr-latn-rs.js" />
-    <None Include="Scripts\i18n\angular-locale_sr.js" />
-    <None Include="Scripts\i18n\angular-locale_sv-se.js" />
-    <None Include="Scripts\i18n\angular-locale_sv.js" />
-    <None Include="Scripts\i18n\angular-locale_sw-tz.js" />
-    <None Include="Scripts\i18n\angular-locale_sw.js" />
-    <None Include="Scripts\i18n\angular-locale_ta-in.js" />
-    <None Include="Scripts\i18n\angular-locale_ta.js" />
-    <None Include="Scripts\i18n\angular-locale_te-in.js" />
-    <None Include="Scripts\i18n\angular-locale_te.js" />
-    <None Include="Scripts\i18n\angular-locale_th-th.js" />
-    <None Include="Scripts\i18n\angular-locale_th.js" />
-    <None Include="Scripts\i18n\angular-locale_tl.js" />
-    <None Include="Scripts\i18n\angular-locale_tr-tr.js" />
-    <None Include="Scripts\i18n\angular-locale_tr.js" />
-    <None Include="Scripts\i18n\angular-locale_uk-ua.js" />
-    <None Include="Scripts\i18n\angular-locale_uk.js" />
-    <None Include="Scripts\i18n\angular-locale_ur-pk.js" />
-    <None Include="Scripts\i18n\angular-locale_ur.js" />
-    <None Include="Scripts\i18n\angular-locale_vi-vn.js" />
-    <None Include="Scripts\i18n\angular-locale_vi.js" />
-    <None Include="Scripts\i18n\angular-locale_zh-cn.js" />
-    <None Include="Scripts\i18n\angular-locale_zh-hans-cn.js" />
-    <None Include="Scripts\i18n\angular-locale_zh-hk.js" />
-    <None Include="Scripts\i18n\angular-locale_zh-tw.js" />
-    <None Include="Scripts\i18n\angular-locale_zh.js" />
-    <None Include="Scripts\i18n\angular-locale_zu-za.js" />
-    <None Include="Scripts\i18n\angular-locale_zu.js" />
+    <None Include="Scripts\angular-animate.min.js" />
+    <None Include="Scripts\angular-cookies.min.js" />
+    <None Include="Scripts\angular-sanitize.min.js" />
+    <None Include="Scripts\errors.json" />
+    <None Include="Scripts\bootstrap.js" />
+    <None Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\moment-with-locales.min.js" />
+    <None Include="Scripts\jquery.signalR-2.1.2.min.js" />
+    <None Include="Scripts\angular-ui\ui-bootstrap.js" />
+    <None Include="Scripts\angular-ui\ui-bootstrap.min.js" />
+    <None Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
+    <None Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">
@@ -656,41 +381,7 @@
     <EmbeddedResource Include="Resources\js\controller\dialog\shutdown.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap-theme.css" />
-    <EmbeddedResource Include="Content\bootstrap-theme.min.css" />
-    <EmbeddedResource Include="Content\bootstrap.css" />
-    <EmbeddedResource Include="Content\bootstrap.min.css" />
-    <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
-    <EmbeddedResource Include="Scripts\angular-animate.js" />
-    <EmbeddedResource Include="Scripts\angular-animate.min.js" />
-    <EmbeddedResource Include="Scripts\angular-cookies.js" />
-    <EmbeddedResource Include="Scripts\angular-cookies.min.js" />
-    <EmbeddedResource Include="Scripts\angular-csp.css" />
-    <EmbeddedResource Include="Scripts\angular-loader.js" />
-    <EmbeddedResource Include="Scripts\angular-loader.min.js" />
-    <EmbeddedResource Include="Scripts\angular-mocks.js" />
-    <EmbeddedResource Include="Scripts\angular-resource.js" />
-    <EmbeddedResource Include="Scripts\angular-resource.min.js" />
-    <EmbeddedResource Include="Scripts\angular-route.js" />
-    <EmbeddedResource Include="Scripts\angular-route.min.js" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.js" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
-    <EmbeddedResource Include="Scripts\angular-scenario.js" />
-    <EmbeddedResource Include="Scripts\angular-touch.js" />
-    <EmbeddedResource Include="Scripts\angular-touch.min.js" />
-    <EmbeddedResource Include="Scripts\angular.js" />
-    <EmbeddedResource Include="Scripts\angular.min.js" />
-    <EmbeddedResource Include="Scripts\bootstrap.js" />
-    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.colorhelpers.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.js" />
     <EmbeddedResource Include="Scripts\flot\jquery.flot.min.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.pie.js" />
-    <EmbeddedResource Include="Scripts\flot\jquery.flot.resize.js" />
-    <EmbeddedResource Include="Scripts\i18n\angular-locale_lt-lt.js" />
-    <EmbeddedResource Include="Scripts\i18n\angular-locale_lt.js" />
-    <EmbeddedResource Include="Scripts\r.js" />
-    <EmbeddedResource Include="Scripts\require.js" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

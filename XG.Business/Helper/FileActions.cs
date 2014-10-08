@@ -37,7 +37,7 @@ using log4net;
 
 namespace XG.Business.Helper
 {
-	public class FileActions
+	public static class FileActions
 	{
 		#region VARIABLES
 
@@ -126,7 +126,7 @@ namespace XG.Business.Helper
 		{
 			if (aEventArgs.Value2 is XG.Model.Domain.File)
 			{
-				XG.Model.Domain.File file = (XG.Model.Domain.File)aEventArgs.Value2;
+				var file = (XG.Model.Domain.File)aEventArgs.Value2;
 				Log.Info("RemoveFile(" + file + ")");
 				FileSystem.DeleteFile(Settings.Default.TempPath + file.TmpName);
 			}
@@ -194,7 +194,7 @@ namespace XG.Business.Helper
 				string file = Path.GetFileName(aFile);
 				string fileName = Path.GetFileNameWithoutExtension(aFile);
 				string fileExtension = Path.GetExtension(aFile);
-				if (fileExtension != null && fileExtension.StartsWith("."))
+				if (fileExtension != null && fileExtension.StartsWith(".", StringComparison.CurrentCulture))
 				{
 					fileExtension = fileExtension.Substring(1);
 				}

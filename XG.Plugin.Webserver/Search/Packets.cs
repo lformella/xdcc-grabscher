@@ -441,10 +441,12 @@ namespace XG.Plugin.Webserver.Search
 
 		static Document PacketToDocument(Packet aPacket)
 		{
+			var name = aPacket.RealName != null && aPacket.RealName != "" ? aPacket.RealName : aPacket.Name;
+
 			var doc = new Document();
 			doc.Add(new Field("Guid", aPacket.Guid.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("Id", "" + aPacket.Id, Field.Store.YES, Field.Index.NOT_ANALYZED));
-			doc.Add(new Field("Name", aPacket.Name.Replace("_", " ").Replace("-", " ").Replace(".", " "), Field.Store.YES, Field.Index.ANALYZED));
+			doc.Add(new Field("Name", name.Replace("_", " ").Replace("-", " ").Replace(".", " "), Field.Store.YES, Field.Index.ANALYZED));
 			doc.Add(new Field("Size", aPacket.Size.ToString(SIZE_STRING), Field.Store.YES, Field.Index.NOT_ANALYZED ));
 			doc.Add(new Field("Speed", "" + (aPacket.File != null ? aPacket.File.Speed : 0), Field.Store.YES, Field.Index.NOT_ANALYZED));
 			doc.Add(new Field("TimeMissing", "" + (aPacket.File != null ? aPacket.File.TimeMissing : 0), Field.Store.YES, Field.Index.NOT_ANALYZED));

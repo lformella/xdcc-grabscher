@@ -175,9 +175,11 @@ namespace XG.Business
 
 			FileActions.Files = Files;
 			FileActions.Servers = Servers;
-			Notifications = new Notifications();
-			Snapshots.Servers = Servers;
+
 			Snapshots.Files = Files;
+			Snapshots.Servers = Servers;
+
+			Notifications = new Notifications();
 		}
 
 		public void Shutdown(object sender)
@@ -208,6 +210,8 @@ namespace XG.Business
 			Scheduler.Shutdown();
 			_dao.Stop();
 			_plugins.StopAll();
+
+			FileActions.OnNotificationAdded -= NotificationAdded;
 		}
 
 		public void AddPlugin(APlugin aPlugin)

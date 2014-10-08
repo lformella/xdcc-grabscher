@@ -226,7 +226,7 @@ namespace XG.Plugin.Irc
 		void BotConnect(object aSender, EventArgs<Packet, Int64, IPAddress, int> aEventArgs)
 		{
 			int currentDownloadCount = (from file in Files.All where file.Connected select file).Count();
-			if (currentDownloadCount >= Settings.Default.MaxDownloads)
+			if (Settings.Default.MaxDownloads > 0 && currentDownloadCount >= Settings.Default.MaxDownloads)
 			{
 				_log.Error("BotConnect(" + aEventArgs.Value1 + ") skipping, because already " + Settings.Default.MaxDownloads + " packets are downloading");
 

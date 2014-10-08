@@ -30,65 +30,63 @@
 	<h4 class="modal-title" translate>Api Keys</h4>
 </div>
 <div class="modal-body">
-	<div class="row">
-		<div class="tableDiv">
-			<table ng-table="tableParamsApi" class="table">
-				<thead>
-					<tr>
-						<th width="38"></th>
-						<th width="300" class="sortable" ng-click="tableParamsApi.sorting({'Guid' : tableParamsApi.isSortBy('Guid', 'asc') ? 'desc' : 'asc'})">
-							<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Guid', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Guid', 'desc')}"></span>
-							<span translate>Api Key</span>
-						</th>
-						<th class="sortable text-left" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
-							<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Name', 'desc')}"></span>
-							<span translate>Name</span>
-						</th>
-						<th width="75" class="sortable text-right" ng-click="tableParamsApi.sorting({'ErrorCount' : tableParamsApi.isSortBy('ErrorCount', 'asc') ? 'desc' : 'asc'})">
-							<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('ErrorCount', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('ErrorCount', 'desc')}"></span>
-							<span translate>Error Count</span>
-						</th>
-						<th width="75" class="sortable text-right" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('SuccessCount', 'asc') ? 'desc' : 'asc'})">
-							<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('SuccessCount', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('SuccessCount', 'desc')}"></span>
-							<span translate>Success Count</span>
-						</th>
-						<th width="40"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="client in $data">
-						<td class="withIcon">
-							<span class="clickAble" ng-bind-html='client|formatClientIcon' ng-click="signalr.flip(client)"></span>
-						</td>
-						<td>
-							{{client.Guid}}
-						</td>
-						<td>
-							{{client.Name}}
-						</td>
-						<td class="text-right">
-							{{client.ErrorCount}}
-						</td>
-						<td class="text-right">
-							{{client.SuccessCount}}
-						</td>
-						<td class="text-right">
-							<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="signalr.remove(client)" title="{{'Remove'|translate}}"></span>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="form-horizontal">
-			<div class="form-group">
-				<label class="col-lg-2 control-label" for="client" translate>Client</label>
-				<div class="col-lg-9">
-					<div class="input-group">
-						<input class="form-control" type="text" name="client" ng-model="$parent.client" ng-keydown="clientKeydown($event);"/>
-									<span class="input-group-btn">
-										<button class="btn" ng-click="addClient();" translate>Add</button>
-									</span>
-					</div>
+	<div class="tableDiv">
+		<table ng-table="tableParamsApi" class="table">
+			<thead>
+				<tr>
+					<th width="38"></th>
+					<th width="300" class="sortable" ng-click="tableParamsApi.sorting({'Guid' : tableParamsApi.isSortBy('Guid', 'asc') ? 'desc' : 'asc'})">
+						<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Guid', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Guid', 'desc')}"></span>
+						<span translate>Api Key</span>
+					</th>
+					<th class="sortable text-left" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('Name', 'asc') ? 'desc' : 'asc'})">
+						<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('Name', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('Name', 'desc')}"></span>
+						<span translate>Name</span>
+					</th>
+					<th width="75" class="sortable text-right" ng-click="tableParamsApi.sorting({'ErrorCount' : tableParamsApi.isSortBy('ErrorCount', 'asc') ? 'desc' : 'asc'})">
+						<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('ErrorCount', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('ErrorCount', 'desc')}"></span>
+						<span translate>Error Count</span>
+					</th>
+					<th width="75" class="sortable text-right" ng-click="tableParamsApi.sorting({'Name' : tableParamsApi.isSortBy('SuccessCount', 'asc') ? 'desc' : 'asc'})">
+						<span ng-class="{'glyphicon glyphicon-sort-by-alphabet': tableParamsApi.isSortBy('SuccessCount', 'asc'), 'glyphicon glyphicon-sort-by-alphabet-alt': tableParamsApi.isSortBy('SuccessCount', 'desc')}"></span>
+						<span translate>Success Count</span>
+					</th>
+					<th width="40"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="client in $data">
+					<td class="withIcon">
+						<span class="clickAble" ng-bind-html='client|formatClientIcon' ng-click="signalr.flip(client)"></span>
+					</td>
+					<td>
+						{{client.Guid}}
+					</td>
+					<td>
+						{{client.Name}}
+					</td>
+					<td class="text-right">
+						{{client.ErrorCount}}
+					</td>
+					<td class="text-right">
+						{{client.SuccessCount}}
+					</td>
+					<td class="text-right">
+						<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="signalr.remove(client)" title="{{'Remove'|translate}}"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="form-horizontal">
+		<div class="form-group">
+			<label class="col-lg-2 control-label" for="client" translate>Client</label>
+			<div class="col-lg-9">
+				<div class="input-group">
+					<input class="form-control" type="text" name="client" ng-model="client" ng-keydown="clientKeydown($event);"/>
+					<span class="input-group-btn">
+						<button class="btn" ng-click="addClient();" translate>Add</button>
+					</span>
 				</div>
 			</div>
 		</div>
