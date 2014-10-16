@@ -272,6 +272,11 @@ td .highlight .name, td.bold
 	padding: 0 8px;
 }
 
+.serverChannelDialog .form-horizontal
+{
+	margin-top: 3px;
+}
+
 .configDialog .modal-dialog
 {
 	width: 850px;

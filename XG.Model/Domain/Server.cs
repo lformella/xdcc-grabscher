@@ -120,7 +120,7 @@ namespace XG.Model.Domain
 			}
 			if (Channel(aChannel) == null)
 			{
-                var tChannel = new Channel {Name = aChannel, Enabled = true};
+				var tChannel = new Channel {Name = aChannel, Enabled = true};
 				return AddChannel(tChannel);
 			}
 			return false;

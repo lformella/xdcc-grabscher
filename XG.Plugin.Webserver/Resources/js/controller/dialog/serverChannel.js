@@ -87,13 +87,24 @@ define(['./module'], function (ng) {
 				}
 			});
 
-			$scope.channel = '';
-			$scope.addChannel = function()
+			$scope.channelDefault = { Guid: '', Name: '', MessageAfterConnect: '' };
+			$scope.channelSignalr.channel = $scope.channelDefault;
+			$scope.saveChannel = function()
 			{
-				if ($scope.channel != '')
+				var channel = $scope.channelSignalr.channel;
+
+				if (channel.Guid == '')
 				{
-					$scope.channelSignalr.add($scope.channel, $scope.serverSignalr.server.Guid);
-					$scope.channel = '';
+					if (channel.Name != '')
+					{
+						$scope.channelSignalr.getProxy().server.add($scope.serverSignalr.server.Guid, channel.Name, channel.MessageAfterConnect);
+						$scope.channelSignalr.channel = $scope.channelDefault;
+					}
+				}
+				else
+				{
+					$scope.channelSignalr.getProxy().server.setMessageAfterConnect(channel.Guid, channel.MessageAfterConnect);
+					$scope.channelSignalr.channel = $scope.channelDefault;
 				}
 			};
 
@@ -101,7 +112,7 @@ define(['./module'], function (ng) {
 			{
 				if ($event.keyCode == 13)
 				{
-					$scope.addChannel();
+					$scope.saveChannel();
 				}
 			};
 
@@ -117,6 +128,7 @@ define(['./module'], function (ng) {
 
 			$scope.$watch('serverSignalr.server', function ()
 			{
+				$scope.channelSignalr.channel = $scope.channelDefault;
 				$scope.tableParamsChannel.page(1);
 				$scope.clear = true;
 				$scope.tableParamsChannel.reload();

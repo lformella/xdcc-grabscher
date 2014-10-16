@@ -47,6 +47,7 @@ namespace XG.Plugin.Irc
 		
 		readonly TimedList<Bot> _botQueue = new TimedList<Bot>();
 		readonly TimedList<Model.Domain.Channel> _channelQueue = new TimedList<Model.Domain.Channel>();
+		readonly TimedList<Model.Domain.Channel> _channelToSendMessageQueue = new TimedList<Model.Domain.Channel>();
 		readonly TimedList<string> _latestPacketRequests = new TimedList<string>();
 		readonly List<XdccListEntry> _xdccListQueue = new List<XdccListEntry>();
 		readonly TimedList<string> _latestXdccListRequests = new TimedList<string>();
@@ -185,6 +186,15 @@ namespace XG.Plugin.Irc
 			if (entry != null)
 			{
 				entry.IncreaseTime();
+			}
+		}
+
+		void ClientOnChannelJoined(object sender, EventArgs<Model.Domain.Channel> e)
+		{
+			if (!string.IsNullOrWhiteSpace(e.Value1.MessageAfterConnect) && !_channelToSendMessageQueue.Contains(e.Value1))
+			{
+				// wait some time and send the message
+				_channelToSendMessageQueue.Add(e.Value1, DateTime.Now.AddSeconds(Settings.Default.CommandWaitTime));
 			}
 		}
 
@@ -378,6 +388,7 @@ namespace XG.Plugin.Irc
 			_client.OnDisconnected += ClientOnDisconnected;
 			_client.OnMessage += ClientOnMessage;
 			_client.OnReadLine += ClientOnReadLine;
+			_client.OnChannelJoined += ClientOnChannelJoined;
 			_client.OnBotJoined += ClientOnBotJoined;
 			_client.OnUserJoined += ClientOnUserJoined;
 			_client.OnQueueChannel += ClientOnQueueChannel;
@@ -398,6 +409,7 @@ namespace XG.Plugin.Irc
 			_client.OnDisconnected -= ClientOnDisconnected;
 			_client.OnMessage -= ClientOnMessage;
 			_client.OnReadLine -= ClientOnReadLine;
+			_client.OnChannelJoined -= ClientOnChannelJoined;
 			_client.OnBotJoined -= ClientOnBotJoined;
 			_client.OnUserJoined -= ClientOnUserJoined;
 			_client.OnQueueChannel -= ClientOnQueueChannel;
@@ -457,10 +469,20 @@ namespace XG.Plugin.Irc
 
 		public void TriggerTimerRun()
 		{
+			TriggerChannelMessageRun();
 			TriggerChannelRun();
 			TriggerBotRun();
 			TriggerXdccListRun();
 			TriggerVersionRun();
+		}
+
+		void TriggerChannelMessageRun()
+		{
+			var channelsReady = _channelToSendMessageQueue.GetExpiredItems();
+			foreach (var channel in channelsReady)
+			{
+				_client.SendMessage(SendType.Message, channel.Name, channel.MessageAfterConnect);
+			}
 		}
 
 		void TriggerChannelRun()

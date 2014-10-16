@@ -109,12 +109,27 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 		}
 
-		public void Add(Guid aGuid, string aString)
+		public void Add(Guid aGuid, string aString, string aMessage)
 		{
 			var tServ = Helper.Servers.WithGuid(aGuid) as Server;
 			if (tServ != null)
 			{
-				tServ.AddChannel(aString);
+				if (!aString.StartsWith("#", StringComparison.CurrentCulture))
+				{
+					aString = "#" + aString;
+				}
+				var tChannel = new Channel {Name = aString, Enabled = true, MessageAfterConnect = aMessage};
+				tServ.AddChannel(tChannel);
+			}
+		}
+
+		public void SetMessageAfterConnect(Guid aGuid, string aMessage)
+		{
+			var tChannel = Helper.Servers.WithGuid(aGuid) as Channel;
+			if (tChannel != null)
+			{
+				tChannel.MessageAfterConnect = aMessage;
+				tChannel.Commit();
 			}
 		}
 

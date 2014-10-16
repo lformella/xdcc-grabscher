@@ -90,6 +90,14 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _askForVersion, value, "AskForVersion"); }
 		}
 
+		string _messageAfterConnect;
+
+		public string MessageAfterConnect
+		{
+			get { return GetProperty(ref _messageAfterConnect); }
+			set { SetProperty(ref _messageAfterConnect, value, "MessageAfterConnect"); }
+		}
+
 		#endregion
 
 		#region CHILDREN

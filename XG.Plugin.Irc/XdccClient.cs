@@ -101,6 +101,7 @@ namespace XG.Plugin.Irc
 		public event EventHandler<EventArgs<Server>> OnDisconnected = delegate {};
 		public event EventHandler<EventArgs<Model.Domain.Channel, string, string>> OnMessage = delegate {};
 		public event EventHandler<EventArgs<string>> OnReadLine = delegate {};
+		public event EventHandler<EventArgs<Model.Domain.Channel>> OnChannelJoined = delegate {};
 		public event EventHandler<EventArgs<Bot>> OnBotJoined = delegate {};
 		public event EventHandler<EventArgs<Model.Domain.Channel, string>> OnUserJoined = delegate {};
 		public event EventHandler<EventArgs<Model.Domain.Channel, int>> OnQueueChannel = delegate {};
@@ -475,6 +476,8 @@ namespace XG.Plugin.Irc
 					channel.Connected = true;
 					_log.Info("joined " + channel);
 					FireNotificationAdded(Notification.Types.ChannelJoined, channel);
+
+					OnChannelJoined(this, new EventArgs<Model.Domain.Channel>(channel));
 				}
 				else
 				{

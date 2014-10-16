@@ -135,13 +135,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-				    this.proxy.server.remove(object.Guid);
-				    object.Active = false;
-				    object.Waiting = true;
+					this.proxy.server.remove(object.Guid);
+					object.Active = false;
+					object.Waiting = true;
 				}
 				catch (e)
 				{
-				    object.Active = false;
+					object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -157,13 +157,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-				    this.proxy.server.enable(object.Guid);
-				    object.Active = false;
-				    object.Waiting = true;
+					this.proxy.server.enable(object.Guid);
+					object.Active = false;
+					object.Waiting = true;
 				}
 				catch (e)
 				{
-				    object.Active = false;
+					object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}

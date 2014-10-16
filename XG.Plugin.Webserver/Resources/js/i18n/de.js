@@ -72,6 +72,7 @@ define(['./module'], function (i18n) {
 				"Shutdown": "Beenden",
 				"Do you really want to shutdown XG?": "Willst du XG wirklich beenden?",
 				"Max Connections": "Max Verbindungen",
+				"This message should be send after a successful connection": "Diese Nachricht wird gesendet wenn der Channel verbunden ist",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */

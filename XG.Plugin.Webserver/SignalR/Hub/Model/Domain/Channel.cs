@@ -71,6 +71,11 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 			get { return Object.AskForVersion; }
 		}
 
+		public string MessageAfterConnect
+		{
+			get { return Object.MessageAfterConnect; }
+		}
+
 		#endregion
 	}
 }
