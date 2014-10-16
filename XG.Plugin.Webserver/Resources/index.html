@@ -63,11 +63,11 @@
 								<span class="glyphicon glyphicon-list-alt glyphiconBig" title="{{'IRC View'|translate}}"></span>
 							</a>
 						</li>
-						<li ng-class="{'active': slide == 3}">
+						<!--li ng-class="{'active': slide == 3}">
 							<a href="#" ng-click="slideTo(3)">
 								<span class="glyphicon glyphicon-cloud-download glyphiconBig" title="{{'External search'|translate}}"></span>
 							</a>
-						</li>
+						</li-->
 						<li ng-class="{'active': slide == 4}">
 							<a href="#" ng-click="slideTo(4)">
 								<span class="glyphicon glyphicon-hdd glyphiconBig" title="{{'Files'|translate}}"></span>
@@ -481,22 +481,15 @@
 					<div class="col-md-2">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">Timespan </h4>
+								<h4 class="panel-title" translate>Timespan</h4>
 							</div>
 							<div class="panel-collapse">
 								<div class="panel-body">
-									<label class="radio">
-										<input type="radio" id="time1" name="snapshotTime" value="1" checked="checked" ng-click="days = 1; updateSnapshots()">
-										<span translate>1 Day</span>
-									</label>
-									<label class="radio">
-										<input type="radio" id="time7" name="snapshotTime" value="7" ng-click="days = 7; updateSnapshots()">
-										<span translate>1 Week</span>
-									</label>
-									<label class="radio">
-										<input type="radio" id="time31" name="snapshotTime" value="31" ng-click="days = 31; updateSnapshots()">
-										<span translate>1 Month</span>
-									</label>
+									<div class="btn-group">
+										<label class="btn btn-primary btn-sm" ng-model="days" btn-radio="1"><span translate>1 Day</span></label>
+										<label class="btn btn-primary btn-sm" ng-model="days" btn-radio="7"><span translate>1 Week</span></label>
+										<label class="btn btn-primary btn-sm" ng-model="days" btn-radio="31"><span translate>1 Month</span></label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -510,10 +503,9 @@
 							</div>
 							<div class="panel-collapse" ng-show="group.collapsed">
 								<div class="panel-body">
-									<label class="checkbox" ng-repeat="type in group.types">
-										<input type="checkbox" ng-click="type.enabled = !type.enabled" />
-										<span translate>Snapshot_{{type.id}}</span>
-									</label>
+									<div ng-repeat="type in group.types">
+										<button type="button" class="btn btn-success btn-sm" ng-model="type.enabled" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" translate>Snapshot_{{type.id}}</button>
+									</div>
 								</div>
 							</div>
 						</div>

@@ -34,7 +34,7 @@ define([
 
 	i18n.config(['$translateProvider', 'LANGUAGE',
 		function ($translateProvider, LANGUAGE) {
-			moment.lang(LANGUAGE);
+			moment.locale(LANGUAGE);
 			$translateProvider.preferredLanguage(LANGUAGE);
 		}
 	]);
