@@ -37,7 +37,15 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 	{
 		public override Task OnConnected()
 		{
-			AddClient(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>(), MaxObjects = 0 });
+			AddClient(
+				new Client
+				{
+					ConnectionId = Context.ConnectionId,
+					LoadedObjects = new HashSet<Guid>(),
+					MaxObjects = 0,
+					VisibleHubs = new List<Type>()
+				}
+			);
 			return base.OnConnected();
 		}
 

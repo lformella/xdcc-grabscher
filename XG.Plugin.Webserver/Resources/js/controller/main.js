@@ -150,6 +150,10 @@ define(['./module'], function (ng) {
 							return $scope.channelSignalr;
 						}
 					}
+				}).result.finally(function ()
+				{
+					$scope.serverSignalr.visible(false);
+					$scope.channelSignalr.visible(false);
 				});
 			};
 
@@ -172,6 +176,9 @@ define(['./module'], function (ng) {
 							return $scope.apiSignalr;
 						}
 					}
+				}).result.finally(function ()
+				{
+					$scope.apiSignalr.visible(false);
 				});
 			};
 

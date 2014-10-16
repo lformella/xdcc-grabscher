@@ -179,13 +179,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-				    this.proxy.server.disable(object.Guid);
-				    object.Active = false;
-				    object.Waiting = true;
+					this.proxy.server.disable(object.Guid);
+					object.Active = false;
+					object.Waiting = true;
 				}
 				catch (e)
 				{
-				    object.Active = false;
+					object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -201,6 +201,11 @@ define(['./module'], function (ng) {
 				{
 					this.enable(object);
 				}
+			};
+
+			SignalrFactory.prototype.visible = function (bool)
+			{
+				this.proxy.server[bool ? "visible" : "inVisible"]();
 			};
 
 			return(SignalrFactory);

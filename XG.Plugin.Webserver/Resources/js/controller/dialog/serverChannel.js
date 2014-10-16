@@ -29,6 +29,9 @@ define(['./module'], function (ng) {
 	ng.controller('ServerChannelDialogCtrl', ['$scope', '$modalInstance', 'serverSignalr', 'channelSignalr', 'ngTableParams',
 		function ($scope, $modalInstance, serverSignalr, channelSignalr, ngTableParams)
 		{
+			serverSignalr.visible(true);
+			channelSignalr.visible(true);
+
 			$scope.serverSignalr = serverSignalr;
 			$scope.serverSignalr.setScope($scope);
 			$scope.serverSignalr.server = null;

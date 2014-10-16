@@ -32,8 +32,9 @@ define(['./module'], function (ng) {
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
-					callback:  function ()
+					callback: function ()
 					{
+						$scope.signalr.visible(true);
 						$scope.signalr.getProxy().server.getAll();
 					}
 				}

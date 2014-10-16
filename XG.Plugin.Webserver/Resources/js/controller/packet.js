@@ -160,6 +160,7 @@ define(['./module'], function (ng) {
 			$rootScope.$on('OnSlideTo', function (e, slide)
 			{
 				$scope.active = slide == 2;
+				$scope.signalr.visible($scope.active);
 			});
 
 			$rootScope.$watch('settings.showOfflineBots', function ()

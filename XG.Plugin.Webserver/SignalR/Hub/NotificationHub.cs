@@ -57,6 +57,16 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return (from client in ConnectedClients where client.ConnectionId == connectionId select client).SingleOrDefault();
 		}
 
+		public void Visible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Add(typeof(NotificationHub));
+		}
+
+		public void InVisible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Remove(typeof(NotificationHub));
+		}
+
 		#endregion
 
 		public Model.Domain.Result Load(int aCount, int aPage, string aSortBy, string aSort)

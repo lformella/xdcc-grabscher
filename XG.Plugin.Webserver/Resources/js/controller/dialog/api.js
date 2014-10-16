@@ -29,6 +29,8 @@ define(['./module'], function (ng) {
 	ng.controller('ApiDialogCtrl', ['$scope', '$modalInstance', 'signalr', 'ngTableParams',
 		function ($scope, $modalInstance, signalr, ngTableParams)
 		{
+			signalr.visible(true);
+
 			$scope.signalr = signalr;
 			$scope.signalr.setScope($scope);
 			$scope.signalr.client = '';
