@@ -48,6 +48,7 @@ define(['./module'], function (ng) {
 
 			$scope.searchBy = "";
 			$scope.search = "";
+			$scope.size = 0;
 			$scope.objects = [];
 			$scope.parents = {};
 			$scope.active = false;

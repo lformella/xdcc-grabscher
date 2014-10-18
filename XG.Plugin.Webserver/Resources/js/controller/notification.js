@@ -32,14 +32,14 @@ define(['./module', 'favicon'], function (ng) {
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
-					callback:  function ()
+					callback: function ()
 					{
 						$scope.tableParams.reload();
 					}
 				},
 				{
 					name: 'OnAdded',
-					callback:  function (message)
+					callback: function (message)
 					{
 						$scope.counter++;
 

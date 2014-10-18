@@ -63,11 +63,11 @@
 								<span class="glyphicon glyphicon-list-alt glyphiconBig" title="{{'IRC View'|translate}}"></span>
 							</a>
 						</li>
-						<!--li ng-class="{'active': slide == 3}">
+						<li ng-class="{'active': slide == 3}" ng-show="REMOTE_SETTINGS.ExternalSearch.Enabled">
 							<a href="#" ng-click="slideTo(3)">
 								<span class="glyphicon glyphicon-cloud-download glyphiconBig" title="{{'External search'|translate}}"></span>
 							</a>
-						</li-->
+						</li>
 						<li ng-class="{'active': slide == 4}">
 							<a href="#" ng-click="slideTo(4)">
 								<span class="glyphicon glyphicon-hdd glyphiconBig" title="{{'Files'|translate}}"></span>
@@ -214,6 +214,8 @@
 				</div>
 			</nav>
 			<div class="container ng-hide" ng-show="passwordOk">
+				<alert ng-show="REMOTE_SETTINGS.Version.ShowWarning" type="success" close="REMOTE_SETTINGS.Version.ShowWarning = false" ng-bind-html='REMOTE_SETTINGS.Version|formatVersionWarning|trustAsHtml'></alert>
+
 				<div ng-show="slide == 1" ng-controller="DashboardCtrl">
 
 					<div class="panel panel-default dashboardItem">

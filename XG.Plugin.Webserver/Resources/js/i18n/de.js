@@ -188,6 +188,8 @@ define(['./module'], function (i18n) {
 				/* OTHERS                                                                                                         */
 				/* ************************************************************************************************************** */
 
+				"NewVersionAvailable": "Es gibt eine neue Version: <a href='{{Url}}' target='_blank'>{{Latest}} ({{Name}})</a>",
+
 				"Search": "Suche",
 				"Dashboard": "Übersicht",
 				"Graphs": "Graphen",

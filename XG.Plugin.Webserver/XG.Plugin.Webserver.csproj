@@ -216,6 +216,8 @@
     <Compile Include="Job\SearchUpdater.cs" />
     <Compile Include="Search\Results.cs" />
     <Compile Include="Search\WildcardQuery.cs" />
+    <Compile Include="RemoteSettings.cs" />
+    <Compile Include="Job\RemoteSettingsLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\config\index.js" />
@@ -276,6 +278,7 @@
     <EmbeddedResource Include="Scripts\require.js" />
     <EmbeddedResource Include="Scripts\version.json" />
     <EmbeddedResource Include="Scripts\angular.min.js" />
+    <EmbeddedResource Include="Resources\js\filter\formatter\main.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />

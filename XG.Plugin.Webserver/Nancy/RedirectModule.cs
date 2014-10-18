@@ -23,10 +23,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+using System.Linq;
 using Nancy;
 using Nancy.Responses;
-using System.Linq;
 using XG.Config.Properties;
+using Newtonsoft.Json;
 
 namespace XG.Plugin.Webserver.Nancy
 {
@@ -36,7 +38,7 @@ namespace XG.Plugin.Webserver.Nancy
 		{
 			Get["/", true] = async(_, ct) => new RedirectResponse("/Resources/index.html");
 
-			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); });";
+			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); ng.constant('REMOTE_SETTINGS', ##REMOTE_SETTINGS##); });";
 
 			Get["/Resources/js/config/config.js", true] = async(parameters, ct) => {
 				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
@@ -48,6 +50,8 @@ namespace XG.Plugin.Webserver.Nancy
 				ret = ret.Replace("##LANGUAGE##", language);
 				ret = ret.Replace("##SALT##", Helper.Salt);
 				ret = ret.Replace("##VERSION##", Settings.Default.XgVersion);
+				ret = ret.Replace("##REMOTE_SETTINGS##", JsonConvert.SerializeObject(Helper.RemoteSettings));
+
 				return new TextResponse(ret, "application/x-javascript");
 			};
 		}

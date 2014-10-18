@@ -49,6 +49,7 @@ namespace XG.Plugin.Webserver.Nancy
 		public static ApiKeys ApiKeys { get; set; }
 		public static string Salt { get; set; }
 		public static string PasswortHash { get; set; }
+		public static RemoteSettings RemoteSettings { get; set; }
 
 		public static IEnumerable<Nancy.Api.Model.Domain.AObject> XgObjectsToNancyObjects(IEnumerable<AObject> aObjects)
 		{

@@ -39,6 +39,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public static RrdDb RrdDb { get; set; }
 		public static ApiKeys ApiKeys { get; set; }
 		public static string PasswortHash { get; set; }
+		public static RemoteSettings RemoteSettings { get; set; }
 
 		public static IEnumerable<SignalR.Hub.Model.Domain.AObject> XgObjectsToHubObjects(IEnumerable<AObject> aObjects)
 		{

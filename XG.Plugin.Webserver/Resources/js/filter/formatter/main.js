@@ -1,5 +1,5 @@
 //
-//  index.js
+//  main.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -23,15 +23,20 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define([
-	'./base',
-	'./bot',
-	'./channel',
-	'./client',
-	'./file',
-	'./notification',
-	'./main',
-	'./packet',
-	'./search',
-	'./server'
-], function () {});
+define(['./module'], function (ng) {
+	'use strict';
+
+	ng.filter('formatVersionWarning', ['$translate', function ($translate)
+	{
+		return function (version)
+		{
+			if (version == undefined)
+			{
+				return "";
+			}
+
+			var msg = $translate("NewVersionAvailable", version);
+			return msg;
+		}
+	}]);
+});

@@ -70,7 +70,7 @@ namespace XG.Plugin.Webserver
 			Search.Packets.Servers = Servers;
 			Search.Packets.Initialize();
 
-			AddRepeatingJob(typeof(Job.SearchUpdater), "SearchUpdater", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 60,
+			AddRepeatingJob(typeof(Job.SearchUpdater), "SearchUpdater", "WebserverPlugin", Settings.Default.TakeSnapshotTimeInMinutes * 60,
 				new JobItem("Searches", Searches));
 
 			string salt = Hash();
@@ -105,6 +105,11 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Notifications = Notifications;
 			_eventForwarder.ApiKeys = ApiKeys;
 			_eventForwarder.Start(typeof(SignalR.EventForwarder).ToString());
+
+			var settings = new RemoteSettings { Version = new Version(), ExternalSearch = new ExternalSearch { Enabled = false } };
+			SignalR.Hub.Helper.RemoteSettings = settings;
+			Nancy.Helper.RemoteSettings = settings;
+			AddRepeatingJob(typeof(Job.RemoteSettingsLoader), "RemoteSettingsLoader", "WebserverPlugin", 60 * 60 * 24);
 		}
 
 		protected override void StopRun()

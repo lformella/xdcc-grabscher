@@ -26,10 +26,11 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory', 'VERSION',
-		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory, VERSION)
+	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory', 'VERSION', 'REMOTE_SETTINGS',
+		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory, VERSION, REMOTE_SETTINGS)
 		{
 			$scope.VERSION = VERSION;
+			$scope.REMOTE_SETTINGS = REMOTE_SETTINGS;
 
 			$scope.password = null;
 			$scope.passwordOk = false;

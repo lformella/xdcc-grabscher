@@ -107,6 +107,7 @@ namespace XG.Plugin
 
 			ITrigger trigger = TriggerBuilder.Create()
 				.WithIdentity(aName, aGroup)
+				.StartNow()
 				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aSecondsToSleep).RepeatForever())
 				.Build();
 

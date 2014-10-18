@@ -104,7 +104,13 @@ define(['./module'], function (i18n) {
 				"Notification_Header_18": "Bot submitted wrong data",
 				"Notification_Description_18": "The Bot {{ParentName1}} submitted wrong data for packet {{ObjectName1}}",
 				"Notification_Header_19": "Packet name is different",
-				"Notification_Description_19": "The submitted name of the Packet {{ObjectName1}} is different from the expected"
+				"Notification_Description_19": "The submitted name of the Packet {{ObjectName1}} is different from the expected",
+
+				/* ************************************************************************************************************** */
+				/* OTHERS                                                                                                         */
+				/* ************************************************************************************************************** */
+
+				"NewVersionAvailable": "A new version is available: <a href='{{Url}}' target='_blank'>{{Latest}} ({{Name}})</a>"
 			});
 		}
 	]);
