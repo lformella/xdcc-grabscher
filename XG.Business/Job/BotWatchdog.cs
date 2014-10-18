@@ -50,8 +50,8 @@ namespace XG.Business.Job
 			                where channel.Connected
 			                from bot in channel.Bots
 			                where
-				                !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Default.BotOfflineTime &&
-				                bot.OldestActivePacket() == null
+			                    !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Default.BotOfflineTime &&
+			                    bot.OldestActivePacket() == null
 			                select bot).ToArray();
 
 			int a = tBots.Length;
