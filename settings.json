@@ -1,0 +1,14 @@
+{
+	"Version":
+	{
+		"Latest": "3.2.0.0",
+		"Name": "Digital Dinosaur",
+		"Url": "https://github.com/lformella/xdcc-grabscher/releases/tag/v3.2.0.0",
+		"ShowWarning": false
+	},
+	"ExternalSearch":
+	{
+		"Enabled": false,
+		"Url": "http://xg.bitpir.at/index.php?show=search&action=external&xg=##VERSION##&start=##START##&limit=##LIMIT##&minSize=##MIN_SIZE##&botState=##BOT_STATE##&sortBy=##SORT_BY##&sort=##SORT##&search=##SEARCH##"
+	}
+}
