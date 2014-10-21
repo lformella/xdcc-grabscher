@@ -279,6 +279,13 @@
     <EmbeddedResource Include="Scripts\version.json" />
     <EmbeddedResource Include="Scripts\angular.min.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\main.js" />
+    <EmbeddedResource Include="Scripts\moment-with-locales.min.js" />
+    <EmbeddedResource Include="Scripts\jquery.signalR-2.1.2.min.js" />
+    <EmbeddedResource Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
+    <EmbeddedResource Include="Scripts\angular-animate.min.js" />
+    <EmbeddedResource Include="Scripts\errors.json" />
+    <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
@@ -311,18 +318,6 @@
     <EmbeddedResource Include="Resources\js\filter\formatter\notification.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\server.js" />
     <EmbeddedResource Include="Resources\css\animate.css" />
-    <None Include="Scripts\angular-animate.min.js" />
-    <None Include="Scripts\angular-cookies.min.js" />
-    <None Include="Scripts\angular-sanitize.min.js" />
-    <None Include="Scripts\errors.json" />
-    <None Include="Scripts\bootstrap.js" />
-    <None Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\moment-with-locales.min.js" />
-    <None Include="Scripts\jquery.signalR-2.1.2.min.js" />
-    <None Include="Scripts\angular-ui\ui-bootstrap.js" />
-    <None Include="Scripts\angular-ui\ui-bootstrap.min.js" />
-    <None Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
-    <None Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Business\XG.Business.csproj">

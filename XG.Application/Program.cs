@@ -24,6 +24,7 @@
 //  
 
 #if __MonoCS__
+using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
 #else

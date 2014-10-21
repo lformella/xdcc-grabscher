@@ -99,7 +99,7 @@ namespace XG.Plugin.Webserver.Nancy
 		{
 			try
 			{
-				var directoryName = "XG.Plugin.Webserver" + Path.GetDirectoryName(aPath).Replace(Path.DirectorySeparatorChar, '.').Replace("-", "_");
+				var directoryName = "XG.Plugin.Webserver" + Path.GetDirectoryName(aPath).Replace(Path.DirectorySeparatorChar, '.');
 				var fileName = Path.GetFileName(aPath);
 				if (ResourceExists(directoryName + "." + fileName))
 				{
