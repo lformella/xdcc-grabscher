@@ -155,6 +155,7 @@ define(['./module', 'jqFlot'], function (ng) {
 							});
 
 							$scope.snapshots = data;
+							$timeout($scope.render, 250);
 						}
 					);
 				}

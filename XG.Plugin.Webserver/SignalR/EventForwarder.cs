@@ -218,10 +218,6 @@ namespace XG.Plugin.Webserver.SignalR
 					{
 						continue;
 					}
-					if (!client.VisibleHubs.Contains(hub))
-					{
-						continue;
-					}
 
 					Log.Debug("SendRemoved()" + aObject);
 					GlobalHost.ConnectionManager.GetHubContext(hub.Name).Clients.Client(client.ConnectionId).OnRemoved(hubObject);

@@ -162,6 +162,11 @@ define(['./module'], function (ng) {
 			{
 				$scope.active = slide == 2;
 				$scope.signalr.visible($scope.active);
+
+				if ($scope.active)
+				{
+					$scope.tableParams.reload();
+				}
 			});
 
 			$rootScope.$watch('settings.showOfflineBots', function ()

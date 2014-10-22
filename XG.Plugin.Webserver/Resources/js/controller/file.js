@@ -57,6 +57,11 @@ define(['./module'], function (ng) {
 			{
 				$scope.active = slide == 4;
 				$scope.signalr.visible($scope.active);
+
+				if ($scope.active)
+				{
+					$scope.tableParams.reload();
+				}
 			});
 		}
 	]);
