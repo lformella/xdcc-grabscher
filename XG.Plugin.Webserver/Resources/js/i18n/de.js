@@ -73,6 +73,8 @@ define(['./module'], function (i18n) {
 				"Do you really want to shutdown XG?": "Willst du XG wirklich beenden?",
 				"Max Connections": "Max Verbindungen",
 				"This message should be send after a successful connection": "Diese Nachricht wird gesendet wenn der Channel verbunden ist",
+				"XG is offline": "XG ist offline",
+				"XG is offline / not ready yet. Please try again later.": "XG ist offline oder noch nicht bereit. Bitte versuche es später nochmal.",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */

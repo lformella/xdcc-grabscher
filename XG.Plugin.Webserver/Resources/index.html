@@ -27,19 +27,13 @@
 //
 -->
 
-<html lang="en" ng-app="xg" ng-controller="MainCtrl">
+<html lang="en" ng-app="xg" ng-controller="MainCtrl" manifest="/3.3.0.0/Resources/xg.appcache">
 	<head>
 		<meta charset="utf-8">
 		<title>XG Webfrontend v{{VERSION}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<link rel="stylesheet" href="/Content/bootstrap.min.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Content/normalize.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/ng-table.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/animation.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/animate.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/tango-colors.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/xg.css" type="text/css" media="screen"/>
+		<link rel="stylesheet" href="./css/init.css" type="text/css" media="screen"/>
 
 		<link rel="shortcut icon" href="favicon.ico">
 	</head>
@@ -520,7 +514,7 @@
 			</div>
 		</div>
 
-		<script data-main="js/init" src="/Scripts/require.js"></script>
+		<script data-main="js/init" src="../Scripts/require.js"></script>
 
 	</body>
 </html>

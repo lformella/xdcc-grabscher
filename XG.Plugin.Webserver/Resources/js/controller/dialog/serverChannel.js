@@ -43,6 +43,11 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
+					if (!$scope.serverSignalr.isConnected())
+					{
+						return;
+					}
+
 					$scope.serverSignalr.loadData($defer, params);
 				}
 			});
@@ -76,6 +81,11 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
+					if (!$scope.channelSignalr.isConnected())
+					{
+						return;
+					}
+
 					if (!$scope.clear && $scope.serverSignalr.server != null)
 					{
 						$scope.channelSignalr.loadData($defer, params, 'loadByServer', $scope.serverSignalr.server.Guid);

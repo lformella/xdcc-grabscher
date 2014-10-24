@@ -23,30 +23,37 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using Nancy;
 using Nancy.Responses;
-using XG.Config.Properties;
 using Newtonsoft.Json;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver.Nancy
 {
 	public class RedirectModule : NancyModule
 	{
+#if !DEBUG
+		string _basePath = "/" + Settings.Default.XgVersion + "/";
+#else
+		string _basePath = "/";
+#endif
+		string _config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); ng.constant('REMOTE_SETTINGS', ##REMOTE_SETTINGS##); ng.constant('ONLINE', true); });";
+
 		public RedirectModule()
 		{
-			Get["/", true] = async(_, ct) => new RedirectResponse("/Resources/index.html");
+			Get["/", true] = async (_, ct) => new RedirectResponse(_basePath + "Resources/index.html");
 
-			string config = "define(['./module'], function (ng) { 'use strict'; ng.constant('LANGUAGE', '##LANGUAGE##'); ng.constant('SALT', '##SALT##'); ng.constant('VERSION', '##VERSION##'); ng.constant('REMOTE_SETTINGS', ##REMOTE_SETTINGS##); });";
-
-			Get["/Resources/js/config/config.js", true] = async(parameters, ct) => {
+			Get[_basePath + "Resources/js/config/config.js", true] = async (parameters, ct) =>
+			{
 				var language = Request.Headers.AcceptLanguage.FirstOrDefault().Item1.Substring(0, 2);
 				if (language != "en" && language != "de")
 				{
 					language = "en";
 				}
-				string ret = config;
+				string ret = _config;
 				ret = ret.Replace("##LANGUAGE##", language);
 				ret = ret.Replace("##SALT##", Helper.Salt);
 				ret = ret.Replace("##VERSION##", Settings.Default.XgVersion);

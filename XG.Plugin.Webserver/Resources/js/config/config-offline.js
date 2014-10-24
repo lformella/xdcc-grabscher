@@ -1,5 +1,5 @@
-//
-//  signalrService.js
+﻿//
+//  config-offline.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -26,49 +26,19 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.service('SignalrService', ['$rootScope', function ($rootScope)
+	var lang = navigator.language || navigator.userLanguage;
+	if (lang.indexOf("de") > -1)
 	{
-		var connected = false;
-		$rootScope.$on('OnConnected', function ()
-		{
-			connected = true;
-		});
+		lang = "de";
+	}
+	else
+	{
+		lang = "en";
+	}
 
-		this.isConnected = function(name)
-		{
-			return connected;
-		};
-
-		this.getProxy = function(name)
-		{
-			return $.connection[name];
-		};
-
-		this.attachEventCallback = function(name, eventCallback)
-		{
-			var proxy = this.getProxy(name);
-			if (eventCallback.name == "OnConnected")
-			{
-				$rootScope.$on('OnConnected', function ()
-				{
-					eventCallback.callback();
-				});
-			}
-			else if (proxy != undefined)
-			{
-				proxy.on(eventCallback.name, function (message)
-				{
-					eventCallback.callback(message);
-				});
-			}
-		};
-
-		this.attachEventCallbacks = function(name, eventCallbacks)
-		{
-			angular.forEach(eventCallbacks, function (eventCallback)
-			{
-				this.attachEventCallback(name, eventCallback);
-			}, this);
-		}
-	}]);
+	ng.constant('LANGUAGE', lang);
+	ng.constant('SALT', '');
+	ng.constant('VERSION', '3.3.0.0');
+	ng.constant('REMOTE_SETTINGS', {});
+	ng.constant('ONLINE', false);
 });

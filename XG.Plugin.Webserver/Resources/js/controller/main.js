@@ -26,43 +26,58 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory', 'VERSION', 'REMOTE_SETTINGS',
-		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory, VERSION, REMOTE_SETTINGS)
+	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory', 'VERSION', 'REMOTE_SETTINGS', 'ONLINE',
+		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory, VERSION, REMOTE_SETTINGS, ONLINE)
 		{
 			$scope.VERSION = VERSION;
 			$scope.REMOTE_SETTINGS = REMOTE_SETTINGS;
+			$scope.ONLINE = ONLINE;
 
 			$scope.password = null;
 			$scope.passwordOk = false;
-			$modal.open({
-				keyboard: false,
-				backdrop: 'static',
-				templateUrl: 'templates/dialog/password.html',
-				controller: 'PasswordDialogCtrl',
-				windowClass: 'passwordDialog'
-			}).result.then(function (password)
+
+			if (!$scope.ONLINE)
 			{
-				$scope.password = password;
-				$scope.passwordOk = true;
-				$.connection.hub.start().done(
-					function ()
-					{
-						$rootScope.$emit('OnConnected', password);
-					}
-				).fail(
-					function (message)
-					{
-						$scope.openErrorDialog(message);
-					}
-				);
-				$.connection.hub.error(
-					function (message)
-					{
-						$scope.openErrorDialog(message);
-					}
-				);
-				ipCookie('xg.password', password, { expires: 21, path: '/' });
-			});
+				$modal.open({
+					keyboard: false,
+					backdrop: 'static',
+					templateUrl: 'templates/dialog/offline.html',
+					controller: 'OfflineDialogCtrl',
+					windowClass: 'offlineDialog'
+				});
+			}
+			else
+			{
+				$modal.open({
+					keyboard: false,
+					backdrop: 'static',
+					templateUrl: 'templates/dialog/password.html',
+					controller: 'PasswordDialogCtrl',
+					windowClass: 'passwordDialog'
+				}).result.then(function (password)
+				{
+					$scope.password = password;
+					$scope.passwordOk = true;
+					$.connection.hub.start().done(
+						function ()
+						{
+							$rootScope.$emit('OnConnected', password);
+						}
+					).fail(
+						function (message)
+						{
+							$scope.openErrorDialog(message);
+						}
+					);
+					$.connection.hub.error(
+						function (message)
+						{
+							$scope.openErrorDialog(message);
+						}
+					);
+					ipCookie('xg.password', password, { expires: 21, path: '/' });
+				});
+			}
 
 			$rootScope.$on('AnErrorOccurred', function (e, message)
 			{

@@ -1,5 +1,5 @@
 //
-//  signalrService.js
+//  offline.js
 //  This file is part of XG - XDCC Grabscher
 //  http://www.larsformella.de/lang/en/portfolio/programme-software/xg
 //
@@ -26,49 +26,9 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.service('SignalrService', ['$rootScope', function ($rootScope)
-	{
-		var connected = false;
-		$rootScope.$on('OnConnected', function ()
+	ng.controller('OfflineDialogCtrl', ['$scope', '$modalInstance',
+		function ($scope, $modalInstance)
 		{
-			connected = true;
-		});
-
-		this.isConnected = function(name)
-		{
-			return connected;
-		};
-
-		this.getProxy = function(name)
-		{
-			return $.connection[name];
-		};
-
-		this.attachEventCallback = function(name, eventCallback)
-		{
-			var proxy = this.getProxy(name);
-			if (eventCallback.name == "OnConnected")
-			{
-				$rootScope.$on('OnConnected', function ()
-				{
-					eventCallback.callback();
-				});
-			}
-			else if (proxy != undefined)
-			{
-				proxy.on(eventCallback.name, function (message)
-				{
-					eventCallback.callback(message);
-				});
-			}
-		};
-
-		this.attachEventCallbacks = function(name, eventCallbacks)
-		{
-			angular.forEach(eventCallbacks, function (eventCallback)
-			{
-				this.attachEventCallback(name, eventCallback);
-			}, this);
 		}
-	}]);
+	]);
 });

@@ -243,7 +243,6 @@
     <EmbeddedResource Include="Resources\js\service\signalr.js" />
     <EmbeddedResource Include="Resources\js\bootstrap.js" />
     <EmbeddedResource Include="Resources\js\init.js" />
-    <EmbeddedResource Include="Resources\css\ng-table.css" />
     <EmbeddedResource Include="Resources\js\factory\index.js" />
     <EmbeddedResource Include="Resources\js\factory\module.js" />
     <EmbeddedResource Include="Resources\js\factory\signalr.js" />
@@ -273,7 +272,6 @@
     <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
     <EmbeddedResource Include="Scripts\r.js" />
     <EmbeddedResource Include="Scripts\require.js" />
-    <EmbeddedResource Include="Scripts\version.json" />
     <EmbeddedResource Include="Scripts\angular.min.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\main.js" />
     <EmbeddedResource Include="Scripts\moment-with-locales.min.js" />
@@ -281,8 +279,17 @@
     <EmbeddedResource Include="Scripts\bootstrap.min.js" />
     <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
     <EmbeddedResource Include="Scripts\angular-animate.min.js" />
-    <EmbeddedResource Include="Scripts\errors.json" />
     <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
+    <EmbeddedResource Include="Resources\js\config\config-offline.js" />
+    <EmbeddedResource Include="Scripts\angular-cookie.min.js" />
+    <EmbeddedResource Include="Scripts\favico.min.js" />
+    <EmbeddedResource Include="Scripts\ng-table.min.js" />
+    <EmbeddedResource Include="Content\ng-table.min.css" />
+    <EmbeddedResource Include="Resources\xg.appcache" />
+    <EmbeddedResource Include="Resources\js\signalr-offline.js" />
+    <EmbeddedResource Include="Resources\css\init.css" />
+    <EmbeddedResource Include="Resources\templates\dialog\offline.html" />
+    <EmbeddedResource Include="Resources\js\controller\dialog\offline.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
@@ -296,14 +303,10 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\js\libs\angular-translate.min.js" />
-    <EmbeddedResource Include="Resources\js\libs\css_browser_selector.js" />
     <EmbeddedResource Include="Resources\js\libs\domReady.js" />
-    <EmbeddedResource Include="Resources\js\libs\favicon.js" />
     <EmbeddedResource Include="Resources\js\libs\jquery.flot.axislabels.js" />
     <EmbeddedResource Include="Resources\js\libs\jquery.knob.js" />
-    <EmbeddedResource Include="Resources\js\libs\ng-table.js" />
     <EmbeddedResource Include="Resources\js\libs\sha256.js" />
-    <EmbeddedResource Include="Scripts\json2.min.js" />
     <EmbeddedResource Include="Resources\js\index.js" />
     <EmbeddedResource Include="Resources\js\controller\notification.js" />
     <EmbeddedResource Include="Resources\js\controller\dialog\index.js" />
@@ -346,9 +349,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\js\libs\angular-cookie.js" />
-  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\controller\main.js" />
   </ItemGroup>
