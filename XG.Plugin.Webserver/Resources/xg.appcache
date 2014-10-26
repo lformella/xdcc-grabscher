@@ -108,9 +108,12 @@ CACHE:
 /3.3.0.0/Scripts/flot/jquery.flot.time.min.js
 /3.3.0.0/Scripts/flot/jquery.flot.pie.min.js
 /3.3.0.0/Scripts/angular-animate.min.js
+/3.3.0.0/Scripts/angular-animate.min.js.map
 /3.3.0.0/Scripts/angular-cookie.min.js
 /3.3.0.0/Scripts/angular-sanitize.min.js
+/3.3.0.0/Scripts/angular-sanitize.min.js.map
 /3.3.0.0/Scripts/angular.min.js
+/3.3.0.0/Scripts/angular.min.js.map
 /3.3.0.0/Scripts/favico.min.js
 /3.3.0.0/Scripts/jquery-2.1.1.min.js
 /3.3.0.0/Scripts/jquery.signalR-2.1.2.min.js

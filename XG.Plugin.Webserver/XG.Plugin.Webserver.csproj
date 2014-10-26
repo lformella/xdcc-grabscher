@@ -102,9 +102,6 @@
     <Reference Include="Nowin">
       <HintPath>..\packages\Nowin.0.12.1.0\lib\net45\Nowin.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Nancy.Serialization.JsonNet">
       <HintPath>..\packages\Nancy.Serialization.JsonNet.0.23.2\lib\net40\Nancy.Serialization.JsonNet.dll</HintPath>
     </Reference>
@@ -140,6 +137,9 @@
     </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -270,15 +270,11 @@
     <EmbeddedResource Include="fonts\glyphicons-halflings-regular.ttf" />
     <EmbeddedResource Include="fonts\glyphicons-halflings-regular.svg" />
     <EmbeddedResource Include="fonts\glyphicons-halflings-regular.eot" />
-    <EmbeddedResource Include="Scripts\r.js" />
     <EmbeddedResource Include="Scripts\require.js" />
-    <EmbeddedResource Include="Scripts\angular.min.js" />
     <EmbeddedResource Include="Resources\js\filter\formatter\main.js" />
     <EmbeddedResource Include="Scripts\moment-with-locales.min.js" />
     <EmbeddedResource Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <EmbeddedResource Include="Scripts\bootstrap.min.js" />
-    <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
-    <EmbeddedResource Include="Scripts\angular-animate.min.js" />
     <EmbeddedResource Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
     <EmbeddedResource Include="Resources\js\config\config-offline.js" />
     <EmbeddedResource Include="Scripts\angular-cookie.min.js" />
@@ -290,6 +286,12 @@
     <EmbeddedResource Include="Resources\css\init.css" />
     <EmbeddedResource Include="Resources\templates\dialog\offline.html" />
     <EmbeddedResource Include="Resources\js\controller\dialog\offline.js" />
+    <EmbeddedResource Include="Scripts\angular.min.js" />
+    <EmbeddedResource Include="Scripts\angular.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-animate.min.js" />
+    <EmbeddedResource Include="Scripts\angular-animate.min.js.map" />
+    <EmbeddedResource Include="Scripts\angular-sanitize.min.js" />
+    <EmbeddedResource Include="Scripts\angular-sanitize.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\js\app.js" />
