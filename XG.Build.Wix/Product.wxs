@@ -31,9 +31,9 @@
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id="ApplicationFiles" Guid="48974b54-bfcd-41b4-b1ba-fa2571950fe1">
 				<File Id="agsXMPP.dll" Source="..\XG.Application\bin\Build.Wix\agsXMPP.dll"/>
-				<File Id="BplusDotNet.dll" Source="..\XG.Application\bin\Build.Wix\BplusDotNet.dll"/>
-				<File Id="CacheAspect.dll" Source="..\XG.Application\bin\Build.Wix\CacheAspect.dll"/>
-				<File Id="CacheAspect.pdb" Source="..\XG.Application\bin\Build.Wix\CacheAspect.pdb"/>
+				<File Id="BplusDotNet.dll" Source="..\XG.Plugin.Webserver\bin\Build.Wix\BplusDotNet.dll"/>
+				<File Id="CacheAspect.dll" Source="..\XG.Plugin.Webserver\bin\Build.Wix\CacheAspect.dll"/>
+				<File Id="CacheAspect.pdb" Source="..\XG.Plugin.Webserver\bin\Build.Wix\CacheAspect.pdb"/>
 				<File Id="Common.Logging.dll" Source="..\XG.Application\bin\Build.Wix\Common.Logging.dll"/>
 				<File Id="Common.Logging.pdb" Source="..\XG.Application\bin\Build.Wix\Common.Logging.pdb"/>
 				<File Id="Common.Logging.xml" Source="..\XG.Application\bin\Build.Wix\Common.Logging.xml"/>
@@ -44,6 +44,8 @@
 				<File Id="HtmlAgilityPack.xml" Source="..\XG.Application\bin\Build.Wix\HtmlAgilityPack.xml"/>
 				<File Id="log4net.dll" Source="..\XG.Application\bin\Build.Wix\log4net.dll"/>
 				<File Id="log4net.xml" Source="..\XG.Application\bin\Build.Wix\log4net.xml"/>
+			  <File Id="Lucene.Net.dll" Source="..\XG.Application\bin\Build.Wix\Lucene.Net.dll"/>
+			  <File Id="Lucene.Net.xml" Source="..\XG.Application\bin\Build.Wix\Lucene.Net.xml"/>
 				<File Id="Meebey.SmartIrc4net.dll" Source="..\XG.Application\bin\Build.Wix\Meebey.SmartIrc4net.dll"/>
 				<File Id="Microsoft.AspNet.SignalR.Core.dll" Source="..\XG.Application\bin\Build.Wix\Microsoft.AspNet.SignalR.Core.dll"/>
 				<File Id="Microsoft.AspNet.SignalR.Core.xml" Source="..\XG.Application\bin\Build.Wix\Microsoft.AspNet.SignalR.Core.xml"/>
@@ -56,16 +58,16 @@
 				<File Id="Nancy.dll" Source="..\XG.Application\bin\Build.Wix\Nancy.dll"/>
 				<File Id="Nancy.Owin.dll" Source="..\XG.Application\bin\Build.Wix\Nancy.Owin.dll"/>
 				<File Id="Nancy.Owin.xml" Source="..\XG.Application\bin\Build.Wix\Nancy.Owin.xml"/>
-				<File Id="Nancy.Serialization.JsonNet.dll" Source="..\XG.Application\bin\Build.Wix\Nancy.Serialization.JsonNet.dll"/>
+				<File Id="Nancy.Serialization.JsonNet.dll" Source="..\XG.Plugin.Webserver\bin\Build.Wix\Nancy.Serialization.JsonNet.dll"/>
 				<File Id="Nancy.xml" Source="..\XG.Application\bin\Build.Wix\Nancy.xml"/>
 				<File Id="Nest.dll" Source="..\XG.Application\bin\Build.Wix\Nest.dll"/>
 				<File Id="Nest.pdb" Source="..\XG.Application\bin\Build.Wix\Nest.pdb"/>
 				<File Id="Nest.xml" Source="..\XG.Application\bin\Build.Wix\Nest.xml"/>
 				<File Id="Newtonsoft.Json.dll" Source="..\XG.Application\bin\Build.Wix\Newtonsoft.Json.dll"/>
 				<File Id="Newtonsoft.Json.xml" Source="..\XG.Application\bin\Build.Wix\Newtonsoft.Json.xml"/>
-				<File Id="Nowin.dll" Source="..\XG.Application\bin\Build.Wix\Nowin.dll"/>
+				<File Id="Nowin.dll" Source="..\XG.Plugin.Webserver\bin\Build.Wix\Nowin.dll"/>
 				<File Id="Owin.dll" Source="..\XG.Application\bin\Build.Wix\Owin.dll"/>
-				<File Id="PostSharp.dll" Source="..\XG.Application\bin\Build.Wix\PostSharp.dll"/>
+				<File Id="PostSharp.dll" Source="..\XG.Plugin.Webserver\bin\Build.Wix\PostSharp.dll"/>
 				<File Id="Quartz.dll" Source="..\XG.Application\bin\Build.Wix\Quartz.dll"/>
 				<File Id="Quartz.pdb" Source="..\XG.Application\bin\Build.Wix\Quartz.pdb"/>
 				<File Id="Quartz.xml" Source="..\XG.Application\bin\Build.Wix\Quartz.xml"/>
@@ -83,6 +85,8 @@
 				<File Id="XG.Config.pdb" Source="..\XG.Application\bin\Build.Wix\XG.Config.pdb"/>
 				<File Id="XG.DB.dll" Source="..\XG.Application\bin\Build.Wix\XG.DB.dll"/>
 				<File Id="XG.DB.pdb" Source="..\XG.Application\bin\Build.Wix\XG.DB.pdb"/>
+			  <File Id="XG.Extensions.dll" Source="..\XG.Extensions\bin\Build.Wix\XG.Extensions.dll"/>
+			  <File Id="XG.Extensions.pdb" Source="..\XG.Extensions\bin\Build.Wix\XG.Extensions.pdb"/>
 				<File Id="XG.Model.dll" Source="..\XG.Application\bin\Build.Wix\XG.Model.dll"/>
 				<File Id="XG.Model.pdb" Source="..\XG.Application\bin\Build.Wix\XG.Model.pdb"/>
 				<File Id="XG.Plugin.dll" Source="..\XG.Application\bin\Build.Wix\XG.Plugin.dll"/>
