@@ -97,30 +97,28 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
 			if (search != null)
 			{
-				return LoadByName(search.Name, aOfflineBots, aCount, aPage, aSortBy, aSort);
+				return LoadByParameter(search.Name, search.Size, aOfflineBots, aCount, aPage, aSortBy, aSort);
 			}
 			return new Model.Domain.Result { Total = 0, Results = new List<Hub.Model.Domain.AObject>() };
 		}
 
-		public Model.Domain.Result LoadByName(string aSearch, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByParameter(string aSearch, Int64 aSize, bool aOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			aPage--;
 
 			try
 			{
-				var uri = new Uri(
-					"http://xg.bitpir.at/index.php?" +
-					"show=search&" +
-					"action=external&" +
-					"xg=" + Settings.Default.XgVersion + "&" +
-					"start=" + aPage * aCount + "&" +
-					"limit=" + aCount + "&" +
-					"botState=" + (aOfflineBots ? 3 : 0) + "&" +
-					"sortBy=" + (aSortBy.Length > 1 ? aSortBy.Substring(0, 1).ToLower() + aSortBy.Substring(1) : "") + "&" +
-					"sort=" + aSort + "&" +
-					"search=" + aSearch
-				);
-				var req = HttpWebRequest.Create(uri);
+				var url = Helper.RemoteSettings.ExternalSearch.Url
+					.Replace("##VERSION##", Settings.Default.XgVersion)
+					.Replace("##START##", "" + aPage * aCount)
+					.Replace("##LIMIT##", "" + aCount)
+					.Replace("##MIN_SIZE##", "" + aSize)
+					.Replace("##BOT_STATE##", "" + (aOfflineBots ? 3 : 0))
+					.Replace("##SORT_BY##", aSortBy.Length > 1 ? aSortBy.Substring(0, 1).ToLower() + aSortBy.Substring(1) : "")
+					.Replace("##SORT##", aSort)
+					.Replace("##SEARCH##", aSearch);
+
+				var req = WebRequest.Create(new Uri(url));
 
 				var response = req.GetResponse();
 				StreamReader sr = new StreamReader(response.GetResponseStream());

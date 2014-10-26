@@ -29,15 +29,14 @@ namespace XG.Plugin.Irc
 {
 	public abstract class Connection : AWorker
 	{
+		public string Name { get; protected set; }
 		public DateTime LastContact { get; protected set; }
-		public bool WatchConnection { get; protected set; }
-
-		internal abstract void RepairConnection();
+		public DateTime ConnectionStarted { get; protected set; }
+		public DateTime ConnectionStopped { get; protected set; }
 
 		public void StartWatch(Int64 aWatchSeconds, string aName)
 		{
 			LastContact = DateTime.Now;
-			WatchConnection = true;
 			AddRepeatingJob(typeof(Job.ConnectionWatcher), aName, "Connection", 1, 
 				new JobItem("Connection", this),
 				new JobItem("MaximalTimeAfterLastContact", aWatchSeconds));
@@ -45,7 +44,19 @@ namespace XG.Plugin.Irc
 
 		public void Stopwatch()
 		{
-			RemoveAllMyRepeatingJobs();
+			RemoveAllJobs();
+		}
+
+		public double TimeConnected
+		{
+			get
+			{
+				if (ConnectionStarted == DateTime.MinValue)
+				{
+					return 0;
+				}
+				return (ConnectionStopped - ConnectionStarted).TotalSeconds;
+			}
 		}
 	}
 }

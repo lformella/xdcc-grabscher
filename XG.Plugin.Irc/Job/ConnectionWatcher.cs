@@ -39,17 +39,15 @@ namespace XG.Plugin.Irc.Job
 
 		public void Execute (IJobExecutionContext context)
 		{
-			if (!Connection.WatchConnection)
-			{
-				return;
-			}
 			if ((DateTime.Now - Connection.LastContact).TotalSeconds < MaximalTimeAfterLastContact)
 			{
 				return;
 			}
 
-			_log.Error("Execute() connection seems hanging since more than " + MaximalTimeAfterLastContact + " seconds");
-			Connection.RepairConnection();
+			_log.Error("Execute() connection " + Connection.Name + " seems hanging since more than " + MaximalTimeAfterLastContact + " seconds");
+
+			Connection.Stopwatch();
+			Connection.Stop();
 		}
 	}
 }

@@ -24,6 +24,7 @@
 //  
 
 using System;
+using Db4objects.Db4o;
 
 namespace XG.Model.Domain
 {
@@ -40,17 +41,27 @@ namespace XG.Model.Domain
 			set { base.Parent = value; }
 		}
 
-		Int64 _resultsOnline;
+		Int64 _size;
 
-		public Int64 ResultsOnline
+		public virtual Int64 Size
+		{
+			get { return GetProperty(ref _size); }
+			set { SetProperty(ref _size, value, "Size"); }
+		}
+
+		[Transient]
+		int _resultsOnline;
+
+		public int ResultsOnline
 		{
 			get { return GetProperty(ref _resultsOnline); }
 			set { SetProperty(ref _resultsOnline, value, "ResultsOnline"); }
 		}
 
-		Int64 _resultsOffline;
+		[Transient]
+		int _resultsOffline;
 
-		public Int64 ResultsOffline
+		public int ResultsOffline
 		{
 			get { return GetProperty(ref _resultsOffline); }
 			set { SetProperty(ref _resultsOffline, value, "ResultsOffline"); }
@@ -58,21 +69,11 @@ namespace XG.Model.Domain
 
 		#endregion
 
-		#region FUNCTIONS
+		#region HELPER
 
-		public bool IsVisible(Packet aPacket)
+		public override string ToString()
 		{
-			if (Guid == SearchDownloads)
-			{
-				return aPacket.Connected;
-			}
-
-			if (Guid == SearchEnabled)
-			{
-				return aPacket.Enabled;
-			}
-
-			return aPacket.Name.ContainsAll(Name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+			return base.ToString() + "|" + Size;
 		}
 
 		#endregion

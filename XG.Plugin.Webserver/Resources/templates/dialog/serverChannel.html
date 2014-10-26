@@ -60,16 +60,11 @@
 				</table>
 			</div>
 			<div class="form-horizontal">
-				<div class="form-group">
-					<label class="col-lg-2 control-label" for="server" translate>Server</label>
-					<div class="col-lg-10">
-						<div class="input-group">
-							<input class="form-control" type="text" name="server" ng-model="$parent.server" ng-keydown="serverKeydown($event);"/>
-										<span class="input-group-btn">
-											<button class="btn" ng-click="addServer();" translate>Add</button>
-										</span>
-						</div>
-					</div>
+				<div class="input-group">
+					<input class="form-control" placeholder="{{'Server'|translate}}" type="text" name="server" ng-model="server" ng-keydown="serverKeydown($event);"/>
+					<span class="input-group-btn">
+						<button class="btn" ng-click="addServer();" translate>Add</button>
+					</span>
 				</div>
 			</div>
 		</div>
@@ -101,7 +96,7 @@
 								<span class="clickAble" ng-bind-html='channel|formatChannelIcon' ng-click="channelSignalr.flip(channel)"></span>
 							</td>
 							<td class="withText">
-								<span ng-bind-html='channel|formatChannelName|trustAsHtml'></span>
+								<span class="clickAble" ng-bind-html='channel|formatChannelName|trustAsHtml' ng-click="channelSignalr.channel = channel"></span>
 							</td>
 							<td class="text-right">
 								{{channel.UserCount}}
@@ -121,17 +116,16 @@
 				</table>
 			</div>
 			<div class="form-horizontal">
-				<div class="form-group">
-					<label class="col-lg-2 control-label" for="channel" translate>Channel</label>
-					<div class="col-lg-10">
-						<div class="input-group">
-							<input class="form-control" type="text" name="channel" ng-model="$parent.channel" ng-keydown="channelKeydown($event)"/>
-										<span class="input-group-btn">
-											<button class="btn" ng-click="addChannel()" translate>Add</button>
-										</span>
-						</div>
-					</div>
+				<div class="input-group">
+					<input class="form-control" placeholder="{{'Channel'|translate}}" type="text" name="channelName" ng-model="channelSignalr.channel.Name" ng-keydown="channelKeydown($event)" ng-readonly="channelSignalr.channel.Guid != ''"/>
+					<span class="input-group-btn">
+						<button ng-if="channelSignalr.channel.Guid == ''" class="btn" ng-click="saveChannel()" translate>Add</button>
+						<button ng-if="channelSignalr.channel.Guid != ''" class="btn" ng-click="saveChannel()" translate>Save</button>
+					</span>
 				</div>
+			</div>
+			<div class="form-horizontal">
+				<input class="form-control" placeholder="{{'This message should be send after a successful connection'|translate}}" type="text" name="channelMessageAfterConnect" ng-model="channelSignalr.channel.MessageAfterConnect" ng-keydown="channelKeydown($event)"/>
 			</div>
 		</div>
 	</div>

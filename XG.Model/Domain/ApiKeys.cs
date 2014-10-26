@@ -31,9 +31,9 @@ namespace XG.Model.Domain
 {
 	public class ApiKeys : AObjects
 	{
-		public new IEnumerable<ApiKey> All
+		public IEnumerable<ApiKey> All
 		{
-			get { return base.All.Cast<ApiKey>(); }
+			get { return base.Children.Cast<ApiKey>(); }
 		}
 
 		public bool Add(ApiKey aObject)
@@ -58,7 +58,7 @@ namespace XG.Model.Domain
 			return tObject != null ? (ApiKey) tObject : null;
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Named(aObject.Name) != null;
 		}

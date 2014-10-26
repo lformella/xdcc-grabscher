@@ -59,6 +59,16 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return (from client in ConnectedClients where client.ConnectionId == connectionId select client).SingleOrDefault();
 		}
 
+		public void Visible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Add(typeof(ChannelHub));
+		}
+
+		public void InVisible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Remove(typeof(ChannelHub));
+		}
+
 		#endregion
 
 		public void Enable(Guid aGuid)
@@ -99,12 +109,27 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 		}
 
-		public void Add(Guid aGuid, string aString)
+		public void Add(Guid aGuid, string aString, string aMessage)
 		{
 			var tServ = Helper.Servers.WithGuid(aGuid) as Server;
 			if (tServ != null)
 			{
-				tServ.AddChannel(aString);
+				if (!aString.StartsWith("#", StringComparison.CurrentCulture))
+				{
+					aString = "#" + aString;
+				}
+				var tChannel = new Channel {Name = aString, Enabled = true, MessageAfterConnect = aMessage};
+				tServ.AddChannel(tChannel);
+			}
+		}
+
+		public void SetMessageAfterConnect(Guid aGuid, string aMessage)
+		{
+			var tChannel = Helper.Servers.WithGuid(aGuid) as Channel;
+			if (tChannel != null)
+			{
+				tChannel.MessageAfterConnect = aMessage;
+				tChannel.Commit();
 			}
 		}
 
@@ -120,7 +145,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public Model.Domain.Result LoadByServer(Guid aGuid, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Channel>((from server in Helper.Servers.All from channel in server.Channels where channel.ParentGuid == aGuid select channel).ToArray(), aCount, aPage, aSortBy, aSort, out length);
+			var objects = Helper.FilterAndLoadObjects<Model.Domain.Channel>((from server in Helper.Servers.All from channel in server.Channels where channel.ParentGuid == aGuid select channel).ToArray(), aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}

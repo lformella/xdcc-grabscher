@@ -31,9 +31,9 @@ namespace XG.Model.Domain
 {
 	public class Searches : AObjects
 	{
-		public new IEnumerable<Search> All
+		public IEnumerable<Search> All
 		{
-			get { return base.All.Cast<Search>(); }
+			get { return base.Children.Cast<Search>(); }
 		}
 
 		public bool Add(Search aObject)
@@ -46,10 +46,9 @@ namespace XG.Model.Domain
 			return base.Remove(aObject);
 		}
 
-		public new Search Named(string aName)
+		public Search WithParameters(string aName, Int64 aSize)
 		{
-			AObject tObject = base.Named(aName);
-			return tObject != null ? (Search) tObject : null;
+			return (from search in All where search.Name == aName && search.Size == aSize select search).FirstOrDefault();
 		}
 
 		public new Search WithGuid(Guid aGuid)
@@ -58,9 +57,9 @@ namespace XG.Model.Domain
 			return tObject != null ? (Search) tObject : null;
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
-			return Named(aObject.Name) != null;
+			return WithParameters(aObject.Name, (aObject as Search).Size) != null;
 		}
 	}
 }

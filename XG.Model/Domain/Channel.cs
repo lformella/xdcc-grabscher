@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Db4objects.Db4o;
 
 namespace XG.Model.Domain
 {
@@ -40,7 +41,7 @@ namespace XG.Model.Domain
 			{
 				if (!value)
 				{
-					foreach (AObject obj in All)
+					foreach (AObject obj in Children)
 					{
 						obj.Connected = false;
 						obj.Commit();
@@ -56,6 +57,7 @@ namespace XG.Model.Domain
 			set { base.Parent = value; }
 		}
 
+		[Transient]
 		int _errorCode;
 
 		public int ErrorCode
@@ -88,13 +90,21 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _askForVersion, value, "AskForVersion"); }
 		}
 
+		string _messageAfterConnect;
+
+		public string MessageAfterConnect
+		{
+			get { return GetProperty(ref _messageAfterConnect); }
+			set { SetProperty(ref _messageAfterConnect, value, "MessageAfterConnect"); }
+		}
+
 		#endregion
 
 		#region CHILDREN
 
 		public IEnumerable<Bot> Bots
 		{
-			get { return All.Cast<Bot>(); }
+			get { return Children.Cast<Bot>(); }
 		}
 
 		public Bot Bot(string aName)
@@ -112,7 +122,7 @@ namespace XG.Model.Domain
 			return Remove(aBot);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Bot((aObject as Bot).Name) != null;
 		}

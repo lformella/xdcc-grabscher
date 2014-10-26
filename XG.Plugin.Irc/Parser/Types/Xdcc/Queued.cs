@@ -27,9 +27,9 @@ using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class Queued : AParserWithExistingBot
+	public class Queued : ASaveBotMessageParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -44,7 +44,7 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					aBot.State = Bot.States.Waiting;
 				}
 
-				int valueInt = 0;
+				int valueInt;
 				aBot.InfoSlotCurrent = 0;
 				if (int.TryParse(match.Groups["queue_cur"].ToString(), out valueInt))
 				{
@@ -69,11 +69,8 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					time += valueInt * 60 * 60;
 				}
 				aBot.QueueTime = time;
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

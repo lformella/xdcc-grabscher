@@ -23,18 +23,19 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using log4net;
+using Quartz.Impl;
 using SharpRobin.Core;
-using XG.Business.Helper;
-using XG.Model.Domain;
-using XG.Plugin;
 using XG.Config.Properties;
 using XG.DB;
-using Quartz.Impl;
+using XG.Model.Domain;
+using XG.Plugin;
+using log4net;
+using XG.Business.Helper;
 
 namespace XG.Business
 {
@@ -64,14 +65,11 @@ namespace XG.Business
 
 		#region EVENTS
 
-		public virtual event EmptyEventHandler OnShutdownComplete;
+		public virtual event EventHandler OnShutdownComplete = delegate {};
 
-		protected void FireShutdownComplete()
+		protected void FireShutdownComplete(object aSender, EventArgs aEventArgs)
 		{
-			if (OnShutdownComplete != null)
-			{
-				OnShutdownComplete();
-			}
+			OnShutdownComplete(aSender, aEventArgs);
 		}
 
 		#endregion
@@ -89,10 +87,9 @@ namespace XG.Business
 			FileActions.OnNotificationAdded += NotificationAdded;
 
 			_plugins = new Plugins();
-			_rrdDb = new Helper.Rrd().GetDb();
+			_rrdDb = new Rrd().GetDb();
 
-			CheckForDuplicates();
-			ResetObjects();
+			Objects.CheckAndRemoveDuplicates(Servers);
 			ClearOldDownloads();
 			TryToRecoverOpenFiles();
 		}
@@ -110,7 +107,7 @@ namespace XG.Business
 					Files.Remove(file);
 					continue;
 				}
-				else if (!file.Enabled)
+				if (!file.Enabled)
 				{
 					// check if the real file and the part is actual the same
 					if (file.CurrentSize != info.Length)
@@ -141,10 +138,6 @@ namespace XG.Business
 
 			AddRepeatingJob(typeof(Job.BotWatchdog), "BotWatchdog", "Core", Settings.Default.BotOfflineCheckTime, 
 				new JobItem("Servers", Servers));
-
-			AddRepeatingJob(typeof(Job.SearchUpdater), "SearchUpdater", "Core", Settings.Default.TakeSnapshotTimeInMinutes * 600, 
-				new JobItem("Servers", Servers),
-				new JobItem("Searches", Searches));
 		}
 
 		void ClearOldDownloads()
@@ -171,85 +164,6 @@ namespace XG.Business
 			}
 		}
 
-		void ResetObjects()
-		{
-			foreach (Server tServer in Servers.All)
-			{
-				tServer.Connected = false;
-				tServer.ErrorCode = SocketErrorCode.None;
-
-				foreach (Channel tChannel in tServer.Channels)
-				{
-					tChannel.Connected = false;
-					tChannel.ErrorCode = 0;
-
-					foreach (Bot tBot in tChannel.Bots)
-					{
-						tBot.Connected = false;
-						tBot.State = Bot.States.Idle;
-						tBot.QueuePosition = 0;
-						tBot.QueueTime = 0;
-
-						foreach (Packet pack in tBot.Packets)
-						{
-							pack.Connected = false;
-						}
-					}
-				}
-			}
-		}
-
-		void CheckForDuplicates()
-		{
-			foreach (Server serv in Servers.All)
-			{
-				foreach (Server s in Servers.All)
-				{
-					if (s.Name == serv.Name && s.Guid != serv.Guid)
-					{
-						Log.Error("Run() removing dupe " + s);
-						Servers.Remove(s);
-					}
-				}
-
-				foreach (Channel chan in serv.Channels)
-				{
-					foreach (Channel c in serv.Channels)
-					{
-						if (c.Name == chan.Name && c.Guid != chan.Guid)
-						{
-							Log.Error("Run() removing dupe " + c);
-							serv.RemoveChannel(c);
-						}
-					}
-
-					foreach (Bot bot in chan.Bots)
-					{
-						foreach (Bot b in chan.Bots)
-						{
-							if (b.Name == bot.Name && b.Guid != bot.Guid)
-							{
-								Log.Error("Run() removing dupe " + b);
-								chan.RemoveBot(b);
-							}
-						}
-
-						/*foreach (Packet pack in bot.Packets)
-						{
-							foreach (Packet p in bot.Packets)
-							{
-								if (p.Id == pack.Id && p.Guid != pack.Guid)
-								{
-									Log.Error("Run() removing dupe " + p);
-									bot.RemovePacket(p);
-								}
-							}
-						}*/
-					}
-				}
-			}
-		}
-
 		void LoadObjects()
 		{
 			_dao.Start(typeof(Dao).ToString(), false);
@@ -261,9 +175,11 @@ namespace XG.Business
 
 			FileActions.Files = Files;
 			FileActions.Servers = Servers;
-			Notifications = new Notifications();
-			Snapshots.Servers = Servers;
+
 			Snapshots.Files = Files;
+			Snapshots.Servers = Servers;
+
+			Notifications = new Notifications();
 		}
 
 		public void Shutdown(object sender)
@@ -273,7 +189,7 @@ namespace XG.Business
 				ShutdownInProgress = true;
 				Log.Warn("OnShutdown() triggered by " + sender);
 				Stop();
-				FireShutdownComplete();
+				FireShutdownComplete(sender, null);
 			}
 		}
 
@@ -294,6 +210,8 @@ namespace XG.Business
 			Scheduler.Shutdown();
 			_dao.Stop();
 			_plugins.StopAll();
+
+			FileActions.OnNotificationAdded -= NotificationAdded;
 		}
 
 		public void AddPlugin(APlugin aPlugin)

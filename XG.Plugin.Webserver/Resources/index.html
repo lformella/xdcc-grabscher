@@ -27,20 +27,12 @@
 //
 -->
 
-<html lang="en" ng-app="xg" ng-controller="MainCtrl">
+<html lang="en" ng-app="xg" ng-controller="MainCtrl" manifest="/3.3.0.0/Resources/xg.appcache">
 	<head>
 		<meta charset="utf-8">
 		<title>XG Webfrontend v{{VERSION}}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-		<link rel="stylesheet" href="/Content/normalize.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/ng-table.css"/>
-		<link rel="stylesheet" href="/Content/bootstrap.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/animation.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/animate.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/tango-colors.css" type="text/css" media="screen"/>
-		<link rel="stylesheet" href="/Resources/css/xg.css" type="text/css" media="screen"/>
-
+		<link rel="stylesheet" href="./css/init.css" type="text/css" media="screen"/>
 		<link rel="shortcut icon" href="favicon.ico">
 	</head>
 
@@ -63,7 +55,7 @@
 								<span class="glyphicon glyphicon-list-alt glyphiconBig" title="{{'IRC View'|translate}}"></span>
 							</a>
 						</li>
-						<li ng-class="{'active': slide == 3}">
+						<li ng-class="{'active': slide == 3}" ng-show="REMOTE_SETTINGS.ExternalSearch.Enabled">
 							<a href="#" ng-click="slideTo(3)">
 								<span class="glyphicon glyphicon-cloud-download glyphiconBig" title="{{'External search'|translate}}"></span>
 							</a>
@@ -115,7 +107,7 @@
 								</div>
 							</div>
 						</li>
-						<li class="dropdown">
+						<li id="settings" class="dropdown">
 							<a class="dropdown-toggle">
 								<span class="glyphicon glyphicon-cog glyphiconBig" title="{{'Settings'|translate}}"></span>
 							</a>
@@ -163,11 +155,14 @@
 										<span translate>Human readable dates</span>
 									</a>
 								</li>
-								<li>
-									<a ng-click="flipSetting('showBotsInView')" ng-class="{'ScarletRedDark': settings.showBotsInView, 'Aluminium1Dark': !settings.showBotsInView}">
-										<span class="glyphicon glyphicon-time"></span>
-										<span translate>Show Bots in view</span>
-									</a>
+								<li class="divider"></li>
+								<li class="dropdown-header">
+									<span translate>Group Search Results By</span>
+									<div class="btn-group">
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'ParentGuid'" uncheckable><span translate>Bots</span></label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'GroupBy'" uncheckable><span translate>Search</span></label>
+										<label class="btn btn-info" ng-model="groupBy" btn-radio="'Guid'" uncheckable><span translate>None</span></label>
+									</div>
 								</li>
 							</ul>
 						</li>
@@ -176,18 +171,22 @@
 						<div id="searchLoading" ng-show="loading" class="glyphicon glyphicon-asterisk animate-spin ScarletRedDark"></div>
 						<div id="searchForm" class="input-append dropdown navbar-form pull-right">
 							<div class="form-group dropdown-toggle">
-								<input type="text" class="search-query form-control" placeholder="{{'Search'|translate}}" ng-model="search" ng-keydown="searchKeydown($event)"/>
+								<div class="input-group">
+									<input type="text" class="search-query form-control" placeholder="{{'Search'|translate}}" ng-model="search" ng-keydown="searchKeydown($event)"/>
+									<input type="text" class="search-size form-control" placeholder="{{'Size'|translate}}" ng-model="size" ng-keydown="searchKeydown($event)">
+									<select class="search-format form-control" ng-model="format" ng-options="f for f in formats" ng-change="triggerSearch()"><option></option></select>
+								</div>
 							</div>
-							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search)" ng-click="signalr.add(search)" title="{{'Save'|translate}}">
+							<button class="btn btn-default" type="button" ng-show="!signalr.isObject(search, getRealSize())" ng-click="signalr.add(getRealSize(), search)" title="{{'Save'|translate}}">
 								<span class="glyphicon glyphicon-thumbs-up"></span>
 							</button>
-							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search)" ng-click="signalr.removeByName(search)" title="{{'Remove'|translate}}">
+							<button class="btn btn-default" type="button" ng-show="signalr.isObject(search, getRealSize())" ng-click="signalr.removeByParameter(search, size)" title="{{'Remove'|translate}}">
 								<span class="glyphicon glyphicon-thumbs-down"></span>
 							</button>
 							<ul class="dropdown-menu">
 								<li class="dropdown-header" translate>Predefined</li>
 								<li ng-repeat="search in predefinedSearches">
-									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
+									<a href="#" ng-click="$parent.searchClicked(search)">
 										<span class="text" title="{{search.Name}}">{{search.Name}}</span>
 									</a>
 								</li>
@@ -195,10 +194,10 @@
 								<li class="dropdown-header" translate>Custom</li>
 								<li ng-repeat="search in objects">
 									<span class="glyphicon glyphicon-remove-circle ScarletRedMiddle clickAble" ng-click="$parent.removeSearch($event, search)" title="{{'Remove'|translate}}"></span>
-									<a href="#" ng-click="$parent.searchByGuid(search.Guid); $parent.search = search.Name">
+									<a href="#" ng-click="$parent.searchClicked(search)">
 										<span class="resultsOnline label label-success pull-right">{{search.ResultsOnline}}</span>
 										<span class="resultsOffline label label-default pull-right">{{search.ResultsOffline}}</span>
-										<span class="text" title="{{search.Name}}" ng-bind-html="search.Name|formatSearchString"></span>
+										<span class="text" title="{{search.Name}}" ng-bind-html="search|formatSearchString"></span>
 									</a>
 								</li>
 							</ul>
@@ -207,6 +206,11 @@
 				</div>
 			</nav>
 			<div class="container ng-hide" ng-show="passwordOk">
+
+				<alert ng-show="REMOTE_SETTINGS.Version.ShowWarning" type="success" close="REMOTE_SETTINGS.Version.ShowWarning = false"><span ng-bind-html='REMOTE_SETTINGS.Version|formatVersionWarning' /></alert>
+
+				<alert ng-repeat="message in REMOTE_SETTINGS.Messages"  ng-show="message.Enabled" type="{{message.type}}" close="message.Enabled = false"><span ng-bind-html='message.Text' /></alert>
+
 				<div ng-show="slide == 1" ng-controller="DashboardCtrl">
 
 					<div class="panel panel-default dashboardItem">
@@ -309,8 +313,8 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': settings.showOfflineBots && !$parent.parents[group.value].Connected}">
-							<tr class="ng-table-group" ng-show="settings.showBotsInView">
+						<tbody ng-repeat="group in $groups" ng-class="{'isOffline': settings.groupBy == 'ParentGuid' && !$parent.parents[group.value].Connected}">
+							<tr class="ng-table-group" ng-show="settings.groupBy == 'ParentGuid'">
 								<td class="withIcon withIcon2">
 									<span class="clickAble" ng-click="$parent.searchByBot($parent.parents[group.value])" title="{{'Just display packets from this bot'|translate}}">
 										<i class="glyphicon glyphicon-search Aluminium1Middle"></i>
@@ -329,6 +333,10 @@
 								<td class="text-right">
 									{{$parent.parents[group.value].LastContact|date2Human}}
 								</td>
+							</tr>
+							<tr class="ng-table-group" ng-show="settings.groupBy == 'GroupBy'">
+								<td colspan="2"></td>
+								<td colspan="5" class="bold">{{group.value}}</td>
 							</tr>
 							<tr ng-repeat="packet in group.data">
 								<td class="text-right">
@@ -470,22 +478,15 @@
 					<div class="col-md-2">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">Timespan </h4>
+								<h4 class="panel-title" translate>Timespan</h4>
 							</div>
 							<div class="panel-collapse">
 								<div class="panel-body">
-									<label class="radio">
-										<input type="radio" id="time1" name="snapshotTime" value="1" checked="checked" ng-click="days = 1; updateSnapshots()">
-										<span translate>1 Day</span>
-									</label>
-									<label class="radio">
-										<input type="radio" id="time7" name="snapshotTime" value="7" ng-click="days = 7; updateSnapshots()">
-										<span translate>1 Week</span>
-									</label>
-									<label class="radio">
-										<input type="radio" id="time31" name="snapshotTime" value="31" ng-click="days = 31; updateSnapshots()">
-										<span translate>1 Month</span>
-									</label>
+									<div class="btn-group">
+										<label class="btn btn-primary btn-sm" ng-model="days" btn-radio="1"><span translate>1 Day</span></label>
+										<label class="btn btn-primary btn-sm" ng-model="days" btn-radio="7"><span translate>1 Week</span></label>
+										<label class="btn btn-primary btn-sm" ng-model="days" btn-radio="31"><span translate>1 Month</span></label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -499,10 +500,9 @@
 							</div>
 							<div class="panel-collapse" ng-show="group.collapsed">
 								<div class="panel-body">
-									<label class="checkbox" ng-repeat="type in group.types">
-										<input type="checkbox" ng-click="type.enabled = !type.enabled" />
-										<span translate>Snapshot_{{type.id}}</span>
-									</label>
+									<div ng-repeat="type in group.types">
+										<button type="button" class="btn btn-success btn-sm" ng-model="type.enabled" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0" translate>Snapshot_{{type.id}}</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -515,7 +515,7 @@
 			</div>
 		</div>
 
-		<script data-main="js/init" src="/Scripts/require.js"></script>
+		<script data-main="js/init" src="../Scripts/require.js"></script>
 
 	</body>
 </html>

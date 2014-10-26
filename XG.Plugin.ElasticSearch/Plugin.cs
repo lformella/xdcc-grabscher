@@ -26,10 +26,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using log4net;
 using Nest;
-using XG.Model.Domain;
 using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Plugin.ElasticSearch
 {
@@ -197,7 +198,7 @@ namespace XG.Plugin.ElasticSearch
 
 				try
 				{
-					_client.Index(myObj, _index, type, myObj.Guid.ToString());
+					_client.Index(myObj, i => i.Index(_index).Type(type).Id(myObj.Guid.ToString()));
 				}
 				catch (Exception ex)
 				{
@@ -214,7 +215,7 @@ namespace XG.Plugin.ElasticSearch
 
 				try
 				{
-					_client.DeleteById(_index, type, aObj.Guid.ToString());
+					_client.Delete(aObj.Guid.ToString(), i => i.Index(_index).Type(type));
 				}
 				catch (Exception ex)
 				{

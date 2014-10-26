@@ -27,13 +27,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using log4net;
-using Meebey.SmartIrc4net;
-using XG.Plugin;
-using XG.Config.Properties;
 using XG.Business.Helper;
+using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
+using XG.Plugin;
+using log4net;
 
 namespace XG.Plugin.Irc
 {
@@ -58,7 +57,7 @@ namespace XG.Plugin.Irc
 			_parser.OnAddDownload += BotConnect;
 			_parser.OnDownloadXdccList += DownloadXdccList;
 			_parser.OnNotificationAdded += AddNotification;
-			_parser.OnRemoveDownload += (aSender, aEventArgs) => BotDisconnect(aEventArgs.Value2);
+			_parser.OnRemoveDownload += (aSender, aEventArgs) => BotDisconnect(aEventArgs.Value1);
 			_parser.Initialize();
 
 			foreach (Server server in Servers.All)
@@ -75,6 +74,8 @@ namespace XG.Plugin.Irc
 
 		protected override void StopRun()
 		{
+			_parser.DeInitialize();
+
 			foreach (var connection in _connections.ToArray())
 			{
 				connection.Stop();
@@ -128,7 +129,7 @@ namespace XG.Plugin.Irc
 
 		#endregion
 
-		#region SERVER
+		#region IRC CONNECTION
 
 		void ServerConnect(Server aServer)
 		{
@@ -141,6 +142,8 @@ namespace XG.Plugin.Irc
 			IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aServer);
 			if (connection == null)
 			{
+				_log.Info("ServerConnect(" + aServer + ")");
+
 				connection = new IrcConnection
 				{
 					Server = aServer,
@@ -155,8 +158,13 @@ namespace XG.Plugin.Irc
 			}
 			else
 			{
-				_log.Error("ConnectServer(" + aServer + ") is already in the list");
+				_log.Error("ServerConnect(" + aServer + ") is already in the list");
 			}
+		}
+
+		public void TryServerConnect(Server aServer)
+		{
+			ServerConnect(aServer);
 		}
 
 		void ServerDisconnect(Server aServer)
@@ -164,11 +172,12 @@ namespace XG.Plugin.Irc
 			IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aServer);
 			if (connection != null)
 			{
-				connection.Stop();
+				_log.Info("ServerDisconnect(" + aServer + ")");
+				connection.Disconnect();
 			}
 			else
 			{
-				_log.Error("DisconnectServer(" + aServer + ") is not in the list");
+				_log.Error("ServerDisconnect(" + aServer + ") is not in the list");
 			}
 		}
 
@@ -177,20 +186,31 @@ namespace XG.Plugin.Irc
 			IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aEventArgs.Value1);
 			if (connection != null)
 			{
-				if (!AllowRunning || !aEventArgs.Value1.Enabled)
-				{
-					connection.OnDisconnected -= ServerDisconnected;
-					connection.OnNotificationAdded -= AddNotification;
+				_log.Info("ServerDisconnected(" + aEventArgs.Value1 + ")");
 
-					connection.Server = null;
-					connection.Parser = null;
+				connection.OnDisconnected -= ServerDisconnected;
+				connection.OnNotificationAdded -= AddNotification;
 
-					_connections.Remove(connection);
-				}
-				else
+				connection.Server = null;
+				connection.Parser = null;
+
+				_connections.Remove(connection);
+
+				if (AllowRunning && aEventArgs.Value1.Enabled)
 				{
-					_log.Error("ServerDisconnected(" + aEventArgs.Value1 + ") restarting");
-					connection.TryConnect();
+					// if the lifetime of a connection was to low, we should sleep some time before try connecting again
+					if (connection.TimeConnected < 10)
+					{
+						_log.Info("ServerReconnect(" + aEventArgs.Value1 + ") in " + Settings.Default.CommandWaitTime + " seconds");
+						AddFutureJob(typeof(Job.ServerConnect), "ServerConnect." + aEventArgs.Value1, "IrcPlugin", Settings.Default.CommandWaitTime, 
+							new JobItem("Server", aEventArgs.Value1),
+							new JobItem("Plugin", this));
+					}
+					else
+					{
+						_log.Info("ServerReconnect(" + aEventArgs.Value1 + ")");
+						ServerConnect(aEventArgs.Value1);
+					}
 				}
 			}
 			else
@@ -201,10 +221,23 @@ namespace XG.Plugin.Irc
 
 		#endregion
 
-		#region BOT
+		#region BOT CONNECTION
 
 		void BotConnect(object aSender, EventArgs<Packet, Int64, IPAddress, int> aEventArgs)
 		{
+			int currentDownloadCount = (from file in Files.All where file.Connected select file).Count();
+			if (Settings.Default.MaxDownloads > 0 && currentDownloadCount >= Settings.Default.MaxDownloads)
+			{
+				_log.Error("BotConnect(" + aEventArgs.Value1 + ") skipping, because already " + Settings.Default.MaxDownloads + " packets are downloading");
+
+				IrcConnection connection = _connections.SingleOrDefault(c => c.Server == aEventArgs.Value1.Parent.Parent.Parent);
+				if (connection != null)
+				{
+					connection.AddBotToQueue(aEventArgs.Value1.Parent, Settings.Default.BotWaitTime);
+				}
+				return;
+			}
+
 			var download = _botDownloads.SingleOrDefault(c => c.Packet == aEventArgs.Value1);
 			if (download == null)
 			{
@@ -341,38 +374,7 @@ namespace XG.Plugin.Irc
 			var connection = _connections.FirstOrDefault(c => c.Server == aEventArgs.Value1);
 			if (connection != null)
 			{
-				Model.Domain.Channel tChan = null;
-				var user = connection.Client.GetIrcUser(aEventArgs.Value2);
-				if (user != null)
-				{
-					foreach (string channel in user.JoinedChannels)
-					{
-						tChan = aEventArgs.Value1.Channel(channel);
-						if (tChan != null)
-						{
-							break;
-						}
-					}
-				}
-
-				if (tChan == null)
-				{
-					_log.Error(".DownloadXdccReady(" + aEventArgs.Value2 + ") cant find channel");
-					return;
-				}
-
-				foreach (var line in lines)
-				{
-					IrcMessageData data = new IrcMessageData(connection.Client, "", aEventArgs.Value2, "", "", tChan.Name, line, line, ReceiveType.QueryNotice, ReplyCode.Null);
-
-					// damn internal contructors...
-					// uhh, this is evil - dont try this @ home kids!
-					IrcEventArgs args = (IrcEventArgs)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(IrcEventArgs));
-					FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-					EventFields[0].SetValue(args, data);
-
-					_parser.Parse(connection, args);
-				}
+				connection.ParseXdccFile(aEventArgs.Value2, lines);
 			}
 			else
 			{

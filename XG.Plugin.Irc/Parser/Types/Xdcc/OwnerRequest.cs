@@ -23,13 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class OwnerRequest : AParserWithExistingBot
+	public class OwnerRequest : ASaveBotMessageParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -43,16 +44,13 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					aBot.State = Bot.States.Idle;
 				}
 				
-				int valueInt = 0;
+				int valueInt;
 				if (int.TryParse(match.Groups["time"].ToString(), out valueInt))
 				{
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, (valueInt * 60 + 1) * 1000));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, (valueInt * 60 + 1) * 1000));
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

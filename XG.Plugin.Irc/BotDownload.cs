@@ -28,11 +28,11 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using log4net;
-using XG.Model;
-using XG.Model.Domain;
-using XG.Config.Properties;
 using XG.Business.Helper;
+using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Plugin.Irc
 {
@@ -102,6 +102,8 @@ namespace XG.Plugin.Irc
 
 		protected override void StartRun()
 		{
+			Name = IP + ":" + Port;
+
 			Packet.Parent.QueuePosition = 0;
 			Packet.Parent.QueueTime = 0;
 			Packet.Parent.Commit();
@@ -187,6 +189,8 @@ namespace XG.Plugin.Irc
 
 		protected void InitializeWriting()
 		{
+			ConnectionStarted = DateTime.Now;
+
 			_speedCalcTime = DateTime.Now;
 			_speedCalcSize = 0;
 			_receivedBytes = 0;
@@ -221,7 +225,7 @@ namespace XG.Plugin.Irc
 
 			try
 			{
-				FileStream stream = new FileStream(Settings.Default.TempPath + File.TmpName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+				var stream = new FileStream(Settings.Default.TempPath + File.TmpName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
 				// we are connected
 				if (OnConnected != null)
@@ -283,6 +287,8 @@ namespace XG.Plugin.Irc
 		protected void FinishWriting()
 		{
 			_log.Info("FinishWriting()");
+			ConnectionStopped = DateTime.Now;
+
 			Stopwatch();
 
 			// close the writer
@@ -334,7 +340,6 @@ namespace XG.Plugin.Irc
 					{
 						_log.Error("FinishWriting(" + Packet + ") downloading did not start, disabling packet");
 						Packet.Enabled = false;
-						Packet.Commit();
 
 						Packet.Parent.HasNetworkProblems = true;
 						Packet.Parent.Commit();
@@ -356,7 +361,6 @@ namespace XG.Plugin.Irc
 				// lets disable the packet, because the bot seems to have broken config or is firewalled
 				_log.Error("FinishWriting(" + Packet + ") connection did not work, disabling packet");
 				Packet.Enabled = false;
-				Packet.Commit();
 
 				Packet.Parent.HasNetworkProblems = true;
 				Packet.Parent.Commit();
@@ -372,7 +376,7 @@ namespace XG.Plugin.Irc
 
 		void EnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (!aEventArgs.Value1.Enabled)
+			if (_tcpClient != null && !aEventArgs.Value1.Enabled)
 			{
 				_removeFile = true;
 				_tcpClient.Close();
@@ -462,12 +466,6 @@ namespace XG.Plugin.Irc
 				File.Commit();
 				_speedCalcSize = 0;
 			}
-		}
-
-		internal override void RepairConnection()
-		{
-			WatchConnection = false;
-			_tcpClient.Close();
 		}
 
 		#endregion

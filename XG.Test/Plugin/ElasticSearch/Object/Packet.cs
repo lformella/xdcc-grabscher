@@ -23,7 +23,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using System;
 using NUnit.Framework;
 
 namespace XG.Test.Plugin.ElasticSearch.Object
@@ -34,17 +33,17 @@ namespace XG.Test.Plugin.ElasticSearch.Object
 		[Test]
 		public void IrcLinkTest()
 		{
-			var packet = new XG.Model.Domain.Packet()
+			var packet = new XG.Model.Domain.Packet
 			{
 				Id = 313,
 				Name = "long.avi",
-				Parent = new XG.Model.Domain.Bot()
+				Parent = new XG.Model.Domain.Bot
 				{
 					Name = "bot",
-					Parent = new XG.Model.Domain.Channel()
+					Parent = new XG.Model.Domain.Channel
 					{
 						Name = "channel",
-						Parent = new XG.Model.Domain.Server()
+						Parent = new XG.Model.Domain.Server
 						{
 							Name = "server.net",
 							Port = 666
@@ -52,7 +51,7 @@ namespace XG.Test.Plugin.ElasticSearch.Object
 					}
 				}
 			};
-			var packet2 = new XG.Plugin.ElasticSearch.Object.Packet()
+			var packet2 = new XG.Plugin.ElasticSearch.Object.Packet
 			{
 				Object = packet
 			};
@@ -68,4 +67,3 @@ namespace XG.Test.Plugin.ElasticSearch.Object
 		}
 	}
 }
-

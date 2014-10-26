@@ -24,15 +24,15 @@
 //  
 
 using System;
-using System.Linq;
-using Microsoft.AspNet.SignalR;
-using XG.Model.Domain;
-using XG.Model;
 using System.Collections.Generic;
-using XG.Plugin.Webserver.SignalR.Hub.Model;
-using XG.Plugin.Webserver.SignalR.Hub;
-using log4net;
+using System.Linq;
 using System.Reflection;
+using Microsoft.AspNet.SignalR;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
+using XG.Plugin.Webserver.SignalR.Hub;
+using XG.Plugin.Webserver.SignalR.Hub.Model;
 
 namespace XG.Plugin.Webserver.SignalR
 {
@@ -180,16 +180,16 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				lock (client.LoadedObjects)
 				{
-					if ((client.LoadedObjects.Count < client.MaxObjects || client.MaxObjects == 0) && hub != typeof(PacketHub).Name)
+					if ((client.LoadedObjects.Count < client.MaxObjects || client.MaxObjects == 0) && hub != typeof(PacketHub))
 					{
 						Log.Debug("SendAdded() " + aObject);
-						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnAdded(hubObject);
+						GlobalHost.ConnectionManager.GetHubContext(hub.Name).Clients.Client(client.ConnectionId).OnAdded(hubObject);
 						client.LoadedObjects.Add(hubObject.Guid);
 					}
 					else if (reloadTable)
 					{
 						Log.Debug("SendChanged() RELOAD");
-						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnReloadTable();
+						GlobalHost.ConnectionManager.GetHubContext(hub.Name).Clients.Client(client.ConnectionId).OnReloadTable();
 					}
 				}
 			}
@@ -214,12 +214,14 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				lock (client.LoadedObjects)
 				{
-					if (client.LoadedObjects.Contains(hubObject.Guid))
+					if (!client.LoadedObjects.Contains(hubObject.Guid))
 					{
-						Log.Debug("SendRemoved()" + aObject);
-						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnRemoved(hubObject);
-						client.LoadedObjects.Remove(hubObject.Guid);
+						continue;
 					}
+
+					Log.Debug("SendRemoved()" + aObject);
+					GlobalHost.ConnectionManager.GetHubContext(hub.Name).Clients.Client(client.ConnectionId).OnRemoved(hubObject);
+					client.LoadedObjects.Remove(hubObject.Guid);
 				}
 			}
 		}
@@ -243,11 +245,17 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				lock (client.LoadedObjects)
 				{
-					if (client.LoadedObjects.Contains(hubObject.Guid))
+					if (!client.LoadedObjects.Contains(hubObject.Guid))
 					{
-						Log.Debug("SendChanged()" + aObject);
-						GlobalHost.ConnectionManager.GetHubContext(hub).Clients.Client(client.ConnectionId).OnChanged(hubObject);
+						continue;
 					}
+					if (!client.VisibleHubs.Contains(hub))
+					{
+						continue;
+					}
+
+					Log.Debug("SendChanged()" + aObject);
+					GlobalHost.ConnectionManager.GetHubContext(hub.Name).Clients.Client(client.ConnectionId).OnChanged(hubObject);
 				}
 			}
 		}
@@ -270,7 +278,7 @@ namespace XG.Plugin.Webserver.SignalR
 			{
 				return FileHub.ConnectedClients;
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
 				return SearchHub.ConnectedClients;
 			}
@@ -286,35 +294,35 @@ namespace XG.Plugin.Webserver.SignalR
 			return new HashSet<Client>();
 		}
 
-		string GetHubForObject(AObject aObject)
+		Type GetHubForObject(AObject aObject)
 		{
 			if (aObject is Server)
 			{
-				return typeof(ServerHub).Name;
+				return typeof(ServerHub);
 			}
 			else if (aObject is Channel)
 			{
-				return typeof(ChannelHub).Name;
+				return typeof(ChannelHub);
 			}
 			else if (aObject is Packet)
 			{
-				return typeof(PacketHub).Name;
+				return typeof(PacketHub);
 			}
 			else if (aObject is File)
 			{
-				return typeof(FileHub).Name;
+				return typeof(FileHub);
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
-				return typeof(SearchHub).Name;
+				return typeof(SearchHub);
 			}
 			else if (aObject is Notification)
 			{
-				return typeof(NotificationHub).Name;
+				return typeof(NotificationHub);
 			}
 			else if (aObject is ApiKey)
 			{
-				return typeof(ApiHub).Name;
+				return typeof(ApiHub);
 			}
 
 			return null;

@@ -22,10 +22,9 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
-using Quartz;
-using Quartz.Impl;
 
 #if __MonoCS__
+using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
 #else
@@ -34,14 +33,12 @@ using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using log4net;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
-using XG.Business.Helper;
 using XG.Config.Properties;
 using XG.Business;
 
@@ -81,7 +78,7 @@ namespace XG.Application
 			SetConsoleCtrlHandler(handler, true);
 #else
 			// http://stackoverflow.com/questions/6546509/detect-when-console-application-is-closing-killed
-			var signums = new Signum []
+			var signums = new[]
 			{
 				Signum.SIGABRT,
 				Signum.SIGINT,
@@ -92,16 +89,19 @@ namespace XG.Application
 				Signum.SIGTSTP
 			};
 
-			List<UnixSignal> signals = new List<UnixSignal>();
+			var signals = new List<UnixSignal>();
 			foreach (var signum in signums)
 			{
 				try
 				{
 					signals.Add(new UnixSignal(signum));
 				}
-				catch(Exception) {}
+				catch(Exception)
+				{
+					// ...
+				}
 			}
-
+#if !DEBUG
 			new Thread (delegate ()
 			{
 				// Wait for a signal to be delivered
@@ -109,12 +109,13 @@ namespace XG.Application
 				app.Shutdown("UnixSignal");
 			}).Start();
 #endif
+#endif
 
 			if (string.IsNullOrWhiteSpace(Settings.Default.TempPath))
 			{
 				Settings.Default.TempPath = Settings.Default.GetAppDataPath() + "tmp";
 			}
-			if (!Settings.Default.TempPath.EndsWith("" + Path.DirectorySeparatorChar))
+			if (!Settings.Default.TempPath.EndsWith("" + Path.DirectorySeparatorChar, StringComparison.CurrentCulture))
 			{
 				Settings.Default.TempPath += Path.DirectorySeparatorChar;
 			}
@@ -124,7 +125,7 @@ namespace XG.Application
 			{
 				Settings.Default.ReadyPath = Settings.Default.GetAppDataPath() + "dl";
 			}
-			if (!Settings.Default.ReadyPath.EndsWith("" + Path.DirectorySeparatorChar))
+			if (!Settings.Default.ReadyPath.EndsWith("" + Path.DirectorySeparatorChar, StringComparison.CurrentCulture))
 			{
 				Settings.Default.ReadyPath += Path.DirectorySeparatorChar;
 			}

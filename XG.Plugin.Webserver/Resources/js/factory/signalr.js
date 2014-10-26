@@ -65,7 +65,9 @@ define(['./module'], function (ng) {
 							var element = HelperService.getByGuid(self.$scope[self.objectsName], message.Guid);
 							if (element != null)
 							{
+								var groupBy = self.$scope[self.objectsName][element.id].GroupBy;
 								self.$scope[self.objectsName][element.id] = message;
+								self.$scope[self.objectsName][element.id].GroupBy = groupBy;
 								self.$scope.$apply();
 							}
 						}
@@ -133,13 +135,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-				    this.proxy.server.remove(object.Guid);
-				    object.Active = false;
-				    object.Waiting = true;
+					this.proxy.server.remove(object.Guid);
+					object.Active = false;
+					object.Waiting = true;
 				}
 				catch (e)
 				{
-				    object.Active = false;
+					object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -155,13 +157,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-				    this.proxy.server.enable(object.Guid);
-				    object.Active = false;
-				    object.Waiting = true;
+					this.proxy.server.enable(object.Guid);
+					object.Active = false;
+					object.Waiting = true;
 				}
 				catch (e)
 				{
-				    object.Active = false;
+					object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -177,13 +179,13 @@ define(['./module'], function (ng) {
 				object.Active = true;
 				try
 				{
-				    this.proxy.server.disable(object.Guid);
-				    object.Active = false;
-				    object.Waiting = true;
+					this.proxy.server.disable(object.Guid);
+					object.Active = false;
+					object.Waiting = true;
 				}
 				catch (e)
 				{
-				    object.Active = false;
+					object.Active = false;
 					var message = { source: { status: 404 }};
 					$rootScope.$emit('AnErrorOccurred', message);
 				}
@@ -199,6 +201,11 @@ define(['./module'], function (ng) {
 				{
 					this.enable(object);
 				}
+			};
+
+			SignalrFactory.prototype.visible = function (bool)
+			{
+				this.proxy.server[bool ? "visible" : "inVisible"]();
 			};
 
 			return(SignalrFactory);

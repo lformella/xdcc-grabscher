@@ -27,9 +27,9 @@ using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class XdccSending : AParserWithExistingBot
+	public class XdccSending : ASaveBotMessageParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -43,11 +43,8 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 				{
 					aBot.State = Bot.States.Idle;
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

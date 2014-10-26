@@ -27,7 +27,8 @@ define([
 	'./api',
 	'./config',
 	'./error',
-	'./password', ,
+	'./offline',
+	'./password',
 	'./serverChannel',
 	'./shutdown',
 	'./xdcc'

@@ -26,8 +26,8 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('FileCtrl', ['$scope', 'SignalrTableFactory', 'ngTableParams',
-		function ($scope, SignalrTableFactory, ngTableParams)
+	ng.controller('FileCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', 'ngTableParams',
+		function ($rootScope, $scope, SignalrTableFactory, ngTableParams)
 		{
 			var eventCallbacks = [
 				{
@@ -49,7 +49,26 @@ define(['./module'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
+					if (!$scope.signalr.isConnected())
+					{
+						return;
+					}
+
 					$scope.signalr.loadData($defer, params);
+				}
+			});
+
+			$rootScope.$on('OnSlideTo', function (e, slide)
+			{
+				$scope.active = slide == 4;
+				if ($scope.signalr.isConnected())
+				{
+					$scope.signalr.visible($scope.active);
+				}
+
+				if ($scope.active)
+				{
+					$scope.tableParams.reload();
 				}
 			});
 		}

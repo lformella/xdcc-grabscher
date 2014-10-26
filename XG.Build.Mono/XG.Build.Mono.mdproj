@@ -2,13 +2,11 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ItemType>PackagingProject</ItemType>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{25B2122B-481A-4C5F-AEF7-DFE57FD23C17}</ProjectGuid>
     <Packages>
       <Packages>
         <Package name="Linux Binärdateien">
-          <Builder targetFile="..\XG.zip" platform="Linux" configuration="Release" ctype="BinariesZipPackageBuilder">
+          <Builder targetFile="..\XG.tar.gz" platform="Linux" configuration="Build.Mono" ctype="BinariesZipPackageBuilder">
             <ChildEntries>
               <SolutionItemReference path="..\XG.Model\XG.Model.csproj" />
               <SolutionItemReference path="..\XG.Business\XG.Business.csproj" />
@@ -21,6 +19,7 @@
               <SolutionItemReference path="..\XG.Plugin.ElasticSearch\XG.Plugin.ElasticSearch.csproj" />
               <SolutionItemReference path="..\XG.Config\XG.Config.csproj" />
               <SolutionItemReference path="..\XG.Plugin.Irc\XG.Plugin.Irc.csproj" />
+              <SolutionItemReference path="..\XG.Extensions\XG.Extensions.csproj" />
             </ChildEntries>
             <ExcludedFiles>
               <File>XG.Business,Linux.PkgConfig,xg.business.pc</File>
@@ -34,6 +33,26 @@
               <File>XG.Plugin.ElasticSearch,Linux.PkgConfig,xg.plugin.elasticsearch.pc</File>
               <File>XG.Plugin,Linux.PkgConfig,xg.plugin.pc</File>
               <File>XG.Application,Binaries,xg.application</File>
+              <File>XG.Extensions,Linux.PkgConfig,xg.extensions.pc</File>
+              <File>XG.Application,ProgramFiles,XG.Plugin.Webserver.dll.config</File>
+              <File>XG.Plugin.Webserver,ProgramFiles,XG.Plugin.Webserver.dll.config</File>
+              <File>XG.Plugin.ElasticSearch,ProgramFiles,XG.Plugin.ElasticSearch.dll.config</File>
+              <File>XG.Application,ProgramFiles,XG.Application.exe.config</File>
+              <File>XG.Application,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Business,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.DB,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.ElasticSearch,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Import,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Irc,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Jabber,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Webserver,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Config,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Application,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Business,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Plugin.Irc,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Plugin.Webserver,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.DB,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Application,ProgramFiles,XG.Plugin.ElasticSearch.dll.config</File>
             </ExcludedFiles>
             <RootEntry path="..\XG.sln" id=":root:" />
           </Builder>

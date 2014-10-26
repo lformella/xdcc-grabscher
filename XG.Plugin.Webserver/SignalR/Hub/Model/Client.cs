@@ -40,6 +40,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model
 
 		public int MaxObjects { get; set; }
 
+		public List<Type> VisibleHubs { get; set; }
+
 		#endregion
 	}
 }

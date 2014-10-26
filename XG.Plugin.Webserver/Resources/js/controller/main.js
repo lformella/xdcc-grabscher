@@ -26,42 +26,58 @@
 define(['./module'], function (ng) {
 	'use strict';
 
-	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory', 'VERSION',
-		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory, VERSION)
+	ng.controller('MainCtrl', ['$rootScope', '$scope', '$modal', 'ipCookie', 'SignalrFactory', 'SignalrTableFactory', 'VERSION', 'REMOTE_SETTINGS', 'ONLINE',
+		function ($rootScope, $scope, $modal, ipCookie, SignalrFactory, SignalrTableFactory, VERSION, REMOTE_SETTINGS, ONLINE)
 		{
 			$scope.VERSION = VERSION;
+			$scope.REMOTE_SETTINGS = REMOTE_SETTINGS;
+			$scope.ONLINE = ONLINE;
 
 			$scope.password = null;
 			$scope.passwordOk = false;
-			$modal.open({
-				keyboard: false,
-				backdrop: 'static',
-				templateUrl: 'templates/dialog/password.html',
-				controller: 'PasswordDialogCtrl',
-				windowClass: 'passwordDialog'
-			}).result.then(function (password)
+
+			if (!$scope.ONLINE)
 			{
-			    $scope.password = password;
-				$scope.passwordOk = true;
-				$.connection.hub.start().done(
-					function ()
-					{
-						$rootScope.$emit('OnConnected', password);
-					}
-				).fail(
-					function (message)
-					{
-						$scope.openErrorDialog(message);
-					}
-				);
-				$.connection.hub.error(
-					function (message)
-					{
-						$scope.openErrorDialog(message);
-					}
-				);
-				ipCookie('xg.password', password, { expires: 21, path: '/' });
-			});
+				$modal.open({
+					keyboard: false,
+					backdrop: 'static',
+					templateUrl: 'templates/dialog/offline.html',
+					controller: 'OfflineDialogCtrl',
+					windowClass: 'offlineDialog'
+				});
+			}
+			else
+			{
+				$modal.open({
+					keyboard: false,
+					backdrop: 'static',
+					templateUrl: 'templates/dialog/password.html',
+					controller: 'PasswordDialogCtrl',
+					windowClass: 'passwordDialog'
+				}).result.then(function (password)
+				{
+					$scope.password = password;
+					$scope.passwordOk = true;
+					$.connection.hub.start().done(
+						function ()
+						{
+							$rootScope.$emit('OnConnected', password);
+						}
+					).fail(
+						function (message)
+						{
+							$scope.openErrorDialog(message);
+						}
+					);
+					$.connection.hub.error(
+						function (message)
+						{
+							$scope.openErrorDialog(message);
+						}
+					);
+					ipCookie('xg.password', password, { expires: 21, path: '/' });
+				});
+			}
 
 			$rootScope.$on('AnErrorOccurred', function (e, message)
 			{
@@ -106,20 +122,20 @@ define(['./module'], function (ng) {
 
 			$scope.openShutdownDialog = function ()
 			{
-			    $modal.open({
-			        keyboard: true,
-			        backdrop: true,
-			        templateUrl: 'templates/dialog/shutdown.html',
-			        controller: 'ShutdownDialogCtrl',
-			        windowClass: 'shutdownDialog',
-			        resolve:
+				$modal.open({
+					keyboard: true,
+					backdrop: true,
+					templateUrl: 'templates/dialog/shutdown.html',
+					controller: 'ShutdownDialogCtrl',
+					windowClass: 'shutdownDialog',
+					resolve:
 					{
-					    password: function ()
-					    {
-					        return $scope.password;
-					    }
+						password: function ()
+						{
+							return $scope.password;
+						}
 					}
-			    });
+				});
 			};
 
 			// build this here, because the dialogs will respawn and recreate stuff
@@ -150,6 +166,10 @@ define(['./module'], function (ng) {
 							return $scope.channelSignalr;
 						}
 					}
+				}).result.finally(function ()
+				{
+					$scope.serverSignalr.visible(false);
+					$scope.channelSignalr.visible(false);
 				});
 			};
 
@@ -172,6 +192,9 @@ define(['./module'], function (ng) {
 							return $scope.apiSignalr;
 						}
 					}
+				}).result.finally(function ()
+				{
+					$scope.apiSignalr.visible(false);
 				});
 			};
 
@@ -200,7 +223,7 @@ define(['./module'], function (ng) {
 			$rootScope.settings = {
 				showOfflineBots: ipCookie('xg.showOfflineBots'),
 				humanDates: ipCookie('xg.humanDates'),
-				showBotsInView: ipCookie('xg.showBotsInView')
+				groupBy: ipCookie('xg.groupBy')
 			};
 
 			if ($rootScope.settings.showOfflineBots == undefined)
@@ -211,9 +234,9 @@ define(['./module'], function (ng) {
 			{
 				$rootScope.settings.humanDates = false;
 			}
-			if ($rootScope.settings.showBotsInView == undefined)
+			if ($rootScope.settings.groupBy == undefined)
 			{
-				$rootScope.settings.showBotsInView = true;
+				$rootScope.settings.groupBy = "ParentGuid";
 			}
 
 			$scope.flipSetting = function (setting)
@@ -222,6 +245,13 @@ define(['./module'], function (ng) {
 				$rootScope.settings[setting] = newValue;
 				ipCookie('xg.' + setting, newValue ? '1' : '0', { expires: 21, path: '/' });
 			};
+
+			$scope.groupBy = $rootScope.settings.groupBy;
+			$scope.$watch('groupBy', function ()
+			{
+				ipCookie('xg.groupBy', $scope.groupBy, { expires: 21, path: '/' });
+				$rootScope.settings['groupBy'] = $scope.groupBy;
+			});
 
 			$scope.slide = 1;
 			$scope.slideTo = function (slide)

@@ -23,7 +23,7 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-define(['./module', 'favicon'], function (ng) {
+define(['./module', 'favico'], function (ng, Favico) {
 	'use strict';
 
 	ng.controller('NotificationCtrl', ['$rootScope', '$scope', 'SignalrTableFactory', '$filter', 'ngTableParams',
@@ -32,14 +32,14 @@ define(['./module', 'favicon'], function (ng) {
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
-					callback:  function ()
+					callback: function ()
 					{
 						$scope.tableParams.reload();
 					}
 				},
 				{
 					name: 'OnAdded',
-					callback:  function (message)
+					callback: function (message)
 					{
 						$scope.counter++;
 
@@ -69,6 +69,11 @@ define(['./module', 'favicon'], function (ng) {
 				total: 0,
 				getData: function($defer, params)
 				{
+					if (!$scope.signalr.isConnected())
+					{
+						return;
+					}
+
 					$scope.signalr.loadData($defer, params);
 				}
 			});

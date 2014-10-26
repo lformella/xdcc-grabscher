@@ -64,13 +64,17 @@ Normally the bots will announce their pakets directly in the channel. If they ar
 ![Server / Channel Dialog](http://xg.bitpir.at/images/help/servers.png?v=3)
 
 ## Search
-You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are also saved into the database. If you want to exclude words from your search you can use "-". To search for packages and exclude TS releases you could use "Spiderman -TS".
+You can search for packets by entering a custom search term and just hit enter. If your want to save your search, just click on the thumb button. Deleting a search works the same. The search items are working with the internal and external search and are also saved into the database. If you want to exclude words from your search you can use "-". To search for packages and exclude TS releases you could use **Spiderman -TS**. The size of packets can be controlled by the size box. Only packets which are bigger than the given value are displayed. If you don't want to use this feature, leave this field blank or zero.
 
 ![Search](http://xg.bitpir.at/images/help/search.png?v=3)
 
-The results are displayed in a table and the packets are grouped by their bot. The grouping can be disabled in the settings menu, but you will lose some important informations. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions.
+XG supportes wildcard searches to be able to search for tv shows. If you search for **under the dome s02e\*\*** you will get results for all season 2 episodes from 01 to 99. Even multiple wildcards are supported: **under the dome s\*\*e\*\*** will return results for all season from 01 to 10 and  episodes from 01 to 30. Because multiple wildcard searches are expensive, the results are limited to 10 seasons and 30 episodes.
 
-![Packet Icons](http://xg.bitpir.at/images/help/search_results.png?v=3)
+The results are displayed in a table and the packets can be grouped by their bot or wildcard search. The grouping can be disabled, but you will lose some important informations. If you click on a packet icon, XG will try to download it and keeps you up to date with updated packet informations. The packet icon will match the file ending, so there are different versions.
+
+![Packet Icons](http://xg.bitpir.at/images/help/search_results_bot.png?v=3)
+
+![Packet Icons](http://xg.bitpir.at/images/help/search_results_wildcard.png?v=3)
 
 ## Notifications
 If something happens inside XG you will get a notification. This can also be shown via your browser if you allow it.
@@ -86,7 +90,7 @@ The server, channel and bot is automatically added. If the server is connected a
 
 ![XDCC Links](http://xg.bitpir.at/images/help/xdcc-links.png?v=3)
 
-The server and channel are not deleted after the packet is complete, so if you dont need them anymore, you have to delete them yourself.
+The server and channel are not deleted after the packet is complete, so if you don't need them anymore, you have to delete them yourself.
 
 ## Extended Stats / Snapshots
 XG will collect every 5 minutes some statistical data and generate nice graphs. There you can enable and disable different values to get an optimal view of your running XG copy.
@@ -96,19 +100,224 @@ XG will collect every 5 minutes some statistical data and generate nice graphs. 
 This feature wont work in older browsers like the good old IE8, so do yourself a favor and use a newer one ;-)
 
 ## API
-XG v3 supports a rest like api to control it via scripts. You can add api keys and enable / disable them.
+XG v3 supports a REST api to control it via external tools. You can add api keys and enable / disable them. 
 
 ![Api](http://xg.bitpir.at/images/help/api.png?v=3)
 
-Currently you can just add xdcc links by calling the following url:
+The following objects can be controlled with different methods via the api:
 
-> ht\*p:// *your-own-host:5556* / api / __615d86bb-f867-47c1-a860-ac24e09e976c__ / parseXdccLink / __irc.test.net__ / __servername__ / __channel__ / __bot__ / __1__ / __filename__ /
+* servers
+  * add
+  * delete
+  * enable / disable
+  * list
+* channels
+  * add
+  * delete
+  * enable / disable
+  * list
+* bots
+  * list
+* packets
+  * enable / disable
+  * list
+* files
+  * delete
+  * list
+* searches
+  * add
+  * delete
+  * list
 
-The api id has to be entered after the __/api/__ path segment. After that is the method you want to call, for example __/parseXdccLink/__. Finally you have to add the data you want to pass to method (must be a valid xdcc link in our example). Currently api methods can return the following JSON encoded results:
+The object name has to be entered after the __/api/1.0/__ path segment with the format in the wich the answer should be encoded, for example __/api/1.0/servers.json__. The data you want to pass to the method has to be encoded in same format. The content type must be the format, too. The __Authorization__ header is mandatory and has to match an api key which is enabled. If the apiKey was invalid or disabled, the method will result in an 401.
 
-* __{"ReturnValue":-1}__ - api key is invalid or disabled
-* __{"ReturnValue":0}__ - there was an error calling the method
-* __{"ReturnValue":1}__ - everything is fine
+The currently allowed formats:
+
+* json (preferred)
+
+Api methods which create or update data, always return the following properties:
+
+* __ReturnValue__ (int)
+  * 0 - there was an error calling the method
+  * 1 - everything is fine
+* __Message__ (string)
+  * a helpful message if an error occurred
+
+---
+### Delete
+You can delete an object and all children.
+
+#### URL
+> __DELETE /api/1.0/[ servers | channels | files | searches ]/$guid.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XDELETE localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59.json
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":1,
+  "Message":null
+}
+```
+
+---
+### Get
+Get a single object by its guid.
+
+#### URL
+> __GET /api/1.0/[ servers | channels | bots | packets | files | searches ]/$guid.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XGET localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59.json
+```
+
+#### Return Value
+```
+{
+	"Port":6667,
+	"ErrorCode":0,
+	"ParentGuid":"c31aa923-b615-4d03-840d-c82357c929d4",
+	"Guid":"906bfd60-b6f1-4d38-a2f4-cb9cba983a24",
+	"Name":"irc.abjects.net",
+	"Connected":false,
+	"Enabled":false
+}
+```
+
+---
+### Enable
+If you enable servers and channels, they will be connected. If you enable a packet it will be downloaded.
+
+#### URL
+> __POST /api/1.0/[ servers | channels | packets ]/$guid/enable.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59/enable.json
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":1,
+  "Message":null
+}
+```
+
+---
+### Disable
+If you disable servers and channels, they will be disconnected. If you disable a packet the download will be stopped and the file is beeing deleted.
+
+#### URL
+> __POST /api/1.0/[ servers | channels | packets ]/$guid/disable.$format__
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/servers/deebd412-9b16-4726-b613-7ec98e714f59/disable.json
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":1,
+  "Message":null
+}
+```
+
+---
+### Add
+You can add an object. All parameters are mandatory.
+
+If you got a XDCC link, you can use this method to add a packet and download it instantly. The server and channel are not deleted after the packet is complete, so if you dont need them anymore, you have to delete them yourself.
+
+#### Url
+> __PUT /api/1.0/[ servers | channels | packets | searches ].$format__
+
+#### Post Parameters for servers
+* server (string): irc.rizon.net
+* port (integer): 11
+
+#### Post Parameters for channels
+* server (string): irc.rizon.net
+* channel (string): #abjects
+
+#### Post Parameters for packets
+* server (string): irc.rizon.net
+* channel (string): #abjects
+* bot (string): [XDCC]Bot
+* packetId (integer): 11
+* packetName (string): My.Super.Movie.mkv
+
+#### Post Parameters for searches
+* search (string): german -mkv
+
+#### Example
+```
+curl -H "Content-Type:application/json" -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/servers.json -d '
+{
+  "server":"irc.rizon.net",
+  "port": 6667
+}'
+```
+
+```
+curl -H "Content-Type:application/json" -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XPOST localhost:5556/api/1.0/packets.json -d '
+{
+  "server":"irc.rizon.net",
+  "channel":"#abjects",
+  "bot":"[XDCC]Bot",
+  "packetId":11,
+  "packetName":"My.Super.Movie.mkv"
+}'
+```
+
+#### Return Value
+```
+{
+  "ReturnValue":0,
+  "Message":"server is empty"
+}
+```
+
+---
+### List
+You can list objects. If you want to list packets, you can controll the results.
+
+#### Url
+> __GET /api/1.0/[ servers | channels | packets | files | searches ].$format__
+
+#### Get Parameters for packets
+* __searchTerm__ (string) *: german -mkv
+* __showOfflineBots__ (boolean): true | false
+* __maxResults__ (integer)
+* __page__ (integer)
+* __sortBy__ (string): Id | Name | Size
+* __sort__ (string): asc | desc
+
+The properties __showOfflineBots__, __maxResults__, __page__, __sortBy__, __sort__ can be left blank. If you leave __showOfflineBots__ blank, it will be filled with __false__ and the search request will just return packets, which bots are online.
+
+#### Example
+```
+curl -H "Authorization: 615d86bb-f867-47c1-a860-ac24e09e976c" -s -XGET 'localhost:5556/api/1.0/packets.json?searchTerm=mkv%20-seven&showOfflineBots=true'
+```
+
+#### Return Value
+```
+{
+  "Results":
+  [
+    {
+      ...
+    }
+  ],
+  "ResultCount":5584
+}
+```
+Results is an array containg the requestet objects.
 
 ## Shutdown XG gracefully
 If you want to shutdown XG, just ctrl+c the process or close the command window. You can also stop XG by using the shutdown button in the webfrontend.
@@ -116,8 +325,8 @@ If you want to shutdown XG, just ctrl+c the process or close the command window.
 # Upgrading XG
 If you are upgrading from version 2 to 3, you should finish your downloads and write down your servers and channels, because XG 3 is not able to load the data generated by previous versions.
 
-XG 3 is using NHibernate, so you can use your own config if you want to put the data into a mysql database for example. If you do not need this feature you can use the build in SQLite config which is loaded by default. The database named __xgobjects.db__ is located in your user config folder and can be edited if XG is not running.
-
+If you are upgrading from XG 3.2 to 3.3 you should notice, that the db format switched from sqlite to db4o. Because of this, XG automatically transformes the db **xgobjects.db** into a db4o database **xgobjects.db4o** if it is not there already. The sqlite file can be safely deleted after the first start, but can also be keeped as backup. If you delete the db4o file, XG will start the transformation process again.
+ 
 ## Unnecessary Files
 Because XG changed some internal routines you can safely delete the following files in the config folder:
 

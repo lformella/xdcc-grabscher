@@ -29,34 +29,28 @@ using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.Collections;
-using Db4objects.Db4o.Ext;
+using XG.Extensions;
 
 namespace XG.Model.Domain
 {
-	public abstract class AObjects : AObject, IObjectCallbacks
+	public abstract class AObjects : AObject
 	{
 		#region EVENTS
 
 		[Transient]
-		public event EventHandler<EventArgs<AObject, AObject>> OnAdded;
+		public event EventHandler<EventArgs<AObject, AObject>> OnAdded = delegate {};
 
 		protected void FireAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (OnAdded != null)
-			{
-				OnAdded(aSender, aEventArgs);
-			}
+			OnAdded(aSender, aEventArgs);
 		}
 
 		[Transient]
-		public event EventHandler<EventArgs<AObject, AObject>> OnRemoved;
+		public event EventHandler<EventArgs<AObject, AObject>> OnRemoved = delegate {};
 
 		protected void FireRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			if (OnRemoved != null)
-			{
-				OnRemoved(aSender, aEventArgs);
-			}
+			OnRemoved(aSender, aEventArgs);
 		}
 
 		#endregion
@@ -65,7 +59,7 @@ namespace XG.Model.Domain
 
 		ICollection<AObject> _children = new ArrayList4<AObject>();
 
-		protected AObject[] All
+		public AObject[] Children
 		{
 			get
 			{
@@ -152,7 +146,7 @@ namespace XG.Model.Domain
 			}
 
 			AObject tObjectReturn = null;
-			foreach (AObject tObject in All)
+			foreach (AObject tObject in Children)
 			{
 				if (tObject.Guid == aGuid)
 				{
@@ -176,7 +170,7 @@ namespace XG.Model.Domain
 		{
 			try
 			{
-				return All.FirstOrDefault(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
+				return Children.FirstOrDefault(obj => obj.Name.Trim().ToLower() == aName.Trim().ToLower());
 			}
 			catch (Exception)
 			{
@@ -184,41 +178,26 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public abstract bool DuplicateChildExists(AObject aObject);
+		protected abstract bool DuplicateChildExists(AObject aObject);
 
 		#endregion
 
 		#region DB4O
 
-		public bool ObjectCanActivate(IObjectContainer container)
+		public new void ObjectOnActivate(IObjectContainer container)
 		{
-			return true;
-		}
+			base.ObjectOnActivate(container);
 
-		public bool ObjectCanDeactivate(IObjectContainer container)
-		{
-			return true;
-		}
+			OnAdded = delegate {};
+			OnRemoved = delegate {};
 
-		public bool ObjectCanDelete(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public bool ObjectCanNew(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public bool ObjectCanUpdate(IObjectContainer container)
-		{
-			return true;
-		}
-
-		public void ObjectOnActivate(IObjectContainer container)
-		{
-			foreach (var child in All)
+			foreach (var child in Children)
 			{
+				if (child == null)
+				{
+					_children.Remove(child);
+					continue;
+				}
 				child.OnEnabledChanged += FireEnabledChanged;
 				child.OnChanged += FireChanged;
 
@@ -229,22 +208,6 @@ namespace XG.Model.Domain
 					children.OnRemoved += FireRemoved;
 				}
 			}
-		}
-
-		public void ObjectOnDeactivate(IObjectContainer container)
-		{
-		}
-
-		public void ObjectOnDelete(IObjectContainer container)
-		{
-		}
-
-		public void ObjectOnNew(IObjectContainer container)
-		{
-		}
-
-		public void ObjectOnUpdate(IObjectContainer container)
-		{
 		}
 
 		#endregion

@@ -31,15 +31,15 @@ define(['./module'], function (ng) {
 		{
 			$scope.shutdown = function ()
 			{
-			    $http.post("/shutdown", password).success(
+				$http.post("/shutdown", password).success(
 					function ()
 					{
-					    $modalInstance.close();
+						$modalInstance.close();
 					}
 				).error(
 					function ()
 					{
-					    // well
+						// well
 					}
 				);
 			};

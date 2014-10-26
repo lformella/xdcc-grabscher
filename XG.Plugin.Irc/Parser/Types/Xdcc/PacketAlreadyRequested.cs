@@ -23,13 +23,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class PacketAlreadyRequested : AParserWithExistingBot
+	public class PacketAlreadyRequested : ASaveBotMessageParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -45,12 +47,9 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					aBot.State = Bot.States.Waiting;
 				}
 
-				//FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.BotWaitTime));
-
-				UpdateBot(aBot, aMessage);
-				return true;
+				FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.BotWaitTime));
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

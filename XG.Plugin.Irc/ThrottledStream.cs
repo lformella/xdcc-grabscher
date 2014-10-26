@@ -33,9 +33,9 @@ namespace XG.Plugin.Irc
 	{
 		#region VARIABLES
 
-		private Stream _baseStream;
-		private long _byteCount;
-		private long _start;
+		Stream _baseStream;
+		long _byteCount;
+		long _start;
 
 		protected long CurrentMilliseconds
 		{

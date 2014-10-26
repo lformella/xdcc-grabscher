@@ -23,13 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Join : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -39,14 +40,13 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 			if (match.Success)
 			{
 				string channel = match.Groups["channel"].ToString();
-				if (!channel.StartsWith("#"))
+				if (!channel.StartsWith("#", System.StringComparison.CurrentCulture))
 				{
 					channel = "#" + channel;
 				}
-				FireJoinChannel(this, new EventArgs<Model.Domain.Server, string>(aConnection.Server, channel));
-				return true;
+				FireJoinChannel(this, new EventArgs<Server, string>(aBot.Parent.Parent, channel));
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

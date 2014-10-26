@@ -37,16 +37,24 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 	{
 		public override Task OnConnected()
 		{
-			AddClient(new Client { ConnectionId = Context.ConnectionId, LoadedObjects = new HashSet<Guid>(), MaxObjects = 0 });
+			AddClient(
+				new Client
+				{
+					ConnectionId = Context.ConnectionId,
+					LoadedObjects = new HashSet<Guid>(),
+					MaxObjects = 0,
+					VisibleHubs = new List<Type>()
+				}
+			);
 			return base.OnConnected();
 		}
 
 		protected abstract void AddClient(Client aClient);
 
-		public override Task OnDisconnected()
+		public override Task OnDisconnected(bool stopCalled)
 		{
 			RemoveClient(Context.ConnectionId);
-			return base.OnDisconnected();
+			return base.OnDisconnected(stopCalled);
 		}
 
 		protected abstract void RemoveClient(string connectionId);
@@ -61,29 +69,6 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 				client.LoadedObjects = aGuids;
 				client.MaxObjects = aMaxObjects;
 			}
-		}
-
-		protected IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
-		{
-			aPage--;
-			var objects = Helper.XgObjectsToHubObjects(aObjects).Cast<T>();
-
-			if (string.IsNullOrWhiteSpace(aSortBy))
-			{
-				aSortBy = "Name";
-			}
-			var prop = typeof(T).GetProperty(aSortBy);
-			if (aSort == "desc")
-			{
-				objects = objects.OrderByDescending(o => prop.GetValue(o, null));
-			}
-			else
-			{
-				objects = objects.OrderBy(o => prop.GetValue(o, null));
-			}
-
-			aLength = objects.Count();
-			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
 		}
 	}
 }

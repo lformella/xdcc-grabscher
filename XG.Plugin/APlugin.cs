@@ -23,12 +23,11 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin
 {
-	public delegate void EmptyEventHandler();
-
 	public abstract class APlugin : AWorker
 	{
 		#region REPOSITORIES

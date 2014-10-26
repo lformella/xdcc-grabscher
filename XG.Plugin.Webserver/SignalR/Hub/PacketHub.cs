@@ -28,9 +28,7 @@ using System.Linq;
 using XG.Model.Domain;
 using XG.Plugin.Webserver.SignalR.Hub;
 using System.Collections.Generic;
-using XG.Model;
 using XG.Plugin.Webserver.SignalR.Hub.Model;
-using System.Threading.Tasks;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
 {
@@ -60,6 +58,16 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return (from client in ConnectedClients where client.ConnectionId == connectionId select client).SingleOrDefault();
 		}
 
+		public void Visible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Add(typeof(PacketHub));
+		}
+
+		public void InVisible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Remove(typeof(PacketHub));
+		}
+
 		#endregion
 
 		public void Enable(Guid aGuid)
@@ -82,17 +90,18 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 
 		public Model.Domain.Result LoadByGuid(Guid aGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
-			if (search == null)
+			XG.Model.Domain.Search search;
+			if (aGuid == XG.Model.Domain.Search.SearchEnabled)
 			{
-				if (aGuid == Search.SearchEnabled)
-				{
-					search = new Search { Guid = Search.SearchEnabled };
-				}
-				else if (aGuid == Search.SearchDownloads)
-				{
-					search = new Search { Guid = Search.SearchDownloads };
-				}
+				search = new XG.Model.Domain.Search { Guid = aGuid };
+			}
+			else if (aGuid == XG.Model.Domain.Search.SearchDownloads)
+			{
+				search = new XG.Model.Domain.Search { Guid = aGuid };
+			}
+			else
+			{
+				search = Helper.Searches.All.SingleOrDefault(s => s.Guid == aGuid);
 			}
 			if (search != null)
 			{
@@ -101,25 +110,30 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return new Model.Domain.Result { Total = 0, Results = new List<Packet>() };
 		}
 
-		public Model.Domain.Result LoadByName(string aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		public Model.Domain.Result LoadByParameter(string aSearch, Int64 aSize, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			return LoadBySearch(new Search { Name = aSearch }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
+			return LoadBySearch(new XG.Model.Domain.Search { Name = aSearch, Size = aSize }, aShowOfflineBots, aCount, aPage, aSortBy, aSort);
 		}
 
-		Model.Domain.Result LoadBySearch(Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
+		Model.Domain.Result LoadBySearch(XG.Model.Domain.Search aSearch, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
-			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where (aShowOfflineBots || bot.Connected) from packet in bot.Packets where aSearch.IsVisible(packet) select packet);
-			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
-			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
-			return new Model.Domain.Result { Total = length, Results = objects };
+			var results = Webserver.Search.Packets.GetResults(aSearch, aShowOfflineBots, (aPage - 1) * aCount, aCount, aSortBy, aSort == "desc");
+			List<Model.Domain.Packet> all = new List<XG.Plugin.Webserver.SignalR.Hub.Model.Domain.Packet>();
+			foreach (var term in results.Packets.Keys)
+			{
+				var objects = Helper.XgObjectsToHubObjects(results.Packets[term]).Cast<Model.Domain.Packet>();
+				objects.ToList().ForEach(p => p.GroupBy = term);
+				all.AddRange(objects);
+			}
+			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(all.Select(o => o.Guid)), aCount);
+			return new Model.Domain.Result { Total = results.Total, Results = all };
 		}
 
 		public Model.Domain.Result LoadByParentGuid(Guid aParentGuid, bool aShowOfflineBots, int aCount, int aPage, string aSortBy, string aSort)
 		{
 			var packets = (from server in Helper.Servers.All from channel in server.Channels from bot in channel.Bots where bot.Guid == aParentGuid from packet in bot.Packets select packet);
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
+			var objects = Helper.FilterAndLoadObjects<Model.Domain.Packet>(packets, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}

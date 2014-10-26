@@ -50,6 +50,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			config.UseJabberClient = Settings.Default.UseJabberClient;
 			config.UseWebserver = Settings.Default.UseWebserver;
 			config.WebserverPort = Settings.Default.WebserverPort;
+			config.MaxDownloads = Settings.Default.MaxDownloads;
 			return config;
 		}
 
@@ -73,6 +74,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			Settings.Default.UseJabberClient = aConfig.UseJabberClient;
 			Settings.Default.UseWebserver = aConfig.UseWebserver;
 			Settings.Default.WebserverPort = aConfig.WebserverPort;
+			Settings.Default.MaxDownloads = aConfig.MaxDownloads;
 			Settings.Default.Save();
 		}
 	}

@@ -24,12 +24,12 @@
 //  
 
 using System;
-using SharpRobin.Core;
-using XG.Config.Properties;
-using Microsoft.Owin.Hosting;
-using Nowin;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Owin.Hosting;
+using Nowin;
+using SharpRobin.Core;
+using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver
 {
@@ -48,14 +48,11 @@ namespace XG.Plugin.Webserver
 
 		#region EVENTS
 
-		public virtual event EmptyEventHandler OnShutdown;
+		public virtual event EventHandler OnShutdown = delegate {};
 
-		protected void FireShutdown()
+		protected void FireShutdown(object aSender, EventArgs aEventArgs)
 		{
-			if (OnShutdown != null)
-			{
-				OnShutdown();
-			}
+			OnShutdown(aSender, aEventArgs);
 		}
 
 		#endregion
@@ -70,6 +67,12 @@ namespace XG.Plugin.Webserver
 
 		protected override void StartRun()
 		{
+			Search.Packets.Servers = Servers;
+			Search.Packets.Initialize();
+
+			AddRepeatingJob(typeof(Job.SearchUpdater), "SearchUpdater", "WebserverPlugin", Settings.Default.TakeSnapshotTimeInMinutes * 60,
+				new JobItem("Searches", Searches));
+
 			string salt = Hash();
 			string passwortHash = Hash(salt + Settings.Default.Password + salt);
 
@@ -81,6 +84,9 @@ namespace XG.Plugin.Webserver
 			SignalR.Hub.Helper.ApiKeys = ApiKeys;
 			SignalR.Hub.Helper.PasswortHash = passwortHash;
 
+			Nancy.Helper.Servers = Servers;
+			Nancy.Helper.Files = Files;
+			Nancy.Helper.Searches = Searches;
 			Nancy.Helper.ApiKeys = ApiKeys;
 			Nancy.Helper.Salt = salt;
 			Nancy.Helper.PasswortHash = passwortHash;
@@ -99,6 +105,11 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Notifications = Notifications;
 			_eventForwarder.ApiKeys = ApiKeys;
 			_eventForwarder.Start(typeof(SignalR.EventForwarder).ToString());
+
+			var settings = new RemoteSettings { Version = new Version(), ExternalSearch = new ExternalSearch { Enabled = false } };
+			SignalR.Hub.Helper.RemoteSettings = settings;
+			Nancy.Helper.RemoteSettings = settings;
+			AddRepeatingJob(typeof(Job.RemoteSettingsLoader), "RemoteSettingsLoader", "WebserverPlugin", 60 * 60 * 24);
 		}
 
 		protected override void StopRun()

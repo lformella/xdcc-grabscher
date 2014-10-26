@@ -24,50 +24,177 @@
 //  
 
 using System;
+using System.Linq;
 using Nancy;
+using Nancy.Security;
 using XG.Model.Domain;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.Nancy.Api
 {
 	public abstract class ApiModule : NancyModule
 	{
-		protected bool IsApiKeyValid(string aKey)
+		protected ApiModule() : base("/api/1.0") {}
+
+		protected void InitializeGet(AObjects aObjects, string aPath)
 		{
-			var apiKey = GetApiKey(aKey);
-			if (apiKey != null)
+			this.RequiresAuthentication();
+
+			Get["/" + aPath + "/{guid:guid}", true] = async(_, ct) =>
 			{
-				return apiKey.Enabled;
-			}
-			return false;
+				try
+				{
+					var obj = aObjects.WithGuid(Guid.Parse(_.guid));
+					if (obj != null)
+					{
+						return CreateSuccessResponseAndUpdateApiKey(Helper.XgObjectToNancyObject(obj));
+					}
+					return CreateErrorResponseAndUpdateApiKey(HttpStatusCode.NotFound);
+				}
+				catch (Exception ex)
+				{
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
+				}
+			};
 		}
 
-		protected void IncreaseErrorCount(string aKey)
+		protected void InitializeGetAll(AObjects aObjects, string aPath)
 		{
-			var apiKey = GetApiKey(aKey);
+			this.RequiresAuthentication();
+
+			Get["/" + aPath] = _ =>
+			{
+				try
+				{
+					return SearchObjects(aObjects);
+				}
+				catch (Exception ex)
+				{
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
+				}
+			};
+		}
+
+		protected void InitializeEnable(AObjects aObjects, string aPath)
+		{
+			this.RequiresAuthentication();
+
+			Post["/" + aPath + "/{guid:guid}/enable", true] = async(_, ct) =>
+			{
+				try
+				{
+					var obj = aObjects.WithGuid(Guid.Parse(_.guid));
+					if (obj != null)
+					{
+						obj.Enabled = true;
+						return CreateSuccessResponseAndUpdateApiKey(_.format);
+					}
+					return CreateErrorResponseAndUpdateApiKey(HttpStatusCode.NotFound);
+				}
+				catch (Exception ex)
+				{
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
+				}
+			};
+
+			Post["/" + aPath + "/{guid:guid}/disable", true] = async(_, ct) =>
+			{
+				try
+				{
+					var obj = aObjects.WithGuid(Guid.Parse(_.guid));
+					if (obj != null)
+					{
+						obj.Enabled = false;
+						return CreateSuccessResponseAndUpdateApiKey(_.format);
+					}
+					return CreateErrorResponseAndUpdateApiKey(HttpStatusCode.NotFound);
+				}
+				catch (Exception ex)
+				{
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
+				}
+			};
+		}
+
+		protected void InitializeDelete(AObjects aObjects, string aPath)
+		{
+			this.RequiresAuthentication();
+
+			Delete["/" + aPath + "/{guid:guid}", true] = async(_, ct) =>
+			{
+				try
+				{
+					var obj = aObjects.WithGuid(Guid.Parse(_.guid));
+					if (obj != null)
+					{
+						obj.Parent.Remove(obj);
+						return CreateSuccessResponseAndUpdateApiKey(_.format);
+					}
+					return CreateErrorResponseAndUpdateApiKey(HttpStatusCode.NotFound);
+				}
+				catch (Exception ex)
+				{
+					return CreateErrorResponseAndUpdateApiKey(ex.Message);
+				}
+			};
+		}
+
+		protected virtual object SearchObjects(AObjects aObjects)
+		{
+			var objs = Helper.XgObjectsToNancyObjects(aObjects.Children);
+			var result = new Result.Objects { Results = objs, ResultCount = objs.Count() };
+			return CreateSuccessResponseAndUpdateApiKey(result);
+		}
+
+		void IncreaseErrorCount(Guid aKey)
+		{
+			var apiKey = Helper.ApiKeys.WithGuid(aKey);
 			if (apiKey != null)
 			{
 				apiKey.ErrorCount++;
+				apiKey.Commit();
 			}
 		}
 
-		protected void IncreaseSuccessCount(string aKey)
+		void IncreaseSuccessCount(Guid aKey)
 		{
-			var apiKey = GetApiKey(aKey);
+			var apiKey = Helper.ApiKeys.WithGuid(aKey);
 			if (apiKey != null)
 			{
 				apiKey.SuccessCount++;
+				apiKey.Commit();
 			}
 		}
 
-		protected ApiKey GetApiKey(string aKey)
+		protected object CreateSuccessResponseAndUpdateApiKey(object aObject = null)
 		{
-			try
+			IncreaseSuccessCount(Guid.Parse(Context.CurrentUser.UserName));
+			if (aObject == null)
 			{
-				var guid = Guid.Parse(aKey);
-				return Helper.ApiKeys.WithGuid(guid);
+				aObject = new Result.Default { ReturnValue = Result.Default.States.Ok };
 			}
-			catch (Exception) {}
-			return null;
+			return aObject;
+		}
+
+		protected object CreateErrorResponseAndUpdateApiKey(string aMessage)
+		{
+			IncreaseErrorCount(Guid.Parse(Context.CurrentUser.UserName));
+			return new Result.Default { ReturnValue = Result.Default.States.Error, Message = aMessage };
+		}
+
+		protected object CreateErrorResponseAndUpdateApiKey(HttpStatusCode aCode)
+		{
+			IncreaseErrorCount(Guid.Parse(Context.CurrentUser.UserName));
+			return aCode;
+		}
+
+		protected List<ValidationResult> Validate(object aObject)
+		{
+			var context = new ValidationContext(aObject, null, null);
+			var results = new List<ValidationResult>();
+			Validator.TryValidateObject(aObject, context, results, true);
+			return results;
 		}
 	}
 }

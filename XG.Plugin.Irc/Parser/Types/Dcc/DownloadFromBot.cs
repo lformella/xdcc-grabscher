@@ -24,20 +24,27 @@
 //  
 
 using System;
+using System.Net;
 using System.Text.RegularExpressions;
 using Meebey.SmartIrc4net;
-using XG.Model;
-using XG.Model.Domain;
 using XG.Business.Helper;
 using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
-	public class DownloadFromBot : ADccParser
+	public class DownloadFromBot : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aUser, string aMessage)
+		public override bool Parse(Message aMessage)
 		{
-			Bot tBot = aConnection.Server.Bot(aUser);
+			if (!aMessage.Text.StartsWith("\u0001DCC ", StringComparison.Ordinal))
+			{
+				return false;
+			}
+			string text = aMessage.Text.Substring(5, aMessage.Text.Length - 6);
+
+			Bot tBot = aMessage.Channel.Bot(aMessage.Nick);
 			if (tBot == null)
 			{
 				return false;
@@ -74,25 +81,24 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 				}
 			}
 
-			string[] tDataList = aMessage.Split(' ');
+			string[] tDataList = text.Split(' ');
 			if (tDataList[0] == "SEND")
 			{
 				Log.Info("Parse() DCC from " + tBot);
 
 				// if the name of the file contains spaces, we have to replace em
-				if (aMessage.StartsWith("SEND \""))
+				if (text.StartsWith("SEND \"", StringComparison.CurrentCulture))
 				{
-					Match tMatch = Regex.Match(aMessage, "SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
+					Match tMatch = Regex.Match(text, "SEND \"(?<packet_name>.+)\"(?<bot_data>[^\"]+)$");
 					if (tMatch.Success)
 					{
-						tDataList = ("SEND " + tMatch.Groups["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups["bot_data"]).Split(' ');
+						tDataList = ("SEND " + tMatch.Groups ["packet_name"].ToString().Replace(" ", "_").Replace("'", "") + tMatch.Groups ["bot_data"]).Split(' ');
 					}
 				}
 
 				try
 				{
-					tBot.IP = TryCalculateIp(tDataList[2]);
-					tBot.Commit();
+					tBot.IP = IPAddress.Parse(tDataList[2]);
 				}
 				catch (Exception ex)
 				{
@@ -154,12 +160,12 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 					{
 						Log.Error("Parse() file for " + tPacket + " from " + tBot + " already in use or not found, disabling packet");
 						tPacket.Enabled = false;
-						FireUnRequestFromBot(this, new EventArgs<Server, Bot>(aConnection.Server, tBot));
+						FireUnRequestFromBot(this, new EventArgs<Bot>(tBot));
 					}
 					else if (tFile.CurrentSize > 0)
 					{
 						Log.Info("Parse() try resume from " + tBot + " for " + tPacket + " @ " + startSize);
-						FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aConnection.Server, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
+						FireSendMessage(this, new EventArgs<Server, SendType, string, string>(aMessage.Channel.Parent, SendType.CtcpRequest, tBot.Name, "DCC RESUME " + tPacket.RealName + " " + tPort + " " + startSize));
 					}
 					else
 					{
@@ -202,11 +208,9 @@ namespace XG.Plugin.Irc.Parser.Types.Dcc
 			if (isOk)
 			{
 				Log.Info("Parse() downloading from " + tBot + " - Starting: " + startSize + " - Size: " + tPacket.RealSize);
-				FireAddDownload(this, new EventArgs<Packet, long, System.Net.IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
-				return true;
+				FireAddDownload(this, new EventArgs<Packet, long, IPAddress, int>(tPacket, startSize, tBot.IP, tPort));
 			}
-
-			return false;
+			return true;
 		}
 	}
 }

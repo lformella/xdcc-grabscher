@@ -188,6 +188,19 @@ namespace XG.Config.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int MaxDownloads {
+            get {
+                return ((int)(this["MaxDownloads"]));
+			}
+			set {
+				this["MaxDownloads"] = value;
+			}
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(XgSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Anonymous")]
         public string IrcNick {
             get {
@@ -408,7 +421,7 @@ namespace XG.Config.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute( "3.2.0.0")]
+        [global::System.Configuration.DefaultSettingValueAttribute( "3.3.0.0")]
         public string XgVersion {
             get {
                 return ((string)(this["XgVersion"]));

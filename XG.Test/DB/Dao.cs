@@ -34,8 +34,8 @@ namespace XG.Test.DB
 	[TestFixture]
 	class Dao
 	{
-		const int Count = 6;
-		Random random = new Random();
+		const int _count = 6;
+		readonly Random _random = new Random();
 
 		[Test]
 		public void DaoLoadObjectsTest()
@@ -43,7 +43,6 @@ namespace XG.Test.DB
 			var dao = new XG.DB.Dao();
 			dao.Scheduler = new StdSchedulerFactory().GetScheduler();
 			dao.Start("Dao");
-			var servers = dao.Servers;
 		}
 			
 		[Test]
@@ -55,7 +54,7 @@ namespace XG.Test.DB
 			dao.Start("Dao");
 
 			var files = dao.Files;
-			for (int a = 0; a < Count; a++)
+			for (int a = 0; a < _count; a++)
 			{
 				var file = new File("test" + a, 1000000 * (a + 1));
 				file.CurrentSize = 700000 * (a + 1);
@@ -63,40 +62,40 @@ namespace XG.Test.DB
 			}
 
 			var servers = dao.Servers;
-			for (int a = 1; a < Count; a++)
+			for (int a = 1; a < _count; a++)
 			{
 				var server = new Server
 				{
-					Connected = random.Next(1, 3) == 1,
+					Connected = _random.Next(1, 3) == 1,
 					Name = "irc.test.com" + a,
 					Port = 6666 + a
 				};
 
-				for (int b = 1; b < Count; b++)
+				for (int b = 1; b < _count; b++)
 				{
 					var channel = new Channel
 					{
-						Connected = random.Next(1, 3) == 1,
+						Connected = _random.Next(1, 3) == 1,
 						Name = "#test" + a + "-" + b
 					};
 
-					for (int c = 1; c < Count; c++)
+					for (int c = 1; c < _count; c++)
 					{
 						var bot = new Bot
 						{
 							Name = "Bot " + a + "-" + b + "-" + c,
-							InfoSpeedCurrent = random.Next(100000, 1000000),
-							InfoSpeedMax = random.Next(1000000, 10000000),
-							InfoSlotCurrent = random.Next(1, 10),
-							InfoSlotTotal = random.Next(10, 100),
-							InfoQueueCurrent = random.Next(1, 10),
-							InfoQueueTotal = random.Next(10, 1000),
-							HasNetworkProblems = random.Next(1, 10) > 7,
+							InfoSpeedCurrent = _random.Next(100000, 1000000),
+							InfoSpeedMax = _random.Next(1000000, 10000000),
+							InfoSlotCurrent = _random.Next(1, 10),
+							InfoSlotTotal = _random.Next(10, 100),
+							InfoQueueCurrent = _random.Next(1, 10),
+							InfoQueueTotal = _random.Next(10, 1000),
+							HasNetworkProblems = _random.Next(1, 10) > 7,
 							LastMessage = "This is a test message that should be long enough for the most of the table and cell width test cases which are there for testing purposes.",
-							LastMessageTime = DateTime.Now.AddMinutes(random.Next(10000, 100000))
+							LastMessageTime = DateTime.Now.AddMinutes(_random.Next(10000, 100000))
 						};
 
-						int rand = random.Next(1, 4);
+						int rand = _random.Next(1, 4);
 						if (rand == 1)
 						{
 							bot.Connected = true;
@@ -105,28 +104,28 @@ namespace XG.Test.DB
 						}
 						else if (rand == 2)
 						{
-							bot.Connected = random.Next(1, 3) == 1;
+							bot.Connected = _random.Next(1, 3) == 1;
 							bot.State = Bot.States.Idle;
 						}
 						else if (rand == 3)
 						{
 							bot.Connected = true;
 							bot.State = Bot.States.Waiting;
-							bot.QueueTime = random.Next(10, 100);
-							bot.QueuePosition = random.Next(1, 10);
+							bot.QueueTime = _random.Next(10, 100);
+							bot.QueuePosition = _random.Next(1, 10);
 						}
 
-						for (int d = 1; d < Count; d++)
+						for (int d = 1; d < _count; d++)
 						{
 							var ending = new string[]{"rar", "mkv", "mp3", "tar", "avi", "wav", "jpg", "bmp"};
 
 							var packet = new Packet
 							{
-								Name = "Pack " + a + "-" + b + "-" + c + "-" + d + "." + ending[random.Next(0, ending.Length)],
+								Name = "Pack " + a + "-" + b + "-" + c + "-" + d + "." + ending[_random.Next(0, ending.Length)],
 								Id = a + b + c + d,
-								Size = random.Next(1000000, 10000000),
-								LastUpdated = DateTime.Now.AddDays(random.Next(1, 10) * -1),
-								LastMentioned = DateTime.Now.AddDays(random.Next(10, 100) * -1)
+								Size = _random.Next(1000000, 10000000),
+								LastUpdated = DateTime.Now.AddDays(_random.Next(1, 10) * -1),
+								LastMentioned = DateTime.Now.AddDays(_random.Next(10, 100) * -1)
 							};
 
 							if (d == 1)
@@ -165,11 +164,11 @@ namespace XG.Test.DB
 			}
 
 			var searches = dao.Searches;
-			for (int a = 0; a < Count; a++)
+			for (int a = 0; a < _count; a++)
 			{
 				var search = new Search
 				{
-					Name = "test" + random.Next(1000, 10000)
+					Name = "test" + _random.Next(1000, 10000)
 				};
 
 				searches.Add(search);

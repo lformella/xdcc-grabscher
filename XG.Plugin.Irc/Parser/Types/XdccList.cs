@@ -23,56 +23,56 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
-using Meebey.SmartIrc4net;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types
 {
 	public class XdccList : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
+		public override bool Parse(Message aMessage)
 		{
-			var regexes = new string[]
+			var regexes = new[]
 			{
 				".* XDCC LIST ALL(\"|'|)\\s*.*"
 			};
-			var match = Helper.Match(aMessage, regexes);
+			var match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC LIST ALL"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC LIST ALL"));
 				return true;
 			}
 
-			regexes = new string[]
+			regexes = new[]
 			{
 				".* XDCC LIST(\"|'|)\\s*.*"
 			};
-			match = Helper.Match(aMessage, regexes);
+			match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC LIST"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC LIST"));
 				return true;
 			}
 
-			regexes = new string[]
+			regexes = new[]
 			{
 				".* XDCC SEND LIST(\"|'|)\\s*.*"
 			};
-			match = Helper.Match(aMessage, regexes);
+			match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC SEND LIST"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC SEND LIST"));
 				return true;
 			}
 
-			regexes = new string[]
+			regexes = new[]
 			{
 				"^group: (?<group>[-a-z0-9_,.{}\\[\\]\\(\\)]+) .*"
 			};
-			match = Helper.Match(aMessage, regexes);
+			match = Helper.Match(aMessage.Text, regexes);
 			if (match.Success)
 			{
-				FireXdccList(this, new EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aEvent.Data.Nick, "XDCC LIST " + match.Groups["group"].ToString()));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aMessage.Channel, aMessage.Nick, "XDCC LIST " + match.Groups["group"]));
 				return true;
 			}
 			return false;

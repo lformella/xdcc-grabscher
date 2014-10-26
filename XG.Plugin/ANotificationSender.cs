@@ -24,6 +24,7 @@
 //  
 
 using System;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin
@@ -32,7 +33,7 @@ namespace XG.Plugin
 	{
 		#region EVENTS
 
-		public event EventHandler<EventArgs<Notification>> OnNotificationAdded;
+		public event EventHandler<EventArgs<Notification>> OnNotificationAdded = delegate {};
 
 		public void FireNotificationAdded(Notification.Types aType, AObject aObject)
 		{
@@ -46,10 +47,7 @@ namespace XG.Plugin
 
 		public void FireNotificationAdded(object aSender, EventArgs<Notification> aEventArgs)
 		{
-			if (OnNotificationAdded != null)
-			{
-				OnNotificationAdded(aSender, aEventArgs);
-			}
+			OnNotificationAdded(aSender, aEventArgs);
 		}
 
 		#endregion

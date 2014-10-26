@@ -26,11 +26,11 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using log4net;
-using XG.Model.Domain;
-using XG.Plugin;
-using XG.Config.Properties;
+using System.Threading;
 using Quartz;
+using XG.Config.Properties;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Business.Job
 {
@@ -42,14 +42,16 @@ namespace XG.Business.Job
 
 		public void Execute (IJobExecutionContext context)
 		{
+			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+
 			Bot[] tBots = (from server in Servers.All
 			                where server.Connected
 			                from channel in server.Channels
 			                where channel.Connected
 			                from bot in channel.Bots
 			                where
-				                !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Default.BotOfflineTime &&
-				                bot.OldestActivePacket() == null
+			                    !bot.Connected && (DateTime.Now - bot.LastContact).TotalSeconds > Settings.Default.BotOfflineTime &&
+			                    bot.OldestActivePacket() == null
 			                select bot).ToArray();
 
 			int a = tBots.Length;

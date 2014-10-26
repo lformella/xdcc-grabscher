@@ -28,9 +28,10 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using log4net;
-using XG.Model.Domain;
 using XG.Config.Properties;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Plugin.Irc
 {

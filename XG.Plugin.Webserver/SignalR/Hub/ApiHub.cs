@@ -58,6 +58,16 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return (from client in ConnectedClients where client.ConnectionId == connectionId select client).SingleOrDefault();
 		}
 
+		public void Visible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Add(typeof(ApiHub));
+		}
+
+		public void InVisible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Remove(typeof(ApiHub));
+		}
+
 		#endregion
 
 		public void Enable(Guid aGuid)
@@ -100,7 +110,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public Model.Domain.Result Load(int aCount, int aPage, string aSortBy, string aSort)
 		{
 			int length;
-			var objects = FilterAndLoadObjects<Model.Domain.ApiKey>(Helper.ApiKeys.All, aCount, aPage, aSortBy, aSort, out length);
+			var objects = Helper.FilterAndLoadObjects<Model.Domain.ApiKey>(Helper.ApiKeys.All, aCount, aPage, aSortBy, aSort, out length);
 			UpdateLoadedClientObjects(Context.ConnectionId, new HashSet<Guid>(objects.Select(o => o.Guid)), aCount);
 			return new Model.Domain.Result { Total = length, Results = objects };
 		}

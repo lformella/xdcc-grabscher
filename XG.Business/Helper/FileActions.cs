@@ -24,19 +24,20 @@
 //  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
-using log4net;
-using XG.Model.Domain;
 using XG.Config.Properties;
-using System.Collections.Generic;
+using XG.Extensions;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Business.Helper
 {
-	public class FileActions
+	public static class FileActions
 	{
 		#region VARIABLES
 
@@ -66,14 +67,12 @@ namespace XG.Business.Helper
 
 		#region EVENTS
 
-		public static event EventHandler<EventArgs<Notification>> OnNotificationAdded;
+		public static event EventHandler<EventArgs<Notification>> OnNotificationAdded = delegate {};
 
 		public static void FireNotificationAdded(Notification.Types aType, AObject aObject)
 		{
-			if (OnNotificationAdded != null)
-			{
-				OnNotificationAdded(null, new EventArgs<Notification>(new Notification(aType, aObject)));
-			}
+			var eventArgs = new EventArgs<Notification>(new Notification(aType, aObject));
+			OnNotificationAdded(null, eventArgs);
 		}
 
 		#endregion
@@ -127,7 +126,7 @@ namespace XG.Business.Helper
 		{
 			if (aEventArgs.Value2 is XG.Model.Domain.File)
 			{
-				XG.Model.Domain.File file = (XG.Model.Domain.File)aEventArgs.Value2;
+				var file = (XG.Model.Domain.File)aEventArgs.Value2;
 				Log.Info("RemoveFile(" + file + ")");
 				FileSystem.DeleteFile(Settings.Default.TempPath + file.TmpName);
 			}
@@ -147,8 +146,6 @@ namespace XG.Business.Helper
 				}
 
 				#region DISABLE ALL MATCHING PACKETS
-
-				// TODO remove all CD* packets if a multi packet was downloaded
 
 				string fileName = XG.Model.Domain.Helper.ShrinkFileName(aFile.Name, 0);
 				List<Packet> matchedPackets = (from server in Servers.All from channel in server.Channels from bot in channel.Bots from packet in bot.Packets where packet.Enabled && (XG.Model.Domain.Helper.ShrinkFileName(packet.RealName, 0).EndsWith(fileName) || XG.Model.Domain.Helper.ShrinkFileName(packet.Name, 0).EndsWith(fileName)) select packet).ToList();
@@ -197,7 +194,7 @@ namespace XG.Business.Helper
 				string file = Path.GetFileName(aFile);
 				string fileName = Path.GetFileNameWithoutExtension(aFile);
 				string fileExtension = Path.GetExtension(aFile);
-				if (fileExtension != null && fileExtension.StartsWith("."))
+				if (fileExtension != null && fileExtension.StartsWith(".", StringComparison.CurrentCulture))
 				{
 					fileExtension = fileExtension.Substring(1);
 				}

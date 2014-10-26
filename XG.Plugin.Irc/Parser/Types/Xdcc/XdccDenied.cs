@@ -24,13 +24,14 @@
 //  
 
 using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class XdccDenied : AParserWithExistingBot
+	public class XdccDenied : ASaveBotMessageParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -40,12 +41,13 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 			if (match.Success)
 			{
 				string info = match.Groups["info"].ToString().ToLower();
-				if (info.StartsWith("you must be on a known channel to request a pack"))
+				// ** XDCC SEND denied, you must have voice on a known channel to request a pack
+				if (info.StartsWith("you must be on a known channel to request a pack", System.StringComparison.CurrentCulture))
 				{
-					FireJoinChannelsFromBot(this, new EventArgs<Model.Domain.Server, Bot>(aConnection.Server, aBot));
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.CommandWaitTime));
+					FireJoinChannelsFromBot(this, new EventArgs<Bot>(aBot));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 				}
-				else if (info.StartsWith("i don't send transfers to"))
+				else if (info.StartsWith("i don't send transfers to", System.StringComparison.CurrentCulture))
 				{
 					foreach (Packet tPacket in aBot.Packets)
 					{
@@ -62,14 +64,11 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					{
 						aBot.State = Bot.States.Idle;
 					}
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.CommandWaitTime));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 					Log.Error("Parse() XDCC denied from " + aBot + ": " + info);
 				}
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

@@ -23,13 +23,20 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
+using System;
 using System.Collections.Generic;
-using Meebey.SmartIrc4net;
+using System.Threading;
 
 namespace XG.Plugin.Irc.Parser
 {
 	public class Parser : AParser
 	{
+		readonly Queue<Message> _messages = new Queue<Message>();
+
+		AutoResetEvent _waitHandle = new AutoResetEvent(false);
+
+		bool _allowRunning = true;
+
 		readonly List<AParser> _ircParsers = new List<AParser>();
 
 		public void Initialize()
@@ -60,26 +67,71 @@ namespace XG.Plugin.Irc.Parser
 			AddParser(new Types.Xdcc.XdccDenied());
 			AddParser(new Types.Xdcc.XdccDown());
 			AddParser(new Types.Xdcc.XdccSending());
+
+			new Thread(new ThreadStart(ParseThread)).Start();
 		}
 
-		public bool Parse(IrcConnection aConnection, IrcEventArgs aEvent)
+		public void DeInitialize()
 		{
-			string tMessage = Helper.RemoveSpecialIrcChars(aEvent.Data.Message);
-			Log.Debug("Parse() " + aEvent.Data.Nick + " " + tMessage);
-
-			return Parse(aConnection, tMessage, aEvent);
-		}
-
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
-		{
+			_allowRunning = false;
+			_waitHandle.Set();
 			foreach (var parser in _ircParsers)
 			{
-				if (parser.Parse(aConnection, aMessage, aEvent))
+				parser.OnAddDownload -= FireAddDownload;
+				parser.OnDownloadXdccList -= FireDownloadXdccList;
+				parser.OnJoinChannel -= FireJoinChannel;
+				parser.OnJoinChannelsFromBot -= FireJoinChannelsFromBot;
+				parser.OnNotificationAdded -= FireNotificationAdded;
+				parser.OnQueueRequestFromBot -= FireQueueRequestFromBot;
+				parser.OnRemoveDownload -= FireRemoveDownload;
+				parser.OnSendMessage -= FireSendMessage;
+				parser.OnUnRequestFromBot -= FireUnRequestFromBot;
+				parser.OnWriteLine -= FireWriteLine;
+				parser.OnXdccList -= FireXdccList;
+			}
+		}
+
+		public override bool Parse(Message aMessage)
+		{
+			_messages.Enqueue(aMessage);
+			return _waitHandle.Set();
+		}
+
+		protected void ParseThread()
+		{
+			Message tMessage = null;
+			while (true)
+			{
+				if (_messages.Count == 0)
 				{
-					return true;
+					_waitHandle.WaitOne();
+				}
+				if (!_allowRunning)
+				{
+					break;
+				}
+
+				try
+				{
+					tMessage = _messages.Dequeue();
+				}
+				catch (Exception) {}
+				if (tMessage == null)
+				{
+					continue;
+				}
+
+				tMessage.Text = Helper.RemoveSpecialIrcChars(tMessage.Text);
+				Log.Debug("Parse() " + _messages.Count + " " + tMessage.Nick + " " + tMessage);
+
+				foreach (var parser in _ircParsers)
+				{
+					if (parser.Parse(tMessage))
+					{
+						continue;
+					}
 				}
 			}
-			return false;
 		}
 
 		void AddParser(AParser aParser)
@@ -100,4 +152,3 @@ namespace XG.Plugin.Irc.Parser
 		}
 	}
 }
-

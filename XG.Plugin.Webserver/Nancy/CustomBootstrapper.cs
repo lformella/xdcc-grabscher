@@ -27,27 +27,34 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CacheAspect;
-using CacheAspect.Attributes;
 using Nancy;
+using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.Responses;
+using Nancy.TinyIoc;
+using XG.Config.Properties;
+using XG.Plugin.Webserver.Nancy.Authentication;
 
 namespace XG.Plugin.Webserver.Nancy
 {
 	public class CustomBootstrapper : DefaultNancyBootstrapper
 	{
-		private byte[] favicon;
+		byte[] _favicon;
+		string _basePath = "/" + Settings.Default.XgVersion;
 
 		protected override byte[] FavIcon
 		{
-			get { return this.favicon?? (this.favicon = LoadFavIcon()); }
+			get { return _favicon?? (_favicon = LoadFavIcon()); }
 		}
 
-#if !DEBUG
-		[Cache.Cacheable]
-#endif
-		private byte[] LoadFavIcon()
+		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+		{
+			base.ApplicationStartup(container, pipelines);
+
+			pipelines.EnableApiKeyAuthentication();
+		}
+
+		byte[] LoadFavIcon()
 		{
 			using (var resourceStream = GetType().Assembly.GetManifestResourceStream("XG.Plugin.Webserver.Resources.favicon.ico"))
 			{
@@ -57,13 +64,13 @@ namespace XG.Plugin.Webserver.Nancy
 			}
 		}
 
-		private string[] resourceNames;
+		string[] resourceNames;
 
-		private bool ResourceExists(string resourceName)
+		bool ResourceExists(string resourceName)
 		{
 			if (resourceNames == null)
 			{
-				resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames(); 
+				resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
 			}
 
 			return resourceNames.Contains(resourceName);
@@ -74,31 +81,45 @@ namespace XG.Plugin.Webserver.Nancy
 			base.ConfigureConventions(nancyConventions);
 
 #if DEBUG && __MonoCS__
+			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Content", "Content"));
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("fonts", "fonts"));
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Resources", "Resources"));
 			nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Scripts", "Scripts"));
 #else
-			nancyConventions.StaticContentsConventions.Add((ctx, rootPath) => GetResource (ctx.Request.Url.Path));
+			nancyConventions.StaticContentsConventions.Add((ctx, rootPath) => GetResource(ctx.Request.Url.Path));
 #endif
 		}
 
-#if !DEBUG
-		[Cache.Cacheable]
-#endif
-		private EmbeddedFileResponse GetResource(string aPath)
+		EmbeddedFileResponse GetResource(string aPath)
 		{
+			if (aPath.StartsWith(_basePath, StringComparison.CurrentCulture))
+			{
+				aPath = aPath.Substring(_basePath.Length);
+			}
+
+#if DEBUG
+			if (aPath == "/Resources/xg.appcache")
+			{
+				return null;
+			}
+#endif
 			try
 			{
-				var directoryName = "XG.Plugin.Webserver" + Path.GetDirectoryName(aPath).Replace(Path.DirectorySeparatorChar, '.').Replace("-", "_");
+				var directoryName = "XG.Plugin.Webserver" + Path.GetDirectoryName(aPath).Replace(Path.DirectorySeparatorChar, '.');
+#if !__MonoCS__
+				directoryName = directoryName.Replace("-", "_");
+#endif
 				var fileName = Path.GetFileName(aPath);
 				if (ResourceExists(directoryName + "." + fileName))
 				{
 					return new EmbeddedFileResponse(GetType().Assembly, directoryName, fileName);
 				}
 			}
-			catch(Exception) {}
+			catch(Exception)
+			{
+				return null;
+			}
 			return null;
 		}
 	}
 }
-

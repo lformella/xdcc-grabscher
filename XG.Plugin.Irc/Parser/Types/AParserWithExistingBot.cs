@@ -23,36 +23,32 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using Meebey.SmartIrc4net;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types
 {
 	public abstract class AParserWithExistingBot : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
+		public override bool Parse(Message aMessage)
 		{
-			Bot tBot = aConnection.Server.Bot(aEvent.Data.Nick);
+			bool result = false;
+			Bot tBot = aMessage.Channel.Bot(aMessage.Nick);
 			if (tBot != null)
 			{
-				return ParseInternal(aConnection, tBot, aMessage);
+				result = ParseInternal(tBot, aMessage.Text);
+
+				if (result)
+				{
+					Log.Info("Parse() message from " + tBot + ": " + aMessage.Text);
+				}
+
+				// set em to connected if it isnt already
+				tBot.Connected = true;
+				tBot.Commit();
 			}
-			return false;
+			return result;
 		}
 
-		protected abstract bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage);
-
-		public void UpdateBot(Bot aBot, string aMessage = null)
-		{
-			if (aMessage != null)
-			{
-				Log.Info("Parse() message from " + aBot + ": " + aMessage);
-				aBot.LastMessage = aMessage;
-			}
-
-			// set em to connected if it isnt already
-			aBot.Connected = true;
-			aBot.Commit();
-		}
+		protected abstract bool ParseInternal(Bot aBot, string aMessage);
 	}
 }

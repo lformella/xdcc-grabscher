@@ -24,11 +24,11 @@
 //  
 
 using System;
+using System.Threading;
+using Quartz;
 using SharpRobin.Core;
-using XG.Plugin;
 using XG.Business.Helper;
 using XG.Business.Model;
-using Quartz;
 
 namespace XG.Business.Job
 {
@@ -38,6 +38,8 @@ namespace XG.Business.Job
 
 		public void Execute (IJobExecutionContext context)
 		{
+			Thread.CurrentThread.Priority = ThreadPriority.Lowest;
+
 			var snapshot = Snapshots.GenerateSnapshot();
 
 			Sample sample = RrdDB.createSample((Int64)snapshot.Get(SnapshotValue.Timestamp));

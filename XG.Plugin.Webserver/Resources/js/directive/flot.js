@@ -193,7 +193,7 @@ define(['./module', 'jqFlot', 'jqFlot.time', 'jqFlot.pie', 'jqFlot.axislabels'],
 					mode: "time",
 					timeformat: timeFormat,
 					minTickSize: tickSize,
-					monthNames: moment.monthsShort
+					monthNames: moment.monthsShort()
 				},
 				yaxes: [
 					{

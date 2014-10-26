@@ -72,9 +72,9 @@ define(['./module'], function (ng) {
 			}
 			else if (file.Waiting)
 			{
-			    overlay = "asterisk";
-			    overlayClass = "ScarletRedLight animate-spin";
-			    overlayStyle = "";
+				overlay = "asterisk";
+				overlayClass = "ScarletRedLight animate-spin";
+				overlayStyle = "";
 			}
 
 			return $filter('formatIcon')(icon, iconClass, overlay, overlayClass, overlayStyle, title);

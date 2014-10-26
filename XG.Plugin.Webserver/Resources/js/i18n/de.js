@@ -71,6 +71,10 @@ define(['./module'], function (i18n) {
 				"Success Count": "Erfolgs Zähler",
 				"Shutdown": "Beenden",
 				"Do you really want to shutdown XG?": "Willst du XG wirklich beenden?",
+				"Max Connections": "Max Verbindungen",
+				"This message should be send after a successful connection": "Diese Nachricht wird gesendet wenn der Channel verbunden ist",
+				"XG is offline": "XG ist offline",
+				"XG is offline / not ready yet. Please try again later.": "XG ist offline oder noch nicht bereit. Bitte versuche es später nochmal.",
 
 				/* ************************************************************************************************************** */
 				/* GRIDS                                                                                                          */
@@ -186,6 +190,8 @@ define(['./module'], function (i18n) {
 				/* OTHERS                                                                                                         */
 				/* ************************************************************************************************************** */
 
+				"NewVersionAvailable": "Es gibt eine neue Version: <a href='{{Url}}' target='_blank'>{{Latest}} ({{Name}})</a>",
+
 				"Search": "Suche",
 				"Dashboard": "Übersicht",
 				"Graphs": "Graphen",
@@ -196,6 +202,8 @@ define(['./module'], function (i18n) {
 				"Predefined": "Vorgefertigt",
 				"Custom": "Eigene",
 				"Ready": "Fertig",
+				"None": "Nichts",
+				"Group Search Results By": "Suchergebnisse gruppieren durch",
 
 				"of": "von",
 				"connected": "verbunden",

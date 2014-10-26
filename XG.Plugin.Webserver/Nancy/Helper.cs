@@ -24,6 +24,8 @@
 //  
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Webserver.Nancy
@@ -32,20 +34,92 @@ namespace XG.Plugin.Webserver.Nancy
 	{
 		#region EVENTS
 
-		public static event EmptyEventHandler OnShutdown;
+		public static event EventHandler OnShutdown = delegate {};
 
-		public static void FireShutdown()
+		public static void FireShutdown(object aSender, EventArgs aEventArgs)
 		{
-			if (OnShutdown != null)
-			{
-				OnShutdown();
-			}
+			OnShutdown(aSender, aEventArgs);
 		}
 
 		#endregion
 
+		public static Servers Servers { get; set; }
+		public static Files Files { get; set; }
+		public static Searches Searches { get; set; }
 		public static ApiKeys ApiKeys { get; set; }
 		public static string Salt { get; set; }
 		public static string PasswortHash { get; set; }
+		public static RemoteSettings RemoteSettings { get; set; }
+
+		public static IEnumerable<Nancy.Api.Model.Domain.AObject> XgObjectsToNancyObjects(IEnumerable<AObject> aObjects)
+		{
+			var list = new HashSet<Nancy.Api.Model.Domain.AObject>();
+
+			foreach (var obj in aObjects)
+			{
+				var convertedObj = XgObjectToNancyObject(obj);
+				if (convertedObj != null)
+				{
+					list.Add(convertedObj);
+				}
+			}
+
+			return list;
+		}
+
+		public static Nancy.Api.Model.Domain.AObject XgObjectToNancyObject(AObject aObject)
+		{
+			Nancy.Api.Model.Domain.AObject myObj = null;
+
+			if (aObject is Server)
+			{
+				myObj = new Nancy.Api.Model.Domain.Server { Object = aObject as Server };
+			}
+			else if (aObject is Channel)
+			{
+				myObj = new Nancy.Api.Model.Domain.Channel { Object = aObject as Channel };
+			}
+			else if (aObject is Bot)
+			{
+				myObj = new Nancy.Api.Model.Domain.Bot { Object = aObject as Bot };
+			}
+			else if (aObject is Packet)
+			{
+				myObj = new Nancy.Api.Model.Domain.Packet { Object = aObject as Packet };
+			}
+			else if (aObject is XG.Model.Domain.Search)
+			{
+				myObj = new Nancy.Api.Model.Domain.Search { Object = aObject as XG.Model.Domain.Search };
+			}
+			else if (aObject is File)
+			{
+				myObj = new Nancy.Api.Model.Domain.File { Object = aObject as File };
+			}
+
+			return myObj;
+		}
+
+		public static IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
+		{
+			aPage--;
+			var objects = Helper.XgObjectsToNancyObjects(aObjects).Cast<T>();
+
+			if (string.IsNullOrWhiteSpace(aSortBy))
+			{
+				aSortBy = "Name";
+			}
+			var prop = typeof(T).GetProperty(aSortBy);
+			if (aSort == "desc")
+			{
+				objects = objects.OrderByDescending(o => prop.GetValue(o, null));
+			}
+			else
+			{
+				objects = objects.OrderBy(o => prop.GetValue(o, null));
+			}
+
+			aLength = objects.Count();
+			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
+		}
 	}
 }

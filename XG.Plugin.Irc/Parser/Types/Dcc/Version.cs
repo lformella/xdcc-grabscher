@@ -23,40 +23,31 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using Meebey.SmartIrc4net;
+using System;
+using XG.Extensions;
+using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Dcc
 {
 	public class Version : AParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, string aMessage, IrcEventArgs aEvent)
+		public override bool Parse(Message aMessage)
 		{
-			var args = aEvent as CtcpEventArgs;
-			if (args != null)
+			if (aMessage.Text.StartsWith("\u0001VERSION ", StringComparison.Ordinal))
 			{
-				if (args.CtcpCommand == Rfc2812.Version())
-				{
-					CheckVersion(aConnection, aEvent.Data.Nick, aMessage);
-				}
-			}
-			else if (aEvent.Data.Type == ReceiveType.QueryNotice)
-			{
-				if (aMessage.StartsWith("\u0001" + Rfc2812.Version() + " "))
-				{
-					CheckVersion(aConnection, aEvent.Data.Nick, aMessage.Substring(9));
-				}
+				CheckVersion(aMessage.Channel, aMessage.Nick, aMessage.Text.Substring(9));
+				return true;
 			}
 			return false;
 		}
 
-		private void CheckVersion(IrcConnection aConnection, string aNick, string aVersion)
+		void CheckVersion(Channel aChannel, string aNick, string aVersion)
 		{
 			Log.Info("Parse() received version reply from " + aNick + ": " + aVersion);
 			if (aVersion.ToLower().Contains("iroffer"))
 			{
-				FireXdccList(this, new Model.Domain.EventArgs<Model.Domain.Server, string, string>(aConnection.Server, aNick, "XDCC HELP"));
+				FireXdccList(this, new EventArgs<Channel, string, string>(aChannel, aNick, "XDCC HELP"));
 			}
 		}
 	}
 }
-

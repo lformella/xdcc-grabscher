@@ -25,20 +25,22 @@
 
 using System;
 using System.Net;
-using System.Reflection;
-using Meebey.SmartIrc4net;
+using XG.Business.Helper;
 using XG.Model.Domain;
+using XG.Plugin.Irc.Parser;
 
 namespace XG.Test.Plugin.Irc.Parser
 {
 	public abstract class AParser
 	{
 		protected XG.Plugin.Irc.IrcConnection Connection;
-		protected XG.Model.Domain.Server Server;
-		protected XG.Model.Domain.Channel Channel;
+		protected Server Server;
+		protected Channel Channel;
 		protected Bot Bot;
+		protected Packet Packet;
+		protected File File;
 
-		protected XG.Model.Domain.Channel EventChannel;
+		protected Channel EventChannel;
 		protected Bot EventBot;
 		protected Packet EventPacket;
 		protected Int64 EventChunk;
@@ -51,47 +53,51 @@ namespace XG.Test.Plugin.Irc.Parser
 
 		protected AParser()
 		{
-			Server = new XG.Model.Domain.Server { Name = "test.bitpir.at" };
+			Server = new Server
+			{
+				Name = "test.bitpir.at"
+			};
 
-			Channel = new XG.Model.Domain.Channel { Name = "#test" };
+			Channel = new Channel
+			{
+				Name = "#test"
+			};
 			Server.AddChannel(Channel);
 
-			Bot = new Bot {Name = "[XG]TestBot"};
+			Bot = new Bot
+			{
+				Name = "[XG]TestBot"
+			};
 			Channel.AddBot(Bot);
+
+			Packet = new Packet
+			{
+				Name = "Testfile.with.a.long.name.mkv",
+				RealName = "Testfile.with.a.long.name.mkv",
+				Id = 1,
+				Enabled = true,
+				RealSize = 975304559
+			};
+			Bot.AddPacket(Packet);
 
 			Connection = new XG.Plugin.Irc.IrcConnection();
 			Connection.Server = Server;
 
-			//parser.Parse(null, "", CreateIrcEventArgs(Channel.Name, Bot.Name, "", ReceiveType.QueryMessage));
+			FileActions.Files = new Files();
+			File = new File("Testfile.with.a.long.name.mkv", 975304559);
+			FileActions.Files.Add(File);
 		}
 
-		protected IrcEventArgs CreateIrcEventArgs(string aChannel, string aBot, string aMessage, ReceiveType aType)
+		protected void Parse(XG.Plugin.Irc.Parser.AParser aParser, string aMessage)
 		{
-			IrcMessageData data = new IrcMessageData(null, "", aBot, "", "", aChannel, aMessage, aMessage, aType, ReplyCode.Null);
-			IrcEventArgs args = (IrcEventArgs)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(IrcEventArgs));
-			FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-			EventFields[0].SetValue(args, data);
-
-			return args;
-		}
-
-		protected IrcEventArgs CreateCtcpEventArgs(string aChannel, string aBot, string aMessage, ReceiveType aType, string aCtcpCommand)
-		{
-			IrcMessageData data = new IrcMessageData(null, "", aBot, "", "", aChannel, aMessage, aMessage, aType, ReplyCode.Null);
-			CtcpEventArgs args = (CtcpEventArgs)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(CtcpEventArgs));
-			FieldInfo[] EventFields = typeof(IrcEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-			EventFields[0].SetValue(args, data);
-
-			FieldInfo[] EventFields2 = typeof(CtcpEventArgs).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-			EventFields2[0].SetValue(args, aCtcpCommand);
-
-			return args;
-		}
-
-		protected void Parse(XG.Plugin.Irc.Parser.AParser aParser, XG.Plugin.Irc.IrcConnection aConnection, IrcEventArgs aEvent)
-		{
-			string tMessage = XG.Plugin.Irc.Parser.Helper.RemoveSpecialIrcChars(aEvent.Data.Message);
-			aParser.Parse(aConnection, tMessage, aEvent);
+			aMessage = XG.Plugin.Irc.Parser.Helper.RemoveSpecialIrcChars(aMessage);
+			var message = new Message
+			{
+				Channel = Channel,
+				Nick = Bot.Name,
+				Text = aMessage
+			};
+			aParser.Parse(message);
 		}
 	}
 }

@@ -1,14 +1,22 @@
 {
 	"Version":
 	{
-		"Latest": "3.2.0.0",
-		"Name": "Digital Dinosaur",
-		"Url": "https://github.com/lformella/xdcc-grabscher/releases/tag/v3.2.0.0",
+		"Latest": "3.3.0.0",
+		"Name": "Shiny Shibe",
+		"Url": "https://github.com/lformella/xdcc-grabscher/releases/tag/v3.3.0.0",
 		"ShowWarning": false
 	},
 	"ExternalSearch":
 	{
 		"Enabled": false,
 		"Url": "http://xg.bitpir.at/index.php?show=search&action=external&xg=##VERSION##&start=##START##&limit=##LIMIT##&minSize=##MIN_SIZE##&botState=##BOT_STATE##&sortBy=##SORT_BY##&sort=##SORT##&search=##SEARCH##"
-	}
+	},
+	"Messages":
+	[
+		{
+			"Text": "At the moment xg.bitpir.at and the integrated cloud search is down, because I can't afford it to run a root server with a special copy of XG. If you want to support my work, you can <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZW786UWCWEJWL\" target=\"_blank\">spend some money</a> or give me access to a .net compatible server to run the mentioned XG copy. Thanks!",
+			"Enabled": true,
+			"Type": "danger"
+		}
+	]
 }

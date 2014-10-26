@@ -30,6 +30,7 @@ define([
 	'./client',
 	'./file',
 	'./notification',
+	'./main',
 	'./packet',
 	'./search',
 	'./server'

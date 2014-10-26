@@ -25,13 +25,13 @@
 
 using System;
 using System.Linq;
-using XG.Business.Model;
-using XG.Model;
+using XG.Extensions;
 using XG.Model.Domain;
+using XG.Business.Model;
 
 namespace XG.Business.Helper
 {
-	public class Snapshots
+	public static class Snapshots
 	{
 		public static Servers Servers { get; set; }
 		public static Files Files { get; set; }

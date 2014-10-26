@@ -59,14 +59,24 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			return (from client in ConnectedClients where client.ConnectionId == connectionId select client).SingleOrDefault();
 		}
 
+		public void Visible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Add(typeof(SearchHub));
+		}
+
+		public void InVisible()
+		{
+			GetClient(Context.ConnectionId).VisibleHubs.Remove(typeof(SearchHub));
+		}
+
 		#endregion
 
-		public void Add(string aSearch)
+		public void Add(string aSearch, Int64 aSize)
 		{
-			var obj = Helper.Searches.Named(aSearch);
+			var obj = Helper.Searches.WithParameters(aSearch, aSize);
 			if (obj == null)
 			{
-				obj = new Search { Name = aSearch };
+				obj = new XG.Model.Domain.Search { Name = aSearch, Size = aSize };
 				Helper.Searches.Add(obj);
 			}
 		}

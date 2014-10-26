@@ -31,9 +31,9 @@ namespace XG.Model.Domain
 {
 	public class Files : AObjects
 	{
-		public new IEnumerable<File> All
+		public IEnumerable<File> All
 		{
-			get { return base.All.Cast<File>(); }
+			get { return base.Children.Cast<File>(); }
 		}
 
 		public File File(string tmpName)
@@ -68,7 +68,7 @@ namespace XG.Model.Domain
 			return base.Remove(aFile);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return File((aObject as File).TmpName) != null;
 		}

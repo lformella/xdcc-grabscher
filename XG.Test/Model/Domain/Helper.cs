@@ -24,7 +24,6 @@
 //  
 
 using NUnit.Framework;
-using System.IO;
 
 namespace XG.Test.Model.Domain
 {

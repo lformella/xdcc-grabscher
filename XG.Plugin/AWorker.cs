@@ -46,7 +46,7 @@ namespace XG.Plugin
 
 		public IScheduler Scheduler { get; set; }
 
-		List<JobKey> _scheduledJobs = new List<JobKey>();
+		readonly List<JobKey> _scheduledJobs = new List<JobKey>();
 
 		#endregion
 
@@ -91,19 +91,54 @@ namespace XG.Plugin
 			{
 				Log.Fatal("Stop()", ex);
 			}
+
+			RemoveAllJobs();
 		}
 
 		protected virtual void StopRun() {}
 
 		public void AddRepeatingJob(Type aType, string aName, string aGroup, int aSecondsToSleep, params JobItem[] aItems)
 		{
-			JobKey key = new JobKey(aName, aGroup);
-			if (Scheduler.GetJobDetail(key) != null)
+			IJobDetail job = CreateAndAddJob(aType, aName, aGroup, aItems);
+			if (job == null)
 			{
-				Log.Error("AddRepeatingJob(" + aType.Name + ", " + aName + ", " + aGroup + ") already exists");
 				return;
 			}
-			Log.Info("AddRepeatingJob(" + aType.Name + ", " + aName + ", " + aGroup + ", " + aSecondsToSleep + ")");
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(aName, aGroup)
+				.StartNow()
+				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aSecondsToSleep).RepeatForever())
+				.Build();
+
+			Scheduler.ScheduleJob(job, trigger);
+		}
+
+		public void AddFutureJob(Type aType, string aName, string aGroup, int aRunInSeconds, params JobItem[] aItems)
+		{
+			IJobDetail job = CreateAndAddJob(aType, aName, aGroup, aItems);
+			if (job == null)
+			{
+				return;
+			}
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(aName, aGroup)
+				.StartAt(new DateTimeOffset(DateTime.Now.AddSeconds(aRunInSeconds)))
+				.Build();
+
+			Scheduler.ScheduleJob(job, trigger);
+		}
+
+		public IJobDetail CreateAndAddJob(Type aType, string aName, string aGroup, params JobItem[] aItems)
+		{
+			var key = new JobKey(aName, aGroup);
+			if (Scheduler.GetJobDetail(key) != null)
+			{
+				Log.Error("CreateAndAddJob(" + aType.Name + ", " + aName + ", " + aGroup + ") already exists");
+				return null;
+			}
+			Log.Info("CreateAndAddJob(" + aType.Name + ", " + aName + ", " + aGroup + ")");
 
 			_scheduledJobs.Add(key);
 
@@ -118,17 +153,16 @@ namespace XG.Plugin
 				.UsingJobData(data)
 				.Build();
 
-			ITrigger trigger = TriggerBuilder.Create()
-				.WithIdentity(aName, aGroup)
-				.WithSimpleSchedule(x => x.WithIntervalInSeconds(aSecondsToSleep).RepeatForever())
-				.Build();
-
-			Scheduler.ScheduleJob(job, trigger);
+			return job;
 		}
 
-		public void RemoveAllMyRepeatingJobs()
+		public void RemoveAllJobs()
 		{
-			Scheduler.DeleteJobs(_scheduledJobs);
+			if (_scheduledJobs.Count > 0 && !Scheduler.IsShutdown)
+			{
+				Scheduler.DeleteJobs(_scheduledJobs);
+				_scheduledJobs.Clear();
+			}
 		}
 
 		#endregion

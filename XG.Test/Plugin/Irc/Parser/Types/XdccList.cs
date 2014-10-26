@@ -23,17 +23,16 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using System;
-using Meebey.SmartIrc4net;
 using NUnit.Framework;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Test.Plugin.Irc.Parser.Types
 {
-	[TestFixture()]
+	[TestFixture]
 	public class XdccList : AParser
 	{
-		[Test()]
+		[Test]
 		public void XdccListParseTest()
 		{
 			TestParse("** Download Liste der Pakete: \"/MSG [XG]TestBot XDCC LIST\" **", "XDCC LIST");
@@ -47,14 +46,13 @@ namespace XG.Test.Plugin.Irc.Parser.Types
 		void TestParse(string aMessage, string aExpectedCommand)
 		{
 			var parser = new XG.Plugin.Irc.Parser.Types.XdccList();
-			EventArgs<XG.Model.Domain.Server, string, string> raisedEvent = null;
+			EventArgs<Channel, string, string> raisedEvent = null;
 			parser.OnXdccList += (sender, e) => raisedEvent = e;
 
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, aMessage, ReceiveType.QueryNotice));
-			Assert.AreEqual(Server, raisedEvent.Value1);
+			Parse(parser, aMessage);
+			Assert.AreEqual(Channel, raisedEvent.Value1);
 			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
 			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
 		}
 	}
 }
-

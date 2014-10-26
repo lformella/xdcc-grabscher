@@ -24,7 +24,7 @@
 //  
 
 using NUnit.Framework;
-using XG.Model;
+using XG.Extensions;
 
 namespace XG.Test.Model
 {
@@ -48,31 +48,6 @@ namespace XG.Test.Model
 
 			name2 = "[ebook] F Scott Fitzgerald - The Great Gatsby";
 			Assert.AreEqual(0.56, name1.Difference(name2));
-		}
-
-		[Test]
-		public void ContainsAllTest()
-		{
-			string name = "F.Scott.Fitzgerald.-.The.Great.Gatsby.epub.ebook.rar";
-			string search;
-
-			search = "fitzgerald";
-			Assert.IsTrue(name.ContainsAll(search.Split(' ')));
-
-			search = "fitzgerald scott";
-			Assert.IsTrue(name.ContainsAll(search.Split(' ')));
-
-			search = "fitzgerald -.tar";
-			Assert.IsTrue(name.ContainsAll(search.Split(' ')));
-
-			search = "fitzgerald -scott";
-			Assert.IsFalse(name.ContainsAll(search.Split(' ')));
-
-			search = "fitzgerald -rar";
-			Assert.IsFalse(name.ContainsAll(search.Split(' ')));
-
-			search = "fitzgerald -F.";
-			Assert.IsFalse(name.ContainsAll(search.Split(' ')));
 		}
 	}
 }

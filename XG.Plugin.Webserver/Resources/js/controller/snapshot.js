@@ -32,7 +32,7 @@ define(['./module', 'jqFlot'], function (ng) {
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
-					callback:  function ()
+					callback: function ()
 					{
 						$scope.updateSnapshots();
 					}
@@ -155,10 +155,16 @@ define(['./module', 'jqFlot'], function (ng) {
 							});
 
 							$scope.snapshots = data;
+							$timeout($scope.render, 250);
 						}
 					);
 				}
 			};
+
+			$scope.$watch('days', function ()
+			{
+				$scope.updateSnapshots();
+			});
 
 			$rootScope.$on('OnSlideTo', function (e, slide)
 			{

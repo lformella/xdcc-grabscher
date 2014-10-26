@@ -24,7 +24,6 @@
 //
 
 using NUnit.Framework;
-using System;
 using XG.Config.Properties;
 using System.Collections.Generic;
 
@@ -63,4 +62,3 @@ namespace XG.Test.Config.Properties
 		}
 	}
 }
-

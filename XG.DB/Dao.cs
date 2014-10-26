@@ -24,12 +24,13 @@
 //  
 
 using System;
-using System.Linq;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Config.Encoding;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.TA;
 using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 using XG.Plugin;
 
@@ -41,6 +42,8 @@ namespace XG.DB
 
 		IObjectContainer _db;
 
+		readonly object _lock = new object();
+
 		#endregion
 
 		#region AWorker
@@ -50,7 +53,7 @@ namespace XG.DB
 			string dbPath = Settings.Default.GetAppDataPath() + "xgobjects.db4o";
 
 			bool loadFromSqlite = false;
-			if (!System.IO.File.Exists(dbPath))
+			if (!System.IO.File.Exists(dbPath) && System.IO.File.Exists(Settings.Default.GetAppDataPath() + "xgobjects.db"))
 			{
 				loadFromSqlite = true;
 			}
@@ -101,67 +104,67 @@ namespace XG.DB
 
 		protected override void ObjectAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ObjectRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ObjectChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ObjectEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void FileAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void FileRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void FileChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void SearchAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void SearchRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ApiKeyChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ApiKeyAdded(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ApiKeyRemoved(object aSender, EventArgs<AObject, AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		protected override void ApiKeyEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			_db.Commit();
+			TryCommit();
 		}
 
 		#endregion
@@ -172,9 +175,11 @@ namespace XG.DB
 		{
 			try
 			{
-				Servers = _db.Query<Servers>(typeof(Servers)).First();
+				Servers = _db.Query<Servers>(typeof(Servers))[0];
 			}
-			catch (InvalidOperationException)
+			catch (InvalidOperationException) {}
+			catch (Db4oRecoverableException) {}
+			if (Servers == null)
 			{
 				Servers = new Servers();
 				_db.Store(Servers);
@@ -182,9 +187,11 @@ namespace XG.DB
 
 			try
 			{
-				Files = _db.Query<Files>(typeof(Files)).First();
+				Files = _db.Query<Files>(typeof(Files))[0];
 			}
-			catch (InvalidOperationException)
+			catch (InvalidOperationException) {}
+			catch (Db4oRecoverableException) {}
+			if (Files == null)
 			{
 				Files = new Files();
 				_db.Store(Files);
@@ -192,9 +199,11 @@ namespace XG.DB
 
 			try
 			{
-				Searches = _db.Query<Searches>(typeof(Searches)).First();
+				Searches = _db.Query<Searches>(typeof(Searches))[0];
 			}
-			catch (InvalidOperationException)
+			catch (InvalidOperationException) {}
+			catch (Db4oRecoverableException) {}
+			if (Searches == null)
 			{
 				Searches = new Searches();
 				_db.Store(Searches);
@@ -202,15 +211,29 @@ namespace XG.DB
 
 			try
 			{
-				ApiKeys = _db.Query<ApiKeys>(typeof(ApiKeys)).First();
+				ApiKeys = _db.Query<ApiKeys>(typeof(ApiKeys))[0];
 			}
-			catch (InvalidOperationException)
+			catch (InvalidOperationException) {}
+			catch (Db4oRecoverableException) {}
+			if (ApiKeys == null)
 			{
 				ApiKeys = new ApiKeys();
 				_db.Store(ApiKeys);
 			}
 
-			_db.Commit();
+			TryCommit();
+		}
+
+		void TryCommit()
+		{
+			lock(_lock)
+			{
+				try
+				{
+					_db.Commit();
+				}
+				catch (DatabaseClosedException) {}
+			}
 		}
 
 		#endregion

@@ -54,7 +54,7 @@ define(['./module'], function (ng) {
 					eventCallback.callback();
 				});
 			}
-			else
+			else if (proxy != undefined)
 			{
 				proxy.on(eventCallback.name, function (message)
 				{

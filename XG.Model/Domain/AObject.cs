@@ -27,34 +27,30 @@ using System;
 using System.Collections.Generic;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.TA;
+using XG.Extensions;
 
 namespace XG.Model.Domain
 {
-	public abstract class AObject : IActivatable 
+	public abstract class AObject : IActivatable, IObjectCallbacks
 	{
 		#region EVENTS
 
 		[Transient]
-		public event EventHandler<EventArgs<AObject>> OnEnabledChanged;
+		public event EventHandler<EventArgs<AObject>> OnEnabledChanged = delegate {};
 
 		protected void FireEnabledChanged(object aSender, EventArgs<AObject> aEventArgs)
 		{
-			if (OnEnabledChanged != null)
-			{
-				OnEnabledChanged(aSender, aEventArgs);
-			}
+			OnEnabledChanged(aSender, aEventArgs);
 		}
 
 		[Transient]
-		public event EventHandler<EventArgs<AObject, string[]>> OnChanged;
+		public event EventHandler<EventArgs<AObject, string[]>> OnChanged = delegate {};
 
 		protected void FireChanged(object aSender, EventArgs<AObject, string[]> aEventArgs)
 		{
-			if (OnChanged != null)
-			{
-				OnChanged(aSender, aEventArgs);
-			}
+			OnChanged(aSender, aEventArgs);
 		}
 
 		#endregion
@@ -106,7 +102,21 @@ namespace XG.Model.Domain
 			}
 		}
 
-		public Guid Guid { get; set; }
+		Guid _guid;
+
+		public Guid Guid
+		{
+			get
+			{
+				Activate(ActivationPurpose.Read);
+				return _guid;
+			}
+			set
+			{
+				Activate(ActivationPurpose.Write);
+				_guid = value;
+			}
+		}
 
 		string _name;
 
@@ -130,10 +140,14 @@ namespace XG.Model.Domain
 					return true;
 				}
 			}
-			catch(Exception) {}
+			catch(Exception)
+			{
+				return false;
+			}
 			return false;
 		}
 
+		[Transient]
 		bool _connected;
 
 		public virtual bool Connected
@@ -218,7 +232,7 @@ namespace XG.Model.Domain
 		#region DB4O
 
 		[Transient]
-		private IActivator _activator;
+		IActivator _activator;
 
 		public void Activate(ActivationPurpose purpose)
 		{
@@ -236,10 +250,49 @@ namespace XG.Model.Domain
 			}
 			if (activator != null && null != _activator)
 			{
-				throw new System.InvalidOperationException();
+				throw new InvalidOperationException();
 			}
 			_activator = activator;
 		}
+
+		public bool ObjectCanActivate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanDeactivate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanDelete(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanNew(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public bool ObjectCanUpdate(IObjectContainer container)
+		{
+			return true;
+		}
+
+		public void ObjectOnActivate(IObjectContainer container)
+		{
+			OnChanged = delegate {};
+			OnEnabledChanged = delegate {};
+		}
+
+		public void ObjectOnDeactivate(IObjectContainer container) {}
+
+		public void ObjectOnDelete(IObjectContainer container) {}
+
+		public void ObjectOnNew(IObjectContainer container) {}
+
+		public void ObjectOnUpdate(IObjectContainer container) {}
 
 		#endregion
 	}

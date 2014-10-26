@@ -99,6 +99,8 @@ namespace XG.Plugin.Webserver.SignalR.Hub.Model.Domain
 			get { return Object.File != null ? Object.File.TimeMissing : 0; }
 		}
 
+		public string GroupBy { get; set; }
+
 		#endregion
 	}
 }

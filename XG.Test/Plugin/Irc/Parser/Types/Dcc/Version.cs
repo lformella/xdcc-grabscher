@@ -23,39 +23,29 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
 
-using System;
-using Meebey.SmartIrc4net;
 using NUnit.Framework;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Test.Plugin.Irc.Parser.Types.Dcc
 {
-	[TestFixture()]
+	[TestFixture]
 	public class Version : AParser
 	{
-		[Test()]
+		[Test]
 		public void VersionParseTest()
 		{
 			var parser = new XG.Plugin.Irc.Parser.Types.Dcc.Version();
-			EventArgs<XG.Model.Domain.Server, string, string> raisedEvent = null;
+			EventArgs<Channel, string, string> raisedEvent = null;
 			parser.OnXdccList += (sender, e) => raisedEvent = e;
 			string aExpectedCommand = "XDCC HELP";
 
 			raisedEvent = null;
-			Parse(parser, Connection, CreateIrcEventArgs(Channel.Name, Bot.Name, "\u0001VERSION *** Iroffer v2.0 Creato Da ArSeNiO ***", ReceiveType.QueryNotice));
+			Parse(parser, "\u0001VERSION *** Iroffer v2.0 Creato Da ArSeNiO ***");
 
-			Assert.AreEqual(Server, raisedEvent.Value1);
-			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
-			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
-
-			raisedEvent = null;
-			Parse(parser, Connection, CreateCtcpEventArgs(Channel.Name, Bot.Name, "*** iroffer v2.0 Creato Da ArSeNiO ***", ReceiveType.CtcpReply, Rfc2812.Version()));
-			parser.OnXdccList += (sender, e) => raisedEvent = e;
-
-			Assert.AreEqual(Server, raisedEvent.Value1);
+			Assert.AreEqual(Channel, raisedEvent.Value1);
 			Assert.AreEqual(Bot.Name, raisedEvent.Value2);
 			Assert.AreEqual(aExpectedCommand, raisedEvent.Value3);
 		}
 	}
 }
-

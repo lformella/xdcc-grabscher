@@ -8,6 +8,7 @@
 //
 //  Copyright (c) 2012 Lars Formella
 //
+//
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation; either version 2 of the License, or
@@ -26,27 +27,35 @@
 // let Angular know that we're bootstrapping manually
 window.name = "NG_DEFER_BOOTSTRAP!";
 
+requirejs.onError = function (err)
+{
+	alert("error: " + err);
+};
+
 require.config({
 	paths: {
-		'angular': '../../../Scripts/angular.min',
-		'ngAnimate': '../../../Scripts/angular-animate.min',
-		'ngTranslate': './libs/angular-translate.min',
-		'ngSanitize': '../../../Scripts/angular-sanitize.min',
-		'ngTable': './libs/ng-table',
-		'domReady': './libs/domReady',
-		'favicon': './libs/favicon',
-		'ipCookies': './libs/angular-cookie',
-		'jquery': '../../../Scripts/jquery-2.1.1.min',
-		'jqKnob': './libs/jquery.knob',
-		'jqFlot': '../../../Scripts/flot/jquery.flot.min',
-		'jqFlot.axislabels': './libs/jquery.flot.axislabels',
-		'jqFlot.pie': '../../../Scripts/flot/jquery.flot.pie.min',
-		'jqFlot.time': '../../../Scripts/flot/jquery.flot.time.min',
-		'moment': '../../../Scripts/moment-with-langs.min',
-		'sha256': './libs/sha256',
-		'signalr': '../../../Scripts/jquery.signalR-2.0.3.min',
-		'signalr.hubs': '../../../signalr/hubs?noext=',
-		'ui.bootstrap': '../../../Scripts/angular-ui/ui-bootstrap-tpls.min'
+		'angular':				'../../Scripts/angular.min',
+		'ngAnimate':			'../../Scripts/angular-animate.min',
+		'ipCookies':			'../../Scripts/angular-cookie.min',
+		'ngSanitize':			'../../Scripts/angular-sanitize.min',
+		'ngTranslate':			'./libs/angular-translate.min',
+		'ui.bootstrap':			'../../Scripts/angular-ui/ui-bootstrap-tpls.min',
+		'ngTable':				'../../Scripts/ng-table.min',
+
+		'domReady':				'./libs/domReady',
+		'favico':				'../../Scripts/favico.min',
+		'jqKnob':				'./libs/jquery.knob',
+
+		'jquery':				'../../Scripts/jquery-2.1.1.min',
+		'jqFlot':				'../../Scripts/flot/jquery.flot.min',
+		'jqFlot.pie':			'../../Scripts/flot/jquery.flot.pie.min',
+		'jqFlot.time':			'../../Scripts/flot/jquery.flot.time.min',
+		'jqFlot.axislabels':	'./libs/jquery.flot.axislabels',
+
+		'moment':				'../../Scripts/moment-with-locales.min',
+		'signalr':				'../../Scripts/jquery.signalR-2.1.2.min',
+		'signalr.hubs':			'../../../signalr/hubs?noext=',
+		'sha256':				'./libs/sha256'
 	},
 	shim: {
 		'angular': {

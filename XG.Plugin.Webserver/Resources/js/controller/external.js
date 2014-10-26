@@ -34,6 +34,7 @@ define(['./module'], function (ng) {
 
 			$scope.searchBy = "";
 			$scope.search = "";
+			$scope.size = 0;
 			$scope.active = false;
 
 			$scope.tableParams = new ngTableParams({
@@ -62,7 +63,14 @@ define(['./module'], function (ng) {
 					var signalR = null;
 					try
 					{
-						signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots, params.$params.count, params.$params.page, sortBy, sort);
+						if ($scope.searchBy == "Parameter")
+						{
+							signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $scope.size, $rootScope.settings.showOfflineBots == 1, params.$params.count, params.$params.page, sortBy, sort);
+						}
+						else
+						{
+							signalR = $scope.signalr.getProxy().server['loadBy' + $scope.searchBy]($scope.search, $rootScope.settings.showOfflineBots == 1, params.$params.count, params.$params.page, sortBy, sort);
+						}
 					}
 					catch (e)
 					{
@@ -88,23 +96,25 @@ define(['./module'], function (ng) {
 			});
 
 			// events
-			$rootScope.$on('SearchByName', function (e, message)
+			$rootScope.$on('SearchByParameter', function (e, search, size)
 			{
 				if ($scope.active)
 				{
-					$scope.searchBy = "Name";
-					$scope.search = message;
+					$scope.searchBy = "Parameter";
+					$scope.search = search;
+					$scope.size = size;
 					$scope.tableParams.page(1);
 					$scope.tableParams.reload();
 				}
 			});
 
-			$rootScope.$on('SearchByGuid', function (e, message)
+			$rootScope.$on('SearchByGuid', function (e, search, size)
 			{
 				if ($scope.active)
 				{
 					$scope.searchBy = "Guid";
-					$scope.search = message;
+					$scope.search = search;
+					$scope.size = size;
 					$scope.tableParams.page(1);
 					$scope.tableParams.reload();
 				}

@@ -26,8 +26,6 @@
 using System.Linq;
 using SharpRobin.Core;
 using XG.Model.Domain;
-using XG.Model;
-using System;
 using System.Collections.Generic;
 
 namespace XG.Plugin.Webserver.SignalR.Hub
@@ -41,6 +39,7 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 		public static RrdDb RrdDb { get; set; }
 		public static ApiKeys ApiKeys { get; set; }
 		public static string PasswortHash { get; set; }
+		public static RemoteSettings RemoteSettings { get; set; }
 
 		public static IEnumerable<SignalR.Hub.Model.Domain.AObject> XgObjectsToHubObjects(IEnumerable<AObject> aObjects)
 		{
@@ -78,9 +77,9 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			{
 				myObj = new SignalR.Hub.Model.Domain.Packet { Object = aObject as Packet };
 			}
-			else if (aObject is Search)
+			else if (aObject is XG.Model.Domain.Search)
 			{
-				myObj = new SignalR.Hub.Model.Domain.Search { Object = aObject as Search };
+				myObj = new SignalR.Hub.Model.Domain.Search { Object = aObject as XG.Model.Domain.Search };
 			}
 			else if (aObject is Notification)
 			{
@@ -96,6 +95,29 @@ namespace XG.Plugin.Webserver.SignalR.Hub
 			}
 
 			return myObj;
+		}
+
+		public static IEnumerable<T> FilterAndLoadObjects<T>(IEnumerable<AObject> aObjects, int aCount, int aPage, string aSortBy, string aSort, out int aLength)
+		{
+			aPage--;
+			var objects = Helper.XgObjectsToHubObjects(aObjects).Cast<T>();
+
+			if (string.IsNullOrWhiteSpace(aSortBy))
+			{
+				aSortBy = "Name";
+			}
+			var prop = typeof(T).GetProperty(aSortBy);
+			if (aSort == "desc")
+			{
+				objects = objects.OrderByDescending(o => prop.GetValue(o, null));
+			}
+			else
+			{
+				objects = objects.OrderBy(o => prop.GetValue(o, null));
+			}
+
+			aLength = objects.Count();
+			return objects.Skip(aPage * aCount).Take(aCount).ToArray();
 		}
 	}
 }

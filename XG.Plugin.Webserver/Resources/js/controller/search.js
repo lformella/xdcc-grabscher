@@ -32,8 +32,9 @@ define(['./module'], function (ng) {
 			var eventCallbacks = [
 				{
 					name: 'OnConnected',
-					callback:  function ()
+					callback: function ()
 					{
+						$scope.signalr.visible(true);
 						$scope.signalr.getProxy().server.getAll();
 					}
 				}
@@ -48,30 +49,72 @@ define(['./module'], function (ng) {
 				{
 					Guid: '00000000-0000-0000-0000-000000000001',
 					Name: $translate('Enabled'),
+					Size: 0,
 					ResultsOnline: 0,
 					ResultsOffline: 0
 				},
 				{
 					Guid: '00000000-0000-0000-0000-000000000002',
 					Name: $translate('Downloads'),
+					Size: 0,
 					ResultsOnline: 0,
 					ResultsOffline: 0
 				}
 			];
 
-			// attach methods to service
-			$scope.signalr.removeByName = function (name)
+			$scope.formats = ['G', 'M', 'K', 'B'];
+			$scope.format = $scope.formats[3];
+
+			// size formatter
+			$scope.getRealSize = function ()
 			{
-				var element = HelperService.getByName($scope.objects, name);
+				if ($scope.format == 'G')
+				{
+					return $scope.size * 1024 * 1024 * 1024;
+				}
+				else if ($scope.format == 'M')
+				{
+					return $scope.size * 1024 * 1024;
+				}
+				else if ($scope.format == 'K')
+				{
+					return $scope.size * 1024;
+				}
+				else
+				{
+					return $scope.size;
+				}
+			};
+
+			// array traversal
+			var getBySearchAndSize = function (array, search, size)
+			{
+				var element = null;
+				angular.forEach(array, function (value, key)
+				{
+					if (value["Name"] == search && value["Size"] == size)
+					{
+						element = { value: value, id: key };
+						return false;
+					}
+					return true;
+				});
+				return element;
+			};
+
+			// attach methods to service
+			$scope.signalr.removeByParameter = function (search, size)
+			{
+				var element = getBySearchAndSize($scope.objects, search, size);
 				if (element != null)
 				{
 					$scope.signalr.remove(element.value);
 				}
 			};
 
-			$scope.signalr.isObject = function(name)
+			$scope.signalr.isObject = function(search, size)
 			{
-				return HelperService.getByName($scope.objects, name) != null;
+				return getBySearchAndSize($scope.objects, search, size) != null;
 			};
 
 			// events
@@ -83,17 +126,49 @@ define(['./module'], function (ng) {
 				$rootScope.$emit('SearchByGuid', guid);
 			};
 
-			$scope.searchByName = function(search)
+			$scope.searchByParameter = function(search, size)
 			{
 				$scope.loading = true;
-				$rootScope.$emit('SearchByName', search);
+				$rootScope.$emit('SearchByParameter', search, size);
 			};
 
 			$scope.searchKeydown = function($event)
 			{
 				if ($event.keyCode == 13)
 				{
-					$scope.searchByName($scope.search);
+					$scope.triggerSearch();
+				}
+			};
+
+			$scope.triggerSearch = function($event)
+			{
+				$scope.searchByParameter($scope.search, $scope.getRealSize());
+			};
+
+			$scope.searchClicked = function(search)
+			{
+				$scope.searchByGuid(search.Guid);
+				$scope.search = search.Name;
+
+				if (search.Size > 1024 * 1024 * 1024)
+				{
+					$scope.format = 'G';
+					$scope.size = (search.Size / (1024 * 1024 * 1024)).toFixed(2);
+				}
+				else if (search.Size > 1024 * 1024)
+				{
+					$scope.format = 'M';
+					$scope.size = (search.Size / (1024 * 1024)).toFixed(2);
+				}
+				else if (search.Size > 1024)
+				{
+					$scope.format = 'K';
+					$scope.size = (search.Size / 1024).toFixed(2);
+				}
+				else
+				{
+					$scope.format = 'B';
+					$scope.size = search.Size;
 				}
 			};
 

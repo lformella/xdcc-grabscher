@@ -23,13 +23,14 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Info
 {
 	public class Status : AParserWithExistingBot
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -38,7 +39,7 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 			var match = Helper.Match(aMessage, regexes);
 			if (match.Success)
 			{
-				int valueInt = 0;
+				int valueInt;
 				if (int.TryParse(match.Groups["slot_cur"].ToString(), out valueInt))
 				{
 					aBot.InfoSlotCurrent = valueInt;
@@ -69,13 +70,10 @@ namespace XG.Plugin.Irc.Parser.Types.Info
 				if (aBot.InfoSlotCurrent > 0 && aBot.State == Bot.States.Waiting)
 				{
 					aBot.State = Bot.States.Idle;
-					FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, 0));
+					FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, 0));
 				}
-
-				UpdateBot(aBot);
-				return true;
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }

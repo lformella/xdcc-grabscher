@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Db4objects.Db4o;
 
 namespace XG.Model.Domain
 {
@@ -40,7 +41,7 @@ namespace XG.Model.Domain
 			{
 				if (!value)
 				{
-					foreach (AObject obj in All)
+					foreach (AObject obj in Children)
 					{
 						obj.Connected = false;
 						obj.Commit();
@@ -64,6 +65,7 @@ namespace XG.Model.Domain
 			set { SetProperty(ref _port, value, "Port"); }
 		}
 
+		[Transient]
 		SocketErrorCode _errorCode = SocketErrorCode.None;
 
 		public SocketErrorCode ErrorCode
@@ -78,16 +80,16 @@ namespace XG.Model.Domain
 
 		public ICollection<Channel> Channels
 		{
-			get { return All.Cast<Channel>().ToArray(); }
+			get { return Children.Cast<Channel>().ToArray(); }
 		}
 
 		public Channel Channel(string aName)
 		{
-			if (aName != null && !aName.StartsWith("#"))
+			if (aName != null && !aName.StartsWith("#", StringComparison.CurrentCulture))
 			{
 				aName = "#" + aName;
 			}
-			return base.Named(aName) as Channel;
+			return Named(aName) as Channel;
 		}
 
 		public Bot Bot(string aName)
@@ -112,13 +114,13 @@ namespace XG.Model.Domain
 		public bool AddChannel(string aChannel)
 		{
 			aChannel = aChannel.Trim().ToLower();
-			if (!aChannel.StartsWith("#"))
+			if (!aChannel.StartsWith("#", StringComparison.CurrentCulture))
 			{
 				aChannel = "#" + aChannel;
 			}
 			if (Channel(aChannel) == null)
 			{
-				var tChannel = new Channel {Name = aChannel};
+				var tChannel = new Channel {Name = aChannel, Enabled = true};
 				return AddChannel(tChannel);
 			}
 			return false;
@@ -129,7 +131,7 @@ namespace XG.Model.Domain
 			return Remove(aChannel);
 		}
 
-		public override bool DuplicateChildExists(AObject aObject)
+		protected override bool DuplicateChildExists(AObject aObject)
 		{
 			return Channel((aObject as Channel).Name) != null;
 		}

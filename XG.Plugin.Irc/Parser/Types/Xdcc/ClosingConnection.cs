@@ -24,13 +24,14 @@
 //  
 
 using XG.Config.Properties;
+using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin.Irc.Parser.Types.Xdcc
 {
-	public class ClosingConnection : AParserWithExistingBot
+	public class ClosingConnection : ASaveBotMessageParser
 	{
-		protected override bool ParseInternal(IrcConnection aConnection, Bot aBot, string aMessage)
+		protected override bool ParseInternal(Bot aBot, string aMessage)
 		{
 			string[] regexes =
 			{
@@ -49,27 +50,24 @@ namespace XG.Plugin.Irc.Parser.Types.Xdcc
 					// kill that connection if the bot sends a close message , but our real bot 
 					// connection is still alive and hangs for some crapy reason - maybe because 
 					// some admins do some network fu to stop my downloads (happend to me)
-					FireRemoveDownload(this, new EventArgs<Model.Domain.Server, Bot>(aConnection.Server, aBot));
+					FireRemoveDownload(this, new EventArgs<Bot>(aBot));
 				}
-				FireQueueRequestFromBot(this, new EventArgs<Model.Domain.Server, Bot, int>(aConnection.Server, aBot, Settings.Default.CommandWaitTime));
+				FireQueueRequestFromBot(this, new EventArgs<Bot, int>(aBot, Settings.Default.CommandWaitTime));
 
 				match = Helper.Match(aMessage, @".*\s+JOIN (?<channel>[^\s]+).*");
 				if (match.Success)
 				{
 					string channel = match.Groups["channel"].ToString();
-					if (!channel.StartsWith("#"))
+					if (!channel.StartsWith("#", System.StringComparison.CurrentCulture))
 					{
 						channel = "#" + channel;
 					}
-					FireJoinChannel(this, new EventArgs<Model.Domain.Server, string>(aConnection.Server, channel));
+					FireJoinChannel(this, new EventArgs<Server, string>(aBot.Parent.Parent, channel));
 				}
 
 				//** Closing Connection: Transfers from [mg]-request|bots are restricted to only MOVIEGODS users! /Part #Beast-xdcc + #elitewarez if you want to download from [MG]-Request|Bot|003
-
-				UpdateBot(aBot, aMessage);
-				return true;
 			}
-			return false;
+			return match.Success;
 		}
 	}
 }
