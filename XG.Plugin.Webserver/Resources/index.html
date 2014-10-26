@@ -208,7 +208,10 @@
 				</div>
 			</nav>
 			<div class="container ng-hide" ng-show="passwordOk">
-				<alert ng-show="REMOTE_SETTINGS.Version.ShowWarning" type="success" close="REMOTE_SETTINGS.Version.ShowWarning = false" ng-bind-html='REMOTE_SETTINGS.Version|formatVersionWarning|trustAsHtml'></alert>
+
+				<alert ng-show="REMOTE_SETTINGS.Version.ShowWarning" type="success" close="REMOTE_SETTINGS.Version.ShowWarning = false"><span ng-bind-html='REMOTE_SETTINGS.Version|formatVersionWarning' /></alert>
+
+				<alert ng-repeat="message in REMOTE_SETTINGS.Messages"  ng-show="message.Enabled" type="{{message.type}}" close="message.Enabled = false"><span ng-bind-html='message.Text' /></alert>
 
 				<div ng-show="slide == 1" ng-controller="DashboardCtrl">
 

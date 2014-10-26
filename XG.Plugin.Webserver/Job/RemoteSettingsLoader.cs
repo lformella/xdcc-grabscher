@@ -38,6 +38,7 @@ namespace XG.Plugin.Webserver.Job
 		{
 			try
 			{
+				//var uri = new Uri("/Users/lars/Projekte/C#/xdcc-grabscher/settings.json");
 				var uri = new Uri("https://raw.githubusercontent.com/lformella/xdcc-grabscher/master/settings.json");
 				var req = WebRequest.Create(uri);
 				var response = req.GetResponse();

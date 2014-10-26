@@ -23,12 +23,15 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System.Collections.Generic;
+
 namespace XG.Plugin.Webserver
 {
 	public class RemoteSettings
 	{
 		public Version Version { get; set; }
 		public ExternalSearch ExternalSearch { get; set; }
+		public IEnumerable<Message> Messages { get; set; }
 	}
 
 	public class Version
@@ -43,5 +46,12 @@ namespace XG.Plugin.Webserver
 	{
 		public bool Enabled { get; set; }
 		public string Url { get; set; }
+	}
+
+	public class Message
+	{
+		public bool Enabled { get; set; }
+		public string Text { get; set; }
+		public string Type { get; set; }
 	}
 }
