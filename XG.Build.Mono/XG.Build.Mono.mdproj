@@ -34,6 +34,25 @@
               <File>XG.Plugin,Linux.PkgConfig,xg.plugin.pc</File>
               <File>XG.Application,Binaries,xg.application</File>
               <File>XG.Extensions,Linux.PkgConfig,xg.extensions.pc</File>
+              <File>XG.Application,ProgramFiles,XG.Plugin.Webserver.dll.config</File>
+              <File>XG.Plugin.Webserver,ProgramFiles,XG.Plugin.Webserver.dll.config</File>
+              <File>XG.Plugin.ElasticSearch,ProgramFiles,XG.Plugin.ElasticSearch.dll.config</File>
+              <File>XG.Application,ProgramFiles,XG.Application.exe.config</File>
+              <File>XG.Application,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Business,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.DB,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.ElasticSearch,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Import,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Irc,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Jabber,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Plugin.Webserver,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Config,ProgramFiles,XG.Config.dll.config</File>
+              <File>XG.Application,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Business,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Plugin.Irc,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Plugin.Webserver,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.DB,ProgramFiles,XG.DB.dll.config</File>
+              <File>XG.Application,ProgramFiles,XG.Plugin.ElasticSearch.dll.config</File>
             </ExcludedFiles>
             <RootEntry path="..\XG.sln" id=":root:" />
           </Builder>
