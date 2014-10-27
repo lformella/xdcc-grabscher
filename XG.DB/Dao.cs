@@ -27,6 +27,7 @@ using System;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Config.Encoding;
+using Db4objects.Db4o.Defragment;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.TA;
 using XG.Config.Properties;
@@ -63,12 +64,16 @@ namespace XG.DB
 			config.Common.Add(new TransparentActivationSupport());
 			config.Common.Add(new TransparentPersistenceSupport());
 
-			/*if (System.IO.File.Exists(dbPath))
+			Settings.Default.RunsWithoutDbOptimize++;
+			if (System.IO.File.Exists(dbPath) && Settings.Default.RunsWithoutDbOptimize > Settings.Default.MaxRunsWithoutDbOptimize)
 			{
 				DefragmentConfig defragmentConfig = new DefragmentConfig(dbPath);
 				defragmentConfig.Db4oConfig(config);
 				Defragment.Defrag(defragmentConfig);
-			}*/
+
+				Settings.Default.RunsWithoutDbOptimize = 0;
+			}
+			Settings.Default.Save();
 
 			_db = Db4oEmbedded.OpenFile(config, dbPath);
 

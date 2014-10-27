@@ -438,6 +438,30 @@ namespace XG.Config.Properties {
             set {
                 this["MaxDownloadSpeedInKB"] = value;
             }
-        }
+		}
+
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("0")]
+		public int RunsWithoutDbOptimize {
+			get {
+				return ((int)(this["RunsWithoutDbOptimize"]));
+			}
+			set {
+				this["RunsWithoutDbOptimize"] = value;
+			}
+		}
+
+		[global::System.Configuration.ApplicationScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("10")]
+		public int MaxRunsWithoutDbOptimize {
+			get {
+				return ((int)(this["MaxRunsWithoutDbOptimize"]));
+			}
+			set {
+				this["MaxRunsWithoutDbOptimize"] = value;
+			}
+		}
     }
 }
