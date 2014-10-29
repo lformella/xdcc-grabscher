@@ -106,6 +106,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SharpRobin">
+      <HintPath>..\packages\SharpRobin\SharpRobin.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -137,6 +140,7 @@
     <Compile Include="Business\Helper\Objects.cs" />
     <Compile Include="Plugin\Webserver\Search\Packets.cs" />
     <Compile Include="Business\Helper\FileActions.cs" />
+    <Compile Include="Business\Helper\Rrd.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
