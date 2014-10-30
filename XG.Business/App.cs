@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.ComponentModel.Composition;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,6 +47,9 @@ namespace XG.Business
 		static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		readonly Dao _dao;
+
+		[ImportMany]
+		public IEnumerable<Lazy<IPlugin, IPluginMetaData>> Plugins;
 
 		readonly Plugins _plugins;
 
@@ -201,6 +205,7 @@ namespace XG.Business
 		{
 			CreateJobs();
 			_plugins.StartAll();
+			Plugins.StartRunAll();
 
 			Scheduler.Start();
 		}
@@ -210,10 +215,12 @@ namespace XG.Business
 			Scheduler.Shutdown();
 			_dao.Stop();
 			_plugins.StopAll();
+			Plugins.StopRunAll();
 
 			FileActions.OnNotificationAdded -= NotificationAdded;
 		}
 
+		[Obsolete("Implement XG.Plugin.IPlugin and use plugins directory instead. Also see: XG.Business.Plugins.Load()")]
 		public void AddPlugin(APlugin aPlugin)
 		{
 			aPlugin.Servers = Servers;

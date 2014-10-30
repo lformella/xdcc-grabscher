@@ -23,7 +23,12 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
+using System.IO;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Collections.Generic;
+using XG.Config.Properties;
 using XG.Plugin;
 
 namespace XG.Business
@@ -37,6 +42,43 @@ namespace XG.Business
 		#endregion
 
 		#region FUNCTIONS
+
+		/// <summary>
+		/// Loads the plugins, from the plugins directory
+		/// </summary>
+		/// <remarks>
+		/// uses System.ComponentModel.Composition to do all the heavy lifting.
+		/// </remarks>
+		public static void Load(App obj)
+		{
+			var pluginsDirectoryInfo = new DirectoryInfo(Settings.Default.GetAppDataPath () + "plugins");
+			if(!pluginsDirectoryInfo.Exists)
+			{
+				try
+				{
+					pluginsDirectoryInfo.Create();
+				}
+				catch(Exception ex)
+				{
+					Console.Write(ex.Message);
+				}
+			}
+
+			var catalog = new AggregateCatalog();
+			//catalog.Catalogs.Add(new AssemblyCatalog(typeof(App).Assembly));
+			catalog.Catalogs.Add(new DirectoryCatalog(pluginsDirectoryInfo.ToString()));
+
+			var container = new CompositionContainer(catalog);
+
+			try
+			{
+				container.ComposeParts(obj);
+			}
+			catch(CompositionException ex)
+			{
+				Console.Write(ex.Message);
+			}
+		}
 
 		public Plugins()
 		{

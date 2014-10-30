@@ -76,6 +76,7 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Job\Rrd.cs" />
     <Compile Include="Plugins.cs" />
     <Compile Include="Helper\Objects.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XG.Config\XG.Config.csproj">
