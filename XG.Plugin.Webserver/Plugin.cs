@@ -24,15 +24,21 @@
 //  
 
 using System;
+using System.ComponentModel.Composition;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Owin.Hosting;
-using Nowin;
 using SharpRobin.Core;
 using XG.Config.Properties;
 
 namespace XG.Plugin.Webserver
 {
+	[Export(typeof(APlugin))]
+	[ExportMetadata(PluginMetaData.NAME, "XG.Plugin.Webserver")]
+	[ExportMetadata(PluginMetaData.DESCRIPTION, "This plugin enables the webfrontend.")]
+	[ExportMetadata(PluginMetaData.VERSION, "3.3.0.0")]
+	[ExportMetadata(PluginMetaData.AUTHOR, "Lars Formella")]
+	[ExportMetadata(PluginMetaData.WEBSITE, "http://xg.bitpir.at/")]
 	public class Plugin : APlugin
 	{
 		#region VARIABLES
@@ -43,17 +49,6 @@ namespace XG.Plugin.Webserver
 		public RrdDb RrdDB { get; set; }
 
 		SHA256Managed _sha256 = new SHA256Managed();
-
-		#endregion
-
-		#region EVENTS
-
-		public virtual event EventHandler OnShutdown = delegate {};
-
-		protected void FireShutdown(object aSender, EventArgs aEventArgs)
-		{
-			OnShutdown(aSender, aEventArgs);
-		}
 
 		#endregion
 
@@ -104,7 +99,7 @@ namespace XG.Plugin.Webserver
 			_eventForwarder.Searches = Searches;
 			_eventForwarder.Notifications = Notifications;
 			_eventForwarder.ApiKeys = ApiKeys;
-			_eventForwarder.Start(typeof(SignalR.EventForwarder).ToString());
+			_eventForwarder.Start();
 
 			var settings = new RemoteSettings { Version = new Version(), ExternalSearch = new ExternalSearch { Enabled = false } };
 			SignalR.Hub.Helper.RemoteSettings = settings;

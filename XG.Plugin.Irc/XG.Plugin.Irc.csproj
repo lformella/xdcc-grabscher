@@ -78,6 +78,7 @@
     <Reference Include="Meebey.SmartIrc4net">
       <HintPath>..\packages\smartirc4net.0.5.0\Meebey.SmartIrc4net.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BotDownload.cs" />

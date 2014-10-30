@@ -29,7 +29,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Threading.Tasks;
 using XG.Config.Properties;
 using XG.Extensions;
 using XG.Model.Domain;
@@ -161,27 +161,17 @@ namespace XG.Business.Helper
 				string tmpPath = Settings.Default.TempPath + aFile.TmpName;
 				string readyPath = Settings.Default.ReadyPath + aFile.Name;
 
-				try
+				if (FileSystem.MoveFile(tmpPath, readyPath))
 				{
-					if (FileSystem.MoveFile(tmpPath, readyPath))
-					{
-						Files.Remove(aFile);
+					Files.Remove(aFile);
 
-						// great, all went right, so lets check what we can do with the file
-						var thread = new Thread(() => HandleFile(readyPath));
-						thread.Name = "HandleFile|" + aFile.Name;
-						thread.Start();
-					}
-					else
-					{
-						Log.Fatal("FinishFile(" + aFile + ") cant move file");
-					}
+					// great, all went right, so lets check what we can do with the file
+					var task = Task.Factory.StartNew((path) => { HandleFile((string)path); }, readyPath);
+					task.ContinueWith(t => Log.Fatal("FinishFile(" + aFile + ") cant finish file", t.Exception), TaskContinuationOptions.OnlyOnFaulted); 
 				}
-				catch (Exception ex)
+				else
 				{
-					Log.Fatal("FinishFile(" + aFile + ") cant finish file", ex);
-
-					FireNotificationAdded(Notification.Types.FileFinishFailed, aFile);
+					Log.Fatal("FinishFile(" + aFile + ") cant move file");
 				}
 			}
 		}

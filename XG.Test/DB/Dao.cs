@@ -42,7 +42,7 @@ namespace XG.Test.DB
 		{
 			var dao = new XG.DB.Dao();
 			dao.Scheduler = new StdSchedulerFactory().GetScheduler();
-			dao.Start("Dao");
+			dao.Start();
 		}
 			
 		[Test]
@@ -51,7 +51,7 @@ namespace XG.Test.DB
 		{
 			var dao = new XG.DB.Dao();
 			dao.Scheduler = new StdSchedulerFactory().GetScheduler();
-			dao.Start("Dao");
+			dao.Start();
 
 			var files = dao.Files;
 			for (int a = 0; a < _count; a++)

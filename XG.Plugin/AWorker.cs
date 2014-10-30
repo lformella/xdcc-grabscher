@@ -24,11 +24,11 @@
 //  
 
 using System;
-using System.Reflection;
-using System.Threading;
-using log4net;
-using Quartz;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using Quartz;
+using log4net;
 
 namespace XG.Plugin
 {
@@ -52,29 +52,25 @@ namespace XG.Plugin
 
 		#region FUNCTIONS
 
-		public void Start(string aName, bool aNewThread = true)
+		public void Start(bool asynchronous = true)
 		{
 			_allowRunning = true;
-			try
+			if (asynchronous)
 			{
-				if (aNewThread)
-				{
-					var thread = new Thread(StartRun);
-					thread.Name = aName;
-					thread.Start();
-				}
-				else
+				var task = new Task(StartRun);
+				task.ContinueWith(t => Log.Fatal("Start() ", t.Exception), TaskContinuationOptions.OnlyOnFaulted); 
+				task.Start();
+			}
+			else
+			{
+				try
 				{
 					StartRun();
 				}
-			}
-			catch (ThreadAbortException)
-			{
-				// this is ok
-			}
-			catch (Exception ex)
-			{
-				Log.Fatal("Start()", ex);
+				catch (Exception ex)
+				{
+					Log.Fatal("Start()", ex);
+				}
 			}
 		}
 

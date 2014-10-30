@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
 using XG.Business.Helper;
@@ -36,6 +37,12 @@ using log4net;
 
 namespace XG.Plugin.Irc
 {
+	[Export(typeof(APlugin))]
+	[ExportMetadata(PluginMetaData.NAME, "XG.Plugin.Irc")]
+	[ExportMetadata(PluginMetaData.DESCRIPTION, "This plugin connects to irc.")]
+	[ExportMetadata(PluginMetaData.VERSION, "3.3.0.0")]
+	[ExportMetadata(PluginMetaData.AUTHOR, "Lars Formella")]
+	[ExportMetadata(PluginMetaData.WEBSITE, "http://xg.bitpir.at/")]
 	public class Plugin : APlugin
 	{
 		#region VARIABLES
@@ -154,7 +161,7 @@ namespace XG.Plugin.Irc
 
 				connection.OnDisconnected += ServerDisconnected;
 				connection.OnNotificationAdded += AddNotification;
-				connection.Start(aServer.ToString());
+				connection.Start();
 			}
 			else
 			{
@@ -256,7 +263,7 @@ namespace XG.Plugin.Irc
 				download.OnNotificationAdded += AddNotification;
 
 				_botDownloads.Add(download);
-				download.Start(aEventArgs.Value3 + ":" + aEventArgs.Value4);
+				download.Start();
 			}
 			else
 			{
@@ -344,7 +351,7 @@ namespace XG.Plugin.Irc
 				download.OnReady += DownloadXdccReady;
 
 				_xdccListDownloads.Add(download);
-				download.Start(aEventArgs.Value4 + ":" + aEventArgs.Value5);
+				download.Start();
 			}
 			else
 			{

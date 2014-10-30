@@ -72,6 +72,7 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -96,26 +97,6 @@
     <ProjectReference Include="..\XG.Model\XG.Model.csproj">
       <Project>{20384A6F-DEBE-438D-9B38-AD2AC36F5B21}</Project>
       <Name>XG.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Plugin.ElasticSearch\XG.Plugin.ElasticSearch.csproj">
-      <Project>{A1219CE4-01AC-4754-B620-CE281C8361D9}</Project>
-      <Name>XG.Plugin.ElasticSearch</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Plugin.Import\XG.Plugin.Import.csproj">
-      <Project>{4D5707FE-5167-45DC-BFD7-A55E49757D0D}</Project>
-      <Name>XG.Plugin.Import</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Plugin.Irc\XG.Plugin.Irc.csproj">
-      <Project>{9BFA221A-262C-4474-81D1-BD0ABF84CA0E}</Project>
-      <Name>XG.Plugin.Irc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Plugin.Jabber\XG.Plugin.Jabber.csproj">
-      <Project>{1D427F5E-B740-453C-8670-CE5D09021595}</Project>
-      <Name>XG.Plugin.Jabber</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\XG.Plugin.Webserver\XG.Plugin.Webserver.csproj">
-      <Project>{E978DE8D-E01F-4F2D-B939-254A4308ED2B}</Project>
-      <Name>XG.Plugin.Webserver</Name>
     </ProjectReference>
     <ProjectReference Include="..\XG.Plugin\XG.Plugin.csproj">
       <Project>{258B9C1A-AA53-4E23-8486-2BCA0FE65538}</Project>

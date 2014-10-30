@@ -75,6 +75,7 @@
     <Reference Include="Nest">
       <HintPath>..\packages\NEST.1.2.1\lib\Nest.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Object\AObject.cs" />

@@ -24,6 +24,7 @@
 //  
 
 using System;
+using System.ComponentModel.Composition;
 using System.Linq;
 using XG.Config.Properties;
 using XG.Extensions;
@@ -34,6 +35,12 @@ using log4net;
 
 namespace XG.Plugin.Jabber
 {
+	[Export(typeof(APlugin))]
+	[ExportMetadata(PluginMetaData.NAME, "XG.Plugin.Jabber")]
+	[ExportMetadata(PluginMetaData.DESCRIPTION, "This plugin connects to a jabber server.")]
+	[ExportMetadata(PluginMetaData.VERSION, "3.3.0.0")]
+	[ExportMetadata(PluginMetaData.AUTHOR, "Lars Formella")]
+	[ExportMetadata(PluginMetaData.WEBSITE, "http://xg.bitpir.at/")]
 	public class Plugin : APlugin
 	{
 		#region VARIABLES

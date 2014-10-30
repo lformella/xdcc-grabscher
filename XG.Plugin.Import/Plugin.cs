@@ -22,14 +22,21 @@
 // 
 
 using System;
-using HtmlAgilityPack;
-using log4net;
-using XG.Model.Domain;
-using XG.Config.Properties;
+using System.ComponentModel.Composition;
 using System.IO;
+using HtmlAgilityPack;
+using XG.Config.Properties;
+using XG.Model.Domain;
+using log4net;
 
 namespace XG.Plugin.Import
 {
+	[Export(typeof(APlugin))]
+	[ExportMetadata(PluginMetaData.NAME, "XG.Plugin.Import")]
+	[ExportMetadata(PluginMetaData.DESCRIPTION, "This plugin imports xdcc links from a file.")]
+	[ExportMetadata(PluginMetaData.VERSION, "3.3.0.0")]
+	[ExportMetadata(PluginMetaData.AUTHOR, "Lars Formella")]
+	[ExportMetadata(PluginMetaData.WEBSITE, "http://xg.bitpir.at/")]
 	public class Plugin : APlugin
 	{
 		#region VARIABLES

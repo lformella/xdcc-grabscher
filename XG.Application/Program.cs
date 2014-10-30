@@ -24,7 +24,6 @@
 //  
 
 #if __MonoCS__
-using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
 #else
@@ -32,6 +31,8 @@ using System.Runtime.InteropServices;
 #endif
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition;
 using System.IO;
 using log4net;
 using log4net.Appender;
@@ -179,26 +180,25 @@ namespace XG.Application
 
 			app = new App();
 
-			Plugins.Load(app);
+			var pluginsDirectoryInfo = new DirectoryInfo(Settings.Default.GetAppDataPath () + "Plugins");
+			if (pluginsDirectoryInfo.Exists)
+			{
+				var catalog = new AggregateCatalog();
+				catalog.Catalogs.Add(new DirectoryCatalog(pluginsDirectoryInfo.ToString()));
 
-			app.AddPlugin(new Plugin.Irc.Plugin());
-			if (Settings.Default.UseJabberClient)
-			{
-				app.AddPlugin(new Plugin.Jabber.Plugin());
-			}
-			if (Settings.Default.UseElasticSearch)
-			{
-				app.AddPlugin(new Plugin.ElasticSearch.Plugin());
-			}
-			if (Settings.Default.UseWebserver)
-			{
-				var webServer = new Plugin.Webserver.Plugin { RrdDB = app.RrdDb };
-				webServer.OnShutdown += delegate { app.Shutdown(webServer); };
-				app.AddPlugin(webServer);
+				var container = new CompositionContainer(catalog);
+				try
+				{
+					container.ComposeParts(app);
+				}
+				catch (CompositionException ex)
+				{
+					LogManager.GetLogger(typeof(Programm)).Fatal("Composing Plugins", ex);
+				}
 			}
 
 			app.OnShutdownComplete += delegate { Environment.Exit(0); };
-			app.Start(typeof(App).ToString());
+			app.Start();
 		}
 	}
 }

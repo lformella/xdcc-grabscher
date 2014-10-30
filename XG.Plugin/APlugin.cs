@@ -23,11 +23,30 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //  
 
+using System;
 using XG.Extensions;
 using XG.Model.Domain;
 
 namespace XG.Plugin
 {
+	public interface IPluginMetaData
+	{
+		string Name { get; }
+		string Description { get; }
+		string Version { get; }
+		string Author { get; }
+		string Website { get; }
+	}
+
+	public static class PluginMetaData
+	{
+		public const string NAME = "Name";
+		public const string DESCRIPTION = "Description";
+		public const string VERSION = "Version";
+		public const string AUTHOR = "Author";
+		public const string WEBSITE = "Website";
+	}
+
 	public abstract class APlugin : AWorker
 	{
 		#region REPOSITORIES
@@ -180,6 +199,17 @@ namespace XG.Plugin
 		protected virtual void SearchChanged(object aSender, EventArgs<AObject, string[]> aEventArgs) {}
 
 		protected virtual void NotificationAdded(object aSender, EventArgs<Notification> aEventArgs) {}
+
+		#endregion
+
+		#region EVENTS
+
+		public virtual event EventHandler OnShutdown = delegate {};
+
+		protected void FireShutdown(object aSender, EventArgs aEventArgs)
+		{
+			OnShutdown(aSender, aEventArgs);
+		}
 
 		#endregion
 	}

@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Reflection;
 using Nest;
 using XG.Config.Properties;
@@ -34,6 +35,12 @@ using log4net;
 
 namespace XG.Plugin.ElasticSearch
 {
+	[Export(typeof(APlugin))]
+	[ExportMetadata(PluginMetaData.NAME, "XG.Plugin.ElasticSearch")]
+	[ExportMetadata(PluginMetaData.DESCRIPTION, "This plugin stores objects in elastic search.")]
+	[ExportMetadata(PluginMetaData.VERSION, "3.3.0.0")]
+	[ExportMetadata(PluginMetaData.AUTHOR, "Lars Formella")]
+	[ExportMetadata(PluginMetaData.WEBSITE, "http://xg.bitpir.at/")]
 	public class Plugin : APlugin
 	{
 		#region VARIABLES

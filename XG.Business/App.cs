@@ -49,9 +49,7 @@ namespace XG.Business
 		readonly Dao _dao;
 
 		[ImportMany]
-		public IEnumerable<Lazy<IPlugin, IPluginMetaData>> Plugins;
-
-		readonly Plugins _plugins;
+		public IEnumerable<Lazy<APlugin, IPluginMetaData>> Plugins;
 
 		readonly RrdDb _rrdDb;
 
@@ -90,7 +88,6 @@ namespace XG.Business
 
 			FileActions.OnNotificationAdded += NotificationAdded;
 
-			_plugins = new Plugins();
 			_rrdDb = new Rrd().GetDb();
 
 			Objects.CheckAndRemoveDuplicates(Servers);
@@ -170,7 +167,7 @@ namespace XG.Business
 
 		void LoadObjects()
 		{
-			_dao.Start(typeof(Dao).ToString(), false);
+			_dao.Start(false);
 
 			Servers = _dao.Servers;
 			Files = _dao.Files;
@@ -204,8 +201,27 @@ namespace XG.Business
 		protected override void StartRun()
 		{
 			CreateJobs();
-			_plugins.StartAll();
-			Plugins.StartRunAll();
+			foreach (var plugin in Plugins)
+			{
+				Log.Warn("StartRun() loading plugin " + plugin.Metadata.Name);
+
+				plugin.Value.Servers = Servers;
+				plugin.Value.Files = Files;
+				plugin.Value.Searches = Searches;
+				plugin.Value.Notifications = Notifications;
+				plugin.Value.ApiKeys = ApiKeys;
+				plugin.Value.Scheduler = Scheduler;
+
+				// special setter for XG.Plugin.Webserver.RrdDB
+				PropertyInfo prop = plugin.Value.GetType().GetProperty("RrdDB");
+				if (prop != null)
+				{
+					prop.SetValue(plugin.Value, RrdDb);
+				}
+
+				plugin.Value.OnShutdown += delegate { Shutdown(plugin.Metadata.Name); };
+				plugin.Value.Start();
+			}
 
 			Scheduler.Start();
 		}
@@ -214,23 +230,13 @@ namespace XG.Business
 		{
 			Scheduler.Shutdown();
 			_dao.Stop();
-			_plugins.StopAll();
-			Plugins.StopRunAll();
+
+			foreach (var plugin in Plugins)
+			{
+				plugin.Value.Stop();
+			}
 
 			FileActions.OnNotificationAdded -= NotificationAdded;
-		}
-
-		[Obsolete("Implement XG.Plugin.IPlugin and use plugins directory instead. Also see: XG.Business.Plugins.Load()")]
-		public void AddPlugin(APlugin aPlugin)
-		{
-			aPlugin.Servers = Servers;
-			aPlugin.Files = Files;
-			aPlugin.Searches = Searches;
-			aPlugin.Notifications = Notifications;
-			aPlugin.ApiKeys = ApiKeys;
-			aPlugin.Scheduler = Scheduler;
-
-			_plugins.Add(aPlugin);
 		}
 
 		#endregion
