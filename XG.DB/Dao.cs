@@ -53,12 +53,6 @@ namespace XG.DB
 		{
 			string dbPath = Settings.Default.GetAppDataPath() + "xgobjects.db4o";
 
-			bool loadFromSqlite = false;
-			if (!System.IO.File.Exists(dbPath) && System.IO.File.Exists(Settings.Default.GetAppDataPath() + "xgobjects.db"))
-			{
-				loadFromSqlite = true;
-			}
-
 			IEmbeddedConfiguration config = Db4oEmbedded.NewConfiguration();
 			config.Common.StringEncoding = StringEncodings.Utf8();
 			config.Common.Add(new TransparentActivationSupport());
@@ -80,18 +74,6 @@ namespace XG.DB
 			Settings.Default.Save();
 
 			_db = Db4oEmbedded.OpenFile(config, dbPath);
-
-			if (loadFromSqlite)
-			{
-				var sqliteConverter = new SqliteConverter();
-				sqliteConverter.Load();
-
-				_db.Store(sqliteConverter.Servers);
-				_db.Store(sqliteConverter.Files);
-				_db.Store(sqliteConverter.Searches);
-				_db.Store(sqliteConverter.ApiKeys);
-				_db.Commit();
-			}
 
 			Load();
 		}
