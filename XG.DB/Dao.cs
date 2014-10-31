@@ -72,6 +72,10 @@ namespace XG.DB
 				Defragment.Defrag(defragmentConfig);
 
 				Settings.Default.RunsWithoutDbOptimize = 0;
+				if (System.IO.File.Exists(dbPath + ".backup"))
+				{
+					System.IO.File.Delete(dbPath + ".backup");
+				}
 			}
 			Settings.Default.Save();
 
