@@ -721,6 +721,12 @@ namespace XG.Plugin.Irc
 
 				FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
 			}
+			catch (Exception ex)
+			{
+				_log.Fatal("Connect() connection failed " + ex.Message);
+
+				FireNotificationAdded(Notification.Types.ServerConnectFailed, Server);
+			}
 
 			_log.Info("connection stoped " + Server);
 
